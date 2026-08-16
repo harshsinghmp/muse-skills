@@ -1,3 +1,8 @@
+---
+name: updateagents
+description: Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery. Workspace-scoped only.
+---
+
 # updateagents
 
 Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Scans workspace for commands, patterns, conventions, and architecture details, then merges new findings into existing memory files or creates them if they don't exist. Workspace-scoped only — never touches parent directories. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery.
