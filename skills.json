@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "updateagents",
+      "description": "Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery. Workspace-scoped only.",
+      "path": "updateagents/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["memory", "documentation", "workspace", "agents", "automation"]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@harsh/muse-skills",
+  "version": "1.0.0",
+  "description": "Custom agent skills for enhanced workspace productivity and memory management",
+  "type": "module",
+  "scripts": {
+    "validate": "bash updateagents/scripts/validate-memory-file.sh"
+  },
+  "keywords": [
+    "skills",
+    "agents",
+    "claude",
+    "codex",
+    "workspace",
+    "memory",
+    "documentation"
+  ],
+  "author": "Harsh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harsh/muse-skills.git"
+  }
+}
