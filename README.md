@@ -8,13 +8,13 @@ Install individual skills using the `npx skills` command:
 
 ```bash
 # Install updateagents skill
-npx skills add https://github.com/harsh/muse-skills/tree/main/updateagents
+npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/updateagents
 ```
 
 Or install all skills at once:
 
 ```bash
-npx skills add https://github.com/harsh/muse-skills
+npx skills add https://github.com/harshsinghmp/muse-skills
 ```
 
 ## Available Skills
