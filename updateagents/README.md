@@ -13,9 +13,14 @@ Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUD
 
 ## Installation
 
-This skill is located at: `~/.config/crush/skills/updateagents/`
+Install via `npx skills` shorthand:
 
-No additional setup required. The skill will detect available tools automatically.
+```bash
+# Recommended shorthand
+npx skills add harshsinghmp/muse-skills --skill updateagents
+```
+
+*(Full URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/updateagents` is also supported).*
 
 ## Usage
 

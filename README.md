@@ -2,23 +2,31 @@
 
 Custom agent skills for enhanced workspace productivity, memory management, and project governance within the LifeOS ecosystem.
 
-## Installation
+---
 
-Install individual skills using the `npx skills` command:
+## ⚡ Installation
+
+### 1. Install Specific Skills (Shorthand)
+
+Install individual skills using the concise GitHub shorthand:
 
 ```bash
 # Install new-project skill
-npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/new-project
+npx skills add harshsinghmp/muse-skills --skill new-project
 
 # Install updateagents skill
-npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/updateagents
+npx skills add harshsinghmp/muse-skills --skill updateagents
 ```
 
-Or install all skills at once:
+### 2. Install All Skills at Once
+
+Install the entire collection into your workspace:
 
 ```bash
-npx skills add https://github.com/harshsinghmp/muse-skills
+npx skills add harshsinghmp/muse-skills
 ```
+
+*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/<skillname>` is also supported).*
 
 ---
 
@@ -27,6 +35,11 @@ npx skills add https://github.com/harshsinghmp/muse-skills
 ### 🚀 `new-project`
 
 Interactive project creator and Project OS provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
+
+**Installation:**
+```bash
+npx skills add harshsinghmp/muse-skills --skill new-project
+```
 
 **Features:**
 - Interactive questionnaire with path auto-suggestions from existing workspaces
@@ -53,6 +66,11 @@ Interactive project creator and Project OS provisioner. Bootstraps the 10 Canoni
 ### 🧠 `updateagents`
 
 Automatically discovers, reads, and updates agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc.) in the current working directory.
+
+**Installation:**
+```bash
+npx skills add harshsinghmp/muse-skills --skill updateagents
+```
 
 **Features:**
 - Auto-discovers existing memory files
