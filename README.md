@@ -1,12 +1,15 @@
 # Muse Skills
 
-Custom agent skills for enhanced workspace productivity and memory management.
+Custom agent skills for enhanced workspace productivity, memory management, and project governance within the LifeOS ecosystem.
 
 ## Installation
 
 Install individual skills using the `npx skills` command:
 
 ```bash
+# Install new-project skill
+npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/new-project
+
 # Install updateagents skill
 npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/updateagents
 ```
@@ -17,11 +20,38 @@ Or install all skills at once:
 npx skills add https://github.com/harshsinghmp/muse-skills
 ```
 
+---
+
 ## Available Skills
 
-### updateagents
+### 🚀 `new-project`
 
-Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory.
+Interactive project creator and Project OS provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
+
+**Features:**
+- Interactive questionnaire with path auto-suggestions from existing workspaces
+- 10 Canonical Documentation sources (`01_OVERVIEW.md` through `10_UNRESOLVED.md`)
+- 8-Stage Reality State Machine (`PROPOSED` → `APPROVED` → `LOCAL_DEV` → `STAGING_VERIFIED` → `PROD_VERIFIED`)
+- Codified **Muse Council** hierarchy (Muse, Sol, Jasper, Crew, Nexus)
+- Nexus adversarial verification suite with Playwright probes
+- Dynamic `llms.txt` and `llms-full.txt` bundler
+- Selective skill bundle installation (`agency-suite`, `design`, `fullstack`, `growth`)
+- Supports Next.js 16 (App Router + Tailwind v4 + React 19), Astro, Vite, and API backends
+
+**Usage:**
+```
+"run /new-project"
+"create a new Astro project"
+"scaffold Next.js 16 app with agency-suite skills"
+```
+
+[Learn more →](new-project/README.md)
+
+---
+
+### 🧠 `updateagents`
+
+Automatically discovers, reads, and updates agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc.) in the current working directory.
 
 **Features:**
 - Auto-discovers existing memory files
@@ -41,6 +71,8 @@ Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUD
 
 [Learn more →](updateagents/README.md)
 
+---
+
 ## Adding New Skills
 
 To add a new skill to this repository:
@@ -55,8 +87,6 @@ To add a new skill to this repository:
 
 ## Skill Structure
 
-Each skill should follow this structure:
-
 ```
 my-skill/
 ├── SKILL.md              # Main skill definition (required)
@@ -66,37 +96,19 @@ my-skill/
 ├── references/           # Reference documentation (optional)
 │   └── *.md
 ├── scripts/              # Helper scripts (optional)
-│   └── *.sh
+│   └── *.sh / *.ts
 └── examples/             # Usage examples (optional)
     └── *.md
 ```
 
-## Development
+---
 
-### Local Testing
+## Development & Publishing
 
-Test skills locally before publishing:
-
-```bash
-# Validate a skill's memory file output
-cd updateagents
-bash scripts/validate-memory-file.sh AGENTS.md
-```
-
-### Publishing
-
-1. Commit changes: `git add . && git commit -m "Add new skill"`
+1. Commit changes: `git add . && git commit -m "feat: add my-new-skill"`
 2. Push to GitHub: `git push origin main`
 3. Skills are immediately available via `npx skills add`
 
 ## License
 
 MIT
-
-## Contributing
-
-Feel free to open issues or pull requests for:
-- New skill ideas
-- Bug fixes
-- Documentation improvements
-- Feature enhancements
