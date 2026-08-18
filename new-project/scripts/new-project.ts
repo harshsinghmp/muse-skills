@@ -106,6 +106,18 @@ const agentRulesContent = `# Project AI Constitution & Behavioral Boundaries
 2. **Safe Environment Handling**: Never ingest entire \`.env\` files into context when only variable names are needed.
 3. **Pre-Ship Secret Scan**: Mandatory \`bun ~/.claude/LIFEOS/TOOLS/SecretScan.ts .\` before any commit or handoff.
 
+## 📜 Meaningful Git Commit Protocol (Mandatory)
+Every git commit in this project MUST follow this format:
+\`\`\`
+<type>(<scope>): <concise-imperative-summary>
+
+- Why: [Motivation or issue solved]
+- What: [Bullet list of specific files or logic changes]
+- Verification: [Proof of clean build, tests, and Nexus gate pass]
+\`\`\`
+- Allowed types: \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`, \`build\`, \`ci\`, \`chore\`.
+- Vague commit messages (\`"update"\`, \`"fix"\`, \`"wip"\`) are strictly forbidden.
+
 ## 🏛️ Agency Governance & Operating Rules
 - **Chief Orchestrator**: **Muse** leads project coordination, contract extraction, and workstream routing.
 - **Evidence Before Claims**: Never claim a bug is fixed or a task is complete based solely on command exit codes. Verify actual rendered HTML, DOM selectors, runtime logs, and browser tests.
@@ -143,7 +155,19 @@ const agentsMdContent = `# 🏛️ Agency Council & Project Operating System
 - **Role**: Staging environments, dev servers, package dependencies, deployment pipelines.
 
 ### 5. 🛡️ Nexus (Technical Director & Review Head — The Quality Gate)
-- **Role**: Mandatory adversarial hardening gate (TypeScript, Build, Playwright probes, Vibeguard SecretScan).
+- **Role**: Mandatory adversarial hardening gate (TypeScript, Build, Playwright probes, Vibeguard SecretScan, Meaningful Commit check).
+
+---
+
+## 📜 Meaningful Git Commit Standards
+All commits made by Council agents must follow:
+\`\`\`
+<type>(<scope>): <concise-imperative-summary>
+
+- Why: [Problem solved or feature intent]
+- What: [List of files and mechanisms modified]
+- Verification: [Receipt from test/build/probe execution]
+\`\`\`
 
 ---
 
@@ -172,6 +196,7 @@ const claudeMdContent = `# ${projectName} - Claude & Agent Operational Guideline
 ## Code & Quality Invariants
 - Follow the 8-Stage Reality Machine in \`STATE.md\`.
 - All durable decisions must be recorded in \`docs/05_DECISION_LOG.md\`.
+- All git commits must be meaningful with \`Why:\`, \`What:\`, and \`Verification:\` sections.
 - Check \`docs/03_ESCALATION_RULES.md\` before implementing complex custom automation.
 `;
 
@@ -294,7 +319,7 @@ Every major architectural decision is recorded using this schema:
 - **Date**: ${new Date().toISOString().split("T")[0]}
 - **Status**: APPROVED
 - **Context**: Initialized the project with the LifeOS Agency Council operating system.
-- **Decision**: Adopted the 10 Canonical Docs, 8-Stage Reality Machine, and Nexus verification harness.
+- **Decision**: Adopted the 10 Canonical Docs, 8-Stage Reality Machine, Meaningful Git Commit Protocol, and Nexus verification harness.
 - **Consequences**: Deterministic state tracking, anti-hallucination guardrails, and zero secret leakage.
 `,
 

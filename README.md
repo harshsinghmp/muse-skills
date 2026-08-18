@@ -33,6 +33,7 @@ Interactive project creator and Project OS provisioner. Bootstraps the 10 Canoni
 - 10 Canonical Documentation sources (`01_OVERVIEW.md` through `10_UNRESOLVED.md`)
 - 8-Stage Reality State Machine (`PROPOSED` → `APPROVED` → `LOCAL_DEV` → `STAGING_VERIFIED` → `PROD_VERIFIED`)
 - Codified **Muse Council** hierarchy (Muse, Sol, Jasper, Crew, Nexus)
+- Enforces the **Meaningful Git Commit Protocol**
 - Nexus adversarial verification suite with Playwright probes
 - Dynamic `llms.txt` and `llms-full.txt` bundler
 - Selective skill bundle installation (`agency-suite`, `design`, `fullstack`, `growth`)
@@ -73,39 +74,25 @@ Automatically discovers, reads, and updates agent memory files (`AGENTS.md`, `CL
 
 ---
 
-## Adding New Skills
+## Contributing & Git Commit Protocol
 
-To add a new skill to this repository:
-
-1. Create a new directory under the root: `mkdir my-new-skill`
-2. Add required files:
-   - `SKILL.md` - Main skill definition
-   - `agents/openai.yaml` - Agent configuration
-   - `README.md` - User documentation (optional but recommended)
-3. Update `skills.json` with the new skill metadata
-4. Test locally before committing
-
-## Skill Structure
+All commits and contributions must adhere to our **[Meaningful Git Commit Protocol](CONTRIBUTING.md)**:
 
 ```
-my-skill/
-├── SKILL.md              # Main skill definition (required)
-├── README.md             # User-facing documentation (recommended)
-├── agents/
-│   └── openai.yaml       # Agent configuration (required)
-├── references/           # Reference documentation (optional)
-│   └── *.md
-├── scripts/              # Helper scripts (optional)
-│   └── *.sh / *.ts
-└── examples/             # Usage examples (optional)
-    └── *.md
+<type>(<scope>): <concise-imperative-summary>
+
+- Why: [Explain motivation or issue solved]
+- What: [Bullet list of specific files or mechanisms changed]
+- Verification: [Proof of clean build and test receipts]
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 
 ---
 
 ## Development & Publishing
 
-1. Commit changes: `git add . && git commit -m "feat: add my-new-skill"`
+1. Commit changes: `git add . && git commit -m "feat(scope): add new skill..."`
 2. Push to GitHub: `git push origin main`
 3. Skills are immediately available via `npx skills add`
 
