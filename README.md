@@ -16,14 +16,14 @@ Custom agent skills for workspace productivity, context preservation, subagent c
 Install individual skills using the concise GitHub shorthand:
 
 ```bash
-# Subagent orchestration & context skills
+# 🚀 Core Flagship Skills (Project OS & Workspace Memory)
+npx skills add harshsinghmp/muse-skills --skill new-project
+npx skills add harshsinghmp/muse-skills --skill updateagents
+
+# 🤝 Subagent Orchestration & Session Reliability Skills
 npx skills add harshsinghmp/muse-skills --skill agent-handoff
 npx skills add harshsinghmp/muse-skills --skill dead-letter
 npx skills add harshsinghmp/muse-skills --skill context-anchor
-
-# Project OS & memory skills
-npx skills add harshsinghmp/muse-skills --skill new-project
-npx skills add harshsinghmp/muse-skills --skill updateagents
 ```
 
 ### 2. Install All Skills at Once
@@ -42,11 +42,68 @@ npx skills add harshsinghmp/muse-skills
 
 | Skill | Triggers | Description |
 | :--- | :--- | :--- |
+| [**`new-project`**](new-project/README.md) | `/new-project` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
+| [**`updateagents`**](updateagents/README.md) | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
 | [**`agent-handoff`**](agent-handoff/README.md) | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
 | [**`dead-letter`**](dead-letter/README.md) | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | `/anchor`, `/context-anchor` | Drop lightweight working reference snapshots (`.claude/anchor.md`) to prevent cascading context drift. |
-| [**`new-project`**](new-project/README.md) | `/new-project` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
-| [**`updateagents`**](updateagents/README.md) | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
+
+---
+
+### 🚀 `new-project` (Flagship)
+
+Interactive project creator and Project OS provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
+
+**Installation:**
+```bash
+npx skills add harshsinghmp/muse-skills --skill new-project
+```
+
+**Key Capabilities:**
+- Interactive questionnaire with path auto-suggestions from existing workspaces
+- 10 Canonical Documentation sources (`01_OVERVIEW.md` through `10_UNRESOLVED.md`)
+- 8-Stage Reality State Machine (`PROPOSED` → `LOCAL_DEV` → `STAGING_VERIFIED` → `PROD_VERIFIED`)
+- Codified **Muse Council** hierarchy (Muse, Sol, Jasper, Crew, Nexus)
+- Enforces the Meaningful Git Commit Protocol
+- Dynamic `llms.txt` and `llms-full.txt` documentation bundler
+- Supports Next.js 16 (App Router + Tailwind v4 + React 19), Astro, Vite, and API backends
+
+**Usage:**
+```
+"run /new-project"
+"create a new Astro project"
+"scaffold Next.js 16 app with agency-suite skills"
+```
+
+[Learn more →](new-project/README.md)
+
+---
+
+### 🧠 `updateagents` (Flagship)
+
+Automatically discovers, reads, and updates agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc.) in the current working directory.
+
+**Installation:**
+```bash
+npx skills add harshsinghmp/muse-skills --skill updateagents
+```
+
+**Key Capabilities:**
+- Auto-discovers existing memory files in workspace root (never traverses parent paths)
+- Integrates with cavemem, codegraph, rtk, memoryagent, ponytail
+- Incremental updates (preserves existing conventions, adds fresh findings)
+- Priority system for multiple memory files
+- Size management (warns at 5KB, errors at 10KB)
+
+**Usage:**
+```
+"update agents.md"
+"refresh clauade.md"
+"sync memory files"
+"create agent guide for this workspace"
+```
+
+[Learn more →](updateagents/README.md)
 
 ---
 
@@ -130,67 +187,33 @@ npx skills add harshsinghmp/muse-skills --skill context-anchor
 
 ---
 
-### 🚀 `new-project`
-
-Interactive project creator and Project OS provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
-
-**Installation:**
-```bash
-npx skills add harshsinghmp/muse-skills --skill new-project
-```
-
-**Key Capabilities:**
-- Interactive questionnaire with path auto-suggestions from existing workspaces
-- 10 Canonical Documentation sources (`01_OVERVIEW.md` through `10_UNRESOLVED.md`)
-- 8-Stage Reality State Machine (`PROPOSED` → `LOCAL_DEV` → `STAGING_VERIFIED` → `PROD_VERIFIED`)
-- Codified **Muse Council** hierarchy (Muse, Sol, Jasper, Crew, Nexus)
-- Enforces the Meaningful Git Commit Protocol
-- Dynamic `llms.txt` and `llms-full.txt` documentation bundler
-- Supports Next.js 16 (App Router + Tailwind v4 + React 19), Astro, Vite, and API backends
-
-**Usage:**
-```
-"run /new-project"
-"create a new Astro project"
-"scaffold Next.js 16 app with agency-suite skills"
-```
-
-[Learn more →](new-project/README.md)
-
----
-
-### 🧠 `updateagents`
-
-Automatically discovers, reads, and updates agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc.) in the current working directory.
-
-**Installation:**
-```bash
-npx skills add harshsinghmp/muse-skills --skill updateagents
-```
-
-**Key Capabilities:**
-- Auto-discovers existing memory files in workspace root (never traverses parent paths)
-- Integrates with cavemem, codegraph, rtk, memoryagent, ponytail
-- Incremental updates (preserves existing conventions, adds fresh findings)
-- Priority system for multiple memory files
-- Size management (warns at 5KB, errors at 10KB)
-
-**Usage:**
-```
-"update agents.md"
-"refresh clauade.md"
-"sync memory files"
-"create agent guide for this workspace"
-```
-
-[Learn more →](updateagents/README.md)
-
----
-
 ## 📁 Repository Structure
 
 ```
 muse-skills/
+├── new-project/                    # Project OS & governance scaffolder (Flagship)
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── references/
+│   │   └── project-os-architecture.md
+│   ├── scripts/
+│   │   └── new-project.ts
+│   ├── README.md
+│   └── SKILL.md
+│
+├── updateagents/                   # Memory & context synchronization (Flagship)
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── before-after.md
+│   ├── references/
+│   │   ├── discovery-commands.md
+│   │   └── memory-file-priorities.md
+│   ├── scripts/
+│   │   └── validate-memory-file.sh
+│   ├── README.md
+│   └── SKILL.md
+│
 ├── agent-handoff/                  # Structured subagent context packet generator
 │   ├── agents/
 │   │   └── openai.yaml             # Agent tool definition
@@ -212,29 +235,6 @@ muse-skills/
 │   │   └── openai.yaml
 │   ├── examples/
 │   │   └── sample-dead-letter.md
-│   ├── README.md
-│   └── SKILL.md
-│
-├── new-project/                    # Project OS & governance scaffolder
-│   ├── agents/
-│   │   └── openai.yaml
-│   ├── references/
-│   │   └── project-os-architecture.md
-│   ├── scripts/
-│   │   └── new-project.ts
-│   ├── README.md
-│   └── SKILL.md
-│
-├── updateagents/                   # Memory & context synchronization
-│   ├── agents/
-│   │   └── openai.yaml
-│   ├── examples/
-│   │   └── before-after.md
-│   ├── references/
-│   │   ├── discovery-commands.md
-│   │   └── memory-file-priorities.md
-│   ├── scripts/
-│   │   └── validate-memory-file.sh
 │   ├── README.md
 │   └── SKILL.md
 │

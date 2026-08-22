@@ -1,6 +1,22 @@
 {
   "skills": [
     {
+      "name": "new-project",
+      "description": "Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.",
+      "path": "new-project/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["scaffolding", "governance", "project-os", "agents", "architecture", "nextjs", "astro"]
+    },
+    {
+      "name": "updateagents",
+      "description": "Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery. Workspace-scoped only.",
+      "path": "updateagents/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["memory", "documentation", "workspace", "agents", "automation"]
+    },
+    {
       "name": "agent-handoff",
       "description": "Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends.",
       "path": "agent-handoff/SKILL.md",
@@ -23,22 +39,6 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["context", "memory", "state", "session", "focus", "agents"]
-    },
-    {
-      "name": "new-project",
-      "description": "Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.",
-      "path": "new-project/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["scaffolding", "governance", "project-os", "agents", "architecture", "nextjs", "astro"]
-    },
-    {
-      "name": "updateagents",
-      "description": "Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery. Workspace-scoped only.",
-      "path": "updateagents/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["memory", "documentation", "workspace", "agents", "automation"]
     }
   ]
 }
