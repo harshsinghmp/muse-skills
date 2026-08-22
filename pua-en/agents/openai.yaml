@@ -1,0 +1,13 @@
+name: pua-en
+description: "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging."
+parameters:
+  type: object
+  properties:
+    trigger_reason:
+      type: string
+      description: The specific failure pattern, stalling symptom, or user frustration triggering the PIP.
+    task_context:
+      type: string
+      description: Summary of the task and failing attempts so far.
+  required:
+    - trigger_reason

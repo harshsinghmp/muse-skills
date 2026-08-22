@@ -1,11 +1,11 @@
 # Muse Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg?style=for-the-badge)](#)
-[![Skills Count](https://img.shields.io/badge/Skills-5%20Available-purple.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/Version-1.3.0-blue.svg?style=for-the-badge)](#)
+[![Skills Count](https://img.shields.io/badge/Skills-6%20Available-purple.svg?style=for-the-badge)](#)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](#)
 
-Custom agent skills for workspace productivity, context preservation, subagent coordination, error triage, and project governance across the LifeOS ecosystem.
+Universal AI agent skills for Project OS scaffolding, workspace memory synchronization, PIP performance enforcement, subagent coordination, error triage, and context preservation across the LifeOS ecosystem. Formatted with rock-solid Hermes metadata and compatible with all major agent frameworks (Claude Code, Hermes, OpenAI Codex, Cursor, Gemini, and OpenCode).
 
 ---
 
@@ -19,6 +19,9 @@ Install individual skills using the concise GitHub shorthand:
 # 🚀 Core Flagship Skills (Project OS & Workspace Memory)
 npx skills add harshsinghmp/muse-skills --skill new-project
 npx skills add harshsinghmp/muse-skills --skill updateagents
+
+# 🛡️ Performance Enforcement & Debugging
+npx skills add harshsinghmp/muse-skills --skill pua-en
 
 # 🤝 Subagent Orchestration & Session Reliability Skills
 npx skills add harshsinghmp/muse-skills --skill agent-handoff
@@ -44,6 +47,7 @@ npx skills add harshsinghmp/muse-skills
 | :--- | :--- | :--- |
 | [**`new-project`**](new-project/README.md) | `/new-project` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
 | [**`updateagents`**](updateagents/README.md) | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
+| [**`pua-en`**](pua-en/README.md) | `PIP`, `/pua-en`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | [**`agent-handoff`**](agent-handoff/README.md) | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
 | [**`dead-letter`**](dead-letter/README.md) | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | `/anchor`, `/context-anchor` | Drop lightweight working reference snapshots (`.claude/anchor.md`) to prevent cascading context drift. |
@@ -104,6 +108,35 @@ npx skills add harshsinghmp/muse-skills --skill updateagents
 ```
 
 [Learn more →](updateagents/README.md)
+
+---
+
+### 🛡️ `pua-en` (PIP Performance Improvement Plan)
+
+Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging.
+
+**Installation:**
+```bash
+npx skills add harshsinghmp/muse-skills --skill pua-en
+```
+
+**Key Capabilities:**
+- Enforces Three Non-Negotiables: Exhaust all options (Bias for Action), Act before asking (Dive Deep), and Take the initiative (Ownership)
+- 4-Tier Pressure Escalation (L1 Verbal Warning → L2 Written Feedback → L3 Formal PIP → L4 Final Review)
+- Universal 5-step problem-solving methodology (Pattern Recognition → Elevate → Self-Review → Execute → Retro)
+- Mandatory 7-Point Checklist for complex and persistent stalls
+- Anti-Rationalization filter blocking deflection, premature manual work, and unverified assumptions
+- 8 Big-Tech Corporate Flavor Packs (Amazon, Google, Meta, Netflix, Musk, Jobs, Stripe, Horse Race)
+
+**Usage:**
+```
+"put the model on a PIP"
+"stop giving up and figure it out"
+"dive deep into this compiler failure"
+"/pua-en"
+```
+
+[Learn more →](pua-en/README.md)
 
 ---
 
@@ -211,6 +244,14 @@ muse-skills/
 │   │   └── memory-file-priorities.md
 │   ├── scripts/
 │   │   └── validate-memory-file.sh
+│   ├── README.md
+│   └── SKILL.md
+│
+├── pua-en/                         # PIP performance & structured debugging
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-pip-report.md
 │   ├── README.md
 │   └── SKILL.md
 │

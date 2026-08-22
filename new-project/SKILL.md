@@ -1,66 +1,96 @@
 ---
 name: new-project
-description: Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.
+description: "Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory."
+version: 1.0.0
+author: Harsh Singh
+license: MIT
+platforms: [macos, linux, windows]
+metadata:
+  hermes:
+    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite]
+    related_skills: [updateagents, agent-handoff]
+    requires_tools: [bash, view_file, write_to_file]
 ---
 
-# 🚀 `/new-project` Skill
+# 🚀 new-project — Autonomous Project OS & Governance Scaffolder
 
-Use this skill whenever the user asks to create a new project, scaffold a workspace, or initialize a Project Operating System for a client or application.
+Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` knowledge base, 8-stage reality state machine (`STATE.md`), Council governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any workspace.
 
 ---
 
-## 📋 Interactive Questionnaire Protocol
+## When to Use
 
-When triggered, the agent must guide the user through this quick, frictionless questionnaire:
+- User asks to *"create a new project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
+- Setting up a new client application, microservice, or prototype.
+- Upgrading an existing unorganized repository to the LifeOS Agency Council architecture.
+- Bootstrapping AI governance (`.agentrules`, `AGENTS.md`, `CLAUDE.md`, `.gitignore`, `STATE.md`).
+
+---
+
+## Quick Reference
+
+| Tech Stack Archetype | Framework Target | Generator Command / Tool |
+|:---|:---|:---|
+| **Next.js 16** | App Router + Tailwind v4 + React 19 | `npx -y create-next-app@latest` |
+| **Astro** | Static / SSR + Tailwind v4 + TS | `npx -y create-astro@latest` |
+| **Vite + React** | Client SPA + TypeScript | `npx -y create-vite@latest` |
+| **Node / Bun Backend** | Fastify / Hono API service | Bun native init |
+| **WordPress / PHP** | Custom theme & plugin environment | PHP / Composer baseline |
+| **Generic / Vanilla** | TypeScript library or tool | TypeScript strict starter |
+
+---
+
+## Procedure
 
 ### Step 1: Location & Folder Selection
-- **Auto-Suggested Paths**:
-  1. Scan `/home/harsh/Projects/` for existing project directories and present them as immediate selectable options.
-  2. Provide option to create a **New Subfolder** (e.g. `/home/harsh/Projects/<name>`).
-  3. Provide option to scaffold in the **Current Working Directory** (`.`).
+Guide the user through interactive selection:
+1. **Existing Projects Scan**: Scan `/home/harsh/Projects/` and present immediate selectable options.
+2. **New Subfolder Creation**: Option to create `/home/harsh/Projects/<name>`.
+3. **Current Working Directory**: Option to scaffold in `.`.
 
-### Step 2: Tech Stack Archetype (Always Latest)
-- **Selection**:
-  - `Next.js (App Router + Tailwind CSS v4 + React 19)` — *Runs `npx -y create-next-app@latest`*
-  - `Astro (Static/SSR + Tailwind v4 + TS)` — *Runs `npx -y create-astro@latest`*
-  - `Vite + React (TypeScript)` — *Runs `npx -y create-vite@latest`*
-  - `Node / Bun API Backend`
-  - `WordPress / PHP`
-  - `Generic / Vanilla TS`
-- **Project Name & Description**: Extracted from folder name or provided by user.
+### Step 2: Tech Stack Selection (Always Latest)
+Select framework archetype and extract project name and description.
 
 ### Step 3: Skill Preset Selection
-- **Presets**:
-  - `[agency-suite]` *(Recommended / Default)*: The complete Agency Design, Animation, Taste, and UI/UX Suite (28 skills copied directly into the project).
-  - `[design]`: Core Design Tokens, Animation, and Impeccable UI skills.
-  - `[fullstack]`: Auth, API Security, Next.js best practices, E2E testing, systematic debugging.
-  - `[growth]`: CRO, SEO Audit, Keyword Cluster Builder, Landing Page Copywriter.
-  - `[all]`: Complete workspace skill library.
-  - `[none]`: Lightweight baseline without skill copies.
+- `[agency-suite]` *(Recommended / Default)*: Full agency suite (Design, Animation, Taste, Fullstack).
+- `[design]`: Core design tokens, motion, and UI patterns.
+- `[fullstack]`: Auth, API security, Next.js patterns, E2E testing.
+- `[growth]`: CRO, SEO audit, keyword clustering, landing page copywriting.
+- `[all]`: Complete workspace skill library.
+- `[none]`: Lightweight baseline without skill copies.
 
 ### Step 4: AI Dotfiles & Governance Confirmation
-- Confirm default generation of:
-  1. `.agentrules` (Vibeguard zero secret leakage + Evidence-before-claims + 3-round autonomous loop)
-  2. `AGENTS.md` (Muse as Chief Orchestrator, Sol, Jasper, Crew, Nexus)
-  3. `CLAUDE.md` (Operational commands)
-  4. `.gitignore` (Hardened default ignore list)
-  5. `llms.txt` & `llms-full.txt` + `scripts/generate_llms_txt.ts`
-  6. `docs/01_OVERVIEW.md` through `docs/10_UNRESOLVED.md`
-  7. `STATE.md` (8-Stage Reality Machine) & `SUMMARY.md` (Change Ledger)
-  8. `scripts/nexus_verify.sh` & `tests/e2e/harness_probe.spec.ts`
+Confirm generation of:
+1. `.agentrules` (Vibeguard zero secret leakage + evidence-before-claims).
+2. `AGENTS.md` (Muse as Chief Orchestrator, Sol, Jasper, Crew, Nexus).
+3. `CLAUDE.md` (Operational commands & guidelines).
+4. `.gitignore` (Hardened default ignore rules including agents, IDEs, and environments).
+5. `llms.txt` & `llms-full.txt` + `scripts/generate_llms_txt.ts`.
+6. `docs/01_OVERVIEW.md` through `docs/10_UNRESOLVED.md`.
+7. `STATE.md` (8-Stage Reality Machine) & `SUMMARY.md` (Change Ledger).
+8. `scripts/nexus_verify.sh` & `tests/e2e/harness_probe.spec.ts`.
 
----
-
-## ⚡ Execution Command
-
-Once parameters are confirmed, run the scaffolder tool:
+### Step 5: Execution Command
+Run the universal provisioner script:
 
 ```bash
 bun ~/.claude/LIFEOS/TOOLS/NewProject.ts "<targetPath>" --name="<projectName>" --type="<type>" --desc="<description>" --skills="agency-suite"
 ```
 
-### Post-Scaffold Verification Checklist:
-1. Verify files exist: `ls -la <targetPath>/docs <targetPath>/.agents/skills`
-2. Test LLM documentation generator: `cd <targetPath> && bun scripts/generate_llms_txt.ts`
-3. Run Vibeguard Secret Scan: `bun ~/.claude/LIFEOS/TOOLS/SecretScan.ts <targetPath>`
-4. Present the created Project OS summary to the user with immediate next actions.
+---
+
+## Pitfalls
+
+- **Skipping Invariant Probes**: Never leave the project without running initial `scripts/nexus_verify.sh`.
+- **Committing Secrets**: Always ensure `.env.example` exists and `.env` is listed in `.gitignore`.
+- **Premature State Claims**: Never mark features as `LOCAL_VERIFIED` or `PROD_VERIFIED` in `STATE.md` without command receipts.
+
+---
+
+## Verification
+
+After scaffolding, execute and verify:
+1. **Directory Structure**: `ls -la <targetPath>/docs <targetPath>/.agents/skills`
+2. **LLM Documentation Generator**: `cd <targetPath> && bun scripts/generate_llms_txt.ts`
+3. **Vibeguard Secret Scan**: `bun ~/.claude/LIFEOS/TOOLS/SecretScan.ts <targetPath>`
+4. **Summary Presentation**: Report provisioned OS summary and immediate next actions to the user.

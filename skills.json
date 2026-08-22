@@ -17,6 +17,14 @@
       "tags": ["memory", "documentation", "workspace", "agents", "automation"]
     },
     {
+      "name": "pua-en",
+      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger on repeated failures, deflections, passive behavior, or complex stalls.",
+      "path": "pua-en/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["debugging", "performance", "reliability", "problem-solving", "triage", "big-tech"]
+    },
+    {
       "name": "agent-handoff",
       "description": "Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends.",
       "path": "agent-handoff/SKILL.md",

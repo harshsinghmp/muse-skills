@@ -1,99 +1,104 @@
 ---
 name: dead-letter
-description: Capture a failed or blocked task before it disappears. Categorizes the failure mode, extracts what was learned, and generates either a retry packet with the root cause fixed or an escalation message with specific decision points. Use whenever an agent returns a blocker, error, or partial result.
+description: "Capture a failed or blocked task before it disappears. Categorizes the failure mode, extracts what was learned, and generates either a retry packet with the root cause fixed or an escalation message with specific decision points."
+version: 1.0.0
+author: Harsh Singh
+license: MIT
+platforms: [macos, linux, windows]
+metadata:
+  hermes:
+    tags: [triage, error-handling, debugging, subagents, escalation, reliability]
+    related_skills: [pua-en, agent-handoff, context-anchor]
+    requires_tools: [bash, view_file, write_to_file]
 ---
 
-# Dead Letter Skill
+# 📮 dead-letter — Failed Task Triage & Capture
 
-You are processing a failed task — one that returned an error, a blocker, a partial result, or a "couldn't proceed" message. Your job is to make sure nothing is lost, the failure mode is named, and the next action is unambiguous.
+Capture a failed or blocked task before context clears. Categorizes failure modes into a 9-part taxonomy, extracts what was learned, and generates either a mechanical retry prompt or an escalation decision point.
 
-Failed tasks are information. The agent that failed learned something — what it tried, what broke, what it couldn't resolve. If that context isn't captured before the session ends, the next agent starts from zero and hits the same wall.
+---
 
-## What You Will Do
+## When to Use
 
-1. **Read the failed task output** — the full message, error, or partial result from the agent that couldn't complete.
+- An agent returns *"I can't proceed"*, *"blocked on"*, *"error:"*, or a partial result.
+- After a long-running subagent batch or background command fails.
+- Before reporting an unresolvable failure to the user or orchestrator.
+- When an in-progress task must be abandoned and resumed later.
 
-2. **Classify the failure mode:**
+---
 
-| Code | Mode | Definition |
-| :--- | :--- | :--- |
-| `BLOCKED-CRED` | Missing credential | Needs API key, token, or auth the agent doesn't have |
-| `BLOCKED-PERM` | Permission gate | Action requires human approval or elevated access |
-| `BLOCKED-DATA` | Missing data | Needs a file, DB record, or external state that doesn't exist yet |
-| `BLOCKED-AMBIG` | Ambiguous objective | Task was underspecified and agent couldn't resolve the ambiguity |
-| `BLOCKED-RATE` | Rate limited | API, platform, or service rejected the request temporarily |
-| `FAILED-LOGIC` | Logic error | Agent produced output but it was wrong, incomplete, or broken |
-| `FAILED-TOOL` | Tool failure | A dependency (CLI, library, MCP, subprocess) failed |
-| `FAILED-SCOPE` | Out of scope | Task requires capability the assigned agent doesn't have |
-| `PARTIAL` | Partial completion | Some steps done, some not — specific breakpoint identified |
+## Quick Reference
 
-3. **Write the dead letter record to `.claude/dead-letter-<timestamp>.md`:**
+| Code | Failure Mode | Resolution Path |
+|:---|:---|:---|
+| `BLOCKED-CRED` | Missing credential / API key | Request credential securely → Retry |
+| `BLOCKED-PERM` | Permission or human approval gate | Route to human / orchestrator with approval question |
+| `BLOCKED-DATA` | Missing file, schema, or mock data | Identify producer → Generate missing prerequisite |
+| `BLOCKED-AMBIG` | Underspecified goal / ambiguity | Rewrite handoff packet with explicit constraints |
+| `BLOCKED-RATE` | Rate limited / temporary outage | Apply exponential backoff delay → Retry |
+| `FAILED-LOGIC` | Defective algorithm or broken logic | Route to code reviewer / PIP debugging |
+| `FAILED-TOOL` | CLI, dependency, or MCP tool crash | Fix dependency / provide isolated workaround |
+| `FAILED-SCOPE` | Missing required agent capability | Re-route to specialized division |
+| `PARTIAL` | Partial completion with clean breakpoint | Checkpoint written files → Handoff remaining steps |
+
+---
+
+## Procedure
+
+### Step 1: Ingest Failure Signals
+Read full error logs, terminal stderr, or subagent exit messages.
+
+### Step 2: Classify Failure Mode
+Assign exact code from the 9-part taxonomy.
+
+### Step 3: Write Dead-Letter Record
+Save record to `.claude/dead-letter-<timestamp>.md`:
 
 ```markdown
 # Dead Letter — <ISO timestamp>
 
 ## Task
-[Original task, one sentence]
+[Original task in one sentence]
 
 ## Failure Mode
-[CODE]: [one-line description]
+[CODE]: [One-line root cause]
 
-## What was attempted
-- [Step 1 tried]
-- [Step 2 tried]
-- [Where it broke and why]
+## What Was Attempted
+- [Approach 1 and where it failed]
+- [Approach 2 and where it failed]
 
-## What was learned
-- [Fact that wasn't in the original brief]
-- [Constraint discovered during execution]
-- [Any partial output or intermediate state that exists]
+## What Was Learned
+- [Newly discovered constraint or API behavior]
+- [Partial state created]
 
-## Retry packet (if retryable)
-**Fix required before retry:** [specific thing to change]
+## Retry Packet (if mechanical fix exists)
+**Fix required before retry:** [Exact fix]
 **Retry prompt:**
-> [Revised task with root cause addressed]
+> [Revised prompt addressing root cause]
 
-## Escalation (if not retryable)
-**Route to:** [Agent or human who can unblock]
-**Decision needed:** [Specific question that must be answered]
-**Deadline:** [When this blocks downstream work]
+## Escalation (if human judgment required)
+**Route to:** [Agent division or human]
+**Decision needed:** [Specific question]
+**Deadline:** [Downstream impact]
 
-## Files written (partial output to preserve)
-- `path/to/file` — [what's in it, what's missing]
+## Files Written (Partial output to preserve)
+- `path/to/file` — [Status and line count]
 ```
 
-4. **Output the failure mode code + summary inline** so you see it immediately without opening the file.
+### Step 4: Emit Inline Summary
+Output failure code and immediate next step to terminal.
 
-## Rules
+---
 
-- **Name the failure mode first.** "Something went wrong" is not a failure mode. `BLOCKED-CRED: missing STRIPE_API_KEY` is.
-- **Preserve partial output.** If the agent wrote 60% of the files, list exactly which ones exist and which don't. Don't treat partial as total failure.
-- **Retry vs escalate is a hard decision.** If the fix is mechanical (add a key, provide a file), generate a retry packet. If it requires a judgment call (change strategy, approve spend, re-scope), escalate.
-- **Escalation routes to a specific agent.** "Escalate to Atlas" is better than "escalate to management." Name the code: `ATL`, `PRO`, `WIL`, `NEXUS`, `SOL`, `JASPER`, `CREW`, etc.
-- **Every escalation has a decision question.** Not "FYI this failed" but "Should we use Stripe or PayPal for this integration? Blocked on this."
-- **Deadline is load-bearing.** If the failed task unblocks another agent or a scheduled job, write when.
+## Pitfalls
 
-## Failure Mode Quick Reference
+- **Generic Error Codes**: Never classify as *"Unknown Error"*; pinpoint the exact blocker code.
+- **Discarding Partial Work**: Always list and preserve partial code files created before failure.
+- **Open-Ended Escalations**: Every escalation must include a clear, binary or multiple-choice decision question.
 
-- `BLOCKED-CRED` → add credential, retry same task
-- `BLOCKED-PERM` → route to WIL/human with specific approval request
-- `BLOCKED-DATA` → identify who generates the missing data, route there
-- `BLOCKED-AMBIG` → rewrite task with explicit constraints, retry
-- `BLOCKED-RATE` → add delay, retry with backoff
-- `FAILED-LOGIC` → add validation step, route to code-reviewer agent
-- `FAILED-TOOL` → fix dependency, document in runbook
-- `FAILED-SCOPE` → re-route to capable agent, update routing table
-- `PARTIAL` → checkpoint what's done, hand off breakpoint to new agent
+---
 
-## When to Use
+## Verification
 
-- Any time an agent returns "I can't proceed", "blocked on", "error:", or a partial result
-- After an overnight batch job — run against every agent session that didn't produce expected output
-- Before reporting a failure to the orchestrator — capture it in a dead letter first so the report includes the full failure context
-- Any time a task is abandoned mid-session and needs to be picked up later
-
-## Why This Exists
-
-Failed tasks disappear. The agent session ends, the context is cleared, and the next agent that picks up the work re-discovers the same blocker from scratch. This is the multi-agent equivalent of not writing down an error message before closing the terminal.
-
-The dead letter record turns failure into a durable asset: what was tried, what was learned, and exactly what the next agent needs to succeed where the last one didn't.
+- Confirm `.claude/dead-letter-<timestamp>.md` exists.
+- Confirm either a concrete retry prompt OR a routed escalation question is fully specified.

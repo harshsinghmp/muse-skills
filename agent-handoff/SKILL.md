@@ -1,79 +1,101 @@
 ---
 name: agent-handoff
-description: Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends.
+description: "Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends."
+version: 1.0.0
+author: Harsh Singh
+license: MIT
+platforms: [macos, linux, windows]
+metadata:
+  hermes:
+    tags: [subagents, handoff, orchestration, context, governance, reliability]
+    related_skills: [dead-letter, context-anchor, pua-en]
+    requires_tools: [bash, view_file, write_to_file]
 ---
 
-# Agent Handoff Skill
+# 🤝 agent-handoff — Structured Subagent Context Generator
 
-You are preparing a handoff packet — the minimum context a subagent needs to execute correctly without asking clarifying questions, re-exploring dead ends, or hallucinating constraints.
+You are preparing a handoff packet — the minimum explicit context a subagent needs to execute correctly without asking clarifying questions, re-exploring dead ends, or hallucinating constraints.
 
-Subagents fail for one reason: they receive a goal but not its shape. They don't know what you already tried, what's off-limits, what "done" looks like, or which files actually matter. This skill makes that implicit context explicit.
+---
 
-## What You Will Do
+## When to Use
 
-1. **Extract from the current session:**
-   - The exact task to delegate (one sentence, actionable)
-   - Decisions already made that the subagent must not re-litigate
-   - Approaches tried and ruled out (with reasons)
-   - Files/paths the subagent needs to touch (concrete, not vague)
-   - The success criterion — how the subagent knows it's done
-   - Hard constraints — what it must not do
+- Before dispatching any subagent for backend, frontend, testing, or refactoring.
+- Before spawning multi-agent teams or worker processes.
+- Before resuming a task idle for >30 minutes (self-handoff).
+- Whenever your task prompt to another agent exceeds 3 sentences.
 
-2. **Write the handoff packet to `.claude/handoff-<timestamp>.md`:**
+---
+
+## Quick Reference
+
+| Field | Purpose | Requirement |
+|:---|:---|:---|
+| **Objective** | Single actionable 1-sentence goal starting with a verb | Mandatory |
+| **Context Needed** | Architecture, API, and runtime facts not obvious from source | Mandatory |
+| **Ruled-Out Paths** | What was tried and failed (with explicit failure rationale) | Mandatory |
+| **Files to Touch** | Specific files and line ranges within scope | Mandatory |
+| **Hard Constraints** | Negative boundaries (`MUST NOT` touch auth, .env, etc.) | Mandatory |
+| **Success Criterion** | Deterministic verification command or observable outcome | Mandatory |
+| **If Blocked** | Explicit fallback action when encountering blockers | Mandatory |
+
+---
+
+## Procedure
+
+### Step 1: Extract Operational Facts
+Extract from the current orchestrator session:
+1. **Actionable Objective**: Exact 1-sentence goal.
+2. **Decisions Made**: Irreversible choices not to be re-litigated.
+3. **Ruled-Out Paths**: Approaches tried and eliminated.
+4. **Target Scope**: Exact files and directories.
+5. **Forbidden Scope**: Restricted files, configs, and credentials.
+6. **Deterministic Verification**: Tests, curl endpoints, or DOM selectors.
+
+### Step 2: Write Handoff Packet
+Save packet to `.claude/handoff-<timestamp>.md`:
 
 ```markdown
 # Agent Handoff — <ISO timestamp>
 
 ## Objective
-[One sentence. Starts with a verb. Specific enough that no clarifying question is needed.]
+[One sentence starting with an imperative verb.]
 
-## Context the subagent needs
-- [Key fact 1 — architectural decision, API behavior, business rule]
-- [Key fact 2]
-- [Add only what would not be obvious from reading the files]
+## Context the Subagent Needs
+- [Key architectural decision, API behavior, or business rule]
+- [Runtime invariant not obvious from static source]
 
-## Already tried — do not re-attempt
-- [Approach]: [Why it failed or was ruled out]
-- [Approach]: [Why it failed or was ruled out]
+## Already Tried — Do NOT Re-Attempt
+- [Approach A]: [Exact failure reason]
+- [Approach B]: [Exact failure reason]
 
-## Files to touch
-- `path/to/file.ts` — [what to do here, optionally line number]
-- `path/to/other.ts` — [what to do here]
+## Files to Touch
+- `path/to/file.ts` — [Exact modification]
 
-## Hard constraints
-- [MUST NOT]: [What the subagent must not change, call, or assume]
-- [MUST NOT]: [...]
+## Hard Constraints
+- [MUST NOT]: [Forbidden scope or prohibited library]
 
-## Success criterion
-- [ ] [Concrete, verifiable output — test passes, file exists, API returns X]
-- [ ] [Second criterion if needed]
+## Success Criterion
+- [ ] [Verifiable command — test passes, build succeeds, HTTP 200]
 
-## If blocked
-[What the subagent should do if it hits an unexpected blocker — escalate, write a findings file, skip and note, etc.]
+## If Blocked
+[Explicit fallback action — emit dead-letter record, escalate with finding.]
 ```
 
-3. **Echo the packet** so you can verify it before dispatching.
+### Step 3: Echo & Dispatch
+Embed packet directly into subagent prompt.
 
-4. **Copy the packet content** into your Agent tool prompt or tmux dispatch command so the subagent has it inline.
+---
 
-## Rules
+## Pitfalls
 
-- **One objective per handoff.** Compound tasks produce confused agents. Split them.
-- **Ruled-out paths are mandatory.** If you tried something that failed, write it down. Subagents re-explore dead ends by default — they don't know better unless you tell them.
-- **Constraints are not optional.** "Don't touch the auth middleware" said once in conversation does not propagate to a subagent. Write it explicitly every time.
-- **Success criterion must be verifiable.** "It works" is not a success criterion. "The test at tests/auth.test.ts passes" is.
-- **No filler in context facts.** Only write what the subagent would not know from reading the codebase. Architecture docs, past decisions, runtime behavior — yes. Basic syntax — no.
-- **If-blocked is load-bearing.** An unblocked subagent that can't proceed will hallucinate a workaround. Give it an explicit fallback.
+- **Compound Objectives**: Never combine multiple decoupled tasks into one handoff packet.
+- **Omitted Ruled-Out Paths**: Subagents re-explore failed attempts unless explicitly forbidden.
+- **Vague Success Criteria**: Never use subjective criteria like *"make it clean"*; use concrete build or test commands.
 
-## When to Use
+---
 
-- Before every Agent tool call where you're delegating real work
-- Before spawning a tmux agent session (any god, hero, or worker)
-- Before resuming a session that has been idle > 30 minutes (use as a self-handoff)
-- Any time your prompt to a subagent exceeds 3 sentences — that's a sign implicit context is leaking in and needs to be made explicit
+## Verification
 
-## Why This Exists
-
-Subagent failure is almost never a model capability problem. It's a context problem. The orchestrator knows what was tried, what's fragile, what matters — and none of that gets transmitted. The subagent operates from a clean slate with a thin goal statement, fills in the blanks with plausible-sounding assumptions, and produces output that looks right but breaks something the orchestrator would never have broken.
-
-The handoff packet is the fix. It externalizes the orchestrator's working model so the subagent starts from the same state, not a hallucinated one.
+- Confirm `.claude/handoff-<timestamp>.md` is created.
+- Confirm all 7 sections of the packet are populated with zero placeholder text.

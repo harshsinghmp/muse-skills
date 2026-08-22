@@ -1,53 +1,83 @@
 ---
 name: context-anchor
-description: Drop a working reference at any point in a session to prevent cascading context drift. Use when switching tasks, resuming after a break, or handing off between agents.
+description: "Drop a working reference at any point in a session to prevent cascading context drift. Use when switching tasks, resuming after a break, or handing off between agents."
+version: 1.0.0
+author: Harsh Singh
+license: MIT
+platforms: [macos, linux, windows]
+metadata:
+  hermes:
+    tags: [context, memory, state, session, focus, anchor, reliability]
+    related_skills: [updateagents, agent-handoff, dead-letter]
+    requires_tools: [view_file, write_to_file]
 ---
 
-# Context Anchor Skill
+# ⚓ context-anchor — Working Reference Snapshot Generator
 
-You are establishing a working reference — a compact, accurate snapshot of what is true right now so the rest of this session (and the next one) doesn't drift.
+Drop a compact working reference snapshot in `<project-root>/.claude/anchor.md` to prevent cascading context drift across long sessions, breaks, or task switches.
 
-## What You Will Do
+---
 
-1. **Scan the current session for:**
-   - What was being built / fixed / investigated
-   - What decisions were made and why
-   - What was tried and ruled out
-   - What the next concrete action is
+## When to Use
 
-2. **Write the anchor in this exact format to a file at `<project-root>/.claude/anchor.md`:**
+- Before switching tasks or workstreams mid-session.
+- Before delegating a subtask to another agent.
+- At the start of a session when previous context is cold or stale.
+- Whenever you catch yourself re-reading dozens of messages to recall system state.
+
+---
+
+## Quick Reference
+
+| Section | Content Requirement | Length Constraint |
+|:---|:---|:---|
+| **What's True Right Now** | Active state, key decisions made, and ruled-out paths | 2–4 bullet points |
+| **The Working Reference** | Single sentence that an agent can act upon immediately | Exactly 1 sentence |
+| **Next Action** | Single atomic next step with file and line reference | Exactly 1 task item |
+
+---
+
+## Procedure
+
+### Step 1: Scan Active Session
+Identify:
+1. What was being built / fixed / investigated.
+2. What decisions were finalized and why.
+3. What was tried and ruled out.
+4. The exact next concrete step.
+
+### Step 2: Write Context Anchor
+Save to `<project-root>/.claude/anchor.md`:
 
 ```markdown
 # Context Anchor — <ISO timestamp>
 
-## What's true right now
-- [1-sentence state of the work]
+## What's True Right Now
+- [1-sentence state of active work]
 - [Key decision made: what and why]
-- [What was tried and didn't work, if anything]
+- [What was tried and ruled out]
 
-## The working reference
-> [One sentence that a new agent could act on immediately]
+## The Working Reference
+> [One sentence that a fresh agent can act on immediately without asking questions.]
 
-## Next action
-- [ ] <exact next step, file:line if applicable>
+## Next Action
+- [ ] `path/to/file.ts:line` — [Exact atomic action]
 ```
 
-3. **Echo the anchor to the user** so they can verify it before trusting it.
+### Step 3: Echo Anchor
+Display the anchor to the user for instant alignment.
 
-## Rules
+---
 
-- **No filler.** Every line must be load-bearing. If you can delete a line without losing information, delete it.
-- **Concrete over vague.** "Fix auth middleware at src/auth.ts:47" beats "fix the auth issue."
-- **Decisions get a why.** "Chose JWT over sessions — no server-state requirement" not just "chose JWT."
-- **Ruled-out paths go in.** Future agents waste tokens re-exploring dead ends. Write them down.
+## Pitfalls
 
-## When to Use
+- **Verbosity & Noise**: Every line must be load-bearing. Delete filler.
+- **Vague Next Actions**: Never write *"continue coding"*; specify the exact file, line number, and function.
+- **Missing Decisions Rationale**: Always include the *"why"* for architectural decisions so future agents don't revert them.
 
-- Before switching tasks mid-session
-- Before handing off to another agent (Leonidas, Diomedes, any hero)
-- At the start of a new session when context is stale
-- Any time you notice yourself re-reading earlier messages to remember state
+---
 
-## Why This Exists
+## Verification
 
-Claude Code sessions accumulate noise. Old tool results, retracted approaches, superseded decisions — they all stay in context and create cascading context drift: the model starts reasoning from stale state because the signal is buried. An anchor clears the noise and makes the working reference explicit.
+- Confirm `<project-root>/.claude/anchor.md` exists and is formatted cleanly.
+- Confirm Next Action points to an exact concrete file and line number.
