@@ -202,38 +202,57 @@ const claudeMdContent = `# ${projectName} - Claude & Agent Operational Guideline
 
 const gitignoreContent = `# Dependencies
 node_modules/
-.pnp
-.pnp.js
 
-# Environment & Secrets (Vibeguard Protocol)
-.env*
-!.env.example
-*.pem
-*.key
-
-# Build & Cache Outputs
+# Build output
 dist/
 build/
-.next/
-.astro/
-out/
-.turbo/
-.cache/
-*.tsbuildinfo
 
-# OS & Logs
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Agents
+.claude/
+.opencode/
+.pi/
+.jez/
+.memory/
+.codex/
+.agents/
+.codegraph/
+.crush/
+.omo/
+.playwright/
+.slim/
+
+# IDE & ADE
+.zed/
+.orca/
+.cursor/
+.antigravity/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
-# Test Receipts & Coverage
+# Test coverage
 coverage/
-playwright-report/
-test-results/
-.playwright/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
 `;
 
 // -------------------------------------------------------------

@@ -1,7 +1,7 @@
 {
   "name": "@harsh/muse-skills",
-  "version": "1.1.0",
-  "description": "Custom agent skills for enhanced workspace productivity, memory management, and project governance within the LifeOS ecosystem",
+  "version": "1.2.0",
+  "description": "Custom agent skills for enhanced workspace productivity, memory management, context anchoring, subagent handoffs, and project governance within the LifeOS ecosystem",
   "type": "module",
   "scripts": {
     "validate": "bash updateagents/scripts/validate-memory-file.sh"
@@ -11,6 +11,11 @@
     "agents",
     "claude",
     "codex",
+    "gemini",
+    "subagents",
+    "handoff",
+    "dead-letter",
+    "context-anchor",
     "workspace",
     "memory",
     "documentation",

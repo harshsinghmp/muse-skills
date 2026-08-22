@@ -10,7 +10,25 @@ build/
 .env.local
 .env.*.local
 
-# IDE
+# Agents
+.claude/
+.opencode/
+.pi/
+.jez/
+.memory/
+.codex/
+.agents/
+.codegraph/
+.crush/
+.omo/
+.playwright/
+.slim/
+
+# IDE & ADE
+.zed/
+.orca/
+.cursor/
+.antigravity/
 .vscode/
 .idea/
 *.swp
