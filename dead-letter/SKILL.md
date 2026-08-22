@@ -8,7 +8,7 @@ platforms: [macos, linux, windows]
 metadata:
   hermes:
     tags: [triage, error-handling, debugging, subagents, escalation, reliability]
-    related_skills: [pua-en, agent-handoff, context-anchor]
+    related_skills: [pua, agent-handoff, context-anchor]
     requires_tools: [bash, view_file, write_to_file]
 ---
 

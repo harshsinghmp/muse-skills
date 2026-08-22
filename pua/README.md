@@ -1,4 +1,4 @@
-# `pua-en` Skill (PIP Performance Improvement Plan)
+# `pua` Skill (PIP Performance Improvement Plan)
 
 > Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging.
 
@@ -9,16 +9,16 @@
 Install via `npx skills` shorthand:
 
 ```bash
-npx skills add harshsinghmp/muse-skills --skill pua-en
+npx skills add harshsinghmp/muse-skills --skill pua
 ```
 
-*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/pua-en` is also supported).*
+*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/pua` is also supported).*
 
 ---
 
 ## 🧭 Overview
 
-`pua-en` transforms passive, deflection-prone, or stalling AI agents into relentless, end-to-end problem solvers.
+`pua` transforms passive, deflection-prone, or stalling AI agents into relentless, end-to-end problem solvers.
 
 It enforces three non-negotiable standards:
 1. **Exhaust All Options (Bias for Action)**: Forbidden from giving up before exhausting every plausible approach.

@@ -21,7 +21,7 @@ npx skills add harshsinghmp/muse-skills --skill new-project
 npx skills add harshsinghmp/muse-skills --skill updateagents
 
 # 🛡️ Performance Enforcement & Debugging
-npx skills add harshsinghmp/muse-skills --skill pua-en
+npx skills add harshsinghmp/muse-skills --skill pua
 
 # 🤝 Subagent Orchestration & Session Reliability Skills
 npx skills add harshsinghmp/muse-skills --skill agent-handoff
@@ -47,7 +47,7 @@ npx skills add harshsinghmp/muse-skills
 | :--- | :--- | :--- |
 | [**`new-project`**](new-project/README.md) | `/new-project` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
 | [**`updateagents`**](updateagents/README.md) | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
-| [**`pua-en`**](pua-en/README.md) | `PIP`, `/pua-en`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
+| [**`pua`**](pua/README.md) | `PIP`, `/pua`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | [**`agent-handoff`**](agent-handoff/README.md) | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
 | [**`dead-letter`**](dead-letter/README.md) | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | `/anchor`, `/context-anchor` | Drop lightweight working reference snapshots (`.claude/anchor.md`) to prevent cascading context drift. |
@@ -111,13 +111,13 @@ npx skills add harshsinghmp/muse-skills --skill updateagents
 
 ---
 
-### 🛡️ `pua-en` (PIP Performance Improvement Plan)
+### 🛡️ `pua` (PIP Performance Improvement Plan)
 
 Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging.
 
 **Installation:**
 ```bash
-npx skills add harshsinghmp/muse-skills --skill pua-en
+npx skills add harshsinghmp/muse-skills --skill pua
 ```
 
 **Key Capabilities:**
@@ -133,10 +133,10 @@ npx skills add harshsinghmp/muse-skills --skill pua-en
 "put the model on a PIP"
 "stop giving up and figure it out"
 "dive deep into this compiler failure"
-"/pua-en"
+"/pua"
 ```
 
-[Learn more →](pua-en/README.md)
+[Learn more →](pua/README.md)
 
 ---
 
@@ -247,7 +247,7 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── pua-en/                         # PIP performance & structured debugging
+├── pua/                            # PIP performance & structured debugging
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/

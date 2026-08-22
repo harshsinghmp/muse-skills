@@ -8,7 +8,7 @@ platforms: [macos, linux, windows]
 metadata:
   hermes:
     tags: [subagents, handoff, orchestration, context, governance, reliability]
-    related_skills: [dead-letter, context-anchor, pua-en]
+    related_skills: [dead-letter, context-anchor, pua]
     requires_tools: [bash, view_file, write_to_file]
 ---
 

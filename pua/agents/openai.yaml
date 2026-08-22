@@ -1,4 +1,4 @@
-name: pua-en
+name: pua
 description: "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging."
 parameters:
   type: object

@@ -17,9 +17,9 @@
       "tags": ["memory", "documentation", "workspace", "agents", "automation"]
     },
     {
-      "name": "pua-en",
+      "name": "pua",
       "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger on repeated failures, deflections, passive behavior, or complex stalls.",
-      "path": "pua-en/SKILL.md",
+      "path": "pua/SKILL.md",
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["debugging", "performance", "reliability", "problem-solving", "triage", "big-tech"]
