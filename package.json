@@ -4,6 +4,7 @@
   "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, and subagent orchestration across the LifeOS ecosystem",
   "type": "module",
   "scripts": {
+    "test": "node -e 'JSON.parse(require(\"fs\").readFileSync(\"skills.json\", \"utf8\")); JSON.parse(require(\"fs\").readFileSync(\"package.json\", \"utf8\")); console.log(\"✅ Catalog & metadata assertions passed.\");'",
     "validate": "bash updateagents/scripts/validate-memory-file.sh"
   },
   "keywords": [
