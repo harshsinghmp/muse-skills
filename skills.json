@@ -47,6 +47,14 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["context", "memory", "state", "session", "focus", "agents"]
+    },
+    {
+      "name": "designscope",
+      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system: a design.md brief plus DTCG design-tokens.json and an optional WCAG contrast report. Element mode copies one component as a rebuild spec or turns visual art into a token-grounded image prompt.",
+      "path": "designscope/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["design", "design-systems", "tokens", "dtcg", "ui", "figma", "wcag"]
     }
   ]
 }

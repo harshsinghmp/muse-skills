@@ -1,6 +1,6 @@
 # Muse Skills
 
-> Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, and subagent orchestration across the LifeOS ecosystem.
+> Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, and design-system extraction across the LifeOS ecosystem.
 
 ## Core Documentation
 - [Repository README](README.md): Overview, quick start, installation, and skill matrices.
@@ -16,3 +16,17 @@
 - [agent-handoff](agent-handoff/SKILL.md): Structured Subagent Context Packet Generator.
 - [dead-letter](dead-letter/SKILL.md): Failed/Blocked Task Triage & Escalation Generator.
 - [context-anchor](context-anchor/SKILL.md): Working Reference Drift Prevention Snapshot.
+- [designscope](designscope/SKILL.md): Design System Extraction (design.md + DTCG Tokens + WCAG) from Images, URLs & Figma.
+
+## Agent Context Pack
+- [Context Index](.agents/context/index.md): Start here - durable project truth for agents.
+- [Product](.agents/context/product.md): Thesis, audience, skill inventory, non-goals.
+- [Architecture](.agents/context/architecture.md): Repo layout, skill anatomy, registry, verification.
+- [Brand](.agents/context/brand.md): Voice, naming, presentation rules.
+- [Current State](.agents/context/current.md): Shipped state and known gaps.
+- [Decisions](.agents/context/decisions.md): Durable decisions, do not reopen casually.
+- [Roadmap](.agents/context/roadmap.md): Parked future work.
+
+## Agent Instructions
+- [AGENTS.md](AGENTS.md): Working rules and context routing for coding agents.
+- [Security Policy](SECURITY.md): Private vulnerability reporting (no public issues).

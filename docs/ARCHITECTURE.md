@@ -72,6 +72,13 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── designscope/                    # Design system extraction from any visual source
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # Capture flows, analysis framework, templates
+│   ├── scripts/                    # Stdlib-only validation & audit tools
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
 ├── CONTRIBUTING.md                 # Meaningful Git Commit Protocol
 ├── LICENSE                         # MIT License
 ├── llms.txt                        # Machine-readable LLM documentation index
