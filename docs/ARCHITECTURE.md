@@ -79,6 +79,19 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── code-review-linus-torvalds-style/ # Linus Torvalds style code review & quality enforcement
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/                   # Review verdict examples
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # 10 Heuristic reference guides
+│   ├── scripts/                    # WCAG contrast calculator & static UI auditor
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
 ├── CONTRIBUTING.md                 # Meaningful Git Commit Protocol
 ├── LICENSE                         # MIT License
 ├── llms.txt                        # Machine-readable LLM documentation index

@@ -2,13 +2,13 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of seven portable agent skills for building durable projects, preserving context, coordinating reliable work, and extracting design systems.**
+**A curated suite of nine portable agent skills for building durable projects, preserving context, coordinating reliable work, extracting design systems, Refactoring UI design heuristics, and Linus Torvalds style code review.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.3.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-7%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Version](https://img.shields.io/badge/Version-1.5.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-9%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
-[![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini-orange.svg?style=for-the-badge)](#-runtime-compatibility)
+[![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete seven-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete nine-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -35,6 +35,8 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | A retry or escalation packet that captures what was learned |
 | Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | A compact snapshot of the current state and next action |
 | Extract a design system from a visual source | [`designscope`](designscope/README.md) | A `design.md` brief, DTCG token JSON, and an optional WCAG report |
+| Review code (Linus Torvalds Style) | [`code-review-linus-torvalds-style`](code-review-linus-torvalds-style/README.md) | A calibrated review verdict, root-cause fixes, and special-case elimination |
+| Refactor UI components & layout hierarchy | [`refactor-ui`](refactor-ui/README.md) | Clean visual hierarchy, typography scales, 4px/8px spacing, and accessible contrast |
 
 ### Explore the repository
 
@@ -69,8 +71,12 @@ npx skills add harshsinghmp/muse-skills --skill dead-letter
 npx skills add harshsinghmp/muse-skills --skill agent-handoff
 npx skills add harshsinghmp/muse-skills --skill context-anchor
 
-# Design analysis
+# Design extraction & UI refactoring
 npx skills add harshsinghmp/muse-skills --skill designscope
+npx skills add harshsinghmp/muse-skills --skill refactor-ui
+
+# Code review & quality enforcement
+npx skills add harshsinghmp/muse-skills --skill code-review-linus-torvalds-style
 ```
 
 ### 3. Ask your agent to use it
@@ -82,11 +88,16 @@ Before delegating this feature, use agent-handoff to create a context packet
 with the task boundaries, facts already established, and verification criteria.
 ```
 
+```text
+Refactor this dashboard component using refactor-ui to establish clear visual hierarchy, 
+clean up border clutter, and fix button tiers.
+```
+
 The skill writes or updates the artifact described in its documentation. Review that artifact as part of your normal project workflow.
 
 ### Install the complete suite
 
-Install all seven skills when you want the full Project OS, context, recovery, orchestration, and design-extraction toolkit:
+Install all nine skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, and code-review toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -134,8 +145,10 @@ graph TD
         Muse --> CA[⚓ context-anchor<br/>Working Reference Drift Prevention]
     end
 
-    subgraph Design Suite [🎨 Design Intelligence]
+    subgraph Quality Suite [🎨 Design & Code Rigor]
         Muse --> DS[🎨 designscope<br/>Design System Extraction & DTCG Tokens]
+        Muse --> RU[🪄 refactor-ui<br/>Atomic UI Design & Refactoring Heuristics]
+        Muse --> LT[🐧 code-review-linus-torvalds-style<br/>Code Review - Linus Torvalds Style]
     end
 ```
 
@@ -152,6 +165,8 @@ graph TD
 | [**`dead-letter`**](dead-letter/README.md) | **Reliability** | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | **Multi-Agent** | `/anchor`, `/context-anchor` | Preserve a lightweight working-state snapshot to prevent cascading context drift. |
 | [**`designscope`**](designscope/README.md) | **Design** | `extract the design system`, `what palette does this site use`, `copy this navbar` | Analyze images, websites, or Figma files into a `design.md` brief, DTCG `design-tokens.json`, and an optional WCAG report. Element mode copies single components. |
+| [**`refactor-ui`**](refactor-ui/README.md) | **Design** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI (typography scale, spacing grid, button tiers, clutter reduction, natural shadows, and WCAG contrast). |
+| [**`code-review-linus-torvalds-style`**](code-review-linus-torvalds-style/README.md)<br/>*(Code Review - Linus Torvalds Style)* | **Quality Gate** | `/torvalds`, `/linus-review`, `review PR` | Language-agnostic code review method derived from Linus Torvalds' corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 
 ---
 
@@ -276,6 +291,41 @@ npx skills add harshsinghmp/muse-skills --skill designscope
 
 ---
 
+### 🪄 `refactor-ui`
+
+Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics established by Adam Wathan and Steve Schoger (*Refactoring UI*).
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill refactor-ui
+```
+
+- **10 Core Heuristics**: Visual hierarchy, typography scales, functional color palettes, 4px/8px spacing grid, button hierarchy, visual clutter elimination, high-value empty states, natural shadows/elevation, WCAG 2.1 AA/AAA contrast, and spatial grouping.
+- **Monochrome-First Workflow**: Solidify layout, optical weights, and spacing in grayscale before introducing accent colors.
+- **De-emphasis Strategy**: Softens surrounding borders, background tones, and metadata instead of making primary elements oversized.
+- **Zero-Dependency Tooling**: Ships with `check_contrast.py` (WCAG 2.1 ratio calculator) and `audit_ui.py` (static anti-pattern linter for JSX/HTML/CSS).
+
+[Read full documentation →](refactor-ui/README.md)
+
+---
+
+### 🐧 `code-review-linus-torvalds-style` — Code Review - Linus Torvalds Style
+
+A language-agnostic code review method derived from Linus Torvalds' 30+ year review corpus. Enforces absolute correctness, eliminates special cases through clean data structures, and demands empirical evidence over assertion.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill code-review-linus-torvalds-style
+```
+
+- **Data Structures First**: Identifies and fixes bad data models where conditional logic and special cases proliferate.
+- **15-Theme Trigger Catalog**: Audits Level 1 Global Invariants (API stability, memory safety, concurrency, security check placement), Level 2 Structural Patterns, and Level 3 Tactical Guidelines.
+- **Precedence Chain**: Strictly enforces $\text{Correctness} > \text{Performance} > \text{Complexity} > \text{Style}$.
+- **Severity Calibration**: Calibrated against a 38,303 public decision baseline ($42.2\%$ Request Changes, $23.8\%$ Reject).
+- **[REASON] $\rightarrow$ [ACT] Protocol**: Eliminates false positives by verifying surrounding context, articulating the underlying design invariant, and providing concrete replacement diffs.
+
+[Read full documentation →](code-review-linus-torvalds-style/README.md)
+
+---
+
 ## 🌐 Runtime compatibility
 
 Muse Skills uses portable Markdown workflows with YAML frontmatter. Compatibility depends on each runtime’s skill-discovery and installation model; the table below describes the intended integration path rather than a claim that every runtime behaves identically.
@@ -358,6 +408,23 @@ muse-skills/
 │   ├── references/                 # Capture flows, analysis framework, token extraction, templates
 │   ├── scripts/                    # Stdlib-only Python helpers (CSS vars, contrast, lint, verify)
 │   ├── LICENSE                     # MIT (upstream-attribution copy)
+│   ├── README.md
+│   └── SKILL.md
+│
+├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+│   ├── agents/
+│   │   └── openai.yaml             # Agent tool definition
+│   ├── references/                 # 10 Heuristic reference guides
+│   ├── scripts/                    # WCAG contrast calculator & static UI auditor
+│   ├── LICENSE                     # MIT (with Refactoring UI attribution)
+│   ├── README.md
+│   └── SKILL.md
+│
+├── code-review-linus-torvalds-style/ # Code Review - Linus Torvalds Style
+│   ├── agents/
+│   │   └── openai.yaml             # Agent tool definition
+│   ├── examples/
+│   │   └── sample-review.md        # Concrete review verdict example
 │   ├── README.md
 │   └── SKILL.md
 │

@@ -55,6 +55,22 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["design", "design-systems", "tokens", "dtcg", "ui", "figma", "wcag"]
+    },
+    {
+      "name": "code-review-linus-torvalds-style",
+      "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, preserves interface contracts, and demands evidence over assertion.",
+      "path": "code-review-linus-torvalds-style/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["code-review", "reviewer-method", "torvalds", "correctness", "data-structures", "concurrency", "api-stability"]
+    },
+    {
+      "name": "refactor-ui",
+      "description": "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms crowded, amateur, or unstyled UI into clean, high-conversion, accessible interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, shadows, contrast, and grouping.",
+      "path": "refactor-ui/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["ui-design", "refactoring-ui", "tailwind", "typography", "color-palette", "visual-hierarchy", "accessibility", "frontend"]
     }
   ]
 }
