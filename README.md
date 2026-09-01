@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of nine portable agent skills for building durable projects, preserving context, coordinating reliable work, extracting design systems, Refactoring UI design heuristics, and Linus Torvalds style code review.**
+**A curated suite of sixteen portable agent skills for building durable projects, preserving context, coordinating reliable work, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, and reflective audits.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.5.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-9%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Version](https://img.shields.io/badge/Version-1.6.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-16%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete nine-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete sixteen-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -37,6 +37,13 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Extract a design system from a visual source | [`designscope`](designscope/README.md) | A `design.md` brief, DTCG token JSON, and an optional WCAG report |
 | Review code (Linus Torvalds Style) | [`code-review-linus-torvalds-style`](code-review-linus-torvalds-style/README.md) | A calibrated review verdict, root-cause fixes, and special-case elimination |
 | Refactor UI components & layout hierarchy | [`refactor-ui`](refactor-ui/README.md) | Clean visual hierarchy, typography scales, 4px/8px spacing, and accessible contrast |
+| Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with plateau stop conditions and acceptance packets |
+| Control high-stakes staff work and approval gates | [`secretary-controller`](secretary-controller/README.md) | Evidence-grounded briefs, preserved dissent, and single-use SHA-256 hash gates |
+| Route task DAGs based on coupling & shared state | [`coupling-router`](coupling-router/README.md) | Deterministic sequential vs parallel subagent delegation routing |
+| Verify factual claims & citation provenance | [`evidence-ledger`](evidence-ledger/README.md) | 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) ledger |
+| Score daily controllable effort & focus | [`daily-standup-coach`](daily-standup-coach/README.md) | 5-pillar input scorecard and daily reflection log |
+| Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
+| Audit link integrity & knowledge hygiene | [`brain-audit`](brain-audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
 
 ### Explore the repository
 
@@ -77,6 +84,17 @@ npx skills add harshsinghmp/muse-skills --skill refactor-ui
 
 # Code review & quality enforcement
 npx skills add harshsinghmp/muse-skills --skill code-review-linus-torvalds-style
+npx skills add harshsinghmp/muse-skills --skill gauntlet-loop
+
+# Governance & architectural routing
+npx skills add harshsinghmp/muse-skills --skill secretary-controller
+npx skills add harshsinghmp/muse-skills --skill coupling-router
+npx skills add harshsinghmp/muse-skills --skill evidence-ledger
+
+# Reflection & knowledge hygiene
+npx skills add harshsinghmp/muse-skills --skill daily-standup-coach
+npx skills add harshsinghmp/muse-skills --skill periodic-retreat
+npx skills add harshsinghmp/muse-skills --skill brain-audit
 ```
 
 ### 3. Ask your agent to use it
@@ -89,15 +107,14 @@ with the task boundaries, facts already established, and verification criteria.
 ```
 
 ```text
-Refactor this dashboard component using refactor-ui to establish clear visual hierarchy, 
-clean up border clutter, and fix button tiers.
+Run a 3-round gauntlet-loop on the cache refactor to verify edge cases and prevent regressions.
 ```
 
 The skill writes or updates the artifact described in its documentation. Review that artifact as part of your normal project workflow.
 
 ### Install the complete suite
 
-Install all nine skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, and code-review toolkit:
+Install all sixteen skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, code-review, governance, and audit toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -140,15 +157,28 @@ graph TD
         Muse --> DL[📮 dead-letter<br/>9-Mode Failure Triage & Escalation]
     end
 
-    subgraph Multi-Agent Suite [🤝 Orchestration & Memory]
+    subgraph Multi-Agent Suite [🤝 Orchestration & Concurrency]
         Muse --> AH[🤝 agent-handoff<br/>Structured Subagent Context Packets]
         Muse --> CA[⚓ context-anchor<br/>Working Reference Drift Prevention]
+        Muse --> CR[🔀 coupling-router<br/>Coupling-Aware Task Routing]
     end
 
     subgraph Quality Suite [🎨 Design & Code Rigor]
         Muse --> DS[🎨 designscope<br/>Design System Extraction & DTCG Tokens]
         Muse --> RU[🪄 refactor-ui<br/>Atomic UI Design & Refactoring Heuristics]
         Muse --> LT[🐧 code-review-linus-torvalds-style<br/>Code Review - Linus Torvalds Style]
+        Muse --> GL[🛡️ gauntlet-loop<br/>Bounded Multi-Agent Quality Loops]
+    end
+
+    subgraph Governance Suite [📑 Staff Work & Knowledge Hygiene]
+        Muse --> SC[📑 secretary-controller<br/>Staff Work & SHA-256 Approval Gate]
+        Muse --> EL[📜 evidence-ledger<br/>Source-Cited Claim Verification Gate]
+        Muse --> BA[🧠 brain-audit<br/>Knowledge Hygiene & Link Integrity]
+    end
+
+    subgraph Reflection Suite [🏔️ Habits & Strategy]
+        Muse --> DSC[☀️ daily-standup-coach<br/>Controllable Input Effort Scorecard]
+        Muse --> PR[🏔️ periodic-retreat<br/>Quarterly Strategic Review & Debt Purge]
     end
 ```
 
@@ -167,6 +197,13 @@ graph TD
 | [**`designscope`**](designscope/README.md) | **Design** | `extract the design system`, `what palette does this site use`, `copy this navbar` | Analyze images, websites, or Figma files into a `design.md` brief, DTCG `design-tokens.json`, and an optional WCAG report. Element mode copies single components. |
 | [**`refactor-ui`**](refactor-ui/README.md) | **Design** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI (typography scale, spacing grid, button tiers, clutter reduction, natural shadows, and WCAG contrast). |
 | [**`code-review-linus-torvalds-style`**](code-review-linus-torvalds-style/README.md)<br/>*(Code Review - Linus Torvalds Style)* | **Quality Gate** | `/torvalds`, `/linus-review`, `review PR` | Language-agnostic code review method derived from Linus Torvalds' corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
+| [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality Gate** | `/gauntlet`, `/gauntlet-loop` | Bounded multi-agent quality improvement loop with Builder, Fresh Critic, Automated Gate, and Integrator roles with plateau stop conditions. |
+| [**`secretary-controller`**](secretary-controller/README.md) | **Governance** | `/secretary`, `/memo` | Evidence-grounded staff-work controller and single-use SHA-256 hash approval gate for high-stakes decisions and mutations. |
+| [**`coupling-router`**](coupling-router/README.md) | **Multi-Agent** | `/router`, `/coupling` | Coupling-aware architectural delegation router for task DAGs; routes high coupling sequentially and low coupling in parallel. |
+| [**`evidence-ledger`**](evidence-ledger/README.md) | **Governance** | `/evidence`, `/claim` | Source-cited claim verification gate enforcing a 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`). |
+| [**`daily-standup-coach`**](daily-standup-coach/README.md) | **Reflection** | `/standup`, `/daily` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
+| [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection** | `/retreat`, `/quarterly` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
+| [**`brain-audit`**](brain-audit/README.md) | **Governance** | `/audit-brain`, `/hygiene` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
 
 ---
 
@@ -326,6 +363,118 @@ npx skills add harshsinghmp/muse-skills --skill code-review-linus-torvalds-style
 
 ---
 
+### 🛡️ `gauntlet-loop`
+
+Bounded multi-agent quality improvement loop that eliminates infinite token burns, self-grading delusions, and regression churn. Deploys an unyielding, 4-role protocol (Freeze → Build → Fresh Critic → Automated Gate → Integrator).
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill gauntlet-loop
+```
+
+- **4-Role Isolation**: Builder proposes diffs; isolated Fresh Critic scores 0–10; Automated Gate runs tests; Integrator merges only the #1 highest-impact fix.
+- **Mathematical Stop Conditions**: Terminates on Proof of Passing ($\ge 9.0/10$), Score Plateau (2 rounds without gain), Regression ($>1.0$ drop), or Budget exhaustion.
+- **Artifact Trail**: Outputs `GAUNTLET_JOB_CONTRACT.md`, `ITERATION_LEDGER.md`, and `ACCEPTANCE_PACKET.md`.
+
+[Read full documentation →](gauntlet-loop/README.md)
+
+---
+
+### 📑 `secretary-controller`
+
+Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill secretary-controller
+```
+
+- **Judgment, Not Authority**: Recommends with rigor; stops dead at `NEEDS_APPROVAL` for any filesystem write or external mutation.
+- **Dissent Preservation**: Explicitly highlights contradictions, uncertainties, and `[NO-DATA]` gaps instead of smoothing over them.
+- **Single-Use Hash Gate**: Computes SHA-256 fingerprint of proposed payload; requires exact user confirmation token before execution.
+
+[Read full documentation →](secretary-controller/README.md)
+
+---
+
+### 🔀 `coupling-router`
+
+Coupling-aware architectural delegation router. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to deterministically route tasks.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill coupling-router
+```
+
+- **High Coupling Routing**: Routes interdependent tasks (shared types, database schemas, rendering pipeline) to a single sequential builder.
+- **Low Coupling Fan-Out**: Dispatches truly orthogonal tasks (isolated test suites, independent docs, separate microservices) to parallel subagents.
+- **DAG Generation**: Outputs `ROUTING_PLAN.md` with visual Mermaid dependency graph and file isolation boundaries.
+
+[Read full documentation →](coupling-router/README.md)
+
+---
+
+### 📜 `evidence-ledger`
+
+Source-cited claim verification gate and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill evidence-ledger
+```
+
+- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction).
+- **Claim Gate**: Flags and redacts ungrounded marketing claims, fabricated benchmarks, and unverified architecture assertions.
+- **Structured Audit**: Outputs `claim-ledger.md` documenting verification paths, timestamps, and exact command receipts.
+
+[Read full documentation →](evidence-ledger/README.md)
+
+---
+
+### ☀️ `daily-standup-coach`
+
+Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs rather than fluctuating external outcomes.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill daily-standup-coach
+```
+
+- **5 Controllable Input Pillars**: TDD compliance, minimal diff discipline, security/secret hygiene, deep work focus, and blocked-task triage.
+- **Stoic Effort Rubric**: Generates an honest 1–10 effort score evaluating execution rigor.
+- **MIT Planning**: Establishes exactly one Most Important Task and up to 2 secondary goals for the next work cycle.
+
+[Read full documentation →](daily-standup-coach/README.md)
+
+---
+
+### 🏔️ `periodic-retreat`
+
+Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, and next-quarter OKRs.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill periodic-retreat
+```
+
+- **4-Phase Framework**: Retrospective Audit ➔ Architecture Debt Purge ➔ TELOS Alignment ➔ Next-Quarter OKR Formulation.
+- **Debt Purge Register**: Systematically sunsetting zombie repos, dead configs, unmaintained dependencies, and outdated documentation.
+- **High-Leverage OKRs**: Formulates 3 core objectives with binary, measurable Key Results.
+
+[Read full documentation →](periodic-retreat/README.md)
+
+---
+
+### 🧠 `brain-audit`
+
+Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill brain-audit
+```
+
+- **100% Relative Link Integrity**: Detects dead markdown links, broken symbol anchors, and moved file paths.
+- **Secret Sweeps**: Audits markdown documentation to guarantee zero leaked tokens (`sk-*`, `ghp_*`, private keys).
+- **Referential Hygiene**: Flags orphaned memory files and stale contradictory documentation before agents hallucinate.
+
+[Read full documentation →](brain-audit/README.md)
+
+---
+
 ## 🌐 Runtime compatibility
 
 Muse Skills uses portable Markdown workflows with YAML frontmatter. Compatibility depends on each runtime’s skill-discovery and installation model; the table below describes the intended integration path rather than a claim that every runtime behaves identically.
@@ -428,6 +577,76 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
+├── gauntlet-loop/                  # Bounded multi-agent quality improvement loop
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-gauntlet-run.md
+│   ├── references/
+│   │   └── gauntlet-protocol.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── secretary-controller/           # Evidence-grounded staff-work controller & approval gate
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-approval-packet.md
+│   ├── references/
+│   │   └── staff-work-doctrine.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── coupling-router/                # Coupling-aware architectural delegation router
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-routing-decision.md
+│   ├── references/
+│   │   └── coupling-matrix.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── evidence-ledger/                # Source-cited claim verification gate
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-claim-ledger.md
+│   ├── references/
+│   │   └── claim-verification-taxonomy.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── daily-standup-coach/            # Daily reflective check-in & effort scorecard
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-standup-log.md
+│   ├── references/
+│   │   └── effort-rubric.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── periodic-retreat/               # Quarterly strategic retreat facilitator
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-quarterly-review.md
+│   ├── references/
+│   │   └── retreat-framework.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── brain-audit/                    # Knowledge hygiene & referential integrity auditor
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-audit-report.md
+│   ├── references/
+│   │   └── hygiene-rules.md
+│   ├── README.md
+│   └── SKILL.md
+│
 ├── .agents/
 │   └── context/                     # Durable agent context pack (index, product, architecture, ...)
 │
@@ -439,7 +658,9 @@ muse-skills/
 ├── llms.txt                         # LLM-facing repository index
 ├── package.json                    # Package metadata & keywords
 ├── README.md                       # Comprehensive repository documentation
-└── skills.json                     # Skill registry catalog
+├── skills.json                     # Skill registry catalog
+└── tests/                          # Automated TDD test suite
+    └── skills.test.ts
 ```
 
 ---

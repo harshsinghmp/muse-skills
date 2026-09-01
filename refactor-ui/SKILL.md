@@ -18,7 +18,7 @@ Systematically evaluate, refine, and refactor user interface components, layouts
 
 ---
 
-## 🧭 When to Use
+## When to Use
 
 **Triggers:**
 - *"Refactor this UI / component / screen"*
@@ -36,7 +36,9 @@ Systematically evaluate, refine, and refactor user interface components, layouts
 
 ---
 
-## ⚡ Leading Principles & Priors
+## Quick Reference
+
+### Leading Principles & Priors
 
 Recruit these core mental models when executing any UI refactor:
 
@@ -46,9 +48,7 @@ Recruit these core mental models when executing any UI refactor:
 4. **Stepped Scale Discipline**: Enforce a strict 4px/8px geometric interval for spacing and a fixed 6-tier type scale. Eliminate arbitrary pixel values (e.g., `13px`, `22px`, `38px`).
 5. **Whitespace-First Grouping**: Separate distinct sections using whitespace (`gap-8`, `space-y-6`) and subtle surface shifts rather than heavy 1px borders.
 
----
-
-## 📊 Quick Reference — The 10 Atomic Heuristics
+### The 10 Atomic Heuristics
 
 | # | Heuristic Domain | Core Problem Solved | Primary Tool / Technique |
 | :--- | :--- | :--- | :--- |
@@ -65,7 +65,7 @@ Recruit these core mental models when executing any UI refactor:
 
 ---
 
-## 🛠️ Step-by-Step Refactoring Procedure
+## Procedure
 
 Always execute UI refactoring in this ordered sequence to prevent circular styling edits:
 
@@ -111,7 +111,7 @@ Always execute UI refactoring in this ordered sequence to prevent circular styli
 
 ---
 
-## 🚫 Common Pitfalls & Anti-Patterns
+## Pitfalls
 
 - **Relying Exclusively on Font Size for Hierarchy**: Changing everything to huge text makes the UI loud and unreadable. Use font weight and muted colors to create contrast without size bloat.
 - **Centering Everything**: Centered body copy or left-aligned labels with centered inputs creates ragged, amateur scanlines. Left-align text by default.
@@ -121,7 +121,7 @@ Always execute UI refactoring in this ordered sequence to prevent circular styli
 
 ---
 
-## 🧪 Verification Oracle Checklist
+## Verification
 
 Before signing off on any UI refactor, verify every gate:
 

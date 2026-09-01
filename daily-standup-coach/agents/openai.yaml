@@ -1,0 +1,15 @@
+name: daily-standup-coach
+description: "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs on a 1-10 effort rubric rather than fluctuating external outcomes."
+tools:
+  - bash
+  - view
+  - write
+  - edit
+instructions: |
+  Follow the daily standup workflow in SKILL.md exactly:
+
+  1. Step 1: Review git history and activities from the last 24 hours.
+  2. Step 2: Grade the 5 controllable input pillars (TDD, Minimal Diffs, Hygiene, Focus, Triage) from 0-2 points each.
+  3. Step 3: Compute total effort score (1-10) and document specific wins and friction points.
+  4. Step 4: Identify exactly one Most Important Task (MIT) and up to 2 secondary items for tomorrow.
+  5. Step 5: Output daily-standup.md.

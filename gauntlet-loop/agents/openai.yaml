@@ -1,0 +1,21 @@
+name: gauntlet-loop
+description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate, and Integrator roles with strict stop conditions."
+tools:
+  - bash
+  - view
+  - write
+  - edit
+  - glob
+  - grep
+instructions: |
+  Follow the gauntlet loop workflow in SKILL.md exactly:
+
+  1. Step 1: Freeze GAUNTLET_JOB_CONTRACT.md with binary acceptance criteria, automated proof commands, and max round budget (default: 3).
+  2. Step 2: For each round:
+     - Builder generates minimal candidate patch addressing prior critic findings.
+     - Spawn isolated Fresh Critic subagent to score 0.0-10.0 across correctness, minimal diff, edge cases, and architecture.
+     - Run automated proof suite.
+     - Log metrics to ITERATION_LEDGER.md.
+     - Evaluate stop conditions (Pass >= 9.0/10, 2-round plateau, regression, budget).
+  3. Step 3: Integrator merges ONLY the single highest-impact fix.
+  4. Step 4: Output ACCEPTANCE_PACKET.md with verbatim command receipts upon successful termination.

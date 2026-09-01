@@ -71,6 +71,62 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["ui-design", "refactoring-ui", "tailwind", "typography", "color-palette", "visual-hierarchy", "accessibility", "frontend"]
+    },
+    {
+      "name": "gauntlet-loop",
+      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate, and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
+      "path": "gauntlet-loop/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["gauntlet", "quality-loop", "multi-agent", "verification", "benchmarking", "orchestration", "governance"]
+    },
+    {
+      "name": "secretary-controller",
+      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, explicit dissent preservation, frozen evidence snapshots, and single-use hash approvals before any filesystem or external mutation.",
+      "path": "secretary-controller/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["staff-work", "executive-brief", "approval-gate", "governance", "decision-memo", "evidence", "hash-approval"]
+    },
+    {
+      "name": "coupling-router",
+      "description": "Coupling-aware architectural delegation router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to deterministically route tasks to single sequential builders or parallel fan-out workers, preventing merge collisions and hallucinated interface drift.",
+      "path": "coupling-router/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["coupling", "task-routing", "subagents", "orchestration", "multi-agent", "architecture", "concurrency"]
+    },
+    {
+      "name": "evidence-ledger",
+      "description": "Source-cited claim verification gate and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]). Generates claim-ledger.md.",
+      "path": "evidence-ledger/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["evidence", "verification", "citation", "fact-checking", "claims", "research-gate", "provenance"]
+    },
+    {
+      "name": "daily-standup-coach",
+      "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
+      "path": "daily-standup-coach/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["standup", "daily-review", "effort-scorecard", "reflection", "developer-productivity", "habits", "lifeos"]
+    },
+    {
+      "name": "periodic-retreat",
+      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md.",
+      "path": "periodic-retreat/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["retreat", "strategic-planning", "quarterly-review", "lifeos", "architecture-debt", "okrs", "telos"]
+    },
+    {
+      "name": "brain-audit",
+      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions. Generates brain-audit-report.md.",
+      "path": "brain-audit/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["knowledge-audit", "memory-hygiene", "link-integrity", "docs-validation", "dead-links", "secret-scan", "ref-integrity"]
     }
   ]
 }
