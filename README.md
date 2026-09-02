@@ -5,7 +5,7 @@
 **A curated suite of seven portable agent skills for building durable projects, preserving context, coordinating reliable work, and extracting design systems.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.3.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-1.5.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-7%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -28,7 +28,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 
 | You need to… | Use | Outcome |
 | :--- | :--- | :--- |
-| Start a project with durable operating context | [`new-project`](new-project/README.md) | A Project OS foundation, governance files, and documentation structure |
+| Start a project with durable operating context | [`new-project`](new-project/README.md) | Progressive DOX foundation (`AGENTS.md` + `.agents/`), brand design tokens, and quality gates |
 | Refresh repository instructions | [`updateagents`](updateagents/README.md) | A workspace-scoped update to agent memory files |
 | Push through a difficult implementation or debugging stall | [`pua`](pua/README.md) | A structured escalation and investigation workflow |
 | Delegate work without losing context | [`agent-handoff`](agent-handoff/README.md) | A context packet with constraints and verification criteria |
@@ -120,7 +120,7 @@ graph TD
     User([User / Principal]) --> Muse[👑 Muse Agency Orchestrator]
     
     subgraph Flagship Suite [🚀 Flagship Foundation]
-        Muse --> NP[🚀 new-project<br/>Project OS & 8-Stage State Machine]
+        Muse --> NP[🚀 new-project<br/>Progressive DOX & Agency Provisioner]
         Muse --> UA[🧠 updateagents<br/>Workspace Memory & Context Sync]
     end
 
@@ -145,13 +145,14 @@ graph TD
 
 | Skill | Category | Primary Triggers | Description |
 | :--- | :--- | :--- | :--- |
-| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `scaffold app` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
+| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `scaffold app`, `interactive project` | Provision Progressive Disclosure DOX architecture (`AGENTS.md`, `.agents/context`, `.agents/standards`, `.agents/brand`), 10 stack archetypes, brand tokens, and quality gates. |
 | [**`updateagents`**](updateagents/README.md) | **Flagship** | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
 | [**`pua`**](pua/README.md) | **Reliability** | `PIP`, `/pua`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | [**`agent-handoff`**](agent-handoff/README.md) | **Multi-Agent** | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
 | [**`dead-letter`**](dead-letter/README.md) | **Reliability** | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | **Multi-Agent** | `/anchor`, `/context-anchor` | Preserve a lightweight working-state snapshot to prevent cascading context drift. |
 | [**`designscope`**](designscope/README.md) | **Design** | `extract the design system`, `what palette does this site use`, `copy this navbar` | Analyze images, websites, or Figma files into a `design.md` brief, DTCG `design-tokens.json`, and an optional WCAG report. Element mode copies single components. |
+| [**`updatedocs`**](updatedocs/SKILL.md) | **Documentation** | `update docs`, `sync documentation`, `refresh README`, `update changelog` | Synchronize documentation with codebase reality, trace impact across README/changelog/architecture/APIs, and audit drift. |
 
 ---
 
@@ -159,16 +160,18 @@ graph TD
 
 ### 🚀 `new-project` (Flagship #1)
 
-Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
+Interactive project creator and Project Operating System provisioner powered by the Progressive Disclosure DOX template. Bootstraps lean root contracts, deep modular engineering standards, durable project truth, brand design tokens, and automated quality gates into any repository.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill new-project
 ```
 
-- **Path Auto-Discovery**: Scans `/home/harsh/Projects/` and suggests immediate target locations.
-- **Framework Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro (Static/SSR), Vite + React, Node/Bun API, WordPress/PHP.
-- **Project OS Assets**: Generates `.agentrules`, `AGENTS.md` (Muse Council hierarchy), `CLAUDE.md`, `STATE.md` (8-stage reality machine), `llms.txt` bundler, and hardened `.gitignore`.
-- **Pre-configured Presets**: `agency-suite` (28 design & taste skills), `design`, `fullstack`, `growth`, `all`, `none`.
+- **Interactive CLI Wizard**: Run `bun new-project/scripts/new-project.ts -i` for guided step-by-step setup (target directory, metadata, stack, brand theme, skill presets).
+- **10 Stack Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro v7.2.x, Vite + React, Cloudflare Workers + Hono, Bun Backend, Python AI/FastAPI, WordPress/PHP, TypeScript Library, Static HTML5, and Generic.
+- **Progressive Disclosure DOX**: Generates `AGENTS.md` (root contract), `.agents/standards/` (execution kernel, security, system design, workflows, stack standards), `.agents/context/` (product, architecture, brand, current state, decisions, roadmap), and `.memory/`.
+- **Dedicated Brand Identity System**: Auto-provisions design tokens (`colors.json`, `motion.json`, `typography.json`, `base.css`), BEM conventions, and A11y baseline with 5 curated themes (`minimal-dark`, `midnight-cyber`, `warm-editorial`, `vibrant-modern`, `corporate-clean`).
+- **Nexus Adversarial Verification Gate**: Tailors `scripts/nexus_verify.sh` and Playwright E2E probes (`tests/e2e/harness_probe.spec.ts`) for pre-ship deterministic quality assurance.
+- **Skill Bundling**: Bundles curated skill presets (`agency-suite` with 28 skills, `design`, `fullstack`, `growth`, `backend`, `all`, `none`) with `skills-lock.json`.
 
 [Read full documentation →](new-project/README.md)
 

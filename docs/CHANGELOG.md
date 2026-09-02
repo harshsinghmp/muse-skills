@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-09-02
+
+### Added
+- **`new-project` Template Upgrade**: Integrated the **Progressive Disclosure DOX Architecture**, generating a lean `AGENTS.md` root contract, `.agents/standards/` (modular universal & stack-specific standards), `.agents/context/` (durable product, architecture, brand, current, decisions, and roadmap truth), and `.memory/` persistent cognitive store.
+- **Interactive CLI Wizard**: Added interactive prompt mode (`bun new-project/scripts/new-project.ts -i`) with guided step-by-step questions for location selection, project metadata, stack selection, brand theme, skill presets, and optional framework initialization.
+- **10 Stack Archetypes**: Support for Next.js 16, Astro v7.2.x, Vite + React 19, Cloudflare Workers + Hono, Bun Backend, Python 3.12+ (FastAPI + AI Agents + Pytest), WordPress 6.x / PHP 8.3 (Bedrock), TypeScript Library / Package, Static HTML5 & CSS Tokens, and Generic DOX starter.
+- **Dedicated Brand Identity System**: Auto-provisions visual design tokens (`colors.json`, `motion.json`, `radii.json`, `shadows.json`, `spacing.json`, `typography.json`, `base.css`), BEM conventions, and A11y baseline across 5 curated themes (`minimal-dark`, `midnight-cyber`, `warm-editorial`, `vibrant-modern`, `corporate-clean`).
+- **Dynamic LLM Documentation Indexer**: Added `scripts/generate_llms_txt.ts` to index `AGENTS.md`, `.agents/context/`, and `.agents/standards/` into `llms.txt` and `llms-full.txt`.
+- **Nexus Adversarial Verification Suite**: Tailors `scripts/nexus_verify.sh` and Playwright baseline probes (`tests/e2e/harness_probe.spec.ts`) per stack.
+
+---
+
 ## [1.4.0] - 2026-08-24
 
 ### Added

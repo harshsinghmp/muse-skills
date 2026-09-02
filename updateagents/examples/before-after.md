@@ -68,18 +68,18 @@ Historical context: 12 session memories integrated
 
 ## Example 4: Workspace boundary enforcement
 
-**User request:** "Update agents.md in /home/harsh/Projects/myapp"
+**User request:** "Update agents.md in /workspace/myapp"
 
 **Skill execution:**
-1. Changes to `/home/harsh/Projects/myapp`
+1. Changes to `/workspace/myapp`
 2. Confirms working directory is workspace root
-3. Scans only within `/home/harsh/Projects/myapp`
-4. Never reads parent `/home/harsh/Projects` or `/home/harsh`
-5. Updates file at `/home/harsh/Projects/myapp/AGENTS.md`
+3. Scans only within `/workspace/myapp`
+4. Never reads parent `/workspace` or system root
+5. Updates file at `/workspace/myapp/AGENTS.md`
 
 **Safety check output:**
 ```
-✅ Workspace root: /home/harsh/Projects/myapp
+✅ Workspace root: /workspace/myapp
 ✅ No parent directory traversal detected
 ✅ All file operations scoped to workspace
 ```
