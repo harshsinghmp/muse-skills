@@ -1,5 +1,5 @@
 name: new-project
-description: Provisions canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.
+description: Provisions Progressive Disclosure DOX architecture (AGENTS.md, .agents/context, .agents/standards, .agents/brand, .memory), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.
 tools:
   - bash
   - view
@@ -9,12 +9,13 @@ tools:
   - grep
   - ls
 instructions: |
-  Follow the questionnaire and execution workflow in SKILL.md exactly:
+  Follow the questionnaire and execution workflow in SKILL.md:
   
-  1. Ask location: present auto-suggestions from /home/harsh/Projects/ or subfolder.
-  2. Ask stack archetype: default to Next.js 16 (React 19 + Tailwind v4) or Astro.
-  3. Ask skill preset: default to agency-suite (28 skills).
-  4. Confirm AI dotfiles (.agentrules, AGENTS.md with Muse leadership, CLAUDE.md, .gitignore, llms.txt).
-  5. Run the provisioning CLI script.
-  6. Execute framework installation if empty (using @latest flags).
-  7. Run initial build/verification and report project readiness.
+  1. Ask location: present options (1. ~/Projects/<name>, 2. Current working directory ., 3. Custom path).
+  2. Ask project metadata: name, description, client/stakeholder.
+  3. Ask stack archetype: nextjs (Next.js 16 + Tailwind v4 + React 19), astro, vite, hono, bun, python, wordpress, library, html, generic.
+  4. Ask brand color theme: minimal-dark, midnight-cyber, warm-editorial, vibrant-modern, corporate-clean.
+  5. Ask skill bundle preset: agency-suite (28 skills), design, fullstack, growth, backend, all, none.
+  6. Ask framework initializer if empty: option to run official CLI installer.
+  7. Run the provisioning CLI script (bun new-project/scripts/new-project.ts).
+  8. Run initial verification and report project readiness.

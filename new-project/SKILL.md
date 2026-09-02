@@ -1,96 +1,167 @@
 ---
 name: new-project
-description: "Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory."
-version: 1.0.0
+description: "Interactive project creator and Project OS provisioner powered by the Progressive Disclosure DOX template. Bootstraps AGENTS.md root contract, .agents/ (context, standards, brand, workflows, archive, artifacts, goals, research), .memory/, .gitignore, dynamic llms.txt, and selective skill bundles into any repository."
+version: 2.0.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 metadata:
   hermes:
-    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite]
-    related_skills: [updateagents, agent-handoff]
-    requires_tools: [bash, view_file, write_to_file]
+    tags: [scaffolding, governance, project-os, architecture, progressive-disclosure, dox, nextjs, astro, vite, hono, python, wordpress]
+    related_skills: [updateagents, agent-handoff, context-anchor]
+    requires_tools: [bash, view_file, write_to_file, edit_file]
 ---
 
-# 🚀 new-project — Autonomous Project OS & Governance Scaffolder
+# 🚀 new-project — Autonomous Project OS & Agency Council Provisioner
 
-Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` knowledge base, 8-stage reality state machine (`STATE.md`), Council governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any workspace.
+Interactive project creator and Project Operating System provisioner. Bootstraps the **Progressive Disclosure DOX architecture**:
+- **`AGENTS.md`**: Lean root contract & progressive DOX routing rail.
+- **`.agents/context/`**: Durable project truth (`product.md`, `architecture.md`, `brand.md`, `current.md`, `decisions.md`, `roadmap.md`, `index.md`).
+- **`.agents/standards/`**: Deep engineering standards (`execution-kernel`, `security-vibeguard`, `system-design`, `workflows`, `git-workflow`, `council-roles`, `dox-hierarchy`, `tech-stacks`, + stack-specific standards).
+- **`.agents/brand/`**: Visual design tokens (`colors.json`, `motion.json`, `typography.json`, `base.css`), BEM conventions, A11y baseline, and UI screenshots.
+- **`.agents/workflows/`, `archive/`, `artifacts/`, `goals/`, `research/`**: Organized agent containment tree.
+- **`.memory/`**: Persistent cognitive session memory.
+- **`scripts/nexus_verify.sh` & `tests/e2e/harness_probe.spec.ts`**: Stack-tailored adversarial quality gate.
+- **`scripts/generate_llms_txt.ts`**: Dynamic `llms.txt` & `llms-full.txt` documentation indexer.
+- **Selective Skill Bundling**: Curated skills in `.agents/skills/` with `skills-lock.json`.
 
 ---
 
 ## When to Use
 
 - User asks to *"create a new project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
-- Setting up a new client application, microservice, or prototype.
-- Upgrading an existing unorganized repository to the LifeOS Agency Council architecture.
-- Bootstrapping AI governance (`.agentrules`, `AGENTS.md`, `CLAUDE.md`, `.gitignore`, `STATE.md`).
+- Setting up a new client application, microservice, library, or prototype.
+- Upgrading an existing unorganized repository to the Agency Council DOX architecture.
+- Bootstrapping AI governance (`.agentrules`, `AGENTS.md`, `.gitignore`, `.memory/`).
 
 ---
 
-## Quick Reference
+## Quick Reference — Supported Archetypes
 
-| Tech Stack Archetype | Framework Target | Generator Command / Tool |
-|:---|:---|:---|
-| **Next.js 16** | App Router + Tailwind v4 + React 19 | `npx -y create-next-app@latest` |
-| **Astro** | Static / SSR + Tailwind v4 + TS | `npx -y create-astro@latest` |
-| **Vite + React** | Client SPA + TypeScript | `npx -y create-vite@latest` |
-| **Node / Bun Backend** | Fastify / Hono API service | Bun native init |
-| **WordPress / PHP** | Custom theme & plugin environment | PHP / Composer baseline |
-| **Generic / Vanilla** | TypeScript library or tool | TypeScript strict starter |
+| Archetype ID | Framework / Stack Target | Category | Key Standards Module |
+|:---|:---|:---|:---|
+| **`nextjs`** | Next.js 16 (App Router + Tailwind v4 + React 19) | Fullstack / Web | `frontend-nextjs.md` |
+| **`astro`** | Astro v7.2.x (Static / SSR + Collections + Tailwind v4) | Content & Web | `frontend-astro.md` |
+| **`vite`** | Vite + React 19 (TypeScript Client SPA) | Frontend SPA | `frontend-nextjs.md` / `design.md` |
+| **`hono`** | Cloudflare Workers + Hono (Drizzle ORM + Neon HTTP) | Edge & Serverless | `backend-workers-hono.md` |
+| **`bun`** | Bun / Node API Service (Fastify / Hono backend) | Backend API | `tech-stacks.md` |
+| **`python`** | Python 3.12+ (FastAPI + AI Agents + Pytest + Ruff) | AI & Data | `python-ai.md` |
+| **`wordpress`** | WordPress 6.x Theme / Plugin Development (Bedrock/PHP) | CMS / PHP | `wordpress-cms.md` |
+| **`library`** | TypeScript Package / Library (Strict Bun/tsup + npm) | Library / Tool | `library-package.md` |
+| **`html`** | Static HTML5 & CSS Tokens (Vanilla / Alpine.js) | Lightweight Web | `static-html.md` |
+| **`generic`** | Minimal Base Starter (Clean DOX baseline) | Custom | `tech-stacks.md` |
 
 ---
 
-## Procedure
+## Interactive Options & Questionnaire
 
-### Step 1: Location & Folder Selection
-Guide the user through interactive selection:
-1. **Existing Projects Scan**: Scan `/home/harsh/Projects/` and present immediate selectable options.
-2. **New Subfolder Creation**: Option to create `/home/harsh/Projects/<name>`.
-3. **Current Working Directory**: Option to scaffold in `.`.
+When running interactively or through conversational delegation, guide the user through these options:
 
-### Step 2: Tech Stack Selection (Always Latest)
-Select framework archetype and extract project name and description.
+### 1. Location & Directory
+- **New Subfolder**: Inside `./<projectName>` or `projects/<projectName>` (Recommended for new projects).
+- **Current Directory**: Inside `.` (Recommended for existing repositories).
+- **Custom Path**: Absolute or relative directory path.
 
-### Step 3: Skill Preset Selection
-- `[agency-suite]` *(Recommended / Default)*: Full agency suite (Design, Animation, Taste, Fullstack).
-- `[design]`: Core design tokens, motion, and UI patterns.
-- `[fullstack]`: Auth, API security, Next.js patterns, E2E testing.
-- `[growth]`: CRO, SEO audit, keyword clustering, landing page copywriting.
-- `[all]`: Complete workspace skill library.
-- `[none]`: Lightweight baseline without skill copies.
+### 2. Project Identity & Metadata
+- **Project Name**: Clean kebab-case or PascalCase name.
+- **Description**: 1-sentence value proposition and core purpose.
+- **Client / Stakeholder**: Name of client or internal division (optional).
 
-### Step 4: AI Dotfiles & Governance Confirmation
-Confirm generation of:
-1. `.agentrules` (Vibeguard zero secret leakage + evidence-before-claims).
-2. `AGENTS.md` (Muse as Chief Orchestrator, Sol, Jasper, Crew, Nexus).
-3. `CLAUDE.md` (Operational commands & guidelines).
-4. `.gitignore` (Hardened default ignore rules including agents, IDEs, and environments).
-5. `llms.txt` & `llms-full.txt` + `scripts/generate_llms_txt.ts`.
-6. `docs/01_OVERVIEW.md` through `docs/10_UNRESOLVED.md`.
-7. `STATE.md` (8-Stage Reality Machine) & `SUMMARY.md` (Change Ledger).
-8. `scripts/nexus_verify.sh` & `tests/e2e/harness_probe.spec.ts`.
+### 3. Stack Archetype
+Select from the 10 supported archetypes above (`nextjs`, `astro`, `vite`, `hono`, `bun`, `python`, `wordpress`, `library`, `html`, `generic`).
 
-### Step 5: Execution Command
+### 4. Brand & Color Theme
+- **`minimal-dark`**: Charcoal, Zinc, Crisp White (Modern dark mode)
+- **`midnight-cyber`**: Deep Navy, Electric Blue, Cyan
+- **`warm-editorial`**: Warm Alabaster, Rich Umber, Terracotta
+- **`vibrant-modern`**: Deep Violet, Indigo, Emerald
+- **`corporate-clean`**: Slate Gray, Ocean Blue, Amber
+
+### 5. Skill Preset Bundle
+- **`agency-suite`** *(Recommended / Default - 28 skills)*: Full agency suite (Design, Taste, Animation, Fullstack, Growth).
+- **`design`**: Design tokens, Apple design, UI-UX Pro Max, motion, animations.
+- **`fullstack`**: Auth patterns, API security, Next.js best practices, E2E testing, debugging.
+- **`growth`**: CRO audit, SEO audit, keyword clustering, landing page copywriting.
+- **`backend`**: API design, Workers/Hono, database design, system architecture.
+- **`all`**: Complete workspace skill library.
+- **`none`**: Lightweight baseline without skill copies.
+
+### 6. Official Framework Initializer
+If target directory is empty, option to run official CLI scaffolders (`create-next-app@latest`, `create-astro@latest`, `create-vite@latest`, `bun init`, etc.).
+
+---
+
+## Execution Command
+
 Run the universal provisioner script:
 
 ```bash
-bun ~/.claude/LIFEOS/TOOLS/NewProject.ts "<targetPath>" --name="<projectName>" --type="<type>" --desc="<description>" --skills="agency-suite"
+# Interactive Mode
+bun new-project/scripts/new-project.ts -i
+
+# Non-Interactive CLI Mode
+bun new-project/scripts/new-project.ts "./my-app" \
+  --name="my-app" \
+  --type="nextjs" \
+  --desc="<description>" \
+  --client="<clientName>" \
+  --theme="minimal-dark" \
+  --skills="agency-suite"
 ```
 
 ---
 
-## Pitfalls
+## Generated Architecture
 
-- **Skipping Invariant Probes**: Never leave the project without running initial `scripts/nexus_verify.sh`.
-- **Committing Secrets**: Always ensure `.env.example` exists and `.env` is listed in `.gitignore`.
-- **Premature State Claims**: Never mark features as `LOCAL_VERIFIED` or `PROD_VERIFIED` in `STATE.md` without command receipts.
+```
+<project-root>/
+├── AGENTS.md                                # Root contract & DOX rail (~50 lines)
+├── .agentrules                              # Vibeguard secret isolation & commit rules
+├── .gitignore                               # Hardened ignore rules (Vibeguard + agents)
+├── .memory/                                 # Persistent cognitive session memory
+├── .agents/
+│   ├── context/                             # Durable project truth
+│   │   ├── index.md                         # Context routing map
+│   │   ├── product.md                       # Scope & capability inventory
+│   │   ├── architecture.md                  # System layout & component boundaries
+│   │   ├── brand.md                         # Voice, presentation, & copy tone
+│   │   ├── current.md                       # Shipped state & known gaps
+│   │   ├── decisions.md                     # Locked architectural decisions (ADRs)
+│   │   └── roadmap.md                       # SOW board & sprint backlog
+│   ├── standards/                           # Progressive disclosure rule modules
+│   │   ├── execution-kernel.md              # 6 Laws, Confidence Gate, Fowler Refactoring
+│   │   ├── security-vibeguard.md            # Secret isolation, Destructive Command Gate
+│   │   ├── system-design.md                 # Evans DDD, Nygard Release It!, Schemas
+│   │   ├── workflows.md                     # Scaled tiers & 5-phase pipeline
+│   │   ├── git-workflow.md                  # Branch hierarchy, commit format, SemVer
+│   │   ├── dox-hierarchy.md                 # Subtree contracts & reading order
+│   │   ├── council-roles.md                 # Council divisions & subagent routing
+│   │   ├── memory-context.md                # Context hygiene, .memory lifecycle
+│   │   └── [stack-specific].md              # e.g. frontend-nextjs, frontend-astro, etc.
+│   ├── brand/                               # Dedicated Brand & Visual Identity System
+│   │   ├── design.md                        # Visual language & component states
+│   │   ├── bem-conventions.md               # Semantic BEM CSS class architecture
+│   │   ├── a11y.md                          # WCAG 2.2 AA non-negotiable mandates
+│   │   ├── tokens/                          # Design tokens (colors, typography, etc.)
+│   │   └── screenshots/                     # Reference screenshots and UI mockups
+│   ├── workflows/                           # Phase-based workflow protocols
+│   ├── archive/                             # Timestamped retired plans & scratchpads
+│   ├── research/                            # Deep research briefs
+│   ├── artifacts/                           # Agent-generated plans & walkthroughs
+│   ├── goals/                               # Sprint milestones & checklist tracking
+│   └── skills/                              # Bundled agency skills + skills-lock.json
+├── scripts/
+│   ├── nexus_verify.sh                      # Pre-ship quality gate (typecheck, build, test)
+│   └── generate_llms_txt.ts                 # Dynamic llms.txt & llms-full.txt generator
+└── tests/
+    └── e2e/
+        └── harness_probe.spec.ts            # Playwright baseline probe
+```
 
 ---
 
-## Verification
+## Pitfalls & Verification
 
-After scaffolding, execute and verify:
-1. **Directory Structure**: `ls -la <targetPath>/docs <targetPath>/.agents/skills`
-2. **LLM Documentation Generator**: `cd <targetPath> && bun scripts/generate_llms_txt.ts`
-3. **Vibeguard Secret Scan**: `bun ~/.claude/LIFEOS/TOOLS/SecretScan.ts <targetPath>`
-4. **Summary Presentation**: Report provisioned OS summary and immediate next actions to the user.
+- **Never Commit Secrets**: Ensure `.env` is listed in `.gitignore` and `.env.example` exists.
+- **Evidence Before Claims**: Work is only complete after running `scripts/nexus_verify.sh`.
+- **Progressive Disclosure**: Keep `AGENTS.md` lean; put specific domain rules in `.agents/standards/`.
