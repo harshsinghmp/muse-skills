@@ -29,6 +29,7 @@ badges + tables + structure tree, `skills.json`, `llms.txt`.
 - Commits follow [CONTRIBUTING.md](CONTRIBUTING.md) (Meaningful Git Commit
 Protocol: `<type>(<scope>): summary` with Why / What / Verification).
 - No secrets or personal environment values in any shipped file.
+- Canonical aliases: "Agent Engine" and "DOX Engine" explicitly refer to the `new-project` Progressive Disclosure DOX scaffolding engine.
 
 
 

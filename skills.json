@@ -2,11 +2,11 @@
   "skills": [
     {
       "name": "new-project",
-      "description": "Interactive project creator and Progressive Disclosure DOX provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite).",
+      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Aliases: Agent Engine, DOX Engine.",
       "path": "new-project/SKILL.md",
       "version": "2.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox"]
+      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox", "agent-engine", "dox-engine"]
     },
     {
       "name": "updateagents",

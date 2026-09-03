@@ -188,7 +188,7 @@ graph TD
 
 | Skill | Category | Primary Triggers | Description |
 | :--- | :--- | :--- | :--- |
-| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `scaffold app` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
+| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `Agent Engine`, `DOX Engine`, `scaffold app` | Progressive Disclosure DOX provisioner (AGENTS.md, 9-folder container, 12 modular standards, brand tokens, and cognitive memory). |
 | [**`updateagents`**](updateagents/README.md) | **Flagship** | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
 | [**`pua`**](pua/README.md) | **Reliability** | `PIP`, `/pua`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | [**`agent-handoff`**](agent-handoff/README.md) | **Multi-Agent** | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
@@ -209,9 +209,9 @@ graph TD
 
 ## 🔍 Detailed Skill Breakdown
 
-### 🚀 `new-project` (Flagship #1)
+### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
 
-Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
+Interactive project creator, DOX Engine, and Agent Engine provisioner. Implements the **"Agents First, Then Project Type"** two-stage architecture: provisions the lean root `AGENTS.md`, `.gitignore`, complete 9-folder `.agents/` container (12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite).
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill new-project

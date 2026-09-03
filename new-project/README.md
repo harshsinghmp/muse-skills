@@ -1,8 +1,9 @@
 # 🚀 `new-project` Skill
 
-> Autonomous Project Operating System & Progressive Disclosure DOX Scaffolder.
+> Autonomous Project Operating System & Progressive Disclosure DOX Scaffolder.  
+> **Aliases**: `Agent Engine` | `DOX Engine`
 
-`new-project` transforms any new or existing workspace into a fully governed **AI-Native Operating Environment** following the **"Agents First, Then Project Type"** architecture.
+`new-project` (also known as the **Agent Engine** or **DOX Engine**) transforms any new or existing workspace into a fully governed **AI-Native Operating Environment** following the **"Agents First, Then Project Type"** architecture.
 
 ---
 

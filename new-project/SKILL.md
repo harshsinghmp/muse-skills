@@ -1,18 +1,22 @@
 ---
 name: new-project
-description: "Interactive project creator and Progressive Disclosure DOX provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite)."
+aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
+description: "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
 metadata:
+  aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
   hermes:
-    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite, dox]
+    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite, dox, agent-engine, dox-engine]
     related_skills: [updateagents, agent-handoff, context-anchor]
     requires_tools: [bash, view_file, write_to_file]
 ---
 
 # 🚀 new-project — Autonomous Project OS & DOX Scaffolder
+
+> **Aliases**: `Agent Engine` | `DOX Engine` | `agent-engine` | `dox-engine`
 
 Interactive project creator and Project Operating System provisioner. Implements the **"Agents First, Then Project Type"** two-stage architecture:
 1. **Stage 1: Governance Container**: Drops the lean root `AGENTS.md`, `.gitignore`, 9-folder `.agents/` tree (standards, brand, context, archive, artifacts, goals, research, skills, workflows), and initializes cognitive memory.
@@ -23,9 +27,9 @@ Interactive project creator and Project Operating System provisioner. Implements
 
 ## When to Use
 
-- User asks to *"create a new project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
-- Setting up a new client application, agency showcase, microservice, or prototype.
-- Equipping an existing unorganized repository with the Progressive Disclosure DOX architecture.
+- User invokes or references *"Agent Engine"*, *"DOX Engine"*, *"new-project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
+- Setting up a new client application, agency showcase, microservice, or prototype with the DOX Engine.
+- Equipping an existing unorganized repository with the Agent Engine / Progressive Disclosure DOX architecture.
 - Initializing a project with strict context isolation (zero cross-project bleed).
 
 ---
