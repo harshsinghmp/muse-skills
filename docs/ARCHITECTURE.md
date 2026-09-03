@@ -18,9 +18,9 @@ All skills follow a dual-layer architecture:
 | **Skill Protocol** | RFC Agent Skills Standard | YAML Frontmatter + Markdown Body |
 | **Metadata Engine** | Hermes Metadata Schema | `metadata.hermes` namespace with tags, dependencies, and tools |
 | **CLI & Registry** | `npx skills` / `skills.sh` | Global repository discovery & tree installation |
-| **Scaffolding Tooling** | TypeScript / Bun | Strict-mode project OS & DOX generation (`new-project.ts`) |
+| **Scaffolding Tooling** | TypeScript / Bun | Strict-mode project OS generation (`NewProject.ts`) |
 | **Validation Suite** | Bash & Node.js | Memory file assertion & JSON schema validation |
-| **Version Control** | Git + Meaningful Commit Protocol | Semantic versioning (`v1.5.0`) with structured changelog |
+| **Version Control** | Git + Meaningful Commit Protocol | Semantic versioning (`v1.3.0`) with structured changelog |
 
 ---
 
@@ -172,21 +172,18 @@ sequenceDiagram
     Target-->>User: Skill ready for Claude / Hermes / Codex / Cursor
 ```
 
-### Flow 2: Project OS & Progressive DOX Provisioning (`new-project`)
+### Flow 2: Project OS Provisioning (`new-project`)
 
 ```mermaid
 graph TD
-    Trigger([User triggers /new-project or CLI wizard]) --> Wizard[bun new-project.ts -i]
-    Wizard --> Input[Select Location, 10 Stacks, Brand Theme & Skills]
-    Input --> DOX[Progressive Disclosure DOX Engine]
-    DOX --> RootDoc[Write lean AGENTS.md & .agentrules]
-    DOX --> Standards[Generate .agents/standards/ Modular Rules]
-    DOX --> Context[Generate .agents/context/ Durable State]
-    DOX --> Brand[Generate .agents/brand/ Tokens & Base CSS]
-    DOX --> Memory[Initialize .memory/ & Agent Containment]
-    DOX --> LLMs[Generate dynamic llms.txt indexer]
-    DOX --> Probes[Setup scripts/nexus_verify.sh & Playwright Probes]
-    Probes --> Ready([🚀 Project OS & DOX Initialized])
+    Trigger([User triggers /new-project]) --> Scaffolder[bun NewProject.ts]
+    Scaffolder --> DocGen[Generate Canonical /docs/]
+    Scaffolder --> StateMachine[Bootstrap 8-Stage STATE.md]
+    Scaffolder --> Governance[Write .agentrules & AGENTS.md]
+    Scaffolder --> Gitignore[Seed Hardened .gitignore]
+    Scaffolder --> LLMs[Generate dynamic llms.txt]
+    Scaffolder --> Verification[Run initial nexus_verify.sh]
+    Verification --> Ready([Project OS Initialized])
 ```
 
 ### Flow 3: Subagent Handoff & Failure Recovery (`agent-handoff` ➔ `dead-letter` ➔ `pua`)

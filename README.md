@@ -28,7 +28,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 
 | You need to… | Use | Outcome |
 | :--- | :--- | :--- |
-| Start a project with durable operating context | [`new-project`](new-project/README.md) | Progressive DOX foundation (`AGENTS.md` + `.agents/`), brand design tokens, and quality gates |
+| Start a project with durable operating context | [`new-project`](new-project/README.md) | A Project OS foundation, governance files, and documentation structure |
 | Refresh repository instructions | [`updateagents`](updateagents/README.md) | A workspace-scoped update to agent memory files |
 | Push through a difficult implementation or debugging stall | [`pua`](pua/README.md) | A structured escalation and investigation workflow |
 | Delegate work without losing context | [`agent-handoff`](agent-handoff/README.md) | A context packet with constraints and verification criteria |
@@ -148,7 +148,7 @@ graph TD
     User([User / Principal]) --> Muse[👑 Muse Agency Orchestrator]
     
     subgraph Flagship Suite [🚀 Flagship Foundation]
-        Muse --> NP[🚀 new-project<br/>Progressive DOX & Agency Provisioner]
+        Muse --> NP[🚀 new-project<br/>Project OS & 8-Stage State Machine]
         Muse --> UA[🧠 updateagents<br/>Workspace Memory & Context Sync]
     end
 
@@ -188,7 +188,7 @@ graph TD
 
 | Skill | Category | Primary Triggers | Description |
 | :--- | :--- | :--- | :--- |
-| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `scaffold app`, `interactive project` | Provision Progressive Disclosure DOX architecture (`AGENTS.md`, `.agents/context`, `.agents/standards`, `.agents/brand`), 10 stack archetypes, brand tokens, and quality gates. |
+| [**`new-project`**](new-project/README.md) | **Flagship** | `/new-project`, `scaffold app` | Provision canonical `/docs/`, 8-stage reality machine (`STATE.md`), Council governance, and skill presets. |
 | [**`updateagents`**](updateagents/README.md) | **Flagship** | `update agents.md`, `sync memory` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
 | [**`pua`**](pua/README.md) | **Reliability** | `PIP`, `/pua`, `try harder`, `figure it out` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | [**`agent-handoff`**](agent-handoff/README.md) | **Multi-Agent** | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
@@ -211,18 +211,16 @@ graph TD
 
 ### 🚀 `new-project` (Flagship #1)
 
-Interactive project creator and Project Operating System provisioner powered by the Progressive Disclosure DOX template. Bootstraps lean root contracts, deep modular engineering standards, durable project truth, brand design tokens, and automated quality gates into any repository.
+Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` Project Brain, 8-Stage Reality Machine (`STATE.md`), Council Governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any repository.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill new-project
 ```
 
-- **Interactive CLI Wizard**: Run `bun new-project/scripts/new-project.ts -i` for guided step-by-step setup (target directory, metadata, stack, brand theme, skill presets).
-- **10 Stack Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro v7.2.x, Vite + React, Cloudflare Workers + Hono, Bun Backend, Python AI/FastAPI, WordPress/PHP, TypeScript Library, Static HTML5, and Generic.
-- **Progressive Disclosure DOX**: Generates `AGENTS.md` (root contract), `.agents/standards/` (execution kernel, security, system design, workflows, stack standards), `.agents/context/` (product, architecture, brand, current state, decisions, roadmap), and `.memory/`.
-- **Dedicated Brand Identity System**: Auto-provisions design tokens (`colors.json`, `motion.json`, `typography.json`, `base.css`), BEM conventions, and A11y baseline with 5 curated themes (`minimal-dark`, `midnight-cyber`, `warm-editorial`, `vibrant-modern`, `corporate-clean`).
-- **Nexus Adversarial Verification Gate**: Tailors `scripts/nexus_verify.sh` and Playwright E2E probes (`tests/e2e/harness_probe.spec.ts`) for pre-ship deterministic quality assurance.
-- **Skill Bundling**: Bundles curated skill presets (`agency-suite` with 28 skills, `design`, `fullstack`, `growth`, `backend`, `all`, `none`) with `skills-lock.json`.
+- **Path Auto-Discovery**: Scans `/home/harsh/Projects/` and suggests immediate target locations.
+- **Framework Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro (Static/SSR), Vite + React, Node/Bun API, WordPress/PHP.
+- **Project OS Assets**: Generates `.agentrules`, `AGENTS.md` (Muse Council hierarchy), `CLAUDE.md`, `STATE.md` (8-stage reality machine), `llms.txt` bundler, and hardened `.gitignore`.
+- **Pre-configured Presets**: `agency-suite` (28 design & taste skills), `design`, `fullstack`, `growth`, `all`, `none`.
 
 [Read full documentation →](new-project/README.md)
 

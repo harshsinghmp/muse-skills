@@ -5,7 +5,7 @@ The **Project OS** architecture moves beyond treating LLMs as ephemeral chatbots
 
 ---
 
-## The 5 Core Pillars
+## The 4 Core Pillars
 
 ### 1. The Progressive Disclosure DOX Rail (`AGENTS.md`)
 A lean root contract (~45 lines) that enforces Core Turn Invariants and acts as a routing table. Agents load in-depth standards only when an active task touches that specific domain:

@@ -10,7 +10,7 @@
 - [Contributing Guide](CONTRIBUTING.md): Meaningful Git Commit Protocol.
 
 ## Published Skills Catalog
-- [new-project](new-project/SKILL.md): (Flagship) Interactive Project OS & Progressive DOX Provisioner.
+- [new-project](new-project/SKILL.md): (Flagship) Interactive Project OS & Governance Scaffolder.
 - [updateagents](updateagents/SKILL.md): (Flagship) Automatic Workspace Memory & Context Synchronizer.
 - [pua](pua/SKILL.md): PIP Performance Improvement Plan & Hardcore Debugging.
 - [agent-handoff](agent-handoff/SKILL.md): Structured Subagent Context Packet Generator.

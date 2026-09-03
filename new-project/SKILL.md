@@ -30,7 +30,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 
 ---
 
-## Quick Reference — Supported Archetypes
+## Quick Reference
 
 | Archetype Target | Framework & Runtime | Command / Generator |
 |:---|:---|:---|
@@ -43,7 +43,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 
 ---
 
-## Interactive Options & Questionnaire
+## Procedure
 
 ### Step 1: Launch Provisioner
 Execute the universal scaffolder script via Bun:
@@ -74,7 +74,7 @@ If an archetype is selected (e.g. Astro or Next.js):
 
 ---
 
-## Generated Architecture
+## Pitfalls
 
 - **Skipping Agents First**: Never run framework generation before AI governance is initialized, or framework defaults may overwrite or conflict with agent boundaries.
 - **Cross-Project Bleed**: Never copy client-specific skills, assets, or memory files from sibling projects. Every project starts with a clean isolated container.
@@ -83,7 +83,7 @@ If an archetype is selected (e.g. Astro or Next.js):
 
 ---
 
-## Pitfalls & Verification
+## Verification
 
 After scaffolding, verify the installation:
 1. **Container Check**: Run `ls -la <targetPath>/.agents/` to ensure all 9 folders exist.
