@@ -17,7 +17,8 @@ build/
 .jez/
 .memory/
 .codex/
-.agents/
+/.agents/
+!new-project/templates/.agents/
 .codegraph/
 .crush/
 .omo/

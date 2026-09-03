@@ -1,73 +1,62 @@
-# `new-project` Skill
+# 🚀 `new-project` Skill
 
-> Autonomous Project Operating System Provisioner & Agency Council Scaffolder powered by the Progressive Disclosure DOX Template.
+> Autonomous Project Operating System & Progressive Disclosure DOX Scaffolder.
 
-`new-project` transforms any new or existing workspace into a fully governed **AI-Native Operating Environment** with tailored engineering standards, brand tokens, and automated quality gates.
-
----
-
-## ⚡ Installation
-
-Install via `npx skills` shorthand:
-
-```bash
-# Recommended shorthand
-npx skills add harshsinghmp/muse-skills --skill new-project
-```
-
-*(Full URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/new-project` is also supported).*
+`new-project` transforms any new or existing workspace into a fully governed **AI-Native Operating Environment** following the **"Agents First, Then Project Type"** architecture.
 
 ---
 
-## 🚀 Key Features
+## ⚡ Key Architectural Features
 
-- **🏛️ Progressive Disclosure DOX Architecture**: Lean `AGENTS.md` root contract with deep modular standards in `.agents/standards/` and durable state in `.agents/context/`.
-- **⚡ 10 Stack Archetypes**: Next.js 16, Astro v7.2.x, Vite + React, Cloudflare Workers + Hono, Bun Backend, Python AI/FastAPI, WordPress/PHP, TypeScript Library, Static HTML, and Generic.
-- **🎨 Brand Identity & Design Tokens**: Auto-configured color themes (`minimal-dark`, `midnight-cyber`, `warm-editorial`, `vibrant-modern`, `corporate-clean`) in `.agents/brand/tokens/`.
-- **🧠 Persistent Cognitive Memory**: Initializes `.memory/` directory for cross-session knowledge retention.
-- **🛡️ Nexus Adversarial Verification Suite**: Generates `scripts/nexus_verify.sh` and Playwright probes for deterministic pre-ship audits.
-- **📄 Dynamic `llms.txt` & `llms-full.txt` Generator**: Auto-indexes documentation and standards for instant LLM ingestion.
-- **📦 Curated Skill Bundling**: Copies selected agency skills directly into `<project>/.agents/skills` with `skills-lock.json`.
+- **🛡️ Agents First (Governance Container)**: Provisions the lean root `AGENTS.md` (~45 lines) and the complete `.agents/` container *before* framework creation, establishing security boundaries and gitignore early.
+- **📁 Complete 9-Folder `.agents/` Containment**:
+  - `archive/` — Retired plans & completed scratchpads (`[title]-[timestamp].md`)
+  - `artifacts/` — Active walkthroughs, specifications & diffs
+  - `brand/` — Design tokens (OKLCH, typography, motion, radii) + BEM conventions + A11y checklist
+  - `context/` — 7 durable context files (`index`, `product`, `architecture`, `brand`, `current`, `decisions`, `roadmap`)
+  - `goals/` — Session goals & sprint verification checklists
+  - `research/` — Deep research briefs & benchmark logs
+  - `skills/` — Clean, isolated container for project-specific skills
+  - `standards/` — 12 modular rulebooks read on-demand
+  - `workflows/` — Custom project workflows & protocols
+- **🧠 Cognitive Memory Hook**: Automatically initializes `.memory/` via `musememory` with active working invariants and multi-agent coordination.
+- **🔒 Strict Project Isolation**: Zero cross-project bleed. Starts with clean containers and zero leaked client assets.
+- **⚡ Interactive Path Picker & Framework Launcher**: Flexible folder selection anywhere in storage, launching official framework creators (Astro v7.2.x, Next.js 16, Instatic, Hono, Vite).
 
 ---
 
 ## 💻 Usage
 
-### 1. Interactive CLI Wizard
+Run via Bun:
+
 ```bash
-bun new-project/scripts/new-project.ts -i
+# Interactive Mode (Prompts for destination, name, and framework)
+bun path/to/new-project/scripts/new-project.ts
+
+# Non-Interactive Mode (Direct flags)
+bun path/to/new-project/scripts/new-project.ts <targetPath> --name="MyApp" --type="astro"
 ```
 
-### 2. Conversational Delegation
-Ask your AI assistant:
-```
-"create a new project"
-"scaffold an Astro agency showcase in ~/Projects/agency-site"
-"initialize Project OS in this directory with minimal-dark theme and Python FastAPI"
-```
+### CLI Flags
 
-### 3. CLI Command Options
-```bash
-bun new-project/scripts/new-project.ts /path/to/project \
-  --name="MyApp" \
-  --type="nextjs" \
-  --theme="minimal-dark" \
-  --skills="agency-suite"
-```
+| Flag | Description | Default |
+|:---|:---|:---|
+| `-n, --name <name>` | Project name | Directory basename |
+| `-t, --type <type>` | `astro` \| `nextjs` \| `instatic` \| `hono` \| `vite` \| `none` | Prompted |
+| `-d, --desc <desc>` | Short project description | Auto-generated |
+| `-p, --path <path>` | Target directory path | Prompted |
+| `--non-interactive` | Run without interactive prompts | `false` |
+| `--dry-run` | Simulate scaffolding without writing files | `false` |
+| `-f, --force` | Overwrite existing files | `false` |
+| `-h, --help` | Display help message | |
 
 ---
 
-## 📋 Archetypes Supported
+## 🛠️ Supported Framework Archetypes
 
-| ID | Stack | Description |
-|---|---|---|
-| `nextjs` | Next.js 16 + React 19 + Tailwind v4 | Fullstack React with App Router & Server Actions |
-| `astro` | Astro v7.2.x + Tailwind v4 + Collections | Content-first, static-first with client:* islands |
-| `vite` | Vite + React 19 + TypeScript | Fast client-side Single Page Application |
-| `hono` | Cloudflare Workers + Hono + Drizzle | Lightweight edge API service |
-| `bun` | Bun / Node API Backend | High-speed backend service |
-| `python` | Python 3.12+ + FastAPI + Pytest + Ruff | Modern Python AI & API microservice |
-| `wordpress` | WordPress 6.x + PHP 8.3 + Bedrock | Custom Block theme & plugin environment |
-| `library` | TypeScript + Bun Test + tsup | Reusable npm package starter |
-| `html` | Semantic HTML5 + CSS Tokens | Zero-build lightweight web project |
-| `generic` | Minimal DOX starter | Custom architecture baseline |
+1. **Astro v7.2.x** *(Recommended)*: Static-first with selective `client:*` island hydration, Zod content collections, `@astrojs/cloudflare`.
+2. **Next.js 16**: React 19, App Router, Server Components by default, Server Actions, TanStack Query.
+3. **Instatic HTML**: Pure HTML brochure and static landing pages, zero-JS by default, sub-millisecond TTFB.
+4. **Hono / Workers**: High-performance Cloudflare Workers edge API microservice.
+5. **Vite + React SPA**: Client-side single page applications with TypeScript.
+6. **None / Existing**: Governance container only (DOX baseline on existing repository).

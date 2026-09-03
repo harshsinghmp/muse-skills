@@ -1,6 +1,6 @@
 # Muse Skills
 
-> Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, and design-system extraction across the LifeOS ecosystem.
+> Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design-system extraction, Refactoring UI design heuristics, and Linus Torvalds style code review across the LifeOS ecosystem.
 
 ## Core Documentation
 - [Repository README](README.md): Overview, quick start, installation, and skill matrices.
@@ -17,7 +17,15 @@
 - [dead-letter](dead-letter/SKILL.md): Failed/Blocked Task Triage & Escalation Generator.
 - [context-anchor](context-anchor/SKILL.md): Working Reference Drift Prevention Snapshot.
 - [designscope](designscope/SKILL.md): Design System Extraction (design.md + DTCG Tokens + WCAG) from Images, URLs & Figma.
-- [updatedocs](updatedocs/SKILL.md): Documentation Synchronization, Impact Analysis & Drift Audit Engine.
+- [code-review-linus-torvalds-style](code-review-linus-torvalds-style/SKILL.md): Code Review - Linus Torvalds Style (Correctness, Invariants, Special-Case Elimination).
+- [refactor-ui](refactor-ui/SKILL.md): Atomic UI Design & Interface Refactoring Engine (10 Heuristics from Refactoring UI).
+- [gauntlet-loop](gauntlet-loop/SKILL.md): Bounded Multi-Agent Quality Improvement Loop & Termination Gate.
+- [secretary-controller](secretary-controller/SKILL.md): Evidence-Grounded Staff-Work Controller & Single-Use Hash Approval Gate.
+- [coupling-router](coupling-router/SKILL.md): Coupling-Aware Architectural Delegation & Concurrency Router.
+- [evidence-ledger](evidence-ledger/SKILL.md): Source-Cited Claim Verification Gate & Provenance Ledger.
+- [daily-standup-coach](daily-standup-coach/SKILL.md): Daily Reflective Check-In & 5-Pillar Controllable Effort Scorecard.
+- [periodic-retreat](periodic-retreat/SKILL.md): Quarterly Strategic Retreat Facilitator & Architecture Debt Purge.
+- [brain-audit](brain-audit/SKILL.md): Knowledge Hygiene, Link Integrity & Credential Leak Auditor.
 
 ## Agent Context Pack
 - [Context Index](.agents/context/index.md): Start here - durable project truth for agents.

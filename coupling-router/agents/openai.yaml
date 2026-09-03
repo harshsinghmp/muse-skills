@@ -1,0 +1,14 @@
+name: coupling-router
+description: "Coupling-aware architectural delegation router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to route tasks sequentially or in parallel."
+tools:
+  - bash
+  - view
+  - grep
+  - glob
+instructions: |
+  Follow the coupling router workflow in SKILL.md exactly:
+
+  1. Step 1: List all planned subtasks, their input dependencies, and their target write paths.
+  2. Step 2: Compute the write-overlap matrix and interface locking status.
+  3. Step 3: Classify overall coupling score (High >= 0.6, Medium 0.3-0.6, Low < 0.3).
+  4. Step 4: Output ROUTING_PLAN.md with selected strategy (SEQUENTIAL / STAGED_PIPELINE / PARALLEL_FAN_OUT) and Mermaid DAG.

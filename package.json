@@ -1,10 +1,10 @@
 {
   "name": "@harsh/muse-skills",
-  "version": "1.5.0",
-  "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, and subagent orchestration across the LifeOS ecosystem",
+  "version": "1.7.0",
+  "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, and reflective audits across the LifeOS ecosystem",
   "type": "module",
   "scripts": {
-    "test": "node -e 'JSON.parse(require(\"fs\").readFileSync(\"skills.json\", \"utf8\")); JSON.parse(require(\"fs\").readFileSync(\"package.json\", \"utf8\")); console.log(\"✅ Catalog & metadata assertions passed.\");'",
+    "test": "bun test",
     "validate": "bash updateagents/scripts/validate-memory-file.sh"
   },
   "keywords": [
@@ -29,7 +29,23 @@
     "governance",
     "project-os",
     "nextjs",
-    "astro"
+    "astro",
+    "designscope",
+    "refactor-ui",
+    "refactoring-ui",
+    "ui-design",
+    "tailwind",
+    "typography",
+    "color-palette",
+    "visual-hierarchy",
+    "accessibility",
+    "gauntlet-loop",
+    "secretary-controller",
+    "coupling-router",
+    "evidence-ledger",
+    "daily-standup-coach",
+    "periodic-retreat",
+    "brain-audit"
   ],
   "author": "Harsh",
   "license": "MIT",

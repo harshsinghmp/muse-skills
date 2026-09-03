@@ -1,5 +1,5 @@
 name: new-project
-description: Provisions Progressive Disclosure DOX architecture (AGENTS.md, .agents/context, .agents/standards, .agents/brand, .memory), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.
+description: Provisions Progressive Disclosure DOX architecture (AGENTS.md, 9-folder .agents/ tree, 12 standards, brand tokens, and cognitive memory) before launching interactive framework creators.
 tools:
   - bash
   - view
@@ -9,13 +9,10 @@ tools:
   - grep
   - ls
 instructions: |
-  Follow the questionnaire and execution workflow in SKILL.md:
+  Follow the 2-stage Agents-First workflow in SKILL.md exactly:
   
-  1. Ask location: present options (1. ~/Projects/<name>, 2. Current working directory ., 3. Custom path).
-  2. Ask project metadata: name, description, client/stakeholder.
-  3. Ask stack archetype: nextjs (Next.js 16 + Tailwind v4 + React 19), astro, vite, hono, bun, python, wordpress, library, html, generic.
-  4. Ask brand color theme: minimal-dark, midnight-cyber, warm-editorial, vibrant-modern, corporate-clean.
-  5. Ask skill bundle preset: agency-suite (28 skills), design, fullstack, growth, backend, all, none.
-  6. Ask framework initializer if empty: option to run official CLI installer.
-  7. Run the provisioning CLI script (bun new-project/scripts/new-project.ts).
-  8. Run initial verification and report project readiness.
+  1. Ask location: present current directory, subfolder, or custom path.
+  2. Ask stack archetype: Astro v7.2.x, Next.js 16, Instatic, Hono/Workers, Vite, or Governance only.
+  3. Execute Stage 1 (Agents First): provisions AGENTS.md, .gitignore, and complete .agents/ 9-folder container.
+  4. Execute Stage 2 (Framework): interactively runs the chosen framework CLI.
+  5. Execute Stage 3 (Closeout): updates .agents/context/current.md with live deliverables.

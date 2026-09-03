@@ -1,0 +1,17 @@
+name: brain-audit
+description: "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits for dead links, broken references, leaked secrets, and stale contradictions."
+tools:
+  - bash
+  - view
+  - grep
+  - glob
+  - write
+  - edit
+instructions: |
+  Follow the brain audit workflow in SKILL.md exactly:
+
+  1. Step 1: Discover all markdown files across docs/, .agents/context/, .memory/wiki/, and root.
+  2. Step 2: Extract and verify 100% of relative markdown links and code block file paths against the filesystem.
+  3. Step 3: Run secret scan for exposed tokens and credentials.
+  4. Step 4: Validate frontmatter integrity and version consistency across all documentation.
+  5. Step 5: Output brain-audit-report.md with list of verified paths, warnings, and remediations.

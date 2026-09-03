@@ -2,19 +2,19 @@
   "skills": [
     {
       "name": "new-project",
-      "description": "Interactive project creator and Project OS provisioner powered by the Progressive Disclosure DOX template. Bootstraps AGENTS.md root contract, .agents/ (context, standards, brand, workflows, archive, artifacts, goals, research), .memory/, .gitignore, dynamic llms.txt, and selective skill bundles into any repository.",
+      "description": "Interactive project creator and Progressive Disclosure DOX provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite).",
       "path": "new-project/SKILL.md",
       "version": "2.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["scaffolding", "governance", "project-os", "progressive-disclosure", "dox", "agents", "architecture", "nextjs", "astro", "python"]
+      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox"]
     },
     {
       "name": "updateagents",
-      "description": "Automatically discovers, reads, and updates agent memory files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) in the current working directory. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced context discovery. Workspace-scoped only.",
+      "description": "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon.",
       "path": "updateagents/SKILL.md",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["memory", "documentation", "workspace", "agents", "automation"]
+      "tags": ["memory", "documentation", "context", "agents", "workspace", "synchronization", "dox"]
     },
     {
       "name": "pua",
@@ -57,12 +57,76 @@
       "tags": ["design", "design-systems", "tokens", "dtcg", "ui", "figma", "wcag"]
     },
     {
-      "name": "updatedocs",
-      "description": "Documentation synchronization, impact analysis, and drift audit skill. Traces codebase and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, agent context), audits discrepancies, and applies minimal, verified updates across Markdown documentation.",
-      "path": "updatedocs/SKILL.md",
+      "name": "code-review-linus-torvalds-style",
+      "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, preserves interface contracts, and demands evidence over assertion.",
+      "path": "code-review-linus-torvalds-style/SKILL.md",
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["documentation", "sync", "impact-analysis", "changelog", "architecture", "audit", "git", "verification"]
+      "tags": ["code-review", "reviewer-method", "torvalds", "correctness", "data-structures", "concurrency", "api-stability"]
+    },
+    {
+      "name": "refactor-ui",
+      "description": "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms crowded, amateur, or unstyled UI into clean, high-conversion, accessible interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, shadows, contrast, and grouping.",
+      "path": "refactor-ui/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["ui-design", "refactoring-ui", "tailwind", "typography", "color-palette", "visual-hierarchy", "accessibility", "frontend"]
+    },
+    {
+      "name": "gauntlet-loop",
+      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate, and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
+      "path": "gauntlet-loop/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["gauntlet", "quality-loop", "multi-agent", "verification", "benchmarking", "orchestration", "governance"]
+    },
+    {
+      "name": "secretary-controller",
+      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, explicit dissent preservation, frozen evidence snapshots, and single-use hash approvals before any filesystem or external mutation.",
+      "path": "secretary-controller/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["staff-work", "executive-brief", "approval-gate", "governance", "decision-memo", "evidence", "hash-approval"]
+    },
+    {
+      "name": "coupling-router",
+      "description": "Coupling-aware architectural delegation router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to deterministically route tasks to single sequential builders or parallel fan-out workers, preventing merge collisions and hallucinated interface drift.",
+      "path": "coupling-router/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["coupling", "task-routing", "subagents", "orchestration", "multi-agent", "architecture", "concurrency"]
+    },
+    {
+      "name": "evidence-ledger",
+      "description": "Source-cited claim verification gate and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]). Generates claim-ledger.md.",
+      "path": "evidence-ledger/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["evidence", "verification", "citation", "fact-checking", "claims", "research-gate", "provenance"]
+    },
+    {
+      "name": "daily-standup-coach",
+      "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
+      "path": "daily-standup-coach/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["standup", "daily-review", "effort-scorecard", "reflection", "developer-productivity", "habits", "lifeos"]
+    },
+    {
+      "name": "periodic-retreat",
+      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md.",
+      "path": "periodic-retreat/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["retreat", "strategic-planning", "quarterly-review", "lifeos", "architecture-debt", "okrs", "telos"]
+    },
+    {
+      "name": "brain-audit",
+      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions. Generates brain-audit-report.md.",
+      "path": "brain-audit/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["knowledge-audit", "memory-hygiene", "link-integrity", "docs-validation", "dead-links", "secret-scan", "ref-integrity"]
     }
   ]
 }

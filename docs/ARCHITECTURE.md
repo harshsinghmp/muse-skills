@@ -79,6 +79,71 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── code-review-linus-torvalds-style/ # Linus Torvalds style code review & quality enforcement
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/                   # Review verdict examples
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # 10 Heuristic reference guides
+│   ├── scripts/                    # WCAG contrast calculator & static UI auditor
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── gauntlet-loop/                  # Bounded multi-agent quality improvement loop
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-gauntlet-run.md # Real-world gauntlet run
+│   ├── references/gauntlet-protocol.md # Scoring rubric & stop rules
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── secretary-controller/           # Evidence-grounded staff-work controller & approval gate
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-approval-packet.md # Hash approval packet
+│   ├── references/staff-work-doctrine.md # Completed staff work doctrine
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── coupling-router/                # Coupling-aware architectural delegation router
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-routing-decision.md # Task DAG plan
+│   ├── references/coupling-matrix.md # Coupling calculation formula
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── evidence-ledger/                # Source-cited claim verification gate
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-claim-ledger.md # Claim ledger table
+│   ├── references/claim-verification-taxonomy.md # 4-tier confidence taxonomy
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── daily-standup-coach/            # Daily reflective check-in & effort scorecard
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-standup-log.md # Daily log example
+│   ├── references/effort-rubric.md # 5-pillar input rubric
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── periodic-retreat/               # Quarterly strategic retreat facilitator
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-quarterly-review.md # Quarterly review artifact
+│   ├── references/retreat-framework.md # 4 review scales
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── brain-audit/                    # Knowledge hygiene & referential integrity auditor
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── examples/sample-audit-report.md # Hygiene report artifact
+│   ├── references/hygiene-rules.md # Core referential rules
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── tests/                          # Automated TDD test suite
+│   └── skills.test.ts              # Catalog, schema, and RFC assertions
+│
 ├── CONTRIBUTING.md                 # Meaningful Git Commit Protocol
 ├── LICENSE                         # MIT License
 ├── llms.txt                        # Machine-readable LLM documentation index

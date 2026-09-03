@@ -1,5 +1,5 @@
 name: updateagents
-description: Updates AGENTS.md, CLAUDE.md, and similar agent memory files with current workspace context. Integrates with cavemem, codegraph, rtk, memoryagent, and ponytail for enhanced discovery. Workspace-scoped only.
+description: Synchronizes AI-agent instructions and project context with the actual workspace state. Retrofits DOX architecture, syncs standards from new-project/templates, and strictly enforces the MuseMemory boundary.
 tools:
   - bash
   - view
@@ -9,18 +9,13 @@ tools:
   - grep
   - ls
 instructions: |
-  Follow the workflow in SKILL.md exactly. Key steps:
+  Follow the 17-step workflow in SKILL.md exactly. Key steps:
   
-  1. Discover existing memory files in current directory only (no parent traversal)
-  2. Read highest-priority existing file if found
-  3. Run available tools (cavemem, codegraph, rtk, memoryagent, ponytail) in parallel
-  4. Perform manual workspace inspection for commands, structure, patterns
-  5. Synthesize findings into structured sections
-  6. Update existing file or create AGENTS.md with proper template
-  7. Report what was changed/added
-  
-  Critical rules:
-  - NEVER go above current working directory
-  - ALWAYS read before writing to preserve content
-  - PREFER incremental updates over full rewrites
-  - Keep files under 5KB when possible
+  1. Scope: Current directory only. HARD BOUNDARY: NEVER touch, read, or modify .memory/**.
+  2. Discover: Discover existing instruction files (AGENTS.md, CLAUDE.md, .cursorrules).
+  3. Inspect: Inspect canonical sources (package.json, build configs, git diff).
+  4. Context Delta: Identify NEW, CHANGED, and OBSOLETE knowledge.
+  5. DOX Retrofit: If DOX is missing, scaffold 9-folder container and migrate facts to .agents/context/.
+  6. Standards Sync: Sync .agents/standards/ and brand tokens from new-project/templates/.
+  7. Validate: Verify size <5KB, commands match package.json, and .memory/** was untouched.
+  8. Report: Return concise structured summary of updates.

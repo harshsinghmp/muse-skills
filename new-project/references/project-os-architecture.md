@@ -1,58 +1,43 @@
-# Project Operating System Architecture Reference
+# Project Operating System & Progressive Disclosure DOX Architecture
 
-> Progressive Disclosure DOX Architecture & Agency Council Governance.
+## Overview
+The **Project OS** architecture moves beyond treating LLMs as ephemeral chatbots by embedding them directly into a stateful, governed, and progressively disclosed development environment.
 
 ---
 
 ## The 5 Core Pillars
 
-### 1. Progressive Disclosure DOX Rail (`AGENTS.md` + `.agents/`)
-Rather than single monolithic prompt files or flat 10-doc dumps, the DOX hierarchy separates root turn contracts from deep domain rules:
-- **`AGENTS.md`**: Root binding contract (~50 lines) establishing turn invariants, context hygiene, confidence gates, and DOX links.
-- **`.agents/standards/`**: Deep progressive disclosure rule modules loaded on-demand:
-  - `execution-kernel.md`: 6 Universal Judgment Laws, Martin Fowler Refactoring, Steve McConnell Code Complete.
-  - `security-vibeguard.md`: Zero secret exposure, Destructive Command Gate, untrusted tool output defense.
-  - `system-design.md`: Evans DDD, Nygard *Release It!* stability patterns, schema evolution.
-  - `workflows.md`: Scaled workflow tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.
-  - `git-workflow.md`: Branching hierarchy, meaningful commit format, SemVer.
-  - `council-roles.md`: Division responsibilities and subagent routing policies.
-  - `tech-stacks.md` + stack-specific guides (`frontend-nextjs.md`, `frontend-astro.md`, `backend-workers-hono.md`, `python-ai.md`, etc.).
+### 1. The Progressive Disclosure DOX Rail (`AGENTS.md`)
+A lean root contract (~45 lines) that enforces Core Turn Invariants and acts as a routing table. Agents load in-depth standards only when an active task touches that specific domain:
+- Universal Standards: Execution kernel, Vibeguard security, System design, Workflows, Git branching, DOX hierarchy, Council roles, Memory context.
+- Framework Standards: Astro v7.2.x, Next.js 16, Hono/Workers, Instatic HTML.
 
 ---
 
-### 2. Durable Project Context Map (`.agents/context/`)
-Authoritative single source of truth for the project:
-1. `index.md`: Context routing map.
-2. `product.md`: Executive summary, value proposition, and capability inventory.
-3. `architecture.md`: Stack blueprint, component boundaries, and runtime topology.
-4. `brand.md`: Voice, visual tone, and presentation rules.
-5. `current.md`: Verified shipped state and known gaps (Reality Gate).
-6. `decisions.md`: Immutable Architectural Decision Records (ADRs).
-7. `roadmap.md`: SOW board and active sprint backlog.
+### 2. Complete Containment (`./.agents/` 9-Folder Tree)
+Guarantees zero temporary file clutter at the repository root:
+- `archive/`: Timestamped retired plans & scratchpads (`[title]-[timestamp].md`).
+- `artifacts/`: Active specifications, walkthroughs, and UI design diffs.
+- `brand/`: Visual token schemas (OKLCH, typography, motion, radii) + BEM + A11y.
+- `context/`: 7 durable files (`index`, `product`, `architecture`, `brand`, `current`, `decisions`, `roadmap`).
+- `goals/`: Sprint milestones and verification checklists.
+- `research/`: Technical research briefs and benchmark scans.
+- `skills/`: Project-isolated turnkey agent skills.
+- `standards/`: Modular rulebooks read on-demand.
+- `workflows/`: Custom pipeline recipes.
 
 ---
 
-### 3. Dedicated Brand & Visual Identity System (`.agents/brand/`)
-- `tokens/`: Design tokens (`colors.json`, `motion.json`, `radii.json`, `shadows.json`, `spacing.json`, `typography.json`, `base.css`).
-- `design.md`: Visual language, OKLCH palette, 7 required UI component states.
-- `bem-conventions.md`: Semantic BEM CSS class architecture.
-- `a11y.md`: WCAG 2.2 AA non-negotiable mandates & checklist.
-- `screenshots/`: Storage for wireframes, screenshots, and visual references.
+### 3. Dual-Path Cognitive Memory
+Clean separation of machine runtime state from human-and-agent verified system reality:
+- **`.memory/CURRENT.md` (Machine / Real-Time)**: Owned by `musememory`. Contains active hard constraints, multi-agent collision workstreams, and session handoffs.
+- **`./.agents/context/current.md` (Durable Shipped Reality)**: Contains verified shipped reality, live deliverables, runtime health oracle, and known gaps/placeholders.
 
 ---
 
-### 4. Agent Containment & Memory
-- `.memory/`: Local persistent cognitive memory store.
-- `.agents/workflows/`: Phase-based workflow protocols.
-- `.agents/archive/`: Timestamped retired plans & scratchpads `[title]-[timestamp].md`.
-- `.agents/artifacts/`: Agent-generated plans & walkthroughs.
-- `.agents/goals/`: Sprint milestones & checklist tracking.
-- `.agents/research/`: Deep research briefs & logs.
-
----
-
-### 5. Nexus Adversarial Quality Gate
-- **Deterministic Check**: 0 TypeScript/lint errors + clean production build.
-- **Visual & Runtime Probes**: Playwright headless browser runs against local/staging checking HTTP status and DOM selectors.
-- **Vibeguard Protocol**: Zero secret leakage scan prior to shipping.
-- **Dynamic Documentation**: `scripts/generate_llms_txt.ts` bundles all context and standards into `llms.txt` and `llms-full.txt`.
+### 4. Agency Council Governance & Nexus Quality Gate
+- **👑 Muse**: Chief Agency Orchestrator leading turn contract extraction and task routing.
+- **⚡ Sol**: Product Architecture, backend logic, APIs, database schemas.
+- **🎨 Jasper**: Creative Technology, Design Systems, Motion, WCAG 2.2 AA.
+- **🚢 Crew**: Operations, staging environments, package management, deployment.
+- **🛡️ Nexus**: Mandatory quality hardening gate (Typecheck, Build, SecretScan, Conventional Commit check).
