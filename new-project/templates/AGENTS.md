@@ -4,6 +4,7 @@
 > **Governance Model**: Contract Extraction → Workstream Execution → Nexus Quality Gate
 > **Toolchain**: Default `bun` for workspace scripts; subprojects define their own runtime in sub-roots.
 > **DOX Rail**: `AGENTS.md` files are binding work contracts for their subtrees. Walk from root to target path; closer docs control local work details.
+> **Engine Aliases**: "Agent Engine" and "DOX Engine" reference this progressive disclosure scaffolding and governance engine.
 
 ---
 

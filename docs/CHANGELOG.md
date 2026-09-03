@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-09-04
+
+### Added
+- **`updatedocs` Skill (v2.0.0)**: Project-wide documentation synchronization, drift detection, and governance engine with a 20-step pipeline.
+- **Strict Governance Boundaries**: Enforced `.memory/` no-touch boundary (`OWNER = musememory`) and `.agents/` protected DOX architecture gate (explicit user permission required).
+- **8 Reference Policy Guides**: Added comprehensive reference guides covering document taxonomy, ownership frameworks, audit checklists, changelog boundaries, and architecture protections.
+- **Agent Engine & DOX Engine Aliases**: Added canonical triggers to `new-project` for seamless activation.
+- **Catalog Expansion**: Expanded suite from 16 to 17 skills across `package.json`, `skills.json`, `llms.txt`, `README.md`, and automated TDD test suite.
+
+---
+
+## [1.7.0] - 2026-09-04
+
+### Added
+- **Progressive Disclosure DOX Architecture**: Upgraded `new-project` with 2-stage Agents-First scaffolder and `.agents/` container template bundle (9 folders, 12 modular standards, brand tokens).
+- **Interactive DOX Wizard**: Interactive CLI wizard with archetype selections (Astro, Next.js, Instatic, Hono, Vite) and dynamic path resolvers.
+- **`updateagents` Modernization**: Rewritten with 17-step context sync, DOX container retrofit, and strict `.memory/**` isolation.
+
+---
+
 ## [1.6.0] - 2026-09-01
 
 ### Added

@@ -1,7 +1,7 @@
 # AGENTS.md - muse-skills
 
-Curated suite of sixteen universal AI agent skills (project provisioning,
-design system extraction, Refactoring UI heuristics, memory sync, performance enforcement,
+Curated suite of seventeen universal AI agent skills (project provisioning,
+documentation synchronization, design system extraction, Refactoring UI heuristics, memory sync, performance enforcement,
 Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing,
 claim verification, and reflective audits). MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
@@ -29,6 +29,7 @@ badges + tables + structure tree, `skills.json`, `llms.txt`.
 - Commits follow [CONTRIBUTING.md](CONTRIBUTING.md) (Meaningful Git Commit
 Protocol: `<type>(<scope>): summary` with Why / What / Verification).
 - No secrets or personal environment values in any shipped file.
+- Canonical aliases: "Agent Engine" and "DOX Engine" explicitly refer to the `new-project` Progressive Disclosure DOX scaffolding engine.
 
 
 

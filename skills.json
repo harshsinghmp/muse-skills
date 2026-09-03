@@ -2,11 +2,11 @@
   "skills": [
     {
       "name": "new-project",
-      "description": "Interactive project creator and Progressive Disclosure DOX provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite).",
+      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Aliases: Agent Engine, DOX Engine.",
       "path": "new-project/SKILL.md",
       "version": "2.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox"]
+      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox", "agent-engine", "dox-engine"]
     },
     {
       "name": "updateagents",
@@ -15,6 +15,14 @@
       "version": "2.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["memory", "documentation", "context", "agents", "workspace", "synchronization", "dox"]
+    },
+    {
+      "name": "updatedocs",
+      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
+      "path": "updatedocs/SKILL.md",
+      "version": "2.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["documentation", "sync", "impact-analysis", "changelog", "architecture", "audit", "git", "verification", "dox", "governance"]
     },
     {
       "name": "pua",
