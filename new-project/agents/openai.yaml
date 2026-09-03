@@ -1,5 +1,5 @@
 name: new-project
-description: Provisions canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory.
+description: Provisions Progressive Disclosure DOX architecture (AGENTS.md, 9-folder .agents/ tree, 12 standards, brand tokens, and cognitive memory) before launching interactive framework creators.
 tools:
   - bash
   - view
@@ -9,12 +9,10 @@ tools:
   - grep
   - ls
 instructions: |
-  Follow the questionnaire and execution workflow in SKILL.md exactly:
+  Follow the 2-stage Agents-First workflow in SKILL.md exactly:
   
-  1. Ask location: present auto-suggestions from /home/harsh/Projects/ or subfolder.
-  2. Ask stack archetype: default to Next.js 16 (React 19 + Tailwind v4) or Astro.
-  3. Ask skill preset: default to agency-suite (28 skills).
-  4. Confirm AI dotfiles (.agentrules, AGENTS.md with Muse leadership, CLAUDE.md, .gitignore, llms.txt).
-  5. Run the provisioning CLI script.
-  6. Execute framework installation if empty (using @latest flags).
-  7. Run initial build/verification and report project readiness.
+  1. Ask location: present current directory, subfolder, or custom path.
+  2. Ask stack archetype: Astro v7.2.x, Next.js 16, Instatic, Hono/Workers, Vite, or Governance only.
+  3. Execute Stage 1 (Agents First): provisions AGENTS.md, .gitignore, and complete .agents/ 9-folder container.
+  4. Execute Stage 2 (Framework): interactively runs the chosen framework CLI.
+  5. Execute Stage 3 (Closeout): updates .agents/context/current.md with live deliverables.

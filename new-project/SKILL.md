@@ -1,96 +1,91 @@
 ---
 name: new-project
-description: "Interactive project creator and Project OS provisioner. Bootstraps canonical /docs/, 8-stage reality machine (STATE.md), .agentrules, AGENTS.md (Muse Council), dynamic llms.txt, .gitignore, and selective skill bundles into any repository or directory."
-version: 1.0.0
-author: Harsh Singh
+description: "Interactive project creator and Progressive Disclosure DOX provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite)."
+version: 2.0.0
+author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
 metadata:
   hermes:
-    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite]
-    related_skills: [updateagents, agent-handoff]
+    tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite, dox]
+    related_skills: [updateagents, agent-handoff, context-anchor]
     requires_tools: [bash, view_file, write_to_file]
 ---
 
-# 🚀 new-project — Autonomous Project OS & Governance Scaffolder
+# 🚀 new-project — Autonomous Project OS & DOX Scaffolder
 
-Interactive project creator and Project Operating System provisioner. Bootstraps the 10 Canonical `/docs/` knowledge base, 8-stage reality state machine (`STATE.md`), Council governance (`AGENTS.md`), dynamic `llms.txt`, `.gitignore`, and selective skill bundles into any workspace.
+Interactive project creator and Project Operating System provisioner. Implements the **"Agents First, Then Project Type"** two-stage architecture:
+1. **Stage 1: Governance Container**: Drops the lean root `AGENTS.md`, `.gitignore`, 9-folder `.agents/` tree (standards, brand, context, archive, artifacts, goals, research, skills, workflows), and initializes cognitive memory.
+2. **Stage 2: Project Type**: Interactively launches the chosen framework creator (Astro v7.2.x, Next.js 16, Instatic HTML, Hono/Workers, or Vite).
+3. **Stage 3: Closeout DOX Pass**: Synchronizes `.agents/context/current.md` with verified live deliverables.
 
 ---
 
 ## When to Use
 
 - User asks to *"create a new project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
-- Setting up a new client application, microservice, or prototype.
-- Upgrading an existing unorganized repository to the LifeOS Agency Council architecture.
-- Bootstrapping AI governance (`.agentrules`, `AGENTS.md`, `CLAUDE.md`, `.gitignore`, `STATE.md`).
+- Setting up a new client application, agency showcase, microservice, or prototype.
+- Equipping an existing unorganized repository with the Progressive Disclosure DOX architecture.
+- Initializing a project with strict context isolation (zero cross-project bleed).
 
 ---
 
 ## Quick Reference
 
-| Tech Stack Archetype | Framework Target | Generator Command / Tool |
+| Archetype Target | Framework & Runtime | Command / Generator |
 |:---|:---|:---|
-| **Next.js 16** | App Router + Tailwind v4 + React 19 | `npx -y create-next-app@latest` |
-| **Astro** | Static / SSR + Tailwind v4 + TS | `npx -y create-astro@latest` |
-| **Vite + React** | Client SPA + TypeScript | `npx -y create-vite@latest` |
-| **Node / Bun Backend** | Fastify / Hono API service | Bun native init |
-| **WordPress / PHP** | Custom theme & plugin environment | PHP / Composer baseline |
-| **Generic / Vanilla** | TypeScript library or tool | TypeScript strict starter |
+| **Astro v7.2.x** *(Recommended)* | Static / SSR + Islands + Cloudflare | `bun create astro@latest .` |
+| **Next.js 16** | React 19 + App Router + Server Actions | `bun create next-app@latest .` |
+| **Instatic HTML** | Pure HTML brochure / zero-JS landing | Instatic SSG starter |
+| **Hono / Workers** | Cloudflare Workers edge API microservice | `bun create hono@latest .` |
+| **Vite + React** | Client SPA + TypeScript | `bun create vite@latest .` |
+| **None / Existing** | Governance container only (DOX baseline) | Agents First only |
 
 ---
 
 ## Procedure
 
-### Step 1: Location & Folder Selection
-Guide the user through interactive selection:
-1. **Existing Projects Scan**: Scan `/home/harsh/Projects/` and present immediate selectable options.
-2. **New Subfolder Creation**: Option to create `/home/harsh/Projects/<name>`.
-3. **Current Working Directory**: Option to scaffold in `.`.
-
-### Step 2: Tech Stack Selection (Always Latest)
-Select framework archetype and extract project name and description.
-
-### Step 3: Skill Preset Selection
-- `[agency-suite]` *(Recommended / Default)*: Full agency suite (Design, Animation, Taste, Fullstack).
-- `[design]`: Core design tokens, motion, and UI patterns.
-- `[fullstack]`: Auth, API security, Next.js patterns, E2E testing.
-- `[growth]`: CRO, SEO audit, keyword clustering, landing page copywriting.
-- `[all]`: Complete workspace skill library.
-- `[none]`: Lightweight baseline without skill copies.
-
-### Step 4: AI Dotfiles & Governance Confirmation
-Confirm generation of:
-1. `.agentrules` (Vibeguard zero secret leakage + evidence-before-claims).
-2. `AGENTS.md` (Muse as Chief Orchestrator, Sol, Jasper, Crew, Nexus).
-3. `CLAUDE.md` (Operational commands & guidelines).
-4. `.gitignore` (Hardened default ignore rules including agents, IDEs, and environments).
-5. `llms.txt` & `llms-full.txt` + `scripts/generate_llms_txt.ts`.
-6. `docs/01_OVERVIEW.md` through `docs/10_UNRESOLVED.md`.
-7. `STATE.md` (8-Stage Reality Machine) & `SUMMARY.md` (Change Ledger).
-8. `scripts/nexus_verify.sh` & `tests/e2e/harness_probe.spec.ts`.
-
-### Step 5: Execution Command
-Run the universal provisioner script:
+### Step 1: Launch Provisioner
+Execute the universal scaffolder script via Bun:
 
 ```bash
-bun ~/.claude/LIFEOS/TOOLS/NewProject.ts "<targetPath>" --name="<projectName>" --type="<type>" --desc="<description>" --skills="agency-suite"
+# Interactive Mode (Prompts for destination, name, and framework archetype)
+bun path/to/new-project/scripts/new-project.ts
+
+# Non-Interactive Mode (Direct flags)
+bun path/to/new-project/scripts/new-project.ts <targetPath> --name="<projectName>" --type="<astro|nextjs|instatic|hono|vite|none>" --desc="<description>"
 ```
+
+### Step 2: Stage 1 — Agents First (Governance Baseline)
+1. Resolves target directory.
+2. Copies `templates/AGENTS.md` and `.gitignore`.
+3. Provisions the complete 9-folder `.agents/` containment tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
+4. Customizes `.agents/context/product.md` and `architecture.md`.
+5. Initializes `.memory/` and real-time `.memory/CURRENT.md`.
+
+### Step 3: Stage 2 — Project Type (Framework Execution)
+If an archetype is selected (e.g. Astro or Next.js):
+1. Runs official framework creator interactively in target directory.
+2. Preserves the AI governance container while generating framework boilerplates.
+
+### Step 4: Stage 3 — Closeout DOX Pass
+1. Scans generated project files.
+2. Records verified initial deliverables in `.agents/context/current.md`.
 
 ---
 
 ## Pitfalls
 
-- **Skipping Invariant Probes**: Never leave the project without running initial `scripts/nexus_verify.sh`.
-- **Committing Secrets**: Always ensure `.env.example` exists and `.env` is listed in `.gitignore`.
-- **Premature State Claims**: Never mark features as `LOCAL_VERIFIED` or `PROD_VERIFIED` in `STATE.md` without command receipts.
+- **Skipping Agents First**: Never run framework generation before AI governance is initialized, or framework defaults may overwrite or conflict with agent boundaries.
+- **Cross-Project Bleed**: Never copy client-specific skills, assets, or memory files from sibling projects. Every project starts with a clean isolated container.
+- **Committing Secrets**: Ensure `.env` is listed in `.gitignore` and `.env.example` exists.
+- **Monolithic Memory Dumps**: Keep `.memory/CURRENT.md` for machine real-time invariants and `.agents/context/current.md` for durable shipped reality.
 
 ---
 
 ## Verification
 
-After scaffolding, execute and verify:
-1. **Directory Structure**: `ls -la <targetPath>/docs <targetPath>/.agents/skills`
-2. **LLM Documentation Generator**: `cd <targetPath> && bun scripts/generate_llms_txt.ts`
-3. **Vibeguard Secret Scan**: `bun ~/.claude/LIFEOS/TOOLS/SecretScan.ts <targetPath>`
-4. **Summary Presentation**: Report provisioned OS summary and immediate next actions to the user.
+After scaffolding, verify the installation:
+1. **Container Check**: Run `ls -la <targetPath>/.agents/` to ensure all 9 folders exist.
+2. **DOX Check**: Verify `.agents/context/current.md` lists the initial deliverables under Section 2.
+3. **Secret Scan**: Run pre-ship secret check on the new project directory.
