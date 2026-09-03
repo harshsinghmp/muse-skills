@@ -9,6 +9,7 @@ Rules for updating, structuring, and maintaining project changelogs without intr
 - **Human-Curated Summaries**: A changelog is written for humans, not machines. It must describe the functional and consumer-facing impact of changes, not echo raw Git commit logs.
 - **Strict Historical Preservation**: Never edit, rewrite, reorder, or delete past release sections. History remains immutable once tagged.
 - **No Fabricated Metadata**: Never guess or invent upcoming version numbers, release dates, release tags, or GitHub release URLs without explicit evidence or confirmation.
+- **Documentation Sync Boundary**: Documentation synchronization does NOT itself imply a changelog entry. Only document changes that represent meaningful project changes according to the changelog policy. Avoid changelog noise from routine documentation-only corrections unless the project explicitly tracks documentation changes.
 - **Release-State Awareness**:
   - **Working Tree / Unreleased Changes**: Must always be placed under an `## [Unreleased]` header.
   - **Tagged Releases**: Only move items from `[Unreleased]` into a concrete version header (`## [1.2.0] - YYYY-MM-DD`) when executing a confirmed release.
@@ -57,13 +58,4 @@ Every bullet in a changelog section should follow this format:
 | `- update stuff` | `- **Auth Middleware**: Fixed token expiration handling to return 401 Unauthorized instead of 500.` |
 | `- added new flags and refactored everything` | `- **CLI**: Added \`--dry-run\` and \`--json\` output flags for automated CI pipelines.` |
 | `- bump version to 2.0.0 (unreleased)` | *(Leave under \`## [Unreleased]\` until formal release)* |
-
----
-
-## 4. Semantic Versioning (SemVer) Guidance
-
-When evaluating whether a change warrants a patch, minor, or major version increment:
-
-- **PATCH (`x.x.1`)**: Backwards-compatible bug fixes and minor internal adjustments.
-- **MINOR (`x.1.x`)**: New backwards-compatible functionality, additions, or features.
-- **MAJOR (`1.x.x`)**: Incompatible API changes, breaking configuration modifications, or dropped support.
+| `- Updated docs / Fixed typo in README` | *(Omit documentation-only noise unless project explicitly tracks doc changes)* |

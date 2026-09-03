@@ -1,6 +1,6 @@
 # 📐 Architecture Documentation & ADR Policy
 
-Standards for synchronizing system topology, component models, data flows, and Architectural Decision Records (ADRs).
+Standards for synchronizing system topology, component models, data flows, Architectural Decision Records (ADRs), and DOX architecture boundaries.
 
 ---
 
@@ -72,3 +72,57 @@ ADRs document significant architectural choices, their context, and evaluated tr
 - **Superseding an ADR**: When a new decision replaces an older one, create a new ADR (`ADR-005`) and update the old ADR's status:
   `Status: SUPERSEDED by [ADR-005](./adr-005.md)`.
 - **No Fabricated Rationale**: If code reveals a decision was made but the rationale cannot be verified from repository evidence, flag it as unverified rather than inventing false justification.
+
+---
+
+## 4. DOX Architecture Protection & System Boundaries
+
+`.agents/` is considered **protected architectural infrastructure**.
+
+Architecture documentation may identify or describe its role, but documentation synchronization does **not** authorize structural changes to `.agents/`.
+
+```text
+                    ┌──────────────────────┐
+                    │    CODE / CONFIG     │
+                    │ SCHEMAS / WORKFLOWS  │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     updatedocs       │
+                    │                      │
+                    │ impact analysis      │
+                    │ drift detection      │
+                    │ doc synchronization  │
+                    │ verification         │
+                    └──────┬───────┬───────┘
+                           │       │
+               ┌───────────┘       └─────────────┐
+               ▼                                 ▼
+       ┌──────────────┐                  ┌────────────────┐
+       │ Normal Docs  │                  │ Agent Context  │
+       │ README/API   │                  │ AGENTS/etc.    │
+       │ guides/etc.  │                  │                │
+       └──────────────┘                  └───────┬────────┘
+                                                 │
+                                                 ▼
+                                          updateagents
+                                          (handoff)
+
+                 PROTECTED SYSTEMS
+                 ──────────────────
+
+       .agents/  → DOX architecture
+                   inspect with AGENTS.md governance
+                   explicit permission before modification
+
+       .memory/  → musememory
+                   updatedocs NEVER touches
+```
+
+### Protocol for `.agents/`:
+Changes to `.agents/` require:
+1. `AGENTS.md` governance review
+2. Concrete impact analysis
+3. Explicit user permission
+4. Appropriate agent/architecture workflow (e.g. `new-project` or `updateagents`)

@@ -1,65 +1,43 @@
 # 🧠 Memory & Project State Policy
 
-Standards for synchronizing persistent cognitive memory stores, state files (`STATE.md`, `CURRENT.md`, `.agents/context/current.md`), and rolling change ledgers (`SUMMARY.md`).
+Standards defining the strict operational boundaries between documentation synchronization (`updatedocs`), cognitive memory systems (`musememory`), and DOX architecture (`.agents/`).
 
 ---
 
-## 1. Durable Memory vs. Ephemeral Session Noise
+## 1. Complete Separation of Memory and Documentation
 
-Project memory preserves context across disparate agent conversations and developer sessions. It must contain only **durable, verified facts**.
+Project memory and state systems exist **completely independently** of `updatedocs`:
+
+- **`.memory/` is Off-Limits**: `.memory/` is owned and automatically maintained by `musememory`. `updatedocs` does NOT read, write, modify, or reorganize `.memory/`.
+- **`.agents/context/*` is Protected DOX Architecture**: `updatedocs` does NOT maintain `.agents/context/*`. Synchronization of DOX context is owned by designated DOX mechanisms (`new-project`, `updateagents`, or human operators).
+- **Durable Fact Reporting Only**: If documentation analysis discovers a durable fact or constraint that would normally belong in project memory, `updatedocs` may report it as a recommendation in the final output. It must **never** write that fact into `.memory/` or `.agents/context/*` directly.
 
 ```
-[Raw Tool Output / Stack Trace]
-          │
-          ▼
- [Ephemeral Hypothesis] ──► (Discard upon task resolution)
-          │
-          ▼
- [Verified Finding / Permanent Rule] ──► Write to .memory/ / current.md
+[Repository Change / Diff]
+           │
+           ▼
+     [updatedocs] ──► Audits & synchronizes user-facing project docs (README, API, CHANGELOG)
+           │
+           ├──► Identifies durable constraint ──► Reports in output (DO NOT write to .memory/)
+           │
+           └──► Identifies agent context drift ──► Recommends `updateagents`
 ```
-
-### ✅ What Qualifies for Durable Memory:
-- **Verified Capabilities**: Features tested and proven working with concrete receipts.
-- **Hard Active Constraints**: Project invariants, forbidden files, strictly required flags.
-- **Architectural Decision Outcomes**: Approved decisions that govern ongoing work.
-- **Durable Environmental Gotchas**: Non-obvious quirks (e.g. *"Native module requires Node 20+"*).
-- **Migration & Schema State**: Currently active database schema version and in-flight migrations.
-
-### ❌ What Must NEVER Be Put into Memory:
-- Raw terminal logs, compiler stack traces, or entire file contents.
-- Temporary debugging ideas or refuted hypotheses.
-- Unverified assumptions about future user intent.
-- Transient task checklists that expire with the current turn.
 
 ---
 
-## 2. Standard State Files & Schemas
+## 2. Independent State Systems
 
-### 1. `CURRENT.md` / `.agents/context/current.md` (Active Reality State)
-Maintains the immediate ground truth:
-```markdown
-# 📍 Current Shipped State & Reality Gate
+### 1. `.memory/` (Machine / Real-Time State)
+- **Owner**: `musememory`
+- **Scope**: Ephemeral working constraints, active execution invariants, multi-agent collision workstreams.
+- **Rule for updatedocs**: `DO NOT TOUCH`.
 
-- **Phase**: STABLE | IN_DEVELOPMENT | REFACTORING
-- **Last Verified**: YYYY-MM-DD
+### 2. `.agents/context/current.md` (Shipped Reality Oracle)
+- **Owner**: Protected DOX Architecture
+- **Scope**: Verified shipped capabilities, runtime oracle health, known gaps.
+- **Rule for updatedocs**: Inspect under applicable `AGENTS.md` governance; `DO NOT MODIFY` without explicit user permission.
 
-## 1. Verified Capabilities
-- [x] Feature A (Passed Playwright probe 2026-09-01)
-- [x] Endpoint B (HTTP 200 verified)
-
-## 2. Active Focus & Open Constraints
-- [ ] Task C: In-progress
-- Invariant: Zero secret exposure server-side execution.
-```
-
-### 2. `SUMMARY.md` / `SESSION_LOG.md` (Change Ledger)
-Maintains a reverse-chronological rolling ledger of verified session changes:
-```markdown
-## [YYYY-MM-DD] - <Task Name>
-- **Author**: <Agent / Contributor>
-- **Changes**:
-  - Implemented X in `src/api/`.
-  - Added test suite in `tests/`.
-  - Updated API docs in `docs/api/`.
-- **Verification**: `bun test` passed (24 tests, 0 failures).
-```
+### 3. `SUMMARY.md` / `SESSION_LOG.md` (Project Change Ledgers)
+- **Owner**: Project developers & active workflows
+- **Scope**: Reverse-chronological rolling ledger of verified session changes.
+- **Rule for updatedocs**: Append verified documentation synchronization entries only when the project explicitly maintains a change ledger.

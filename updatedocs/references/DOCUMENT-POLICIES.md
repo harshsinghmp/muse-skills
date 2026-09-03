@@ -1,10 +1,26 @@
 # 📜 Document Class Operational Policies
 
-Detailed standards, invariants, and synchronization rules for every specific category of project documentation.
+Detailed standards, invariants, ownership rules, and synchronization boundaries for every specific category of project documentation.
 
 ---
 
-## 1. README Policy (`README.md`, `README.*.md`)
+## 1. Universal Document Ownership & Permission Framework
+
+Every documentation surface must be classified and treated according to its fundamental ownership model before editing:
+
+| Ownership Class | Definition | Operational Rule for `updatedocs` |
+|:---|:---|:---|
+| **SOURCE-OF-TRUTH** | Generated or defined directly by implementation, code schemas, manifests, or executable configurations. | Use as the verification oracle; synchronize downstream derived docs to match. |
+| **DERIVED** | Summarizes, formats, or aggregates facts from another canonical source of truth. | Safe for automated synchronization when evidence from the source of truth is direct. |
+| **HUMAN-CURATED** | Contains high-value human context, architectural rationale, trade-offs, engineering philosophy, or business rules. | Preserve structure and project voice; apply only minimal, surgical corrections. Never perform wholesale rewrites. |
+| **PROTECTED** | Architecture infrastructure, operational contracts, or client deliverables (`.agents/*`, client SOPs). | Requires explicit user permission before any modification. Read applicable governance first. |
+| **GENERATED** | Output produced by build scripts, documentation compilers (TypeDoc, Sphinx, OpenAPI generators), or automated tools. | Do not patch directly; update the underlying source or generator mechanism and trigger regeneration. |
+| **HISTORICAL** | Immutable records of past states (past releases in `CHANGELOG.md`, accepted ADRs, retired plans in `.agents/archive/`). | Must never be rewritten, deleted, or altered merely because it describes an older state. |
+| **CLIENT-FACING** | Business process documentation, client handoff deliverables, CMS manuals, SEO guides, or client SOPs. | High-risk; prefer human review and explicit approval before publishing changes. |
+
+---
+
+## 2. README Policy (`README.md`, `README.*.md`)
 
 The README is the front door of the repository. It balances brevity with utility.
 
@@ -24,7 +40,7 @@ The README is the front door of the repository. It balances brevity with utility
 
 ---
 
-## 2. API Documentation Policy (`docs/api/*`, `openapi.yaml`)
+## 3. API Documentation Policy (`docs/api/*`, `openapi.yaml`)
 
 API documentation represents a formal contract with external and internal consumers.
 
@@ -41,7 +57,7 @@ API documentation represents a formal contract with external and internal consum
 
 ---
 
-## 3. Contributing Guidelines Policy (`CONTRIBUTING.md`)
+## 4. Contributing Guidelines Policy (`CONTRIBUTING.md`)
 
 Documents the local workflow for internal developers and open-source contributors.
 
@@ -53,7 +69,7 @@ Documents the local workflow for internal developers and open-source contributor
 
 ---
 
-## 4. License Policy (`LICENSE`, `NOTICE`)
+## 5. License Policy (`LICENSE`, `NOTICE`)
 
 ### Strict Invariants:
 - **Zero Automatic Modification**: Never edit, change, replace, or re-license a repository's `LICENSE` file automatically during general documentation synchronization.
@@ -62,10 +78,10 @@ Documents the local workflow for internal developers and open-source contributor
 
 ---
 
-## 5. Configuration & Environment Policy (`docs/configuration.md`, `.env.example`)
+## 6. Configuration & Environment Policy (`docs/configuration.md`, `.env.example`)
 
 ### Invariants:
-- **Zero Raw Secrets**: `.env.example` must contain only variable keys with placeholder strings (`your_api_key_here`, `http://localhost:5432/mydb`).
+- **Zero Raw Secrets**: `.env.example` must contain only variable keys with placeholder strings (`YOUR_API_KEY_HERE`, `http://localhost:5432/mydb`).
 - **Comprehensive Variable Inventory**: Every variable referenced via `process.env.*`, `os.environ`, or config loaders must be documented with:
   - Key name
   - Required vs. Optional status
@@ -75,7 +91,7 @@ Documents the local workflow for internal developers and open-source contributor
 
 ---
 
-## 6. Migration & Upgrading Policy (`MIGRATING.md`, `UPGRADING.md`)
+## 7. Migration & Upgrading Policy (`MIGRATING.md`, `UPGRADING.md`)
 
 Targeted at consumers upgrading across breaking versions.
 
@@ -86,7 +102,7 @@ Targeted at consumers upgrading across breaking versions.
 
 ---
 
-## 7. Runbooks & Operational Documentation (`docs/runbooks/*`)
+## 8. Runbooks & Operational Documentation (`docs/runbooks/*`)
 
 Targeted at operators maintaining live systems.
 

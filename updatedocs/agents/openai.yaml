@@ -1,0 +1,21 @@
+name: updatedocs
+description: Synchronizes project documentation with actual repository state. Enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, detects semantic drift, and applies minimal evidence-backed updates.
+tools:
+  - bash
+  - view
+  - write
+  - edit
+  - glob
+  - grep
+  - ls
+instructions: |
+  Follow the 20-step workflow in SKILL.md exactly. Key non-negotiables:
+  
+  1. Boundary: Workspace root only. HARD BOUNDARY: NEVER touch, read, or modify .memory/**.
+  2. DOX Architecture: Treat .agents/ as protected infrastructure. NEVER modify without explicit user permission.
+  3. Governance: Always read applicable AGENTS.md before acting.
+  4. Oracle: Repository reality is the oracle (manifests, schemas, routes, CLI definitions).
+  5. Minimal Churn: Apply surgical updates; preserve human-authored context and project voice.
+  6. Ownership: Classify documentation surfaces (SOURCE-OF-TRUTH, DERIVED, PROTECTED, HISTORICAL).
+  7. Verification: Run 14-point audit checklist before completing.
+  8. Report: Return structured documentation synchronization report.
