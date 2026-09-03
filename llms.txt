@@ -12,6 +12,7 @@
 ## Published Skills Catalog
 - [new-project](new-project/SKILL.md): (Flagship) Interactive Project OS, DOX Engine & Agent Engine Scaffolder.
 - [updateagents](updateagents/SKILL.md): (Flagship) Automatic Workspace Memory & Context Synchronizer.
+- [updatedocs](updatedocs/SKILL.md): Project-Wide Documentation Synchronization, Drift Detection & Governance Engine.
 - [pua](pua/SKILL.md): PIP Performance Improvement Plan & Hardcore Debugging.
 - [agent-handoff](agent-handoff/SKILL.md): Structured Subagent Context Packet Generator.
 - [dead-letter](dead-letter/SKILL.md): Failed/Blocked Task Triage & Escalation Generator.

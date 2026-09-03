@@ -17,6 +17,14 @@
       "tags": ["memory", "documentation", "context", "agents", "workspace", "synchronization", "dox"]
     },
     {
+      "name": "updatedocs",
+      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
+      "path": "updatedocs/SKILL.md",
+      "version": "2.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["documentation", "sync", "impact-analysis", "changelog", "architecture", "audit", "git", "verification", "dox", "governance"]
+    },
+    {
       "name": "pua",
       "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger on repeated failures, deflections, passive behavior, or complex stalls.",
       "path": "pua/SKILL.md",
