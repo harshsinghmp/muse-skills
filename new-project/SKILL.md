@@ -87,6 +87,12 @@ If an archetype is selected (e.g. Astro or Next.js):
 1. Scans generated project files.
 2. Records verified initial deliverables in `.agents/context/current.md`.
 
+### Step 5: Pattern Promotion & Skill Extraction (Continuous Self-Improvement)
+When recurring patterns emerge across tasks (≥3 occurrences) and are verified by tests:
+1. Review the 3 extraction gates in [`references/skill-extraction.md`](references/skill-extraction.md).
+2. Execute `bun scripts/extract-skill.ts --name <skill-name> --desc "<desc>" --occurrences 3 --verified`.
+3. Scaffolds an RFC-compliant skill container with `SKILL.md`, `README.md`, and `agents/openai.yaml` under `.agents/skills/<skill-name>/` or project root.
+
 ---
 
 ## Pitfalls
