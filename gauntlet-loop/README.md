@@ -4,7 +4,7 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /gauntlet](https://img.shields.io/badge/Triggers-%2Fgauntlet%20%7C%20%2Fgauntlet--loop-purple.svg?style=for-the-badge)](#)
 
-Bounded multi-agent quality improvement loop that eliminates infinite token burns, self-grading delusions, and regression churn. Deploys an unyielding, 4-role protocol (Freeze → Build → Fresh Critic → Automated Gate → Integrator) with hard mathematically enforced termination boundaries, OWASP security header audits, and multi-viewport visual regression gates.
+Bounded multi-agent quality improvement loop that eliminates infinite token burns, self-grading delusions, and regression churn. Deploys an unyielding, 4-role protocol (Freeze → Build → Fresh Critic → Automated Gate → Integrator) comparing against a **Named Real-World Bar** with blind A/B critiques, OWASP security header audits, and multi-viewport visual regression gates.
 
 ---
 
@@ -12,10 +12,14 @@ Bounded multi-agent quality improvement loop that eliminates infinite token burn
 
 Autonomous agents frequently fail during iterative refinement in three catastrophic ways:
 1. **Self-grading delusion**: The agent evaluating code is the same agent that wrote it, consistently overlooking its own blind spots.
-2. **Infinite regression churn**: Changes in round 3 break fixes made in round 1, oscillating infinitely without converging on quality.
-3. **Overlooked Web Security & Layout Defects**: Shipping code that passes unit tests but omits essential security headers (CSP, HSTS) or blows out mobile viewports.
+2. **Comparing against vague abstractions**: Iterating without a concrete, fetchable reference bar to benchmark against.
+3. **Infinite regression churn**: Changes in round 3 break fixes made in round 1, oscillating infinitely without converging on quality.
 
-`gauntlet-loop` enforces a strict 4-role workflow with isolated Fresh Critic auditing, automated gate validation (unit tests + security headers + 3-tier viewports), single-fix integration, and mathematical stop conditions (score plateau, regression, or proof of passing).
+`gauntlet-loop` enforces **"The Bar is the Whole Trick"**:
+- **Named Real Bar**: Compares against actual production sites, top-tier OSS repos, or named publications — never vague descriptions.
+- **Blind A/B Evaluation**: The Fresh Critic compares outputs side-by-side with labels stripped to judge objectively.
+- **Dual Modes**: Run the complete autonomous 4-role loop or synthesize a 120–180 word paste-ready `/loop` prompt.
+- **Automated Gate**: Enforces tests, OWASP security headers (CSP/HSTS), and 3-viewport responsive checks (375px, 768px, 1280px).
 
 ---
 

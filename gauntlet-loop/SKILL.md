@@ -51,15 +51,29 @@ Do NOT use this skill when:
 
 ## Quick Reference
 
-### The 4 Gauntlet Roles
+### The 4 Gauntlet Roles & Blind Reference Bar
 
 ```
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────────────────┐       ┌─────────────────┐
 │     BUILDER     │ ────▶ │  FRESH CRITIC   │ ────▶ │       AUTOMATED GATE        │ ────▶ │   INTEGRATOR    │
 │ Minimal, clean  │       │ Blind audit vs  │       │ Tests, types, secret scans, │       │ Merges ONLY the │
-│ diff candidate  │       │ frozen rubric   │       │ security headers & viewports│       │ #1 largest fix  │
+│ diff candidate  │       │ NAMED REAL BAR  │       │ security headers & viewports│       │ #1 largest fix  │
 └─────────────────┘       └─────────────────┘       └─────────────────────────────┘       └─────────────────┘
 ```
+
+### 🎯 "The Bar is the Whole Trick" Doctrine
+
+The loop only produces quality if the thing it compares against is **real**:
+- **Named**: A specific entity, not an abstract category (*"Nike's running landing page"*, not *"modern athletic sites"*).
+- **Fetchable**: The critic can obtain the raw reality (live URL screenshot, published article, test suite).
+- **Comparable**: Both artifacts can sit side-by-side so a judge can pick a winner.
+
+| Goal Type | Concrete Passing Bar | Measurable Half |
+| :--- | :--- | :--- |
+| **Web Apps & UI** | Live site of named best-in-class product screenshotted at 375px & 1440px. | Zero layout shift, CSP/HSTS headers, zero horizontal scroll overflow. |
+| **Code & CLI Tools** | Top-tier open source repository implementation (e.g. Bun, Ripgrep, Hono). | Benchmark latency, memory footprint, 100% test pass rate. |
+| **Writing & Essays** | Specific published article by named author (e.g. Julia Evans, Paul Graham). | Reading grade level, clarity score, word count parity. |
+| **System Research** | Named industry whitepaper or peer-reviewed methods section. | Citation count, empirical receipts, falsifiable claims. |
 
 ### Stop Conditions Matrix
 
@@ -81,24 +95,26 @@ When evaluating web endpoints or frontend components:
 
 ## Procedure
 
-### Step 1 — Freeze the Job Contract (`GAUNTLET_JOB_CONTRACT.md`)
-Before executing any generation or editing, lock the contract in workspace root:
-1. **Goal**: Precise, measurable objective statement.
-2. **Acceptance Criteria**: 3–5 binary checkboxes (must be objectively verifiable). Include web security headers and responsive viewport criteria if delivering web applications.
-3. **Automated Proof Commands**: Pinned commands (e.g., `bun test`, `tsc --noEmit`, `SecretScan.ts`, curl header audits).
-4. **Iteration Budget**: Max rounds (default 3).
+### Option A: Autonomous Multi-Role Execution Loop
 
-### Step 2 — Round Execution Loop
+#### Step 1 — Set the Real Bar & Freeze the Job Contract (`GAUNTLET_JOB_CONTRACT.md`)
+1. **Name the Bar**: If the user supplied a reference, use it. If not, offer **2 or 3 candidate bars** (one line each) and wait for their pick.
+2. **Lock Contract**: Record in workspace root:
+   - **Goal**: Precise, measurable objective statement.
+   - **Concrete Bar**: Named fetchable reference artifact.
+   - **Acceptance Criteria**: 3–5 binary checkboxes + OWASP security headers + responsive viewports.
+   - **Automated Proof Commands**: Pinned commands (`bun test`, `tsc --noEmit`, `SecretScan.ts`, curl header audits).
+   - **Iteration Budget**: Max rounds (default 3, hard ceiling 5).
 
+#### Step 2 — Round Execution Loop (with Blind A/B Critique)
 ```
 Round N (N = 1..max_rounds):
   1. BUILD: Builder produces candidate patch based strictly on previous round critic feedback.
-  2. AUDIT: Spawn isolated Fresh Critic subagent with NO memory of builder reasoning. Critic scores 0.0–10.0 across 4 axes:
-     - Correctness & Invariants (40%)
-     - Minimal Diff Discipline (25%)
-     - Edge-Case Coverage (20%)
-     - Architectural Cleanliness (15%)
-  3. GATE: Run automated proof suite AND Web App Security & Visual Gate (see references/web-security-visual-gate.md):
+  2. AUDIT (Blind A/B): Spawn isolated Fresh Critic subagent with NO memory of builder reasoning.
+     - Strip labels from candidate and bar.
+     - Put candidate next to the bar blind; judge which is better and name the single biggest remaining gap.
+     - Score 0.0–10.0 across: Correctness (40%), Minimal Diff (25%), Edge Cases (20%), Architecture (15%).
+  3. GATE: Run automated proof suite AND Web App Security & Visual Gate:
      - Check 5 mandatory security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
      - Check 3 responsive viewports (375px, 768px, 1280px) for zero horizontal overflow.
      - Any test failure, missing critical security header, or visual overflow zeroes the round score (0.0).
@@ -106,14 +122,23 @@ Round N (N = 1..max_rounds):
   5. DECIDE: Evaluate Stop Conditions Matrix.
 ```
 
-### Step 3 — Integrator Gate
+#### Step 3 — Integrator Gate
 The Integrator agent NEVER merges bulk diffs. It isolates and applies **only the single highest-impact delta** that directly improved the score, preserving all previously verified baselines.
 
-### Step 4 — Acceptance Packet Synthesis (`ACCEPTANCE_PACKET.md`)
+#### Step 4 — Acceptance Packet Synthesis (`ACCEPTANCE_PACKET.md`)
 Upon reaching success termination, compile the final artifact:
 - Summary of rounds executed and score trajectory ($R_1 \rightarrow R_N$).
 - Verbatim execution receipts of automated proof commands, security headers, and viewport checks.
 - Verified diff summary and signature.
+
+---
+
+### Option B: Gauntlet Prompt Synthesizer Mode
+When the user asks to *"make a gauntlet prompt"* or *"loop until it beats X"*, craft ONE short, paste-ready prompt (120–180 words):
+1. **Set the Bar**: Name a concrete, fetchable reference.
+2. **Break into Pieces**: Smallest judgeable components.
+3. **Blind Critic Directive**: Fresh critic puts output next to the bar blind with labels stripped and names the #1 biggest gap.
+4. **Offer to Run**: Append flat line: `I can run this here.`
 
 ---
 

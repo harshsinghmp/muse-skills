@@ -3,8 +3,8 @@
  * 🏛️ Universal Project OS & Progressive Disclosure DOX Scaffolder
  * 
  * Pipeline:
- *   Stage 1: Agents First (AGENTS.md, .agents/* 9-folder tree, .gitignore, memory init)
- *   Stage 2: Project Type (Interactive Framework CLI: Astro, Next.js, Instatic, Hono, Vite, or None)
+ *   Stage 1: Agents First (Directly copies Agent Engine from ai-ready/templates/)
+ *   Stage 2: Project Type (Interactive Framework CLI: Astro, Next.js, WordPress, Instatic, Hono, Vite, or None)
  *   Stage 3: Closeout DOX Pass (Updates .agents/context/current.md with live deliverables)
  * 
  * Usage:
@@ -12,7 +12,7 @@
  * 
  * Flags:
  *   -n, --name <name>        Project name
- *   -t, --type <type>        Project archetype (astro | nextjs | instatic | hono | vite | none)
+ *   -t, --type <type>        Project archetype (astro | nextjs | wordpress | instatic | hono | vite | none)
  *   -d, --desc <desc>        Project description
  *   -p, --path <path>        Target path
  *       --non-interactive    Skip prompts and use provided flags or defaults
@@ -22,14 +22,15 @@
  */
 
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync } from "node:fs";
-import { resolve, join, basename, isAbsolute } from "node:path";
+import { resolve, join, basename, isAbsolute, relative } from "node:path";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { spawnSync } from "node:child_process";
 
-// Directory where new-project is installed
+// Template source of truth located in ai-ready/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
-const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
+const REPO_ROOT = resolve(SCRIPT_DIR, "..");
+const TEMPLATES_DIR = join(REPO_ROOT, "ai-ready/templates");
 
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({
@@ -56,7 +57,7 @@ Usage:
 
 Options:
   -n, --name <name>        Project name (default: directory name)
-  -t, --type <type>        Archetype: astro | nextjs | instatic | hono | vite | none
+  -t, --type <type>        Archetype: astro | nextjs | wordpress | instatic | hono | vite | none
   -d, --desc <desc>        Project description
   -p, --path <path>        Target directory path
       --non-interactive    Run without interactive prompts
@@ -99,28 +100,12 @@ async function main() {
     try {
       // 1. Path Picker
       if (!targetPath) {
-        console.log("📂 Select Target Directory:");
-        console.log("  [1] Current directory (.)");
-        console.log("  [2] Subfolder in current directory");
-        console.log("  [3] Custom absolute or relative path");
-        
-        const pathChoice = await ask(rl, "Choose destination [1-3]", "1");
-        if (pathChoice === "1") {
-          targetPath = ".";
-        } else if (pathChoice === "2") {
-          const subfolder = await ask(rl, "Enter subfolder name");
-          targetPath = join(".", subfolder);
-        } else {
-          targetPath = await ask(rl, "Enter destination path", ".");
-        }
+        targetPath = await ask(rl, "Project Destination Directory", "./my-project");
       }
-
-      // Resolve full absolute path
-      const resolvedTarget = isAbsolute(targetPath) ? targetPath : resolve(process.cwd(), targetPath);
-      const defaultName = basename(resolvedTarget) === "." ? basename(process.cwd()) : basename(resolvedTarget);
 
       // 2. Project Name
       if (!projectName) {
+        const defaultName = basename(resolve(process.cwd(), targetPath));
         projectName = await ask(rl, "Project Name", defaultName);
       }
 
@@ -138,19 +123,21 @@ async function main() {
         console.log("\n⚡ Select Tech Stack Archetype:");
         console.log("  [1] Astro v7.2.x        (High-speed content & web apps, Cloudflare edge)");
         console.log("  [2] Next.js 16          (React 19, App Router, Server Components/Actions)");
-        console.log("  [3] Instatic HTML       (Pure HTML brochure & zero-JS static site)");
-        console.log("  [4] Hono / Workers      (Cloudflare Workers edge API microservice)");
-        console.log("  [5] Vite + React SPA    (Client-side React 19 single-page app)");
-        console.log("  [6] None / Existing     (AI DOX Governance ONLY — no framework init)");
+        console.log("  [3] WordPress           (Modern Roots Bedrock / Custom Theme / Gutenberg Blocks)");
+        console.log("  [4] Instatic HTML       (Pure HTML brochure & zero-JS static site)");
+        console.log("  [5] Hono / Workers      (Cloudflare Workers edge API microservice)");
+        console.log("  [6] Vite + React SPA    (Client-side React 19 single-page app)");
+        console.log("  [7] None / Existing     (AI DOX Governance ONLY — no framework init)");
         
-        const typeChoice = await ask(rl, "Choose archetype [1-6]", "1");
+        const typeChoice = await ask(rl, "Choose archetype [1-7]", "1");
         const typeMap: Record<string, string> = {
           "1": "astro",
           "2": "nextjs",
-          "3": "instatic",
-          "4": "hono",
-          "5": "vite",
-          "6": "none",
+          "3": "wordpress",
+          "4": "instatic",
+          "5": "hono",
+          "6": "vite",
+          "7": "none",
         };
         projectType = typeMap[typeChoice] || "astro";
       }
@@ -175,8 +162,9 @@ async function main() {
 
   // =========================================================================
   // STAGE 1: Agents First (Mandatory Governance Container)
+  // Directly copies the Agent Engine from ai-ready/templates/
   // =========================================================================
-  console.log("🛡️  STAGE 1: Initializing Agent Governance & Progressive Disclosure DOX...");
+  console.log("🛡️  STAGE 1: Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)...");
 
   if (!isDryRun && !existsSync(resolvedTarget)) {
     mkdirSync(resolvedTarget, { recursive: true });
@@ -198,9 +186,7 @@ async function main() {
   }
 
   // 1.2 Copy .gitignore
-  const gitignoreSrc = existsSync(join(TEMPLATES_DIR, "gitignore.template"))
-    ? join(TEMPLATES_DIR, "gitignore.template")
-    : join(TEMPLATES_DIR, ".gitignore");
+  const gitignoreSrc = join(TEMPLATES_DIR, "gitignore.template");
   const gitignoreDest = join(resolvedTarget, ".gitignore");
   if (existsSync(gitignoreSrc)) {
     if (!existsSync(gitignoreDest) || isForce) {
@@ -211,43 +197,86 @@ async function main() {
     }
   }
 
-  // 1.3 Copy .agents/ with all 9 subdirectories
-  const agentsDirSrc = join(TEMPLATES_DIR, ".agents");
-  const agentsDirDest = join(resolvedTarget, ".agents");
-  if (existsSync(agentsDirSrc)) {
-    if (!isDryRun) {
-      cpSync(agentsDirSrc, agentsDirDest, { recursive: true });
-    }
-    console.log("  ✅ Provisioned: ./.agents/ (archive, artifacts, brand, context, goals, research, skills, standards, workflows)");
-  }
+  // 1.3 Scaffold .agents/ 9-Folder Tree
+  const agentsDir = join(resolvedTarget, ".agents");
+  const subdirs = [
+    "archive",
+    "artifacts",
+    "brand",
+    "brand/tokens",
+    "brand/screenshots",
+    "context",
+    "goals",
+    "research",
+    "skills",
+    "standards",
+    "workflows",
+  ];
 
-  // 1.4 Customize Context Files (product.md & architecture.md)
-  if (!isDryRun) {
-    const productPath = join(agentsDirDest, "context/product.md");
-    if (existsSync(productPath)) {
-      let productContent = readFileSync(productPath, "utf8");
-      productContent = productContent.replace(/Agency engineering workspace[\s\S]*?## Digital Delivery Capabilities/, `${projectDesc}\n\n## Digital Delivery Capabilities`);
-      writeFileSync(productPath, productContent, "utf8");
-      console.log("  ✅ Configured: ./.agents/context/product.md");
-    }
-
-    const archPath = join(agentsDirDest, "context/architecture.md");
-    if (existsSync(archPath)) {
-      let archContent = readFileSync(archPath, "utf8");
-      archContent = archContent.replace(/## Supported Tech Stack Directions[\s\S]*?## Agent Containment/, `## Selected Tech Stack\n- **Target**: ${projectType.toUpperCase()}\n- **Governance**: Agency Council Progressive Disclosure DOX\n\n## Agent Containment`);
-      writeFileSync(archPath, archContent, "utf8");
-      console.log("  ✅ Configured: ./.agents/context/architecture.md");
+  for (const sub of subdirs) {
+    const p = join(agentsDir, sub);
+    if (!existsSync(p) && !isDryRun) {
+      mkdirSync(p, { recursive: true });
     }
   }
+  console.log("  ✅ Provisioned: ./.agents/ 9-folder tree");
 
-  // 1.5 Initialize Git repository if missing
-  const gitDir = join(resolvedTarget, ".git");
-  if (!existsSync(gitDir) && !isDryRun) {
-    console.log("  🌱 Initializing git repository...");
-    spawnSync("git", ["init"], { cwd: resolvedTarget, stdio: "ignore" });
+  // 1.4 Copy Standards
+  const standardsSrc = join(TEMPLATES_DIR, ".agents/standards");
+  const standardsDest = join(agentsDir, "standards");
+  if (existsSync(standardsSrc)) {
+    const files = readdirSync(standardsSrc);
+    for (const f of files) {
+      const src = join(standardsSrc, f);
+      const dest = join(standardsDest, f);
+      if (!existsSync(dest) || isForce) {
+        if (!isDryRun) cpSync(src, dest);
+      }
+    }
+    console.log(`  ✅ Synced: ./.agents/standards/ (${readdirSync(standardsSrc).length} standards, including WordPress)`);
   }
 
-  // 1.6 Initialize Cognitive Memory (.memory/ + CURRENT.md)
+  // 1.5 Copy Brand Guidelines & Tokens
+  const brandSrc = join(TEMPLATES_DIR, ".agents/brand");
+  const brandDest = join(agentsDir, "brand");
+  if (existsSync(brandSrc)) {
+    const brandFiles = ["design.md", "bem-conventions.md", "a11y.md"];
+    for (const bf of brandFiles) {
+      const src = join(brandSrc, bf);
+      const dest = join(brandDest, bf);
+      if (!existsSync(dest) || isForce) {
+        if (!isDryRun) cpSync(src, dest);
+      }
+    }
+    const tokensSrc = join(brandSrc, "tokens");
+    const tokensDest = join(brandDest, "tokens");
+    if (existsSync(tokensSrc) && !existsSync(tokensDest)) {
+      if (!isDryRun) cpSync(tokensSrc, tokensDest, { recursive: true });
+      console.log("  ✅ Provisioned: ./.agents/brand/tokens/ baseline");
+    }
+  }
+
+  // 1.6 Copy and Tailor .agents/context/ Templates
+  const contextSrc = join(TEMPLATES_DIR, ".agents/context");
+  const contextDest = join(agentsDir, "context");
+  if (existsSync(contextSrc)) {
+    const ctxFiles = readdirSync(contextSrc);
+    for (const f of ctxFiles) {
+      const src = join(contextSrc, f);
+      const dest = join(contextDest, f);
+      if (!existsSync(dest) || isForce) {
+        if (!isDryRun) {
+          let c = readFileSync(src, "utf8");
+          c = c.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
+          c = c.replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
+          writeFileSync(dest, c, "utf8");
+        }
+      }
+    }
+    console.log("  ✅ Initialized: ./.agents/context/ (product, architecture, decisions, roadmap)");
+  }
+
+  // 1.7 Initialize Cognitive Memory (.memory/ + CURRENT.md)
   const memoryDir = join(resolvedTarget, ".memory");
   if (!existsSync(memoryDir) && !isDryRun) {
     console.log("  🧠 Initializing persistent cognitive memory store...");
@@ -301,6 +330,35 @@ async function main() {
           cwd: resolvedTarget,
           stdio: "inherit",
         });
+      } else if (projectType === "wordpress") {
+        console.log("   Initializing Modern WordPress project (Roots Bedrock or Theme scaffold)...");
+        const hasComposer = spawnSync("which", ["composer"], { stdio: "ignore" }).status === 0;
+        if (hasComposer) {
+          console.log("   Bootstrapping Roots Bedrock via Composer...");
+          spawnSync("composer", ["create-project", "roots/bedrock", "."], {
+            cwd: resolvedTarget,
+            stdio: "inherit",
+          });
+        } else {
+          console.log("   Composer not detected. Scaffolding modern custom WordPress theme/plugin layout...");
+          mkdirSync(join(resolvedTarget, "wp-content/themes", projectName), { recursive: true });
+          mkdirSync(join(resolvedTarget, "wp-content/plugins"), { recursive: true });
+          writeFileSync(
+            join(resolvedTarget, "wp-content/themes", projectName, "style.css"),
+            `/*\nTheme Name: ${projectName}\nAuthor: Agency Council\nVersion: 1.0.0\n*/\n`,
+            "utf8"
+          );
+          writeFileSync(
+            join(resolvedTarget, "wp-content/themes", projectName, "index.php"),
+            `<?php\n// Silence is golden.\n`,
+            "utf8"
+          );
+          writeFileSync(
+            join(resolvedTarget, "wp-content/themes", projectName, "functions.php"),
+            `<?php\n// Theme functions\n`,
+            "utf8"
+          );
+        }
       } else if (projectType === "hono") {
         spawnSync("bun", ["create", "hono@latest", "."], {
           cwd: resolvedTarget,
@@ -346,40 +404,46 @@ async function main() {
 
 ## 1. Verified Shipped Reality
 - Initialized **${projectName}** with **${projectType.toUpperCase()}** archetype.
-- Progressive Disclosure DOX container active with 12 modular standards, brand token baseline, and cognitive memory.
+- Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
 
 ## 2. Live Deliverables & Key Artifacts
-${artifactList || "- `AGENTS.md` — Root contract and DOX rail\n- `.agents/` — System standards and context\n- `.memory/` — Cognitive memory store"}
+${artifactList}
 
 ## 3. Runtime Health & Verification Oracle
-- **Build / Lint Status**: Freshly scaffolded baseline
-- **Test Suite**: Ready for initial test suites
-- **Console / Runtime Errors**: 0 errors reported
-- **Environment Notes**: Project initialized cleanly via Agency Council Scaffolder
+- **Framework**: ${projectType.toUpperCase()}
+- **Governance**: Active via root \`AGENTS.md\` and \`.agents/\` container
+- **Verification**: Pending initial build / test verification run
 
-## 4. Known Gaps, Blockers & Placeholders
-- **Active Blockers**: None
-- **Pending Tasks**: Initial layout and feature implementation
+## 4. Known Gaps & Blockers
+- None (Fresh scaffold initialization).
 
 ## 5. Next Immediate Focus
-- Implement foundational routes, components, and primary application shell.
+- Run framework dependencies installation (\`bun install\` / \`npm install\` / \`composer install\`).
+- Verify initial local dev server and test execution.
 `;
       writeFileSync(currentMdPath, initialCurrentContent, "utf8");
-      console.log("  ✅ Synchronized: ./.agents/context/current.md");
+      console.log("  ✅ Updated: ./.agents/context/current.md with initial reality");
     }
   }
 
   console.log("\n=======================================================");
-  console.log(`🎉 SUCCESS: ${projectName} is fully scaffolded & governed!`);
+  console.log(" 🎉 SUCCESS: Project Successfully Initialized!");
   console.log("=======================================================");
+  console.log(`📁 Project Directory: ${resolvedTarget}`);
+  console.log(`⚡ Archetype:          ${projectType.toUpperCase()}`);
+  console.log(`🛡️  Governance:         DOX Engine Active (Root AGENTS.md + .agents/ container)`);
   console.log(`\nNext Steps:`);
-  console.log(`  1. cd ${targetPath !== "." ? targetPath : resolvedTarget}`);
-  console.log(`  2. Review .agents/context/product.md and current.md`);
-  console.log(`  3. Start dev server: bun dev (or astro dev --background)`);
-  console.log(`  4. Begin building with Agency Council!\n`);
+  console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
+  if (projectType === "wordpress") {
+    console.log(`  2. composer install`);
+  } else if (projectType !== "instatic" && projectType !== "none") {
+    console.log(`  2. bun install (or pnpm install)`);
+    console.log(`  3. bun run dev`);
+  }
+  console.log("=======================================================\n");
 }
 
 main().catch((err) => {
-  console.error(`\n❌ Error scaffolding project:`, err);
+  console.error("❌ Scaffolding Error:", err);
   process.exit(1);
 });

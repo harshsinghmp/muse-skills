@@ -170,19 +170,23 @@ Update the smallest correct scope (root instructions vs package instructions). D
 ### Step 7 — Preserve Existing Knowledge
 Preserve valid human-authored content, architectural decisions, project-specific constraints, and meaningful warnings. Remove obsolete guidance only when obsolescence is confirmed.
 
-### Step 8 — DOX Container Retrofit (If DOX Is Missing)
-If `.agents/standards` or the 9-folder tree is missing:
-1. Scaffold all 9 subdirectories: `archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`.
-2. Migrate extracted facts:
-   - Name & Description → `.agents/context/product.md`
-   - Dependencies & Framework → `.agents/context/architecture.md`
-   - Existing ADRs/Decisions → `.agents/context/decisions.md`
-   - Active files & scripts → `.agents/context/current.md`
-3. Safely archive legacy `AGENTS.md` to `.agents/archive/AGENTS.legacy-[timestamp].md`.
-4. Deploy the lean DOX rail `AGENTS.md` (~45 lines).
+### Step 8 — Check Existing Agent Files & Scaffolding Gate
+1. Check if any agent engine files exist (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.agents/`, etc.).
+2. **If NONE Found**:
+   - Scaffold the entire fresh Agent Engine DOX architecture directly from `ai-ready/templates/`.
+   - Provision `.agents/` 9-folder tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
+   - Deploy lean root `AGENTS.md` router (<50 lines) and initialize `.agents/context/` files based on repository discovery.
+3. **If ANY Found (Custom Content Present)**:
+   - Do NOT overwrite human work. Parse and extract custom sections:
+     - Project Purpose / Scope → Merge into `.agents/context/product.md`
+     - Build Commands / Tech Stack / Database → Merge into `.agents/context/architecture.md`
+     - Architectural Decisions / Rules / ADRs → Merge into `.agents/context/decisions.md`
+     - In-flight tasks / active notes → Merge into `.agents/context/current.md`
+   - Safely archive un-split legacy files to `.agents/archive/AGENTS.legacy-[timestamp].md` or `.agents/archive/CLAUDE.legacy-[timestamp].md`.
+   - Deploy lean root `AGENTS.md` DOX rail (<50 lines) pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize `.agents/standards/` (all 12 rulebooks) and `.agents/brand/` directly from `new-project/templates/`. Never touch or overwrite `.agents/context/*` or project source files.
+Synchronize `.agents/standards/` (all 13 rulebooks, including modern WordPress) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.

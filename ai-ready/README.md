@@ -1,26 +1,26 @@
 # 🤖 ai-ready
 
-> Universal AI-readiness auditor, PR convention miner, and progressive disclosure scaffolding engine.
+> Universal AI-readiness auditor, Agent Engine DOX scaffolder, and PR convention miner.
 
-`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It enforces clean architectural boundaries, cuts token burn via a **Stage-0 Fast-Skip Gate**, and mines merged PR reviews into explicit agent rules.
+`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It serves as the **master home of the Agent Engine DOX template bundle**, cuts token burn via a **Stage-0 Fast-Skip Gate**, and mines merged PR reviews into explicit agent rules.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Run Complete Audit & Remediation
-Scans the current repository, reports gaps, and interactively scaffolds missing assets:
+### 1. Run Complete Audit (Fast-Skip Enabled)
+Inspects repository health and outputs the 12-asset scorecard (exits in `<100ms` if already 12/12):
 ```bash
-# Via agent prompt:
-"Make this repo AI-ready"
-"Run ai-ready audit"
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --audit
 ```
 
-### 2. Report-Only Mode
-Inspects repository health and outputs the 12-asset scorecard without creating or modifying any files:
+### 2. Scaffold Agent Engine DOX Architecture
+Directly provisions the complete 9-folder container, 13 modular standards (including WordPress), brand tokens, and lean root `AGENTS.md`:
 ```bash
-"How AI-ready is this repo?"
-"Score this repository for AI readiness"
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold
+
+# Or dry-run simulation:
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold --dry-run
 ```
 
 ### 3. Stage-0 Fast-Skip Gate
