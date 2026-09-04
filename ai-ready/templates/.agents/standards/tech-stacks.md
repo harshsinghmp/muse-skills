@@ -46,7 +46,21 @@ All digital products and client builds follow one of three designated architectu
 
 ---
 
+## 🌐 Direction 4: Modern WordPress & Enterprise CMS
+
+> **Best For**: Content-heavy editorial publishing, bespoke enterprise agency setups, and headless WordPress architectures.
+
+### Core Toolchain & Stack
+- **Architecture**: **Roots Bedrock** (12-factor configuration, Composer dependency management)
+- **CMS**: WordPress 6.x+ with Modern Gutenberg Blocks (`@wordpress/scripts`)
+- **API & Headless**: WP REST API / WPGraphQL for decoupled Next.js / Astro frontends
+- **Code Quality**: PSR-12 / WordPress Coding Standards (WPCS) with `phpcs`
+- **Testing**: PHPUnit / `wp-env` integration suite
+- **Hosting**: Fast PHP 8.2+ managed hosting, Kinsta, WP Engine, or custom Cloudflare-proxied VPS
+
+---
+
 ## 🔒 Tech Stack Invariants
 1. **No Speculative Dependencies**: Do not introduce unlisted frameworks or heavy third-party runtime libraries without explicit human authorization.
-2. **Edge-First Hosting**: Default to Cloudflare edge deployment across all three directions to maintain zero-to-low infrastructure costs.
+2. **Edge-First Hosting**: Default to Cloudflare edge deployment across all directions to maintain zero-to-low infrastructure costs.
 3. **Accessibility Baseline**: WCAG 2.2 AA compliance is mandatory across all user-facing components.

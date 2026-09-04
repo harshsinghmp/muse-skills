@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of nineteen portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
+**A curated suite of twenty portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-2.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-19%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Version](https://img.shields.io/badge/Version-2.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-20%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete nineteen-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -47,6 +47,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #17 Score daily controllable effort & focus | [`coach`](coach/README.md) | 5-pillar input scorecard and daily reflection log |
 | #18 Audit link integrity & knowledge hygiene | [`audit`](audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
 | #19 Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
+| #20 Clean developer, designer & browser caches | [`clean-system-cache`](clean-system-cache/README.md) | Multi-platform cache purge, zero-session interruption & cache-only safety |
 
 ### Explore the repository
 
@@ -93,10 +94,11 @@ npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 npx skills add harshsinghmp/muse-skills --skill designscope
 
-# Reflection & Maintenance (#17, #18, #19)
+# Reflection & Maintenance (#17, #18, #19, #20)
 npx skills add harshsinghmp/muse-skills --skill coach
 npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
+npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 ```
 
 ### 3. Ask your agent to use it
@@ -177,10 +179,11 @@ graph TD
         Muse --> DS[🎨 designscope<br/>Design System Extraction & DTCG Tokens]
     end
 
-    subgraph ReflectionMaint [🏔️ Reflection & Maintenance (#17, #18, #19)]
+    subgraph ReflectionMaint [🏔️ Reflection & Maintenance (#17, #18, #19, #20)]
         Muse --> CO[☀️ coach<br/>Controllable Input Effort Scorecard]
         Muse --> AU[🧠 audit<br/>Knowledge Hygiene & Link Integrity]
         Muse --> PR[🏔️ periodic-retreat<br/>Quarterly Strategic Review & Debt Purge]
+        Muse --> CSC[🧹 clean-system-cache<br/>Developer & Browser Cache Cleaner]
     end
 ```
 
@@ -209,6 +212,7 @@ graph TD
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `evidence-ledger`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
+| **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
 
 ---
 
@@ -520,6 +524,23 @@ npx skills add harshsinghmp/muse-skills --skill ai-ready
 
 ---
 
+### 🧹 `clean-system-cache`
+
+Cross-platform development and design cache cleanup engine for Linux, macOS, and Windows. Cleans unused package managers (npm, bun, yarn, pnpm, cargo, pip/uv, gradle), build tools, design applications (Figma, Adobe, Blender), and browser caches while strictly protecting running processes, active user sessions, and persistent credentials.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill clean-system-cache
+```
+
+- **Cross-Platform Zero-Python Architecture**: Pure Bash on Linux/macOS and pure Batch/CMD on Windows (`scripts/clean-cache.sh` and `scripts/clean-cache.cmd`).
+- **Running Session Protection**: Dynamically detects running instances of tools and browsers (Chrome, Firefox, Figma, Docker, etc.) and safely skips active application caches to prevent session corruption.
+- **Cache-Only Isolation**: Strictly targets temporary cache stores (`Cache/`, `Code Cache/`, `GPUCache/`, `~/.cache`), preserving user cookies, saved sessions, profiles, and download histories.
+- **Dry-Run & Targeted Scopes**: Supports `--dry-run` safe estimation and targeted tool flags (`--browsers-only`, `--dev-only`, `--design-only`).
+
+[Read full documentation →](clean-system-cache/README.md)
+
+---
+
 ## 🌐 Runtime compatibility
 
 Muse Skills uses portable Markdown workflows with YAML frontmatter. Compatibility depends on each runtime’s skill-discovery and installation model; the table below describes the intended integration path rather than a claim that every runtime behaves identically.
@@ -720,6 +741,15 @@ muse-skills/
 │   │   ├── fast-skip-protocol.md
 │   │   ├── pr-review-mining.md
 │   │   └── twelve-asset-matrix.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── clean-system-cache/             # Cross-platform development & design cache cleaner
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── scripts/
+│   │   ├── clean-cache.cmd
+│   │   └── clean-cache.sh
 │   ├── README.md
 │   └── SKILL.md
 │

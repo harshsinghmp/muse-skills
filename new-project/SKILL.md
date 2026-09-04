@@ -31,8 +31,8 @@ metadata:
 
 Interactive project creator and Project Operating System provisioner. Implements the **"Agents First, Then Project Type"** architecture with a zero-token **Stage-0 Fast-Skip Gate**:
 0. **Stage 0: AI-Ready Pre-Flight Gate**: Checks if root `AGENTS.md` and `.agents/` container already exist and pass `ai-ready` audit. If healthy, skips scaffolding immediately.
-1. **Stage 1: Governance Container**: Drops the lean root `AGENTS.md` (<50 lines), `.gitignore`, 9-folder `.agents/` tree (standards, brand, context, archive, artifacts, goals, research, skills, workflows), and initializes cognitive memory.
-2. **Stage 2: Project Type**: Interactively launches the chosen framework creator (Astro v7.2.x, Next.js 16, Instatic HTML, Hono/Workers, or Vite).
+1. **Stage 1: Governance Container**: Directly copies the complete Agent Engine from `ai-ready/templates/` (lean root `AGENTS.md` [<50 lines], `.gitignore`, 9-folder `.agents/` container, 13 modular standards, and brand tokens), and initializes cognitive memory.
+2. **Stage 2: Project Type**: Interactively launches the chosen framework creator (Astro v7.2.x, Next.js 16, WordPress [Roots Bedrock / theme], Instatic HTML, Hono/Workers, or Vite).
 3. **Stage 3: Closeout DOX Pass**: Synchronizes `.agents/context/current.md` with verified live deliverables.
 
 ---
@@ -53,6 +53,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 |:---|:---|:---|
 | **Astro v7.2.x** *(Recommended)* | Static / SSR + Islands + Cloudflare | `bun create astro@latest .` |
 | **Next.js 16** | React 19 + App Router + Server Actions | `bun create next-app@latest .` |
+| **WordPress** | Modern Roots Bedrock / Custom Theme / Blocks | `composer create-project roots/bedrock .` |
 | **Instatic HTML** | Pure HTML brochure / zero-JS landing | Instatic SSG starter |
 | **Hono / Workers** | Cloudflare Workers edge API microservice | `bun create hono@latest .` |
 | **Vite + React** | Client SPA + TypeScript | `bun create vite@latest .` |
@@ -70,7 +71,7 @@ Execute the universal scaffolder script via Bun:
 bun path/to/new-project/scripts/new-project.ts
 
 # Non-Interactive Mode (Direct flags)
-bun path/to/new-project/scripts/new-project.ts <targetPath> --name="<projectName>" --type="<astro|nextjs|instatic|hono|vite|none>" --desc="<description>"
+bun path/to/new-project/scripts/new-project.ts <targetPath> --name="<projectName>" --type="<astro|nextjs|wordpress|instatic|hono|vite|none>" --desc="<description>"
 ```
 
 ### Step 1b: Stage 0 — AI-Ready Pre-Flight Gate
@@ -84,8 +85,8 @@ Before scaffolding, inspect the target directory:
 ### Step 2: Stage 1 — Agents First (Governance Baseline)
 If Stage 0 detects missing or incomplete governance:
 1. Resolves target directory.
-2. Copies `templates/AGENTS.md` (<50 lines) and `.gitignore`.
-3. Provisions the complete 9-folder `.agents/` containment tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
+2. Copies lean `AGENTS.md` (<50 lines) and `.gitignore` directly from `ai-ready/templates/`.
+3. Provisions the complete 9-folder `.agents/` containment tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`) with 13 modular standards.
 4. Customizes `.agents/context/product.md` and `architecture.md`.
 5. Initializes `.memory/` and real-time `.memory/CURRENT.md`.
 

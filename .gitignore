@@ -20,7 +20,7 @@ build/
 GEMINI.md
 .codex/
 /.agents/
-!new-project/templates/.agents/
+!ai-ready/templates/.agents/
 .codegraph/
 .crush/
 .omo/

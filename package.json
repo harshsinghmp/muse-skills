@@ -1,6 +1,6 @@
 {
   "name": "@harsh/muse-skills",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, and reflective audits across the LifeOS ecosystem",
   "type": "module",
   "scripts": {
@@ -53,7 +53,8 @@
     "code-review",
     "git",
     "ai-ready",
-    "updatedocs"
+    "updatedocs",
+    "clean-system-cache"
   ],
   "author": "Harsh",
   "license": "MIT",
