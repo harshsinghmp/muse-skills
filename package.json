@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "bun test",
-    "validate": "bash updateagents/scripts/validate-memory-file.sh"
+    "validate": "bash updateagents/scripts/validate-memory-file.sh",
+    "extract-skill": "bun scripts/extract-skill.ts"
   },
   "keywords": [
     "skills",
