@@ -67,3 +67,60 @@ Every commit must follow this deterministic format:
 - Sync `package.json` `"version"` with the git tag in the release commit.
 - Tag releases with annotated git tags: `git tag -a vX.Y.Z -m "release: vX.Y.Z"`.
 - Never push untracked artifacts or unredacted secrets into a release.
+
+---
+
+## 4. Worktree Parallel Lanes (Multi-Agent & Dev-Server Protection)
+
+When multiple agents or tasks operate concurrently, or when running persistent development servers (`bun dev`, Vite, test watchers), use Git worktrees instead of in-place `git checkout -b`:
+
+```text
+/repo-root/               (Main Working Tree on 'dev' or active branch)
+├── .git/                 (Shared repository database)
+└── .worktrees/           (Explicitly gitignored)
+    ├── feat-login/       (Isolated checkout on 'feat/login')
+    └── feat-billing/     (Isolated checkout on 'feat/billing')
+```
+
+### Protocol:
+1. **Directory**: Always isolate worktrees in `.worktrees/` at repo root (guaranteed `.gitignore` entry).
+2. **Creation**: `git worktree add .worktrees/feat-<slug> -b feat/<slug> dev`
+3. **Bootstrap**: Install dependencies inside `.worktrees/feat-<slug>` prior to test runs.
+4. **Teardown**: Once PR is merged to `dev`, remove worktree and prune:
+   ```bash
+   git worktree remove .worktrees/feat-<slug>
+   git worktree prune
+   ```
+
+*(See [Worktree Parallel Lanes Protocol](worktree-parallel-lanes.md) for sandbox fallback and submodule guards).*
+
+---
+
+## 5. Monorepo Tag Scoping (`{package}-vX.Y.Z` vs `vX.Y.Z`)
+
+In multi-package repositories, global tags collide and obscure package-level version progression.
+
+### Heuristics for Monorepos:
+Detected if any of the following exist:
+- `pnpm-workspace.yaml`
+- `lerna.json`
+- `turbo.json`
+- `packages/` directory containing package manifests
+
+### Tagging Rules:
+- **Single-Package Repo**: Use standalone SemVer: `vX.Y.Z` (e.g. `v2.1.0`).
+- **Monorepo / Multi-Package**: Scope tags to the package name: `{package}-vX.Y.Z` (e.g. `web-v1.4.0`, `@muse/core-v2.0.1`).
+- **Release Target**: Direct release notes and GitHub release titles to the specific scoped package tag.
+
+*(See [Monorepo Tagging & Pre-Release Sanitization Protocol](monorepo-and-sanitization.md) for visibility checks and artifact purging).*
+
+---
+
+## 6. Related References
+
+- 🌲 [Worktree Parallel Lanes Protocol](worktree-parallel-lanes.md)
+- ⚔️ [Merge Conflict Resolution & Git Recovery Playbook](conflict-resolution-and-recovery.md)
+- 📦 [Monorepo Tagging & Pre-Release Sanitization Protocol](monorepo-and-sanitization.md)
+- 🛡️ [Anti-Slop Issue Intake Matrix](anti-slop-triage.md)
+- 🎨 [GitHub SEO & Open Graph Presentation Guide](github-seo-and-presentation.md)
+
