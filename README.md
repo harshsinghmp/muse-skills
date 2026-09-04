@@ -34,7 +34,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Delegate work without losing context | [`agent-handoff`](agent-handoff/README.md) | A context packet with constraints and verification criteria |
 | Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | A retry or escalation packet that captures what was learned |
 | Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | A compact snapshot of the current state and next action |
-| Extract a design system from a visual source | [`designscope`](designscope/README.md) | A `design.md` brief, DTCG token JSON, and an optional WCAG report |
+| Extract a design system & layout tree from a visual source | [`designscope`](designscope/README.md) | A `design.md` brief with CSS Grid/Flexbox layout tree, DTCG token JSON, and WCAG report |
 | Review code (Linus Torvalds Style) | [`code-review-linus-torvalds-style`](code-review-linus-torvalds-style/README.md) | A calibrated review verdict, root-cause fixes, and special-case elimination |
 | Refactor UI components & layout hierarchy | [`refactor-ui`](refactor-ui/README.md) | Clean visual hierarchy, typography scales, 4px/8px spacing, and accessible contrast |
 | Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with plateau stop conditions and acceptance packets |
@@ -201,7 +201,7 @@ graph TD
 | [**`agent-handoff`**](agent-handoff/README.md) | **Multi-Agent** | `/handoff`, `/agent-handoff` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
 | [**`dead-letter`**](dead-letter/README.md) | **Reliability** | `/dead-letter`, `/dl` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | [**`context-anchor`**](context-anchor/README.md) | **Multi-Agent** | `/anchor`, `/context-anchor` | Preserve a lightweight working-state snapshot to prevent cascading context drift. |
-| [**`designscope`**](designscope/README.md) | **Design** | `extract the design system`, `what palette does this site use`, `copy this navbar` | Analyze images, websites, or Figma files into a `design.md` brief, DTCG `design-tokens.json`, and an optional WCAG report. Element mode copies single components. |
+| [**`designscope`**](designscope/README.md) | **Design** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
 | [**`refactor-ui`**](refactor-ui/README.md) | **Design** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI (typography scale, spacing grid, button tiers, clutter reduction, natural shadows, and WCAG contrast). |
 | [**`code-review-linus-torvalds-style`**](code-review-linus-torvalds-style/README.md)<br/>*(Code Review - Linus Torvalds Style)* | **Quality Gate** | `/torvalds`, `/linus-review`, `review PR` | Language-agnostic code review method derived from Linus Torvalds' corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality Gate** | `/gauntlet`, `/gauntlet-loop` | Bounded multi-agent quality improvement loop with Builder, Fresh Critic, Automated Gate, and Integrator roles with plateau stop conditions. |
@@ -321,7 +321,7 @@ npx skills add harshsinghmp/muse-skills --skill context-anchor
 
 ### 🎨 `designscope`
 
-Point at any visual source — a screenshot, a live website, or a Figma file — and extract its structured design system into artifacts another AI (or human) can build from.
+Point at any visual source — a screenshot, a live website, or a Figma file — and extract its structured design system and responsive component layout tree into artifacts another AI (or human) can build from.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill designscope
@@ -329,7 +329,8 @@ npx skills add harshsinghmp/muse-skills --skill designscope
 
 - **Three Source Flows**: local images (direct vision), website URLs (web fetch + CSS variable extraction + native browser screenshots), and Figma links (Figma MCP tools).
 - **Two Modes**: full analysis (`design.md` + DTCG `design-tokens.json` + optional WCAG report) and element mode (one component → rebuild spec or token-grounded image prompt).
-- **Six-Layer Analysis**: identity, system tokens, components, layout, reconstruction notes, and brand Do's/Don'ts — plus a non-negotiable Art Direction QA pass.
+- **Layout Tree Extraction**: deconstructs visual UI screenshots into container blocks (Header, Hero, Feature Grid, Bento Cards, Footer), generating responsive CSS Grid and Flexbox component hierarchies.
+- **Six-Layer Analysis**: identity, system tokens, components, layout & layout trees, reconstruction notes, and brand Do's/Don'ts — plus a non-negotiable Art Direction QA pass.
 - **Honesty Contract**: confidence markers on every inference, real hex codes only, mandatory Open Questions section.
 - **Lint Gate**: every deliverable passes `scripts/lint_design_md.py` before handoff; all scripts are Python stdlib-only.
 
@@ -602,10 +603,10 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── designscope/                    # Design system extraction & documentation
+├── designscope/                    # Design system & component layout tree extraction
 │   ├── agents/
 │   │   └── openai.yaml
-│   ├── references/                 # Capture flows, analysis framework, token extraction, templates
+│   ├── references/                 # Capture flows, analysis framework, layout tree, token extraction, templates
 │   ├── scripts/                    # Stdlib-only Python helpers (CSS vars, contrast, lint, verify)
 │   ├── LICENSE                     # MIT (upstream-attribution copy)
 │   ├── README.md
