@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Changed
+- **Skill Name Shortening**:
+  - `agent-handoff` ➔ `handoff`
+  - `code-review-linus-torvalds-style` ➔ `code-review`
+  - `daily-standup-coach` ➔ `coach`
+  - `secretary-controller` ➔ `secretary`
+  - `brain-audit` ➔ `audit`
+  (Preserved previous names as aliases in YAML frontmatters).
+- **Universal Metadata RFC & Agent Compliance**:
+  - Upgraded all 19 skills with Hermes, OpenClaw, Codex, Cursor, and Gemini metadata standards.
+  - Added structured `category`, `priority`, `aliases`, `suggested_skills` mesh, `hermes`, and `openclaw` trigger blocks.
+- **Priority Reordering**:
+  - Reordered suite in exact priority order (#1 `updatedocs` through #19 `periodic-retreat`).
+  - Synchronized `skills.json`, `llms.txt`, `README.md`, and test suite.
+
+---
+
 ## [1.8.0] - 2026-09-04
 
 ### Added

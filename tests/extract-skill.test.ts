@@ -139,7 +139,12 @@ describe("Skill Extraction Helper (extract-skill)", () => {
     expect(skillContent).toContain("version: 1.0.0");
     expect(skillContent).toContain("license: MIT");
     expect(skillContent).toContain("platforms: [macos, linux, windows]");
+    expect(skillContent).toContain("category: core-engine");
     expect(skillContent).toContain("metadata:");
+    expect(skillContent).toContain("priority: 20");
+    expect(skillContent).toContain("hermes:");
+    expect(skillContent).toContain("openclaw:");
+    expect(skillContent).toContain("suggested_skills:");
     expect(skillContent).toContain("requires_tools: [bash, view_file]");
 
     // Check companion yaml

@@ -1,0 +1,17 @@
+name: handoff
+description: "Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends."
+tools:
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: write_to_file
+instructions: |
+  You are the handoff agent specialist (Category: context-orchestration, Priority: #6).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: context-anchor, dead-letter, coupling-router, updateagents.
+  Always enforce verification before completing any task.

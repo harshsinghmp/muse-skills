@@ -1,17 +1,28 @@
 ---
 name: new-project
-aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
+aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
-  aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
+  category: core-engine
+  priority: 5
+  aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
+  suggested_skills: ["ai-ready","updateagents","updatedocs","git"]
   hermes:
     tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite, dox, agent-engine, dox-engine]
-    related_skills: [updateagents, agent-handoff, context-anchor]
+    related_skills: [ai-ready, updateagents, updatedocs, git]
+    suggested_skills: [ai-ready, updateagents, updatedocs, git]
     requires_tools: [bash, view_file, write_to_file]
+  openclaw:
+    category: core-engine
+    suggested_skills: [ai-ready, updateagents, updatedocs, git]
+    primary_triggers: ["new-project","Agent Engine","DOX Engine","scaffold Project OS","initialize agent workspace"]
+    requires_tools: [bash, view_file, write_to_file]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🚀 new-project — Autonomous Project OS & DOX Scaffolder

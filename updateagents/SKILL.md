@@ -1,15 +1,28 @@
 ---
 name: updateagents
+aliases: ["sync-agents","update-memory","agent-sync"]
 description: "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
+  category: core-engine
+  priority: 2
+  aliases: ["sync-agents","update-memory","agent-sync"]
+  suggested_skills: ["updatedocs","new-project","handoff","context-anchor"]
   hermes:
     tags: [memory, documentation, context, agents, workspace, synchronization, dox]
-    related_skills: [new-project, context-anchor, agent-handoff]
+    related_skills: [updatedocs, new-project, handoff, context-anchor]
+    suggested_skills: [updatedocs, new-project, handoff, context-anchor]
     requires_tools: [bash, view_file, write_to_file, grep_search]
+  openclaw:
+    category: core-engine
+    suggested_skills: [updatedocs, new-project, handoff, context-anchor]
+    primary_triggers: ["update agents","sync project context","update memory","sync AGENTS.md"]
+    requires_tools: [bash, view_file, write_to_file, grep_search]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🧠 updateagents — Project Agent Context Synchronization

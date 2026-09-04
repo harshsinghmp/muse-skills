@@ -1,15 +1,28 @@
 ---
 name: coupling-router
+aliases: ["task-router","skill-router","coupling-analysis"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat."
 version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: context-orchestration
 metadata:
+  category: context-orchestration
+  priority: 12
+  aliases: ["task-router","skill-router","coupling-analysis"]
+  suggested_skills: ["handoff","secretary","gauntlet-loop","updateagents"]
   hermes:
     tags: [coupling, task-routing, subagents, orchestration, multi-agent, architecture, concurrency, skill-compatibility, token-optimization]
-    related_skills: [agent-handoff, gauntlet-loop, dead-letter, new-project, ai-ready, git, code-review-linus-torvalds-style]
+    related_skills: [handoff, secretary, gauntlet-loop, updateagents]
+    suggested_skills: [handoff, secretary, gauntlet-loop, updateagents]
     requires_tools: [bash, view_file, grep, glob]
+  openclaw:
+    category: context-orchestration
+    suggested_skills: [handoff, secretary, gauntlet-loop, updateagents]
+    primary_triggers: ["route tasks","analyze task coupling","audit skill compatibility","optimize token budget"]
+    requires_tools: [bash, view_file, grep, glob]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🔀 Coupling Router — Architectural Delegation, Skill-Stack & Concurrency Router
@@ -24,7 +37,7 @@ metadata:
 Execute this skill when:
 1. **Planning Multi-Agent Delegation**: You have a task list or project plan with 2 or more subtasks.
 2. **Auditing Skill-Stack Compatibility**: Multiple agent skills are installed or active, risking prompt contradictions, overlapping triggers, or token budget exhaustion.
-3. **Enforcing Minimal Viable Skill Set (MVSS)**: Trimming secondary/redundant skills when a primary dominant skill (e.g., `ai-ready`, `git`, `refactor-ui`, `code-review-linus-torvalds-style`) already covers the execution scope.
+3. **Enforcing Minimal Viable Skill Set (MVSS)**: Trimming secondary/redundant skills when a primary dominant skill (e.g., `ai-ready`, `git`, `refactor-ui`, `code-review`) already covers the execution scope.
 4. **Preventing Merge Collisions**: Multiple files or modules share mutable state, type contracts, or lifecycle flows.
 5. **Deciding Concurrency Strategy**: Resolving whether to spawn subagents concurrently in parallel or pipeline them sequentially.
 6. **Complex Refactors**: Multi-layer changes spanning database schemas, API controllers, and frontend clients.
@@ -77,17 +90,17 @@ Do NOT use this skill when:
 | :--- | :--- | :--- | :--- | :--- |
 | **`ai-ready`** | `new-project` | Redundant | Both attempt repository scaffolding and root context creation. | **Suppress `new-project` Stage 0**: `ai-ready` takes precedence as the single source of repository audit and readiness. |
 | **`ai-ready`** | `updateagents` | Synergistic | `ai-ready` verifies baseline readiness; `updateagents` synchronizes ongoing cognitive memory. | **Sequential**: Run `ai-ready` audit first; invoke `updateagents` only if memory drift is detected. |
-| **`code-review-linus-torvalds-style`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
+| **`code-review`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
 | **`git`** | Ad-Hoc VCS Prompts | Conflicting | Ad-hoc git prompts may attempt direct commits to `master` or unstructured messages. `git` enforces strict dev-branch staging and Conventional Commits. | **Suppress Ad-Hoc**: Route all VCS actions strictly through `git` lifecycle. Silence conflicting direct-commit instructions. |
 | **`refactor-ui`** | Generic CSS / Styling Skills | Conflicting / Redundant | Generic UI prompts introduce decorative border clutter and arbitrary hex colors, violating Refactoring UI heuristics. | **Suppress Generic UI**: Enforce `refactor-ui` 11 heuristics and 5-state anti-slop coverage. |
 | **`gauntlet-loop`** | Single-Shot Test Prompts | Synergistic | Single-shot tests provide early unit signals; `gauntlet-loop` provides bounded regression cycling. | **Pipeline**: Run fast unit checks locally; invoke `gauntlet-loop` at milestone hardening gate. |
-| **`secretary-controller`** | Autonomous Execution Skills | Synergistic / Supervisory | Autonomous skills move fast; `secretary-controller` holds SHA-256 evidence approvals and dissent preservation. | **Supervisor Role**: `secretary-controller` acts as quality gatekeeper. Tasks pass through secretary approval before merging. |
+| **`secretary`** | Autonomous Execution Skills | Synergistic / Supervisory | Autonomous skills move fast; `secretary` holds SHA-256 evidence approvals and dissent preservation. | **Supervisor Role**: `secretary` acts as quality gatekeeper. Tasks pass through secretary approval before merging. |
 
 ### Skill Precedence Hierarchy
 
 ```
-Tier 1: Governance & Verification (secretary-controller, evidence-ledger, gauntlet-loop)
-   └── Tier 2: Review & Correctness Doctrine (code-review-linus-torvalds-style / Karpathy)
+Tier 1: Governance & Verification (secretary, evidence-ledger, gauntlet-loop)
+   └── Tier 2: Review & Correctness Doctrine (code-review / Karpathy)
          └── Tier 3: Architecture & Context Engines (coupling-router, ai-ready, agent-engine)
                └── Tier 4: Domain Implementation Specialists (refactor-ui, designscope, updatedocs, git)
                      └── Tier 5: Ad-Hoc / Generic Prompts (Suppressed when higher tiers active)

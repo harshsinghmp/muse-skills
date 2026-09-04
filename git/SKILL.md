@@ -1,17 +1,28 @@
 ---
 name: git
-aliases: ["git-flow", "git-lifecycle", "github-workflow", "git-workflow", "github-release"]
+aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
 version: 1.0.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
-  aliases: ["git-flow", "git-lifecycle", "github-workflow", "git-workflow", "github-release"]
+  category: core-engine
+  priority: 3
+  aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
+  suggested_skills: ["code-review","updatedocs","ai-ready","gauntlet-loop"]
   hermes:
     tags: [git, github, release, pr, triage, branching, semver, workflow, devops, seo]
-    related_skills: [updatedocs, code-review-linus-torvalds-style, evidence-ledger, secretary-controller]
+    related_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
+    suggested_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
     requires_tools: [bash, run_command, view_file, write_to_file]
+  openclaw:
+    category: core-engine
+    suggested_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
+    primary_triggers: ["manage git workflow","triage issues","create PR","release project","cut release","run git","sync github seo","execute release lifecycle"]
+    requires_tools: [bash, run_command, view_file, write_to_file]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🐙 Git — Autonomous End-to-End Release & GitHub Lifecycle Engine

@@ -1,18 +1,17 @@
 name: new-project
-description: Provisions Progressive Disclosure DOX architecture (AGENTS.md, 9-folder .agents/ tree, 12 standards, brand tokens, and cognitive memory) before launching interactive framework creators. Also known as Agent Engine or DOX Engine.
+description: "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 tools:
-  - bash
-  - view
-  - write
-  - edit
-  - glob
-  - grep
-  - ls
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: write_to_file
 instructions: |
-  Follow the 2-stage Agents-First workflow in SKILL.md exactly:
-  
-  1. Ask location: present current directory, subfolder, or custom path.
-  2. Ask stack archetype: Astro v7.2.x, Next.js 16, Instatic, Hono/Workers, Vite, or Governance only.
-  3. Execute Stage 1 (Agents First): provisions AGENTS.md, .gitignore, and complete .agents/ 9-folder container.
-  4. Execute Stage 2 (Framework): interactively runs the chosen framework CLI.
-  5. Execute Stage 3 (Closeout): updates .agents/context/current.md with live deliverables.
+  You are the new-project agent specialist (Category: core-engine, Priority: #5).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: ai-ready, updateagents, updatedocs, git.
+  Always enforce verification before completing any task.

@@ -24,11 +24,11 @@ Below is the pairwise compatibility matrix across standard agent skills:
 | :--- | :--- | :--- | :--- | :--- |
 | **`ai-ready`** | `new-project` | Redundant | Both attempt repository scaffolding and root context creation. | **Suppress `new-project` Stage 0**: `ai-ready` takes precedence as the single source of repository audit and readiness. |
 | **`ai-ready`** | `updateagents` | Synergistic | `ai-ready` verifies baseline readiness; `updateagents` synchronizes ongoing cognitive memory. | **Sequential**: Run `ai-ready` audit first; invoke `updateagents` only if memory drift is detected. |
-| **`code-review-linus-torvalds-style`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
+| **`code-review`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
 | **`git`** | Ad-Hoc VCS Prompts | Conflicting | Ad-hoc git prompts may attempt direct commits to `master` or unstructured messages. `git` enforces strict dev-branch staging and Conventional Commits. | **Suppress Ad-Hoc**: Route all VCS actions strictly through `git` lifecycle. Silence conflicting direct-commit instructions. |
 | **`refactor-ui`** | Generic CSS / Styling Skills | Conflicting / Redundant | Generic UI prompts introduce decorative border clutter and arbitrary hex colors, violating Refactoring UI heuristics. | **Suppress Generic UI**: Enforce `refactor-ui` 11 heuristics and 5-state anti-slop coverage. |
 | **`gauntlet-loop`** | Single-Shot Test Prompts | Synergistic | Single-shot tests provide early unit signals; `gauntlet-loop` provides bounded regression cycling. | **Pipeline**: Run fast unit checks locally; invoke `gauntlet-loop` at milestone hardening gate. |
-| **`secretary-controller`** | Autonomous Execution Skills | Synergistic / Supervisory | Autonomous skills move fast; `secretary-controller` holds SHA-256 evidence approvals and dissent preservation. | **Supervisor Role**: `secretary-controller` acts as quality gatekeeper. Tasks pass through secretary approval before merging. |
+| **`secretary`** | Autonomous Execution Skills | Synergistic / Supervisory | Autonomous skills move fast; `secretary` holds SHA-256 evidence approvals and dissent preservation. | **Supervisor Role**: `secretary` acts as quality gatekeeper. Tasks pass through secretary approval before merging. |
 | **`coupling-router`** | Any Subagent Dispatch | Synergistic (Root) | `coupling-router` audits both task coupling and active skill compatibility prior to dispatching subagents. | **Root Prerequisite**: Must execute before launching parallel or pipelined worker agents. |
 
 ---
@@ -40,13 +40,13 @@ When conflicting instructions arise, skills must yield according to the followin
 ```
 ┌────────────────────────────────────────────────────────┐
 │ Tier 1: Governance & Verification                      │
-│ (secretary-controller, evidence-ledger, gauntlet-loop) │
+│ (secretary, evidence-ledger, gauntlet-loop)            │
 └───────────────────────────┬────────────────────────────┘
                             │ Dominates quality & safety
                             ▼
 ┌────────────────────────────────────────────────────────┐
 │ Tier 2: Review & Correctness Doctrine                  │
-│ (code-review-linus-torvalds-style / Karpathy)          │
+│ (code-review / Karpathy)                               │
 └───────────────────────────┬────────────────────────────┘
                             │ Dominates diff scope & architecture
                             ▼
@@ -92,6 +92,6 @@ Before an orchestrator spawns subagents or begins a complex task, it applies the
    ### Active Skill Configuration (MVSS)
    - **Task Phase 1**: `ai-ready` (Primary) [Suppressed: `new-project`]
    - **Task Phase 2**: `refactor-ui` (Primary UI) [Suppressed: generic styling]
-   - **Task Phase 3**: `code-review-linus-torvalds-style` (Quality Gate)
+   - **Task Phase 3**: `code-review` (Quality Gate)
    - **Task Phase 4**: `git` (VCS Lifecycle)
    ```

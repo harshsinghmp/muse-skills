@@ -1,156 +1,680 @@
 {
   "skills": [
     {
-      "name": "new-project",
-      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Aliases: Agent Engine, DOX Engine.",
-      "path": "new-project/SKILL.md",
+      "name": "updatedocs",
+      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
+      "path": "updatedocs/SKILL.md",
       "version": "2.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["scaffolding", "governance", "project-os", "architecture", "nextjs", "astro", "dox", "agent-engine", "dox-engine"]
+      "category": "core-engine",
+      "priority": 1,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
+      ],
+      "tags": [
+        "documentation",
+        "sync",
+        "impact-analysis",
+        "changelog",
+        "architecture",
+        "audit",
+        "git",
+        "verification",
+        "dox",
+        "governance"
+      ],
+      "suggested_skills": [
+        "updateagents",
+        "git",
+        "ai-ready",
+        "audit"
+      ],
+      "aliases": [
+        "sync-docs",
+        "doc-sync",
+        "docs-audit"
+      ]
     },
     {
       "name": "updateagents",
       "description": "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon.",
       "path": "updateagents/SKILL.md",
       "version": "2.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["memory", "documentation", "context", "agents", "workspace", "synchronization", "dox"]
+      "category": "core-engine",
+      "priority": 2,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "grep_search"
+      ],
+      "tags": [
+        "memory",
+        "documentation",
+        "context",
+        "agents",
+        "workspace",
+        "synchronization",
+        "dox"
+      ],
+      "suggested_skills": [
+        "updatedocs",
+        "new-project",
+        "handoff",
+        "context-anchor"
+      ],
+      "aliases": [
+        "sync-agents",
+        "update-memory",
+        "agent-sync"
+      ]
     },
     {
-      "name": "updatedocs",
-      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
-      "path": "updatedocs/SKILL.md",
+      "name": "git",
+      "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'.",
+      "path": "git/SKILL.md",
+      "version": "1.0.0",
+      "category": "core-engine",
+      "priority": 3,
+      "tools": [
+        "bash",
+        "run_command",
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "git",
+        "github",
+        "release",
+        "pr",
+        "triage",
+        "branching",
+        "semver",
+        "workflow",
+        "devops",
+        "seo"
+      ],
+      "suggested_skills": [
+        "code-review",
+        "updatedocs",
+        "ai-ready",
+        "gauntlet-loop"
+      ],
+      "aliases": [
+        "git-flow",
+        "git-lifecycle",
+        "github-workflow",
+        "git-workflow",
+        "github-release"
+      ]
+    },
+    {
+      "name": "code-review",
+      "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review.",
+      "path": "code-review/SKILL.md",
+      "version": "1.0.0",
+      "category": "quality-review",
+      "priority": 4,
+      "tools": [
+        "bash",
+        "view_file",
+        "grep",
+        "edit_file"
+      ],
+      "tags": [
+        "code-review",
+        "reviewer-method",
+        "torvalds",
+        "correctness",
+        "data-structures",
+        "concurrency",
+        "api-stability",
+        "karpathy-doctrine",
+        "minimal-diff"
+      ],
+      "suggested_skills": [
+        "git",
+        "gauntlet-loop",
+        "refactor-ui",
+        "pua"
+      ],
+      "aliases": [
+        "code-review-linus-torvalds-style",
+        "linus-review",
+        "rigorous-review"
+      ]
+    },
+    {
+      "name": "new-project",
+      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace.",
+      "path": "new-project/SKILL.md",
       "version": "2.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["documentation", "sync", "impact-analysis", "changelog", "architecture", "audit", "git", "verification", "dox", "governance"]
+      "category": "core-engine",
+      "priority": 5,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "scaffolding",
+        "governance",
+        "project-os",
+        "architecture",
+        "nextjs",
+        "astro",
+        "vite",
+        "dox",
+        "agent-engine",
+        "dox-engine"
+      ],
+      "suggested_skills": [
+        "ai-ready",
+        "updateagents",
+        "updatedocs",
+        "git"
+      ],
+      "aliases": [
+        "Agent Engine",
+        "DOX Engine",
+        "agent-engine",
+        "dox-engine"
+      ]
     },
     {
-      "name": "pua",
-      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger on repeated failures, deflections, passive behavior, or complex stalls.",
-      "path": "pua/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["debugging", "performance", "reliability", "problem-solving", "triage", "big-tech"]
-    },
-    {
-      "name": "agent-handoff",
+      "name": "handoff",
       "description": "Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends.",
-      "path": "agent-handoff/SKILL.md",
+      "path": "handoff/SKILL.md",
       "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["subagents", "handoff", "orchestration", "context", "governance", "agents"]
+      "category": "context-orchestration",
+      "priority": 6,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "subagents",
+        "handoff",
+        "orchestration",
+        "context",
+        "governance",
+        "reliability"
+      ],
+      "suggested_skills": [
+        "context-anchor",
+        "dead-letter",
+        "coupling-router",
+        "updateagents"
+      ],
+      "aliases": [
+        "agent-handoff",
+        "subagent-handoff",
+        "context-packet"
+      ]
     },
     {
-      "name": "dead-letter",
-      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, extracts what was learned, and generates either a retry packet with the root cause fixed or an escalation message with specific decision points.",
-      "path": "dead-letter/SKILL.md",
+      "name": "ai-ready",
+      "description": "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically, and integrates as the foundational pre-flight check for new-project and updateagents.",
+      "path": "ai-ready/SKILL.md",
       "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["triage", "error-handling", "debugging", "subagents", "escalation", "agents"]
+      "category": "core-engine",
+      "priority": 7,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "audit",
+        "readiness",
+        "governance",
+        "dox",
+        "agents",
+        "pr-mining",
+        "ci",
+        "workflow",
+        "onboarding"
+      ],
+      "suggested_skills": [
+        "new-project",
+        "updateagents",
+        "git",
+        "updatedocs"
+      ],
+      "aliases": [
+        "repo-ai-ready",
+        "audit-ai-ready",
+        "ai-audit"
+      ]
     },
     {
       "name": "context-anchor",
       "description": "Drop a working reference at any point in a session to prevent cascading context drift. Use when switching tasks, resuming after a break, or handing off between agents.",
       "path": "context-anchor/SKILL.md",
       "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["context", "memory", "state", "session", "focus", "agents"]
-    },
-    {
-      "name": "designscope",
-      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system: a design.md brief with responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Element mode copies one component as a rebuild spec or turns visual art into a token-grounded image prompt.",
-      "path": "designscope/SKILL.md",
-      "version": "1.1.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["design", "design-systems", "tokens", "dtcg", "ui", "figma", "wcag", "layout-tree", "flexbox", "css-grid"]
-    },
-    {
-      "name": "code-review-linus-torvalds-style",
-      "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, preserves interface contracts, and demands evidence over assertion.",
-      "path": "code-review-linus-torvalds-style/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["code-review", "reviewer-method", "torvalds", "correctness", "data-structures", "concurrency", "api-stability"]
-    },
-    {
-      "name": "refactor-ui",
-      "description": "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms crowded, amateur, or unstyled UI into clean, high-conversion, accessible interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, shadows, contrast, and grouping.",
-      "path": "refactor-ui/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["ui-design", "refactoring-ui", "tailwind", "typography", "color-palette", "visual-hierarchy", "accessibility", "frontend"]
+      "category": "context-orchestration",
+      "priority": 8,
+      "tools": [
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "context",
+        "memory",
+        "state",
+        "session",
+        "focus",
+        "anchor",
+        "reliability"
+      ],
+      "suggested_skills": [
+        "handoff",
+        "updateagents",
+        "dead-letter"
+      ],
+      "aliases": [
+        "anchor",
+        "session-anchor",
+        "working-reference"
+      ]
     },
     {
       "name": "gauntlet-loop",
-      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with security headers & visual regression gate), and Integrator roles with strict stop conditions. Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
+      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
       "path": "gauntlet-loop/SKILL.md",
       "version": "1.1.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["gauntlet", "quality-loop", "multi-agent", "verification", "benchmarking", "orchestration", "governance", "security-headers", "visual-regression", "owasp"]
+      "category": "quality-review",
+      "priority": 9,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command"
+      ],
+      "tags": [
+        "gauntlet",
+        "quality-loop",
+        "multi-agent",
+        "verification",
+        "benchmarking",
+        "orchestration",
+        "governance",
+        "security-headers",
+        "visual-regression",
+        "owasp",
+        "responsive-testing"
+      ],
+      "suggested_skills": [
+        "code-review",
+        "refactor-ui",
+        "secretary",
+        "git"
+      ],
+      "aliases": [
+        "gauntlet",
+        "quality-loop",
+        "verification-loop"
+      ]
     },
     {
-      "name": "secretary-controller",
-      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use hash approvals before any filesystem or external mutation.",
-      "path": "secretary-controller/SKILL.md",
+      "name": "refactor-ui",
+      "description": "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms amateurish, crowded, or unstyled UI into clean, high-conversion, production-ready interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, natural shadows, accessible contrast, and optical grouping. Trigger on 'refactor this UI', 'improve this design', 'fix visual hierarchy', 'make this component look professional', 'audit UI contrast and spacing', 'clean up this messy dashboard', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts.",
+      "path": "refactor-ui/SKILL.md",
+      "version": "1.0.0",
+      "category": "design-interface",
+      "priority": 10,
+      "tools": [
+        "view_file",
+        "replace_file_content",
+        "write_to_file",
+        "run_command"
+      ],
+      "tags": [
+        "ui-design",
+        "refactoring-ui",
+        "tailwind",
+        "typography",
+        "color-palette",
+        "visual-hierarchy",
+        "accessibility",
+        "frontend",
+        "design-systems",
+        "5-state-gate"
+      ],
+      "suggested_skills": [
+        "designscope",
+        "gauntlet-loop",
+        "code-review"
+      ],
+      "aliases": [
+        "refactoring-ui",
+        "ui-polish",
+        "ui-audit"
+      ]
+    },
+    {
+      "name": "designscope",
+      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system: a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
+      "path": "designscope/SKILL.md",
       "version": "1.1.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["staff-work", "executive-brief", "approval-gate", "governance", "decision-memo", "evidence", "hash-approval", "socratic-lens", "adversarial-review", "dissent-preservation"]
+      "category": "design-interface",
+      "priority": 11,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "web_fetch"
+      ],
+      "tags": [
+        "design",
+        "design-systems",
+        "tokens",
+        "dtcg",
+        "ui",
+        "figma",
+        "wcag",
+        "layout-tree",
+        "flexbox",
+        "css-grid",
+        "website-recreation"
+      ],
+      "suggested_skills": [
+        "refactor-ui",
+        "new-project",
+        "code-review"
+      ],
+      "aliases": [
+        "extract-design",
+        "design-tokens",
+        "layout-tree"
+      ]
     },
     {
       "name": "coupling-router",
       "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat.",
       "path": "coupling-router/SKILL.md",
       "version": "1.1.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["coupling", "task-routing", "subagents", "orchestration", "multi-agent", "architecture", "concurrency", "skill-compatibility", "token-optimization"]
+      "category": "context-orchestration",
+      "priority": 12,
+      "tools": [
+        "bash",
+        "view_file",
+        "grep",
+        "glob"
+      ],
+      "tags": [
+        "coupling",
+        "task-routing",
+        "subagents",
+        "orchestration",
+        "multi-agent",
+        "architecture",
+        "concurrency",
+        "skill-compatibility",
+        "token-optimization"
+      ],
+      "suggested_skills": [
+        "handoff",
+        "secretary",
+        "gauntlet-loop",
+        "updateagents"
+      ],
+      "aliases": [
+        "task-router",
+        "skill-router",
+        "coupling-analysis"
+      ]
+    },
+    {
+      "name": "secretary",
+      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation.",
+      "path": "secretary/SKILL.md",
+      "version": "1.1.0",
+      "category": "context-orchestration",
+      "priority": 13,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "staff-work",
+        "executive-brief",
+        "approval-gate",
+        "governance",
+        "decision-memo",
+        "evidence",
+        "hash-approval",
+        "socratic-lens",
+        "adversarial-review",
+        "dissent-preservation"
+      ],
+      "suggested_skills": [
+        "evidence-ledger",
+        "coupling-router",
+        "gauntlet-loop",
+        "code-review"
+      ],
+      "aliases": [
+        "secretary-controller",
+        "staff-controller",
+        "approval-gate"
+      ]
     },
     {
       "name": "evidence-ledger",
       "description": "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, and empirical vs speculative classification. Generates claim-ledger.md and MISSING_RECEIPTS_REPORT.md.",
       "path": "evidence-ledger/SKILL.md",
       "version": "1.1.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["evidence", "verification", "citation", "fact-checking", "claims", "research-gate", "provenance", "academic-research", "citation-synthesis", "receipt-audit", "doi"]
+      "category": "context-orchestration",
+      "priority": 14,
+      "tools": [
+        "bash",
+        "view_file",
+        "grep",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "evidence",
+        "verification",
+        "citation",
+        "fact-checking",
+        "claims",
+        "research-gate",
+        "provenance",
+        "academic-research",
+        "citation-synthesis",
+        "receipt-audit",
+        "doi",
+        "empirical-verification"
+      ],
+      "suggested_skills": [
+        "secretary",
+        "updatedocs",
+        "audit",
+        "coupling-router"
+      ],
+      "aliases": [
+        "claim-ledger",
+        "verification-ledger",
+        "citation-gate"
+      ]
     },
     {
-      "name": "daily-standup-coach",
-      "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
-      "path": "daily-standup-coach/SKILL.md",
+      "name": "dead-letter",
+      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, extracts what was learned, and generates either a retry packet with the root cause fixed or an escalation message with specific decision points.",
+      "path": "dead-letter/SKILL.md",
       "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["standup", "daily-review", "effort-scorecard", "reflection", "developer-productivity", "habits", "lifeos"]
+      "category": "quality-review",
+      "priority": 15,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "triage",
+        "error-handling",
+        "debugging",
+        "subagents",
+        "escalation",
+        "reliability"
+      ],
+      "suggested_skills": [
+        "handoff",
+        "pua",
+        "context-anchor",
+        "secretary"
+      ],
+      "aliases": [
+        "failure-triage",
+        "blocked-task",
+        "dead-letter-queue"
+      ]
+    },
+    {
+      "name": "pua",
+      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive—not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
+      "path": "pua/SKILL.md",
+      "version": "1.0.0",
+      "category": "quality-review",
+      "priority": 16,
+      "tools": [
+        "bash",
+        "view_file",
+        "edit_file"
+      ],
+      "tags": [
+        "debugging",
+        "performance",
+        "reliability",
+        "problem-solving",
+        "triage",
+        "big-tech"
+      ],
+      "suggested_skills": [
+        "dead-letter",
+        "code-review",
+        "gauntlet-loop"
+      ],
+      "aliases": [
+        "pip",
+        "ai-pip",
+        "performance-plan"
+      ]
+    },
+    {
+      "name": "coach",
+      "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
+      "path": "coach/SKILL.md",
+      "version": "1.0.0",
+      "category": "reflection-maintenance",
+      "priority": 17,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "standup",
+        "daily-review",
+        "effort-scorecard",
+        "reflection",
+        "developer-productivity",
+        "habits",
+        "lifeos"
+      ],
+      "suggested_skills": [
+        "audit",
+        "periodic-retreat",
+        "context-anchor"
+      ],
+      "aliases": [
+        "daily-standup-coach",
+        "standup-coach",
+        "daily-standup"
+      ]
+    },
+    {
+      "name": "audit",
+      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions. Generates brain-audit-report.md.",
+      "path": "audit/SKILL.md",
+      "version": "1.0.0",
+      "category": "reflection-maintenance",
+      "priority": 18,
+      "tools": [
+        "bash",
+        "view_file",
+        "grep",
+        "glob",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "knowledge-audit",
+        "memory-hygiene",
+        "link-integrity",
+        "docs-validation",
+        "dead-links",
+        "secret-scan",
+        "ref-integrity"
+      ],
+      "suggested_skills": [
+        "updatedocs",
+        "evidence-ledger",
+        "coach",
+        "periodic-retreat"
+      ],
+      "aliases": [
+        "brain-audit",
+        "memory-audit",
+        "knowledge-audit"
+      ]
     },
     {
       "name": "periodic-retreat",
       "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md.",
       "path": "periodic-retreat/SKILL.md",
       "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["retreat", "strategic-planning", "quarterly-review", "lifeos", "architecture-debt", "okrs", "telos"]
-    },
-    {
-      "name": "brain-audit",
-      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions. Generates brain-audit-report.md.",
-      "path": "brain-audit/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["knowledge-audit", "memory-hygiene", "link-integrity", "docs-validation", "dead-links", "secret-scan", "ref-integrity"]
-    },
-    {
-      "name": "git",
-      "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup.",
-      "path": "git/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["git", "github", "release", "pr", "triage", "branching", "semver", "workflow", "devops", "seo"]
-    },
-    {
-      "name": "ai-ready",
-      "description": "Repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding with a 4-tier grading matrix (Getting Started to AI-Ready), zero-token Stage-0 Fast-Skip Gate, and merged PR review convention mining.",
-      "path": "ai-ready/SKILL.md",
-      "version": "1.0.0",
-      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["audit", "readiness", "governance", "dox", "pr-mining", "ci", "workflow", "fast-skip", "onboarding"]
+      "category": "reflection-maintenance",
+      "priority": 19,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "retreat",
+        "strategic-planning",
+        "quarterly-review",
+        "lifeos",
+        "architecture-debt",
+        "okrs",
+        "telos"
+      ],
+      "suggested_skills": [
+        "coach",
+        "audit",
+        "updateagents",
+        "updatedocs"
+      ],
+      "aliases": [
+        "retreat",
+        "quarterly-retreat",
+        "strategic-retreat"
+      ]
     }
   ]
 }

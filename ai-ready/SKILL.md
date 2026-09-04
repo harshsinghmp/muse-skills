@@ -1,17 +1,28 @@
 ---
 name: ai-ready
-aliases: ["repo-ai-ready", "audit-ai-ready", "ai-audit"]
+aliases: ["repo-ai-ready","audit-ai-ready","ai-audit"]
 description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically, and integrates as the foundational pre-flight check for new-project and updateagents."
 version: 1.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
-  aliases: ["repo-ai-ready", "audit-ai-ready", "ai-audit"]
+  category: core-engine
+  priority: 7
+  aliases: ["repo-ai-ready","audit-ai-ready","ai-audit"]
+  suggested_skills: ["new-project","updateagents","git","updatedocs"]
   hermes:
     tags: [audit, readiness, governance, dox, agents, pr-mining, ci, workflow, onboarding]
     related_skills: [new-project, updateagents, git, updatedocs]
+    suggested_skills: [new-project, updateagents, git, updatedocs]
     requires_tools: [bash, view_file, write_to_file, run_command, grep_search]
+  openclaw:
+    category: core-engine
+    suggested_skills: [new-project, updateagents, git, updatedocs]
+    primary_triggers: ["make repo AI-ready","audit AI readiness","check repo health","ai-audit"]
+    requires_tools: [bash, view_file, write_to_file, run_command, grep_search]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🤖 ai-ready — Repository AI-Readiness Auditor & Scaffolding Engine
