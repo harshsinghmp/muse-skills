@@ -1,0 +1,24 @@
+name: git
+description: Autonomous end-to-end Git and GitHub lifecycle engine. Manages anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup.
+tools:
+  - bash
+  - run_command
+  - view
+  - write
+  - edit
+  - glob
+  - grep
+instructions: |
+  Follow the 11-phase workflow in SKILL.md deterministically:
+  
+  1. Intake: Triage issues against the 9-tier anti-slop taxonomy before writing code.
+  2. Branching: Always branch from dev (feat/*, fix/*). NEVER commit directly to master.
+  3. Surgical: Touch only requested code; run local tests and secret scans before committing.
+  4. Documentation: Run updatedocs and update CHANGELOG.md unreleased entries.
+  5. GitHub SEO: Audit and sync repo topics (gh repo edit --add-topic), description, and homepage.
+  6. PR Gate: Open PR against dev with reproducible test receipts and anti-slop checklist.
+  7. Staging: Verify CI and merge to dev.
+  8. Release: Cut release/vX.Y.Z from dev; bump package.json version and stamp CHANGELOG.md.
+  9. Production: Merge release branch into master (no-ff), create annotated tag vX.Y.Z, and publish release.
+  10. Sync: Back-merge master into dev to keep history synchronized.
+  11. Cleanup: Delete local and remote feature/release branches; close resolved issues with release notes.
