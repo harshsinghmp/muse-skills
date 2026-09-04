@@ -40,7 +40,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with plateau stop conditions and acceptance packets |
 | Control staff work with Socratic adversarial gates | [`secretary-controller`](secretary-controller/README.md) | Socratic devil's advocate challenges, preserved dissent, and single-use SHA-256 hash gates |
 | Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
-| Verify factual claims & citation provenance | [`evidence-ledger`](evidence-ledger/README.md) | 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) ledger |
+| Verify factual claims & academic citations | [`evidence-ledger`](evidence-ledger/README.md) | Academic DOI citations, 4-tier confidence taxonomy, and missing receipt audits |
 | Score daily controllable effort & focus | [`daily-standup-coach`](daily-standup-coach/README.md) | 5-pillar input scorecard and daily reflection log |
 | Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | Audit link integrity & knowledge hygiene | [`brain-audit`](brain-audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
@@ -207,7 +207,7 @@ graph TD
 | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality Gate** | `/gauntlet`, `/gauntlet-loop` | Bounded multi-agent quality improvement loop with Builder, Fresh Critic, Automated Gate, and Integrator roles with plateau stop conditions. |
 | [**`secretary-controller`**](secretary-controller/README.md) | **Governance** | `/secretary`, `/memo` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and SHA-256 hash gate. |
 | [**`coupling-router`**](coupling-router/README.md) | **Multi-Agent** | `/router`, `/coupling` | Coupling-aware architectural router & skill-stack auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
-| [**`evidence-ledger`**](evidence-ledger/README.md) | **Governance** | `/evidence`, `/claim` | Source-cited claim verification gate enforcing a 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`). |
+| [**`evidence-ledger`**](evidence-ledger/README.md) | **Governance** | `/evidence`, `/claim` | Source-cited claim verification gate with academic DOI citations, empirical vs speculative audit, and missing receipt flagger. |
 | [**`daily-standup-coach`**](daily-standup-coach/README.md) | **Reflection** | `/standup`, `/daily` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection** | `/retreat`, `/quarterly` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | [**`brain-audit`**](brain-audit/README.md) | **Governance** | `/audit-brain`, `/hygiene` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
@@ -425,14 +425,16 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 
 ### 📜 `evidence-ledger`
 
-Source-cited claim verification gate and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
+Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 ```
 
-- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction).
-- **Claim Gate**: Flags and redacts ungrounded marketing claims, fabricated benchmarks, and unverified architecture assertions.
+- **Academic & Primary Citations**: Requires peer-reviewed DOI links (`https://doi.org/...`) or canonical specification URLs for all technical assertions.
+- **Empirical vs Speculative Demarcation**: Enforces strict boundaries between measured empirical benchmark facts (`[EMPIRICAL]`) and theoretical extrapolations (`[SPECULATIVE]`).
+- **Statistical Audit & Missing Receipts Flagger**: Scans statistical statements (percentages, multipliers, latency numbers) and emits `MISSING_RECEIPTS_REPORT.md` for unbacked assertions.
+- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL / DOI), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction).
 - **Structured Audit**: Outputs `claim-ledger.md` documenting verification paths, timestamps, and exact command receipts.
 
 [Read full documentation →](evidence-ledger/README.md)
@@ -662,12 +664,13 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── evidence-ledger/                # Source-cited claim verification gate
+├── evidence-ledger/                # Source-cited claim verification & academic receipt gate
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
 │   │   └── sample-claim-ledger.md
 │   ├── references/
+│   │   ├── academic-citation-protocol.md
 │   │   └── claim-verification-taxonomy.md
 │   ├── README.md
 │   └── SKILL.md
