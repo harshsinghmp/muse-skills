@@ -10,11 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0] - 2026-09-04
 
 ### Added
-- **`clean-system-cache` Skill (#20)**: Cross-platform development, design, and browser cache cleanup engine for Linux, macOS, and Windows (`scripts/clean-cache.sh` and `scripts/clean-cache.cmd`). Cleans package managers (npm, bun, yarn, pnpm, cargo, pip/uv, gradle), build tools, design applications (Figma, Adobe, Blender), and browser caches with active running-session protection, credential preservation, and targeted dry-run auditing.
-- **Agent Engine Architecture in `ai-ready`**: Relocated template bundle from `new-project` to `ai-ready` as canonical source, added `backend-wordpress.md` standard and WordPress archetype to `new-project`, and added `ai-ready/scripts/ai-ready.ts` CLI supporting `--audit` and `--scaffold`.
-- **Intelligent Context Extraction in `updateagents`**: Scaffolding on empty workspaces, intelligent legacy context mapping and merging from custom agent instruction files, and structured diff change reporting.
-- **Session Resumption in `handoff`**: Inbound session continuation protocol with directory boundary verification.
-- **'The Bar is the Whole Trick' in `gauntlet-loop`**: Blind A/B critique and adversarial quality gate integration.
+- **`clean-system-cache` Skill (#20)**: Cross-platform developer, designer, and browser cache cleaner for Linux, macOS, and Windows. Cleans unreferenced, dangling, and disposable caches across package managers (`npm`, `bun`, `pnpm`, `yarn`, `cargo`, `uv`/`pip`, `gradle`, `brew`), build tools, containers (`docker`, `podman`), creative suites (Figma, Adobe, Blender), and web browsers with zero external runtimes (pure POSIX Bash & native Windows Batch). ([#29](https://github.com/harshsinghmp/muse-skills/pull/29))
+- **Active Running-Session Guards**: Integrated non-destructive process scanners (`pgrep` / `tasklist`) in `clean-system-cache` that automatically detect active developer tools and browser instances, safely skipping their caches to prevent session disruption or file locking. ([#29](https://github.com/harshsinghmp/muse-skills/pull/29))
+- **Browser Cache-Only Isolation**: Enforced strict cache directory filtering targeting only disposable stores (`Cache/`, `Code Cache/`, `GPUCache/`, `~/.cache`), completely protecting saved logins, active cookies, session tokens, user profiles, and history. ([#29](https://github.com/harshsinghmp/muse-skills/pull/29))
+- **Canonical Agent Engine in `ai-ready`**: Established `ai-ready` as the single source of truth for the Agent Engine DOX template bundle (`ai-ready/templates/`), adding the `backend-wordpress.md` standard and a standalone `ai-ready.ts` CLI supporting `--audit` and `--scaffold` workflows. ([#28](https://github.com/harshsinghmp/muse-skills/pull/28))
+- **WordPress Archetype in `new-project`**: Expanded framework scaffolding in `new-project.ts` to support full-stack agency WordPress setups alongside Astro, Next.js, Instatic, Hono, and Vite. ([#28](https://github.com/harshsinghmp/muse-skills/pull/28))
+
+### Changed
+- **Intelligent Legacy Parsing in `updateagents`**: Rewrote `updateagents.ts` with an intelligent context extractor that discovers custom legacy memory files, maps unstructured directives into canonical DOX sections, safely archives original files to `.agents/archive/`, and generates structured diff change reports. ([#28](https://github.com/harshsinghmp/muse-skills/pull/28))
+- **Inbound Session Resumption in `handoff`**: Upgraded `handoff` protocol with session continuation envelopes, working directory boundary verification, and subagent context resumption contracts. ([#28](https://github.com/harshsinghmp/muse-skills/pull/28))
+- **'The Bar is the Whole Trick' in `gauntlet-loop`**: Upgraded `gauntlet-loop` with an explicit 4-tier quality bar rubric and double-blind A/B critique gates to eliminate agent confirmation bias. ([#28](https://github.com/harshsinghmp/muse-skills/pull/28))
+- **20-Skill Catalog & Priority Synchronization**: Registered `clean-system-cache` as skill #20 across `skills.json`, `package.json`, `llms.txt`, automated test assertions, and `README.md`. ([#29](https://github.com/harshsinghmp/muse-skills/pull/29))
+
+### Fixed
+- **System Architecture Mermaid Syntax**: Resolved GitHub rich display parse error (`got 'PS'`) by properly enclosing all special characters (`#`, `&`, `(`, `)`) in double quotes across subgraph titles and node shapes. ([#31](https://github.com/harshsinghmp/muse-skills/pull/31))
+- **Compact 4-Tier Pipeline Layout**: Restructured the sprawling 2,500px wide System Architecture diagram into a compact vertical 4-tier execution pipeline (Orchestration, Foundation, Execution, Delivery) with a dedicated Architectural Layer Breakdown table. ([#32](https://github.com/harshsinghmp/muse-skills/pull/32))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.0.0...v2.1.0
+
+---
 
 ## [2.0.0] - 2026-09-04
 

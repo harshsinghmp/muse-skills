@@ -59,3 +59,28 @@ Every bullet in a changelog section should follow this format:
 | `- added new flags and refactored everything` | `- **CLI**: Added \`--dry-run\` and \`--json\` output flags for automated CI pipelines.` |
 | `- bump version to 2.0.0 (unreleased)` | *(Leave under \`## [Unreleased]\` until formal release)* |
 | `- Updated docs / Fixed typo in README` | *(Omit documentation-only noise unless project explicitly tracks doc changes)* |
+
+---
+
+## 4. High-Signal Feature Craft Standard (The v2.0.0 Rule)
+
+To prevent flat, low-signal changelog descriptions, every released version and unreleased staging entry must adhere to the **v2.0.0 Craft Standard**:
+
+1. **Architectural Doctrine / Thematic Naming**:
+   - Every entry must lead with a bold named theme, doctrine, or concrete component (e.g., `**Karpathy Simplicity Doctrine**`, `**5-State Anti-Slop UI Gate**`, `**Active Running-Session Guards**`), never generic file names or unadorned phrases like "updated x".
+2. **Strict Multi-Category Demarcation**:
+   - Never dump updates into a monolithic `### Added` block.
+   - Distinctly segregate into `### Added` (new capabilities/tools), `### Changed` (upgraded architectures, modified defaults, refactored logic), `### Fixed` (bugs, syntax errors, layout fixes), and `### Security` (credential isolation, secret sweeps).
+3. **Mechanisms, Flags & Invariants**:
+   - Entries must explicitly articulate the mechanism (e.g., CLI flags like `--audit`, process scanners `pgrep`, isolation boundaries), why the capability matters to developers/agents, and what guarantees it enforces.
+4. **Nested Sub-Bullets for Transformations**:
+   - Use nested arrows (`- `old-name` ➔ `new-name``) or breakdown lists for renames, migrations, or multi-part refactors.
+5. **Issue & Pull Request Attribution**:
+   - Every bullet must link to the corresponding PR or issue: `([#123](https://github.com/harshsinghmp/muse-skills/pull/123))`.
+6. **Full Changelog Compare Diff Link**:
+   - Every tagged release section must conclude with the GitHub compare diff URL immediately preceding the divider:
+     ```markdown
+     **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v<PREVIOUS_TAG>...v<NEW_TAG>
+     ```
+7. **Release Divider**:
+   - Terminate every released version section with a horizontal rule (`---`).
