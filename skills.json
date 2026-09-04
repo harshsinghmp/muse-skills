@@ -143,6 +143,14 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["git", "github", "release", "pr", "triage", "branching", "semver", "workflow", "devops", "seo"]
+    },
+    {
+      "name": "ai-ready",
+      "description": "Repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding with a 4-tier grading matrix (Getting Started to AI-Ready), zero-token Stage-0 Fast-Skip Gate, and merged PR review convention mining.",
+      "path": "ai-ready/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["audit", "readiness", "governance", "dox", "pr-mining", "ci", "workflow", "fast-skip", "onboarding"]
     }
   ]
 }

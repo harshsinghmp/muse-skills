@@ -114,11 +114,21 @@ Identify the project's source of truth before documenting behavior:
 
 ## Procedure
 
-Execute the 17-step synchronization workflow via the automation CLI:
+Execute the synchronization workflow via the automation CLI:
 
 ```bash
 bun path/to/updateagents/scripts/updateagents.ts [options]
 ```
+
+### Step 0 — Stage-0 Fast-Skip Gate (Pre-Flight)
+Before performing deep inspection or delta generation, run the `ai-ready` fast-skip verification:
+1. Verify `AGENTS.md` exists and is `<50 lines`.
+2. Verify `.agents/standards` and `.agents/context` exist and are populated.
+3. If instructions are already aligned with project reality:
+   ```text
+   [ai-ready] Agent instructions and DOX container verified. Skipping pass.
+   ```
+   Exit immediately with 0 changes and zero token waste. Proceed only when structural drift or new project requirements are detected.
 
 ### Step 1 — Establish Workspace Context
 Determine current directory, repository status, project type, language/runtime, package manager, and application boundaries. Exclude parent directories and `.memory/**`.
