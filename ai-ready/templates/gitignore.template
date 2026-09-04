@@ -267,3 +267,9 @@ desktop.ini
 *.sublime-project
 .zed/
 .zed-context/
+
+# ==============================================================================
+# Git Worktrees (Isolated Parallel Agent Lanes)
+# ==============================================================================
+.worktrees/
+worktrees/

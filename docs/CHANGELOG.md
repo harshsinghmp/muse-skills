@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Worktree Parallel Lanes in `git`**: Isolated working tree feature lanes (`.worktrees/feat-<slug>`) enabling concurrent multi-agent development and shielding active development servers (`bun dev`, Vite, test watchers) from branch switching churn.
+- **Dynamic `.gitignore` Seeding**: Automatic zero-leakage `.gitignore` template initialization if missing from the workspace, seeded directly from `ai-ready/templates/gitignore.template`.
+- **Pre-Release Sanitization Gate in `git`**: Production release gate that sweeps temporary scratch files (`SESSION.md`, `planning/`, `screenshots/`, `test-*.ts`, `scratch/`) and verifies repository visibility vs. licensing invariants.
+- **Monorepo-Aware Tag Scoping in `git`**: Automatic workspace detection (`pnpm-workspace.yaml`, `packages/`, `turbo.json`, `lerna.json`) that applies package-scoped tags (`{package}-vX.Y.Z`) while preserving root SemVer (`vX.Y.Z`) for single-package repositories.
+- **Merge Conflict Resolution & Git Recovery Playbook**: Dedicated recovery guide with triage diagnostics, rebase vs. merge strategy matrix, emergency code extraction (`git show ... > /tmp/...`), and reflog restoration recipes.
+- **Safe Bulk Branch Pruning & Worktree Cleanup**: One-line prune of merged feature branches and stale worktrees with protection for `dev`, `master`, and `main`.
+- **Worktree Invariants in `.gitignore`**: Added `.worktrees/` and `worktrees/` to root `.gitignore` and `ai-ready/templates/gitignore.template`.
+
+---
+
 ## [2.1.0] - 2026-09-04
 
 ### Added

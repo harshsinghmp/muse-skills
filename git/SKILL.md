@@ -100,6 +100,43 @@ Do **NOT** use this skill for:
 
 ## Procedure
 
+### Phase 0: Workspace Security & Dynamic `.gitignore` Initialization
+Before executing any Git operations or staging commits, verify workspace repository hygiene:
+1. **Dynamic `.gitignore` Seeding**:
+   ```bash
+   if [ ! -f ".gitignore" ]; then
+     echo "🛡️ .gitignore missing. Seeding hardened Zero-Leakage template from ai-ready..."
+     TEMPLATE_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/ai-ready/templates/gitignore.template"
+     if [ -f "$TEMPLATE_PATH" ]; then
+       cp "$TEMPLATE_PATH" .gitignore
+     else
+       cat > .gitignore << 'EOF'
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+.worktrees/
+worktrees/
+.agents/
+.gemini/
+.claude/
+.cursor/
+.DS_Store
+*.log
+EOF
+     fi
+     git add .gitignore
+     git commit -m "chore(git): seed hardened zero-leakage .gitignore"
+   else
+     # Ensure worktrees directory is ignored
+     if ! git check-ignore -q .worktrees 2>/dev/null; then
+       echo -e "\n# Git Worktrees\n.worktrees/\nworktrees/" >> .gitignore
+     fi
+   fi
+   ```
+
 ### Phase 1: Issue Intake & Anti-Slop Triage
 1. View issue details using GitHub CLI:
    ```bash
@@ -109,20 +146,49 @@ Do **NOT** use this skill for:
 3. If non-actionable, comment with clear evidence and close or defer.
 4. If actionable, note the exact minimal scope and proceed to Phase 2.
 
-### Phase 2: Feature Branch Creation
-1. Ensure the working tree is clean and `dev` is up to date:
+### Phase 2: Feature Branch Creation & Worktree Parallel Lanes
+Choose the execution lane appropriate for your environment:
+
+#### Option A: Worktree Parallel Lane (Recommended for Multi-Agent Workflows & Active Watchers)
+Protects running dev servers (`bun dev`), file watchers, and parallel subagents from branch-switching churn:
+1. **Detect Existing Isolation & Submodule Guard**:
    ```bash
-   git checkout dev
-   git pull origin dev
+   GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
+   GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
+   SUBMODULE=$(git rev-parse --show-superproject-working-tree 2>/dev/null)
+   # If GIT_DIR != GIT_COMMON and no SUBMODULE, already in a worktree—work in place!
    ```
-2. Create and switch to the feature branch:
+2. **Create Worktree Lane**:
    ```bash
+   git checkout dev && git pull origin dev
+   git worktree add .worktrees/feat-<slug> -b feat/<issue-id>-<slug> dev
+   cd .worktrees/feat-<slug>
+   ```
+3. **Bootstrap & Verify Clean Baseline**:
+   ```bash
+   bun install || npm install || cargo check || true
+   bun test || npm test || cargo test
+   ```
+*(For detailed worktree mechanics, see [Worktree Parallel Lanes](references/worktree-parallel-lanes.md)).*
+
+#### Option B: In-Place Working Tree Lane (Standard Single-Agent Fallback)
+Used when sandboxing restricts worktrees or for simple isolated edits:
+1. Ensure working tree is clean and `dev` is up to date:
+   ```bash
+   git checkout dev && git pull origin dev
    git checkout -b feat/<issue-id>-<slug> dev
    ```
 
-### Phase 3: Surgical Implementation & Local Verification Gate
+### Phase 3: Surgical Implementation, Interactive Rebase & Local Verification Gate
 1. Implement the requested changes following the **Surgical Changes Doctrine** (touch only what is necessary; no unrequested refactors of adjacent code).
-2. Execute the verification suite:
+2. **Interactive Rebase & Atomic Commits**:
+   - Keep commits atomic and self-contained.
+   - Clean up intermediate checkpoint commits before pushing:
+     ```bash
+     git rebase -i dev  # Squash fixups, clean up commit messages
+     ```
+   - When updating a remote feature branch, always use `--force-with-lease` (never bare `--force` and never on shared branches).
+3. Execute the verification suite:
    ```bash
    # Run tests
    bun test
@@ -131,7 +197,7 @@ Do **NOT** use this skill for:
    # Run pre-ship secret scan
    bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts . 2>/dev/null || grep -riE "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . --exclude-dir={.git,node_modules,dist}
    ```
-3. Commit using Conventional Commits format:
+4. Commit using Conventional Commits format:
    ```bash
    git add -A
    git commit -m "feat(<scope>): <imperative summary> (Closes #<issue-id>)"
@@ -181,28 +247,60 @@ Do **NOT** use this skill for:
    )"
    ```
 
-### Phase 7: Staging Integration (`dev`)
+### Phase 7: Staging Integration & Conflict Resolution Playbook (`dev`)
 1. Verify CI workflow passes:
    ```bash
    gh pr checks
    ```
-2. Merge PR into `dev` using squash or linear rebase:
+2. **Merge Conflict Resolution (If conflicts occur during staging)**:
+   - **Scope Assessment**:
+     ```bash
+     git diff --name-only --diff-filter=U
+     ```
+   - **Rebase vs. Merge Decision**: Rebase feature branches (`git rebase dev`); never rebase or force-push shared branches (`dev`, `master`). Use `--force-with-lease` on feature branches.
+   - **Emergency Abort & Code Extraction**: If rebase loops or diverges catastrophically:
+     ```bash
+     git rebase --abort 2>/dev/null || git merge --abort 2>/dev/null
+     git show feat/<slug>:path/to/file > /tmp/recovered-file
+     # Reset branch to latest dev, re-apply extracted files, test, and commit cleanly
+     ```
+   - **Reflog Safety Net**: Recover lost states with `git reflog -n 25` and `git checkout -b recovery-branch HEAD@{n}`.
+   *(For full details, see [Conflict Resolution & Recovery Playbook](references/conflict-resolution-and-recovery.md)).*
+3. Merge PR into `dev` using squash or linear rebase:
    ```bash
    gh pr merge --squash --delete-branch=false
    git checkout dev && git pull origin dev
    ```
 
-### Phase 8: Cut Production Release Branch
-1. Determine the new SemVer version (`vX.Y.Z`).
-2. Cut release branch from updated `dev`:
+### Phase 8: Cut Production Release Branch & Pre-Release Sanitization Gate
+1. **Pre-Release Sanitization Gate**:
+   - Sweep and purge uncommitted scratch files (`SESSION.md`, `planning/`, `screenshots/`, `test-*.ts`, `scratch/`).
+   - Audit repository visibility and licensing:
+     ```bash
+     VISIBILITY=$(gh repo view --json visibility -q '.visibility' 2>/dev/null || echo "UNKNOWN")
+     # Ensure private client repos carry proprietary notices and package.json has "private": true
+     ```
+2. **Determine SemVer Version & Monorepo Tag Scoping**:
+   - Auto-detect monorepo (`pnpm-workspace.yaml`, `packages/`, `lerna.json`, `turbo.json`):
+     - Monorepo format: `{package-name}-v{semver}`
+     - Standard single package: `v{semver}`
+   - **Tag Pre-Existence Gate**:
+     ```bash
+     if git tag -l "$TAG_NAME" | grep -q "^${TAG_NAME}$"; then
+       echo "🚨 Tag $TAG_NAME already exists! Bump version in package.json."
+       exit 1
+     fi
+     ```
+   *(For sanitization & monorepo rules, see [Monorepo & Sanitization Protocol](references/monorepo-and-sanitization.md)).*
+3. Cut release branch from updated `dev`:
    ```bash
    git checkout -b release/vX.Y.Z dev
    ```
-3. Bump version in `package.json` and stamp `CHANGELOG.md` with version and release date:
+4. Bump version in `package.json` and stamp `CHANGELOG.md` with version and release date:
    - Audit `CHANGELOG.md` against the High-Signal Feature Craft Standard (`updatedocs/references/CHANGELOG-POLICY.md`).
    - Append the comparison diff URL before the release divider:
      `**Full Changelog**: https://github.com/<owner>/<repo>/compare/v<PREV>...v<NEW>`
-4. Commit release preparation:
+5. Commit release preparation:
    ```bash
    git add package.json CHANGELOG.md
    git commit -m "chore(release): vX.Y.Z"
@@ -234,14 +332,26 @@ Do **NOT** use this skill for:
    git push origin dev
    ```
 
-### Phase 11: Branch Cleanup & Issue Closure
+### Phase 11: Safe Branch Pruning, Worktree Teardown & Issue Closure
 1. Delete local and remote feature/release branches safely:
    ```bash
    git branch -d feat/<issue-id>-<slug>
    git push origin --delete feat/<issue-id>-<slug> 2>/dev/null || true
    git branch -d release/vX.Y.Z
+   git push origin --delete release/vX.Y.Z 2>/dev/null || true
    ```
-2. Close linked issues with release receipts:
+2. **Safe Bulk Branch Pruning** (Sweeps merged branches while protecting `dev`, `master`, and `main`):
+   ```bash
+   git branch --merged dev | grep -vE '^\*|main|master|dev|develop' | xargs -r git branch -d
+   git fetch --prune
+   ```
+3. **Worktree Teardown** (If feature lane was executed in a worktree):
+   ```bash
+   cd "$MAIN_REPO_ROOT"
+   git worktree remove .worktrees/feat-<slug> 2>/dev/null || true
+   git worktree prune
+   ```
+4. Close linked issues with release receipts:
    ```bash
    gh issue close <issue-id> --comment "Resolved and released in vX.Y.Z."
    ```
@@ -255,6 +365,7 @@ Do **NOT** use this skill for:
 - **Never Leave Stale Branches**: Unmerged or orphaned branches create cognitive clutter and trigger spurious merge conflicts. Clean up immediately after release.
 - **Never Include Unredacted Credentials**: Scan diffs for `.env` files, API keys (`sk-*`, `ghp_*`), and private tokens before pushing.
 - **No Vague Commit Messages**: Messages like "fixes bug" or "updates" are strictly forbidden. Always use Conventional Commits with scope and rationale.
+- **Never Force-Push Shared Branches**: `--force-with-lease` is permissible only on isolated feature branches; force-pushing `dev` or `master` is catastrophic.
 
 ---
 
@@ -263,7 +374,19 @@ Do **NOT** use this skill for:
 Before marking this skill complete, verify:
 1. `git status` shows a clean working tree.
 2. `master` and `dev` branch pointers are properly synchronized.
-3. Feature branch is cut strictly from `dev`.
+3. Feature branch is cut strictly from `dev` (in-place or via `.worktrees/`).
 4. Tests and secret scans pass cleanly.
-5. GitHub release is published with valid tag `vX.Y.Z`.
-6. Obsolete feature branches have been deleted locally and remotely.
+5. GitHub release is published with valid tag `vX.Y.Z` (or `{package}-vX.Y.Z` in monorepos).
+6. Obsolete feature branches and worktrees have been deleted locally and remotely.
+
+---
+
+## References
+
+- 🌲 [Worktree Parallel Lanes Protocol](references/worktree-parallel-lanes.md)
+- ⚔️ [Merge Conflict Resolution & Git Recovery Playbook](references/conflict-resolution-and-recovery.md)
+- 📦 [Monorepo Tagging & Pre-Release Sanitization Protocol](references/monorepo-and-sanitization.md)
+- 🌳 [Branching, Commits & Release Matrix](references/branching-and-release-matrix.md)
+- 🛡️ [Anti-Slop Issue Intake Matrix](references/anti-slop-triage.md)
+- 🎨 [GitHub SEO & Open Graph Presentation Guide](references/github-seo-and-presentation.md)
+- 📜 [Changelog Policy & High-Signal Craft Standard](../updatedocs/references/CHANGELOG-POLICY.md)
