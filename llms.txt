@@ -23,7 +23,7 @@
 - [gauntlet-loop](gauntlet-loop/SKILL.md): Bounded Multi-Agent Quality Improvement Loop & Termination Gate.
 - [secretary-controller](secretary-controller/SKILL.md): Evidence-Grounded Staff-Work Controller, Socratic Adversarial Gate & Hash Approval.
 - [coupling-router](coupling-router/SKILL.md): Coupling-Aware Architectural Delegation, Skill-Stack Compatibility & Concurrency Router.
-- [evidence-ledger](evidence-ledger/SKILL.md): Source-Cited Claim Verification Gate & Provenance Ledger.
+- [evidence-ledger](evidence-ledger/SKILL.md): Source-Cited Claim Verification Gate, Academic Citation Synthesis & Receipt Ledger.
 - [daily-standup-coach](daily-standup-coach/SKILL.md): Daily Reflective Check-In & 5-Pillar Controllable Effort Scorecard.
 - [periodic-retreat](periodic-retreat/SKILL.md): Quarterly Strategic Retreat Facilitator & Architecture Debt Purge.
 - [brain-audit](brain-audit/SKILL.md): Knowledge Hygiene, Link Integrity & Credential Leak Auditor.
