@@ -1,5 +1,5 @@
 name: context-anchor
-description: Drops a compact working reference snapshot in .claude/anchor.md to eliminate cascading context drift and preserve active state.
+description: Drops a compact working reference snapshot in .agents/anchor.md to eliminate cascading context drift and preserve active state.
 tools:
   - bash
   - view
@@ -15,5 +15,5 @@ instructions: |
      - Key architectural/product decisions made with reasons.
      - Ruled-out attempts and failed paths.
      - Exact next action with file and line reference.
-  2. Write structured anchor to <project-root>/.claude/anchor.md.
+  2. Write structured anchor to <project-root>/.agents/anchor.md.
   3. Echo anchor inline for user/orchestrator verification.

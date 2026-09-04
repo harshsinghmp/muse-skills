@@ -305,7 +305,7 @@ npx skills add harshsinghmp/muse-skills --skill dead-letter
 
 ### ⚓ `context-anchor`
 
-Drop a compact working reference snapshot in the project’s configured agent-context location (the current default is `<project-root>/.claude/anchor.md`) to prevent cascading context drift across long sessions, breaks, or task switches.
+Drop a compact working reference snapshot in the project’s configured agent-context location (the current default is `<project-root>/.agents/anchor.md`) to prevent cascading context drift across long sessions, breaks, or task switches.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill context-anchor
