@@ -55,6 +55,17 @@ Execute this skill when any of the following occur:
 - **Nitpick (6.8%)**: Purely localized style, obvious dead code removals, minor naming improvements.
 - **Approve (7.0%)**: Code is strictly correct, data structures are optimal, and changes are verified with evidence.
 
+### The Karpathy Surgical Changes Doctrine (Diff Minimality & Focus)
+
+Synthesizes Andrej Karpathy's 4 core behavioral guidelines into the review discipline:
+
+| Principle | Review Standard | Anti-Pattern Trigger | Default Severity |
+| :--- | :--- | :--- | :--- |
+| **Think Before Coding** | State assumptions and trade-offs explicitly before implementation | Silently choosing an ambiguous interpretation without surfacing alternatives | **Request Changes** |
+| **Simplicity First** | Minimum viable code to solve the exact issue; reject bloat | Speculative flexibility, premature configurability, single-use wrappers | **Reject** |
+| **Surgical Changes** | Touch only lines necessary for the fix; zero orthogonal churn | "Drive-by" refactoring, reformatting untouched lines, editing unrelated comments | **Reject** |
+| **Goal-Driven Execution** | Require reproducible test passes and verifiable oracle criteria | "Should work" claims without terminal proof or runnable test receipts | **Request Changes / Reject** |
+
 ---
 
 ## Procedure
@@ -175,6 +186,14 @@ Systematically review the submission against the three levels of triggers:
 - **Trigger 15.1 (Hard Crash on Unrecognized Input)**: Crashing instead of gracefully falling back to known-good general handler. (*Severity: Nitpick*)
 - **Trigger 15.2 (Unusable Error Returns)**: Returning errors the caller has no programmatic way to recover from or handle. (*Severity: Reject*)
 - **Trigger 15.3 (Silent Swallowing of Serious Bug)**: Silently ignoring "should never happen" bugs instead of logging a loud one-time warning. (*Severity: Request Changes*)
+
+#### Level 4: Surgical Scope & Diff Minimality (Karpathy Doctrine)
+
+##### Theme 16: Surgical Diff Discipline & Simplicity
+- **Trigger 16.1 (Drive-By Edits & Diff Bloat)**: PR modifies lines, comments, formatting, or imports outside the stated issue scope. (*Severity: Reject*)
+- **Trigger 16.2 (Speculative Abstraction)**: Introduces single-caller helpers, generic factory wrappers, or premature interfaces for hypothetical future use. (*Severity: Reject*)
+- **Trigger 16.3 (Silent Assumption Trap)**: Author guessed an ambiguous requirement without documenting alternatives or surfacing trade-offs. (*Severity: Request Changes*)
+- **Trigger 16.4 (Evidence-Free Claim)**: Patch claims performance gain or bug fix without providing concrete test execution output or reproducer trace. (*Severity: Request Changes*)
 
 ---
 
@@ -297,6 +316,8 @@ Every review must output a clean, authoritative report structured as follows:
 - [ ] Interface Stability: Zero breaking API changes or silent data layout shifts
 - [ ] Data Structures: Special cases eliminated through representation (pointer-to-pointer, unified flows)
 - [ ] Root Cause: Producer fixed, not papered over at consumer; zero silent error swallowing
+- [ ] Surgical Scope: Zero drive-by edits, reformatting of working code, or orthogonal diff churn
+- [ ] Simplicity: No single-use wrappers, speculative generality, or premature abstractions
 - [ ] Evidence: Benchmarks isolated, tests present, reproducer verified
 - [ ] Cross-File: Header/implementation consistency, caller/callee contracts satisfied across repo
 ```
@@ -323,3 +344,5 @@ Before finalizing a code review, verify that:
 4. **Concrete Alternative Provided**: Every substantive objection includes a cleaner code proposal.
 5. **Cross-File Invariants Verified**: Checked header/impl consistency, lock ordering across call trees, and caller/callee error handling.
 6. **No Regressions Overlooked**: Verified that error handling, lock releasing, and API stability remain intact across all call paths.
+7. **Surgical Diff Discipline**: Verified that the diff contains zero drive-by refactorings, orthogonal comment edits, or single-use abstractions.
+8. **Goal-Driven Verification**: Confirmed that all changes are backed by executable oracle tests and terminal receipts.

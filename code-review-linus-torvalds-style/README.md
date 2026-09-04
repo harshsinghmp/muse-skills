@@ -84,6 +84,9 @@ Level 3: Tactical Guidelines (Implementation-Level — Default: REQUEST CHANGES 
 ├── Theme 13: Testing & Verification (Concrete reproducers, non-happy-path tests)
 ├── Theme 14: Performance Discipline (No dynamic dispatch in hot loops, A/B benchmarks)
 └── Theme 15: Error Handling & Recovery (Graceful degradation, one-time warnings)
+
+Level 4: Surgical Scope & Diff Minimality (Karpathy Doctrine — Default: REJECT / REQUEST CHANGES)
+└── Theme 16: Surgical Diff Discipline (Zero drive-by edits, no speculative abstractions, oracle receipts)
 ```
 
 ---
