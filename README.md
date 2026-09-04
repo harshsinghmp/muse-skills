@@ -147,45 +147,53 @@ flowchart LR
 
 ## 📐 System Architecture
 
+Muse Skills operates as an **autonomous agent execution pipeline** divided into four deterministic architectural layers: **Orchestration & Governance**, **Foundation & DOX Scaffolding**, **Execution & Hardening Gates**, and **Production Delivery & Maintenance**.
+
+Work flows downward through strictly bounded context packets, progressive disclosure scaffolding, adversarial quality gates, and automated release lifecycles:
+
 ```mermaid
-graph TD
-    User(["User / Principal"]) --> Muse["👑 Muse Agency Orchestrator"]
+flowchart TD
+    User(["Principal / Developer"]) --> Muse["👑 Muse Agency Orchestrator"]
 
-    subgraph CoreEngine ["⚡ Core Engine & Governance (#1, #2, #3, #5, #7)"]
-        Muse --> UD["📚 updatedocs<br/>Doc Synchronization & Drift Detection"]
-        Muse --> UA["🧠 updateagents<br/>Workspace Cognitive Memory Sync"]
-        Muse --> GIT["🐙 git<br/>Autonomous Release & GitHub Lifecycle"]
-        Muse --> NP["🚀 new-project<br/>Project OS & Progressive Disclosure DOX"]
-        Muse --> AR["🤖 ai-ready<br/>12-Asset AI Readiness Audit & Fast-Skip"]
+    subgraph L1 ["1. Orchestration & Governance Layer"]
+        direction TB
+        Muse --> Router["🔀 coupling-router (#12)<br/>DAG Analysis & Skill Selection"]
+        Router --> Sec["📑 secretary (#13)<br/>Staff Work & SHA-256 Approval Gate"]
+        Router --> Bounds["🤝 handoff (#6) & ⚓ context-anchor (#8)<br/>Context Packets & Working State Bounds"]
     end
 
-    subgraph QualityReview ["🛡️ Quality & Review (#4, #9, #15, #16)"]
-        Muse --> CR["🐧 code-review<br/>Linus Torvalds Style & Karpathy Doctrine"]
-        Muse --> GL["🛡️ gauntlet-loop<br/>Bounded Multi-Agent Quality Loops"]
-        Muse --> DL["📮 dead-letter<br/>9-Mode Failure Triage & Escalation"]
-        Muse --> PUA["⚡ pua<br/>PIP Performance Plan & Exhaustive Debugging"]
+    subgraph L2 ["2. Foundation & DOX Scaffolding Engine"]
+        direction TB
+        Bounds --> Scaffolder["🚀 new-project (#5) & 🤖 ai-ready (#7)<br/>DOX Scaffolder, 12-Asset Audit & Fast-Skip"]
+        Scaffolder --> Memory["🧠 updateagents (#2) & 📚 updatedocs (#1)<br/>Workspace Cognitive Memory & Doc Governance"]
     end
 
-    subgraph ContextOrch ["🤝 Context & Orchestration (#6, #8, #12, #13, #14)"]
-        Muse --> HO["🤝 handoff<br/>Structured Subagent Context Packets"]
-        Muse --> CA["⚓ context-anchor<br/>Working Reference Drift Prevention"]
-        Muse --> CPR["🔀 coupling-router<br/>Coupling-Aware Task & Skill Router"]
-        Muse --> SC["📑 secretary<br/>Staff Work & SHA-256 Approval Gate"]
-        Muse --> EL["📜 evidence-ledger<br/>Source-Cited Claim Verification Gate"]
+    subgraph L3 ["3. Execution, Design & Quality Gates"]
+        direction TB
+        Memory --> Design["🎨 designscope (#11) & 🪄 refactor-ui (#10)<br/>Design Tokens, Responsive Trees & UI States"]
+        Design --> Review["🐧 code-review (#4) & 🛡️ gauntlet-loop (#9)<br/>Torvalds-Karpathy Audit & Bounded Critique"]
+        Review --> Ledger["📜 evidence-ledger (#14)<br/>4-Tier Source Citations & Receipts"]
+        
+        Review -->|"Stall / Block"| DL["📮 dead-letter (#15) & ⚡ pua (#16)<br/>9-Mode Failure Taxonomy & PIP Debugging"]
+        DL -->|"Remediated"| Review
     end
 
-    subgraph DesignUI ["🎨 Design & Interface (#10, #11)"]
-        Muse --> RU["🪄 refactor-ui<br/>Atomic UI Design & Refactoring Heuristics"]
-        Muse --> DS["🎨 designscope<br/>Design System Extraction & DTCG Tokens"]
-    end
-
-    subgraph ReflectionMaint ["🏔️ Reflection & Maintenance (#17, #18, #19, #20)"]
-        Muse --> CO["☀️ coach<br/>Controllable Input Effort Scorecard"]
-        Muse --> AU["🧠 audit<br/>Knowledge Hygiene & Link Integrity"]
-        Muse --> PR["🏔️ periodic-retreat<br/>Quarterly Strategic Review & Debt Purge"]
-        Muse --> CSC["🧹 clean-system-cache<br/>Developer & Browser Cache Cleaner"]
+    subgraph L4 ["4. Production Delivery & Lifecycle Maintenance"]
+        direction TB
+        Ledger --> Release["🐙 git (#3)<br/>Autonomous 11-Phase GitHub Release Engine"]
+        Release --> Maint["🧹 clean-system-cache (#20) & 🧠 audit (#18)<br/>Safe Cache Purge & Knowledge Hygiene"]
+        Maint --> Reflection["☀️ coach (#17) & 🏔️ periodic-retreat (#19)<br/>Effort Scorecard & Quarterly Strategic Review"]
     end
 ```
+
+### Architectural Layer Breakdown
+
+| Layer | Architectural Role | Shipped Skills | Core Governance & Invariants |
+| :--- | :--- | :--- | :--- |
+| **1. Orchestration & Governance** | Intake, DAG coupling analysis, staff work approval, and bounded subagent context isolation | [`coupling-router`](coupling-router/README.md) (#12)<br/>[`secretary`](secretary/README.md) (#13)<br/>[`handoff`](handoff/README.md) (#6)<br/>[`context-anchor`](context-anchor/README.md) (#8) | Socratic adversarial challenge, single-use SHA-256 hash approval gate, negative boundary constraints, sub-15-line working state snapshots. |
+| **2. Foundation & DOX Engine** | Progressive disclosure scaffolding, workspace memory sync, and documentation governance | [`updatedocs`](updatedocs/README.md) (#1)<br/>[`updateagents`](updateagents/README.md) (#2)<br/>[`new-project`](new-project/README.md) (#5)<br/>[`ai-ready`](ai-ready/README.md) (#7) | 12-asset AI readiness scorecard, sub-100ms Stage-0 Fast-Skip gate, 9-folder DOX container, `.memory/` no-touch boundary. |
+| **3. Execution & Quality Gates** | Design system extraction, UI refactoring, adversarial code reviews, claim verification, and failure triage | [`code-review`](code-review/README.md) (#4)<br/>[`gauntlet-loop`](gauntlet-loop/README.md) (#9)<br/>[`refactor-ui`](refactor-ui/README.md) (#10)<br/>[`designscope`](designscope/README.md) (#11)<br/>[`evidence-ledger`](evidence-ledger/README.md) (#14)<br/>[`dead-letter`](dead-letter/README.md) (#15)<br/>[`pua`](pua/README.md) (#16) | Linus Torvalds & Karpathy minimal-diff doctrine, 5-state anti-slop UI gate, DTCG design tokens, 4-tier citation taxonomy, 9-mode failure classification, 4-tier PIP escalation. |
+| **4. Delivery & Lifecycle Maintenance** | Autonomous Git release cuts, cache cleanup, knowledge hygiene, and strategic reflection | [`git`](git/README.md) (#3)<br/>[`coach`](coach/README.md) (#17)<br/>[`audit`](audit/README.md) (#18)<br/>[`periodic-retreat`](periodic-retreat/README.md) (#19)<br/>[`clean-system-cache`](clean-system-cache/README.md) (#20) | 11-phase release pipeline, SemVer tagging, zero-runtime cache cleaner with running process guards, 5-pillar controllable effort rubric. |
 
 ---
 
