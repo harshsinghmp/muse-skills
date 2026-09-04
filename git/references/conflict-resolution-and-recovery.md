@@ -12,8 +12,8 @@ When Git reports a conflict during a rebase or merge against `dev`:
 # List all conflicted files immediately
 git diff --name-only --diff-filter=U
 
-# Inspect conflict markers across all files
-grep -rnE "^<<<<<<< " . --exclude-dir={.git,node_modules,dist,.worktrees}
+# Inspect conflict markers across all files using ripgrep (with grep fallback)
+rg "^<<<<<<< " . 2>/dev/null || grep -rnE "^<<<<<<< " . --exclude-dir={.git,node_modules,dist,.worktrees}
 ```
 
 ---

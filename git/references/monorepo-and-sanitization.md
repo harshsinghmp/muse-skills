@@ -72,12 +72,25 @@ Check for and remove scratch files that must never leak into production releases
 - Temporary agent scratchpads (`scratch/`, `.playwright/`)
 
 ```bash
-# Audit for unversioned scratch files
-find . -maxdepth 2 -name "SESSION.md" -o -name "test-*.ts" -o -name "scratch" 2>/dev/null
+# Audit for unversioned scratch files using fd (with find fallback)
+fd -d 2 "^(SESSION\.md|test-.*\.ts|scratch)$" . 2>/dev/null || find . -maxdepth 2 -name "SESSION.md" -o -name "test-*.ts" -o -name "scratch" 2>/dev/null
 ```
 *Action*: Delete them or add them to `.gitignore` before committing.
 
-### 2. Private Repo Visibility & License Sanity Check
+### 2. Synthetic ADE/IDE Artifact & Placeholder Sweep
+Verify that no editor metadata or rich markdown artifacts have overtaken original content:
+- ORCA ADE markers: `[[ORCA_RICH_MD:...]]`
+- Cursor tokens: `[cursor:...]`, `<|cursor_...|>`
+- Windsurf wrappers: `<<<windsurf...>>>`
+- Claude Code artifacts: `<antArtifact...>`
+
+```bash
+# Audit for synthetic ADE/IDE wrappers
+rg -l "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}
+```
+*Action*: If contaminated files are detected, unwrap them immediately via `bun ai-ready/scripts/ai-ready.ts . --sanitize`.
+
+### 3. Private Repo Visibility & License Sanity Check
 Before tagging and publishing release notes:
 
 ```bash

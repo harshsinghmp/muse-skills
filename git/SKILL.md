@@ -195,7 +195,7 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    # Run type checks
    tsc --noEmit
    # Run pre-ship secret scan
-   bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts . 2>/dev/null || grep -riE "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . --exclude-dir={.git,node_modules,dist}
+   bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts . 2>/dev/null || rg -i "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . || grep -riE "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . --exclude-dir={.git,node_modules,dist}
    ```
 4. Commit using Conventional Commits format:
    ```bash
@@ -280,13 +280,20 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
      VISIBILITY=$(gh repo view --json visibility -q '.visibility' 2>/dev/null || echo "UNKNOWN")
      # Ensure private client repos carry proprietary notices and package.json has "private": true
      ```
+   - **Synthetic ADE/IDE Artifact Sweep**: Audit for and unwrap any synthetic ADE/IDE placeholders before release:
+     ```bash
+     if rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}; then
+       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun ai-ready/scripts/ai-ready.ts . --sanitize' before release."
+       exit 1
+     fi
+     ```
 2. **Determine SemVer Version & Monorepo Tag Scoping**:
    - Auto-detect monorepo (`pnpm-workspace.yaml`, `packages/`, `lerna.json`, `turbo.json`):
      - Monorepo format: `{package-name}-v{semver}`
      - Standard single package: `v{semver}`
    - **Tag Pre-Existence Gate**:
      ```bash
-     if git tag -l "$TAG_NAME" | grep -q "^${TAG_NAME}$"; then
+     if git tag -l "$TAG_NAME" | (rg -q "^${TAG_NAME}$" 2>/dev/null || grep -q "^${TAG_NAME}$"); then
        echo "🚨 Tag $TAG_NAME already exists! Bump version in package.json."
        exit 1
      fi
@@ -342,7 +349,7 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    ```
 2. **Safe Bulk Branch Pruning** (Sweeps merged branches while protecting `dev`, `master`, and `main`):
    ```bash
-   git branch --merged dev | grep -vE '^\*|main|master|dev|develop' | xargs -r git branch -d
+   git branch --merged dev | (rg -v '^\*|main|master|dev|develop' 2>/dev/null || grep -vE '^\*|main|master|dev|develop') | xargs -r git branch -d
    git fetch --prune
    ```
 3. **Worktree Teardown** (If feature lane was executed in a worktree):
