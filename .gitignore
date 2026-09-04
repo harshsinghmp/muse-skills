@@ -57,3 +57,7 @@ temp/
 
 # Skill-specific
 updateagents/scripts/*.sh.bak
+
+# Git Worktrees
+.worktrees/
+worktrees/
