@@ -226,6 +226,10 @@ flowchart TD
 
 ## 🔍 Detailed Skill Breakdown
 
+<details>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 20 skills)</b></summary>
+<br/>
+
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
 
 Interactive project creator, DOX Engine, and Agent Engine provisioner. Implements the **"Agents First, Then Project Type"** two-stage architecture: provisions the lean root `AGENTS.md`, `.gitignore`, complete 9-folder `.agents/` container (12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite).
@@ -547,6 +551,8 @@ npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
 [Read full documentation →](clean-system-cache/README.md)
 
+</details>
+
 ---
 
 ## 🌐 Runtime compatibility
@@ -567,6 +573,10 @@ For the authoring contract that keeps these workflows portable, see the [Skill A
 ---
 
 ## 📁 Repository Structure
+
+<details>
+<summary><b>📂 Click to expand Complete Repository Directory Tree</b></summary>
+<br/>
 
 ```text
 muse-skills/
@@ -776,6 +786,8 @@ muse-skills/
 └── tests/                          # Automated TDD test suite
     └── skills.test.ts
 ```
+
+</details>
 
 ---
 
