@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **`clean-system-cache` Skill (#20)**: Cross-platform development, design, and browser cache cleanup engine for Linux, macOS, and Windows (`scripts/clean-cache.sh` and `scripts/clean-cache.cmd`). Cleans package managers (npm, bun, yarn, pnpm, cargo, pip/uv, gradle), build tools, design applications (Figma, Adobe, Blender), and browser caches with active running-session protection, credential preservation, and targeted dry-run auditing.
+- **Agent Engine Architecture in `ai-ready`**: Relocated template bundle from `new-project` to `ai-ready` as canonical source, added `backend-wordpress.md` standard and WordPress archetype to `new-project`, and added `ai-ready/scripts/ai-ready.ts` CLI supporting `--audit` and `--scaffold`.
+- **Intelligent Context Extraction in `updateagents`**: Scaffolding on empty workspaces, intelligent legacy context mapping and merging from custom agent instruction files, and structured diff change reporting.
+- **Session Resumption in `handoff`**: Inbound session continuation protocol with directory boundary verification.
+- **'The Bar is the Whole Trick' in `gauntlet-loop`**: Blind A/B critique and adversarial quality gate integration.
+
 ## [2.0.0] - 2026-09-04
 
 ### Added

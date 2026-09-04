@@ -1,7 +1,8 @@
 # AGENTS.md - muse-skills
 
-Curated suite of seventeen universal AI agent skills (project provisioning,
-documentation synchronization, design system extraction, Refactoring UI heuristics, memory sync, performance enforcement,
+Curated suite of twenty universal AI agent skills (project provisioning,
+workspace memory sync, documentation synchronization, autonomous Git release lifecycle,
+AI-readiness audits, cross-platform cache cleanup, design system extraction, Refactoring UI heuristics,
 Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing,
 claim verification, and reflective audits). MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
