@@ -140,7 +140,8 @@ Do **NOT** use this skill for:
 ### Phase 4: Documentation Synchronization (`updatedocs`)
 1. Invoke `updatedocs` to synchronize project context with new code behavior:
    ```bash
-   # Update CHANGELOG.md under [Unreleased]
+   # Update CHANGELOG.md under [Unreleased] following the High-Signal Feature Craft Standard
+   # (Section 4 in updatedocs/references/CHANGELOG-POLICY.md: thematic naming, multi-category, PR links)
    # Synchronize .agents/context/current.md
    ```
 2. If docs were updated, commit:
@@ -197,7 +198,10 @@ Do **NOT** use this skill for:
    ```bash
    git checkout -b release/vX.Y.Z dev
    ```
-3. Bump version in `package.json` and stamp `CHANGELOG.md` with version and release date.
+3. Bump version in `package.json` and stamp `CHANGELOG.md` with version and release date:
+   - Audit `CHANGELOG.md` against the High-Signal Feature Craft Standard (`updatedocs/references/CHANGELOG-POLICY.md`).
+   - Append the comparison diff URL before the release divider:
+     `**Full Changelog**: https://github.com/<owner>/<repo>/compare/v<PREV>...v<NEW>`
 4. Commit release preparation:
    ```bash
    git add package.json CHANGELOG.md
