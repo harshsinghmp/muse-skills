@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [2.1.0] - 2026-09-04
 
 ### Added
 - **`clean-system-cache` Skill (#20)**: Cross-platform development, design, and browser cache cleanup engine for Linux, macOS, and Windows (`scripts/clean-cache.sh` and `scripts/clean-cache.cmd`). Cleans package managers (npm, bun, yarn, pnpm, cargo, pip/uv, gradle), build tools, design applications (Figma, Adobe, Blender), and browser caches with active running-session protection, credential preservation, and targeted dry-run auditing.
