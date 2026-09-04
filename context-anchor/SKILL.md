@@ -14,7 +14,7 @@ metadata:
 
 # ⚓ context-anchor — Working Reference Snapshot Generator
 
-Drop a compact working reference snapshot in `<project-root>/.claude/anchor.md` to prevent cascading context drift across long sessions, breaks, or task switches.
+Drop a compact working reference snapshot in `<project-root>/.agents/anchor.md` to prevent cascading context drift across long sessions, breaks, or task switches.
 
 ---
 
@@ -47,7 +47,7 @@ Identify:
 4. The exact next concrete step.
 
 ### Step 2: Write Context Anchor
-Save to `<project-root>/.claude/anchor.md`:
+Save to `<project-root>/.agents/anchor.md`:
 
 ```markdown
 # Context Anchor — <ISO timestamp>
@@ -79,5 +79,5 @@ Display the anchor to the user for instant alignment.
 
 ## Verification
 
-- Confirm `<project-root>/.claude/anchor.md` exists and is formatted cleanly.
+- Confirm `<project-root>/.agents/anchor.md` exists and is formatted cleanly.
 - Confirm Next Action points to an exact concrete file and line number.
