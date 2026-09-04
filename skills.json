@@ -675,6 +675,57 @@
         "quarterly-retreat",
         "strategic-retreat"
       ]
+    },
+    {
+      "name": "clean-system-cache",
+      "description": "Cross-platform developer, designer, and browser cache cleaner for Windows, Linux, and macOS. Safely purges only unreferenced, dangling, and disposable caches from package managers (uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle, brew), IDEs and compilers (xcode, android, vscode, cursor, cypress), containers (docker, podman), creative suites (adobe media cache, photoshop temp, figma, blender, electron), and web browsers (chrome, chromium, brave, edge, firefox, zen, vivaldi, safari). Enforces active running session protection and strict cache-only isolation with zero external runtimes (pure Bash on POSIX, native CMD on Windows).",
+      "path": "clean-system-cache/SKILL.md",
+      "version": "1.0.0",
+      "category": "reflection-maintenance",
+      "priority": 20,
+      "tools": [
+        "bash",
+        "run_command",
+        "view_file",
+        "write_to_file"
+      ],
+      "tags": [
+        "cache",
+        "cleanup",
+        "disk-space",
+        "maintenance",
+        "devtools",
+        "designer-tools",
+        "browser",
+        "chrome",
+        "firefox",
+        "zen",
+        "brave",
+        "edge",
+        "safari",
+        "xcode",
+        "docker",
+        "adobe",
+        "figma",
+        "blender",
+        "windows",
+        "linux",
+        "macos",
+        "bash",
+        "cmd"
+      ],
+      "suggested_skills": [
+        "audit",
+        "periodic-retreat",
+        "code-review",
+        "gauntlet-loop"
+      ],
+      "aliases": [
+        "clean-cache",
+        "purge-cache",
+        "cache-cleaner",
+        "disk-cleanup"
+      ]
     }
   ]
 }

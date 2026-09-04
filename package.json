@@ -53,7 +53,8 @@
     "code-review",
     "git",
     "ai-ready",
-    "updatedocs"
+    "updatedocs",
+    "clean-system-cache"
   ],
   "author": "Harsh",
   "license": "MIT",
