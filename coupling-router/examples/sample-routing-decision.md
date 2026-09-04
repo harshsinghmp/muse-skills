@@ -16,7 +16,7 @@
 | **Phase 1 (Precursor)** | `ai-ready` | `new-project` (Stage 0) | `ai-ready` validates workspace invariants; redundant scaffolding suppressed. |
 | **Phase 2a (Backend)** | Baseline Engineering | Ad-hoc fast-path commits | VCS handled strictly by downstream phase. |
 | **Phase 2b (Frontend)** | `refactor-ui` | Generic CSS rules | Enforces 11 Refactoring UI heuristics and 5-state anti-slop coverage. |
-| **Phase 3 (Integrate)** | `code-review-linus-torvalds-style` | Speculative refactor prompts | Enforces Karpathy surgical diffs and Linus taste gate before commit. |
+| **Phase 3 (Integrate)** | `code-review` | Speculative refactor prompts | Enforces Karpathy surgical diffs and Linus taste gate before commit. |
 | **Phase 4 (Ship)** | `git` | Direct-to-master push scripts | Enforces Conventional Commits and dev-branch staging PR lifecycle. |
 
 ---
@@ -44,7 +44,7 @@ flowchart TD
    - **Subagent A (Backend)**: `src/api/auth.ts`, `tests/api/auth.test.ts`
    - **Subagent B (Frontend - with `refactor-ui`)**: `src/components/ProfileCard.tsx`
 3. **Phase 3 (Integrator & Reviewer)**:
-   - Skills: `code-review-linus-torvalds-style`
+   - Skills: `code-review`
    - Target: Review full diff for surgical scope, run `tests/e2e/auth-flow.test.ts`.
 4. **Phase 4 (VCS Lifecycle)**:
    - Skills: `git`

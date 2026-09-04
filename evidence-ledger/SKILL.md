@@ -1,15 +1,28 @@
 ---
 name: evidence-ledger
+aliases: ["claim-ledger","verification-ledger","citation-gate"]
 description: "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, and empirical vs speculative classification. Generates claim-ledger.md and MISSING_RECEIPTS_REPORT.md."
 version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: context-orchestration
 metadata:
+  category: context-orchestration
+  priority: 14
+  aliases: ["claim-ledger","verification-ledger","citation-gate"]
+  suggested_skills: ["secretary","updatedocs","audit","coupling-router"]
   hermes:
     tags: [evidence, verification, citation, fact-checking, claims, research-gate, provenance, academic-research, citation-synthesis, receipt-audit, doi, empirical-verification]
-    related_skills: [secretary-controller, gauntlet-loop, brain-audit, dead-letter]
+    related_skills: [secretary, updatedocs, audit, coupling-router]
+    suggested_skills: [secretary, updatedocs, audit, coupling-router]
     requires_tools: [bash, view_file, grep, write_to_file, replace_file_content]
+  openclaw:
+    category: context-orchestration
+    suggested_skills: [secretary, updatedocs, audit, coupling-router]
+    primary_triggers: ["verify claims","audit evidence","generate claim ledger","cite sources","missing receipts report"]
+    requires_tools: [bash, view_file, grep, write_to_file, replace_file_content]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 📜 Evidence Ledger — Source-Cited Claim Verification Gate & Research Ledger

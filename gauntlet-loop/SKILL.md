@@ -1,15 +1,28 @@
 ---
 name: gauntlet-loop
+aliases: ["gauntlet","quality-loop","verification-loop"]
 description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
 version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: quality-review
 metadata:
+  category: quality-review
+  priority: 9
+  aliases: ["gauntlet","quality-loop","verification-loop"]
+  suggested_skills: ["code-review","refactor-ui","secretary","git"]
   hermes:
     tags: [gauntlet, quality-loop, multi-agent, verification, benchmarking, orchestration, governance, security-headers, visual-regression, owasp, responsive-testing]
-    related_skills: [pua, agent-handoff, dead-letter, coupling-router, evidence-ledger]
+    related_skills: [code-review, refactor-ui, secretary, git]
+    suggested_skills: [code-review, refactor-ui, secretary, git]
     requires_tools: [bash, view_file, write_to_file, replace_file_content, run_command]
+  openclaw:
+    category: quality-review
+    suggested_skills: [code-review, refactor-ui, secretary, git]
+    primary_triggers: ["run gauntlet","start quality loop","adversarial refinement","bounded iteration loop"]
+    requires_tools: [bash, view_file, write_to_file, replace_file_content, run_command]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🛡️ Gauntlet Loop — Bounded Multi-Agent Quality Improvement Loop

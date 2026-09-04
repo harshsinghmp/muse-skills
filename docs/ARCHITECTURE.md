@@ -54,7 +54,7 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── agent-handoff/                  # Structured subagent context packet generator
+├── handoff/                        # Structured subagent context packet generator
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-handoff.md  # Packet example
 │   ├── README.md                   # Child documentation
@@ -79,7 +79,7 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── code-review-linus-torvalds-style/ # Linus Torvalds style code review & quality enforcement
+├── code-review/                    # Linus Torvalds style code review & Karpathy doctrine
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/                   # Review verdict examples
 │   ├── README.md                   # Child documentation
@@ -99,7 +99,7 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── secretary-controller/           # Evidence-grounded staff-work controller & approval gate
+├── secretary/                      # Evidence-grounded staff-work controller & approval gate
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-approval-packet.md # Hash approval packet
 │   ├── references/staff-work-doctrine.md # Completed staff work doctrine
@@ -120,7 +120,7 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── daily-standup-coach/            # Daily reflective check-in & effort scorecard
+├── coach/                          # Daily reflective check-in & effort scorecard
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-standup-log.md # Daily log example
 │   ├── references/effort-rubric.md # 5-pillar input rubric
@@ -134,7 +134,7 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── brain-audit/                    # Knowledge hygiene & referential integrity auditor
+├── audit/                          # Knowledge hygiene & referential integrity auditor
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-audit-report.md # Hygiene report artifact
 │   ├── references/hygiene-rules.md # Core referential rules
@@ -186,11 +186,11 @@ graph TD
     Verification --> Ready([Project OS Initialized])
 ```
 
-### Flow 3: Subagent Handoff & Failure Recovery (`agent-handoff` ➔ `dead-letter` ➔ `pua`)
+### Flow 3: Subagent Handoff & Failure Recovery (`handoff` ➔ `dead-letter` ➔ `pua`)
 
 ```mermaid
 graph LR
-    Orchestrator[👑 Muse Orchestrator] -->|1. Generate Handoff Packet| AH[🤝 agent-handoff]
+    Orchestrator[👑 Muse Orchestrator] -->|1. Generate Handoff Packet| HO[🤝 handoff]
     AH -->|2. Dispatch Context| Worker[⚡ Subagent Worker]
     Worker -->|3a. Task Succeeds| Done([✅ Verifiable Receipt])
     Worker -->|3b. Task Fails / Blocks| DL[📮 dead-letter]

@@ -53,6 +53,8 @@ export interface ExtractionOptions {
   tags?: string[];
   tools?: string[];
   author?: string;
+  category?: string;
+  priority?: number;
   register?: boolean;
   dryRun?: boolean;
   force?: boolean;
@@ -197,12 +199,16 @@ export function generateSkillMd(opts: {
   description: string;
   version?: string;
   author?: string;
+  category?: string;
+  priority?: number;
   tags?: string[];
   tools?: string[];
   testCmd?: string;
 }): string {
   const version = opts.version || "1.0.0";
   const author = opts.author || "Agency Council";
+  const category = opts.category || "core-engine";
+  const priority = opts.priority || 20;
   const tags = opts.tags && opts.tags.length > 0 ? opts.tags : ["automation", "workflow", "self-learning"];
   const tools = opts.tools && opts.tools.length > 0 ? opts.tools : ["bash", "view_file", "write_to_file", "run_command"];
   const title = opts.name
@@ -212,17 +218,29 @@ export function generateSkillMd(opts: {
 
   return `---
 name: ${opts.name}
+aliases: ["${opts.name}"]
 description: "${opts.description.replace(/"/g, '\\"')}"
 version: ${version}
 author: ${author}
 license: MIT
 platforms: [macos, linux, windows]
+category: ${category}
 metadata:
+  category: ${category}
+  priority: ${priority}
   aliases: ["${opts.name}"]
+  suggested_skills: ["updatedocs", "updateagents", "git"]
   hermes:
     tags: [${tags.join(", ")}]
-    related_skills: [new-project, updateagents]
+    related_skills: [updatedocs, updateagents, git]
+    suggested_skills: [updatedocs, updateagents, git]
     requires_tools: [${tools.join(", ")}]
+  openclaw:
+    category: ${category}
+    suggested_skills: ["updatedocs", "updateagents", "git"]
+    primary_triggers: ["execute ${opts.name}", "run ${opts.name}"]
+    requires_tools: [${tools.join(", ")}]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # ⚡ ${opts.name} — ${title}
@@ -460,6 +478,8 @@ export function extractSkill(options: ExtractionOptions): {
     tags: options.tags,
     tools: options.tools,
     author: options.author,
+    category: options.category,
+    priority: options.priority,
     testCmd: options.testCmd,
   });
 

@@ -1,17 +1,23 @@
 name: evidence-ledger
-description: "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces 'No source, no claim. No verification path, no release.' Audits technical claims against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), DOI receipts, and empirical vs speculative classification."
+description: "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, and empirical vs speculative classification. Generates claim-ledger.md and MISSING_RECEIPTS_REPORT.md."
 tools:
-  - bash
-  - view
-  - grep
-  - write
-  - edit
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: grep
+  - type: function
+    function:
+      name: write_to_file
+  - type: function
+    function:
+      name: replace_file_content
 instructions: |
-  Follow the evidence ledger workflow in SKILL.md exactly:
-
-  1. Step 1: Scan target artifact and extract every factual, performance, and architecture claim.
-  2. Step 2: Tag each claim with its confidence tier ([RAW], [FETCH], [SEARCH], [INFER]) and verify academic DOI / canonical URLs per references/academic-citation-protocol.md.
-  3. Step 3: Classify each claim as [EMPIRICAL] or [SPECULATIVE].
-  4. Step 4: Scan statistical claims (percentages, multipliers) and emit MISSING_RECEIPTS_REPORT.md for any unbacked claims.
-  5. Step 5: Compile claim-ledger.md documenting verification paths, timestamps, and exact receipts.
-  6. Step 6: Redact or remediate any ungrounded claims in the source artifact.
+  You are the evidence-ledger agent specialist (Category: context-orchestration, Priority: #14).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: secretary, updatedocs, audit, coupling-router.
+  Always enforce verification before completing any task.

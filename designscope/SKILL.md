@@ -1,15 +1,28 @@
 ---
 name: designscope
+aliases: ["extract-design","design-tokens","layout-tree"]
 description: "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system: a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level."
 version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: design-interface
 metadata:
+  category: design-interface
+  priority: 11
+  aliases: ["extract-design","design-tokens","layout-tree"]
+  suggested_skills: ["refactor-ui","new-project","code-review"]
   hermes:
     tags: [design, design-systems, tokens, dtcg, ui, figma, wcag, layout-tree, flexbox, css-grid, website-recreation]
-    related_skills: [new-project, agent-handoff, refactor-ui]
+    related_skills: [refactor-ui, new-project, code-review]
+    suggested_skills: [refactor-ui, new-project, code-review]
     requires_tools: [bash, view_file, write_to_file, web_fetch]
+  openclaw:
+    category: design-interface
+    suggested_skills: [refactor-ui, new-project, code-review]
+    primary_triggers: ["extract design system","deconstruct layout","convert screenshot to tokens","document design"]
+    requires_tools: [bash, view_file, write_to_file, web_fetch]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🎨 designscope — Design System Extraction & Design Documentation

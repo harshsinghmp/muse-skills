@@ -20,7 +20,7 @@
 
 ## 3. Next-Quarter OKRs (Q4 2026)
 ### Objective 1: Elevate Multi-Agent Reliability & Quality Loops
-- **KR 1.1**: Deploy `gauntlet-loop`, `secretary-controller`, and `coupling-router` across all client repos.
+- **KR 1.1**: Deploy `gauntlet-loop`, `secretary`, and `coupling-router` across all client repos.
 - **KR 1.2**: Achieve 0 unreviewed filesystem mutations via SHA-256 approval gates.
 - **KR 1.3**: Reduce multi-agent merge conflicts by 80% via `coupling-router` DAGs.
 ```

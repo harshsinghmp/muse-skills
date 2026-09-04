@@ -1,15 +1,28 @@
 ---
 name: updatedocs
+aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
+  category: core-engine
+  priority: 1
+  aliases: ["sync-docs","doc-sync","docs-audit"]
+  suggested_skills: ["updateagents","git","ai-ready","audit"]
   hermes:
     tags: [documentation, sync, impact-analysis, changelog, architecture, audit, git, verification, dox, governance]
-    related_skills: [updateagents, agent-handoff, new-project]
+    related_skills: [updateagents, git, ai-ready, audit]
+    suggested_skills: [updateagents, git, ai-ready, audit]
     requires_tools: [bash, view_file, write_to_file, replace_file_content, grep_search, find_by_name]
+  openclaw:
+    category: core-engine
+    suggested_skills: [updateagents, git, ai-ready, audit]
+    primary_triggers: ["update docs","sync documentation","audit documentation drift","verify readme"]
+    requires_tools: [bash, view_file, write_to_file, replace_file_content, grep_search, find_by_name]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 📚 updatedocs — Project-Wide Documentation Synchronization, Drift Detection & Governance Engine
@@ -930,7 +943,7 @@ Always provide a structured synchronization report:
 *(Include only where useful)*
 - `updateagents` → agent-context or instruction architecture requires deeper maintenance
 - `musememory` → durable state may require its own automatic lifecycle
-- `agent-handoff` → concrete implementation task should be delegated
+- `handoff` → concrete implementation task should be delegated
 ```
 
 ---

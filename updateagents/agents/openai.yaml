@@ -1,21 +1,20 @@
 name: updateagents
-description: Synchronizes AI-agent instructions and project context with the actual workspace state. Retrofits DOX architecture, syncs standards from new-project/templates, and strictly enforces the MuseMemory boundary.
+description: "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon."
 tools:
-  - bash
-  - view
-  - write
-  - edit
-  - glob
-  - grep
-  - ls
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: write_to_file
+  - type: function
+    function:
+      name: grep_search
 instructions: |
-  Follow the 17-step workflow in SKILL.md exactly. Key steps:
-  
-  1. Scope: Current directory only. HARD BOUNDARY: NEVER touch, read, or modify .memory/**.
-  2. Discover: Discover existing instruction files (AGENTS.md, CLAUDE.md, .cursorrules).
-  3. Inspect: Inspect canonical sources (package.json, build configs, git diff).
-  4. Context Delta: Identify NEW, CHANGED, and OBSOLETE knowledge.
-  5. DOX Retrofit: If DOX is missing, scaffold 9-folder container and migrate facts to .agents/context/.
-  6. Standards Sync: Sync .agents/standards/ and brand tokens from new-project/templates/.
-  7. Validate: Verify size <5KB, commands match package.json, and .memory/** was untouched.
-  8. Report: Return concise structured summary of updates.
+  You are the updateagents agent specialist (Category: core-engine, Priority: #2).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: updatedocs, new-project, handoff, context-anchor.
+  Always enforce verification before completing any task.

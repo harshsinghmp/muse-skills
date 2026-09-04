@@ -1,15 +1,28 @@
 ---
 name: refactor-ui
+aliases: ["refactoring-ui","ui-polish","ui-audit"]
 description: "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms amateurish, crowded, or unstyled UI into clean, high-conversion, production-ready interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, natural shadows, accessible contrast, and optical grouping. Trigger on 'refactor this UI', 'improve this design', 'fix visual hierarchy', 'make this component look professional', 'audit UI contrast and spacing', 'clean up this messy dashboard', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts."
 version: 1.0.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: design-interface
 metadata:
+  category: design-interface
+  priority: 10
+  aliases: ["refactoring-ui","ui-polish","ui-audit"]
+  suggested_skills: ["designscope","gauntlet-loop","code-review"]
   hermes:
-    tags: [ui-design, refactoring-ui, tailwind, typography, color-palette, visual-hierarchy, accessibility, frontend, design-systems]
-    related_skills: [designscope, new-project, agent-handoff]
+    tags: [ui-design, refactoring-ui, tailwind, typography, color-palette, visual-hierarchy, accessibility, frontend, design-systems, 5-state-gate]
+    related_skills: [designscope, gauntlet-loop, code-review]
+    suggested_skills: [designscope, gauntlet-loop, code-review]
     requires_tools: [view_file, replace_file_content, write_to_file, run_command]
+  openclaw:
+    category: design-interface
+    suggested_skills: [designscope, gauntlet-loop, code-review]
+    primary_triggers: ["refactor this UI","improve visual hierarchy","make component professional","audit UI contrast"]
+    requires_tools: [view_file, replace_file_content, write_to_file, run_command]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🪄 refactor-ui — Atomic UI Design & Interface Refactoring Engine
