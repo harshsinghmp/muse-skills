@@ -25,19 +25,21 @@ metadata:
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
-# 🤖 ai-ready — Repository AI-Readiness Auditor & Scaffolding Engine
+# 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
 
 > **Aliases**: `repo-ai-ready` | `audit-ai-ready` | `ai-audit`
-> **Core Mandate**: Reduce review burden, eliminate agent guessing, and guarantee zero token waste via Stage-0 Fast-Skip.
+> **Canonical Home**: Holds the master Agent Engine DOX templates (`ai-ready/templates/`).
+> **Core Mandate**: Eliminate agent guessing, guarantee zero token waste via Stage-0 Fast-Skip, and provide autonomous Agent Engine scaffolding.
 
-`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It grades repositories across a 4-tier maturity matrix and surgically scaffolds missing configuration files without clobbering existing human work.
+`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It grades repositories across a 4-tier maturity matrix, houses the master Agent Engine DOX template canon, and surgically scaffolds missing configuration files without clobbering existing human work.
 
 ---
 
 ## When to Use
 
-- User asks: *"Make this repo AI-ready"*, *"Audit AI readiness"*, *"Check repo health"*, or *"How AI-ready is this repo?"*.
+- User asks: *"Make this repo AI-ready"*, *"Audit AI readiness"*, *"Check repo health"*, *"Scaffold Agent Engine"*, or *"How AI-ready is this repo?"*.
 - Invoked automatically as **Stage 0 Pre-Flight** inside `new-project` and `updateagents`.
+- Upstream template canon provider for `new-project` (copying templates) and `updateagents` (synchronizing standards).
 - Onboarding an existing codebase into autonomous AI workflows.
 - Auditing whether an existing project suffers from context drift, missing templates, or unwritten conventions.
 - Mining merged Pull Request reviews to surface implicit team conventions into explicit agent instructions.
@@ -141,8 +143,17 @@ gh pr list --state merged --limit 15 --json number,title,comments,reviews 2>/dev
 
 ### Step 3: Targeted Remediation (Surgical Fixes)
 Only scaffold what is missing. Never overwrite human-authored configuration files without explicit user approval:
-1. **Missing `AGENTS.md`**: Create a lean routing table (`<50 lines`) pointing to `.agents/`.
-2. **Missing `.agents/` Container**: Provision the 9-folder structure with standard baseline modules.
+
+```bash
+# Automated Provisioning via ai-ready CLI
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold
+
+# Simulation Mode
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold --dry-run
+```
+
+1. **Missing `AGENTS.md`**: Deploy lean DOX routing rail (`<50 lines`) from `ai-ready/templates/AGENTS.md`.
+2. **Missing `.agents/` Container**: Provision the 9-folder structure with 13 standard baseline modules (including WordPress) from `ai-ready/templates/.agents/`.
 3. **Missing `llms.txt`**: Generate a clean markdown index of the repository purpose, documentation, and public APIs.
 4. **Missing CI Workflow**: Generate `.github/workflows/ci.yml` running linter and tests matching detected stack.
 5. **Missing Issue / PR Templates**: Drop standard bug/feature templates and anti-slop PR verification checklist.

@@ -18,11 +18,11 @@
   - `goals/` — Session goals & sprint verification checklists
   - `research/` — Deep research briefs & benchmark logs
   - `skills/` — Clean, isolated container for project-specific skills
-  - `standards/` — 12 modular rulebooks read on-demand
+  - `standards/` — 13 modular rulebooks read on-demand (including modern WordPress)
   - `workflows/` — Custom project workflows & protocols
 - **🧠 Cognitive Memory Hook**: Automatically initializes `.memory/` via `musememory` with active working invariants and multi-agent coordination.
 - **🔒 Strict Project Isolation**: Zero cross-project bleed. Starts with clean containers and zero leaked client assets.
-- **⚡ Interactive Path Picker & Framework Launcher**: Flexible folder selection anywhere in storage, launching official framework creators (Astro v7.2.x, Next.js 16, Instatic, Hono, Vite).
+- **⚡ Interactive Path Picker & Framework Launcher**: Flexible folder selection anywhere in storage, launching official framework creators (Astro v7.2.x, Next.js 16, WordPress, Instatic, Hono, Vite).
 
 ---
 
@@ -43,7 +43,7 @@ bun path/to/new-project/scripts/new-project.ts <targetPath> --name="MyApp" --typ
 | Flag | Description | Default |
 |:---|:---|:---|
 | `-n, --name <name>` | Project name | Directory basename |
-| `-t, --type <type>` | `astro` \| `nextjs` \| `instatic` \| `hono` \| `vite` \| `none` | Prompted |
+| `-t, --type <type>` | `astro` \| `nextjs` \| `wordpress` \| `instatic` \| `hono` \| `vite` \| `none` | Prompted |
 | `-d, --desc <desc>` | Short project description | Auto-generated |
 | `-p, --path <path>` | Target directory path | Prompted |
 | `--non-interactive` | Run without interactive prompts | `false` |
@@ -57,10 +57,11 @@ bun path/to/new-project/scripts/new-project.ts <targetPath> --name="MyApp" --typ
 
 1. **Astro v7.2.x** *(Recommended)*: Static-first with selective `client:*` island hydration, Zod content collections, `@astrojs/cloudflare`.
 2. **Next.js 16**: React 19, App Router, Server Components by default, Server Actions, TanStack Query.
-3. **Instatic HTML**: Pure HTML brochure and static landing pages, zero-JS by default, sub-millisecond TTFB.
-4. **Hono / Workers**: High-performance Cloudflare Workers edge API microservice.
-5. **Vite + React SPA**: Client-side single page applications with TypeScript.
-6. **None / Existing**: Governance container only (DOX baseline on existing repository).
+3. **WordPress**: Modern Roots Bedrock (12-factor, Composer, dotenv), custom theme hierarchy, Gutenberg blocks (`@wordpress/scripts`).
+4. **Instatic HTML**: Pure HTML brochure and static landing pages, zero-JS by default, sub-millisecond TTFB.
+5. **Hono / Workers**: High-performance Cloudflare Workers edge API microservice.
+6. **Vite + React SPA**: Client-side single page applications with TypeScript.
+7. **None / Existing**: Governance container only (DOX baseline on existing repository).
 
 ---
 
