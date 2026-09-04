@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of seventeen portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, and reflective audits.**
+**A curated suite of eighteen portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, and autonomous Git release lifecycles.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-1.8.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-17%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-18%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete seventeen-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete eighteen-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -44,6 +44,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Score daily controllable effort & focus | [`daily-standup-coach`](daily-standup-coach/README.md) | 5-pillar input scorecard and daily reflection log |
 | Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | Audit link integrity & knowledge hygiene | [`brain-audit`](brain-audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
+| Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
 
 ### Explore the repository
 
@@ -95,6 +96,9 @@ npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 npx skills add harshsinghmp/muse-skills --skill daily-standup-coach
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill brain-audit
+
+# Autonomous Git & GitHub release lifecycle
+npx skills add harshsinghmp/muse-skills --skill git
 ```
 
 ### 3. Ask your agent to use it
@@ -114,7 +118,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all sixteen skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, code-review, governance, and audit toolkit:
+Install all eighteen skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, code-review, governance, and audit toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -174,6 +178,7 @@ graph TD
         Muse --> SC[📑 secretary-controller<br/>Staff Work & SHA-256 Approval Gate]
         Muse --> EL[📜 evidence-ledger<br/>Source-Cited Claim Verification Gate]
         Muse --> BA[🧠 brain-audit<br/>Knowledge Hygiene & Link Integrity]
+        Muse --> GIT[🐙 git<br/>Autonomous Release & GitHub Lifecycle]
     end
 
     subgraph Reflection Suite [🏔️ Habits & Strategy]
@@ -205,6 +210,7 @@ graph TD
 | [**`daily-standup-coach`**](daily-standup-coach/README.md) | **Reflection** | `/standup`, `/daily` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection** | `/retreat`, `/quarterly` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | [**`brain-audit`**](brain-audit/README.md) | **Governance** | `/audit-brain`, `/hygiene` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
+| [**`git`**](git/README.md) | **Release & DevOps** | `/git`, `manage git workflow`, `cut release`, `triage issues` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
 
 ---
 
@@ -476,6 +482,23 @@ npx skills add harshsinghmp/muse-skills --skill brain-audit
 
 ---
 
+### 🐙 `git`
+
+Autonomous end-to-end Git and GitHub release lifecycle engine with 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill git
+```
+
+- **9-Tier Anti-Slop Triage**: Categorizes issues before writing code to prevent hallucinated changes and low-signal churn.
+- **Strict Branch Governance**: Never commits directly to `master`; routes work from `dev` through `release/vX.Y.Z` cuts and back-merges.
+- **GitHub SEO & Presentation Pass**: Automatically synchronizes repository topics, description, and Open Graph previews.
+- **Automated Doc & Changelog Sync**: Invokes `updatedocs` and stamps `CHANGELOG.md` unreleased entries prior to opening PRs.
+
+[Read full documentation →](git/README.md)
+
+---
+
 ## 🌐 Runtime compatibility
 
 Muse Skills uses portable Markdown workflows with YAML frontmatter. Compatibility depends on each runtime’s skill-discovery and installation model; the table below describes the intended integration path rather than a claim that every runtime behaves identically.
@@ -652,6 +675,16 @@ muse-skills/
 │   │   └── sample-audit-report.md
 │   ├── references/
 │   │   └── hygiene-rules.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── git/                            # Autonomous release & GitHub lifecycle engine
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── references/
+│   │   ├── anti-slop-triage.md
+│   │   ├── branching-and-release-matrix.md
+│   │   └── github-seo-and-presentation.md
 │   ├── README.md
 │   └── SKILL.md
 │

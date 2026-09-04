@@ -135,6 +135,14 @@
       "version": "1.0.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
       "tags": ["knowledge-audit", "memory-hygiene", "link-integrity", "docs-validation", "dead-links", "secret-scan", "ref-integrity"]
+    },
+    {
+      "name": "git",
+      "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup.",
+      "path": "git/SKILL.md",
+      "version": "1.0.0",
+      "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
+      "tags": ["git", "github", "release", "pr", "triage", "branching", "semver", "workflow", "devops", "seo"]
     }
   ]
 }
