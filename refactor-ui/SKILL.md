@@ -47,8 +47,9 @@ Recruit these core mental models when executing any UI refactor:
 3. **Monochrome Foundation**: Solidify layout, optical weights, and spacing in grayscale before introducing brand or accent hues.
 4. **Stepped Scale Discipline**: Enforce a strict 4px/8px geometric interval for spacing and a fixed 6-tier type scale. Eliminate arbitrary pixel values (e.g., `13px`, `22px`, `38px`).
 5. **Whitespace-First Grouping**: Separate distinct sections using whitespace (`gap-8`, `space-y-6`) and subtle surface shifts rather than heavy 1px borders.
+6. **The 5-State Anti-Slop Law**: Never stop at the happy path. Every interactive component or view must explicitly handle Empty, Loading, Error, Success, and Overflow states.
 
-### The 10 Atomic Heuristics
+### The Atomic Heuristics
 
 | # | Heuristic Domain | Core Problem Solved | Primary Tool / Technique |
 | :--- | :--- | :--- | :--- |
@@ -62,6 +63,7 @@ Recruit these core mental models when executing any UI refactor:
 | **08** | **Shadows & Depth** | Flat cards, muddy dropshadows | Layered 2-part shadows with ambient light and simulated elevation |
 | **09** | **Color Contrast** | Low-contrast text failing accessibility | WCAG AA compliance (≥ 4.5:1 text, ≥ 3:1 UI components) |
 | **10** | **Grouping & Proximity** | Related items drifting apart | Law of proximity: spacing *inside* group must be < spacing *between* groups |
+| **11** | **Anti-Slop 5-State Gate** | Happy-path only components break in prod | Explicit Empty, Loading, Error, Success, and Overflow state handling |
 
 ---
 
@@ -70,10 +72,10 @@ Recruit these core mental models when executing any UI refactor:
 Always execute UI refactoring in this ordered sequence to prevent circular styling edits:
 
 ```
-┌─────────────────┐     ┌─────────────────────┐     ┌──────────────────┐     ┌─────────────────────┐
-│ 1. Triage &     │ ──▶ │ 2. Structural &     │ ──▶ │ 3. Polish &      │ ──▶ │ 4. Verification &   │
-│    Hierarchy    │     │    Spacing System   │     │    Visual Weight │     │    Contrast Oracle  │
-└─────────────────┘     └─────────────────────┘     └──────────────────┘     └─────────────────────┘
+┌─────────────────┐     ┌─────────────────────┐     ┌──────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
+│ 1. Triage &     │ ──▶ │ 2. Structural &     │ ──▶ │ 3. Polish &      │ ──▶ │ 4. Verification &   │ ──▶ │ 5. Anti-Slop        │
+│    Hierarchy    │     │    Spacing System   │     │    Visual Weight │     │    Contrast Oracle  │     │    5-State Coverage │
+└─────────────────┘     └─────────────────────┘     └──────────────────┘     └─────────────────────┘     └─────────────────────┘
 ```
 
 ### Step 1 — Element Inventory & Hierarchy Triage
@@ -109,10 +111,20 @@ Always execute UI refactoring in this ordered sequence to prevent circular styli
    ```
 2. **Use Background Surface Shifts**: Separate cards using subtle background contrast (`bg-background` on `bg-muted/40` parent) rather than heavy outlines.
 
+### Step 5 — The 5-State Anti-Slop Coverage Gate
+Never declare a component refactor complete without verifying all 5 lifecycle states:
+1. **Empty State**: Dataset empty (`length === 0`)? Render a soft icon, clear explanation, and direct CTA (`Create First ...`).
+2. **Loading State**: Data fetching? Render a geometry-matching pulse skeleton (`animate-pulse bg-muted`) to eliminate layout shift (CLS).
+3. **Error State**: Query failed? Display an inline non-blocking error banner with human-friendly diagnosis and a direct "Retry" action button.
+4. **Success State**: Action resolved? Show immediate visual confirmation (toast, badge, or transient checkmark).
+5. **Overflow State**: Long strings or narrow viewports? Enforce `min-w-0` on flex items, `truncate` with `title="..."`, `line-clamp-2`/`line-clamp-3`, and responsive wrapping.
+
 ---
 
 ## Pitfalls
 
+- **Happy-Path Blindness**: Shipping a component assuming mock data will always be present, short, and error-free. Every component must handle empty datasets, slow networks, failed APIs, and long strings.
+- **Invisible Focus Rings**: Removing focus outlines (`outline-none`) without providing an accessible alternative (`focus-visible:ring-2`). Interactive controls must remain navigable via keyboard.
 - **Relying Exclusively on Font Size for Hierarchy**: Changing everything to huge text makes the UI loud and unreadable. Use font weight and muted colors to create contrast without size bloat.
 - **Centering Everything**: Centered body copy or left-aligned labels with centered inputs creates ragged, amateur scanlines. Left-align text by default.
 - **Using Pure Black Text on Pure White**: `#000000` text on `#FFFFFF` background creates harsh optical vibration. Use a deep slate or zinc neutral (`#0f172a` or `#18181b`).
@@ -125,6 +137,8 @@ Always execute UI refactoring in this ordered sequence to prevent circular styli
 
 Before signing off on any UI refactor, verify every gate:
 
+- [ ] **5-State Anti-Slop Coverage**: Empty, Loading, Error, Success, and Overflow states are explicitly implemented and verified.
+- [ ] **Visible Focus Rings**: All interactive controls feature high-visibility focus states (`focus-visible:ring-2 focus-visible:ring-offset-2`).
 - [ ] **Squint Test Passed**: The primary action or metric remains unmistakably distinct when looking at the interface through blurred vision.
 - [ ] **Zero Arbitrary Values**: All margins, paddings, and font sizes map 1:1 to defined scale tokens (Tailwind / CSS variables).
 - [ ] **Single Primary Action**: Exactly one primary CTA exists per visible section or modal; secondary actions use outline/ghost styles.
@@ -147,6 +161,7 @@ For deep reference on specific heuristics, consult the specialized guides in `re
 - [08-shadows-elevation.md](references/08-shadows-elevation.md) — Directional lighting, layered shadows, and elevation systems.
 - [09-contrast-accessibility.md](references/09-contrast-accessibility.md) — WCAG 2.1 contrast formulas and accessible color pairing.
 - [10-grouping-alignment.md](references/10-grouping-alignment.md) — Gestalt proximity, alignment grids, and optical balancing.
+- [11-five-state-anti-slop.md](references/11-five-state-anti-slop.md) — Mandatory 5-state lifecycle coverage and anti-slop patterns.
 
 ---
 
