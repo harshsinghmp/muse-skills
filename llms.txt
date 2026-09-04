@@ -17,7 +17,7 @@
 - [agent-handoff](agent-handoff/SKILL.md): Structured Subagent Context Packet Generator.
 - [dead-letter](dead-letter/SKILL.md): Failed/Blocked Task Triage & Escalation Generator.
 - [context-anchor](context-anchor/SKILL.md): Working Reference Drift Prevention Snapshot.
-- [designscope](designscope/SKILL.md): Design System Extraction (design.md + DTCG Tokens + WCAG) from Images, URLs & Figma.
+- [designscope](designscope/SKILL.md): Design System & Component Layout Tree Extraction (design.md + DTCG Tokens + WCAG) from Images, URLs & Figma.
 - [code-review-linus-torvalds-style](code-review-linus-torvalds-style/SKILL.md): Code Review - Linus Torvalds Style (Correctness, Invariants, Special-Case Elimination).
 - [refactor-ui](refactor-ui/SKILL.md): Atomic UI Design & Interface Refactoring Engine (10 Heuristics from Refactoring UI).
 - [gauntlet-loop](gauntlet-loop/SKILL.md): Bounded Multi-Agent Quality Improvement Loop & Termination Gate.
