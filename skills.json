@@ -82,11 +82,11 @@
     },
     {
       "name": "gauntlet-loop",
-      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate, and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
+      "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with security headers & visual regression gate), and Integrator roles with strict stop conditions. Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
       "path": "gauntlet-loop/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["gauntlet", "quality-loop", "multi-agent", "verification", "benchmarking", "orchestration", "governance"]
+      "tags": ["gauntlet", "quality-loop", "multi-agent", "verification", "benchmarking", "orchestration", "governance", "security-headers", "visual-regression", "owasp"]
     },
     {
       "name": "secretary-controller",
