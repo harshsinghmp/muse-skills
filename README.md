@@ -149,41 +149,41 @@ flowchart LR
 
 ```mermaid
 graph TD
-    User([User / Principal]) --> Muse[👑 Muse Agency Orchestrator]
+    User(["User / Principal"]) --> Muse["👑 Muse Agency Orchestrator"]
 
-    subgraph CoreEngine [⚡ Core Engine & Governance (#1, #2, #3, #5, #7)]
-        Muse --> UD[📚 updatedocs<br/>Doc Synchronization & Drift Detection]
-        Muse --> UA[🧠 updateagents<br/>Workspace Cognitive Memory Sync]
-        Muse --> GIT[🐙 git<br/>Autonomous Release & GitHub Lifecycle]
-        Muse --> NP[🚀 new-project<br/>Project OS & Progressive Disclosure DOX]
-        Muse --> AR[🤖 ai-ready<br/>12-Asset AI Readiness Audit & Fast-Skip]
+    subgraph CoreEngine ["⚡ Core Engine & Governance (#1, #2, #3, #5, #7)"]
+        Muse --> UD["📚 updatedocs<br/>Doc Synchronization & Drift Detection"]
+        Muse --> UA["🧠 updateagents<br/>Workspace Cognitive Memory Sync"]
+        Muse --> GIT["🐙 git<br/>Autonomous Release & GitHub Lifecycle"]
+        Muse --> NP["🚀 new-project<br/>Project OS & Progressive Disclosure DOX"]
+        Muse --> AR["🤖 ai-ready<br/>12-Asset AI Readiness Audit & Fast-Skip"]
     end
 
-    subgraph QualityReview [🛡️ Quality & Review (#4, #9, #15, #16)]
-        Muse --> CR[🐧 code-review<br/>Linus Torvalds Style & Karpathy Doctrine]
-        Muse --> GL[🛡️ gauntlet-loop<br/>Bounded Multi-Agent Quality Loops]
-        Muse --> DL[📮 dead-letter<br/>9-Mode Failure Triage & Escalation]
-        Muse --> PUA[⚡ pua<br/>PIP Performance Plan & Exhaustive Debugging]
+    subgraph QualityReview ["🛡️ Quality & Review (#4, #9, #15, #16)"]
+        Muse --> CR["🐧 code-review<br/>Linus Torvalds Style & Karpathy Doctrine"]
+        Muse --> GL["🛡️ gauntlet-loop<br/>Bounded Multi-Agent Quality Loops"]
+        Muse --> DL["📮 dead-letter<br/>9-Mode Failure Triage & Escalation"]
+        Muse --> PUA["⚡ pua<br/>PIP Performance Plan & Exhaustive Debugging"]
     end
 
-    subgraph ContextOrch [🤝 Context & Orchestration (#6, #8, #12, #13, #14)]
-        Muse --> HO[🤝 handoff<br/>Structured Subagent Context Packets]
-        Muse --> CA[⚓ context-anchor<br/>Working Reference Drift Prevention]
-        Muse --> CPR[🔀 coupling-router<br/>Coupling-Aware Task & Skill Router]
-        Muse --> SC[📑 secretary<br/>Staff Work & SHA-256 Approval Gate]
-        Muse --> EL[📜 evidence-ledger<br/>Source-Cited Claim Verification Gate]
+    subgraph ContextOrch ["🤝 Context & Orchestration (#6, #8, #12, #13, #14)"]
+        Muse --> HO["🤝 handoff<br/>Structured Subagent Context Packets"]
+        Muse --> CA["⚓ context-anchor<br/>Working Reference Drift Prevention"]
+        Muse --> CPR["🔀 coupling-router<br/>Coupling-Aware Task & Skill Router"]
+        Muse --> SC["📑 secretary<br/>Staff Work & SHA-256 Approval Gate"]
+        Muse --> EL["📜 evidence-ledger<br/>Source-Cited Claim Verification Gate"]
     end
 
-    subgraph DesignUI [🎨 Design & Interface (#10, #11)]
-        Muse --> RU[🪄 refactor-ui<br/>Atomic UI Design & Refactoring Heuristics]
-        Muse --> DS[🎨 designscope<br/>Design System Extraction & DTCG Tokens]
+    subgraph DesignUI ["🎨 Design & Interface (#10, #11)"]
+        Muse --> RU["🪄 refactor-ui<br/>Atomic UI Design & Refactoring Heuristics"]
+        Muse --> DS["🎨 designscope<br/>Design System Extraction & DTCG Tokens"]
     end
 
-    subgraph ReflectionMaint [🏔️ Reflection & Maintenance (#17, #18, #19, #20)]
-        Muse --> CO[☀️ coach<br/>Controllable Input Effort Scorecard]
-        Muse --> AU[🧠 audit<br/>Knowledge Hygiene & Link Integrity]
-        Muse --> PR[🏔️ periodic-retreat<br/>Quarterly Strategic Review & Debt Purge]
-        Muse --> CSC[🧹 clean-system-cache<br/>Developer & Browser Cache Cleaner]
+    subgraph ReflectionMaint ["🏔️ Reflection & Maintenance (#17, #18, #19, #20)"]
+        Muse --> CO["☀️ coach<br/>Controllable Input Effort Scorecard"]
+        Muse --> AU["🧠 audit<br/>Knowledge Hygiene & Link Integrity"]
+        Muse --> PR["🏔️ periodic-retreat<br/>Quarterly Strategic Review & Debt Purge"]
+        Muse --> CSC["🧹 clean-system-cache<br/>Developer & Browser Cache Cleaner"]
     end
 ```
 
