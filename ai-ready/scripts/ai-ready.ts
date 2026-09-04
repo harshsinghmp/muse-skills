@@ -18,6 +18,7 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync } from "node:fs";
 import { resolve, join, basename, relative } from "node:path";
 import { parseArgs } from "node:util";
+import { spawnSync } from "node:child_process";
 
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
@@ -27,6 +28,7 @@ const { values, positionals } = parseArgs({
   options: {
     audit: { type: "boolean", default: false },
     scaffold: { type: "boolean", short: "s", default: false },
+    sanitize: { type: "boolean", default: false },
     "dry-run": { type: "boolean", default: false },
     json: { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
@@ -43,8 +45,9 @@ Usage:
   bun ai-ready.ts [targetPath] [options]
 
 Options:
-  --audit          Audit 12 tracked assets (default behavior)
+  --audit          Audit 12 tracked assets, modern tools & synthetic artifacts (default)
   -s, --scaffold   Scaffold missing Agent Engine DOX container from templates
+  --sanitize       Scan and unwrap synthetic ADE/IDE artifacts (ORCA_RICH_MD, Cursor, etc.)
   --dry-run        Simulate without writing files to disk
   --json           Output audit results in JSON format
   -f, --force      Force overwrite during scaffolding
@@ -56,6 +59,99 @@ Options:
 const isDryRun = values["dry-run"] || false;
 const isForce = values.force || false;
 const isScaffold = values.scaffold || false;
+const isSanitize = values.sanitize || false;
+
+export function unwrapSyntheticArtifacts(content: string): { cleaned: string; unwrappedCount: number } {
+  let unwrappedCount = 0;
+  // Match ORCA_RICH_MD pattern: [[ORCA_RICH_MD:<hash>:<type>:<urlencoded-payload>]]
+  const orcaRegex = /\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:([^\]]+)\]\]/gi;
+  let cleaned = content.replace(orcaRegex, (_match, payload) => {
+    unwrappedCount++;
+    try {
+      return decodeURIComponent(payload);
+    } catch {
+      return payload;
+    }
+  });
+
+  // Also strip proprietary editor wrappers that overtake content
+  const genericADE = /\[\[(?:ADE|CURSOR|WINDSURF|ARTIFACT):[a-f0-9]+:[a-z-]+:([^\]]+)\]\]/gi;
+  cleaned = cleaned.replace(genericADE, (_match, payload) => {
+    unwrappedCount++;
+    try {
+      return decodeURIComponent(payload);
+    } catch {
+      return payload;
+    }
+  });
+
+  return { cleaned, unwrappedCount };
+}
+
+export function scanForSyntheticArtifacts(target: string): { file: string; count: number }[] {
+  const contaminated: { file: string; count: number }[] = [];
+  const orcaPattern = /\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:[^\]]+\]\]|<antArtifact|\[cursor:|<<<windsurf/i;
+
+  if (!existsSync(target)) return contaminated;
+
+  try {
+    const st = statSync(target);
+    if (st.isFile()) {
+      try {
+        const text = readFileSync(target, "utf8");
+        if (orcaPattern.test(text)) {
+          const matches = (text.match(/\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:[^\]]+\]\]/gi) || []).length;
+          contaminated.push({ file: basename(target), count: matches || 1 });
+        }
+      } catch {}
+      return contaminated;
+    }
+  } catch {
+    return contaminated;
+  }
+
+  function walk(dir: string) {
+    if (!existsSync(dir)) return;
+    try {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const fullPath = join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (entry.name === ".git" || entry.name === "node_modules" || entry.name === "dist" || entry.name === ".worktrees" || entry.name === ".memory") continue;
+          walk(fullPath);
+        } else if (entry.isFile() && /\.(md|markdown|txt|json|yaml|yml|ts|js|tsx|jsx|sh)$/i.test(entry.name)) {
+          try {
+            const text = readFileSync(fullPath, "utf8");
+            if (orcaPattern.test(text)) {
+              const matches = (text.match(/\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:[^\]]+\]\]/gi) || []).length;
+              contaminated.push({ file: relative(target, fullPath), count: matches || 1 });
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+  }
+
+  walk(target);
+  return contaminated;
+}
+
+export function checkModernToolsAvailability(): { installed: string[]; missing: string[] } {
+  const coreTools = ["fd", "rg", "bat", "eza", "sd", "choose", "procs", "zoxide", "delta", "btop", "ncdu", "gojq", "zstd"];
+  const installed: string[] = [];
+  const missing: string[] = [];
+
+  for (const tool of coreTools) {
+    const res = spawnSync("which", [tool], { encoding: "utf8" });
+    if (res.status === 0) {
+      installed.push(tool);
+    } else {
+      missing.push(tool);
+    }
+  }
+
+  return { installed, missing };
+}
+
 
 const rawTarget = positionals[0] || ".";
 const workspaceDir = resolve(process.cwd(), rawTarget);
@@ -326,6 +422,39 @@ if (values.json) {
   process.exit(0);
 }
 
+if (isSanitize) {
+  console.log("\n============================================================");
+  console.log(" 🛡️ ai-ready — Synthetic ADE/IDE Artifact Sanitization Pass");
+  console.log("============================================================");
+  console.log(`📁 Target: ${workspaceDir}`);
+  if (isDryRun) console.log(`🔍 [DRY RUN — No filesystem writes]`);
+  console.log("------------------------------------------------------------\n");
+
+  const contaminated = scanForSyntheticArtifacts(workspaceDir);
+  if (contaminated.length === 0) {
+    console.log("✅ Zero synthetic ADE/IDE artifacts detected in workspace.");
+  } else {
+    console.log(`⚠️ Found ${contaminated.length} files contaminated by synthetic artifacts:`);
+    let totalUnwrapped = 0;
+    for (const item of contaminated) {
+      const fullPath = statSync(workspaceDir).isFile() ? workspaceDir : join(workspaceDir, item.file);
+      try {
+        const raw = readFileSync(fullPath, "utf8");
+        const { cleaned, unwrappedCount } = unwrapSyntheticArtifacts(raw);
+        if (unwrappedCount > 0) {
+          totalUnwrapped += unwrappedCount;
+          if (!isDryRun) writeFileSync(fullPath, cleaned, "utf8");
+          console.log(`  • [Cleaned] ${item.file} (${unwrappedCount} synthetic artifacts unwrapped)`);
+        }
+      } catch (err) {
+        console.error(`  • [Error] Failed to sanitize ${item.file}: ${(err as Error).message}`);
+      }
+    }
+    console.log(`\n🎉 Sanitization complete! Total artifacts unwrapped: ${totalUnwrapped}`);
+  }
+  process.exit(0);
+}
+
 if (isScaffold) {
   console.log("\n============================================================");
   console.log(" 🤖 ai-ready — Scaffolding Agent Engine DOX Architecture");
@@ -360,7 +489,26 @@ for (const check of checks) {
   console.log(`  [${icon}] ${check.category}: ${check.name} (${check.path})`);
 }
 
+// Modern Tooling & Synthetic Artifact Health
+const toolHealth = checkModernToolsAvailability();
+const contaminated = scanForSyntheticArtifacts(workspaceDir);
+
+console.log("\n⚡ Modern CLI Tooling Health (Host System):");
+console.log(`  • Installed: ${toolHealth.installed.join(", ") || "None"}`);
+if (toolHealth.missing.length > 0) {
+  console.log(`  • Missing / Classic Fallback: ${toolHealth.missing.join(", ")}`);
+}
+
+if (contaminated.length > 0) {
+  console.log(`\n⚠️ Synthetic ADE/IDE Artifact Warning:`);
+  console.log(`  • Found ${contaminated.length} files with ORCA_RICH_MD or proprietary IDE wrappers.`);
+  console.log(`  • Run 'bun ai-ready.ts --sanitize' to unwrap them automatically.`);
+} else {
+  console.log(`\n🛡️ Synthetic Artifact Hygiene: Clean (0 synthetic ADE wrappers detected).`);
+}
+
 console.log("============================================================");
 if (score < 12) {
   console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to automatically provision missing Agent Engine assets.\n`);
 }
+

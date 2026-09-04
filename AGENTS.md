@@ -31,6 +31,9 @@ badges + tables + structure tree, `skills.json`, `llms.txt`.
 Protocol: `<type>(<scope>): summary` with Why / What / Verification).
 - No secrets or personal environment values in any shipped file.
 - Canonical aliases: "Agent Engine" and "DOX Engine" explicitly refer to the `new-project` Progressive Disclosure DOX scaffolding engine.
+- Modern Tool Primacy: Always invoke modern CLI tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Agent subshells run non-interactively without `.bashrc` aliases—agents MUST call modern tools explicitly by binary name.
+- Synthetic ADE/IDE Artifact Sanitization: Never accept or commit synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude artifacts). Always unwrap and decode them to raw content, and enclose template variables in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
+
 
 
 

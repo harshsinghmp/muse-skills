@@ -19,7 +19,8 @@
 7. **Structured Commits**: Commits must follow `<type>(<scope>): <summary>` with Why/What/Verification blocks.
 8. **Agent Containment & Archive**: All agent artifacts live in `./.agents/*`. Retired plans/scratchpads move to `./.agents/archive/[title]-[timestamp].md`.
 9. **Session Memory & Closeout DOX Pass**: Update `./.memory`, `./.agents/context/current.md`, and the nearest owning `AGENTS.md` before completing tasks.
-10. **Modern CLI Tooling & Resilient Fallback**: Default to modern high-speed CLI tools over legacy UNIX utilities (`rg` > `grep`, `fd` > `find`, `eza` > `ls`, `bat` > `cat`, `fzf` for fuzzy finding, `dust`/`ncdu` > `du`). If modern tools are absent, gracefully fall back to classic tools and interactively prompt the user via CLI to install modern replacements.
+10. **Modern Tool Primacy (MANDATORY)**: Always use modern high-speed tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Subshells run non-interactively and DO NOT load `.bashrc` aliases—agents MUST invoke modern binaries explicitly by name, never legacy tools unless modern binaries are absent.
+11. **Zero Synthetic ADE Artifact Leakage**: Never accept, commit, or propagate synthetic ADE/IDE placeholders or rich markdown wrappers (such as ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor `[cursor:...]`, Windsurf wrappers, or Claude artifacts). Always unwrap and decode them to raw content, and wrap template tokens in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
 
 ---
 
@@ -27,7 +28,7 @@
 Load these relative modules on-demand when relevant to your active task:
 
 ### 🌐 Universal Core Standards (All Frameworks)
-- ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, modern CLI tooling standards & fallbacks, Fowler Refactoring.
+- ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, 32-tool modern CLI matrix & fallbacks, synthetic ADE sanitization, Fowler Refactoring.
 - 🛡️ [Security & Vibeguard Protocol](./.agents/standards/security-vibeguard.md) — Secret isolation, Destructive Command Gate, Untrusted Tool Output defense.
 - 📐 [System, Domain & Resilience Design](./.agents/standards/system-design.md) — Evans DDD, Nygard Release It! stability, migration rehearsal, and schemas.
 - 🔄 [Development Workflows & Gates](./.agents/standards/workflows.md) — Scaled tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.

@@ -37,6 +37,9 @@ Update the closest owning `AGENTS.md` when a change affects:
 4. Remove stale or contradictory text immediately.
 5. Run existing verification when relevant.
 6. Report any docs intentionally left unchanged and why.
+7. Audit for synthetic ADE/IDE artifacts (`ORCA_RICH_MD`, `antArtifact`, `[cursor:`) and unwrap before finalizing.
+8. Ensure all command snippets in updated docs use modern CLI tools (`fd`, `rg`, `bat`, `eza`) rather than legacy tools.
+
 
 ---
 

@@ -59,7 +59,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 [ -f ".github/pull_request_template.md" -o -f ".github/PULL_REQUEST_TEMPLATE.md" ] && \
 [ -f ".github/dependabot.yml" ] && [ -f "CHANGELOG.md" ] && \
 [ -f "CONTRIBUTING.md" ] && [ -d "docs" -o -d ".agents/context" ] && \
-[ -f ".gitignore" ] && grep -q "\.env" .gitignore
+[ -f ".gitignore" ] && (rg -q "\.env" .gitignore 2>/dev/null || grep -q "\.env" .gitignore)
 ```
 
 - **If ALL 12 assets are present and valid**:
@@ -191,6 +191,9 @@ Print the structured AI-Readiness scorecard:
 2. **Zero Clobbering**: Never overwrite existing custom configurations, tests, or scripts without confirmation.
 3. **Strict MuseMemory Boundary**: Never touch, audit, or clean `.memory/**`. That directory is exclusively owned by MuseMemory.
 4. **No Artificial Token Burn**: Never emit essays when the repository is already compliant. Respect the Fast-Skip Gate.
+5. **Zero Synthetic ADE Artifacts**: Never accept or commit `[[ORCA_RICH_MD:...]]`, Cursor markers, or Claude artifacts. Run `bun ai-ready.ts --sanitize` or unwrap them before saving.
+6. **Modern CLI Primacy**: Always invoke modern CLI tools (`fd`, `rg`, `bat`, `eza`) explicitly by name; never rely on `.bashrc` aliases in non-interactive agent subshells.
+
 
 ---
 
