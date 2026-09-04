@@ -127,16 +127,40 @@ For reproducible issues:
 
 Agents must prioritize modern, high-speed, and resource-safe CLI utilities over legacy UNIX tools to minimize token waste, avoid terminal buffer overflow, and automatically leverage `.gitignore` and binary filtering. However, agents must remain resilient in any environment and never fail due to missing tooling.
 
-### Tool Hierarchy & Fallback Matrix
+> [!IMPORTANT]
+> **Subshell Alias Isolation Invariant**:
+> AI agent execution harnesses (Antigravity, OpenCode, Codex, subagents) execute shell commands in **non-interactive subshells** (`bash -c "..."`). Non-interactive subshells **do NOT load `~/.bashrc`** and disable alias expansion (`expand_aliases` is off).
+> 
+> Therefore, aliases like `alias grep=rg` or `alias find=fd` defined in `.bashrc` **are never available to agents**. Agents MUST explicitly invoke modern binaries by name (`fd`, `rg`, `bat`, `eza`, `sd`, `choose`, etc.) or use native agent tools (`find_by_name`, `grep_search`).
 
-| Category | Modern Standard (Primary) | Classic Tool (Fallback) | Key Behavioral Advantage |
-| :--- | :--- | :--- | :--- |
-| **Content Search** | `rg` (ripgrep) | `grep -rnI` | Multi-threaded SIMD regex, respects `.gitignore`, skips binary files automatically |
-| **File / Path Finding** | `fd` (or `fdfind`) | `find . -name` | Parallel directory walker, `.gitignore`-aware, clean regex/glob syntax |
-| **Directory / Tree Listing** | `eza` (or `lsd`) | `ls -la` / `tree` | Git status flags, file metadata, colorized icons, integrated tree view |
-| **File Viewing & Paging** | `bat` (or `batcat`) | `cat` / `less` | Syntax highlighting, line numbers, Git diff gutters, automatic paging |
-| **Interactive Fuzzy Search** | `fzf` | Native CLI filtering | Real-time interactive stream, file, and command-line filtering |
-| **Disk Usage Analysis** | `dust` / `ncdu` / `dua` | `du -sh *` | Graphical tree hierarchy of disk usage without manual pipe sorting |
+### The Grand 32-Tool Modernization Taxonomy & Fallback Matrix
+
+| Category | Legacy Tool | Modern Standard (Primary) | Secondary / Alternative | Fallback | Key Behavioral Advantage |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **File Search** | `find` | `fd` (or `fdfind`) | — | `find` | Parallel directory walker, `.gitignore`-aware, clean glob/regex syntax |
+| **Code / Text Search** | `grep` | `ripgrep` (`rg`) | `ugrep`, `ag`, `ack` | `grep -rnI` | SIMD regex, respects `.gitignore`, skips binary files automatically |
+| **File Viewing & Paging** | `cat` | `bat` (or `batcat`) | — | `cat` | Syntax highlighting, line numbers, Git diff gutters, automatic paging |
+| **File Paging & Navigation** | `more` | `less` | — | `more` | Vastly more capable interactive pager and backward navigation |
+| **Directory Listing** | `ls` | `eza` | `lsd` | `ls -la` / `tree` | Git status flags, file metadata, colorized icons, integrated tree view |
+| **Stream Editing** | `sed` | `sd` | — | `sed` | Clean, intuitive regex replace syntax (`sd 'find' 'replace'`) without delimiter escaping |
+| **Field / Column Extract** | `cut` | `choose` | `awk` | `cut` | Clean human-readable field selection (`choose 1:3`, `choose -1`) |
+| **JSON / YAML Query** | `jq` | `gojq` | — | `jq` | Pure Go jq-compatible query engine with native YAML support |
+| **Git Diff Display** | `git diff` | `delta` | `difft` (difftastic) | `git diff` | Syntax highlighting, side-by-side view, language-aware AST diffs (`difft`) |
+| **Process Monitoring** | `top` | `btop` | `htop` | `top` | Dynamic terminal graphs, per-core metrics, disk I/O, network telemetry |
+| **Process Inspection** | `ps` | `procs` | — | `ps` | Human-readable colored trees, port bindings, container awareness |
+| **Disk Usage Analysis** | `du` | `ncdu` | `dua`, `gdu` | `du -sh *` | Interactive visual disk exploration; `dua`/`gdu` provide parallel disk scanning |
+| **Filesystem Overview** | `df` | `duf` | — | `df -h` | Clean graphical tables, mount categorization, usage percentages |
+| **Network Sockets** | `netstat` | `ss` | — | `netstat` | Maintained kernel netlink socket interface, faster socket dump |
+| **Network Interface** | `ifconfig` | `ip` (`ip a`, `ip r`) | — | `ifconfig` | Modern `iproute2` interface with full routing and link manipulation |
+| **Compression** | `gzip` | `zstd` | — | `gzip` | Modern Zstandard algorithm; orders of magnitude faster compression and decompression |
+| **Directory Navigation** | `cd` | `zoxide` (`z`) | `fasd` | `cd` | Frecency-based smart jumping across directory history |
+| **Shell History Search** | `C-r` | `atuin` | `fzf` | built-in history | SQLite-backed, context-aware, end-to-end encrypted shell history search |
+| **Terminal Multiplexing** | `screen` | `zellij` | `tmux` | `screen` | Modern terminal workspace with discoverable UI, floating panes, WASM plugins |
+| **Terminal Text Editor** | `vim` / `vi` | `neovim` (`nvim`) | — | `vim` / `vi` | Async architecture, Lua configuration, Treesitter syntax, LSP client |
+| **Simple CLI Editor** | `nano` | `micro` | — | `nano` | Intuitive keybindings (Ctrl+C, Ctrl+V), multi-cursor, syntax highlighting |
+| **Terminal File Manager** | `mc` (Midnight) | `yazi` | `ranger` | `mc` | Asynchronous Rust terminal file manager with image previews and Vim keybindings |
+| **Command Quick Reference** | `man` | `tealdeer` (`tldr`) | — | `man` | Practical community-maintained CLI examples instead of exhaustive man pages |
+| **Calculator / Units** | `dc` / `bc` | `numbat` | Python | `bc` | High-precision scientific calculator with first-class physical units and currency |
 
 ### Execution & Dynamic Fallback Protocol
 1. **Tool Check & Safe Invocation**: Before executing a modern utility in shell scripts or agent terminal actions, verify if the binary exists (`command -v <tool>`).
@@ -145,10 +169,66 @@ Agents must prioritize modern, high-speed, and resource-safe CLI utilities over 
    - When an agent discovers a modern tool is missing during an interactive session:
      - Inform the user which modern utility is missing and why it is beneficial.
      - Provide the exact platform-specific installation command:
-       - **Debian / Ubuntu**: `sudo apt update && sudo apt install -y ripgrep fd-find bat fzf eza` (note binary aliases `fdfind` -> `fd`, `batcat` -> `bat`).
-       - **Arch Linux**: `sudo pacman -S ripgrep fd bat fzf eza dust`.
-       - **macOS (Homebrew)**: `brew install ripgrep fd bat fzf eza dust`.
-       - **Rust / Cargo**: `cargo install ripgrep fd-find bat eza du-dust fzf`.
+       - **Debian / Ubuntu**: `sudo apt update && sudo apt install -y ripgrep fd-find bat fzf eza btop duf zstd tldr` (note binary aliases `fdfind` -> `fd`, `batcat` -> `bat`).
+       - **Arch Linux**: `sudo pacman -S ripgrep fd bat fzf eza btop duf zstd tealdeer zoxide procs sd`.
+       - **macOS (Homebrew)**: `brew install ripgrep fd bat fzf eza btop duf zstd tealdeer zoxide procs sd choose-rust delta gojq numbat`.
+       - **Rust / Cargo**: `cargo install ripgrep fd-find bat eza du-dust fzf sd choose procs zoxide git-delta difftastic yazi-fm numbat-cli`.
      - Prompt the user via interactive CLI/chat to ask if they want to install it now.
      - If the user agrees, assist with installation; if declined or skipped, proceed seamlessly with the classic fallback.
    - If running in non-interactive mode, autonomous background subagents, or CI/CD pipelines, suppress the prompt and execute the classic fallback silently.
+
+---
+
+## 11. Synthetic ADE/IDE Artifact Sanitization Protocol
+
+Agents must strictly protect source code, documentation, specs, and commit history from contamination by synthetic ADE/IDE placeholders, rich markdown wrappers, or ghost text that overtake original content.
+
+### 1. The Threat Model & Root Cause
+In agentic development environments like **ORCA ADE**, unescaped angle-bracket placeholders in Markdown prose (such as `<issue-id>`, `<slug>`, `<package-name>`, or `<type>`) are mistakenly parsed by the Monaco/DOM rendering layer as unescaped inline HTML elements. To display or process them, the environment wraps or replaces them with internal synthetic placeholders:
+
+```text
+[[ORCA_RICH_MD:<hash>:<type>:<urlencoded-payload>]]
+```
+
+**Concrete Example**:
+`[[ORCA_RICH_MD:ac3f3ae9ea8d6d7338bd6222cb595541:inline-html:%3Cissue-id%3E]]`
+
+When files are saved or passed through agent context, these synthetic tokens contaminate source files, break shell scripts, and corrupt documentation.
+
+### 2. Multi-Vendor Scope
+This sanitization invariant applies to all proprietary or synthetic IDE/ADE injections:
+- **ORCA ADE**: `[[ORCA_RICH_MD:<hash>:<type>:<payload>]]`
+- **Cursor IDE**: `[cursor:...]`, `<|cursor_...|>`, `<!-- cursor:... -->`
+- **Windsurf / Cascade**: `<<<windsurf...>>>`, `// windsurf:...`
+- **Anthropic / Claude Code**: `<antArtifact identifier="..." type="...">`, `<antThinking>`
+- **Jupyter / Notebooks**: `<!-- nbformat:... -->`, `[IPython:...]`
+- **GitHub Copilot**: `<copilot:...>`, `<｜begin of sentence｜>`
+
+### 3. Dual-Layer Defense
+
+#### Layer A: Proactive Prevention (Angle-Bracket Invariant)
+When authoring documentation, templates, or instructions, **NEVER** write naked template angle brackets in prose or table cells. Always enclose template variables in backticks:
+- ❌ **Forbidden**: `Cut branch from dev: feat/<issue-id>-<slug>`
+- ✅ **Required**: `Cut branch from dev: feat/\`<issue-id>\`-\`<slug>\`` or code-fenced:
+  ```bash
+  git checkout -b feat/<issue-id>-<slug> dev
+  ```
+Fenced code blocks and inline backticks instruct ADE markdown engines not to parse the content as HTML elements.
+
+#### Layer B: Deterministic Unwrapping & Sanitization
+Whenever reading, diffing, editing, or committing files:
+1. **Detect**: Match the synthetic regex pattern:
+   ```regex
+   \[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:([^\]]+)\]\]
+   ```
+2. **Decode**: Extract the URL-encoded payload (e.g. `%3Cissue-id%3E`) and decode it (`<issue-id>`).
+3. **Unwrap**: Replace the entire synthetic wrapper with the raw decoded string (or backtick-escaped string in markdown prose).
+4. **Generalize**: Strip any remaining synthetic ADE markers (`<antArtifact...>`, `[cursor:...]`, `<<<windsurf...>>>`) to restore the original clean content.
+
+#### Layer C: Pre-Ship / Pre-Commit Sanitization Audit
+Before finalizing deliverables, opening PRs, or cutting releases, audit the workspace with `rg`:
+```bash
+rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}
+```
+If any synthetic tokens are found, unwrap and sanitize them immediately. Zero synthetic artifacts may ever be committed to git.
+

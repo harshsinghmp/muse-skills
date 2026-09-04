@@ -40,3 +40,14 @@ git diff --staged 2>/dev/null || echo "Clean"
 ```
 
 If the scan reports any credential leakage or pattern matches, resolve them immediately before declaring completion.
+
+---
+
+## 5. Synthetic ADE/IDE Artifact & Placeholder Defense
+
+Agents must treat proprietary ADE/IDE metadata wrappers as untrusted synthetic noise that threatens code and documentation integrity:
+- **Zero Acceptance**: Never accept, commit, or propagate synthetic tokens such as ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor ghost markers (`[cursor:...]`, `<|cursor_...|>`), Windsurf delimiters (`<<<windsurf...>>>`), or Claude artifacts (`<antArtifact...>`).
+- **Mandatory Unwrapping**: Automatically extract and URL-decode payloads back to pure raw text.
+- **Proactive Protection**: Enclose markdown template variables in backticks (`<var>`) to prevent Monaco/HTML parsers from corrupting them.
+- **Pre-Ship Audit**: Scan with `rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" .` and sanitize prior to commit.
+

@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Merge Conflict Resolution & Git Recovery Playbook**: Dedicated recovery guide with triage diagnostics, rebase vs. merge strategy matrix, emergency code extraction (`git show ... > /tmp/...`), and reflog restoration recipes.
 - **Safe Bulk Branch Pruning & Worktree Cleanup**: One-line prune of merged feature branches and stale worktrees with protection for `dev`, `master`, and `main`.
 - **Worktree Invariants in `.gitignore`**: Added `.worktrees/` and `worktrees/` to root `.gitignore` and `ai-ready/templates/gitignore.template`.
+- **Synthetic ADE/IDE Artifact Sanitization Protocol**: Autonomous unwrapping and URL-decoding engine for ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor ghost markers, Windsurf delimiters, and Claude artifacts across the Agent Engine DOX canon (`ai-ready/templates/`), `ai-ready.ts` (`--sanitize`), `security-vibeguard.md`, and `git` pre-release sanitization sweeps. Codified proactive markdown backtick escaping for template placeholders.
+- **The Grand 32-Tool Modern CLI Taxonomy & Fallback Matrix**: Comprehensive modernization taxonomy in `ai-ready/templates/AGENTS.md` and `execution-kernel.md` mandating modern high-speed CLI utilities (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta`/`difft` > `git diff`, `btop` > `top`, `ncdu`/`dua`/`gdu` > `du`, `gojq` > `jq`, `zstd` > `gzip`, `ss` > `netstat`, `ip` > `ifconfig`, `atuin`, `zellij`, `nvim`, `micro`, `yazi`, `tldr`, `numbat`, `less`) with explicit subshell `.bashrc` alias isolation rules and modernizations in `updateagents/references/discovery-commands.md`.
+
 
 ---
 
