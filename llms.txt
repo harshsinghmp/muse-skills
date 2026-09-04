@@ -22,7 +22,7 @@
 - [refactor-ui](refactor-ui/SKILL.md): Atomic UI Design & Interface Refactoring Engine (10 Heuristics from Refactoring UI).
 - [gauntlet-loop](gauntlet-loop/SKILL.md): Bounded Multi-Agent Quality Improvement Loop & Termination Gate.
 - [secretary-controller](secretary-controller/SKILL.md): Evidence-Grounded Staff-Work Controller & Single-Use Hash Approval Gate.
-- [coupling-router](coupling-router/SKILL.md): Coupling-Aware Architectural Delegation & Concurrency Router.
+- [coupling-router](coupling-router/SKILL.md): Coupling-Aware Architectural Delegation, Skill-Stack Compatibility & Concurrency Router.
 - [evidence-ledger](evidence-ledger/SKILL.md): Source-Cited Claim Verification Gate & Provenance Ledger.
 - [daily-standup-coach](daily-standup-coach/SKILL.md): Daily Reflective Check-In & 5-Pillar Controllable Effort Scorecard.
 - [periodic-retreat](periodic-retreat/SKILL.md): Quarterly Strategic Retreat Facilitator & Architecture Debt Purge.
