@@ -1,11 +1,12 @@
 {
   "name": "@harsh/muse-skills",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, and reflective audits across the LifeOS ecosystem",
   "type": "module",
   "scripts": {
     "test": "bun test",
-    "validate": "bash updateagents/scripts/validate-memory-file.sh"
+    "validate": "bash updateagents/scripts/validate-memory-file.sh",
+    "extract-skill": "bun scripts/extract-skill.ts"
   },
   "keywords": [
     "skills",
@@ -40,12 +41,19 @@
     "visual-hierarchy",
     "accessibility",
     "gauntlet-loop",
+    "secretary",
     "secretary-controller",
     "coupling-router",
     "evidence-ledger",
+    "coach",
     "daily-standup-coach",
     "periodic-retreat",
-    "brain-audit"
+    "audit",
+    "brain-audit",
+    "code-review",
+    "git",
+    "ai-ready",
+    "updatedocs"
   ],
   "author": "Harsh",
   "license": "MIT",

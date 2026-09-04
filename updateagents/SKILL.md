@@ -1,15 +1,28 @@
 ---
 name: updateagents
+aliases: ["sync-agents","update-memory","agent-sync"]
 description: "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
+  category: core-engine
+  priority: 2
+  aliases: ["sync-agents","update-memory","agent-sync"]
+  suggested_skills: ["updatedocs","new-project","handoff","context-anchor"]
   hermes:
     tags: [memory, documentation, context, agents, workspace, synchronization, dox]
-    related_skills: [new-project, context-anchor, agent-handoff]
+    related_skills: [updatedocs, new-project, handoff, context-anchor]
+    suggested_skills: [updatedocs, new-project, handoff, context-anchor]
     requires_tools: [bash, view_file, write_to_file, grep_search]
+  openclaw:
+    category: core-engine
+    suggested_skills: [updatedocs, new-project, handoff, context-anchor]
+    primary_triggers: ["update agents","sync project context","update memory","sync AGENTS.md"]
+    requires_tools: [bash, view_file, write_to_file, grep_search]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🧠 updateagents — Project Agent Context Synchronization
@@ -114,11 +127,21 @@ Identify the project's source of truth before documenting behavior:
 
 ## Procedure
 
-Execute the 17-step synchronization workflow via the automation CLI:
+Execute the synchronization workflow via the automation CLI:
 
 ```bash
 bun path/to/updateagents/scripts/updateagents.ts [options]
 ```
+
+### Step 0 — Stage-0 Fast-Skip Gate (Pre-Flight)
+Before performing deep inspection or delta generation, run the `ai-ready` fast-skip verification:
+1. Verify `AGENTS.md` exists and is `<50 lines`.
+2. Verify `.agents/standards` and `.agents/context` exist and are populated.
+3. If instructions are already aligned with project reality:
+   ```text
+   [ai-ready] Agent instructions and DOX container verified. Skipping pass.
+   ```
+   Exit immediately with 0 changes and zero token waste. Proceed only when structural drift or new project requirements are detected.
 
 ### Step 1 — Establish Workspace Context
 Determine current directory, repository status, project type, language/runtime, package manager, and application boundaries. Exclude parent directories and `.memory/**`.

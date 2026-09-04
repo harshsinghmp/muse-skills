@@ -1,16 +1,18 @@
-# Sample Gauntlet Loop Run
+# Sample Gauntlet Loop Run (Web Application Hardening)
 
 ## GAUNTLET_JOB_CONTRACT.md
 
 ```markdown
-# Gauntlet Job Contract: Safe Memory Cache TTL Refactor
+# Gauntlet Job Contract: Next.js Auth Portal Hardening
 
-- **Goal**: Refactor cache eviction logic to support sliding TTLs without memory leaks.
+- **Goal**: Refactor authentication portal with strict session expiration, security headers, and responsive layouts.
 - **Criteria**:
-  - [x] Sliding expiration verified by unit tests.
-  - [x] Eviction runs in O(1) time complexity.
-  - [x] Concurrency tests pass with zero deadlocks.
-- **Proof Commands**: `bun test tests/cache.test.ts`
+  - [x] Session tokens expire after 15 minutes of inactivity.
+  - [x] OWASP security headers verified (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
+  - [x] Responsive layout verified at 375px, 768px, and 1280px with zero horizontal scroll overflow.
+- **Proof Commands**:
+  - `bun test tests/auth.test.ts`
+  - `curl -s -I http://localhost:3000 | grep -Ei "(content-security-policy|strict-transport-security|x-frame-options)"`
 - **Max Iterations**: 3
 ```
 
@@ -20,23 +22,25 @@
 
 ```markdown
 ### Round 1
-- **Candidate**: Implemented sliding expiration in `src/cache.ts`.
-- **Automated Gate**: `bun test` passed (14/14 tests).
-- **Critic Score**: 7.8 / 10.0
-  - Correctness: 8.5 (sliding window works)
-  - Minimal Diff: 7.0 (added unused debug helpers)
-  - Edge Cases: 7.5 (missing negative TTL check)
-  - Cleanliness: 8.0
-- **Action**: Proceed to Round 2. Prompt: Remove unused helpers, validate negative TTL.
+- **Candidate**: Implemented session expiration in `src/auth.ts`.
+- **Automated Gate**:
+  - Unit tests: PASS (14/14 tests).
+  - Security Headers: FAIL (Missing `Content-Security-Policy` and `X-Frame-Options`).
+  - Viewports: FAIL (Horizontal blowout at 375px due to wide table).
+- **Critic Score**: 0.0 / 10.0 (BLOCKED by Automated Gate).
+- **Action**: Proceed to Round 2. Prompt: Add CSP/X-Frame-Options to middleware, wrap table in responsive overflow container.
 
 ### Round 2
-- **Candidate**: Removed debug helpers, added negative TTL guard.
-- **Automated Gate**: `bun test` passed (16/16 tests).
-- **Critic Score**: 9.4 / 10.0
+- **Candidate**: Added security headers to `middleware.ts`, added `overflow-x-auto` to table container.
+- **Automated Gate**:
+  - Unit tests: PASS (16/16 tests).
+  - Security Headers: PASS (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy present).
+  - Viewports: PASS (375px: 0px overflow, 768px: clean 2-col wrap, 1280px: max-w respected).
+- **Critic Score**: 9.5 / 10.0
   - Correctness: 9.8
-  - Minimal Diff: 9.5
-  - Edge Cases: 9.2
-  - Cleanliness: 9.0
+  - Minimal Diff: 9.4
+  - Edge Cases: 9.5
+  - Cleanliness: 9.3
 - **Action**: Score >= 9.0 -> TERMINATE (SUCCESS).
 ```
 
@@ -45,10 +49,13 @@
 ## ACCEPTANCE_PACKET.md
 
 ```markdown
-# Acceptance Packet: Safe Memory Cache TTL Refactor
+# Acceptance Packet: Next.js Auth Portal Hardening
 
-- **Verdict**: ACCEPTED (Round 2 Score: 9.4/10.0)
+- **Verdict**: ACCEPTED (Round 2 Score: 9.5/10.0)
 - **Rounds Executed**: 2 / 3
-- **Receipts**: `bun test tests/cache.test.ts` exited 0 (16 tests passed).
-- **Diff Summary**: +28 lines, -8 lines in `src/cache.ts`.
+- **Receipts**:
+  - `bun test tests/auth.test.ts` exited 0 (16 tests passed).
+  - Security headers verified via curl receipt (`CSP: default-src 'self'`).
+  - Mobile viewport `375px` confirmed zero horizontal scroll (`scrollWidth === innerWidth`).
+- **Diff Summary**: +34 lines, -6 lines in `src/auth.ts` and `middleware.ts`.
 ```

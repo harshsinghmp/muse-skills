@@ -50,6 +50,7 @@ Make this registration form look clean, modern, and professional using Refactori
 | **08** | **Shadows & Depth** | Light comes from above | Replace harsh single-line drop-shadows with subtle, layered ambient/direct shadow pairs to simulate realistic elevation. |
 | **09** | **Color Contrast** | Accessibility is non-negotiable | Verify all foreground/background pairings meet WCAG AA standards (≥ 4.5:1 for body copy, ≥ 3:1 for large text & UI controls). |
 | **10** | **Grouping & Alignment** | Proximity creates semantic meaning | Ensure spacing *within* related element groups is strictly tighter than spacing *between* unrelated groups (Gestalt Law of Proximity). |
+| **11** | **Anti-Slop 5-State Gate** | Never ship only the happy path | Explicitly implement Empty, Loading (skeleton), Error (retry CTA), Success, and Overflow defensive wrapping. |
 
 ---
 

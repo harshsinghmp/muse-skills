@@ -26,14 +26,26 @@ const REQUIRED_FRONTMATTER_KEYS = [
   "metadata",
 ];
 
-const EXPECTED_NEW_SKILLS = [
+const EXPECTED_ORDERED_SKILLS = [
+  "updatedocs",
+  "updateagents",
+  "git",
+  "code-review",
+  "new-project",
+  "handoff",
+  "ai-ready",
+  "context-anchor",
   "gauntlet-loop",
-  "secretary-controller",
+  "refactor-ui",
+  "designscope",
   "coupling-router",
+  "secretary",
   "evidence-ledger",
-  "daily-standup-coach",
+  "dead-letter",
+  "pua",
+  "coach",
+  "audit",
   "periodic-retreat",
-  "brain-audit",
 ];
 
 describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
@@ -52,24 +64,33 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(parsed).toHaveProperty("name", "@harsh/muse-skills");
   });
 
-  test("skills.json preserves flagship skill ordering", () => {
+  test("skills.json preserves requested priority ordering (#1 updatedocs through #19 periodic-retreat)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills[0].name).toBe("new-project");
-    expect(skills[1].name).toBe("updateagents");
+    expect(skills.length).toBe(19);
+    for (let i = 0; i < EXPECTED_ORDERED_SKILLS.length; i++) {
+      expect(skills[i].name).toBe(EXPECTED_ORDERED_SKILLS[i]);
+      expect(skills[i].priority).toBe(i + 1);
+    }
   });
 
-  test("skills.json contains all 17 total skills (10 baseline + 7 evolution skills)", () => {
+  test("skills.json contains all 19 total skills categorized across 5 divisions", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(17);
+    expect(skills.length).toBe(19);
 
     const skillNames = skills.map((s: { name: string }) => s.name);
-    for (const newSkill of EXPECTED_NEW_SKILLS) {
-      expect(skillNames).toContain(newSkill);
+    for (const skill of EXPECTED_ORDERED_SKILLS) {
+      expect(skillNames).toContain(skill);
     }
-    expect(skillNames).toContain("updatedocs");
+
+    const categories = new Set(skills.map((s: { category: string }) => s.category));
+    expect(categories.has("core-engine")).toBe(true);
+    expect(categories.has("quality-review")).toBe(true);
+    expect(categories.has("context-orchestration")).toBe(true);
+    expect(categories.has("design-interface")).toBe(true);
+    expect(categories.has("reflection-maintenance")).toBe(true);
   });
 
-  test("every skill defined in skills.json exists and conforms to the RFC specification", () => {
+  test("every skill defined in skills.json exists and conforms to Hermes, OpenClaw, and RFC agent specifications", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
 
     for (const skill of skills) {
@@ -86,6 +107,13 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
       for (const key of REQUIRED_FRONTMATTER_KEYS) {
         expect(frontmatter).toContain(`${key}:`);
       }
+
+      // Check Hermes & OpenClaw metadata standards
+      expect(frontmatter).toContain("category:");
+      expect(frontmatter).toContain("priority:");
+      expect(frontmatter).toContain("suggested_skills:");
+      expect(frontmatter).toContain("hermes:");
+      expect(frontmatter).toContain("openclaw:");
 
       // Check required markdown sections
       for (const section of REQUIRED_SECTIONS) {
@@ -107,7 +135,7 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     }
   });
 
-  test("llms.txt registers all skills", () => {
+  test("llms.txt registers all skills in priority order", () => {
     expect(fs.existsSync(LLMS_TXT_PATH)).toBe(true);
     const llmsContent = fs.readFileSync(LLMS_TXT_PATH, "utf8");
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));

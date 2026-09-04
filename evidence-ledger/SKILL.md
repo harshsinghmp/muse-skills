@@ -1,20 +1,33 @@
 ---
 name: evidence-ledger
-description: "Source-cited claim verification gate and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]). Generates claim-ledger.md."
-version: 1.0.0
+aliases: ["claim-ledger","verification-ledger","citation-gate"]
+description: "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, and empirical vs speculative classification. Generates claim-ledger.md and MISSING_RECEIPTS_REPORT.md."
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: context-orchestration
 metadata:
+  category: context-orchestration
+  priority: 14
+  aliases: ["claim-ledger","verification-ledger","citation-gate"]
+  suggested_skills: ["secretary","updatedocs","audit","coupling-router"]
   hermes:
-    tags: [evidence, verification, citation, fact-checking, claims, research-gate, provenance]
-    related_skills: [secretary-controller, gauntlet-loop, brain-audit, dead-letter]
+    tags: [evidence, verification, citation, fact-checking, claims, research-gate, provenance, academic-research, citation-synthesis, receipt-audit, doi, empirical-verification]
+    related_skills: [secretary, updatedocs, audit, coupling-router]
+    suggested_skills: [secretary, updatedocs, audit, coupling-router]
     requires_tools: [bash, view_file, grep, write_to_file, replace_file_content]
+  openclaw:
+    category: context-orchestration
+    suggested_skills: [secretary, updatedocs, audit, coupling-router]
+    primary_triggers: ["verify claims","audit evidence","generate claim ledger","cite sources","missing receipts report"]
+    requires_tools: [bash, view_file, grep, write_to_file, replace_file_content]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
-# 📜 Evidence Ledger — Source-Cited Claim Verification Gate
+# 📜 Evidence Ledger — Source-Cited Claim Verification Gate & Research Ledger
 
-> Enforces the non-negotiable verification doctrine: *"No source, no claim. No verification path, no release."* Audits all technical documentation, benchmark numbers, architectural claims, and research summaries against a rigorous 4-tier confidence taxonomy, eliminating ungrounded assertions and hallucinated facts.
+> Enforces the non-negotiable verification doctrine: *"No source, no claim. No verification path, no release."* Audits all technical documentation, benchmark statistics, architectural whitepapers, and academic research summaries against a 4-tier confidence taxonomy, primary DOI/URL citation receipts, and strict empirical vs. speculative demarcation.
 
 ---
 
@@ -22,10 +35,11 @@ metadata:
 
 ### Trigger Conditions
 Execute this skill when:
-1. **Auditing Technical Claims**: Verifying documentation, marketing copy, or release notes making performance, security, or capability claims.
-2. **Research & Architecture Synthesis**: Generating technical whitepapers, evaluation reports, or dependency audit briefs.
-3. **Pre-Release Factual Gate**: Final check before publishing external or client-facing deliverables to ensure every number has a verifiable receipt.
-4. **Flagging Speculative Assertions**: Detecting statements disguised as facts that are actually inferred deductions.
+1. **Auditing Technical & Statistical Claims**: Verifying documentation, marketing copy, or release notes making performance, latency, or throughput assertions.
+2. **Academic & Literature Synthesis**: Generating technical whitepapers, research briefs, or architecture proposals requiring peer-reviewed DOI/URL citations.
+3. **Empirical vs Speculative Auditing**: Disentangling measured empirical benchmark observations from theoretical extrapolations.
+4. **Pre-Release Factual Gate**: Final check before publishing external or client-facing deliverables to ensure zero ungrounded assertions survive.
+5. **Missing Receipt Detection**: Automatically identifying unbacked statistics and generating remediation reports.
 
 ### Anti-Triggers
 Do NOT use this skill when:
@@ -43,61 +57,79 @@ Do NOT use this skill when:
 │ Tier Tag      │ Definition & Verification Requirement                       │
 ├───────────────┼─────────────────────────────────────────────────────────────┤
 │ [RAW]         │ Verbatim output from local executed command or local file   │
-│ [FETCH]       │ Direct quote from authoritative primary URL or official doc │
+│ [FETCH]       │ Direct quote from authoritative primary URL, RFC, or DOI    │
 │ [SEARCH]      │ Corroborated fact supported by 2+ independent search hits   │
 │ [INFER]       │ Agent logical deduction; MUST state premises explicitly     │
 └───────────────┴─────────────────────────────────────────────────────────────┘
 ```
 
-### Claim Gate Matrix
+### Academic Receipt Standards
 
-| Claim Type | Minimum Required Tier | Action if Unmet |
+| Reference Type | Required Receipt Format | Quality Check |
 | :--- | :--- | :--- |
-| **Performance / Latency Metric** | `[RAW]` (Reproducible benchmark run) | **REDACT CLAIM** or downgrade to estimated range |
-| **Security / Compliance Statement** | `[RAW]` or `[FETCH]` (Official audit/spec) | **BLOCK RELEASE** until verified |
-| **External API / Library Behavior** | `[FETCH]` (Official documentation URL) | **TEST LOCALLY** to upgrade to `[RAW]` |
-| **Design Rationale / Trade-off** | `[INFER]` (Explicit premises listed) | Acceptable with declared reasoning |
+| **Peer-Reviewed Paper** | DOI link (`https://doi.org/...`) or `arXiv:ID` | Primary paper verified; no vague attributions |
+| **Standard / RFC** | Canonical specification URL (e.g. `rfc-editor.org`) | Exact section or anchor cited |
+| **Benchmark Metric** | `[RAW]` Command receipt with timestamp & stdout | Reproducible execution script provided |
+| **External Library** | Official docs URL (`[FETCH]`) or local test (`[RAW]`) | Versioned API link |
+
+### Empirical vs. Speculative Demarcation
+
+- **`[EMPIRICAL]`**: Grounded in reproducible measurement (`[RAW]`) or primary literature (`[FETCH]`). Stated as factual observation.
+- **`[SPECULATIVE]`**: Grounded in deduction, extrapolation, or forward projections (`[INFER]`). Must explicitly state hypotheses and premises.
 
 ---
 
 ## Procedure
 
-### Step 1 — Claim Extraction & Inventory
-Scan the target artifact (markdown, doc, proposal) and extract every discrete factual statement, numeric metric, or capability claim into an enumerated list.
+### Step 1 — Claim Extraction & Statistical Scanning
+Scan the target artifact (markdown, doc, proposal) and extract every discrete factual statement, numeric metric, or statistical claim (percentages, multipliers, latency bounds) into an enumerated inventory.
 
-### Step 2 — Provenance Tagging
+### Step 2 — Provenance Tagging & Academic Receipt Verification
 Assign exactly one taxonomy tag (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) to each claim:
 - If `[RAW]`: Record execution command, timestamp, and stdout snippet.
-- If `[FETCH]`: Record canonical URL, access date, and quoted text.
-- If `[SEARCH]`: Record query string and corroborating domains.
-- If `[INFER]`: Explicitly document: *"Premise A + Premise B $\implies$ Conclusion"*.
+- If `[FETCH]`: Verify canonical DOI link or specification URL, access date, and quoted excerpt (see `references/academic-citation-protocol.md`).
+- If `[SEARCH]`: Record query string and at least 2 independent corroborating domains.
+- If `[INFER]`: Explicitly document the deduction logic: *"Premise A + Premise B $\implies$ Conclusion"*.
 
-### Step 3 — Ledger Compilation (`claim-ledger.md`)
+### Step 3 — Empirical vs. Speculative Classification
+Classify each claim as either `[EMPIRICAL]` or `[SPECULATIVE]`:
+- Flag any speculative statement masquerading as an empirical fact.
+- Force speculative claims to declare their underlying assumptions and risk factors.
+
+### Step 4 — Missing Receipt Audit & Flagger
+Scan all statistical claims (e.g., *"3x faster"*, *"40% less memory"*):
+- If a statistical statement lacks a reproducible `[RAW]` log or verified `[FETCH]` DOI/URL, automatically flag it in `MISSING_RECEIPTS_REPORT.md`.
+- Unbacked claims must either be proven via benchmark or downgraded/redacted.
+
+### Step 5 — Ledger Compilation (`claim-ledger.md`)
 Generate the structured ledger containing:
 - **Claim ID & Statement**
-- **Assigned Confidence Tier**
-- **Verification Path & Exact Receipt**
-- **Status**: `VERIFIED` | `UNGROUNDED` | `REDACTED`
+- **Epistemological Class**: `[EMPIRICAL]` | `[SPECULATIVE]`
+- **Confidence Tier**: `[RAW]` | `[FETCH]` | `[SEARCH]` | `[INFER]`
+- **Verification Path & Exact Receipt**: DOI / URL / command receipt
+- **Status**: `VERIFIED` | `QUARANTINED` | `REDACTED`
 
-### Step 4 — Artifact Remediation
-Rewrite or annotate the target document:
-- Replace ungrounded claims with verified data or remove them entirely.
-- Ensure all metrics link directly to entries in `claim-ledger.md`.
+### Step 6 — Artifact Remediation
+Update the target document:
+- Replace ungrounded statements with verified receipts or remove them entirely.
+- Ensure all statistics link directly to entries in `claim-ledger.md`.
 
 ---
 
 ## Pitfalls
 
-- **Disguising Inferences as Raw Facts**: Stating *"System throughput increased by 40%"* without a raw benchmark log is a critical violation. Must be marked `[INFER]` or proven with `[RAW]`.
-- **Vague Citations**: Citing *"industry benchmarks"* or *"standard research"* without specific URLs or test runs is rejected.
-- **Outdated Fetched Data**: Using cached or memory-based assumptions about external library APIs without fetching current docs.
+- **Unbacked Statistical Fluff**: Writing *"increases efficiency by 50%"* without raw benchmark logs or DOI citations.
+- **Pseudo-Citations**: Name-dropping authors or papers (e.g. *"As Smith et al. showed..."*) without providing the exact DOI or paper link.
+- **Disguising Inferences as Raw Facts**: Stating architectural hypotheses as proven truths without empirical validation.
+- **Vague Citations**: Citing *"industry standards"* or *"standard benchmarks"* without canonical URLs.
 
 ---
 
 ## Verification
 
 Before certifying an artifact:
-1. [ ] `claim-ledger.md` accounts for 100% of numeric and architectural claims.
-2. [ ] Zero ungrounded or uncited assertions remain in public deliverables.
-3. [ ] All `[RAW]` claims contain reproducible command receipts.
-4. [ ] All `[INFER]` statements explicitly declare their foundational premises.
+1. [ ] `claim-ledger.md` accounts for 100% of numeric, statistical, and architectural claims.
+2. [ ] All academic and research citations include valid DOI or canonical specification URLs.
+3. [ ] Empirical findings are strictly separated from speculative extrapolations.
+4. [ ] Zero ungrounded statistical claims remain; `MISSING_RECEIPTS_REPORT.md` is empty or fully resolved.
+5. [ ] All `[RAW]` claims contain reproducible command receipts.

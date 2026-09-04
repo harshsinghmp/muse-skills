@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.0] - 2026-09-04
+
+### Added
+- **`git` Skill (Flagship #3)**: Autonomous end-to-end Git & GitHub release engine with 9-tier anti-slop issue triage, strict 4-phase branching (`master` production, `dev` staging, `release/*` cuts, `feat/*` working lanes), automated doc sync, SemVer release cutting, and GitHub SEO / Open Graph metadata optimization.
+- **`ai-ready` Skill (Flagship #7)**: Autonomous repository AI-readiness auditor and Agent Engine DOX scaffolding engine with a 12-asset audit scorecard, PR review convention mining, and sub-100ms Stage-0 Fast-Skip gate.
+- **Automatic Skill Extraction Helper**: CLI utility `scripts/extract-skill.ts` (`bun run extract-skill`) with 3-gate validation (Recurrence Gate $\ge 3$, Verification Gate, Generalization Gate) and automated catalog registration.
+- **5-State Anti-Slop UI Gate**: Upgraded `refactor-ui` with comprehensive UI state coverage auditing (loading, empty, error, partial, ideal).
+- **Karpathy Simplicity Doctrine**: Upgraded `code-review` with the Karpathy minimal-diff doctrine, cognitive burden reduction heuristics, and complexity pushback.
+- **Skill Compatibility & Conflict Matrix**: Upgraded `coupling-router` to audit pairwise skill compatibility, detect antagonistic pairings, and enforce Minimum Viable Skill Sets (MVSS).
+- **Responsive Layout Tree Extraction**: Upgraded `designscope` to extract structured CSS Grid/Flexbox component hierarchy trees and tokenized breakpoints.
+- **Socratic Adversarial Challenge Lens**: Upgraded `secretary` with a 3-prong devil's advocate stress-testing lens, dissent ledger, and cryptographic approval gate.
+- **Academic Citation Receipts**: Upgraded `evidence-ledger` with peer-reviewed DOI citation validation, research receipts, and empirical vs speculative demarcation.
+- **Web Security & Visual Regression Gates**: Upgraded `gauntlet-loop` with CSP/HSTS header audits and multi-viewport visual regression gates.
+
+### Changed
+- **Skill Name Shortening**:
+  - `agent-handoff` ➔ `handoff`
+  - `code-review-linus-torvalds-style` ➔ `code-review`
+  - `daily-standup-coach` ➔ `coach`
+  - `secretary-controller` ➔ `secretary`
+  - `brain-audit` ➔ `audit`
+  (Preserved previous names as aliases in YAML frontmatters for backward compatibility).
+- **Universal Multi-Agent Metadata Standard**: Upgraded all 19 skills with Hermes, OpenClaw, Codex, Cursor, and Gemini metadata standards, adding structured `category`, `priority`, `aliases`, `suggested_skills` mesh, `hermes`, and `openclaw` trigger blocks.
+- **Priority Reordering Overhaul**: Reordered the entire suite in exact priority order (#1 `updatedocs` through #19 `periodic-retreat`), synchronizing `skills.json`, `llms.txt`, `README.md`, and test suite.
+- **Context Anchor Neutrality**: Standardized anchor location to vendor-neutral `.agents/context.md`.
+
+---
+
 ## [1.8.0] - 2026-09-04
 
 ### Added

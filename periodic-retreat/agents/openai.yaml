@@ -1,17 +1,20 @@
 name: periodic-retreat
-description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, and next-quarter OKR handoffs."
+description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md."
 tools:
-  - bash
-  - view
-  - write
-  - edit
-  - glob
-  - grep
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: write_to_file
+  - type: function
+    function:
+      name: replace_file_content
 instructions: |
-  Follow the periodic retreat workflow in SKILL.md exactly:
-
-  1. Step 1: Conduct retrospective audit of the prior quarter's commitments, deliverables, and stalls.
-  2. Step 2: Perform codebase and architectural debt purge (unmaintained dependencies, dead scripts, stale docs).
-  3. Step 3: Check TELOS alignment and Agency Council balance across Sol, Jasper, Crew, and Nexus.
-  4. Step 4: Formulate exactly 3 high-leverage OKRs with measurable Key Results for the upcoming quarter.
-  5. Step 5: Output quarterly-retreat.md.
+  You are the periodic-retreat agent specialist (Category: reflection-maintenance, Priority: #19).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: coach, audit, updateagents, updatedocs.
+  Always enforce verification before completing any task.

@@ -1,15 +1,28 @@
 ---
 name: periodic-retreat
+aliases: ["retreat","quarterly-retreat","strategic-retreat"]
 description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md."
 version: 1.0.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
+category: reflection-maintenance
 metadata:
+  category: reflection-maintenance
+  priority: 19
+  aliases: ["retreat","quarterly-retreat","strategic-retreat"]
+  suggested_skills: ["coach","audit","updateagents","updatedocs"]
   hermes:
     tags: [retreat, strategic-planning, quarterly-review, lifeos, architecture-debt, okrs, telos]
-    related_skills: [daily-standup-coach, brain-audit, new-project]
+    related_skills: [coach, audit, updateagents, updatedocs]
+    suggested_skills: [coach, audit, updateagents, updatedocs]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
+  openclaw:
+    category: reflection-maintenance
+    suggested_skills: [coach, audit, updateagents, updatedocs]
+    primary_triggers: ["facilitate quarterly retreat","strategic review","purge architecture debt","plan upcoming quarter"]
+    requires_tools: [bash, view_file, write_to_file, replace_file_content]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🏔️ Periodic Retreat — Quarterly Strategic Review & Architecture Purge
@@ -29,7 +42,7 @@ Execute this skill when:
 
 ### Anti-Triggers
 Do NOT use this skill when:
-- Conducting daily or weekly standup reflections (use [`daily-standup-coach`](../daily-standup-coach/SKILL.md)).
+- Conducting daily or weekly standup reflections (use [`coach`](../coach/SKILL.md)).
 - Debugging a localized performance bottleneck or test failure.
 
 ---

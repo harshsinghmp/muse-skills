@@ -1,25 +1,37 @@
 ---
 name: new-project
-aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
+aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 version: 2.0.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
+category: core-engine
 metadata:
-  aliases: ["Agent Engine", "DOX Engine", "agent-engine", "dox-engine"]
+  category: core-engine
+  priority: 5
+  aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
+  suggested_skills: ["ai-ready","updateagents","updatedocs","git"]
   hermes:
     tags: [scaffolding, governance, project-os, architecture, nextjs, astro, vite, dox, agent-engine, dox-engine]
-    related_skills: [updateagents, agent-handoff, context-anchor]
+    related_skills: [ai-ready, updateagents, updatedocs, git]
+    suggested_skills: [ai-ready, updateagents, updatedocs, git]
     requires_tools: [bash, view_file, write_to_file]
+  openclaw:
+    category: core-engine
+    suggested_skills: [ai-ready, updateagents, updatedocs, git]
+    primary_triggers: ["new-project","Agent Engine","DOX Engine","scaffold Project OS","initialize agent workspace"]
+    requires_tools: [bash, view_file, write_to_file]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🚀 new-project — Autonomous Project OS & DOX Scaffolder
 
 > **Aliases**: `Agent Engine` | `DOX Engine` | `agent-engine` | `dox-engine`
 
-Interactive project creator and Project Operating System provisioner. Implements the **"Agents First, Then Project Type"** two-stage architecture:
-1. **Stage 1: Governance Container**: Drops the lean root `AGENTS.md`, `.gitignore`, 9-folder `.agents/` tree (standards, brand, context, archive, artifacts, goals, research, skills, workflows), and initializes cognitive memory.
+Interactive project creator and Project Operating System provisioner. Implements the **"Agents First, Then Project Type"** architecture with a zero-token **Stage-0 Fast-Skip Gate**:
+0. **Stage 0: AI-Ready Pre-Flight Gate**: Checks if root `AGENTS.md` and `.agents/` container already exist and pass `ai-ready` audit. If healthy, skips scaffolding immediately.
+1. **Stage 1: Governance Container**: Drops the lean root `AGENTS.md` (<50 lines), `.gitignore`, 9-folder `.agents/` tree (standards, brand, context, archive, artifacts, goals, research, skills, workflows), and initializes cognitive memory.
 2. **Stage 2: Project Type**: Interactively launches the chosen framework creator (Astro v7.2.x, Next.js 16, Instatic HTML, Hono/Workers, or Vite).
 3. **Stage 3: Closeout DOX Pass**: Synchronizes `.agents/context/current.md` with verified live deliverables.
 
@@ -30,6 +42,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 - User invokes or references *"Agent Engine"*, *"DOX Engine"*, *"new-project"*, *"scaffold a workspace"*, or *"initialize Project OS"*.
 - Setting up a new client application, agency showcase, microservice, or prototype with the DOX Engine.
 - Equipping an existing unorganized repository with the Agent Engine / Progressive Disclosure DOX architecture.
+- Running `ai-ready` pre-flight to verify existing workspace health before framework execution.
 - Initializing a project with strict context isolation (zero cross-project bleed).
 
 ---
@@ -60,9 +73,18 @@ bun path/to/new-project/scripts/new-project.ts
 bun path/to/new-project/scripts/new-project.ts <targetPath> --name="<projectName>" --type="<astro|nextjs|instatic|hono|vite|none>" --desc="<description>"
 ```
 
+### Step 1b: Stage 0 — AI-Ready Pre-Flight Gate
+Before scaffolding, inspect the target directory:
+1. If `AGENTS.md` and `.agents/` container already exist and are intact:
+   ```text
+   [ai-ready] Repository container healthy. Skipping scaffolding pass.
+   ```
+2. Skip Stage 1 entirely and proceed directly to Stage 2 (Project Type) or closeout DOX pass, saving context tokens.
+
 ### Step 2: Stage 1 — Agents First (Governance Baseline)
+If Stage 0 detects missing or incomplete governance:
 1. Resolves target directory.
-2. Copies `templates/AGENTS.md` and `.gitignore`.
+2. Copies `templates/AGENTS.md` (<50 lines) and `.gitignore`.
 3. Provisions the complete 9-folder `.agents/` containment tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
 4. Customizes `.agents/context/product.md` and `architecture.md`.
 5. Initializes `.memory/` and real-time `.memory/CURRENT.md`.
@@ -75,6 +97,12 @@ If an archetype is selected (e.g. Astro or Next.js):
 ### Step 4: Stage 3 — Closeout DOX Pass
 1. Scans generated project files.
 2. Records verified initial deliverables in `.agents/context/current.md`.
+
+### Step 5: Pattern Promotion & Skill Extraction (Continuous Self-Improvement)
+When recurring patterns emerge across tasks (≥3 occurrences) and are verified by tests:
+1. Review the 3 extraction gates in [`references/skill-extraction.md`](references/skill-extraction.md).
+2. Execute `bun scripts/extract-skill.ts --name <skill-name> --desc "<desc>" --occurrences 3 --verified`.
+3. Scaffolds an RFC-compliant skill container with `SKILL.md`, `README.md`, and `agents/openai.yaml` under `.agents/skills/<skill-name>/` or project root.
 
 ---
 

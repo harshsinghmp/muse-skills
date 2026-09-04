@@ -61,3 +61,20 @@ bun path/to/new-project/scripts/new-project.ts <targetPath> --name="MyApp" --typ
 4. **Hono / Workers**: High-performance Cloudflare Workers edge API microservice.
 5. **Vite + React SPA**: Client-side single page applications with TypeScript.
 6. **None / Existing**: Governance container only (DOX baseline on existing repository).
+
+---
+
+## ⚡ Continuous Self-Improvement (Skill Extraction)
+
+When an agent repeatedly solves recurring problems across multiple tasks ($\ge 3$ occurrences), package the pattern directly into a new RFC-compliant skill:
+
+```bash
+bun scripts/extract-skill.ts \
+  --name "custom-pattern" \
+  --desc "Extract and execute deterministic pattern solution" \
+  --occurrences 3 \
+  --verified
+```
+
+See [`references/skill-extraction.md`](references/skill-extraction.md) for the complete 3-gate lifecycle specification (Recurrence, Verification, Generalization).
+

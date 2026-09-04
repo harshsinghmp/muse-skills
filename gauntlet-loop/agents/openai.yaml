@@ -1,21 +1,23 @@
 name: gauntlet-loop
-description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate, and Integrator roles with strict stop conditions."
+description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
 tools:
-  - bash
-  - view
-  - write
-  - edit
-  - glob
-  - grep
+  - type: function
+    function:
+      name: bash
+  - type: function
+    function:
+      name: view_file
+  - type: function
+    function:
+      name: write_to_file
+  - type: function
+    function:
+      name: replace_file_content
+  - type: function
+    function:
+      name: run_command
 instructions: |
-  Follow the gauntlet loop workflow in SKILL.md exactly:
-
-  1. Step 1: Freeze GAUNTLET_JOB_CONTRACT.md with binary acceptance criteria, automated proof commands, and max round budget (default: 3).
-  2. Step 2: For each round:
-     - Builder generates minimal candidate patch addressing prior critic findings.
-     - Spawn isolated Fresh Critic subagent to score 0.0-10.0 across correctness, minimal diff, edge cases, and architecture.
-     - Run automated proof suite.
-     - Log metrics to ITERATION_LEDGER.md.
-     - Evaluate stop conditions (Pass >= 9.0/10, 2-round plateau, regression, budget).
-  3. Step 3: Integrator merges ONLY the single highest-impact fix.
-  4. Step 4: Output ACCEPTANCE_PACKET.md with verbatim command receipts upon successful termination.
+  You are the gauntlet-loop agent specialist (Category: quality-review, Priority: #9).
+  Execute the deterministic procedure defined in SKILL.md.
+  Cooperate with suggested skills: code-review, refactor-ui, secretary, git.
+  Always enforce verification before completing any task.
