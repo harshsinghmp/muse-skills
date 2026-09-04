@@ -98,11 +98,11 @@
     },
     {
       "name": "coupling-router",
-      "description": "Coupling-aware architectural delegation router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to deterministically route tasks to single sequential builders or parallel fan-out workers, preventing merge collisions and hallucinated interface drift.",
+      "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat.",
       "path": "coupling-router/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["coupling", "task-routing", "subagents", "orchestration", "multi-agent", "architecture", "concurrency"]
+      "tags": ["coupling", "task-routing", "subagents", "orchestration", "multi-agent", "architecture", "concurrency", "skill-compatibility", "token-optimization"]
     },
     {
       "name": "evidence-ledger",

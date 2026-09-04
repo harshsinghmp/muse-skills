@@ -39,7 +39,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Refactor UI components & layout hierarchy | [`refactor-ui`](refactor-ui/README.md) | Clean visual hierarchy, typography scales, 4px/8px spacing, and accessible contrast |
 | Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with plateau stop conditions and acceptance packets |
 | Control high-stakes staff work and approval gates | [`secretary-controller`](secretary-controller/README.md) | Evidence-grounded briefs, preserved dissent, and single-use SHA-256 hash gates |
-| Route task DAGs based on coupling & shared state | [`coupling-router`](coupling-router/README.md) | Deterministic sequential vs parallel subagent delegation routing |
+| Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
 | Verify factual claims & citation provenance | [`evidence-ledger`](evidence-ledger/README.md) | 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) ledger |
 | Score daily controllable effort & focus | [`daily-standup-coach`](daily-standup-coach/README.md) | 5-pillar input scorecard and daily reflection log |
 | Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
@@ -206,7 +206,7 @@ graph TD
 | [**`code-review-linus-torvalds-style`**](code-review-linus-torvalds-style/README.md)<br/>*(Code Review - Linus Torvalds Style)* | **Quality Gate** | `/torvalds`, `/linus-review`, `review PR` | Language-agnostic code review method derived from Linus Torvalds' corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality Gate** | `/gauntlet`, `/gauntlet-loop` | Bounded multi-agent quality improvement loop with Builder, Fresh Critic, Automated Gate, and Integrator roles with plateau stop conditions. |
 | [**`secretary-controller`**](secretary-controller/README.md) | **Governance** | `/secretary`, `/memo` | Evidence-grounded staff-work controller and single-use SHA-256 hash approval gate for high-stakes decisions and mutations. |
-| [**`coupling-router`**](coupling-router/README.md) | **Multi-Agent** | `/router`, `/coupling` | Coupling-aware architectural delegation router for task DAGs; routes high coupling sequentially and low coupling in parallel. |
+| [**`coupling-router`**](coupling-router/README.md) | **Multi-Agent** | `/router`, `/coupling` | Coupling-aware architectural router & skill-stack auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
 | [**`evidence-ledger`**](evidence-ledger/README.md) | **Governance** | `/evidence`, `/claim` | Source-cited claim verification gate enforcing a 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`). |
 | [**`daily-standup-coach`**](daily-standup-coach/README.md) | **Reflection** | `/standup`, `/daily` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection** | `/retreat`, `/quarterly` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
@@ -406,15 +406,16 @@ npx skills add harshsinghmp/muse-skills --skill secretary-controller
 
 ### 🔀 `coupling-router`
 
-Coupling-aware architectural delegation router. Analyzes task dependency graphs, shared mutable state, type definitions, and schema boundaries to deterministically route tasks.
+Coupling-aware architectural delegation and skill-stack compatibility router. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill coupling-router
 ```
 
+- **Skill-Stack & Token Conflict Auditor**: Audits active skills against the Skill Compatibility Matrix, silences conflicting instructions, and enforces the Minimal Viable Skill Set (MVSS $\le$ 6,000 tokens).
 - **High Coupling Routing**: Routes interdependent tasks (shared types, database schemas, rendering pipeline) to a single sequential builder.
 - **Low Coupling Fan-Out**: Dispatches truly orthogonal tasks (isolated test suites, independent docs, separate microservices) to parallel subagents.
-- **DAG Generation**: Outputs `ROUTING_PLAN.md` with visual Mermaid dependency graph and file isolation boundaries.
+- **DAG & Allocation Generation**: Outputs `ROUTING_PLAN.md` with active MVSS, suppressed skills, Mermaid dependency graph, and file isolation boundaries.
 
 [Read full documentation →](coupling-router/README.md)
 
@@ -647,13 +648,14 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── coupling-router/                # Coupling-aware architectural delegation router
+├── coupling-router/                # Coupling-aware architectural delegation & skill-stack router
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
 │   │   └── sample-routing-decision.md
 │   ├── references/
-│   │   └── coupling-matrix.md
+│   │   ├── coupling-matrix.md
+│   │   └── skill-compatibility-matrix.md
 │   ├── README.md
 │   └── SKILL.md
 │
