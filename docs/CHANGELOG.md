@@ -7,21 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [2.1.1] - 2026-09-05
 
 ### Added
-- **Worktree Parallel Lanes in `git`**: Isolated working tree feature lanes (`.worktrees/feat-<slug>`) enabling concurrent multi-agent development and shielding active development servers (`bun dev`, Vite, test watchers) from branch switching churn.
-- **Dynamic `.gitignore` Seeding**: Automatic zero-leakage `.gitignore` template initialization if missing from the workspace, seeded directly from `ai-ready/templates/gitignore.template`.
-- **Pre-Release Sanitization Gate in `git`**: Production release gate that sweeps temporary scratch files (`SESSION.md`, `planning/`, `screenshots/`, `test-*.ts`, `scratch/`) and verifies repository visibility vs. licensing invariants.
-- **Monorepo-Aware Tag Scoping in `git`**: Automatic workspace detection (`pnpm-workspace.yaml`, `packages/`, `turbo.json`, `lerna.json`) that applies package-scoped tags (`{package}-vX.Y.Z`) while preserving root SemVer (`vX.Y.Z`) for single-package repositories.
-- **Merge Conflict Resolution & Git Recovery Playbook**: Dedicated recovery guide with triage diagnostics, rebase vs. merge strategy matrix, emergency code extraction (`git show ... > /tmp/...`), and reflog restoration recipes.
-- **Safe Bulk Branch Pruning & Worktree Cleanup**: One-line prune of merged feature branches and stale worktrees with protection for `dev`, `master`, and `main`.
-- **Worktree Invariants in `.gitignore`**: Added `.worktrees/` and `worktrees/` to root `.gitignore` and `ai-ready/templates/gitignore.template`.
-- **Synthetic ADE/IDE Artifact Sanitization Protocol**: Autonomous unwrapping and URL-decoding engine for ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor ghost markers, Windsurf delimiters, and Claude artifacts across the Agent Engine DOX canon (`ai-ready/templates/`), `ai-ready.ts` (`--sanitize`), `security-vibeguard.md`, and `git` pre-release sanitization sweeps. Codified proactive markdown backtick escaping for template placeholders.
-- **The Grand 32-Tool Modern CLI Taxonomy & Fallback Matrix**: Comprehensive modernization taxonomy in `ai-ready/templates/AGENTS.md` and `execution-kernel.md` mandating modern high-speed CLI utilities (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta`/`difft` > `git diff`, `btop` > `top`, `ncdu`/`dua`/`gdu` > `du`, `gojq` > `jq`, `zstd` > `gzip`, `ss` > `netstat`, `ip` > `ifconfig`, `atuin`, `zellij`, `nvim`, `micro`, `yazi`, `tldr`, `numbat`, `less`) with explicit subshell `.bashrc` alias isolation rules and modernizations in `updateagents/references/discovery-commands.md`.
+- **Worktree Parallel Lanes in `git`**: Isolated working tree feature lanes (`.worktrees/feat-<slug>`) enabling concurrent multi-agent development and shielding active development servers (`bun dev`, Vite, test watchers) from branch switching churn. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Dynamic `.gitignore` Seeding**: Automatic zero-leakage `.gitignore` template initialization if missing from the workspace, seeded directly from `ai-ready/templates/gitignore.template`. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Pre-Release Sanitization Gate in `git`**: Production release gate that sweeps temporary scratch files (`SESSION.md`, `planning/`, `screenshots/`, `test-*.ts`, `scratch/`) and verifies repository visibility vs. licensing invariants. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Monorepo-Aware Tag Scoping in `git`**: Automatic workspace detection (`pnpm-workspace.yaml`, `packages/`, `turbo.json`, `lerna.json`) that applies package-scoped tags (`{package}-vX.Y.Z`) while preserving root SemVer (`vX.Y.Z`) for single-package repositories. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Merge Conflict Resolution & Git Recovery Playbook**: Dedicated recovery guide with triage diagnostics, rebase vs. merge strategy matrix, emergency code extraction (`git show ... > /tmp/...`), and reflog restoration recipes. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Safe Bulk Branch Pruning & Worktree Cleanup**: One-line prune of merged feature branches and stale worktrees with protection for `dev`, `master`, and `main`. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Synthetic ADE/IDE Artifact Sanitization Protocol**: Autonomous unwrapping and URL-decoding engine for ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor ghost markers, Windsurf delimiters, and Claude artifacts across the Agent Engine DOX canon (`ai-ready/templates/`), `ai-ready.ts` (`--sanitize`), `security-vibeguard.md`, and `git` pre-release sanitization sweeps. Codified proactive markdown backtick escaping for template placeholders. ([#37](https://github.com/harshsinghmp/muse-skills/pull/37))
+- **The Grand 32-Tool Modern CLI Taxonomy & Fallback Matrix**: Comprehensive modernization taxonomy in `ai-ready/templates/AGENTS.md` and `execution-kernel.md` mandating modern high-speed CLI utilities (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta`/`difft` > `git diff`, `btop` > `top`, `ncdu`/`dua`/`gdu` > `du`, `gojq` > `jq`, `zstd` > `gzip`, `ss` > `netstat`, `ip` > `ifconfig`, `atuin`, `zellij`, `nvim`, `micro`, `yazi`, `tldr`, `numbat`, `less`) with explicit subshell `.bashrc` alias isolation rules and modernizations in `updateagents/references/discovery-commands.md`. ([#37](https://github.com/harshsinghmp/muse-skills/pull/37))
 
+### Changed
+- **Worktree Invariants in `.gitignore`**: Added `.worktrees/` and `worktrees/` to root `.gitignore` and `ai-ready/templates/gitignore.template`. ([#35](https://github.com/harshsinghmp/muse-skills/pull/35))
+- **Fast-Skip & SecretScan Modernization**: Upgraded `ai-ready/SKILL.md`, `git/SKILL.md`, and `updateagents` discovery commands to prioritize `rg` and `fd` over legacy `grep` and `find`. ([#37](https://github.com/harshsinghmp/muse-skills/pull/37))
 
----
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.1.0...v2.1.1
 
 ## [2.1.0] - 2026-09-04
 
