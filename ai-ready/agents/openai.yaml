@@ -1,0 +1,18 @@
+name: ai-ready
+description: Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix. Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant.
+tools:
+  - bash
+  - run_command
+  - view
+  - write
+  - edit
+  - glob
+  - grep
+instructions: |
+  Follow the 5-step workflow in SKILL.md deterministically:
+  
+  1. Stage 0 Fast-Skip: Check if all 12 assets are present and valid. If yes, output single line "[ai-ready] Repository is AI-ready (12/12). Skipping pass." and exit immediately.
+  2. Discovery: Scan local repo for runtimes, test frameworks, CI setups, and package managers without modifying files.
+  3. PR Mining: If GitHub CLI is available, analyze the last 15 merged PRs to surface recurring review feedback and implicit developer conventions.
+  4. Targeted Remediation: Scaffold only the missing or stale assets among the 12 tracked assets. Never clobber existing human-authored configuration files.
+  5. Scorecard: Print the structured 12-asset audit report and tier (Getting Started, On Track, Solid, or AI-Ready).

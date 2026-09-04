@@ -58,9 +58,9 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(skills[1].name).toBe("updateagents");
   });
 
-  test("skills.json contains all 18 total skills (10 baseline + 7 evolution + 1 lifecycle skill)", () => {
+  test("skills.json contains all 19 total skills (10 baseline + 7 evolution + 2 lifecycle & governance skills)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(18);
+    expect(skills.length).toBe(19);
 
     const skillNames = skills.map((s: { name: string }) => s.name);
     for (const newSkill of EXPECTED_NEW_SKILLS) {
@@ -68,6 +68,7 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     }
     expect(skillNames).toContain("updatedocs");
     expect(skillNames).toContain("git");
+    expect(skillNames).toContain("ai-ready");
   });
 
   test("every skill defined in skills.json exists and conforms to the RFC specification", () => {

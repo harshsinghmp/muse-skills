@@ -28,6 +28,7 @@
 - [periodic-retreat](periodic-retreat/SKILL.md): Quarterly Strategic Retreat Facilitator & Architecture Debt Purge.
 - [brain-audit](brain-audit/SKILL.md): Knowledge Hygiene, Link Integrity & Credential Leak Auditor.
 - [git](git/SKILL.md): Autonomous End-to-End Release & GitHub Lifecycle Engine.
+- [ai-ready](ai-ready/SKILL.md): Repository AI-Readiness Auditor & Scaffolding Engine.
 
 ## Agent Context Pack
 - [Context Index](.agents/context/index.md): Start here - durable project truth for agents.

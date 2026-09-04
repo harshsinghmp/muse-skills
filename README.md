@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of eighteen portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, and autonomous Git release lifecycles.**
+**A curated suite of nineteen portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-1.8.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-18%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-19%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete eighteen-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete nineteen-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -45,6 +45,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | Audit link integrity & knowledge hygiene | [`brain-audit`](brain-audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
 | Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
+| Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 12-asset audit scorecard, PR review mining, and Stage-0 Fast-Skip gate |
 
 ### Explore the repository
 
@@ -211,6 +212,7 @@ graph TD
 | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection** | `/retreat`, `/quarterly` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | [**`brain-audit`**](brain-audit/README.md) | **Governance** | `/audit-brain`, `/hygiene` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
 | [**`git`**](git/README.md) | **Release & DevOps** | `/git`, `manage git workflow`, `cut release`, `triage issues` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
+| [**`ai-ready`**](ai-ready/README.md) | **Governance** | `ai-ready`, `audit repo`, `check ai readiness` | Comprehensive 12-asset AI-readiness audit, Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
 
 ---
 
@@ -499,6 +501,23 @@ npx skills add harshsinghmp/muse-skills --skill git
 
 ---
 
+### 🤖 `ai-ready`
+
+Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding with a 4-tier grading matrix (Getting Started to AI-Ready), zero-token Stage-0 Fast-Skip Gate, and merged PR review convention mining.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill ai-ready
+```
+
+- **12-Asset AI Audit**: Tracks essential AI context, developer workflows, and onboarding hygiene without boilerplate fluff.
+- **Stage-0 Fast-Skip Gate**: Exits immediately in `<100ms` with zero token burn when the repository is already verified compliant.
+- **PR Review Mining**: Mines recent merged PR reviews via GitHub CLI to turn recurring reviewer feedback into explicit agent instructions.
+- **Targeted Surgical Remediation**: Scaffolds only missing assets without clobbering existing developer configurations.
+
+[Read full documentation →](ai-ready/README.md)
+
+---
+
 ## 🌐 Runtime compatibility
 
 Muse Skills uses portable Markdown workflows with YAML frontmatter. Compatibility depends on each runtime’s skill-discovery and installation model; the table below describes the intended integration path rather than a claim that every runtime behaves identically.
@@ -685,6 +704,16 @@ muse-skills/
 │   │   ├── anti-slop-triage.md
 │   │   ├── branching-and-release-matrix.md
 │   │   └── github-seo-and-presentation.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── ai-ready/                       # Repository AI-readiness auditor & scaffolding engine
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── references/
+│   │   ├── fast-skip-protocol.md
+│   │   ├── pr-review-mining.md
+│   │   └── twelve-asset-matrix.md
 │   ├── README.md
 │   └── SKILL.md
 │

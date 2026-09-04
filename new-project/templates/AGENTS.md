@@ -24,11 +24,10 @@
 ---
 
 ## 📚 Standards & Detailed Protocols (Progressive Disclosure)
-
 Load these relative modules on-demand when relevant to your active task:
 
 ### 🌐 Universal Core Standards (All Frameworks)
-- ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, modern CLI tooling standards & fallbacks, Fowler Refactoring, McConnell Code Complete, and byte-capping.
+- ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, modern CLI tooling standards & fallbacks, Fowler Refactoring.
 - 🛡️ [Security & Vibeguard Protocol](./.agents/standards/security-vibeguard.md) — Secret isolation, Destructive Command Gate, Untrusted Tool Output defense.
 - 📐 [System, Domain & Resilience Design](./.agents/standards/system-design.md) — Evans DDD, Nygard Release It! stability, migration rehearsal, and schemas.
 - 🔄 [Development Workflows & Gates](./.agents/standards/workflows.md) — Scaled tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.
@@ -37,17 +36,12 @@ Load these relative modules on-demand when relevant to your active task:
 - 🎭 [Council Roles & Routing](./.agents/standards/council-roles.md) — Division responsibilities (Muse, Sol, Jasper, Crew, Nexus) and subagent dispatch policies.
 - 🧠 [Context, Memory & Identity](./.agents/standards/memory-context.md) — Context hygiene, `./.memory` store lifecycle, Creed durable proposals, canonical identity sources.
 
-### 🚀 Framework & Architecture Standards
-- ⚛️ [Next.js & React Architecture](./.agents/standards/frontend-nextjs.md) — Next.js 16 (App Router), React 19, Server Components, Server Actions, TanStack Query.
-- 🚀 [Astro Frontend Architecture](./.agents/standards/frontend-astro.md) — Astro v7.2.x, static-first with `client:*` islands, content collections with Zod, `@astrojs/cloudflare`.
-- ⚡ [Cloudflare Workers & Hono API](./.agents/standards/backend-workers-hono.md) — Hono `@latest`, Drizzle ORM, Neon HTTP driver, route-per-resource, isolate safety.
+### 🚀 Framework, Brand & Architecture Standards
+- ⚛️ [Next.js & React Architecture](./.agents/standards/frontend-nextjs.md) — Next.js 16 (App Router), React 19, Server Components, TanStack Query.
+- 🚀 [Astro Frontend Architecture](./.agents/standards/frontend-astro.md) — Astro v7.2.x, static-first with `client:*` islands, content collections with Zod.
+- ⚡ [Cloudflare Workers & Hono API](./.agents/standards/backend-workers-hono.md) — Hono `@latest`, Drizzle ORM, Neon HTTP driver, route-per-resource.
 - 🧭 [Agency Tech Stacks & Tooling](./.agents/standards/tech-stacks.md) — 3 Core Directions: Astro v7.2.x, Instatic HTML, and Payload CMS + Next.js.
-
-### 🎨 Brand Identity, UI & Accessibility System
 - 🎨 [Design System & UI Standards](./.agents/brand/design.md) — Token architecture, 7 required UI component states, fluid typography.
 - 📐 [Semantic BEM CSS Conventions](./.agents/brand/bem-conventions.md) — Block-Element-Modifier class architecture and shallow depth rules.
 - ♿ [Accessibility (A11y) Baseline](./.agents/brand/a11y.md) — WCAG 2.2 AA non-negotiable mandates, contrast ratios, hit targets, and axe-core zero-tolerance.
-- 📸 [Reference Screenshots & Mocks](./.agents/brand/screenshots/README.md) — Directory for UI screenshots, wireframes, and design snapshots.
-
-### 📖 Durable Project Context
 - 📖 [Durable Project Context Map](./.agents/context/index.md) — Product scope, architecture truth, current shipped state, decisions, and roadmap.
