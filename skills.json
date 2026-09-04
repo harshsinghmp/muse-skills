@@ -90,11 +90,11 @@
     },
     {
       "name": "secretary-controller",
-      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, explicit dissent preservation, frozen evidence snapshots, and single-use hash approvals before any filesystem or external mutation.",
+      "description": "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use hash approvals before any filesystem or external mutation.",
       "path": "secretary-controller/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "tools": ["bash", "view", "write", "edit", "glob", "grep", "ls"],
-      "tags": ["staff-work", "executive-brief", "approval-gate", "governance", "decision-memo", "evidence", "hash-approval"]
+      "tags": ["staff-work", "executive-brief", "approval-gate", "governance", "decision-memo", "evidence", "hash-approval", "socratic-lens", "adversarial-review", "dissent-preservation"]
     },
     {
       "name": "coupling-router",

@@ -38,7 +38,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | Review code (Linus Torvalds Style) | [`code-review-linus-torvalds-style`](code-review-linus-torvalds-style/README.md) | A calibrated review verdict, root-cause fixes, and special-case elimination |
 | Refactor UI components & layout hierarchy | [`refactor-ui`](refactor-ui/README.md) | Clean visual hierarchy, typography scales, 4px/8px spacing, and accessible contrast |
 | Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with plateau stop conditions and acceptance packets |
-| Control high-stakes staff work and approval gates | [`secretary-controller`](secretary-controller/README.md) | Evidence-grounded briefs, preserved dissent, and single-use SHA-256 hash gates |
+| Control staff work with Socratic adversarial gates | [`secretary-controller`](secretary-controller/README.md) | Socratic devil's advocate challenges, preserved dissent, and single-use SHA-256 hash gates |
 | Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
 | Verify factual claims & citation provenance | [`evidence-ledger`](evidence-ledger/README.md) | 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) ledger |
 | Score daily controllable effort & focus | [`daily-standup-coach`](daily-standup-coach/README.md) | 5-pillar input scorecard and daily reflection log |
@@ -205,7 +205,7 @@ graph TD
 | [**`refactor-ui`**](refactor-ui/README.md) | **Design** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI (typography scale, spacing grid, button tiers, clutter reduction, natural shadows, and WCAG contrast). |
 | [**`code-review-linus-torvalds-style`**](code-review-linus-torvalds-style/README.md)<br/>*(Code Review - Linus Torvalds Style)* | **Quality Gate** | `/torvalds`, `/linus-review`, `review PR` | Language-agnostic code review method derived from Linus Torvalds' corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality Gate** | `/gauntlet`, `/gauntlet-loop` | Bounded multi-agent quality improvement loop with Builder, Fresh Critic, Automated Gate, and Integrator roles with plateau stop conditions. |
-| [**`secretary-controller`**](secretary-controller/README.md) | **Governance** | `/secretary`, `/memo` | Evidence-grounded staff-work controller and single-use SHA-256 hash approval gate for high-stakes decisions and mutations. |
+| [**`secretary-controller`**](secretary-controller/README.md) | **Governance** | `/secretary`, `/memo` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and SHA-256 hash gate. |
 | [**`coupling-router`**](coupling-router/README.md) | **Multi-Agent** | `/router`, `/coupling` | Coupling-aware architectural router & skill-stack auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
 | [**`evidence-ledger`**](evidence-ledger/README.md) | **Governance** | `/evidence`, `/claim` | Source-cited claim verification gate enforcing a 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`). |
 | [**`daily-standup-coach`**](daily-standup-coach/README.md) | **Reflection** | `/standup`, `/daily` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
@@ -397,8 +397,9 @@ Evidence-grounded staff-work controller and approval gate for high-stakes decisi
 npx skills add harshsinghmp/muse-skills --skill secretary-controller
 ```
 
+- **Socratic Adversarial Gate**: Enforces a 3-prong devil's advocate stress-test (Architectural Fragility, Rollback Burden, Hidden Assumptions) before computing payload hashes.
 - **Judgment, Not Authority**: Recommends with rigor; stops dead at `NEEDS_APPROVAL` for any filesystem write or external mutation.
-- **Dissent Preservation**: Explicitly highlights contradictions, uncertainties, and `[NO-DATA]` gaps instead of smoothing over them.
+- **Dissent Preservation**: Explicitly highlights contradictions, uncertainties, and `[NO-DATA]` gaps in the formal Dissent Ledger.
 - **Single-Use Hash Gate**: Computes SHA-256 fingerprint of proposed payload; requires exact user confirmation token before execution.
 
 [Read full documentation →](secretary-controller/README.md)
@@ -639,12 +640,13 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── secretary-controller/           # Evidence-grounded staff-work controller & approval gate
+├── secretary-controller/           # Evidence-grounded staff controller & Socratic gate
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
 │   │   └── sample-approval-packet.md
 │   ├── references/
+│   │   ├── socratic-adversarial-gate.md
 │   │   └── staff-work-doctrine.md
 │   ├── README.md
 │   └── SKILL.md
