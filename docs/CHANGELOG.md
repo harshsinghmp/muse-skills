@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.2] - 2026-09-05
+
+### Fixed
+- **Canonical Package Scope Alignment**: Aligned `package.json` package name from `@harsh/muse-skills` to `@harshsinghmp/muse-skills` to match the canonical GitHub user identity and prevent unexpected `npm notice` runtime messages during `npx skills` execution. ([#41](https://github.com/harshsinghmp/muse-skills/pull/41))
+- **Documentation & Verification Suite**: Updated architecture overview documentation and test assertions to track `@harshsinghmp/muse-skills`. ([#41](https://github.com/harshsinghmp/muse-skills/pull/41))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.1.1...v2.1.2
+
 ## [2.1.1] - 2026-09-05
 
 ### Added
