@@ -165,4 +165,4 @@ else
   git log --oneline --no-merges "${LAST_TAG}..HEAD"
 fi
 ```
-Use this log to audit [`docs/CHANGELOG.md`](file:///home/harsh/Projects/github/muse-skills/docs/CHANGELOG.md) entries under `[Unreleased]` before cutting the release branch.
+Use this log to audit [`docs/CHANGELOG.md`](../../docs/CHANGELOG.md) entries under `[Unreleased]` before cutting the release branch.

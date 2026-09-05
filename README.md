@@ -241,7 +241,7 @@ Interactive project creator, DOX Engine, and Agent Engine provisioner. Implement
 npx skills add harshsinghmp/muse-skills --skill new-project
 ```
 
-- **Path Auto-Discovery**: Scans `/home/harsh/Projects/` and suggests immediate target locations.
+- **Path Auto-Discovery**: Scans local workspace projects directory and suggests immediate target locations.
 - **Framework Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro (Static/SSR), Vite + React, Node/Bun API, WordPress/PHP.
 - **Project OS Assets**: Generates `.agentrules`, `AGENTS.md` (Muse Council hierarchy), `CLAUDE.md`, `STATE.md` (8-stage reality machine), `llms.txt` bundler, and hardened `.gitignore`.
 - **Pre-configured Presets**: `agency-suite` (28 design & taste skills), `design`, `fullstack`, `growth`, `all`, `none`.
