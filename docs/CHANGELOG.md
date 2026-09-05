@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.1] - 2026-09-05
+
+### Fixed
+- **Clean Package Syntax & Git Reference Stripping**: Codified canonical rules across `AGENTS.md`, `ai-ready` template invariants, and `git-workflow` standard to strip dirty git references (`<owner>/<repo>#<ref>`) such as commit SHAs or branch tags from package and skill installation targets. Mandates clean repository specs (`skills add <owner>/<repo>`) and preserves linking integrity.
+- **Package Manager Freshness Standard**: Standardized `@latest` usage for package managers supporting tag parameters (`npm`, `bun`), while keeping commands without version arguments clean to pull latest without trailing hashes.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.2.0...v2.2.1
+
 ## [2.2.0] - 2026-09-05
 
 ### Added
