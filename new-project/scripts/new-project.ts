@@ -17,7 +17,7 @@
  *   -p, --path <path>        Target path
  *       --non-interactive    Skip prompts and use provided flags or defaults
  *       --dry-run            Simulate without writing files
- *   -f, --force              Overwrite existing files
+ *   -f, --force              Force replace existing destination targets
  *   -h, --help               Show help message
  */
 
@@ -62,7 +62,7 @@ Options:
   -p, --path <path>        Target directory path
       --non-interactive    Run without interactive prompts
       --dry-run            Simulate without writing files
-  -f, --force              Overwrite existing files
+  -f, --force              Force replace existing destination targets
   -h, --help               Show this help message
 `);
   process.exit(0);

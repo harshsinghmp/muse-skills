@@ -1,0 +1,394 @@
+# SkillSpector baseline — findings listed here are suppressed on future scans.
+# Edit 'reason' fields and add glob 'rules' as needed. See docs/SUPPRESSION.md.
+version: 2
+scanner_version: 2.9.5
+rules: []
+fingerprints:
+- hash: sha256:21cd9be9c57b05dc2d5a23bb372dc6874fbe2eb110106f00021e04e583d5d602
+  rule_id: RP1
+  file: .agents/context/architecture.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:8be9951a6840f8095e0dd7fc1c4cc1cd5e0a3a76044d6154542ee4647195000e
+  rule_id: RP1
+  file: .agents/context/architecture.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:838181604c471d1cc746c72627e6de23712246ac75f22b09becbcdb5661d7d7b
+  rule_id: RP1
+  file: .agents/context/current.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:99781f1c3bff886dca7e260d3c200d13ac2602fabed8c92143476d33141c9b60
+  rule_id: RP1
+  file: .agents/context/decisions.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:eccddd9dbcc69d6b6ab54127adf490e9d0cd835ec00d0e551eaa74d4ce690908
+  rule_id: RP1
+  file: .agents/context/index.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:6292ea355043466262848b7efda5d591b4b7e6e5e1d77b4daf629bb762b2a17f
+  rule_id: RP1
+  file: .agents/context/product.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:55e5b4aa1519feecbe29170b37f76fc328cc56dbbeb3d6646fc0f73f9332bb8e
+  rule_id: RP1
+  file: .agents/context/product.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:0bdbf172dd9528044378c6c2339e6581d8295b9f09986cee07ebd359b86fcc39
+  rule_id: RP1
+  file: AGENTS.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:c4068d6721504035386ab8d0dd26f6dc75db8b92cbedafc2fd2d686213147db9
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:1b0f0a324e043a4ecc6c9117a9ad25750bdd722298b910a9146f2bfef0b2da46
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:b5a1d609052c402a1eeb1671d948e41d762ab3840b7b3a63b7bd4d730afd3d54
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:583b0e8afccfa81ecfe67f67577a49acb0ffccb30f68560d18b308b9237dd448
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:0737ddf6b8f95dae41470c173310911d221e74932ada628c934d159d61c16759
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:ac945c42a986cdb10d96446d35d138ff78d9a098c5ce91936e8199a2edc73380
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:08b1d7b2eaf0f849085448b31d1257ff58f5f12a6e184e0fd159e998d105ada3
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:1bcaeaad816185ead7cf08905b665ba7623dc7759895b7a23445ff2ca64b5767
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:a94c1a968c458afc9a7f310e1ca96c1d1d16eb81af3792e8a639447cd74ff333
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:ee69ad9c56657bdf7d1e351c5dcfab3ac4532858d6527ed29e645ebfb88687b5
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:6291a62664ba91d4a7efc1aa07a139dd0f5c7aacf910ffa0b0afdccd5afe8105
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:1640c15d2267587f534a2e6c7cf7e3eee198bc5d8a1c7812b3406c643fa184f4
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:e729c9670e9605597305726a04eab5aa58af6f0c7ea6e8ecd852d48cb5264dd8
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:a8f3a19a8d172cb039cf97af56a18b73b3a91c50f55b75de202b6a261b64c23b
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:89e1276237b8be5b65acd26d962863b2d37f137a09fd10c52047d3b335bb1c70
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:e20bf8ea2c717573f6498869dde23647d160eb911ee3911947c8b75438569c90
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:14132baacc03c935e9813defb0b21a2eef7981553e913a618de0232e399b9017
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:3cfe9c85028f14f572252d50f882788b6f2fd7b75bcad6e9adf5ab9d5844c680
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:dcac7e9c45703f7d4696c0ed1370e8bffca1b219c246221f9533ae9ae0cfb121
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:6f7d7405ef1d5de84859bb2d437c0f6116cea3c240b75213a8be275f482bf59c
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:ccb6433cae670537ebfac2c7c3a8ee0884e247608697f1609924c0c81ce146b1
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:f5dd08eac0066ab5370b301908e9fa84361d3ca6ab66ef8e151842b127c23794
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:83724a50c8faf603852231db4a8621e7795e61bebc5e72f263410abb36276455
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:1085e84df7be9f4b1dc11e833f7f12bb8da0ca1c60dcb6675def8a264a9454c0
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:d5fd335309da292b4bb812c4ca89bcacbc002438079a7f050b1b4c0aee5bf25a
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:cf99fcdf89324ea2c21e01e60534253090a7f8de187ae20a64943de6f4ae99d9
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:a1be8e0e271fa9ff5881f2e2fbd4dc904424e1ea88a92897902cdd3d8ad56f6b
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:9a5344c051d54135493d2bcba5cc208a61d66bbede12acd3f08fd8c76028635c
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:d7e384e40059ba718494cc28f2117285c7d61d8d9ddf64cb95254a6232eba074
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:3e6024ea1b09af3ee25fc5006e48655027e102fa5daaded783e138ebb1d6d81e
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:c589d85a54e618904fd32af239f976267d56e944424cc841a9a345ff0920895e
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:6c24ab4d3a006b96d9f162bf38ae9d20849011a1af7ae1f1eccb69af13b52482
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2b4e8e315a3f7f3119fc2599cf0f24c2c954c9ea1ce25192d8715e16cb98c74c
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:b57e9b90c402aa07ebf6e4c4f7311857894839b6fc70fb96382204fe1d686a02
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:5b5e6e05645472b6e6db04470fb8ed35c97d8f5719ce75fccd1494ad620bdb9f
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:c7725618ffe7266363b6212c0c885c4f96f3c54897def49df1911f37a3ab1477
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:ee6464dbd5b68f516d579791340c1fe17f0faa910c1388237b6c0c909d7cf372
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:3516a7f99e3560ad7bb63e60177d089dfaf46cbbbfba4a27ac7fbcb545c42c1e
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2ec687e987f05e7faaaa96e444d58eb7a386d08c7d36d620c73c796f06f080e5
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:a400bc90b9814e3e8871a7ec12da002b734fa0ce11961e5980bb9311425b0e51
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:406340691a81aed626b7507e871c60e406ead7d6f993087d83450dfc0da3de23
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:916e378670b40f50c3e513d6cc85aa9c87f3e4bdc698bb4297135230ad50f823
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:d69b1bcd49a8d3c2a860c1a58c265777addc6877b15c5af94dcf95ca8901a903
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:7cc1614108abed78b081aeacb8c48dcf281e8101153d765c6e7f8c3c431119af
+  rule_id: RP1
+  file: README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:4a475ad62d79442b37518b4180045f3478fe5f8f404db94a8c6969a670884f00
+  rule_id: RP1
+  file: ai-ready/templates/.agents/standards/system-design.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:d50b7bbd865fdad8ba1befb0b6b6e0e598dc7f8770a8ebe2670b39d576802e94
+  rule_id: RP1
+  file: audit/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:233d6ac51509881375fddd5381b744d3fee38a61cc09695ac431b4fbefb4a87d
+  rule_id: RP1
+  file: clean-system-cache/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2743d0ac1349e07963d76945b66214cf167017b20a202a75ec83713dbc53c9ab
+  rule_id: RP1
+  file: clean-system-cache/scripts/clean-cache.cmd
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:538264389222f9618e09eea5f179c00fc5b785744870aa579548931ed81f932a
+  rule_id: RP1
+  file: clean-system-cache/scripts/clean-cache.sh
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:fe7c9162683881d684b1b54d5de79ba1acd8234cb27480172e78572d6f320bd7
+  rule_id: RP1
+  file: clean-system-cache/scripts/clean-cache.sh
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:9ce953fee03badb610ad9df9a49fa84b0c7920b997ebb00be28e6f8dd52c6fe1
+  rule_id: RP1
+  file: clean-system-cache/scripts/clean-cache.sh
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:28175947cba27ad5e30fef002e79840fb056699c63608270fbd407f4b575eb7b
+  rule_id: RP1
+  file: coach/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:f2b04db894fd7daff4532f4d25312f8aa5a91334838492edbfb1d7b842e0219b
+  rule_id: RP1
+  file: code-review/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:f9b2ccdbd90b942298dac34dae4feef3212abafb548521ed6a48df25b62dd9e9
+  rule_id: RP1
+  file: code-review/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:d6312cb7c336136bf9111388052375347db53c917458c04dfb1a6121f1bdb09f
+  rule_id: RP1
+  file: code-review/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:5f1ed0f2be96171372ff29b6fd9abe0c9afb516720fd37c06f184ae11ac8bb29
+  rule_id: RP1
+  file: context-anchor/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:40e4c088a7ea996973eaae78a43043167a06150e32a74a9ed2857885b7ada61b
+  rule_id: RP1
+  file: context-anchor/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:06de6b81a4939131e91805515ab6b898a1052f1168e3c493410173d414ea9686
+  rule_id: RP1
+  file: context-anchor/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:655c39753e7cf04b5af3658565166615956cc3248d1bec5cf30257398e766a4d
+  rule_id: RP1
+  file: coupling-router/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2ad167acd9861212c849da7086d20664efbe86dfabd5dad5121331b79595e17d
+  rule_id: RP1
+  file: dead-letter/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:a95c39022f566141eea434a1fc623f60be229de6302b1af8fb600b431641d3d1
+  rule_id: RP1
+  file: dead-letter/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:647a6b9179373f96c532ffcbc3f10aec50ddb45cff09397e0a076b255453db2c
+  rule_id: RP1
+  file: dead-letter/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:5700f136f98d57df42a9c852f1491c0c04182b28497e36b92ddda9a4138ceea8
+  rule_id: RP1
+  file: designscope/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:92f8e252286609f18f10e813f0cd0d13c89b7c5f6d3f4ef301cf83aeba4926b5
+  rule_id: RP1
+  file: docs/ARCHITECTURE.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:cd3314c897920fe41806676fd02cc129abcb6396d35f3ff1150f095b1feb5411
+  rule_id: RP1
+  file: docs/ARCHITECTURE.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:50134df1be357f9c1dbf6a5a7b058e14010f02eb3d677856bbc4558a3b495e71
+  rule_id: RP1
+  file: docs/ARCHITECTURE.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:5a29fa7465c8bbbcfd231b04eb855473bee21295aa0f5bbf48188a447f231341
+  rule_id: RP1
+  file: docs/ARCHITECTURE.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:74784d5160eafd63f6db7f91887d04f8d94c98a2191e99c1585b1493b4515d5f
+  rule_id: RP1
+  file: docs/CHANGELOG.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:090463bf030d09f8b518054f6107d116e19a8331f76b9e126ed2761b2d0daca2
+  rule_id: RP1
+  file: evidence-ledger/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2130d433dd716884248dfc9cac971fb1400e9d7c2130a599a98ee97d0ebbe674
+  rule_id: RP1
+  file: gauntlet-loop/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:092b905794aff2e1ff6023bef315762bf4ad222795a80eb05aa8507eba337a55
+  rule_id: RP1
+  file: handoff/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:10d6a83dfde7bbe7148b8fe6999be49eccbe5d5f458df6921568864e24d532dc
+  rule_id: RP1
+  file: handoff/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:c5ac00907a5cda67f52f3b61c47c56a35c7bcb642b77643b32ab0233ea904a1b
+  rule_id: RP1
+  file: llms.txt
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:8bf3365ba9d38aaf35d2ed44948dce9fa7acbbcff45784b8a8ab0acd94d5732a
+  rule_id: RP1
+  file: new-project/references/skill-extraction.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:b9c7d4a6b1dffdf22d6a55b0137072ed1a3ddc52e631119f53c061edfa3dc505
+  rule_id: RP1
+  file: periodic-retreat/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:9c729880e4fb996258b3e92bda055cd3ba24bf3a00556d8656f39f3216892c1d
+  rule_id: RP1
+  file: pua/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:4d5dd4525c29f8607732e521ee144fedf4ee4280d6d44001ade283a44b5d2012
+  rule_id: RP1
+  file: pua/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:778a1480b9e4130292bf3b9eca41cdfbeea15d5a3ad183c52b0224b0038c6c38
+  rule_id: RP1
+  file: pua/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:b9a811d035ba879f62ebfebe193c446f93575567af3f2c3ec1540fbf0069b42c
+  rule_id: RP1
+  file: refactor-ui/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:b7cce25af23baa5a81c9904660f25174fbfee5a178df6966d7d0c694081a9d90
+  rule_id: RP1
+  file: refactor-ui/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:baba529bf050ff1e940cfdebd595aebbcc5c5ebdf1ed396928e84232ff4be5f1
+  rule_id: RP1
+  file: scripts/extract-skill.ts
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:3d97daadf18a22067dfa2d6d1470a4f9fbbfe8126d8497ff107a2f4e7a78fa14
+  rule_id: RP1
+  file: secretary/README.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:52fc51d90a7037e179081a4d7ee50f77931042a8df16643b13abc5de2f9f823d
+  rule_id: EA3
+  file: LICENSE
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:0905eecfe4e5ca4bade6218a99bf61e447b6203175d28c081f8687773614be54
+  rule_id: EA2
+  file: ai-ready/SKILL.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:2610cd8a7778c6e8cfe308568b0850564a1824a40ab7bb79820668ffeea779f2
+  rule_id: EA2
+  file: context-anchor/SKILL.md
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:3802419fea95859a8123fe749b864749c72d7c6fb30adcc980543ad2ce4bdadf
+  rule_id: EA3
+  file: designscope/LICENSE
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:ae57788ce00216fc122101bfc13654b3c1ddd517405e3d6cd95025af53b9f51b
+  rule_id: EA2
+  file: new-project/scripts/new-project.ts
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:7b39c120da881790b0d095375262d7ad49294f730d3f6a629ae1a93ce3102782
+  rule_id: EA3
+  file: refactor-ui/LICENSE
+  reason: Accepted finding (auto-generated baseline)
+- hash: sha256:1a419da5c90d76385632ff29068c7ecb6812747f42be0d2ff044c2dee182241e
+  rule_id: EA2
+  file: updatedocs/SKILL.md
+  reason: Accepted finding (auto-generated baseline)

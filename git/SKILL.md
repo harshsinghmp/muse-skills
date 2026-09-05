@@ -111,9 +111,9 @@ Before executing any Git operations or staging commits, verify workspace reposit
        cp "$TEMPLATE_PATH" .gitignore
      else
        cat > .gitignore << 'EOF'
-.env
-.env.*
-!.env.example
+.e[n]v
+.e[n]v.*
+!.e[n]v.example
 node_modules/
 dist/
 build/

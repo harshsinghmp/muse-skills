@@ -169,8 +169,8 @@ Agents must prioritize modern, high-speed, and resource-safe CLI utilities over 
    - When an agent discovers a modern tool is missing during an interactive session:
      - Inform the user which modern utility is missing and why it is beneficial.
      - Provide the exact platform-specific installation command:
-       - **Debian / Ubuntu**: `sudo apt update && sudo apt install -y ripgrep fd-find bat fzf eza btop duf zstd tldr` (note binary aliases `fdfind` -> `fd`, `batcat` -> `bat`).
-       - **Arch Linux**: `sudo pacman -S ripgrep fd bat fzf eza btop duf zstd tealdeer zoxide procs sd`.
+       - **Debian / Ubuntu**: `apt update && apt install -y ripgrep fd-find bat fzf eza btop duf zstd tldr` (run with appropriate administrative privileges; note binary aliases `fdfind` -> `fd`, `batcat` -> `bat`).
+       - **Arch Linux**: `pacman -S ripgrep fd bat fzf eza btop duf zstd tealdeer zoxide procs sd` (run with appropriate administrative privileges).
        - **macOS (Homebrew)**: `brew install ripgrep fd bat fzf eza btop duf zstd tealdeer zoxide procs sd choose-rust delta gojq numbat`.
        - **Rust / Cargo**: `cargo install ripgrep fd-find bat eza du-dust fzf sd choose procs zoxide git-delta difftastic yazi-fm numbat-cli`.
      - Prompt the user via interactive CLI/chat to ask if they want to install it now.

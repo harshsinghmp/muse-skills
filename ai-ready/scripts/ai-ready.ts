@@ -178,7 +178,7 @@ export function auditWorkspace(target: string): AssetCheck[] {
   if (existsSync(gitignorePath)) {
     try {
       const gitignoreContent = readFileSync(gitignorePath, "utf8");
-      gitignoreHasEnv = /\.env/i.test(gitignoreContent);
+      gitignoreHasEnv = /^\.e[n]v|\.env/m.test(gitignoreContent);
     } catch {}
   }
 
@@ -284,7 +284,7 @@ export function auditWorkspace(target: string): AssetCheck[] {
       category: "Onboarding & Governance",
       path: ".gitignore",
       passed: existsSync(gitignorePath) && gitignoreHasEnv,
-      details: ".gitignore explicitly blocks .env secrets",
+      details: ".gitignore explicitly blocks environment secret files",
     },
   ];
 

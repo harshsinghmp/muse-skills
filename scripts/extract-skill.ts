@@ -26,7 +26,7 @@
  *       --author <author>      Skill author (default: Agency Council)
  *   -r, --register             Auto-register in skills.json, llms.txt, and README.md
  *       --dry-run              Preview generated files and registration without writing
- *   -f, --force                Bypass gate checks or overwrite existing skill
+ *   -f, --force                Bypass gate checks or replace existing destination target
  *       --non-interactive      Non-interactive mode
  *   -h, --help                 Show help message
  */
@@ -545,7 +545,7 @@ export function extractSkill(options: ExtractionOptions): {
           }
         }
       } catch (e) {
-        console.error("Warning: Failed to update skills.json:", e);
+        console.error("Warning: Failed to sync registry manifest (skills.json):", e);
       }
     }
 
@@ -642,7 +642,7 @@ Gate Validation Options:
   -e, --evidence <file|num>  Evidence log file path or recurrence count
   -t, --test-cmd <cmd>       Verification command to test solution
       --verified             Flag asserting solution is verified by existing tests
-  -f, --force                Bypass gate checks or overwrite existing skill
+  -f, --force                Bypass gate checks or replace existing destination target
 
 Scaffolding & Catalog Options:
   -p, --dest <path>          Target directory for new skill

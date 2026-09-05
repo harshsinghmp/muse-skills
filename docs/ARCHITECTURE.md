@@ -32,6 +32,11 @@ muse-skills/
 │   ├── ARCHITECTURE.md             # System architecture & data flow
 │   ├── CHANGELOG.md                # Semantic version release log
 │   └── SKILL_SPECIFICATION.md      # RFC skill authoring standard
+├── updatedocs/                    # Documentation sync & drift detection (Priority #1)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # Drift rules & doc policies
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
 │
 ├── new-project/                    # Project OS & governance scaffolder (Flagship #1)
 │   ├── agents/openai.yaml          # Agent tool definition
@@ -48,6 +53,12 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── git/                            # Autonomous Git & GitHub release engine (Priority #3)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # Branching matrix & triage guides
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
 ├── pua/                            # PIP performance & structured debugging
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-pip-report.md # Real-world diagnostic report
@@ -57,6 +68,14 @@ muse-skills/
 ├── handoff/                        # Structured subagent context packet generator
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-handoff.md  # Packet example
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── ai-ready/                       # Repository AI-readiness auditor & Agent Engine home (Priority #7)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # 12-Asset matrix & fast-skip protocol
+│   ├── scripts/ai-ready.ts         # Auditor & scaffolding CLI
+│   ├── templates/                  # Canonical Agent Engine DOX templates
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
@@ -141,6 +160,18 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── clean-system-cache/             # Cross-platform development & design cache cleaner (Priority #20)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── scripts/                    # Native Bash (.sh) and Windows CMD (.cmd) cleaners
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
+├── humanize/                       # Editorial review & prose humanization engine (Priority #21)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # Patterns, style guide, and verification rubrics
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
 ├── tests/                          # Automated TDD test suite
 │   └── skills.test.ts              # Catalog, schema, and RFC assertions
 │
@@ -191,7 +222,7 @@ graph TD
 ```mermaid
 graph LR
     Orchestrator[👑 Muse Orchestrator] -->|1. Generate Handoff Packet| HO[🤝 handoff]
-    AH -->|2. Dispatch Context| Worker[⚡ Subagent Worker]
+    HO -->|2. Dispatch Context| Worker[⚡ Subagent Worker]
     Worker -->|3a. Task Succeeds| Done([✅ Verifiable Receipt])
     Worker -->|3b. Task Fails / Blocks| DL[📮 dead-letter]
     DL -->|4a. Mechanical Fix| Retry([🔄 Retry Packet])

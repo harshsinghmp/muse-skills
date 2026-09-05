@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of twenty portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
+**A curated suite of twenty-one portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-2.1.2-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-20%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-21%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-one-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -48,6 +48,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #18 Audit link integrity & knowledge hygiene | [`audit`](audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
 | #19 Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | #20 Clean developer, designer & browser caches | [`clean-system-cache`](clean-system-cache/README.md) | Multi-platform cache purge, zero-session interruption & cache-only safety |
+| #21 Remove AI writing patterns & polish prose | [`humanize`](humanize/README.md) | Editorial review, anti-slop pattern detection & authentic voice preservation |
 
 ### Explore the repository
 
@@ -77,11 +78,12 @@ npx skills add harshsinghmp/muse-skills --skill git
 npx skills add harshsinghmp/muse-skills --skill new-project
 npx skills add harshsinghmp/muse-skills --skill ai-ready
 
-# Quality & Review (#4, #9, #15, #16)
+# Quality & Review (#4, #9, #15, #16, #21)
 npx skills add harshsinghmp/muse-skills --skill code-review
 npx skills add harshsinghmp/muse-skills --skill gauntlet-loop
 npx skills add harshsinghmp/muse-skills --skill dead-letter
 npx skills add harshsinghmp/muse-skills --skill pua
+npx skills add harshsinghmp/muse-skills --skill humanize
 
 # Context & Orchestration (#6, #8, #12, #13, #14)
 npx skills add harshsinghmp/muse-skills --skill handoff
@@ -171,7 +173,7 @@ flowchart TD
     subgraph L3 ["3. Execution, Design & Quality Gates"]
         direction TB
         Memory --> Design["🎨 designscope (#11) & 🪄 refactor-ui (#10)<br/>Design Tokens, Responsive Trees & UI States"]
-        Design --> Review["🐧 code-review (#4) & 🛡️ gauntlet-loop (#9)<br/>Torvalds-Karpathy Audit & Bounded Critique"]
+        Design --> Review["🐧 code-review (#4), 🛡️ gauntlet-loop (#9) & ✍️ humanize (#21)<br/>Torvalds-Karpathy Audit, Bounded Critique & Anti-Slop"]
         Review --> Ledger["📜 evidence-ledger (#14)<br/>4-Tier Source Citations & Receipts"]
         
         Review -->|"Stall / Block"| DL["📮 dead-letter (#15) & ⚡ pua (#16)<br/>9-Mode Failure Taxonomy & PIP Debugging"]
@@ -192,7 +194,7 @@ flowchart TD
 | :--- | :--- | :--- | :--- |
 | **1. Orchestration & Governance** | Intake, DAG coupling analysis, staff work approval, and bounded subagent context isolation | [`coupling-router`](coupling-router/README.md) (#12)<br/>[`secretary`](secretary/README.md) (#13)<br/>[`handoff`](handoff/README.md) (#6)<br/>[`context-anchor`](context-anchor/README.md) (#8) | Socratic adversarial challenge, single-use SHA-256 hash approval gate, negative boundary constraints, sub-15-line working state snapshots. |
 | **2. Foundation & DOX Engine** | Progressive disclosure scaffolding, workspace memory sync, and documentation governance | [`updatedocs`](updatedocs/README.md) (#1)<br/>[`updateagents`](updateagents/README.md) (#2)<br/>[`new-project`](new-project/README.md) (#5)<br/>[`ai-ready`](ai-ready/README.md) (#7) | 12-asset AI readiness scorecard, sub-100ms Stage-0 Fast-Skip gate, 9-folder DOX container, `.memory/` no-touch boundary. |
-| **3. Execution & Quality Gates** | Design system extraction, UI refactoring, adversarial code reviews, claim verification, and failure triage | [`code-review`](code-review/README.md) (#4)<br/>[`gauntlet-loop`](gauntlet-loop/README.md) (#9)<br/>[`refactor-ui`](refactor-ui/README.md) (#10)<br/>[`designscope`](designscope/README.md) (#11)<br/>[`evidence-ledger`](evidence-ledger/README.md) (#14)<br/>[`dead-letter`](dead-letter/README.md) (#15)<br/>[`pua`](pua/README.md) (#16) | Linus Torvalds & Karpathy minimal-diff doctrine, 5-state anti-slop UI gate, DTCG design tokens, 4-tier citation taxonomy, 9-mode failure classification, 4-tier PIP escalation. |
+| **3. Execution & Quality Gates** | Design system extraction, UI refactoring, adversarial code reviews, claim verification, editorial anti-slop, and failure triage | [`code-review`](code-review/README.md) (#4)<br/>[`gauntlet-loop`](gauntlet-loop/README.md) (#9)<br/>[`refactor-ui`](refactor-ui/README.md) (#10)<br/>[`designscope`](designscope/README.md) (#11)<br/>[`evidence-ledger`](evidence-ledger/README.md) (#14)<br/>[`dead-letter`](dead-letter/README.md) (#15)<br/>[`pua`](pua/README.md) (#16)<br/>[`humanize`](humanize/README.md) (#21) | Linus Torvalds & Karpathy minimal-diff doctrine, 5-state anti-slop UI gate, DTCG design tokens, 4-tier citation taxonomy, 9-mode failure classification, 4-tier PIP escalation, editorial anti-slop rules. |
 | **4. Delivery & Lifecycle Maintenance** | Autonomous Git release cuts, cache cleanup, knowledge hygiene, and strategic reflection | [`git`](git/README.md) (#3)<br/>[`coach`](coach/README.md) (#17)<br/>[`audit`](audit/README.md) (#18)<br/>[`periodic-retreat`](periodic-retreat/README.md) (#19)<br/>[`clean-system-cache`](clean-system-cache/README.md) (#20) | 11-phase release pipeline, SemVer tagging, zero-runtime cache cleaner with running process guards, 5-pillar controllable effort rubric. |
 
 ---
@@ -221,13 +223,14 @@ flowchart TD
 | **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `evidence-ledger`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
+| **#21** | [**`humanize`**](humanize/README.md) | **Quality & Review** | `humanize prose`, `remove AI patterns`, `de-ai text` | `code-review`, `updatedocs`, `evidence-ledger`, `secretary` | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, significance inflation, and robotic cadence while preserving authentic authorial voice. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 20 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 21 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -238,7 +241,7 @@ Interactive project creator, DOX Engine, and Agent Engine provisioner. Implement
 npx skills add harshsinghmp/muse-skills --skill new-project
 ```
 
-- **Path Auto-Discovery**: Scans `/home/harsh/Projects/` and suggests immediate target locations.
+- **Path Auto-Discovery**: Scans local workspace projects directory and suggests immediate target locations.
 - **Framework Archetypes**: Next.js 16 (App Router + Tailwind v4 + React 19), Astro (Static/SSR), Vite + React, Node/Bun API, WordPress/PHP.
 - **Project OS Assets**: Generates `.agentrules`, `AGENTS.md` (Muse Council hierarchy), `CLAUDE.md`, `STATE.md` (8-stage reality machine), `llms.txt` bundler, and hardened `.gitignore`.
 - **Pre-configured Presets**: `agency-suite` (28 design & taste skills), `design`, `fullstack`, `growth`, `all`, `none`.
@@ -551,6 +554,23 @@ npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
 [Read full documentation →](clean-system-cache/README.md)
 
+---
+
+### ✍️ `humanize`
+
+Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill humanize
+```
+
+- **Editorial System, Not Evasion**: Treats AI-style signals as evidence to inspect rather than mechanical rules to obey blindly.
+- **6 Operating Modes**: Supports Edit (surgical minimal diff), Rewrite (full reconstruction), Detect (structured audit table), File (in-place markdown/code preserving), Repo Audit, and Embedded.
+- **Strict Hierarchy of Truth**: Prioritizes Accuracy > Meaning > Voice > Register > Specificity > Clarity > Density > Rhythm > Polish. Never hallucinates metrics or invents anecdotes.
+- **30+ Anti-Slop Patterns**: Pinpoints significance inflation, shallow participles, copula avoidance, binary contrasts, and forced triads with concrete before/after fixes.
+
+[Read full documentation →](humanize/README.md)
+
 </details>
 
 ---
@@ -771,6 +791,16 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
+├── humanize/                       # Editorial review & prose humanization engine
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── references/
+│   │   ├── patterns.md
+│   │   ├── style-guide.md
+│   │   └── verification.md
+│   ├── README.md
+│   └── SKILL.md
+│
 ├── .agents/
 │   └── context/                     # Durable agent context pack (index, product, architecture, ...)
 │
@@ -817,6 +847,6 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vu
 
 <div align="center">
 
-[![Star History Chart](https://api.star-history.com/svg?repos=harshsinghmp/muse-skills&type=Date)](https://star-history.com/#harshsinghmp/muse-skills&Date)
+<a href="https://star-history.com/#harshsinghmp/muse-skills&Date"><img src="https://img.shields.io/github/stars/harshsinghmp/muse-skills?style=social&label=Star%20History" alt="Star History Chart" /></a>
 
 </div>

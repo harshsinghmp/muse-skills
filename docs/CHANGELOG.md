@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **`humanize` Editorial Engine (#21)**: Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. Includes full RFC agent specification, Hermes and OpenClaw frontmatter, companion `agents/openai.yaml`, standalone `README.md`, and 3 modular reference guides (`patterns.md`, `style-guide.md`, `verification.md`).
+- **21-Skill Catalog & Priority Synchronization**: Registered `humanize` as skill #21 under `quality-review` across `skills.json`, `package.json`, `llms.txt`, automated test assertions in `tests/skills.test.ts`, and root `README.md`.
+
 ## [2.1.2] - 2026-09-05
 
 ### Fixed
