@@ -54,7 +54,11 @@
     "git",
     "ai-ready",
     "updatedocs",
-    "clean-system-cache"
+    "clean-system-cache",
+    "humanize",
+    "editorial",
+    "anti-slop",
+    "prose"
   ],
   "author": "Harsh",
   "license": "MIT",

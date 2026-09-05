@@ -726,6 +726,47 @@
         "cache-cleaner",
         "disk-cleanup"
       ]
+    },
+    {
+      "name": "humanize",
+      "description": "Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. Trigger on 'humanize this text', 'make this read naturally', 'remove AI writing patterns', 'de-ai this article', 'audit this copy for chatbot slop', 'polish this prose', or whenever technical, documentation, blog, or marketing copy sounds robotic or template-driven.",
+      "path": "humanize/SKILL.md",
+      "version": "2.0.0",
+      "category": "quality-review",
+      "priority": 21,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
+      ],
+      "tags": [
+        "humanize",
+        "prose",
+        "editorial",
+        "copyediting",
+        "anti-slop",
+        "natural-language",
+        "technical-writing",
+        "style-guide",
+        "voice-preservation",
+        "writing-quality"
+      ],
+      "suggested_skills": [
+        "code-review",
+        "updatedocs",
+        "evidence-ledger",
+        "secretary"
+      ],
+      "aliases": [
+        "anti-ai",
+        "de-ai",
+        "human-writer",
+        "prose-polish",
+        "voice-editor"
+      ]
     }
   ]
 }
