@@ -33,6 +33,7 @@ Protocol: `<type>(<scope>): summary` with Why / What / Verification).
 - Canonical aliases: "Agent Engine" and "DOX Engine" explicitly refer to the `new-project` Progressive Disclosure DOX scaffolding engine.
 - Modern Tool Primacy: Always invoke modern CLI tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Agent subshells run non-interactively without `.bashrc` aliases—agents MUST call modern tools explicitly by binary name.
 - Synthetic ADE/IDE Artifact Sanitization: Never accept or commit synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude artifacts). Always unwrap and decode them to raw content, and enclose template variables in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
+- Clean Package Syntax & Versioning: In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is a git reference (branch, tag, or commit hash). Never append raw commit hashes or arbitrary branch references (`#<ref>`); keep repository links and skill installation commands clean (`npx skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it never breaks linking or downstream resolution. For package managers (`npm`, `bun`, etc.), use `@latest` when specified as a parameter; otherwise keep commands clean without redundant arguments to fetch latest automatically.
 
 
 
