@@ -191,7 +191,8 @@ In agentic development environments like **ORCA ADE**, unescaped angle-bracket p
 ```
 
 **Concrete Example**:
-`[[ORCA_RICH_MD:ac3f3ae9ea8d6d7338bd6222cb595541:inline-html:%3Cissue-id%3E]]`
+A placeholder like `<issue-id>` is mistakenly wrapped by the ADE into:
+`[[ORCA_RICH_MD:<hash>:inline-html:%3Cissue-id%3E]]`
 
 When files are saved or passed through agent context, these synthetic tokens contaminate source files, break shell scripts, and corrupt documentation.
 
