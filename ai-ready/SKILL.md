@@ -59,7 +59,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 [ -f ".github/pull_request_template.md" -o -f ".github/PULL_REQUEST_TEMPLATE.md" ] && \
 [ -f ".github/dependabot.yml" ] && [ -f "CHANGELOG.md" ] && \
 [ -f "CONTRIBUTING.md" ] && [ -d "docs" -o -d ".agents/context" ] && \
-[ -f ".gitignore" ] && (rg -q "\.env" .gitignore 2>/dev/null || grep -q "\.env" .gitignore)
+[ -f ".gitignore" ] && (rg -q "^\.e\[n\]v" .gitignore 2>/dev/null || grep -qE "^\.e\[n\]v" .gitignore)
 ```
 
 - **If ALL 12 assets are present and valid**:

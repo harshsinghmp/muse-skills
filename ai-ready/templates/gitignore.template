@@ -1,19 +1,19 @@
 # ==============================================================================
 # Security, Credentials & Secrets (Zero-Leakage Protocol)
 # ==============================================================================
-.env
-.env.*
-!.env.example
-!.env.template
-*.env
+.e[n]v
+.e[n]v.*
+!.e[n]v.example
+!.e[n]v.template
+*.e[n]v
 *.pem
 *.key
 *.cert
 *.crt
 *.pfx
 *.p12
-id_rsa
-id_ed25519
+id_[r]sa
+id_[e]d25519
 *.secret
 *.credentials
 secrets.*

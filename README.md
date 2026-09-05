@@ -817,6 +817,6 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vu
 
 <div align="center">
 
-[![Star History Chart](https://api.star-history.com/svg?repos=harshsinghmp/muse-skills&type=Date)](https://star-history.com/#harshsinghmp/muse-skills&Date)
+<a href="https://star-history.com/#harshsinghmp/muse-skills&Date"><img src="https://img.shields.io/github/stars/harshsinghmp/muse-skills?style=social&label=Star%20History" alt="Star History Chart" /></a>
 
 </div>

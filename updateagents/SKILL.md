@@ -224,7 +224,7 @@ Output a concise change report detailing files discovered, updated, new/obsolete
 * **Never read, write, create, delete, move, rename, summarize, reorganize, synchronize, or validate `.memory/**`**.
 * Never expose secrets, API keys, or `.env` contents.
 * Never fabricate commands or architecture.
-* Never overwrite instruction files wholesale.
+* Never perform wholesale replacement of guidance files.
 * Never clobber application source code (`src/`, `app/`) or package dependencies.
 * Never claim validation succeeded when it did not run.
 

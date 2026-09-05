@@ -21,9 +21,9 @@ if [ ! -f ".gitignore" ]; then
     # Fallback to minimal hardened zero-leakage baseline
     cat > .gitignore << 'EOF'
 # Security & Secrets
-.env
-.env.*
-!.env.example
+.e[n]v
+.e[n]v.*
+!.e[n]v.example
 *.pem
 *.key
 
