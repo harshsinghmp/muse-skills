@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.3] - 2026-09-05
+
+### Fixed
+- **Prohibit Appending & Publishing Git Commit Refs**: Hardened operational rules across root `AGENTS.md`, global `~/.agents/AGENTS.md`, `ai-ready/SKILL.md` (Pitfall 7), `ai-ready/templates/AGENTS.md` (Invariant 12), `git-workflow.md` (§5), and `execution-kernel.md` (§12). Explicitly documented the downstream clone mechanics where `skills add` invokes `git clone --depth 1 --branch <ref>`, which causes Git to fatally crash with `fatal: Remote branch <sha> not found in upstream origin` when given a commit SHA. Mandates clean repository specs (`skills add <owner>/<repo>`) without any appended commit references.
+- **Safe-Skills Interceptor Default & Commit Omission**: Configured default `antiToctou = 'off'` across the `safe-skills` ecosystem and neutralized raw commit SHA pinning to prevent breaking downstream `skills add` shallow clones.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.2.2...v2.2.3
+
 ## [2.2.2] - 2026-09-05
 
 ### Fixed

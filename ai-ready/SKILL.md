@@ -193,6 +193,7 @@ Print the structured AI-Readiness scorecard:
 4. **No Artificial Token Burn**: Never emit essays when the repository is already compliant. Respect the Fast-Skip Gate.
 5. **Zero Synthetic ADE Artifacts**: Never accept or commit `[[ORCA_RICH_MD:...]]`, Cursor markers, or Claude artifacts. Run `bun ai-ready.ts --sanitize` or unwrap them before saving.
 6. **Modern CLI Primacy**: Always invoke modern CLI tools (`fd`, `rg`, `bat`, `eza`) explicitly by name; never rely on `.bashrc` aliases in non-interactive agent subshells.
+7. **No Published Git Refs in Package Specs**: Never output, publish, or append trailing `#<ref>` or commit SHAs in package targets (`skills add <owner>/<repo>`). Downstream installers invoke `git clone --depth 1 --branch <ref>`, which fatally rejects raw commit SHAs.
 
 
 ---
