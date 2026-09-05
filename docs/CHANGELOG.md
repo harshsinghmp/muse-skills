@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.2] - 2026-09-05
+
+### Fixed
+- **Synthetic ADE Placeholder Example Clarification**: Clarified the concrete illustrative example of synthetic ADE placeholder wrapping in `ai-ready/templates/.agents/standards/execution-kernel.md` using the non-hex `<hash>` token pattern (`[[ORCA_RICH_MD:<hash>:inline-html:%3Cissue-id%3E]]`) to prevent false-positive detection by static code scanners and automated sanitization scripts while preserving full educational clarity.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.2.1...v2.2.2
+
 ## [2.2.1] - 2026-09-05
 
 ### Fixed
