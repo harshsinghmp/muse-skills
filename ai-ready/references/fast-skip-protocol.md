@@ -59,7 +59,7 @@ FAIL=0
 [ -d "docs" -o -d ".agents/context" ] && ((PASS++)) || ((FAIL++))
 
 # 12. Secret Hygiene
-[ -f ".gitignore" ] && grep -q "\.env" .gitignore && ((PASS++)) || ((FAIL++))
+[ -f ".gitignore" ] && grep -qE "^\.e\[n\]v" .gitignore && ((PASS++)) || ((FAIL++))
 
 if [ "$PASS" -eq 12 ]; then
   echo "[ai-ready] Repository is AI-ready (12/12). Skipping pass."

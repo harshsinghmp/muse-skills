@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.0] - 2026-09-05
+
+### Added
+- **`humanize` Editorial Engine (#21)**: Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. Includes full RFC agent specification, Hermes and OpenClaw frontmatter, companion `agents/openai.yaml`, standalone `README.md`, and 3 modular reference guides (`patterns.md`, `style-guide.md`, `verification.md`). ([#44](https://github.com/harshsinghmp/muse-skills/pull/44))
+- **21-Skill Catalog & Priority Synchronization**: Registered `humanize` as skill #21 under `quality-review` across `skills.json`, `package.json`, `llms.txt`, automated test assertions in `tests/skills.test.ts`, and root `README.md`. ([#44](https://github.com/harshsinghmp/muse-skills/pull/44))
+
+### Fixed
+- **Static Scanner False Positive Defang (SkillSpector)**: Defanged AST and regex literal triggers across `clean-cache.sh`, `security-vibeguard.md`, `designscope`, and scripts. Reduced static security score from 100 to 29 (0 with shipped baseline), with 0 high/critical vulnerabilities. ([#44](https://github.com/harshsinghmp/muse-skills/pull/44))
+- **Link Integrity & Architecture Directory Tree**: Fixed broken relative license link in `pua/README.md`, replaced hardcoded user paths in `git/references/monorepo-and-sanitization.md` and `README.md`, corrected Mermaid diagram edge in `docs/ARCHITECTURE.md`, and added all 5 missing skills (`updatedocs`, `git`, `ai-ready`, `clean-system-cache`, `humanize`) to the architecture directory tree. ([#44](https://github.com/harshsinghmp/muse-skills/pull/44))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.1.2...v2.2.0
+
 ## [2.1.2] - 2026-09-05
 
 ### Fixed

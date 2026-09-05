@@ -177,6 +177,14 @@ get_chromium_cache_size_kb() {
     echo "$total"
 }
 
+# Helper: Purge contents of a cache directory safely without touching parent directory
+purge_dir_contents() {
+    local target="$1"
+    if [ -d "$target" ]; then
+        find "$target" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+    fi
+}
+
 # Purge Chromium Profile HTTP & Bytecode Caches ONLY
 # NEVER touches cookies, login data, bookmarks, history, sessions, or user profiles
 purge_chromium_cache() {
@@ -184,17 +192,13 @@ purge_chromium_cache() {
     [ ! -d "$root" ] && return
     
     for sub in "Cache/Cache_Data" "Cache" "Code Cache" "GPUCache" "GrShaderCache" "ShaderCache"; do
-        if [ -d "$root/$sub" ]; then
-            rm -rf "${root:?}/$sub"/* 2>/dev/null || true
-        fi
+        purge_dir_contents "$root/$sub"
     done
 
     for p in "$root"/*; do
         [ ! -d "$p" ] && continue
         for sub in "Cache/Cache_Data" "Cache" "Code Cache" "GPUCache" "GrShaderCache" "ShaderCache"; do
-            if [ -d "$p/$sub" ]; then
-                rm -rf "${p:?}/$sub"/* 2>/dev/null || true
-            fi
+            purge_dir_contents "$p/$sub"
         done
     done
 }
@@ -226,12 +230,12 @@ purge_gecko_cache() {
     for p in "$root"/*; do
         [ ! -d "$p" ] && continue
         if [ -d "$p/cache2" ]; then
-            rm -rf "${p:?}/cache2/entries"/* 2>/dev/null || true
-            rm -rf "${p:?}/cache2/doomed"/* 2>/dev/null || true
-            rm -rf "${p:?}/cache2"/trash* 2>/dev/null || true
+            purge_dir_contents "$p/cache2/entries"
+            purge_dir_contents "$p/cache2/doomed"
+            find "$p/cache2" -maxdepth 1 -name "trash*" -exec rm -rf {} + 2>/dev/null || true
         fi
-        [ -d "$p/startupCache" ] && rm -rf "${p:?}/startupCache"/* 2>/dev/null || true
-        [ -d "$p/thumbnails" ] && rm -rf "${p:?}/thumbnails"/* 2>/dev/null || true
+        purge_dir_contents "$p/startupCache"
+        purge_dir_contents "$p/thumbnails"
     done
 }
 
@@ -337,7 +341,7 @@ handle_safari_browser() {
             record_result "safari (cache)" "reclaimable" "$size_before" 0 "$size_before" "Would prune Safari WebKit & disk caches"
         else
             for sub in "fsCachedData" "WebKitCache"; do
-                [ -d "$safari_cache/$sub" ] && rm -rf "${safari_cache:?}/$sub"/* 2>/dev/null || true
+                purge_dir_contents "$safari_cache/$sub"
             done
             local size_after=0
             for sub in "fsCachedData" "WebKitCache"; do
@@ -412,7 +416,8 @@ if is_tool_selected "npm" && command -v npm >/dev/null 2>&1; then
         record_result "npm" "reclaimable" "$size_before" 0 "$size_before" "Would clean npm cache and stale _npx"
     else
         npm cache clean --force >/dev/null 2>&1 || true
-        rm -rf "$npm_cache/_npx" "$npm_cache/_logs" 2>/dev/null || true
+        purge_dir_contents "$npm_cache/_npx"
+        purge_dir_contents "$npm_cache/_logs"
         size_after=$(get_dir_size_kb "$npm_cache")
         reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
         record_result "npm" "cleaned" "$size_before" "$size_after" "$reclaimed" "Cleared cache and temporary npx runs"
@@ -490,7 +495,7 @@ if is_tool_selected "cargo" && [ -d "$HOME/.cargo/registry/cache" ]; then
         if [ "$DRY_RUN" = true ]; then
             record_result "cargo (crates)" "reclaimable" "$size_before" 0 "$size_before" "Would delete .crate archive cache"
         else
-            rm -rf "${cargo_cache:?}"/* 2>/dev/null || true
+            purge_dir_contents "$cargo_cache"
             size_after=$(get_dir_size_kb "$cargo_cache")
             reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
             record_result "cargo (crates)" "cleaned" "$size_before" "$size_after" "$reclaimed" "Deleted downloaded .crate archives"
@@ -510,7 +515,7 @@ if is_tool_selected "go"; then
             if command -v go >/dev/null 2>&1; then
                 go clean -cache >/dev/null 2>&1 || true
             else
-                rm -rf "$go_cache" 2>/dev/null || true
+                purge_dir_contents "$go_cache"
             fi
             size_after=$(get_dir_size_kb "$go_cache")
             reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
@@ -579,7 +584,7 @@ if is_tool_selected "xcode" && [ "$OS" = "Darwin" ]; then
             if [ "$DRY_RUN" = true ]; then
                 record_result "xcode (DerivedData)" "reclaimable" "$size_before" 0 "$size_before" "Would delete Xcode DerivedData compilation cache"
             else
-                rm -rf "${xcode_derived:?}"/* 2>/dev/null || true
+                purge_dir_contents "$xcode_derived"
                 size_after=$(get_dir_size_kb "$xcode_derived")
                 reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
                 record_result "xcode (DerivedData)" "cleaned" "$size_before" "$size_after" "$reclaimed" "DerivedData compilation artifacts cleared"
@@ -596,7 +601,7 @@ if is_tool_selected "android" && [ -d "$HOME/.android/build-cache" ]; then
         if [ "$DRY_RUN" = true ]; then
             record_result "android (build-cache)" "reclaimable" "$size_before" 0 "$size_before" "Would delete Android Studio build-cache"
         else
-            rm -rf "${android_cache:?}"/* 2>/dev/null || true
+            purge_dir_contents "$android_cache"
             size_after=$(get_dir_size_kb "$android_cache")
             reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
             record_result "android (build-cache)" "cleaned" "$size_before" "$size_after" "$reclaimed" "Android build cache purged"
@@ -645,9 +650,9 @@ if is_tool_selected "cypress"; then
             record_result "cypress" "reclaimable" "$size_before" 0 "$size_before" "Would clear cached Cypress browser runtimes"
         else
             if command -v npx >/dev/null 2>&1; then
-                npx cypress cache clear >/dev/null 2>&1 || rm -rf "$cypress_cache"/* 2>/dev/null || true
+                npx cypress cache clear >/dev/null 2>&1 || purge_dir_contents "$cypress_cache"
             else
-                rm -rf "$cypress_cache"/* 2>/dev/null || true
+                purge_dir_contents "$cypress_cache"
             fi
             size_after=$(get_dir_size_kb "$cypress_cache")
             reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
@@ -702,7 +707,7 @@ if is_tool_selected "adobe"; then
                 record_result "adobe (media-cache)" "reclaimable" "$size_before" 0 "$size_before" "Would delete Adobe scratch, .cfa, and .pek peak files"
             else
                 for sub in "Media Cache Files" "Media Cache" "Peak Files"; do
-                    [ -d "$adobe_dir/$sub" ] && rm -rf "${adobe_dir:?}/$sub"/* 2>/dev/null || true
+                    purge_dir_contents "$adobe_dir/$sub"
                 done
                 size_after=0
                 for sub in "Media Cache Files" "Media Cache" "Peak Files"; do
@@ -752,7 +757,7 @@ if is_tool_selected "figma"; then
                 if [ "$DRY_RUN" = true ]; then
                     record_result "figma" "reclaimable" "$size_before" 0 "$size_before" "Would delete Figma desktop asset cache"
                 else
-                    rm -rf "${figma_cache:?}"/* 2>/dev/null || true
+                    purge_dir_contents "$figma_cache"
                     size_after=$(get_dir_size_kb "$figma_cache")
                     reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
                     record_result "figma" "cleaned" "$size_before" "$size_after" "$reclaimed" "Figma asset cache cleared"
@@ -780,7 +785,7 @@ if is_tool_selected "blender"; then
                 if [ "$DRY_RUN" = true ]; then
                     record_result "blender" "reclaimable" "$size_before" 0 "$size_before" "Would clear Blender shader/preview cache"
                 else
-                    rm -rf "${blender_cache:?}"/* 2>/dev/null || true
+                    purge_dir_contents "$blender_cache"
                     size_after=$(get_dir_size_kb "$blender_cache")
                     reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
                     record_result "blender" "cleaned" "$size_before" "$size_after" "$reclaimed" "Blender preview caches cleared"
@@ -800,7 +805,7 @@ if is_tool_selected "electron"; then
             if [ "$DRY_RUN" = true ]; then
                 record_result "electron" "reclaimable" "$size_before" 0 "$size_before" "Would delete stale electron zips"
             else
-                rm -rf "$electron_cache" 2>/dev/null || true
+                purge_dir_contents "$electron_cache"
                 size_after=$(get_dir_size_kb "$electron_cache")
                 reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
                 record_result "electron" "cleaned" "$size_before" "$size_after" "$reclaimed" "Deleted stale electron binary zips"
@@ -899,7 +904,7 @@ if [ -n "$SCAN_NODE_MODULES_PATH" ]; then
         echo "--------------------------------------------------------------------"
         if [ "$found" -eq 1 ]; then
             echo "Total space consumed by scanned node_modules: ~$(fmt_kb "$total_nm_kb")"
-            echo "Tip: Use 'rm -rf <path>/node_modules' or 'npx npkill' to prune specific projects."
+            echo "Tip: Prune target project dependencies with package manager clean commands or 'npx npkill'."
         else
             echo "No node_modules directories found in $SCAN_NODE_MODULES_PATH"
         fi
