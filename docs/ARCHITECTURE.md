@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Muse Skills** (`@harsh/muse-skills`) is an enterprise-grade agent skill repository and governance toolkit within the **LifeOS** ecosystem. It provides autonomous AI agents with structured operational capabilities for Project Operating System provisioning, workspace memory synchronization, PIP performance enforcement, subagent coordination, error triage, and context anchoring.
+**Muse Skills** (`@harshsinghmp/muse-skills`) is an enterprise-grade agent skill repository and governance toolkit within the **LifeOS** ecosystem. It provides autonomous AI agents with structured operational capabilities for Project Operating System provisioning, workspace memory synchronization, PIP performance enforcement, subagent coordination, error triage, and context anchoring.
 
 All skills follow a dual-layer architecture:
 1. **Universal Metadata Layer**: Extended YAML frontmatter (with Hermes metadata, tools, and platform requirements) parsed natively by `npx skills`, Claude Code, Cursor, and Hermes.
