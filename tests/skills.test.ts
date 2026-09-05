@@ -62,7 +62,7 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(fs.existsSync(PACKAGE_JSON_PATH)).toBe(true);
     const content = fs.readFileSync(PACKAGE_JSON_PATH, "utf8");
     const parsed = JSON.parse(content);
-    expect(parsed).toHaveProperty("name", "@harsh/muse-skills");
+    expect(parsed).toHaveProperty("name", "@harshsinghmp/muse-skills");
   });
 
   test("skills.json preserves requested priority ordering (#1 updatedocs through #20 clean-system-cache)", () => {
