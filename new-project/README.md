@@ -13,7 +13,7 @@
 - **📁 Complete 9-Folder `.agents/` Containment**:
   - `archive/` — Retired plans & completed scratchpads (`[title]-[timestamp].md`)
   - `artifacts/` — Active walkthroughs, specifications & diffs
-  - `brand/` — Design tokens (Kameli OKLCH palette, typography, motion, radii) + BEM conventions + A11y checklist
+  - `brand/` — Design tokens (DTCG OKLCH color palettes, typography, motion, radii) + BEM conventions + A11y checklist
   - `context/` — 7 durable context files (`index`, `product`, `architecture`, `brand`, `current`, `decisions`, `roadmap`)
   - `goals/` — Session goals & sprint verification checklists
   - `research/` — Deep research briefs & benchmark logs
@@ -78,6 +78,18 @@ bun new-project/scripts/new-project.ts <targetPath> \
 |:---|:---|:---|
 | `-n, --name <name>` | String | Project name (default: directory basename) |
 | `-p, --path <path>` | String | Target directory path |
+| `--author <name>` | String | Project author or organization name |
+| `--tagline <desc>` | String | Project mission or summary |
+| `--audience <aud>` | String | Target audience or user persona |
+| `--problem <prob>` | String | Core problem solved by the project |
+| `--features <list>` | String | Comma-separated core features |
+| `--tone <tone>` | String | Brand voice / design aesthetic (e.g. Minimalist, High-Tech, Warm) |
+| `--palette <color>` | String | Brand theme: `slate` \| `indigo` \| `emerald` \| `amber` \| `violet` |
+| `--first-milestone <m>` | String | Immediate next task / initial milestone |
+| `--planned-milestones <list>`| String | Comma-separated planned milestones |
+| `--agent-name <name>` | String | Lead autonomous agent persona name (default: `Orchestrator`) |
+| `--agent-role <role>` | String | Lead agent functional role description |
+| `--constraint <text>` | String | Primary operational constraint or invariant |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
 | `--preset <preset>` | String | `powerhouse` \| `publisher` \| `edge` \| `visual` \| `instatic` \| `mobile` \| `astro-mobile` |
 | `-t, --type <framework>` | String | `nextjs` \| `astro` \| `instatic` \| `wordpress` \| `expo` \| `custom` \| `none` |
@@ -95,6 +107,23 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--non-interactive` | Boolean | Run without interactive prompts |
 | `-f, --force` | Boolean | Overwrite existing files |
 | `-h, --help` | Boolean | Display help message |
+
+---
+
+## 🎙️ Interactive Onboarding & Dynamic DOX Generation
+
+When running `new-project` interactively or through an AI agent, the onboarding wizard guides users through 5 stages:
+1. **Identity & Scope**: Project name, organization/author, mission tagline, target audience, and core problem.
+2. **Features & Milestones**: Core capabilities, immediate first milestone, and planned sprint roadmap.
+3. **Brand & Design Tokens**: Brand voice/tone and color palette (`slate`, `indigo`, `emerald`, `amber`, `violet`), automatically configuring DTCG design tokens.
+4. **Technical Architecture**: Archetype, framework, styling engine, state, mobile packaging, CMS, e-commerce, database, and auth.
+5. **Agent Governance & Constraints**: Lead autonomous agent name/role and active working invariants.
+
+All gathered answers dynamically populate:
+- `AGENTS.md` (project identity, mission, and agent personas)
+- `.agents/context/` (`product.md`, `brand.md`, `roadmap.md`, `architecture.md`, `decisions.md`, `current.md`)
+- `.agents/brand/tokens/` (`colors.json` and `base.css` with chosen OKLCH palette)
+- `.memory/CURRENT.md` (active invariants, stack rules, and first milestone)
 
 ---
 

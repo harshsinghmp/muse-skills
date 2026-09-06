@@ -1,17 +1,15 @@
-# 🗺️ Roadmap & Sprint Backlog
+# 🗺️ Roadmap & Sprint Backlog — {{PROJECT_NAME}}
 
 ## SOW Lifecycle Board
 
 ### [ 📋 Requested ]
-- Automate `.agents/` scaffolding script for newly initialized client projects.
-- Standardize subproject GitHub CI templates for automated Nexus audit gates.
+{{REQUESTED_BACKLOG}}
 
 ### [ 📅 Planned ]
-- Expand project-specific context files for active client workspaces.
+{{PLANNED_MILESTONES}}
 
 ### [ ⚡ In Progress ]
-- Progressive disclosure rollout and agent containment verification.
+- **{{FIRST_MILESTONE}}**: Initial core feature delivery and verification.
 
 ### [ ✅ Done ]
-- Consolidated `AGENT_MASTER_PROTOCOL.md`, `CREED_NATIVE_CONTEXT.md`, and `AGENTS.md` into modular `./.agents/standards/`.
-- 100% path-free relative referencing across agent rule hierarchy.
+- **Workspace Scaffolding**: Initialized Project OS, Progressive Disclosure DOX container, modular standards, and cognitive memory.

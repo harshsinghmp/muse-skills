@@ -1,5 +1,3 @@
-# Border Radius Tokens
-
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
   "radius": {
