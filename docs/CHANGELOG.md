@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.3.0] - 2026-09-06
+
+### Added
+- **Intent-First Configurator Engine (`new-project`)**: Upgraded `new-project` (the canonical DOX Engine / Agent Engine) to an interactive, intent-first architecture configurator. Dynamically prunes and configures companion technologies based on core intent (`brochure`, `content`, `ecommerce`, `webapp`, `mobile`). ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **7 One-Click Agency Presets**: Added high-speed scaffolding presets covering `--preset=powerhouse` (Next.js 16 + Payload CMS + Puck Visual Builder + Hybrid UnoCSS Wind 4), `--preset=publisher` (Astro v7 + StudioCMS), `--preset=visual` (Astro v7 + Aria Builder visual editor), `--preset=edge` (Instatic HTML + Aria Builder), `--preset=instatic` (Zero-build semantic HTML5 + OKLCH BEM), `--preset=mobile` (React Native with Expo), and `--preset=astro-mobile` (Astro v7 + NanoStores + Aria Builder + Ionic Capacitor). ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Hybrid Styling System**: Hybrid UnoCSS Wind 4 (`@unocss/preset-wind4`) combined with semantic BEM CSS and OKLCH color palettes, automatically configured in `uno.config.ts` and `src/styles/design-tokens.css`. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Zero-Dependency High-FPS CSS Animation Library**: Injected hardware-accelerated CSS animations (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`) with `prefers-reduced-motion` accessibility support, with opt-in support for `motion.dev` and `gsap`. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Open-Source-First CMS Ecosystem**: Deep integrations for Aria Builder (`ariabuilder.io`), StudioCMS, SitePins, Tina CMS, Keystatic, Pages CMS, and Payload CMS (with optional Puck visual drag-and-drop page builder). ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Modern E-Commerce Checkout Modules**: First-class support for Payload CMS E-Commerce, Medusa v2, Fastrr 1-click accelerated checkout, Razorpay, and Stripe Hosted checkouts. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **NanoStores Reactive State Engine**: Sub-1KB, framework-agnostic reactive state sharing across isolated Astro client islands (`client:*`) and React/Next.js components with pre-wired reactive primitives in `src/stores/app.ts`. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Ionic Capacitor & Mobile Packaging**: Native iOS and Android APK/AAB compilation bridge for Astro, Next.js, and Instatic web projects via `@capacitor/core`, `@capacitor/cli`, `@capacitor/ios`, and `@capacitor/android`, configured in `capacitor.config.ts` with dedicated build scripts (`cap:build`, `cap:sync`, `cap:ios`, `cap:android`). ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Flexible Data & Auth Layer**: First-class support for Neon DB, Supabase, Self-Hosted PostgreSQL, SQLite with Drizzle ORM, and Better Auth. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+
+### Fixed
+- **ADE/HTML Execution Summary Sanitization**: Wrapped all folder and file placeholders (`<project-name>`, `<folder>`, `<path>`) in markdown backticks across CLI execution reports to prevent automated developer environment (ADE) HTML parsers from hijacking or swallowing output text. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Template Staging Isolation**: Isolated framework scaffolds in `os.tmpdir()` during generation to prevent collisions between Stage 1 governance files and downstream `git clone` or template unpack operations. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+- **Strict Package Freshness Invariant**: Enforced `@latest` tag resolution across all package dependencies and removed dirty git commit hash references. ([#53](https://github.com/harshsinghmp/muse-skills/pull/53))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.2.3...v2.3.0
+
 ## [2.2.3] - 2026-09-05
 
 ### Fixed
