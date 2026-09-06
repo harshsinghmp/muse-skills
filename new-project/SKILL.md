@@ -46,7 +46,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Automatically wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
 4. **Stage 4: Modern Tokens & BEM Architecture Injection**: Injects wide-gamut OKLCH tokens, fluid `clamp()` typography & spacing scales (`src/styles/tokens.css`), and reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-cart-drawer`).
 5. **Stage 5: Beginner-Friendly `start-here.md` Guide**: Generates an empathetic 7-section developer handbook covering architecture, quick start, directory tour, styling, AI agent collaboration, recipes, and verification.
-6. **Stage 6: Interactive Brand Onboarding Gate**: Generates structured brand, business, and offerings documentation (`Onboarding/01-Brand/`, `02-Business/`, `03-Menu/`), synchronizing DTCG tokens and context files.
+6. **Stage 6: Interactive Brand Onboarding & Client Intake Gate**: Generates structured brand, business, offerings, and technical intake documentation (`Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, `04-Technical-Intake/`), synchronizing DTCG tokens and context files.
 
 ---
 
@@ -209,11 +209,12 @@ Empathetic 7-section handbook generated at project root:
 6. **Common Tasks & Recipes**: Adding routes, creating BEM components, env vars, Drizzle migrations.
 7. **Verification & Definition of Done**: Verification commands, Vibeguard secret defense, and DoD checklist.
 
-### Stage 6: Interactive Brand Onboarding & Closeout Gate
-Generates structured onboarding documents:
-- `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`
-- `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`
-- `Onboarding/03-Menu/`: `offerings.md`
+### Stage 6: Interactive Brand Onboarding & Client Intake Gate
+Generates structured 4-pillar onboarding and client intake documents:
+- `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`, `brand-guardrails.md`, `brand-assets-intake.md`
+- `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`, `competitor-benchmark.md`, `client-goals-kpis.md`
+- `Onboarding/03-Offerings/`: `offerings-catalog.md`, `scope-deliverables.md` (with backward-compatible `offerings.md`)
+- `Onboarding/04-Technical-Intake/`: `access-and-credentials.md`, `integrations-matrix.md`
 - Dynamically injects chosen OKLCH palette into `.agents/brand/tokens/colors.json` and `base.css`.
 - **Durable DOX Closeout**:
   - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
@@ -300,7 +301,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 After scaffolding, verify the project:
 1. **Developer Guide**: Check that `./start-here.md` exists and contains all 7 sections.
-2. **Onboarding Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, and `03-Menu/`.
+2. **Onboarding & Intake Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/`.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.

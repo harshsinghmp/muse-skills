@@ -8,7 +8,7 @@
  *   Stage 3: Official Package Installation & Config Auto-Wiring
  *   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
  *   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
- *   Stage 6: Interactive Brand Onboarding Gate (Onboarding/01-Brand, 02-Business, 03-Menu)
+ *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
  * 
  * Usage:
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
@@ -100,7 +100,7 @@ Core Execution Stages:
   Stage 3: Official Package Installation & Config Auto-Wiring
   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
-  Stage 6: Interactive Brand Onboarding Gate (Onboarding/01-Brand, 02-Business, 03-Menu)
+  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
 
 Options:
   -n, --name <name>             Project name (default: directory name)
@@ -1076,7 +1076,7 @@ async function main() {
       "{{PROBLEM_SOLVED}}": coreProblem,
       "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
       "{{CORE_FEATURES}}": featureBullets,
-      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Onboarding/\` — Brand identity, business model, and offerings artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
+      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Onboarding/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
       "{{BRAND_VOICE}}": brandVoice,
       "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
       "{{FIRST_MILESTONE}}": firstMilestone,
@@ -4406,10 +4406,11 @@ ${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ 
 ` : ""}${config.db === "postgres" && config.ecommerce !== "medusa" ? `├── docker-compose.yml       # 🗄️ Local PostgreSQL 16 container
 ` : ""}${config.cms === "keystatic" ? `├── keystatic.config.ts      # 📝 Keystatic Git-based CMS configuration
 ` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
-├── Onboarding/              # 📋 Client and Brand Onboarding Artifacts
-│   ├── 01-Brand/            # Brand identity, vision, and visual direction
-│   ├── 02-Business/         # Business model, audience personas, and value proposition
-│   └── 03-Menu/             # Service offerings and product catalog specifications
+├── Onboarding/              # 📋 Client and Brand Onboarding & Intake Artifacts
+│   ├── 01-Brand/            # Brand identity, visual direction, voice & tone, asset intake
+│   ├── 02-Business/         # Business model, audience personas, competitor benchmarks
+│   ├── 03-Offerings/        # Service offerings, product catalog, scope deliverables
+│   └── 04-Technical-Intake/ # Domain/DNS, cloud credentials, integrations matrix
 ├── src/
 │   ├── components/          # Reusable UI components
 ${config.cms === "payload" ? `│   ├── collections/         # 📦 Payload CMS Collections (Users, Media, Pages)
@@ -4600,11 +4601,15 @@ Happy building! 🚀
     const onboardingDir = join(resolvedTarget, "Onboarding");
     const brandDir = join(onboardingDir, "01-Brand");
     const bizDir = join(onboardingDir, "02-Business");
+    const offeringsDir = join(onboardingDir, "03-Offerings");
     const menuDir = join(onboardingDir, "03-Menu");
+    const techDir = join(onboardingDir, "04-Technical-Intake");
 
     mkdirSync(brandDir, { recursive: true });
     mkdirSync(bizDir, { recursive: true });
+    mkdirSync(offeringsDir, { recursive: true });
     mkdirSync(menuDir, { recursive: true });
+    mkdirSync(techDir, { recursive: true });
 
     // 6.1 Onboarding/01-Brand/
     const brandIdentityContent = `# 🎨 Brand Identity & Vision — ${projectName}
@@ -4722,6 +4727,38 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(brandDir, "brand-guardrails.md"), brandGuardrailsContent, "utf8");
 
+    const brandAssetsIntakeContent = `# 📥 Brand Assets & Media Kit Intake — ${projectName}
+
+> **Client Intake Form**: Essential creative assets and media items required from ${authorName || projectName} prior to final UI implementation and launch.
+
+---
+
+## Vector Brand Marks & Logo Assets
+- [ ] **Primary Wordmark**: Vector format (\`.svg\`, \`.ai\`, or \`.eps\`) in full color for primary surfaces.
+- [ ] **Reversed Wordmark**: Monochrome white vector for dark surfaces and navigation overlays.
+- [ ] **Standalone Brand Icon / Glyphs**: Scalable icon format for mobile app icons, favicons, and avatars.
+- [ ] **Favicon Package**: Crisp 16x16, 32x32, 180x180 (Apple Touch Icon), and \`favicon.svg\`.
+
+## Typography & Font Licensing
+- [ ] **Licensed Web Font Files**: Web font files (\`.woff2\`, \`.woff\`) for custom brand typefaces.
+- [ ] **Proof of Commercial Web License**: Confirmation of domain entitlement or Google Fonts / Adobe Typekit ID.
+- [ ] **Fallback Hierarchy**: Approved system fallbacks (\`system-ui\`, \`sans-serif\`, \`serif\`).
+
+## Photography & Media Library Assets
+- [ ] **Brand Photography Repository**: Shared cloud link (Google Drive, Dropbox, Box) with organized folders:
+  - *Hero / Banner Visuals* (High-DPI minimum 2560px width)
+  - *Product / Service Showcase Imagery*
+  - *Leadership / Team Headshots*
+  - *Authentic Lifestyle & B-Roll Imagery*
+- [ ] **Video Assets & Motion Graphics**: 4K/1080p B-roll loops or ambient background MP4/WebM files.
+- [ ] **Model & Property Releases**: Confirmation of commercial usage rights.
+
+## Brand Guidelines & Pitch Materials
+- [ ] **Legacy Brand Book**: PDF reference document (if available).
+- [ ] **Recent Pitch Decks & Marketing Collateral**: Past presentations reflecting active customer-facing positioning.
+`;
+    writeFileSync(join(brandDir, "brand-assets-intake.md"), brandAssetsIntakeContent, "utf8");
+
     // 6.2 Onboarding/02-Business/
     const bizModelContent = `# 💼 Business Model & Strategy — ${projectName}
 
@@ -4745,26 +4782,176 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(bizDir, "audience-persona.md"), personaContent, "utf8");
 
-    // 6.3 Onboarding/03-Menu/
-    const offeringsContent = `# 📦 Offerings & Catalog Matrix — ${projectName}
+    const competitorBenchmarkContent = `# 🔍 Competitor Benchmark & Market Positioning — ${projectName}
 
-## Core Capabilities & Deliverables
-${coreFeatures
-  .split(",")
-  .map((f) => `- **${f.trim()}**: High-impact feature provisioned and verified.`)
-  .join("\n")}
+> **Client Intake Form**: Analysis of direct and indirect competitors in the ${industry} market to establish differentiation and UI/UX benchmarks.
 
-## Catalog / Menu Tiers
+---
+
+## Key Competitors
+1. **Competitor A (Direct Benchmark)**:
+   - **URL**: \`https://competitor-a.com\`
+   - **What to Emulate**: Clean layout hierarchy, high-converting pricing table, smooth checkout flow.
+   - **What to Avoid**: Cluttered navigation, aggressive pop-up modals, poor mobile performance.
+
+2. **Competitor B (Visual & Brand Benchmark)**:
+   - **URL**: \`https://competitor-b.com\`
+   - **What to Emulate**: Elevated typography, subtle micro-animations, authentic lifestyle imagery.
+   - **What to Avoid**: Vague value proposition, hidden pricing tiers.
+
+3. **Competitor C (Alternative / Legacy Provider)**:
+   - **URL**: \`https://competitor-c.com\`
+   - **What to Emulate**: Thorough FAQ section, social proof testimonials.
+   - **What to Avoid**: Outdated design language, slow initial page loads.
+
+## Competitive Differentiation & Unfair Advantage
+- **Core Market Pain**: ${coreProblem}
+- **Our Unfair Advantage**: Unified modern digital architecture engineered for velocity, complete data sovereignty, and accessible human-centric design.
+- **Why Customers Choose ${projectName}**: Superior speed, uncompromising craft, and direct alignment with ${targetAudience}.
+`;
+    writeFileSync(join(bizDir, "competitor-benchmark.md"), competitorBenchmarkContent, "utf8");
+
+    const clientGoalsKpisContent = `# 🎯 Business Objectives & Target KPIs — ${projectName}
+
+> **Client Intake Form**: Strategic launch targets, conversion definitions, and measurable key performance indicators for ${projectName}.
+
+---
+
+## Primary Business Objectives
+1. **Commercial Growth**: Establish a high-converting digital storefront and lead generation engine for ${targetAudience}.
+2. **Brand Elevation**: Present an authoritative, polished brand image that instills institutional trust in ${industry}.
+3. **Operational Efficiency**: Automate inquiries, sales, and content management to minimize manual overhead.
+
+## Target Launch Timeline & Milestones
+- **Target Launch Date**: Q3/Q4 Target Release
+- **Milestone 1 (Design & Intake Signoff)**: Completion of Brand and Architecture intake.
+- **Milestone 2 (Staging Review)**: End-to-end user flows, catalog, and checkout verification on staging.
+- **Milestone 3 (Public Go-Live)**: DNS switchover, production deployment, and monitoring activation.
+
+## Key Conversion Metrics & KPIs
+- **Primary Conversion Event**: Direct checkout purchase, demo booking, or membership registration.
+- **Target Conversion Rate**: Minimum 3.5% on qualified traffic.
+- **Target Core Web Vitals**:
+  - *Largest Contentful Paint (LCP)*: < 1.2s
+  - *Cumulative Layout Shift (CLS)*: < 0.05
+  - *Interaction to Next Paint (INP)*: < 100ms
+`;
+    writeFileSync(join(bizDir, "client-goals-kpis.md"), clientGoalsKpisContent, "utf8");
+
+    // 6.3 Onboarding/03-Offerings/
+    const offeringsCatalogContent = `# 📦 Offerings & Deliverables Matrix — ${projectName}
+
+> **Offerings Engine**: Product catalog, service tiers, pricing architecture, and fulfillment models for ${projectName}.
+
+---
+
+## Offerings & Deliverables Matrix
 ${offerings
   .split(",")
-  .map((o) => `- **${o.trim()}**: Production offering tier.`)
+  .map((o) => `### ${o.trim()}
+- **Category**: Core Offering
+- **Target Buyer**: ${targetAudience}
+- **Value Delivery**: Direct resolution for "${coreProblem}".
+- **Status**: Production Shipped tier.
+`)
   .join("\n")}
-`;
-    writeFileSync(join(menuDir, "offerings.md"), offeringsContent, "utf8");
 
-    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md)");
-    console.log("  ✅ Generated: `./Onboarding/02-Business/` (business-model.md, audience-persona.md)");
-    console.log("  ✅ Generated: `./Onboarding/03-Menu/` (offerings.md)\n");
+## Pricing Architecture & Commercial Models
+- **Billing Paradigm**: Subscription, One-Time, or Retainer.
+- **Currency & Settlement**: Multi-currency support (Default: USD, EUR, GBP).
+- **Payment Processing**: Integrated via Stripe / Medusa Commerce.
+- **Tax & Compliance**: Automated nexus and regional tax calculation.
+`;
+    writeFileSync(join(offeringsDir, "offerings-catalog.md"), offeringsCatalogContent, "utf8");
+    writeFileSync(join(offeringsDir, "offerings.md"), offeringsCatalogContent, "utf8");
+    writeFileSync(join(menuDir, "offerings.md"), offeringsCatalogContent, "utf8");
+
+    const scopeDeliverablesContent = `# 🗺️ Scope Boundaries & Phasing — ${projectName}
+
+> **Agency Scope Governance**: Clear boundaries between Day-1 MVP release commitments, Phase 2 enhancements, and out-of-scope requests.
+
+---
+
+## Scope Boundaries & Phasing
+
+### Phase 1 (MVP Shipped Deliverables)
+${coreFeatures
+  .split(",")
+  .map((f) => `- [x] **${f.trim()}**: Production feature provisioned, integrated, and verified in test suite.`)
+  .join("\n")}
+- [x] **Brand & Design Tokens**: Wide-gamut OKLCH palettes and fluid typography clamp scales.
+- [x] **Governance Container**: Root \`AGENTS.md\` and 9-folder \`.agents/\` context system.
+- [x] **Developer Handbook**: Empathetic 7-section \`start-here.md\` walkthrough.
+
+### Phase 2 (Post-Launch Roadmap)
+- [ ] Advanced personalization algorithms and behavioral recommendations.
+- [ ] Multi-regional warehouse and localized currency routing.
+- [ ] Automated customer re-engagement lifecycle flows.
+
+### Explicitly Out-of-Scope
+- Custom mobile app development outside of Capacitor wrappers (unless explicitly contracted).
+- Legacy database manual data cleansing (client provides clean CSV/JSON exports).
+- Custom bespoke hardware or IoT integrations.
+`;
+    writeFileSync(join(offeringsDir, "scope-deliverables.md"), scopeDeliverablesContent, "utf8");
+
+    // 6.4 Onboarding/04-Technical-Intake/
+    const accessCredentialsContent = `# 🔑 Access & Infrastructure Credentials Intake — ${projectName}
+
+> **Client Technical Onboarding**: Credentials, cloud services, and access permissions required to build and deploy ${projectName}.
+
+---
+
+## Domain & DNS Management
+- [ ] **DNS Provider**: [Cloudflare / Namecheap / GoDaddy / AWS Route53]
+- [ ] **Domain Name**: \`[clientdomain.com]\`
+- [ ] **Access Method**: Team invitation sent to agency engineering lead, or delegated nameservers.
+
+## Code Repository & Deployment Infrastructure
+- [ ] **Git Host**: GitHub (\`harshsinghmp/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}\`)
+- [ ] **Hosting Provider**: [Cloudflare Pages / Vercel / Docker Container / AWS]
+- [ ] **Database Host**: [PostgreSQL Docker / Neon Serverless / Supabase]
+
+## Merchant & Payment Processing
+- [ ] **Payment Gateway**: [Stripe / Medusa / PayPal / LemonSqueezy]
+- [ ] **Environment**: Restricted API keys provisioned for test & live environments.
+- [ ] **Webhooks**: Endpoint configured to \`/api/webhooks/stripe\`.
+
+## Secure Credential Transfer Protocol
+> 🛡️ **LifeOS Vibeguard Security Protocol**: NEVER email, Slack, or commit raw passwords or API keys to git repositories.
+- [ ] Share all sensitive credentials via a secure, end-to-end encrypted 1Password or Bitwarden share link.
+- [ ] All production environment variables must strictly live in \`.env.production\` and never be committed.
+`;
+    writeFileSync(join(techDir, "access-and-credentials.md"), accessCredentialsContent, "utf8");
+
+    const integrationsMatrixContent = `# 🔌 Third-Party Integrations Matrix — ${projectName}
+
+> **System Interoperability**: Required third-party service connections, analytics, messaging, and compliance tools for ${projectName}.
+
+---
+
+## Third-Party Platform Integrations
+- [ ] **Customer Relationship Management (CRM)**: [HubSpot / Salesforce / Attio / None]
+- [ ] **Transactional Email**: [Resend / SendGrid / Postmark] (Configured with SPF, DKIM, and DMARC)
+- [ ] **Customer Support / Chat**: [Intercom / Crisp / Plain / Zendesk]
+- [ ] **CMS Backing**: [Payload CMS / Aria Builder / StudioCMS / Keystatic]
+
+## Marketing, Analytics & Tag Management
+- [ ] **Analytics Engine**: [PostHog / Google Analytics 4 (GA4) / Plausible]
+- [ ] **Tag Container**: [Google Tag Manager (GTM) Container ID]
+- [ ] **Advertising Pixels**: [Meta Pixel / LinkedIn Insight Tag / Google Ads Conversion ID]
+
+## Compliance & Legal Prerequisites
+- [ ] **Privacy Policy & Terms of Service**: Final legal copy provided by client counsel.
+- [ ] **Cookie Consent Banner**: GDPR / CCPA compliant consent management platform.
+- [ ] **Accessibility Standard**: Target WCAG 2.1 AA certification.
+`;
+    writeFileSync(join(techDir, "integrations-matrix.md"), integrationsMatrixContent, "utf8");
+
+    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
+    console.log("  ✅ Generated: `./Onboarding/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
+    console.log("  ✅ Generated: `./Onboarding/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
+    console.log("  ✅ Generated: `./Onboarding/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)\n");
   }
 
   // =========================================================================
@@ -4949,7 +5136,7 @@ ${offerItems}
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
   console.log(`🛡️  Governance:         DOX Engine Active (Root \`AGENTS.md\` + \`.agents/\` container)`);
   console.log(`📖 Developer Guide:    \`./start-here.md\` (Empathetic 7-section handbook)`);
-  console.log(`📋 Brand Onboarding:   \`./Onboarding/\` (01-Brand, 02-Business, 03-Menu)`);
+  console.log(`📋 Brand Onboarding:   \`./Onboarding/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)`);
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
   if (config.framework === "wordpress") {
