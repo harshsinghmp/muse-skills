@@ -302,6 +302,87 @@ Custom billing engine for healthcare providers.
       expect(currentMd).toContain("Zero client-side PHI storage");
       expect(currentMd).toContain("Sentinel");
       expect(currentMd).toContain("Implement EHR webhook listener");
+
+      // Verify start-here.md and Onboarding
+      expect(existsSync(join(target, "start-here.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/03-Menu/offerings.md"))).toBe(true);
+    });
+
+    it("provisions beginner-friendly start-here.md, Onboarding suite, fluid tokens, and BEM semantic classes", () => {
+      const target = join(TEST_SANDBOX, "ecommerce-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        target,
+        "--non-interactive",
+        "--name=Sovereign Store",
+        "--author=Acme Retail",
+        "--intent=ecommerce",
+        "--type=none",
+        "--styling=hybrid",
+        "--animation=css",
+        "--state=nanostores",
+        "--ecommerce=medusa",
+        "--palette=indigo",
+        "--first-milestone=Setup Medusa v2 SDK",
+        "--industry=Direct to Consumer Apparel",
+        "--offerings=Signature Denim, Classic Hoodies, Oxford Shirts"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // 1. Verify start-here.md exists and contains all 7 sections
+      const startHerePath = join(target, "start-here.md");
+      expect(existsSync(startHerePath)).toBe(true);
+      const startHereContent = readFileSync(startHerePath, "utf8");
+      expect(startHereContent).toContain("1. Welcome & Architecture Snapshot");
+      expect(startHereContent).toContain("2. Prerequisites & Quick Start");
+      expect(startHereContent).toContain("3. Project Structure Tour");
+      expect(startHereContent).toContain("4. How Styling & Design Tokens Work");
+      expect(startHereContent).toContain("5. Working with AI Agents");
+      expect(startHereContent).toContain("6. Common Tasks & Recipes");
+      expect(startHereContent).toContain("7. Verification & Definition of Done");
+
+      // 2. Verify Onboarding 3-folder structure and artifacts
+      expect(existsSync(join(target, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/01-Brand/visual-direction.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/02-Business/audience-persona.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/03-Menu/offerings.md"))).toBe(true);
+
+      const brandIdentity = readFileSync(join(target, "Onboarding/01-Brand/brand-identity.md"), "utf8");
+      expect(brandIdentity).toContain("Sovereign Store");
+      expect(brandIdentity).toContain("Direct to Consumer Apparel");
+
+      const offeringsMd = readFileSync(join(target, "Onboarding/03-Menu/offerings.md"), "utf8");
+      expect(offeringsMd).toContain("Signature Denim");
+
+      // 3. Verify OKLCH tokens and fluid clamp scales in src/styles/tokens.css
+      const tokensCssPath = join(target, "src/styles/tokens.css");
+      expect(existsSync(tokensCssPath)).toBe(true);
+      const tokensCss = readFileSync(tokensCssPath, "utf8");
+      expect(tokensCss).toContain("oklch(");
+      expect(tokensCss).toContain("--font-size-base: clamp(");
+      expect(tokensCss).toContain("--spacing-md: clamp(");
+
+      // 4. Verify Semantic BEM classes in src/styles/semantic.css
+      const semanticCssPath = join(target, "src/styles/semantic.css");
+      expect(existsSync(semanticCssPath)).toBe(true);
+      const semanticCss = readFileSync(semanticCssPath, "utf8");
+      expect(semanticCss).toContain(".c-button");
+      expect(semanticCss).toContain(".c-button--primary");
+      expect(semanticCss).toContain(".c-card");
+      expect(semanticCss).toContain(".c-product-grid");
+      expect(semanticCss).toContain(".c-product-card");
+      expect(semanticCss).toContain(".c-cart-drawer");
+
+      // 5. Verify auto-wired config files
+      expect(existsSync(join(target, "uno.config.ts"))).toBe(true);
+      expect(existsSync(join(target, "src/lib/medusa.ts"))).toBe(true);
+      expect(existsSync(join(target, ".env.example"))).toBe(true);
+      const envExample = readFileSync(join(target, ".env.example"), "utf8");
+      expect(envExample).toContain("MEDUSA_BACKEND_URL");
     });
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
