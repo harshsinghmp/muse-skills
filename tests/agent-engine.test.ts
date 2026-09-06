@@ -66,7 +66,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     });
   });
 
-  describe("Part B: new-project Framework Creation & WordPress Archetype", () => {
+  describe("Part B: new-project Framework Creation & Intent-First Configurator", () => {
     it("new-project copies Agent Engine from ai-ready/templates and supports wordpress archetype", () => {
       const target = join(TEST_SANDBOX, "wp-agency");
       const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
@@ -77,6 +77,74 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(res.stdout).toContain("Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)");
       expect(res.stdout).toContain("Archetype:          WORDPRESS");
       expect(res.stdout).toContain("Synced: ./.agents/standards/ (13 standards, including WordPress)");
+    });
+
+    it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile)", () => {
+      // 1. Powerhouse preset
+      const targetPower = join(TEST_SANDBOX, "power-test");
+      const resPower = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resPower.status).toBe(0);
+      expect(resPower.stdout).toContain("Framework:         `NEXTJS`");
+      expect(resPower.stdout).toContain("Styling:           `HYBRID`");
+      expect(resPower.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
+      expect(resPower.stdout).toContain("Database:          `NEON`");
+
+      // 2. Visual preset (Aria Builder)
+      const targetVisual = join(TEST_SANDBOX, "visual-test");
+      const resVisual = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetVisual, "--non-interactive", "--preset=visual", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resVisual.status).toBe(0);
+      expect(resVisual.stdout).toContain("Framework:         `ASTRO`");
+      expect(resVisual.stdout).toContain("CMS:               `ARIABUILDER`");
+      expect(resVisual.stdout).toContain("E-Commerce:        `FASTRR`");
+
+      // 3. Instatic preset
+      const targetInstatic = join(TEST_SANDBOX, "instatic-test");
+      const resInstatic = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resInstatic.status).toBe(0);
+      expect(resInstatic.stdout).toContain("Framework:         `INSTATIC`");
+      expect(resInstatic.stdout).toContain("Styling:           `BEM`");
+
+      // 4. Mobile preset (Expo)
+      const targetMobile = join(TEST_SANDBOX, "mobile-test");
+      const resMobile = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resMobile.status).toBe(0);
+      expect(resMobile.stdout).toContain("Framework:         `EXPO`");
+    });
+
+    it("supports granular intent-first companion composition and dynamic pruning", () => {
+      const targetCustom = join(TEST_SANDBOX, "custom-ecommerce");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetCustom,
+        "--non-interactive",
+        "--intent=ecommerce",
+        "--type=nextjs",
+        "--styling=hybrid",
+        "--animation=motion",
+        "--cms=payload",
+        "--puck",
+        "--ecommerce=medusa",
+        "--db=postgres",
+        "--auth=better-auth",
+        "--dry-run"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("Intent:            `ECOMMERCE`");
+      expect(res.stdout).toContain("Framework:         `NEXTJS`");
+      expect(res.stdout).toContain("Styling:           `HYBRID`");
+      expect(res.stdout).toContain("Animations:        `MOTION`");
+      expect(res.stdout).toContain("CMS:               `PAYLOAD`");
+      expect(res.stdout).toContain("E-Commerce:        `MEDUSA`");
+      expect(res.stdout).toContain("Database:          `POSTGRES`");
     });
   });
 

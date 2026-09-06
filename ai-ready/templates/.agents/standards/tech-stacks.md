@@ -1,6 +1,19 @@
 # 🚀 Agency Tech Stack Directions & Architectural Standards
 
-All digital products and client builds follow one of three designated architectural directions. All tooling is kept at the latest stable version.
+All digital products and client builds are scaffolded via the **Intent-First Configurator** (`new-project` / Agent Engine). Every project selects an intent, framework, styling companion, animation layer, CMS, e-commerce engine, and database. All packages strictly resolve to `@latest`.
+
+---
+
+## 🎯 Intent-First Architecture Matrix
+
+| Intent Category | Primary Frameworks | Recommended Styling | Recommended CMS / Commerce | Database & Backend |
+| :--- | :--- | :--- | :--- | :--- |
+| **Brochure & Static Site** | Astro v7 / Instatic HTML | Hybrid (UnoCSS Wind 4 + BEM) | SitePins / Aria Builder / None | None / SQLite |
+| **Content / Publication** | Astro v7 / Next.js 16 / Bedrock | Hybrid (UnoCSS Wind 4 + BEM) | Tina CMS / StudioCMS / Keystatic | SQLite / Turso / Neon |
+| **E-Commerce Storefront** | Next.js 16 / Astro v7 | Hybrid (UnoCSS Wind 4 + BEM) | Payload CMS / Medusa v2 / Fastrr | PostgreSQL (Neon / Supabase) |
+| **Web App / SaaS** | Next.js 16 | Hybrid (UnoCSS Wind 4 + BEM) | Payload + Puck / Keystone | Supabase / Neon + Better Auth |
+| **Mobile App** | React Native (Expo `@latest`) | NativeWind / StyleSheet | Headless API / Strapi | Supabase / PostgreSQL |
+| **DOX Governance Only** | Any (Language Agnostic) | Project Native | Project Native | Project Native |
 
 ---
 
@@ -9,13 +22,17 @@ All digital products and client builds follow one of three designated architectu
 > **Best For**: High-speed marketing platforms, content ecosystems, portals, and interactive agency web applications.
 
 ### Core Toolchain & Stack
-- **Framework**: **Astro v7.2.x** (Server-first, content collections, hybrid rendering)
-- **Styling**: **UnoCSS v66.x** + Custom Semantic BEM CSS tokens
-- **Animations**: **Motion.dev** (Framer Motion engine for high-end web interactions)
-- **UI & Accessibility**: **Aria Builder `@latest`** (WCAG 2.2 AA compliant accessible components)
-- **Testing**: **Vitest** (Unit, component, and utility tests)
-- **Runtime & Deployment**: **`@astrojs/cloudflare`** on **Cloudflare Free Tier** or **GitHub Pages**
-- **Persistence & Analytics**: SQLite DB (when local storage/edge persistence is needed) + Cloudflare Web Analytics
+- **Framework**: **Astro v7.x (`@latest`)** (Server-first, content collections, hybrid rendering)
+- **Zero-JS Invariant**: Pure static HTML with 0kB JavaScript baseline by default. Interactive dynamic islands are strictly implemented using **React** (`@astrojs/react@latest` with `client:*` directives).
+- **Styling**: **Hybrid Engine** (UnoCSS with `@unocss/preset-wind4` + Custom Semantic BEM with native OKLCH design tokens).
+- **Animations**: **Hardware-Accelerated CSS Presets** (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`) or **Motion.dev** (`motion@latest`).
+- **CMS & Visual Builders**:
+  - **Aria Builder** (`ariabuilder.io`): Astro-native visual builder #1 choice.
+  - **StudioCMS**: Astro-native headless CMS (Astro DB / LibSQL / Turso).
+  - **Git-Based Headless**: SitePins, Tina CMS, Keystatic, Pages CMS, Decap CMS.
+- **E-Commerce Companions**: Fastrr (1-click checkout), Razorpay, Stripe Hosted, Medusa v2, or Payload CMS.
+- **Testing**: **Vitest** (Unit, component, and utility tests).
+- **Runtime & Deployment**: **`@astrojs/cloudflare`** on Cloudflare Free Tier or GitHub Pages.
 
 ---
 
@@ -24,25 +41,32 @@ All digital products and client builds follow one of three designated architectu
 > **Best For**: Pure HTML brochure sites, lightweight marketing landing pages, and zero-JS static client deliverables.
 
 ### Core Toolchain & Stack
-- **Engine**: **[Instatic](https://github.com/corebunch/instatic)** — Pure HTML-based static site generator
-- **Delivery**: Semantic HTML5, CSS3, minimal vanilla JS
-- **Hosting**: Cloudflare Pages / GitHub Pages (Zero compute overhead, sub-millisecond TTFB)
+- **Engine**: **[Instatic](https://github.com/corebunch/instatic)** — Pure HTML-based static site generator.
+- **Styling**: Custom Semantic BEM CSS tokens with OKLCH palette (`reset.css`, `tokens.css`, `semantic.css`).
+- **Animations**: Pure hardware-accelerated CSS animations (`animations.css`).
+- **Delivery**: Semantic HTML5, CSS3, minimal vanilla JS.
+- **Hosting**: Cloudflare Pages / GitHub Pages (Zero compute overhead, sub-millisecond TTFB).
 - **Principle**: Zero runtime dependencies, 100/100 Lighthouse performance score by default.
 
 ---
 
-## 🛍️ Direction 3: Headless E-Commerce & Dynamic CMS
+## 🛍️ Direction 3: Headless E-Commerce & Dynamic Next.js
 
 > **Best For**: Direct-to-Consumer (D2C) e-commerce brands, high-scale digital stores, and content-managed portals.
 
 ### Core Toolchain & Stack
-- **CMS & Backend**: **Payload CMS** with official E-Commerce Module
-- **Frontend Framework**: **Next.js** (App Router, Server Components by default)
-- **Styling & Motion**: **UnoCSS** + **Motion.dev**
-- **Type Safety & Validation**: **Zod** (strict schema validation at all API boundaries)
-- **Testing**: **Vitest** (Unit, integration, and API tests)
-- **Database**: **Neon** (Serverless PostgreSQL) or **Supabase**
-- **Hosting & Infrastructure**: **Cloudflare Free / Low-Cost Tier** + edge caching for zero-to-low operational cost
+- **Frontend Framework**: **Next.js 16 (`@latest`)** (React 19, App Router, Server Components & Server Actions by default).
+- **Styling Engine**: **Hybrid Engine** (UnoCSS `@unocss/preset-wind4` + Custom Semantic BEM).
+- **Animations**: **Motion.dev (`motion@latest`)** or **GSAP (`gsap@latest` + ScrollTrigger)** for high-fps zero-lag experiences.
+- **CMS & Builders**:
+  - **Payload CMS (`@latest`)**: Full-stack TypeScript headless CMS with optional **Puck Visual Builder**.
+  - **Keystone CMS / Strapi**: Self-hosted headless alternatives.
+- **E-Commerce Backend**:
+  - **Payload E-Commerce Module**: Native unified database-level checkout and cart management.
+  - **Medusa v2 (`@latest`)**: Sovereign headless commerce engine for complex inventory and multi-region storefronts.
+- **Database & ORM**: **Neon** (Serverless PostgreSQL) or **Supabase** via **Drizzle ORM**.
+- **Authentication**: **Better Auth** (Self-hosted in Postgres) or **Supabase Auth**.
+- **Hosting & Infrastructure**: Cloudflare Pages / Docker / Coolify / Vercel.
 
 ---
 
@@ -51,16 +75,32 @@ All digital products and client builds follow one of three designated architectu
 > **Best For**: Content-heavy editorial publishing, bespoke enterprise agency setups, and headless WordPress architectures.
 
 ### Core Toolchain & Stack
-- **Architecture**: **Roots Bedrock** (12-factor configuration, Composer dependency management)
-- **CMS**: WordPress 6.x+ with Modern Gutenberg Blocks (`@wordpress/scripts`)
-- **API & Headless**: WP REST API / WPGraphQL for decoupled Next.js / Astro frontends
-- **Code Quality**: PSR-12 / WordPress Coding Standards (WPCS) with `phpcs`
-- **Testing**: PHPUnit / `wp-env` integration suite
-- **Hosting**: Fast PHP 8.2+ managed hosting, Kinsta, WP Engine, or custom Cloudflare-proxied VPS
+- **Architecture**: **Roots Bedrock** (12-factor configuration, Composer dependency management).
+- **CMS**: WordPress 6.x+ with Modern Gutenberg Blocks (`@wordpress/scripts`).
+- **API & Headless**: WP REST API / WPGraphQL for decoupled Next.js / Astro frontends.
+- **Code Quality**: PSR-12 / WordPress Coding Standards (WPCS) with `phpcs`.
+- **Testing**: PHPUnit / `wp-env` integration suite.
+- **Hosting**: Fast PHP 8.2+ managed hosting, Kinsta, WP Engine, or custom Cloudflare-proxied VPS.
+
+---
+
+## 📱 Direction 5: Cross-Platform Mobile Applications
+
+> **Best For**: Native iOS and Android applications with web code-sharing.
+
+### Core Toolchain & Stack
+- **Framework**: **React Native with Expo (`@latest`)**.
+- **Navigation**: Expo Router (file-based routing).
+- **Styling**: NativeWind (Tailwind CSS for React Native) or StyleSheet tokens.
+- **Backend & Auth**: Supabase / Better Auth API.
+- **Tooling**: Bun runtime, EAS Build.
 
 ---
 
 ## 🔒 Tech Stack Invariants
-1. **No Speculative Dependencies**: Do not introduce unlisted frameworks or heavy third-party runtime libraries without explicit human authorization.
-2. **Edge-First Hosting**: Default to Cloudflare edge deployment across all directions to maintain zero-to-low infrastructure costs.
-3. **Accessibility Baseline**: WCAG 2.2 AA compliance is mandatory across all user-facing components.
+1. **Always-Latest Package Resolution**: Whenever scaffolding or adding dependencies, always resolve to `@latest`. Never pin deprecated or arbitrary commit hashes (`#<sha>`).
+2. **Open-Source & Self-Hosted Priority**: Always prefer open-source and self-hostable solutions (Payload, Medusa, Better Auth, Drizzle, Roots) before third-party cloud services.
+3. **Universal Custom & None**: Every architectural layer must provide a `Custom` option for user-defined tooling and a `None` option for pure zero-dependency baselines.
+4. **Zero Secret Exposure**: Strict adherence to the LifeOS Vibeguard protocol (`bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts`). Never commit `.env` or plaintext credentials.
+5. **Accessibility Baseline**: WCAG 2.2 AA compliance is mandatory across all user-facing components.
+
