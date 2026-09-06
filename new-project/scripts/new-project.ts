@@ -31,12 +31,25 @@ const REPO_ROOT = resolve(SCRIPT_DIR, "..");
 const TEMPLATES_DIR = join(REPO_ROOT, "ai-ready/templates");
 
 // CLI Flags Parsing
+// CLI Flags Parsing
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
   options: {
     name: { type: "string", short: "n" },
     desc: { type: "string", short: "d" },
     path: { type: "string", short: "p" },
+    author: { type: "string" },
+    tagline: { type: "string" },
+    audience: { type: "string" },
+    problem: { type: "string" },
+    features: { type: "string" },
+    tone: { type: "string" },
+    palette: { type: "string" },
+    "first-milestone": { type: "string" },
+    "planned-milestones": { type: "string" },
+    "agent-name": { type: "string" },
+    "agent-role": { type: "string" },
+    constraint: { type: "string" },
     intent: { type: "string", short: "i" }, // brochure | content | ecommerce | app | mobile | governance
     preset: { type: "string" },             // powerhouse | publisher | edge | visual | instatic | mobile
     type: { type: "string", short: "t" },   // nextjs | astro | instatic | wordpress | expo | custom | none
@@ -70,14 +83,29 @@ const { values, positionals } = parseArgs({
 
 if (values.help) {
   console.log(`
-🏛️ Universal Project OS & Intent-First Companion Configurator
+🚀 Universal Project OS & Intent-First Companion Configurator
 
 Usage:
   bun new-project/scripts/new-project.ts [targetPath] [options]
 
-Core Options:
+Project Onboarding Options:
   -n, --name <name>             Project name (default: directory name)
   -p, --path <path>             Target directory path
+  -d, --desc <desc>             Project description
+      --tagline <text>          One-line project summary / vision
+      --author <name>           Author or organization name
+      --audience <audience>     Target audience or user segment
+      --problem <problem>       Core problem being solved
+      --features <list>         Key capabilities/features (comma-separated)
+      --tone <tone>             Brand tone & voice
+      --palette <palette>       Color theme: slate | indigo | emerald | amber | violet | custom
+      --first-milestone <item>  Immediate first milestone to build
+      --planned-milestones <items> Planned upcoming milestones (comma-separated)
+      --agent-name <name>       Primary AI agent identity (default: Orchestrator)
+      --agent-role <role>       Primary AI agent role (default: Lead Workspace Orchestrator)
+      --constraint <rule>       Primary governance quality rule
+
+Architecture & Stack Options:
   -i, --intent <intent>         brochure | content | ecommerce | app | mobile | governance
       --preset <preset>         1-click recipe: powerhouse | publisher | edge | visual | instatic | mobile | astro-mobile
   -t, --type <type>             Framework: nextjs | astro | instatic | wordpress | expo | custom | none
@@ -108,6 +136,52 @@ async function ask(rl: ReturnType<typeof createInterface>, question: string, def
   const answer = await rl.question(question + suffix);
   return answer.trim() || defaultVal;
 }
+
+interface PaletteColors {
+  primaryDefault: string;
+  primaryLight: string;
+  primaryDark: string;
+  secondary: string;
+  accent: string;
+}
+
+const PALETTES: Record<string, PaletteColors> = {
+  slate: {
+    primaryDefault: "oklch(0.25 0.02 260)",
+    primaryLight: "oklch(0.35 0.02 260)",
+    primaryDark: "oklch(0.15 0.01 260)",
+    secondary: "oklch(0.45 0.03 260)",
+    accent: "oklch(0.65 0.15 250)",
+  },
+  indigo: {
+    primaryDefault: "oklch(0.52 0.22 260)",
+    primaryLight: "oklch(0.62 0.18 260)",
+    primaryDark: "oklch(0.42 0.24 260)",
+    secondary: "oklch(0.68 0.16 200)",
+    accent: "oklch(0.72 0.18 160)",
+  },
+  emerald: {
+    primaryDefault: "oklch(0.55 0.18 150)",
+    primaryLight: "oklch(0.65 0.14 150)",
+    primaryDark: "oklch(0.45 0.20 150)",
+    secondary: "oklch(0.65 0.12 180)",
+    accent: "oklch(0.75 0.15 85)",
+  },
+  amber: {
+    primaryDefault: "oklch(0.55 0.16 55)",
+    primaryLight: "oklch(0.65 0.13 55)",
+    primaryDark: "oklch(0.45 0.18 55)",
+    secondary: "oklch(0.68 0.12 75)",
+    accent: "oklch(0.75 0.18 40)",
+  },
+  violet: {
+    primaryDefault: "oklch(0.55 0.25 300)",
+    primaryLight: "oklch(0.65 0.20 300)",
+    primaryDark: "oklch(0.45 0.27 300)",
+    secondary: "oklch(0.65 0.20 330)",
+    accent: "oklch(0.75 0.18 180)",
+  },
+};
 
 // Preset definitions for 1-Click Agency Golden Presets
 interface StackConfig {
@@ -270,7 +344,7 @@ function getPresetConfig(preset: string): StackConfig {
 
 async function main() {
   console.log("\n=======================================================");
-  console.log(" 🏛️ Agency Council — Universal Project OS & Scaffolder");
+  console.log(" 🚀 Universal Project OS & DOX Engine Provisioner");
   console.log("=======================================================\n");
 
   if (!existsSync(TEMPLATES_DIR)) {
@@ -280,7 +354,18 @@ async function main() {
 
   let targetPath = values.path || positionals[0] || "";
   let projectName = values.name || "";
-  let projectDesc = values.desc || "";
+  let projectDesc = values.desc || values.tagline || "";
+  let authorName = values.author || "";
+  let targetAudience = values.audience || "";
+  let coreProblem = values.problem || "";
+  let coreFeatures = values.features || "";
+  let brandVoice = values.tone || "";
+  let colorPalette = values.palette || "";
+  let firstMilestone = values["first-milestone"] || "";
+  let plannedMilestones = values["planned-milestones"] || "";
+  let agentName = values["agent-name"] || "";
+  let agentRole = values["agent-role"] || "";
+  let primaryConstraint = values.constraint || "";
 
   let config: StackConfig = {
     intent: values.intent || "",
@@ -329,16 +414,13 @@ async function main() {
   if (!projectName && targetPath) {
     projectName = basename(resolve(process.cwd(), targetPath));
   }
-  if (!projectDesc && projectName) {
-    projectDesc = `${projectName} - High-performance application governed by Agency Council.`;
-  }
 
-  // Interactive Prompt Mode (skip if non-interactive OR if preset/type & path provided)
-  const shouldPrompt = !isNonInteractive && (!targetPath || (!config.framework && !values.preset));
-  if (shouldPrompt) {
+  // Interactive Prompt Mode (run full onboarding questionnaire when not in non-interactive mode)
+  if (!isNonInteractive) {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
 
     try {
+      console.log("📋 STAGE 1: Project Identity & Vision");
       // 1. Path Picker
       if (!targetPath) {
         targetPath = await ask(rl, "📁 Project Destination Directory", "./my-project");
@@ -354,29 +436,54 @@ async function main() {
       if (!projectDesc) {
         projectDesc = await ask(
           rl,
-          "📝 Project Description",
-          `${projectName} - High-performance application governed by Agency Council.`
+          "📝 One-Line Tagline / Vision",
+          `${projectName} - Modern application governed by DOX Engine.`
         );
       }
 
-      // 4. Mode Selection: Preset vs Custom Composer
+      // 4. Author / Organization
+      if (!authorName) {
+        authorName = await ask(rl, "👤 Author / Organization", projectName);
+      }
+
+      // 5. Target Audience
+      if (!targetAudience) {
+        targetAudience = await ask(rl, "👥 Target Audience / Users", "Developers, creators, and modern teams");
+      }
+
+      // 6. Core Problem Solved
+      if (!coreProblem) {
+        coreProblem = await ask(rl, "🎯 Core Problem Solved", "Delivering fast, accessible, and structured user experiences");
+      }
+
+      // 7. Core Features
+      if (!coreFeatures) {
+        coreFeatures = await ask(
+          rl,
+          "✨ Key Features (comma-separated)",
+          "Core application shell, Responsive modern UI, Fast API integration"
+        );
+      }
+
+      // 8. Mode Selection: Preset vs Custom Composer
       if (!config.framework && !values.preset) {
-        console.log("\n⚡ Configuration Mode:");
-        console.log("  [1] 🌟 1-Click Agency Golden Presets (Battle-tested curated recipes)");
+        console.log("\n⚡ STAGE 2: Architecture & Intent Configuration");
+        console.log("  [1] 🌟 1-Click Curated Presets (Battle-tested curated recipes)");
         console.log("  [2] 🛠️  Custom Intent Composer (Step-by-step interactive configuration)");
         
         const modeChoice = await ask(rl, "Select mode [1-2]", "1");
 
         if (modeChoice === "1") {
-          console.log("\n🌟 Select Agency Golden Preset:");
-          console.log("  [1] The Agency Superstack     (Next.js 16 + Hybrid UnoCSS/BEM + Payload 3.0 w/ Puck + Payload E-Com + Neon DB)");
-          console.log("  [2] The Hyper Publisher       (Astro v7 + Hybrid UnoCSS/BEM + StudioCMS / SitePins + CSS Animations)");
-          console.log("  [3] The Visual Studio         (Astro v7 + Aria Builder + OKLCH Tokens + Fastrr/Razorpay/Stripe)");
-          console.log("  [4] The Edge Sovereign        (Astro v7 + UnoCSS Wind 4 + Emdash CMS on Cloudflare D1/R2/Workers)");
-          console.log("  [5] The Performance Brochure  (Instatic HTML + Semantic BEM + Zero JS + 100/100 Lighthouse)");
-          console.log("  [6] The Cross-Platform Mobile (Expo React Native + Shared TypeScript Models)");
+          console.log("\n🌟 Select Curated Golden Preset:");
+          console.log("  [1] Full-Stack Powerhouse     (Next.js 16 + Hybrid UnoCSS/BEM + Payload 3.0 w/ Puck + Payload E-Com + Neon DB)");
+          console.log("  [2] Hyper Publisher           (Astro v7 + Hybrid UnoCSS/BEM + StudioCMS / SitePins + CSS Animations)");
+          console.log("  [3] Visual Studio & Checkout  (Astro v7 + Aria Builder + OKLCH Tokens + Fastrr/Razorpay/Stripe)");
+          console.log("  [4] Edge Sovereign            (Astro v7 + UnoCSS Wind 4 + Emdash CMS on Cloudflare D1/R2/Workers)");
+          console.log("  [5] Performance Brochure      (Instatic HTML + Semantic BEM + Zero JS + 100/100 Lighthouse)");
+          console.log("  [6] Cross-Platform Mobile     (Expo React Native + Shared TypeScript Models)");
+          console.log("  [7] Astro Mobile to APK       (Astro v7 + Ionic Capacitor + NanoStores for iOS & Android)");
           
-          const presetChoice = await ask(rl, "Choose preset [1-6]", "1");
+          const presetChoice = await ask(rl, "Choose preset [1-7]", "1");
           const presetMap: Record<string, string> = {
             "1": "powerhouse",
             "2": "publisher",
@@ -384,6 +491,7 @@ async function main() {
             "4": "edge",
             "5": "instatic",
             "6": "mobile",
+            "7": "astro-mobile",
           };
           config = getPresetConfig(presetMap[presetChoice] || "powerhouse");
         } else {
@@ -625,7 +733,6 @@ async function main() {
           }
 
           // STEP 5: Database & Persistence Selection
-          // Pruning: Skip if pure Instatic or static git-based without user data
           if (config.framework !== "instatic" && config.framework !== "none") {
             console.log("\n🗄️  Select Database & Persistence Layer (Open Source / Self-Hosted First):");
             console.log("  [1] Neon DB             (Serverless branchable autoscaling PostgreSQL + Drizzle ORM) [Recommended]");
@@ -756,6 +863,74 @@ async function main() {
           }
         }
       }
+
+      // STAGE 3: Brand Personality & Visual Aesthetics
+      if (!brandVoice) {
+        console.log("\n🎨 STAGE 3: Brand Personality & Visual Aesthetics");
+        console.log("  [1] Modern, Technical & Authoritative [Recommended]");
+        console.log("  [2] Clean, Minimalist & Focused");
+        console.log("  [3] Bold, Dynamic & Creative");
+        console.log("  [4] Elegant, Editorial & Sophisticated");
+        console.log("  [5] Friendly, Warm & Approachable");
+        console.log("  [6] Custom");
+        const toneChoice = await ask(rl, "Choose brand tone [1-6]", "1");
+        const toneMap: Record<string, string> = {
+          "1": "Modern, technical, precise, and authoritative",
+          "2": "Clean, minimalist, focused, and distraction-free",
+          "3": "Bold, dynamic, creative, and high-energy",
+          "4": "Elegant, editorial, sophisticated, and polished",
+          "5": "Friendly, warm, helpful, and approachable",
+        };
+        brandVoice = toneChoice === "6" ? await ask(rl, "Custom voice description", "Direct and technical") : (toneMap[toneChoice] || toneMap["1"]);
+      }
+
+      if (!colorPalette) {
+        console.log("\n🌈 Select Color Theme Palette:");
+        console.log("  [1] Slate & Zinc      (Neutral monochrome / Minimalist) [Default]");
+        console.log("  [2] Ocean Indigo      (Modern SaaS & Tech Indigo)");
+        console.log("  [3] Emerald & Mint    (Fresh / Eco / Fintech Green)");
+        console.log("  [4] Warm Amber        (Artisan / Earthy / Editorial)");
+        console.log("  [5] Cyberpunk Violet  (Creative / High-contrast Neon)");
+        console.log("  [6] Custom OKLCH");
+        const palChoice = await ask(rl, "Choose color theme [1-6]", "1");
+        const palMap: Record<string, string> = {
+          "1": "slate",
+          "2": "indigo",
+          "3": "emerald",
+          "4": "amber",
+          "5": "violet",
+        };
+        colorPalette = palChoice === "6" ? "custom" : (palMap[palChoice] || "slate");
+      }
+
+      // STAGE 4: SOW Roadmap & Immediate Milestone
+      if (!firstMilestone) {
+        console.log("\n🗺️  STAGE 4: SOW Roadmap & Milestones");
+        firstMilestone = await ask(rl, "⚡ Immediate First Milestone (In Progress)", "Scaffold core application shell and initial landing page");
+      }
+      if (!plannedMilestones) {
+        plannedMilestones = await ask(
+          rl,
+          "📋 Planned Future Milestones (comma-separated)",
+          "Backend API integration, Automated testing suite, Production deployment"
+        );
+      }
+
+      // STAGE 5: Agent Governance & Operating Rules
+      if (!agentName) {
+        console.log("\n🤖 STAGE 5: Agent Governance & Operating Rules");
+        agentName = await ask(rl, "Primary AI Agent Name", "Orchestrator");
+      }
+      if (!agentRole) {
+        agentRole = await ask(rl, "Primary Agent Role", "Lead Workspace Orchestrator");
+      }
+      if (!primaryConstraint) {
+        primaryConstraint = await ask(
+          rl,
+          "Primary Quality Invariant",
+          "Zero regression, 100% test pass rate, and zero secret exposure"
+        );
+      }
     } finally {
       rl.close();
     }
@@ -764,7 +939,19 @@ async function main() {
   // Fallbacks & Defaults
   const resolvedTarget = isAbsolute(targetPath || ".") ? (targetPath || ".") : resolve(process.cwd(), targetPath || ".");
   projectName = projectName || basename(resolvedTarget);
-  projectDesc = projectDesc || `${projectName} - Application governed by Agency Council.`;
+  projectDesc = projectDesc || `${projectName} - Modern application governed by DOX Engine.`;
+  authorName = authorName || projectName;
+  targetAudience = targetAudience || "Developers, creators, and modern teams";
+  coreProblem = coreProblem || "Delivering fast, accessible, and structured user experiences";
+  coreFeatures = coreFeatures || "Core application shell, High-speed rendering, Clean API boundaries";
+  brandVoice = brandVoice || "Modern, technical, precise, and authoritative";
+  colorPalette = (colorPalette || "slate").toLowerCase();
+  firstMilestone = firstMilestone || "Scaffold core application shell and initial landing page";
+  plannedMilestones = plannedMilestones || "Backend API integration, Automated testing suite, Production deployment";
+  agentName = agentName || "Orchestrator";
+  agentRole = agentRole || "Lead Workspace Orchestrator";
+  primaryConstraint = primaryConstraint || "Zero regression, 100% test pass rate, and zero secret exposure";
+
   config.framework = (config.framework || "astro").toLowerCase();
   config.styling = (config.styling || "hybrid").toLowerCase();
   config.animation = (config.animation || "css").toLowerCase();
@@ -778,8 +965,10 @@ async function main() {
   console.log("\n-------------------------------------------------------");
   console.log(`📁 Project Directory: \`${resolvedTarget}\``);
   console.log(`🏷️  Project Name:      \`${projectName}\``);
+  console.log(`👤 Author:            \`${authorName}\``);
   console.log(`🎯 Project Intent:     \`${config.intent.toUpperCase() || "CUSTOM"}\``);
   console.log(`⚡ Framework:         \`${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""}\``);
+  console.log(`⚡ Archetype:          ${config.framework.toUpperCase()}`);
   console.log(`🎨 Styling:           \`${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""}\``);
   console.log(`🎭 Animations:        \`${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}\``);
   console.log(`🧠 State Store:       \`${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}\``);
@@ -788,6 +977,9 @@ async function main() {
   console.log(`🛍️  E-Commerce:        \`${config.ecommerce.toUpperCase()}${config.customEcommerce ? ` (${config.customEcommerce})` : ""}\``);
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}${config.customDb ? ` (${config.customDb})` : ""}\``);
   console.log(`🔑 Auth:              \`${config.auth.toUpperCase()}${config.customAuth ? ` (${config.customAuth})` : ""}\``);
+  console.log(`🎨 Brand Theme:       \`${colorPalette.toUpperCase()}\``);
+  console.log(`🤖 Lead Agent:        \`${agentName} (${agentRole})\``);
+  console.log(`⚡ First Milestone:   \`${firstMilestone}\``);
   if (isDryRun) console.log(`🔍 [DRY RUN MODE — Zero filesystem modifications]`);
   console.log("-------------------------------------------------------\n");
 
@@ -808,6 +1000,8 @@ async function main() {
     let content = readFileSync(agentsSrc, "utf8");
     content = content.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
     content = content.replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
+    content = content.replace(/\{\{AGENT_NAME\}\}/g, agentName);
+    content = content.replace(/\{\{AGENT_ROLE\}\}/g, agentRole);
     if (!existsSync(agentsDest) || isForce) {
       if (!isDryRun) writeFileSync(agentsDest, content, "utf8");
       console.log("  ✅ Created: `./AGENTS.md`");
@@ -881,9 +1075,47 @@ async function main() {
     }
     const tokensSrc = join(brandSrc, "tokens");
     const tokensDest = join(brandDest, "tokens");
-    if (existsSync(tokensSrc) && !existsSync(tokensDest)) {
-      if (!isDryRun) cpSync(tokensSrc, tokensDest, { recursive: true });
-      console.log("  ✅ Provisioned: `./.agents/brand/tokens/` baseline");
+    if (existsSync(tokensSrc)) {
+      if (!existsSync(join(tokensDest, "colors.json")) || isForce) {
+        if (!isDryRun) cpSync(tokensSrc, tokensDest, { recursive: true });
+        console.log("  ✅ Provisioned: `./.agents/brand/tokens/` baseline");
+      }
+
+      // Dynamically apply selected color palette
+      if (PALETTES[colorPalette] && !isDryRun) {
+        const pal = PALETTES[colorPalette];
+        const colorsJsonPath = join(tokensDest, "colors.json");
+        if (existsSync(colorsJsonPath)) {
+          try {
+            const colorsData = JSON.parse(readFileSync(colorsJsonPath, "utf8"));
+            if (colorsData.color?.primary) {
+              colorsData.color.primary.default.$value = pal.primaryDefault;
+              colorsData.color.primary.light.$value = pal.primaryLight;
+              colorsData.color.primary.dark.$value = pal.primaryDark;
+            }
+            if (colorsData.color?.secondary) {
+              colorsData.color.secondary.$value = pal.secondary;
+            }
+            if (colorsData.color?.accent) {
+              colorsData.color.accent.$value = pal.accent;
+            }
+            writeFileSync(colorsJsonPath, JSON.stringify(colorsData, null, 2) + "\n", "utf8");
+          } catch {
+            // Non-fatal if parsing fails
+          }
+        }
+
+        const baseCssPath = join(tokensDest, "base.css");
+        if (existsSync(baseCssPath)) {
+          let baseCss = readFileSync(baseCssPath, "utf8");
+          baseCss = baseCss.replace(/--color-primary:\s*[^;]+;/, `--color-primary: ${pal.primaryDefault};`);
+          baseCss = baseCss.replace(/--color-primary-light:\s*[^;]+;/, `--color-primary-light: ${pal.primaryLight};`);
+          baseCss = baseCss.replace(/--color-primary-dark:\s*[^;]+;/, `--color-primary-dark: ${pal.primaryDark};`);
+          baseCss = baseCss.replace(/--color-secondary:\s*[^;]+;/, `--color-secondary: ${pal.secondary};`);
+          baseCss = baseCss.replace(/--color-accent:\s*[^;]+;/, `--color-accent: ${pal.accent};`);
+          writeFileSync(baseCssPath, baseCss, "utf8");
+        }
+      }
     }
   }
 
@@ -891,6 +1123,43 @@ async function main() {
   const contextSrc = join(TEMPLATES_DIR, ".agents/context");
   const contextDest = join(agentsDir, "context");
   if (existsSync(contextSrc)) {
+    const featureBullets = coreFeatures
+      .split(",")
+      .map((f) => `- **${f.trim()}**: Core capability and automated verification.`)
+      .join("\n");
+    const plannedBullets = plannedMilestones
+      .split(",")
+      .map((m) => `- **${m.trim()}**: Scheduled for upcoming development sprint.`)
+      .join("\n");
+    const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
+
+    const tokenMap: Record<string, string> = {
+      "{{PROJECT_NAME}}": projectName,
+      "{{PROJECT_DESC}}": projectDesc,
+      "{{AUTHOR_NAME}}": authorName,
+      "{{TARGET_AUDIENCE}}": targetAudience,
+      "{{PROBLEM_SOLVED}}": coreProblem,
+      "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
+      "{{CORE_FEATURES}}": featureBullets,
+      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance and standards container`,
+      "{{BRAND_VOICE}}": brandVoice,
+      "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
+      "{{FIRST_MILESTONE}}": firstMilestone,
+      "{{PLANNED_MILESTONES}}": plannedBullets,
+      "{{REQUESTED_BACKLOG}}": requestedBullets,
+      "{{PROJECT_INTENT}}": config.intent.toUpperCase() || "WEB",
+      "{{FRAMEWORK_DETAILS}}": `${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""} (@latest)`,
+      "{{STYLING_DETAILS}}": `${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in .agents/brand/tokens/)`,
+      "{{ANIMATION_DETAILS}}": `${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}`,
+      "{{STATE_DETAILS}}": `${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}`,
+      "{{MOBILE_DETAILS}}": `${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}`,
+      "{{CMS_COMMERCE_DETAILS}}": `CMS: ${config.cms.toUpperCase()}${config.puck ? " (+ Puck Visual Builder)" : ""} | E-Commerce: ${config.ecommerce.toUpperCase()}`,
+      "{{DATABASE_AUTH_DETAILS}}": `Database: ${config.db.toUpperCase()} | Auth: ${config.auth.toUpperCase()}`,
+      "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
+      "{{AGENT_NAME}}": agentName,
+      "{{AGENT_ROLE}}": agentRole,
+    };
+
     const ctxFiles = readdirSync(contextSrc);
     for (const f of ctxFiles) {
       const src = join(contextSrc, f);
@@ -898,8 +1167,9 @@ async function main() {
       if (!existsSync(dest) || isForce) {
         if (!isDryRun) {
           let c = readFileSync(src, "utf8");
-          c = c.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
-          c = c.replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
+          for (const [k, v] of Object.entries(tokenMap)) {
+            c = c.replaceAll(k, v);
+          }
           writeFileSync(dest, c, "utf8");
         }
       }
@@ -916,9 +1186,9 @@ async function main() {
     const hasMemoryCli = spawnSync("which", ["memory"], { stdio: "ignore" }).status === 0;
     if (hasMemoryCli) {
       spawnSync("memory", ["init"], { cwd: resolvedTarget, stdio: "ignore" });
-      console.log("  ✅ Initialized: `./.memory/` via Muse Memory CLI");
-    } else {
-      const baselineCurrent = `# Active Project Constraints & In-Flight Context
+      console.log("  ✅ Initialized: `./.memory/` via Memory CLI");
+    }
+    const baselineCurrent = `# Active Project Constraints & In-Flight Context — ${projectName}
 
 > **Operational Guidelines**:
 > - **For Humans**: Single-pane executive summary of active hard constraints and in-flight agent tasks. Zero verbose logs or transient filler.
@@ -932,14 +1202,15 @@ async function main() {
 - **Framework Standard**: ${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""}
 - **Styling Architecture**: ${config.styling.toUpperCase()}
 - **Always-Latest Rule**: All installed libraries resolve strictly using \`@latest\`.
+- **Primary Governance Constraint**: ${primaryConstraint}
 
 ## 🤖 Active Concurrent Agent Workstreams
 | Agent / Session ID | Status | Active Task | Target Scope / Files | Last Active |
 | :--- | :--- | :--- | :--- | :--- |
+| ${agentName} | In Progress | ${firstMilestone} | Full Workspace | ${new Date().toISOString().split("T")[0]} |
 `;
-      writeFileSync(join(memoryDir, "CURRENT.md"), baselineCurrent, "utf8");
-      console.log("  ✅ Initialized: `./.memory/CURRENT.md`");
-    }
+    writeFileSync(join(memoryDir, "CURRENT.md"), baselineCurrent, "utf8");
+    console.log("  ✅ Initialized: `./.memory/CURRENT.md`");
   }
 
   console.log("  🛡️ Stage 1 Complete: Governance container active.\n");
@@ -953,14 +1224,33 @@ async function main() {
     try {
       if (config.framework === "astro") {
         console.log("   Bootstrapping Astro v7 (@latest) with zero-JS static baseline...");
-        spawnSync("bun", ["create", "astro@latest", ".", "--template", "minimal", "--yes", "--no-git"], {
-          cwd: resolvedTarget,
+        const stagingDir = join(os.tmpdir(), `astro-scaffold-${Date.now()}`);
+
+        spawnSync("bun", ["create", "astro@latest", stagingDir, "--template", "minimal", "--yes", "--no-git", "--install"], {
           stdio: "inherit",
         });
 
         // Zero-Claude compliance (R1)
-        const claudeMd = join(resolvedTarget, "CLAUDE.md");
+        const claudeMd = join(stagingDir, "CLAUDE.md");
         if (existsSync(claudeMd)) rmSync(claudeMd, { force: true });
+
+        // Remove framework default AGENTS.md so Stage 1 governance contract is preserved
+        const astroAgentsMd = join(stagingDir, "AGENTS.md");
+        if (existsSync(astroAgentsMd)) rmSync(astroAgentsMd, { force: true });
+
+        // Merge .gitignore
+        const stagingGitignore = join(stagingDir, ".gitignore");
+        const targetGitignore = join(resolvedTarget, ".gitignore");
+        if (existsSync(stagingGitignore)) {
+          const astroIgnores = readFileSync(stagingGitignore, "utf8");
+          const doxIgnores = existsSync(targetGitignore) ? readFileSync(targetGitignore, "utf8") : "";
+          writeFileSync(targetGitignore, `${doxIgnores}\n\n# Astro Framework Defaults\n${astroIgnores}`, "utf8");
+          rmSync(stagingGitignore, { force: true });
+        }
+
+        // Copy framework deliverables into target directory
+        cpSync(stagingDir, resolvedTarget, { recursive: true });
+        rmSync(stagingDir, { recursive: true, force: true });
 
       } else if (config.framework === "nextjs") {
         console.log("   Bootstrapping Next.js 16 (@latest) with TypeScript, ESLint, and App Router...");
@@ -1036,7 +1326,7 @@ async function main() {
           mkdirSync(join(resolvedTarget, "wp-content/plugins"), { recursive: true });
           writeFileSync(
             join(resolvedTarget, "wp-content/themes", projectName, "style.css"),
-            `/*\nTheme Name: ${projectName}\nAuthor: Agency Council\nVersion: 1.0.0\n*/\n`,
+            `/*\nTheme Name: ${projectName}\nAuthor: ${authorName || projectName}\nVersion: 1.0.0\n*/\n`,
             "utf8"
           );
           writeFileSync(join(resolvedTarget, "wp-content/themes", projectName, "index.php"), `<?php\n// Silence is golden.\n`, "utf8");
@@ -1524,7 +1814,9 @@ export function updatePreference<K extends keyof UserPreferences>(key: K, value:
     // 9. Mobile App & Native Packaging (Ionic Capacitor)
     if (config.mobile === "capacitor") {
       console.log("  📱 Injecting Ionic Capacitor Mobile Packaging Configuration (`capacitor.config.ts`)...");
-      const capAppId = `com.agency.${projectName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "app"}`;
+      const authorSlug = (authorName || "app").replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "app";
+      const projectSlug = projectName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "app";
+      const capAppId = `com.${authorSlug}.${projectSlug}`;
       const capWebDir = config.framework === "nextjs" ? "out" : "dist";
 
       const capConfig = `import type { CapacitorConfig } from '@capacitor/cli';
@@ -1629,6 +1921,7 @@ ${artifactList}
 - None (Fresh scaffold initialization verified).
 
 ## 5. Next Immediate Focus
+- **Milestone 1**: ${firstMilestone}
 - Run \`bun install\` to resolve freshly scaffolded dependencies.
 - Verify initial local development server (\`bun run dev\`).
 `;
@@ -1644,9 +1937,9 @@ ${artifactList}
 ## High-Level Overview
 - **Project Intent**: ${config.intent.toUpperCase() || "BROCHURE"}
 - **Framework & Runtime**: ${config.framework.toUpperCase()} (Node/Bun runtime, \`@latest\` resolution)
-- **Styling Engine**: ${config.styling.toUpperCase()} (Hybrid UnoCSS Wind 4 + Custom Semantic BEM)
-- **Animation Layer**: ${config.animation.toUpperCase()} (Hardware-accelerated zero-lag animation presets)
-- **State Management**: ${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""} (Sub-1KB NanoStores for cross-island reactive state)
+- **Styling Engine**: ${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in \`.agents/brand/tokens/\`)
+- **Animation Layer**: ${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""} (Hardware-accelerated zero-lag animation presets)
+- **State Management**: ${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}
 - **Mobile Conversion**: ${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""} (Native packaging via Ionic Capacitor / Expo)
 - **Content Management**: ${config.cms.toUpperCase()}${config.puck ? " + Puck Visual Builder" : ""}
 - **E-Commerce**: ${config.ecommerce.toUpperCase()}

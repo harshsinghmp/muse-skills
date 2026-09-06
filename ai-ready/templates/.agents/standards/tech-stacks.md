@@ -1,6 +1,6 @@
-# 🚀 Agency Tech Stack Directions & Architectural Standards
+# 🚀 Tech Stack Directions & Architectural Standards
 
-All digital products and client builds are scaffolded via the **Intent-First Configurator** (`new-project` / Agent Engine). Every project selects an intent, framework, styling companion, animation layer, CMS, e-commerce engine, and database. All packages strictly resolve to `@latest`.
+All digital products and application builds are scaffolded via the **Intent-First Configurator** (`new-project` / Agent Engine). Every project selects an intent, framework, styling companion, animation layer, CMS, e-commerce engine, and database. All packages strictly resolve to `@latest`.
 
 ---
 
@@ -112,6 +112,6 @@ All digital products and client builds are scaffolded via the **Intent-First Con
 1. **Always-Latest Package Resolution**: Whenever scaffolding or adding dependencies, always resolve to `@latest`. Never pin deprecated or arbitrary commit hashes (`#<sha>`).
 2. **Open-Source & Self-Hosted Priority**: Always prefer open-source and self-hostable solutions (Payload, Medusa, Better Auth, Drizzle, Roots) before third-party cloud services.
 3. **Universal Custom & None**: Every architectural layer must provide a `Custom` option for user-defined tooling and a `None` option for pure zero-dependency baselines.
-4. **Zero Secret Exposure**: Strict adherence to the LifeOS Vibeguard protocol (`bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts`). Never commit `.env` or plaintext credentials.
+4. **Zero Secret Exposure**: Strict adherence to the Vibeguard secret defense protocol. Never commit `.env` or plaintext credentials.
 5. **Accessibility Baseline**: WCAG 2.2 AA compliance is mandatory across all user-facing components.
 

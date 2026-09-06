@@ -243,4 +243,95 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(REPO_ROOT, "gauntlet-loop/references/bar-selection-and-blind-critique.md"))).toBe(true);
     });
   });
+
+  describe("Part E: Interactive Onboarding & Clean Template Invariants", () => {
+    it("new-project dynamically injects onboarding parameters into DOX files and brand tokens", () => {
+      const target = join(TEST_SANDBOX, "acme-health");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        target,
+        "--non-interactive",
+        "--name=Acme Health",
+        "--author=Acme Corp",
+        "--tagline=HIPAA-compliant patient intake portal",
+        "--audience=Hospitals and regional clinics",
+        "--problem=Manual paper intake bottlenecks",
+        "--features=Intake Automation, EHR Sync, Secure Chat",
+        "--tone=Medical-Grade, Authoritative, Empathetic",
+        "--palette=emerald",
+        "--first-milestone=Implement EHR webhook listener",
+        "--planned-milestones=Patient onboarding flow, HIPAA audit log",
+        "--agent-name=Sentinel",
+        "--agent-role=Lead Healthcare Architect",
+        "--constraint=Zero client-side PHI storage",
+        "--intent=app",
+        "--type=none"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // Verify AGENTS.md
+      const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
+      expect(agentsMd).toContain("Acme Health");
+      expect(agentsMd).toContain("HIPAA-compliant patient intake portal");
+      expect(agentsMd).toContain("Sentinel");
+      expect(agentsMd).toContain("Lead Healthcare Architect");
+
+      // Verify .agents/context/product.md
+      const productMd = readFileSync(join(target, ".agents/context/product.md"), "utf8");
+      expect(productMd).toContain("Hospitals and regional clinics");
+      expect(productMd).toContain("Manual paper intake bottlenecks");
+      expect(productMd).toContain("Intake Automation");
+
+      // Verify .agents/context/brand.md
+      const brandMd = readFileSync(join(target, ".agents/context/brand.md"), "utf8");
+      expect(brandMd).toContain("Medical-Grade, Authoritative, Empathetic");
+      expect(brandMd).toContain("EMERALD");
+
+      // Verify .agents/context/roadmap.md
+      const roadmapMd = readFileSync(join(target, ".agents/context/roadmap.md"), "utf8");
+      expect(roadmapMd).toContain("Implement EHR webhook listener");
+      expect(roadmapMd).toContain("Patient onboarding flow");
+
+      // Verify .agents/brand/tokens/colors.json has emerald palette
+      const colorsJson = JSON.parse(readFileSync(join(target, ".agents/brand/tokens/colors.json"), "utf8"));
+      expect(colorsJson.color.primary.default.$value).toBe("oklch(0.55 0.18 150)");
+
+      // Verify .memory/CURRENT.md
+      const currentMd = readFileSync(join(target, ".memory/CURRENT.md"), "utf8");
+      expect(currentMd).toContain("Zero client-side PHI storage");
+      expect(currentMd).toContain("Sentinel");
+      expect(currentMd).toContain("Implement EHR webhook listener");
+    });
+
+    it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
+      const prohibited = [
+        "Harsh",
+        "harshsinghmp",
+        "Agency Council",
+        "Kameli",
+        "/home/harsh",
+        "~/.config/LIFEOS"
+      ];
+
+      function scanDir(dir: string) {
+        const entries = readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+          const fullPath = join(dir, entry.name);
+          if (entry.isDirectory()) {
+            scanDir(fullPath);
+          } else if (entry.isFile()) {
+            const content = readFileSync(fullPath, "utf8");
+            for (const word of prohibited) {
+              expect(content.includes(word)).toBe(
+                false
+              );
+            }
+          }
+        }
+      }
+
+      scanDir(AI_READY_TEMPLATES);
+    });
+  });
 });

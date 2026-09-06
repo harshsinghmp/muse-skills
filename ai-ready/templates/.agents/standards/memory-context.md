@@ -23,9 +23,9 @@ Before compaction, confirm:
 
 ---
 
-## 2. Persistent Cognitive Memory (`./.memory` & Muse Memory MCP)
+## 2. Persistent Cognitive Memory (`./.memory` & Memory MCP)
 
-The `./.memory` directory at the project root is the local persistent store managed by Muse Memory.
+The `./.memory` directory at the project root is the local persistent store managed by Cognitive Memory.
 
 ### Session Lifecycle & Concurrency
 1. **Pre-Flight Grounding**: At session start, call `get_context()` to load `USER.md`, active `CURRENT.md` invariants, and check active concurrent agent workstreams before editing files.
@@ -41,7 +41,7 @@ The `./.memory` directory at the project root is the local persistent store mana
    - Run `memory optimize` periodically or on cadence (7 days / 48h idle) to purge test noise and defragment SQLite.
 
 ### ⚠️ Dual-File Distinction: `.memory/CURRENT.md` vs `./.agents/context/current.md`
-- **`.memory/CURRENT.md` (Machine & Real-Time Coordination)**: Owned and parsed by `@github/musememory`. Stores machine-readable active hard constraints, in-flight agent workstream locks, and pre-compaction session handoffs. Never dump static project overviews or changelogs here.
+- **`.memory/CURRENT.md` (Machine & Real-Time Coordination)**: Stores machine-readable active hard constraints, in-flight agent workstream locks, and pre-compaction session handoffs. Never dump static project overviews or changelogs here.
 - **`./.agents/context/current.md` (Durable Shipped Reality)**: Owned by the project DOX tree. Stores the human-and-agent verified state of the codebase (verified shipped reality, live deliverables, runtime health oracle, and known gaps/placeholders). Updated during the Phase 5 Closeout DOX pass.
 
 ---
@@ -51,7 +51,7 @@ The `./.memory` directory at the project root is the local persistent store mana
 When available in the user environment, agents reference canonical identity and governance sources:
 
 1. **Principal Identity**: Stable principal identity, preferences, and agency operating standards.
-2. **Digital Assistant & Council**: Council roles, routing rules, and Nexus quality hardening gates.
+2. **Agent Roles & Governance**: Functional agent roles, routing rules, and quality hardening gates.
 3. **Mission & Goals**: Target outcomes, architectural direction, and operational boundaries.
 4. **Operational Rules**: Environment-specific compliance and communication rules.
 5. **Project Registry**: System routing and repository domain maps.

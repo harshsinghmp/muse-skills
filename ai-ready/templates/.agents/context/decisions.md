@@ -1,4 +1,4 @@
-# 🔒 Durable Architectural Decisions
+# 🔒 Durable Architectural Decisions — {{PROJECT_NAME}}
 
 > **Invariant**: Decisions documented here are locked. Do not reopen or refactor without explicit authorization.
 
@@ -6,17 +6,22 @@
 
 ## Decision Record
 
-### ADR-001: Progressive Disclosure for Agent Context
-- **Context**: Monolithic `AGENTS.md` loaded excessive tokens and suffered from context drift.
-- **Decision**: Split rules into lean root `AGENTS.md` with modular standards in `./.agents/standards/` and context maps in `./.agents/context/`.
+### ADR-001: Intent & Framework Architecture
+- **Context**: The project required a scalable foundation for {{PROJECT_INTENT}} workloads.
+- **Decision**: Adopted **{{FRAMEWORK_DETAILS}}** resolving strictly to `@latest`.
 - **Status**: Accepted & Implemented.
 
-### ADR-002: Zero Absolute Path Coupling
-- **Context**: Hardcoded paths break when repositories are cloned, moved, or renamed.
-- **Decision**: All intra-repo links and tool references must be relative (`./`).
+### ADR-002: Styling Architecture & Design Tokens
+- **Context**: Consistent visual design system with zero runtime overhead and WCAG 2.2 AA compliance.
+- **Decision**: Implemented **{{STYLING_DETAILS}}** paired with DTCG tokens in `./.agents/brand/tokens/`.
 - **Status**: Accepted & Implemented.
 
-### ADR-003: Agent File Containment
-- **Context**: Agents previously created scattered dot-directories in the root workspace (`.jez`, `.crush`, etc.).
-- **Decision**: All agent outputs, research, artifacts, plans, and goals live strictly within `./.agents/*`.
+### ADR-003: Progressive Disclosure DOX Container
+- **Context**: Monolithic context files overload LLM context windows and cause instructional drift.
+- **Decision**: Split rules into lean root `AGENTS.md` (<50 lines) with modular standards in `./.agents/standards/` and context maps in `./.agents/context/`.
+- **Status**: Accepted & Implemented.
+
+### ADR-004: Dual-Store Cognitive Memory Separation
+- **Context**: Clear separation needed between real-time machine runtime invariants and human-verified shipped documentation.
+- **Decision**: Machine-readable constraints live in `./.memory/CURRENT.md`; durable human/agent truth lives in `./.agents/context/current.md`.
 - **Status**: Accepted & Implemented.

@@ -242,7 +242,7 @@ In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is
 ### 1. Invariant & Downstream Mechanics
 - **Zero Appended Commit Hashes**: Never publish, output, or pass trailing `#<commit-sha>` or arbitrary git references in package/skill installation targets (e.g. `<owner>/<repo>#<commit-sha>`).
 - **The Fatal Clone Bug**: Downstream skill managers (`skills add`, `npx skills add`) invoke `git clone --depth 1 --branch <ref>`. In Git, `--branch` strictly accepts branch or tag names; passing a raw commit SHA fatally crashes the clone (`fatal: Remote branch <commit-sha> not found in upstream origin`).
-- **Clean Spec Mandate**: Always use `<owner>/<repo>` (e.g. `skills add harshsinghmp/muse-skills`). If a reference is strictly required anywhere, ensure it is a valid tag/branch and never breaks linking.
+- **Clean Spec Mandate**: Always use `<owner>/<repo>` (e.g. `skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it is a valid tag/branch and never breaks linking.
 - **Package Manager Freshness**: When tools accept version parameters (`npm`, `bun`, `pnpm`), use `@latest` if latest is desired. Otherwise, keep commands clean without redundant arguments to fetch latest automatically.
 
 

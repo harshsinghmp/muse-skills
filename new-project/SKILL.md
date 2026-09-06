@@ -3,7 +3,7 @@ name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Intent-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Aria Builder, Payload + Puck, StudioCMS, Git-based CMS), e-commerce (Payload, Medusa v2, Fastrr, Razorpay), and database (Neon, Supabase, Postgres, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 version: 2.2.0
-author: Agency Council
+author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
 category: core-engine
@@ -111,6 +111,20 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 | Flag | Type | Description |
 | :--- | :--- | :--- |
+| `-n, --name <name>` | String | Project name (default: directory basename) |
+| `-p, --path <path>` | String | Target directory path |
+| `--author <name>` | String | Project author or organization name |
+| `--tagline <desc>` | String | Project mission or summary |
+| `--audience <aud>` | String | Target audience or user persona |
+| `--problem <prob>` | String | Core problem solved by the project |
+| `--features <list>` | String | Comma-separated core features |
+| `--tone <tone>` | String | Brand voice / design aesthetic (e.g. Minimalist, High-Tech, Warm) |
+| `--palette <color>` | String | Brand theme: `slate` \| `indigo` \| `emerald` \| `amber` \| `violet` |
+| `--first-milestone <m>` | String | Immediate next task / initial milestone |
+| `--planned-milestones <list>`| String | Comma-separated planned milestones |
+| `--agent-name <name>` | String | Lead autonomous agent persona name (default: `Orchestrator`) |
+| `--agent-role <role>` | String | Lead agent functional role description |
+| `--constraint <text>` | String | Primary operational constraint or invariant |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
 | `--preset <preset>` | String | `powerhouse` \| `publisher` \| `edge` \| `visual` \| `instatic` \| `mobile` \| `astro-mobile` |
 | `-t, --type <framework>` | String | `nextjs` \| `astro` \| `instatic` \| `wordpress` \| `expo` \| `custom` \| `none` |
@@ -128,8 +142,48 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--non-interactive` | Boolean | Run without interactive prompts |
 | `-f, --force` | Boolean | Overwrite existing files |
 
-### Step 2: Stage 1 — Agents First (Governance Baseline)
-Copies lean `AGENTS.md` (<50 lines) and `.gitignore`, creates `.agents/` 9-folder containment tree with 13 modular standards, brand design tokens (Kameli OKLCH palette), and initializes cognitive memory.
+---
+
+## 🎙️ Interactive Onboarding Interview Protocol
+
+When invoking this skill interactively (or when an AI agent is tasked with onboarding a new project for a user), the agent MUST conduct a structured 5-phase onboarding interview or invoke `new-project` in interactive mode. The gathered answers are dynamically synthesized into all onboarding documents without generic placeholders:
+
+### Phase 1: Identity & Scope
+1. **Project Name & Slug**: Clear name and package slug.
+2. **Author / Organization**: Individual or team identity owning the codebase.
+3. **Core Mission & Tagline**: One-sentence purpose.
+4. **Target Audience**: Who this project serves.
+5. **Problem Statement**: The exact friction or pain point addressed.
+
+### Phase 2: Core Capabilities & Deliverables
+1. **Core Features**: The 3–5 foundational capabilities of the system.
+2. **First Milestone**: The immediate first task to be verified after scaffolding.
+3. **Planned Roadmap**: Upcoming milestones for sprint planning.
+
+### Phase 3: Brand & Aesthetic System
+1. **Brand Voice**: Adjectives defining product tone (e.g. *Precision, High-Performance, Minimalist*).
+2. **Design Palette**: Primary color theme (`slate`, `indigo`, `emerald`, `amber`, `violet`), dynamically injected into DTCG OKLCH tokens (`colors.json` & `base.css`).
+
+### Phase 4: Technical Stack & Companions
+1. **Project Intent**: Brochure, Content, E-Commerce, Web App, Mobile App, or Governance.
+2. **Framework & Companions**: Selected framework archetype (`nextjs`, `astro`, `instatic`, `wordpress`, `expo`) and companion stack (styling, animation, state, mobile packaging, CMS, DB, auth).
+
+### Phase 5: Autonomous Governance & Hard Constraints
+1. **Lead Agent Persona**: Dedicated agent handle and functional role.
+2. **Primary Operational Constraint**: Project invariant (e.g., zero client-side auth tokens, pure SSR, sub-100ms latency).
+
+---
+
+### Step 2: Stage 1 — Agents First (Governance Baseline & Dynamic Onboarding Docs)
+Copies lean `AGENTS.md` (<50 lines) and `.gitignore`, creates `.agents/` 9-folder containment tree with 13 modular standards, and dynamically populates:
+- `AGENTS.md`: Parameterized with project name, mission, and lead agent role.
+- `.agents/context/product.md`: Dynamically filled with target audience, problem solved, value proposition, core features, and key deliverables.
+- `.agents/context/brand.md`: Dynamically filled with brand voice, tone, and chosen color palette tokens.
+- `.agents/context/roadmap.md`: Dynamically initialized with first milestone, planned milestones, and requested backlog.
+- `.agents/context/architecture.md`: Dynamically initialized with chosen framework, styling, state, and mobile packaging.
+- `.agents/context/decisions.md`: Seeded with initial ADRs reflecting the intent, framework, and styling decisions.
+- `.agents/brand/tokens/colors.json` & `base.css`: Primary, secondary, and accent colors updated with the chosen OKLCH palette.
+- `.memory/CURRENT.md`: Seeded with active constraints, selected framework standards, and the in-flight first milestone.
 
 ### Step 3: Stage 2 — Companion Injection
 Generates configured companions:
@@ -137,7 +191,7 @@ Generates configured companions:
 - `src/styles/tokens.css`, `semantic.css`, `reset.css` (OKLCH BEM system)
 - `src/styles/animations.css` (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`)
 - `src/stores/app.ts` (NanoStores reactive state engine across Astro islands and React)
-- `capacitor.config.ts` (Ionic Capacitor iOS & Android APK configuration bridge)
+- `capacitor.config.ts` (Ionic Capacitor iOS & Android APK configuration bridge with dynamic app ID)
 - `src/lib/puck.config.tsx` (Puck Visual Builder configuration)
 - `src/lib/db.ts` & `drizzle.config.ts` (Database connection and Drizzle schema)
 - `src/lib/medusa.ts`, `src/lib/fastrr.ts`, `src/lib/razorpay.ts` (E-Commerce helpers)
@@ -145,7 +199,7 @@ Generates configured companions:
 - `package.json` updated with companion packages and mobile build scripts (`cap:build`, `cap:sync`, `cap:ios`, `cap:android`)
 
 ### Step 4: Stage 3 — Closeout DOX Pass
-Updates `.agents/context/current.md` and `.agents/context/architecture.md` with verified live deliverables.
+Updates `.agents/context/current.md` and `.agents/context/architecture.md` with verified live deliverables and records the initial milestone under immediate focus.
 
 ### Step 5: Pattern Promotion & Skill Extraction (Continuous Self-Improvement)
 When recurring patterns emerge across tasks (≥3 occurrences) and are verified by tests:
