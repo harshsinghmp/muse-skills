@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.0] - 2026-09-06
+
+### Added
+- **Purpose-First Hierarchical Decision Engine (`new-project`)**: Upgraded `new-project` (the canonical DOX Engine / Agent Engine) to an interactive, purpose-first decision engine. Questions the developer interactively across 6 purpose branches (`brochure`, `content`, `ecommerce`, `webapp`, `mobile`, `governance`) before framework selection. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **Aria Visual Builder Suite for Astro**: Full visual drag-and-drop component registry in `aria.config.mjs`, accessible hero banner in `src/components/AriaHero.astro`, and interactive island integration. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **StudioCMS & Emdash CMS Blog Engines**: First-class support for StudioCMS (`studiocms.config.mjs`, Astro DB wiring) and edge-native Emdash CMS (`emdash.config.ts`, Cloudflare D1/R2, starter blog collection). ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **MedusaJS 2.0 Sovereign E-Commerce Backend**: Fully scaffolded `backend/` container with `medusa-config.ts`, PostgreSQL 16 & Redis 7 `docker-compose.yml`, typed frontend SDK (`src/lib/medusa.ts`), and Aria shopping cart and product grid components. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **Payload CMS 3.0 & E-Commerce Module for Next.js**: App Router CMS administration (`/admin`), Lexical rich text, Puck visual builder (`/puck`), typed collections (`Users`, `Media`, `Pages`, `Products`, `Orders`, `Customers`), and Stripe checkout route handler. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **Pure HTML/CSS & Instatic Framework Options**: Zero build step standalone semantic BEM `index.html` with wide-gamut OKLCH fluid design tokens and `bun x serve .` scripts. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **Empathetic `start-here.md` Guide & Dynamic Onboarding**: Generates customized Day-1 onboarding walkthroughs, architecture snapshots, and starter dashboards with zero placeholder leaks. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+
+### Fixed
+- **Clean Template Invariants**: Sanitized DOX templates to eliminate personal metadata, hardcoded directory references, and author leaks while preserving canonical account `harshsinghmp`. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+- **Zero Half-Baked Stubs**: Replaced stub placeholders with full working implementations, typed schemas, connection pools, and route handlers across all supported tech stacks. ([#56](https://github.com/harshsinghmp/muse-skills/pull/56))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.3.0...v2.4.0
+
 ## [2.3.0] - 2026-09-06
 
 ### Added
