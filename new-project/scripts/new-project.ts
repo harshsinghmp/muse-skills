@@ -45,6 +45,10 @@ const { values, positionals } = parseArgs({
     "custom-styling": { type: "string" },
     animation: { type: "string", short: "a" }, // css | motion | gsap | webgl | custom | none
     "custom-animation": { type: "string" },
+    state: { type: "string" },              // nanostores | custom | none
+    "custom-state": { type: "string" },
+    mobile: { type: "string", short: "m" }, // capacitor | expo | custom | none
+    "custom-mobile": { type: "string" },
     cms: { type: "string", short: "c" },    // ariabuilder | studiocms | sitepins | tina | keystatic | pagescms | emdash | payload | decap | keystone | sanity | strapi | custom | none
     "custom-cms": { type: "string" },
     puck: { type: "boolean", default: false },
@@ -75,12 +79,14 @@ Core Options:
   -n, --name <name>             Project name (default: directory name)
   -p, --path <path>             Target directory path
   -i, --intent <intent>         brochure | content | ecommerce | app | mobile | governance
-      --preset <preset>         1-click recipe: powerhouse | publisher | edge | visual | instatic | mobile
+      --preset <preset>         1-click recipe: powerhouse | publisher | edge | visual | instatic | mobile | astro-mobile
   -t, --type <type>             Framework: nextjs | astro | instatic | wordpress | expo | custom | none
   -s, --styling <style>         Styling: hybrid | unocss | bem | tailwind | custom | none
   -a, --animation <engine>      Animations: css | motion | gsap | webgl | custom | none
+      --state <engine>          State: nanostores | custom | none
+  -m, --mobile <target>         Mobile: capacitor | expo | custom | none
   -c, --cms <cms>               CMS: ariabuilder | studiocms | sitepins | tina | keystatic | pagescms | emdash | payload | decap | keystone | sanity | strapi | custom | none
-      --puck <true|false>       Enable Puck Visual Builder for Payload CMS
+      --puck                    Enable Puck Visual Builder for Payload CMS
   -e, --ecommerce <engine>      Commerce: payload | medusa | vendure | fastrr | razorpay | stripe | custom | none
       --db <database>           Database: supabase | neon | postgres | sqlite | custom | none
       --auth <auth>             Authentication: better-auth | supabase | authjs | custom | none
@@ -112,6 +118,10 @@ interface StackConfig {
   customStyling?: string;
   animation: string;
   customAnimation?: string;
+  state: string;
+  customState?: string;
+  mobile: string;
+  customMobile?: string;
   cms: string;
   customCms?: string;
   puck: boolean;
@@ -133,6 +143,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "nextjs",
         styling: "hybrid",
         animation: "motion",
+        state: "nanostores",
+        mobile: "none",
         cms: "payload",
         puck: true,
         ecommerce: "payload",
@@ -147,6 +159,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "astro",
         styling: "hybrid",
         animation: "css",
+        state: "nanostores",
+        mobile: "none",
         cms: "studiocms",
         puck: false,
         ecommerce: "none",
@@ -161,6 +175,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "astro",
         styling: "unocss",
         animation: "css",
+        state: "nanostores",
+        mobile: "none",
         cms: "emdash",
         puck: false,
         ecommerce: "none",
@@ -175,6 +191,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "astro",
         styling: "hybrid",
         animation: "css",
+        state: "nanostores",
+        mobile: "none",
         cms: "ariabuilder",
         puck: false,
         ecommerce: "fastrr",
@@ -189,6 +207,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "instatic",
         styling: "bem",
         animation: "css",
+        state: "none",
+        mobile: "none",
         cms: "none",
         puck: false,
         ecommerce: "none",
@@ -203,7 +223,25 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "expo",
         styling: "bem",
         animation: "none",
+        state: "nanostores",
+        mobile: "expo",
         cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "none",
+      };
+    case "astro-mobile":
+      return {
+        intent: "mobile",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "capacitor",
+        cms: "ariabuilder",
         puck: false,
         ecommerce: "none",
         db: "none",
@@ -217,6 +255,8 @@ function getPresetConfig(preset: string): StackConfig {
         framework: "astro",
         styling: "hybrid",
         animation: "css",
+        state: "nanostores",
+        mobile: "none",
         cms: "none",
         puck: false,
         ecommerce: "none",
@@ -250,6 +290,10 @@ async function main() {
     customStyling: values["custom-styling"] || "",
     animation: values.animation || "",
     customAnimation: values["custom-animation"] || "",
+    state: values.state || "",
+    customState: values["custom-state"] || "",
+    mobile: values.mobile || "",
+    customMobile: values["custom-mobile"] || "",
     cms: values.cms || "",
     customCms: values["custom-cms"] || "",
     puck: Boolean(values.puck),
@@ -272,6 +316,8 @@ async function main() {
       ...(values.type ? { framework: values.type } : {}),
       ...(values.styling ? { styling: values.styling } : {}),
       ...(values.animation ? { animation: values.animation } : {}),
+      ...(values.state ? { state: values.state } : {}),
+      ...(values.mobile ? { mobile: values.mobile } : {}),
       ...(values.cms ? { cms: values.cms } : {}),
       ...(values.ecommerce ? { ecommerce: values.ecommerce } : {}),
       ...(values.db ? { db: values.db } : {}),
@@ -425,16 +471,30 @@ async function main() {
             } else config.framework = "none";
 
           } else if (config.intent === "mobile") {
-            console.log("\n⚡ Select Mobile Application Framework:");
-            console.log("  [1] React Native with Expo  (Managed TypeScript workflow, Expo Router v4) [Recommended]");
-            console.log("  [2] Custom                  (Specify custom mobile stack)");
-            console.log("  [3] None                    (DOX governance only)");
-            const fwChoice = await ask(rl, "Choose mobile framework [1-3]", "1");
-            if (fwChoice === "1") config.framework = "expo";
-            else if (fwChoice === "2") {
+            console.log("\n⚡ Select Mobile Application Framework & Native Packaging:");
+            console.log("  [1] React Native with Expo   (Managed TypeScript workflow, Expo Router v4 for React) [Recommended for React]");
+            console.log("  [2] Astro + Ionic Capacitor  (Convert high-performance Astro web app to native iOS & Android APK) [Recommended for Astro]");
+            console.log("  [3] Next.js/React + Capacitor(Convert React/Next.js web app to native iOS & Android APK)");
+            console.log("  [4] Custom                   (Specify custom mobile architecture)");
+            console.log("  [5] None                     (DOX governance only)");
+            const fwChoice = await ask(rl, "Choose mobile framework [1-5]", "1");
+            if (fwChoice === "1") {
+              config.framework = "expo";
+              config.mobile = "expo";
+            } else if (fwChoice === "2") {
+              config.framework = "astro";
+              config.mobile = "capacitor";
+            } else if (fwChoice === "3") {
+              config.framework = "nextjs";
+              config.mobile = "capacitor";
+            } else if (fwChoice === "4") {
               config.framework = "custom";
+              config.mobile = "custom";
               config.customFramework = await ask(rl, "Custom mobile framework", "react-native-cli");
-            } else config.framework = "none";
+            } else {
+              config.framework = "none";
+              config.mobile = "none";
+            }
 
           } else if (config.intent === "governance") {
             config.framework = "none";
@@ -658,6 +718,42 @@ async function main() {
           if (config.animation === "custom") {
             config.customAnimation = await ask(rl, "Custom animation library", "custom-animation");
           }
+
+          // STEP 9: State Management Selection
+          if (config.framework !== "instatic" && config.framework !== "none") {
+            console.log("\n🧠 Select State Management & Cross-Island Store:");
+            console.log("  [1] Nano Stores         (nanostores@latest — Sub-1KB reactive store across Astro islands & React) [Recommended]");
+            console.log("  [2] Custom State Engine (Zustand, Redux Toolkit, Pinia, etc.)");
+            console.log("  [3] None                (Pure local component state / zero global store)");
+            const stateChoice = await ask(rl, "Choose state management [1-3]", "1");
+            if (stateChoice === "1") config.state = "nanostores";
+            else if (stateChoice === "2") {
+              config.state = "custom";
+              config.customState = await ask(rl, "Custom state management library", "zustand");
+            } else {
+              config.state = "none";
+            }
+          } else {
+            config.state = "none";
+          }
+
+          // STEP 10: Mobile App & Native Packaging Target
+          if (config.intent !== "mobile") {
+            console.log("\n📱 Select Mobile Packaging & Native Conversion Target:");
+            console.log("  [1] None                (Pure web deliverable) [Default]");
+            console.log("  [2] Ionic Capacitor     (@capacitor/cli — Convert Astro / Next.js to native iOS & Android APK)");
+            console.log("  [3] Expo                (React Native managed mobile target)");
+            console.log("  [4] Custom              (User-specified mobile packager)");
+            const mobChoice = await ask(rl, "Choose mobile conversion target [1-4]", "1");
+            if (mobChoice === "2") config.mobile = "capacitor";
+            else if (mobChoice === "3") config.mobile = "expo";
+            else if (mobChoice === "4") {
+              config.mobile = "custom";
+              config.customMobile = await ask(rl, "Custom mobile wrapper", "tauri-mobile");
+            } else {
+              config.mobile = "none";
+            }
+          }
         }
       }
     } finally {
@@ -672,6 +768,8 @@ async function main() {
   config.framework = (config.framework || "astro").toLowerCase();
   config.styling = (config.styling || "hybrid").toLowerCase();
   config.animation = (config.animation || "css").toLowerCase();
+  config.state = (config.state || "none").toLowerCase();
+  config.mobile = (config.mobile || "none").toLowerCase();
   config.cms = (config.cms || "none").toLowerCase();
   config.ecommerce = (config.ecommerce || "none").toLowerCase();
   config.db = (config.db || "none").toLowerCase();
@@ -684,6 +782,8 @@ async function main() {
   console.log(`⚡ Framework:         \`${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""}\``);
   console.log(`🎨 Styling:           \`${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""}\``);
   console.log(`🎭 Animations:        \`${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}\``);
+  console.log(`🧠 State Store:       \`${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}\``);
+  console.log(`📱 Mobile Packaging:  \`${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}\``);
   console.log(`📦 CMS:               \`${config.cms.toUpperCase()}${config.puck ? " + PUCK VISUAL BUILDER" : ""}${config.customCms ? ` (${config.customCms})` : ""}\``);
   console.log(`🛍️  E-Commerce:        \`${config.ecommerce.toUpperCase()}${config.customEcommerce ? ` (${config.customEcommerce})` : ""}\``);
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}${config.customDb ? ` (${config.customDb})` : ""}\``);
@@ -1360,6 +1460,128 @@ export function openRazorpayModal(options: { orderId: string; amount: number; na
     const envExamplePath = join(resolvedTarget, ".env.example");
     writeFileSync(envExamplePath, envVars.join("\n") + "\n", "utf8");
     console.log("  ✅ Generated: `./.env.example` with exact companion variables");
+
+    // 8. State Management (NanoStores)
+    if (config.state === "nanostores") {
+      console.log("  🧠 Injecting NanoStores Global Cross-Island State Engine (`src/stores/app.ts`)...");
+      const storesDir = join(resolvedTarget, "src", "stores");
+      mkdirSync(storesDir, { recursive: true });
+
+      const storeContent = `import { atom, map } from 'nanostores';
+
+/**
+ * 🧠 NanoStores Global Cross-Island State Engine
+ * Framework-agnostic, sub-1KB reactive store for sharing state across
+ * Astro islands (React/Vue/Svelte/vanilla) and Next.js/React components.
+ */
+
+// Global reactive atoms
+export const $isNavOpen = atom<boolean>(false);
+export const $theme = atom<'light' | 'dark' | 'system'>('system');
+export const $cartCount = atom<number>(0);
+
+// Reactive map for user preferences / session state
+export interface UserPreferences {
+  currency: string;
+  locale: string;
+  notifications: boolean;
+}
+
+export const $userPreferences = map<UserPreferences>({
+  currency: 'USD',
+  locale: 'en-US',
+  notifications: true,
+});
+
+// Helper action functions
+export function toggleNav() {
+  $isNavOpen.set(!$isNavOpen.get());
+}
+
+export function setTheme(theme: 'light' | 'dark' | 'system') {
+  $theme.set(theme);
+  if (typeof document !== 'undefined') {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+}
+
+export function incrementCart(by: number = 1) {
+  $cartCount.set($cartCount.get() + by);
+}
+
+export function updatePreference<K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) {
+  $userPreferences.setKey(key, value);
+}
+`;
+      writeFileSync(join(storesDir, "app.ts"), storeContent, "utf8");
+      console.log("  ✅ Created: `./src/stores/app.ts` (NanoStores reactive cross-island state)");
+    }
+
+    // 9. Mobile App & Native Packaging (Ionic Capacitor)
+    if (config.mobile === "capacitor") {
+      console.log("  📱 Injecting Ionic Capacitor Mobile Packaging Configuration (`capacitor.config.ts`)...");
+      const capAppId = `com.agency.${projectName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "app"}`;
+      const capWebDir = config.framework === "nextjs" ? "out" : "dist";
+
+      const capConfig = `import type { CapacitorConfig } from '@capacitor/cli';
+
+/**
+ * 📱 Ionic Capacitor Mobile App Configuration
+ * Converts web applications (Astro, Next.js, Instatic) into native iOS & Android APK.
+ */
+const config: CapacitorConfig = {
+  appId: '${capAppId}',
+  appName: '${projectName}',
+  webDir: '${capWebDir}',
+  bundledWebRuntime: false,
+  server: {
+    androidScheme: 'https',
+  },
+};
+
+export default config;
+`;
+      writeFileSync(join(resolvedTarget, "capacitor.config.ts"), capConfig, "utf8");
+      console.log("  ✅ Created: `./capacitor.config.ts` (Ionic Capacitor mobile bridge)");
+    }
+
+    // 10. Update package.json scripts and dependencies for companions
+    const pkgPath = join(resolvedTarget, "package.json");
+    if (existsSync(pkgPath)) {
+      try {
+        const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+        pkg.dependencies = pkg.dependencies || {};
+        pkg.devDependencies = pkg.devDependencies || {};
+        pkg.scripts = pkg.scripts || {};
+
+        if (config.state === "nanostores") {
+          pkg.dependencies["nanostores"] = "^0.11.3";
+          if (config.framework === "astro" || config.framework === "nextjs") {
+            pkg.dependencies["@nanostores/react"] = "^0.8.4";
+          }
+        }
+
+        if (config.mobile === "capacitor") {
+          pkg.dependencies["@capacitor/core"] = "^7.0.0";
+          pkg.dependencies["@capacitor/ios"] = "^7.0.0";
+          pkg.dependencies["@capacitor/android"] = "^7.0.0";
+          pkg.devDependencies["@capacitor/cli"] = "^7.0.0";
+          pkg.scripts["cap:sync"] = "cap sync";
+          pkg.scripts["cap:build"] = "bun run build && cap sync";
+          pkg.scripts["cap:ios"] = "cap open ios";
+          pkg.scripts["cap:android"] = "cap open android";
+        }
+
+        writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
+        console.log("  ✅ Updated: `./package.json` with companion packages and mobile scripts");
+      } catch {
+        // Non-fatal if package.json cannot be parsed
+      }
+    }
   }
 
   // =========================================================================
@@ -1384,6 +1606,8 @@ export function openRazorpayModal(options: { orderId: string; amount: number; na
 - **Intent**: ${config.intent.toUpperCase() || "BROCHURE"}
 - **Styling Architecture**: ${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""}
 - **Animation Engine**: ${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}
+- **State Management**: ${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}
+- **Mobile Conversion**: ${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}
 - **Content Management**: ${config.cms.toUpperCase()}${config.puck ? " + Puck Visual Builder" : ""}${config.customCms ? ` (${config.customCms})` : ""}
 - **E-Commerce**: ${config.ecommerce.toUpperCase()}${config.customEcommerce ? ` (${config.customEcommerce})` : ""}
 - **Database**: ${config.db.toUpperCase()}${config.customDb ? ` (${config.customDb})` : ""}
@@ -1396,6 +1620,8 @@ ${artifactList}
 ## 3. Runtime Health & Verification Oracle
 - **Framework**: ${config.framework.toUpperCase()}
 - **Styling**: ${config.styling.toUpperCase()}
+- **State**: ${config.state.toUpperCase()}
+- **Mobile**: ${config.mobile.toUpperCase()}
 - **Governance**: Active via root \`AGENTS.md\` and \`.agents/\` container
 - **Verification**: Scaffold complete with zero unescaped placeholders
 
@@ -1420,6 +1646,8 @@ ${artifactList}
 - **Framework & Runtime**: ${config.framework.toUpperCase()} (Node/Bun runtime, \`@latest\` resolution)
 - **Styling Engine**: ${config.styling.toUpperCase()} (Hybrid UnoCSS Wind 4 + Custom Semantic BEM)
 - **Animation Layer**: ${config.animation.toUpperCase()} (Hardware-accelerated zero-lag animation presets)
+- **State Management**: ${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""} (Sub-1KB NanoStores for cross-island reactive state)
+- **Mobile Conversion**: ${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""} (Native packaging via Ionic Capacitor / Expo)
 - **Content Management**: ${config.cms.toUpperCase()}${config.puck ? " + Puck Visual Builder" : ""}
 - **E-Commerce**: ${config.ecommerce.toUpperCase()}
 - **Database & ORM**: ${config.db.toUpperCase()} (Drizzle ORM)
@@ -1431,7 +1659,8 @@ ${artifactList}
 ## Technical Constraints & Boundaries
 1. **Always-Latest Versioning**: All installed packages strictly resolve to \`@latest\`.
 2. **Zero-JS Baseline for Astro**: Astro components render pure static HTML with 0kB JS by default. React is strictly reserved for interactive islands.
-3. **Secret Defense**: Never log or commit credentials. Follow the Vibeguard protocol.
+3. **Cross-Island State Sharing**: Use NanoStores to communicate between isolated Astro islands without bloating client bundles.
+4. **Secret Defense**: Never log or commit credentials. Follow the Vibeguard protocol.
 `;
       writeFileSync(archMdPath, archContent, "utf8");
       console.log("  ✅ Updated: `./.agents/context/architecture.md` with active stack specifications");
@@ -1447,6 +1676,8 @@ ${artifactList}
   console.log(`⚡ Archetype:          ${config.framework.toUpperCase()}`);
   console.log(`🎨 Styling:           \`${config.styling.toUpperCase()}\``);
   console.log(`🎭 Animations:        \`${config.animation.toUpperCase()}\``);
+  console.log(`🧠 State:             \`${config.state.toUpperCase()}\``);
+  console.log(`📱 Mobile:            \`${config.mobile.toUpperCase()}\``);
   console.log(`📦 CMS:               \`${config.cms.toUpperCase()}\``);
   console.log(`🛍️  E-Commerce:        \`${config.ecommerce.toUpperCase()}\``);
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
@@ -1458,6 +1689,10 @@ ${artifactList}
   } else if (config.framework !== "instatic" && config.framework !== "none") {
     console.log(`  2. bun install`);
     console.log(`  3. bun run dev`);
+  }
+  if (config.mobile === "capacitor") {
+    console.log(`  4. bun run cap:sync (Sync web build to native iOS & Android APK)`);
+    console.log(`  5. bun run cap:ios (Open Xcode) or bun run cap:android (Open Android Studio)`);
   }
   console.log("=======================================================\n");
 }

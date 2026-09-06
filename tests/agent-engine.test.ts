@@ -117,9 +117,20 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       });
       expect(resMobile.status).toBe(0);
       expect(resMobile.stdout).toContain("Framework:         `EXPO`");
+      expect(resMobile.stdout).toContain("Mobile:            `EXPO`");
+
+      // 5. Astro Mobile preset (Astro + Ionic Capacitor + NanoStores)
+      const targetAstroMobile = join(TEST_SANDBOX, "astro-mobile-test");
+      const resAstroMobile = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resAstroMobile.status).toBe(0);
+      expect(resAstroMobile.stdout).toContain("Framework:         `ASTRO`");
+      expect(resAstroMobile.stdout).toContain("State:             `NANOSTORES`");
+      expect(resAstroMobile.stdout).toContain("Mobile:            `CAPACITOR`");
     });
 
-    it("supports granular intent-first companion composition and dynamic pruning", () => {
+    it("supports granular intent-first companion composition including NanoStores and Capacitor", () => {
       const targetCustom = join(TEST_SANDBOX, "custom-ecommerce");
       const res = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -129,6 +140,8 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
         "--type=nextjs",
         "--styling=hybrid",
         "--animation=motion",
+        "--state=nanostores",
+        "--mobile=capacitor",
         "--cms=payload",
         "--puck",
         "--ecommerce=medusa",
@@ -142,6 +155,8 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(res.stdout).toContain("Framework:         `NEXTJS`");
       expect(res.stdout).toContain("Styling:           `HYBRID`");
       expect(res.stdout).toContain("Animations:        `MOTION`");
+      expect(res.stdout).toContain("State:             `NANOSTORES`");
+      expect(res.stdout).toContain("Mobile:            `CAPACITOR`");
       expect(res.stdout).toContain("CMS:               `PAYLOAD`");
       expect(res.stdout).toContain("E-Commerce:        `MEDUSA`");
       expect(res.stdout).toContain("Database:          `POSTGRES`");

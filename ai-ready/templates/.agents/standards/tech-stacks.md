@@ -26,6 +26,8 @@ All digital products and client builds are scaffolded via the **Intent-First Con
 - **Zero-JS Invariant**: Pure static HTML with 0kB JavaScript baseline by default. Interactive dynamic islands are strictly implemented using **React** (`@astrojs/react@latest` with `client:*` directives).
 - **Styling**: **Hybrid Engine** (UnoCSS with `@unocss/preset-wind4` + Custom Semantic BEM with native OKLCH design tokens).
 - **Animations**: **Hardware-Accelerated CSS Presets** (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`) or **Motion.dev** (`motion@latest`).
+- **State Management**: **Nano Stores (`nanostores@latest`)** — Sub-1KB framework-agnostic reactive store for sharing state across Astro islands (React, Vue, Svelte, vanilla JS) with zero bundle bloat.
+- **Mobile Conversion**: **Ionic Capacitor (`@capacitor/cli@latest`)** — Wrap high-performance Astro web deliverables into native iOS and Android APK binaries.
 - **CMS & Visual Builders**:
   - **Aria Builder** (`ariabuilder.io`): Astro-native visual builder #1 choice.
   - **StudioCMS**: Astro-native headless CMS (Astro DB / LibSQL / Turso).
@@ -44,6 +46,7 @@ All digital products and client builds are scaffolded via the **Intent-First Con
 - **Engine**: **[Instatic](https://github.com/corebunch/instatic)** — Pure HTML-based static site generator.
 - **Styling**: Custom Semantic BEM CSS tokens with OKLCH palette (`reset.css`, `tokens.css`, `semantic.css`).
 - **Animations**: Pure hardware-accelerated CSS animations (`animations.css`).
+- **Mobile Packaging**: Optional **Ionic Capacitor** wrapper for generating standalone Android APK and iOS apps from static HTML.
 - **Delivery**: Semantic HTML5, CSS3, minimal vanilla JS.
 - **Hosting**: Cloudflare Pages / GitHub Pages (Zero compute overhead, sub-millisecond TTFB).
 - **Principle**: Zero runtime dependencies, 100/100 Lighthouse performance score by default.
@@ -58,6 +61,7 @@ All digital products and client builds are scaffolded via the **Intent-First Con
 - **Frontend Framework**: **Next.js 16 (`@latest`)** (React 19, App Router, Server Components & Server Actions by default).
 - **Styling Engine**: **Hybrid Engine** (UnoCSS `@unocss/preset-wind4` + Custom Semantic BEM).
 - **Animations**: **Motion.dev (`motion@latest`)** or **GSAP (`gsap@latest` + ScrollTrigger)** for high-fps zero-lag experiences.
+- **State Management**: **Nano Stores** or lightweight atomic stores for micro-interactions without massive client hydration.
 - **CMS & Builders**:
   - **Payload CMS (`@latest`)**: Full-stack TypeScript headless CMS with optional **Puck Visual Builder**.
   - **Keystone CMS / Strapi**: Self-hosted headless alternatives.
@@ -66,6 +70,7 @@ All digital products and client builds are scaffolded via the **Intent-First Con
   - **Medusa v2 (`@latest`)**: Sovereign headless commerce engine for complex inventory and multi-region storefronts.
 - **Database & ORM**: **Neon** (Serverless PostgreSQL) or **Supabase** via **Drizzle ORM**.
 - **Authentication**: **Better Auth** (Self-hosted in Postgres) or **Supabase Auth**.
+- **Mobile Conversion**: **Expo** (for React Native native mobile apps) or **Ionic Capacitor** (for wrapping Next.js/React export into native iOS/Android APK).
 - **Hosting & Infrastructure**: Cloudflare Pages / Docker / Coolify / Vercel.
 
 ---
@@ -84,16 +89,22 @@ All digital products and client builds are scaffolded via the **Intent-First Con
 
 ---
 
-## 📱 Direction 5: Cross-Platform Mobile Applications
+## 📱 Direction 5: Cross-Platform Mobile Applications & Native Packaging
 
-> **Best For**: Native iOS and Android applications with web code-sharing.
+> **Best For**: Native iOS and Android applications with web code-sharing or native packaging.
 
-### Core Toolchain & Stack
-- **Framework**: **React Native with Expo (`@latest`)**.
-- **Navigation**: Expo Router (file-based routing).
-- **Styling**: NativeWind (Tailwind CSS for React Native) or StyleSheet tokens.
-- **Backend & Auth**: Supabase / Better Auth API.
-- **Tooling**: Bun runtime, EAS Build.
+### Core Paradigms & Toolchains
+1. **Paradigm A: React Native with Expo (`@latest`) [Pure Native App]**
+   - **Framework**: React Native with managed Expo Router v4 (file-based navigation).
+   - **Styling**: NativeWind (Tailwind CSS for React Native) or StyleSheet tokens.
+   - **Backend & Auth**: Supabase / Better Auth API.
+   - **Tooling**: Bun runtime, EAS Build.
+2. **Paradigm B: Astro + Ionic Capacitor (`@latest`) [Web-to-APK/iOS]**
+   - **Framework**: Astro v7 static web platform wrapped via `@capacitor/cli` and `@capacitor/core`.
+   - **State**: **Nano Stores** for lightweight cross-component reactivity.
+   - **Output**: Native Xcode (.xcodeproj) and Android Studio (.apk / .aab) builds.
+3. **Paradigm C: Next.js / React + Ionic Capacitor [Web-to-APK/iOS]**
+   - **Framework**: Next.js static export (`output: 'export'`) wrapped with Capacitor bridge for native push notifications, biometrics, and camera access.
 
 ---
 
