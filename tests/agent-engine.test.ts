@@ -753,6 +753,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(brandDir, "visual-direction.md"))).toBe(true);
       expect(existsSync(join(brandDir, "voice-and-tone.md"))).toBe(true);
       expect(existsSync(join(brandDir, "brand-guardrails.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "brand-assets-intake.md"))).toBe(true);
 
       const identityDoc = readFileSync(join(brandDir, "brand-identity.md"), "utf8");
       expect(identityDoc).toContain("## Brand Purpose");
@@ -769,13 +770,55 @@ Custom billing engine for healthcare providers.
       expect(guardrailsDoc).toContain("## Brand Asset & IP Protection");
       expect(guardrailsDoc).toContain("## Clear Space & Minimum Sizing");
 
-      // 2. Verify Business Strategy & Offerings Matrix
+      const brandAssetsDoc = readFileSync(join(brandDir, "brand-assets-intake.md"), "utf8");
+      expect(brandAssetsDoc).toContain("## Vector Brand Marks & Logo Assets");
+      expect(brandAssetsDoc).toContain("## Typography & Font Licensing");
+      expect(brandAssetsDoc).toContain("## Photography & Media Library Assets");
+
+      // 2. Verify Business Strategy & Market Discovery
       const bizDir = join(targetNoCache, "Onboarding/02-Business");
       expect(existsSync(join(bizDir, "business-model.md"))).toBe(true);
       expect(existsSync(join(bizDir, "audience-persona.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "competitor-benchmark.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "client-goals-kpis.md"))).toBe(true);
 
-      const menuDir = join(targetNoCache, "Onboarding/03-Menu");
-      expect(existsSync(join(menuDir, "offerings.md"))).toBe(true);
+      const compDoc = readFileSync(join(bizDir, "competitor-benchmark.md"), "utf8");
+      expect(compDoc).toContain("## Key Competitors");
+      expect(compDoc).toContain("## Competitive Differentiation & Unfair Advantage");
+
+      const kpiDoc = readFileSync(join(bizDir, "client-goals-kpis.md"), "utf8");
+      expect(kpiDoc).toContain("## Primary Business Objectives");
+      expect(kpiDoc).toContain("## Target Launch Timeline & Milestones");
+      expect(kpiDoc).toContain("## Key Conversion Metrics & KPIs");
+
+      // 3. Verify Products, Services & Offerings (renamed from 03-Menu)
+      const offeringsDir = join(targetNoCache, "Onboarding/03-Offerings");
+      expect(existsSync(join(offeringsDir, "offerings-catalog.md"))).toBe(true);
+      expect(existsSync(join(offeringsDir, "scope-deliverables.md"))).toBe(true);
+
+      const offeringsDoc = readFileSync(join(offeringsDir, "offerings-catalog.md"), "utf8");
+      expect(offeringsDoc).toContain("## Offerings & Deliverables Matrix");
+      expect(offeringsDoc).toContain("## Pricing Architecture & Commercial Models");
+
+      const scopeDoc = readFileSync(join(offeringsDir, "scope-deliverables.md"), "utf8");
+      expect(scopeDoc).toContain("## Scope Boundaries & Phasing");
+      expect(scopeDoc).toContain("## Phase 1 (MVP Shipped Deliverables)");
+      expect(scopeDoc).toContain("## Explicitly Out-of-Scope");
+
+      // 4. Verify Technical Intake & Integrations
+      const techDir = join(targetNoCache, "Onboarding/04-Technical-Intake");
+      expect(existsSync(join(techDir, "access-and-credentials.md"))).toBe(true);
+      expect(existsSync(join(techDir, "integrations-matrix.md"))).toBe(true);
+
+      const accessDoc = readFileSync(join(techDir, "access-and-credentials.md"), "utf8");
+      expect(accessDoc).toContain("## Domain & DNS Management");
+      expect(accessDoc).toContain("## Code Repository & Deployment Infrastructure");
+      expect(accessDoc).toContain("## Secure Credential Transfer Protocol");
+
+      const integrationsDoc = readFileSync(join(techDir, "integrations-matrix.md"), "utf8");
+      expect(integrationsDoc).toContain("## Third-Party Platform Integrations");
+      expect(integrationsDoc).toContain("## Marketing, Analytics & Tag Management");
+      expect(integrationsDoc).toContain("## Compliance & Legal Prerequisites");
     }, 15000);
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
