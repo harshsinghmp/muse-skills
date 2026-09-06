@@ -486,6 +486,74 @@ Custom billing engine for healthcare providers.
       expect(startHereContent).toContain("E-Commerce Checkout & Webhooks (Stripe)");
     });
 
+    it("provisions starter dashboard, deployment artifacts, test suite, pre-commit hook, and dynamic ADRs", () => {
+      const target = join(TEST_SANDBOX, "production-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        target,
+        "--non-interactive",
+        "--name=Nebula Cloud",
+        "--author=Nebula Inc",
+        "--intent=webapp",
+        "--type=nextjs",
+        "--styling=hybrid",
+        "--deploy=docker",
+        "--db=neon",
+        "--auth=better-auth",
+        "--skip-install"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // 1. Day-1 Starter Dashboard
+      expect(existsSync(join(target, "src/app/page.tsx"))).toBe(true);
+      const pageContent = readFileSync(join(target, "src/app/page.tsx"), "utf8");
+      expect(pageContent).toContain("Nebula Cloud");
+      expect(pageContent).toContain("Drizzle ORM");
+      expect(pageContent).toContain("BETTER-AUTH");
+
+      expect(existsSync(join(target, "src/app/layout.tsx"))).toBe(true);
+
+      // 2. Production Deployment & CI/CD
+      expect(existsSync(join(target, ".github/workflows/ci.yml"))).toBe(true);
+      const ciContent = readFileSync(join(target, ".github/workflows/ci.yml"), "utf8");
+      expect(ciContent).toContain("Vibeguard Secret Audit");
+
+      expect(existsSync(join(target, "Dockerfile"))).toBe(true);
+      expect(existsSync(join(target, ".dockerignore"))).toBe(true);
+
+      // 3. Testing & Biome
+      expect(existsSync(join(target, "tests/health.test.ts"))).toBe(true);
+      expect(existsSync(join(target, "biome.json"))).toBe(true);
+
+      // 4. Vibeguard Pre-Commit Hook
+      expect(existsSync(join(target, "scripts/pre-commit.sh"))).toBe(true);
+      const precommitContent = readFileSync(join(target, "scripts/pre-commit.sh"), "utf8");
+      expect(precommitContent).toContain("Vibeguard: Inspecting staged files");
+
+      // 5. Dynamic ADRs in decisions.md & product.md
+      expect(existsSync(join(target, ".agents/context/decisions.md"))).toBe(true);
+      const decisionsContent = readFileSync(join(target, ".agents/context/decisions.md"), "utf8");
+      expect(decisionsContent).toContain("ADR-001: Intent & Framework Architecture");
+      expect(decisionsContent).toContain("ADR-002: Persistence & Data Layer Strategy");
+      expect(decisionsContent).toContain("ADR-003: Sovereign Identity & Authentication Engine");
+      expect(decisionsContent).toContain("ADR-004: Design Tokens & Fluid BEM Styling System");
+      expect(decisionsContent).toContain("ADR-005: Production Deployment & Infrastructure Target");
+      expect(decisionsContent).toContain("ADR-006: Automated Quality Gates & Vibeguard Secret Defense");
+
+      expect(existsSync(join(target, ".agents/context/product.md"))).toBe(true);
+      const productContent = readFileSync(join(target, ".agents/context/product.md"), "utf8");
+      expect(productContent).toContain("Nebula Cloud");
+
+      // 6. One-Command Setup Script in package.json
+      expect(existsSync(join(target, "package.json"))).toBe(true);
+      const pkg = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+      expect(pkg.scripts["setup"]).toBeDefined();
+      expect(pkg.scripts["test"]).toBe("bun test");
+      expect(pkg.scripts["lint"]).toBeDefined();
+      expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
+    });
+
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
       const prohibited = [
         "Harsh",

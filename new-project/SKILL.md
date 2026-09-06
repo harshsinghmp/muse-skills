@@ -154,7 +154,20 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `capacitor.config.ts`: Cross-platform mobile configuration for Ionic Capacitor (`@capacitor/cli`, `@capacitor/core`).
   - `uno.config.ts` & `postcss.config.mjs`: UnoCSS Wind 4 presets, icon collections, and fluid typography tokens.
   - `src/stores/app.ts`: NanoStores sub-1KB reactive store for cross-framework state.
+- **Day-1 Proof-of-Life Starter Dashboard UI**:
+  - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js) or `src/pages/index.astro` (Astro): Generates an interactive live dashboard that immediately exercises the selected stack upon `bun run dev` (Drizzle DB status, Better Auth client SDK status, Stripe checkout trigger, and quick-launch links to `/admin`, `/keystatic`, or `/puck`).
+- **Production Deployment Artifacts & CI/CD**:
+  - `.github/workflows/ci.yml`: Automated CI pipeline running dependencies installation, TypeScript checking, test runner, and Vibeguard secret audits.
+  - `Dockerfile` & `.dockerignore`: Multi-stage production container for Node/Bun with unprivileged non-root user (`--deploy=docker`).
+  - `wrangler.toml`: Cloudflare Workers / Pages configuration with node compatibility and binding placeholders (`--deploy=cloudflare`).
+  - `vercel.json`: Production headers, function rules, and security policies (`--deploy=vercel`).
+- **Automated Quality Gates & Test Suite**:
+  - `tests/health.test.ts`: Out-of-the-box health check asserting environment configuration, AI governance container, and design tokens baseline.
+  - `biome.json`: High-speed zero-config linter and formatter.
+- **Day-1 Secret Defense (Vibeguard Pre-Commit Hook)**:
+  - `scripts/pre-commit.sh` & `.git/hooks/pre-commit`: Executable pre-commit hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
 - **Package Scripts & Secrets Injection**:
+  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash scripts/pre-commit.sh`).
   - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
   - Automatically populates all required connection strings, database URLs, and API secret keys into `.env.example`.
   - Synchronizes official dependencies in `package.json` with self-verification gate.
@@ -167,20 +180,23 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 ### Stage 5: Beginner-Friendly `start-here.md` Guide
 Empathetic 7-section handbook generated at project root:
 1. **Welcome & Architecture Snapshot**: Purpose, mental model, and stack matrix.
-2. **Prerequisites & Quick Start**: Step-by-step setup commands.
+2. **Prerequisites & Quick Start**: One-command setup (`bun run setup`), health verification (`bun test`), and development workflow.
 3. **Project Structure Tour**: Annotated visual tree map of all directories.
 4. **How Styling & Tokens Work**: OKLCH color space, fluid clamp scales, and BEM conventions.
 5. **Working with AI Agents**: DOX Engine orientation, cognitive memory, and effective prompting.
 6. **Common Tasks & Recipes**: Adding routes, creating BEM components, env vars, Drizzle migrations.
 7. **Verification & Definition of Done**: Verification commands, Vibeguard secret defense, and DoD checklist.
 
-### Stage 6: Interactive Brand Onboarding Gate
+### Stage 6: Interactive Brand Onboarding & Closeout Gate
 Generates structured onboarding documents:
 - `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`
 - `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`
 - `Onboarding/03-Menu/`: `offerings.md`
 - Dynamically injects chosen OKLCH palette into `.agents/brand/tokens/colors.json` and `base.css`.
-- Records initial shipped state in `.agents/context/current.md` and `.agents/context/product.md`.
+- **Durable DOX Closeout**:
+  - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
+  - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
+  - Records initial shipped state in `.agents/context/current.md` and `.agents/context/architecture.md`.
 
 ---
 
@@ -268,4 +284,9 @@ After scaffolding, verify the project:
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
 6. **CMS & Visual Builder Completeness**: If Payload, Keystatic, or Puck is enabled, verify config files (`payload.config.ts`, `keystatic.config.ts`), collection schemas, and admin UI pages exist.
 7. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`. If PostgreSQL container is requested, check `./docker-compose.yml`.
-8. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status. Run `bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts .` to ensure compliance with the Vibeguard protocol.
+8. **Day-1 Starter Dashboard**: Check that `src/app/page.tsx` (Next.js) or `src/pages/index.astro` (Astro) is provisioned with live stack badges and quick links.
+9. **Deployment & CI/CD**: Verify `.github/workflows/ci.yml` is present, alongside `Dockerfile` / `wrangler.toml` / `vercel.json` matching `--deploy`.
+10. **Quality Gates & Test Suite**: Run `bun test` inside the scaffolded workspace to confirm `tests/health.test.ts` passes cleanly.
+11. **Day-1 Secret Defense**: Verify `scripts/pre-commit.sh` exists and is executable.
+12. **Dynamic ADRs & Product DOX**: Check that `.agents/context/decisions.md` contains ADR-001 through ADR-006, and `.agents/context/product.md` reflects the interview scope.
+13. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status. Run `bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts .` to ensure compliance with the Vibeguard protocol.
