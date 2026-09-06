@@ -617,12 +617,17 @@ Custom billing engine for healthcare providers.
       ], { encoding: "utf8" });
       expect(resAria.status).toBe(0);
       expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(true);
+      expect(existsSync(join(targetAria, "astro.config.ts"))).toBe(true);
+      expect(existsSync(join(targetAria, "aria/integration.ts"))).toBe(true);
+      expect(existsSync(join(targetAria, "aria/pages/admin.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(true);
       expect(existsSync(join(targetAria, "backend/package.json"))).toBe(true);
       expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(true);
+      const ariaPkg = JSON.parse(readFileSync(join(targetAria, "package.json"), "utf8"));
+      expect(ariaPkg.scripts["dev"]).toContain("aria/scripts/project-command.ts dev");
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
@@ -631,16 +636,25 @@ Custom billing engine for healthcare providers.
         targetStudio,
         "--non-interactive",
         "--intent=content",
-        "--type=none",
+        "--type=astro",
         "--cms=studiocms",
         "--styling=hybrid",
         "--skip-install"
       ], { encoding: "utf8" });
       expect(resStudio.status).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
+      const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
+      expect(studioCfg).toContain("from 'studiocms/config'");
       expect(existsSync(join(targetStudio, "astro.config.mjs"))).toBe(true);
       const astroCfg = readFileSync(join(targetStudio, "astro.config.mjs"), "utf8");
+      expect(astroCfg).toContain("from 'studiocms'");
+      expect(astroCfg).toContain("from '@astrojs/node'");
+      expect(astroCfg).toContain('output: "server"');
       expect(astroCfg).toContain("studioCMS()");
+      const studioPkg = JSON.parse(readFileSync(join(targetStudio, "package.json"), "utf8"));
+      expect(studioPkg.dependencies["studiocms"]).toBeDefined();
+      expect(studioPkg.dependencies["@studiocms/core"]).toBeUndefined();
+      expect(studioPkg.dependencies["@astrojs/node"]).toBeDefined();
 
       // 3. Astro + Emdash CMS
       const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
@@ -649,7 +663,7 @@ Custom billing engine for healthcare providers.
         targetEmdash,
         "--non-interactive",
         "--intent=content",
-        "--type=none",
+        "--type=astro",
         "--cms=emdash",
         "--styling=hybrid",
         "--skip-install"
@@ -658,6 +672,9 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/content/blog/welcome.md"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/pages/blog/index.astro"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "astro.config.mjs"))).toBe(true);
+      const emdashAstroCfg = readFileSync(join(targetEmdash, "astro.config.mjs"), "utf8");
+      expect(emdashAstroCfg).toContain("emdash()");
 
       // 4. Next.js + Payload E-Commerce + Puck
       const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
@@ -666,7 +683,7 @@ Custom billing engine for healthcare providers.
         targetPayloadEcom,
         "--non-interactive",
         "--intent=ecommerce",
-        "--type=none",
+        "--type=nextjs",
         "--cms=payload",
         "--ecommerce=payload",
         "--puck",
@@ -681,6 +698,11 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetPayloadEcom, "src/collections/Customers.ts"))).toBe(true);
       expect(existsSync(join(targetPayloadEcom, "src/app/api/payload-checkout/route.ts"))).toBe(true);
       expect(existsSync(join(targetPayloadEcom, "src/lib/puck.config.tsx"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "next.config.mjs"))).toBe(true);
+      const nextCfg = readFileSync(join(targetPayloadEcom, "next.config.mjs"), "utf8");
+      expect(nextCfg).toContain("withPayload");
+      expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/layout.tsx"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/admin/[[...segments]]/page.tsx"))).toBe(true);
 
       // 5. Pure HTML / CSS
       const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
@@ -699,7 +721,105 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
       expect(htmlPkg.scripts["dev"]).toContain("serve");
-    });
+    }, 30000);
+
+    it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
+      const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetNoCache,
+        "--non-interactive",
+        "--intent=content",
+        "--type=none",
+        "--no-cache",
+        "--name=Aura Luxury Retail",
+        "--desc=High-end sustainable apparel and luxury lifestyle collection",
+        "--author=Aura Collective",
+        "--audience=Discerning high-net-worth consumers seeking ethical luxury",
+        "--problem=Mass-produced fast fashion lacks soul, longevity, and sustainability",
+        "--features=Curated drops, Digital provenance certificates, Bespoke tailoring",
+        "--industry=Luxury Fashion & Sustainable Lifestyle",
+        "--offerings=Signature Silk Coats, Artisanal Linen Suits, Lifetime Care Membership",
+        "--tone=Understated, sophisticated, sensory, and discerning",
+        "--palette=amber",
+        "--skip-install"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // 1. Verify Complete Agency Brand Guardian Suite
+      const brandDir = join(targetNoCache, "Onboarding/01-Brand");
+      expect(existsSync(join(brandDir, "brand-identity.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "visual-direction.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "voice-and-tone.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "brand-guardrails.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "brand-assets-intake.md"))).toBe(true);
+
+      const identityDoc = readFileSync(join(brandDir, "brand-identity.md"), "utf8");
+      expect(identityDoc).toContain("## Brand Purpose");
+      expect(identityDoc).toContain("## Brand Vision");
+      expect(identityDoc).toContain("## Brand Mission");
+      expect(identityDoc).toContain("## Core Values");
+      expect(identityDoc).toContain("## Brand Promise");
+
+      const voiceDoc = readFileSync(join(brandDir, "voice-and-tone.md"), "utf8");
+      expect(voiceDoc).toContain("## Voice & Tone Pillars");
+      expect(voiceDoc).toContain("## Vocabulary & Copywriting Guidelines");
+
+      const guardrailsDoc = readFileSync(join(brandDir, "brand-guardrails.md"), "utf8");
+      expect(guardrailsDoc).toContain("## Brand Asset & IP Protection");
+      expect(guardrailsDoc).toContain("## Clear Space & Minimum Sizing");
+
+      const brandAssetsDoc = readFileSync(join(brandDir, "brand-assets-intake.md"), "utf8");
+      expect(brandAssetsDoc).toContain("## Vector Brand Marks & Logo Assets");
+      expect(brandAssetsDoc).toContain("## Typography & Font Licensing");
+      expect(brandAssetsDoc).toContain("## Photography & Media Library Assets");
+
+      // 2. Verify Business Strategy & Market Discovery
+      const bizDir = join(targetNoCache, "Onboarding/02-Business");
+      expect(existsSync(join(bizDir, "business-model.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "audience-persona.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "competitor-benchmark.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "client-goals-kpis.md"))).toBe(true);
+
+      const compDoc = readFileSync(join(bizDir, "competitor-benchmark.md"), "utf8");
+      expect(compDoc).toContain("## Key Competitors");
+      expect(compDoc).toContain("## Competitive Differentiation & Unfair Advantage");
+
+      const kpiDoc = readFileSync(join(bizDir, "client-goals-kpis.md"), "utf8");
+      expect(kpiDoc).toContain("## Primary Business Objectives");
+      expect(kpiDoc).toContain("## Target Launch Timeline & Milestones");
+      expect(kpiDoc).toContain("## Key Conversion Metrics & KPIs");
+
+      // 3. Verify Products, Services & Offerings (renamed from 03-Menu)
+      const offeringsDir = join(targetNoCache, "Onboarding/03-Offerings");
+      expect(existsSync(join(offeringsDir, "offerings-catalog.md"))).toBe(true);
+      expect(existsSync(join(offeringsDir, "scope-deliverables.md"))).toBe(true);
+
+      const offeringsDoc = readFileSync(join(offeringsDir, "offerings-catalog.md"), "utf8");
+      expect(offeringsDoc).toContain("## Offerings & Deliverables Matrix");
+      expect(offeringsDoc).toContain("## Pricing Architecture & Commercial Models");
+
+      const scopeDoc = readFileSync(join(offeringsDir, "scope-deliverables.md"), "utf8");
+      expect(scopeDoc).toContain("## Scope Boundaries & Phasing");
+      expect(scopeDoc).toContain("## Phase 1 (MVP Shipped Deliverables)");
+      expect(scopeDoc).toContain("## Explicitly Out-of-Scope");
+
+      // 4. Verify Technical Intake & Integrations
+      const techDir = join(targetNoCache, "Onboarding/04-Technical-Intake");
+      expect(existsSync(join(techDir, "access-and-credentials.md"))).toBe(true);
+      expect(existsSync(join(techDir, "integrations-matrix.md"))).toBe(true);
+
+      const accessDoc = readFileSync(join(techDir, "access-and-credentials.md"), "utf8");
+      expect(accessDoc).toContain("## Domain & DNS Management");
+      expect(accessDoc).toContain("## Code Repository & Deployment Infrastructure");
+      expect(accessDoc).toContain("## Secure Credential Transfer Protocol");
+
+      const integrationsDoc = readFileSync(join(techDir, "integrations-matrix.md"), "utf8");
+      expect(integrationsDoc).toContain("## Third-Party Platform Integrations");
+      expect(integrationsDoc).toContain("## Marketing, Analytics & Tag Management");
+      expect(integrationsDoc).toContain("## Compliance & Legal Prerequisites");
+    }, 15000);
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
       const prohibited = [

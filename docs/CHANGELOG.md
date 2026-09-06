@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.1] - 2026-09-07
+
+### Added
+- **Always-Fresh Upstream Sync (`--no-cache` & `--latest`)**: Added `--no-cache` and `--latest` flags to `new-project` scaffolding. When enabled, local template caches (such as `~/.cache/aria-template`) are refreshed via `git fetch --depth 1 origin main && git reset --hard origin/main`, and `bun install --no-cache` is executed to guarantee zero stale cache discrepancies. ([#60](https://github.com/harshsinghmp/muse-skills/pull/60))
+- **Standardized 4-Pillar Client Intake Suite (`Onboarding/`)**: Modernized Stage 6 client onboarding with dedicated operational intake documents across 4 modular pillars:
+  - `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`, `brand-guardrails.md`, and `brand-assets-intake.md` (vector marks, licensed web fonts, photography).
+  - `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`, `competitor-benchmark.md` (competitor UX/brand benchmarks), and `client-goals-kpis.md` (launch milestones, conversion metrics).
+  - `Onboarding/03-Offerings/`: Universal `offerings-catalog.md` and `scope-deliverables.md` (MVP Phase 1 commitments vs. Phase 2 roadmap).
+  - `Onboarding/04-Technical-Intake/`: `access-and-credentials.md` (Domain/DNS, Git repo, hosting, payment processor, 1Password secure share) and `integrations-matrix.md` (CRM, email, analytics, cookie consent). ([#61](https://github.com/harshsinghmp/muse-skills/pull/61))
+
+### Fixed
+- **Replaced Hospitality-Specific `03-Menu` with `03-Offerings`**: Renamed `03-Menu` to canonical `03-Offerings` to natively support all client archetypes (SaaS, e-commerce, consulting, retainers, and hybrid services) while maintaining backward-compatible `03-Menu/offerings.md` mirrors. ([#61](https://github.com/harshsinghmp/muse-skills/pull/61))
+- **Aria Builder Engine Extraction & Initial Setup Redirect**: Full official Aria Builder platform extraction into `aria/`, copying `actions/`, `middleware/`, `wrangler.jsonc`, UnoCSS presets, and patching Day-1 admin onboarding redirect to `/admin/setup` when zero users exist. ([#58](https://github.com/harshsinghmp/muse-skills/pull/58), [#59](https://github.com/harshsinghmp/muse-skills/pull/59))
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.4.0...v2.4.1
+
 ## [2.4.0] - 2026-09-06
 
 ### Added

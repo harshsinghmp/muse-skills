@@ -2,7 +2,7 @@
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Empathetic 7-Section start-here.md Guide), and Stage 6 (Interactive Brand Onboarding Gate). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
-version: 2.4.0
+version: 2.4.1
 author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,7 +46,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Automatically wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
 4. **Stage 4: Modern Tokens & BEM Architecture Injection**: Injects wide-gamut OKLCH tokens, fluid `clamp()` typography & spacing scales (`src/styles/tokens.css`), and reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-cart-drawer`).
 5. **Stage 5: Beginner-Friendly `start-here.md` Guide**: Generates an empathetic 7-section developer handbook covering architecture, quick start, directory tour, styling, AI agent collaboration, recipes, and verification.
-6. **Stage 6: Interactive Brand Onboarding Gate**: Generates structured brand, business, and offerings documentation (`Onboarding/01-Brand/`, `02-Business/`, `03-Menu/`), synchronizing DTCG tokens and context files.
+6. **Stage 6: Interactive Brand Onboarding & Client Intake Gate**: Generates structured brand, business, offerings, and technical intake documentation (`Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, `04-Technical-Intake/`), synchronizing DTCG tokens and context files.
 
 ---
 
@@ -153,10 +153,13 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - Route Handlers: `src/app/api/auth/[...all]/route.ts` (Next.js App Router) or `src/pages/api/auth/[...all].ts` (Astro) wrapping `auth.handler`.
   - `src/lib/supabase-server.ts`: Server-side Supabase client with cookie storage adapters for SSR.
 - **Aria Builder & Visual Page Building**:
+  - `aria/`: Full sovereign engine containing the Vue 3 visual studio canvas (`pages/admin.astro`, `pages/setup.astro`), Astro integration (`aria/integration.ts`), auth & session manager, actions, and storage drivers (Node/SQLite or Cloudflare workerd D1/KV/R2).
+  - `astro.config.ts`: Pre-wired with `@astrojs/node`, `@unocss/astro`, and `aria()` engine integration.
   - `aria.config.mjs`: Visual component registry and preview configuration.
   - `src/components/AriaHero.astro`: Accessible visual hero banner with custom OKLCH styling.
   - `src/components/AriaMedusaProductGrid.astro`: Live Medusa product grid query with client cart actions.
   - `src/components/AriaCartDrawer.astro`: Slide-out shopping cart drawer with checkout trigger.
+  - `/admin`: Interactive visual drag-and-drop page builder studio (auto-redirects to `/admin/setup` on first launch for zero-friction administrator provisioning).
 - **Content Management Systems (CMS)**:
   - *Payload CMS 3.0 & E-Commerce Module*: `payload.config.ts`, strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`, `Orders.ts`, `Customers.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), Stripe checkout endpoint (`src/app/api/payload-checkout/route.ts`), and `importMap.js`.
   - *StudioCMS*: `studiocms.config.mjs`, Astro DB integration, and `astro.config.mjs` integration wiring (`studioCMS()`).
@@ -206,11 +209,12 @@ Empathetic 7-section handbook generated at project root:
 6. **Common Tasks & Recipes**: Adding routes, creating BEM components, env vars, Drizzle migrations.
 7. **Verification & Definition of Done**: Verification commands, Vibeguard secret defense, and DoD checklist.
 
-### Stage 6: Interactive Brand Onboarding & Closeout Gate
-Generates structured onboarding documents:
-- `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`
-- `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`
-- `Onboarding/03-Menu/`: `offerings.md`
+### Stage 6: Interactive Brand Onboarding & Client Intake Gate
+Generates structured 4-pillar onboarding and client intake documents:
+- `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`, `brand-guardrails.md`, `brand-assets-intake.md`
+- `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`, `competitor-benchmark.md`, `client-goals-kpis.md`
+- `Onboarding/03-Offerings/`: `offerings-catalog.md`, `scope-deliverables.md` (with backward-compatible `offerings.md`)
+- `Onboarding/04-Technical-Intake/`: `access-and-credentials.md`, `integrations-matrix.md`
 - Dynamically injects chosen OKLCH palette into `.agents/brand/tokens/colors.json` and `base.css`.
 - **Durable DOX Closeout**:
   - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
@@ -297,7 +301,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 After scaffolding, verify the project:
 1. **Developer Guide**: Check that `./start-here.md` exists and contains all 7 sections.
-2. **Onboarding Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, and `03-Menu/`.
+2. **Onboarding & Intake Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/`.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
