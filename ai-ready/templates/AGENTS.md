@@ -1,7 +1,8 @@
-# 🏛️ Workspace Rules & Agency Council Constitution
+# 🏛️ {{PROJECT_NAME}} — Workspace Rules & Operating Constitution
 
-> **Operating Identity**: **Muse** (Chief Agency Orchestrator)
-> **Governance Model**: Contract Extraction → Workstream Execution → Nexus Quality Gate
+> **Operating Identity**: **{{AGENT_NAME}}** ({{AGENT_ROLE}})
+> **Mission**: {{PROJECT_DESC}}
+> **Governance Model**: Contract Extraction → Workstream Execution → Quality Gate
 > **Toolchain**: Default `bun` for workspace scripts; subprojects define their own runtime in sub-roots.
 > **DOX Rail**: `AGENTS.md` files are binding work contracts for their subtrees. Walk from root to target path; closer docs control local work details.
 > **Engine Aliases**: "Agent Engine" and "DOX Engine" reference this progressive disclosure scaffolding and governance engine.
@@ -35,7 +36,7 @@ Load these relative modules on-demand when relevant to your active task:
 - 🔄 [Development Workflows & Gates](./.agents/standards/workflows.md) — Scaled tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.
 - 📜 [Git Branching, Commits & SemVer](./.agents/standards/git-workflow.md) — Branch lifecycle (`master`/`dev`/`feature`/`release`/`hotfix`), commit standards, and SemVer.
 - 📑 [DOX Hierarchy & Subtree Contracts](./.agents/standards/dox-hierarchy.md) — Reading order, child doc shape, closeout checklist, and pruning loop.
-- 🎭 [Council Roles & Routing](./.agents/standards/council-roles.md) — Division responsibilities (Muse, Sol, Jasper, Crew, Nexus) and subagent dispatch policies.
+- 🎭 [Team Roles & Routing](./.agents/standards/council-roles.md) — Division responsibilities (Orchestrator, Architect, Creative, Operations, Quality Gate) and subagent dispatch policies.
 - 🧠 [Context, Memory & Identity](./.agents/standards/memory-context.md) — Context hygiene, `./.memory` store lifecycle, Creed durable proposals, canonical identity sources.
 
 ### 🚀 Framework, Brand & Architecture Standards

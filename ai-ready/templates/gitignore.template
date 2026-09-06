@@ -29,7 +29,7 @@ secrets.*
 *.rdb
 
 # ==============================================================================
-# Personal Identity, LifeOS & Principal Context (Option A Strict Privacy)
+# Personal Identity & Principal Context (Option A Strict Privacy)
 # ==============================================================================
 USER.md
 PRINCIPAL_*.md
@@ -140,6 +140,9 @@ export/
 
 # Astro
 .astro/
+
+# Medusa E-Commerce Engine
+.medusa/
 
 # Next.js, React, Vite & Turborepo
 .next/

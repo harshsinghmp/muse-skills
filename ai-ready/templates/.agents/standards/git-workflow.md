@@ -29,7 +29,7 @@ Every commit in this repository must follow this structured format:
 
 - Why: [Brief explanation of the motivation/problem solved]
 - What: [Bullet list of specific files, components, or mechanisms changed]
-- Verification: [Evidence that tests, builds, and Nexus probes passed]
+- Verification: [Evidence that tests, builds, and verification probes passed]
 ```
 
 ### Commit Formatting Rules
@@ -49,7 +49,7 @@ Every commit in this repository must follow this structured format:
 - `ci`: CI/CD pipeline and automation configuration.
 
 ### Rejection Gate
-Vague commit messages like `"update"`, `"fix"`, `"minor changes"`, or `"wip"` are strictly rejected by the **Nexus Quality Gate**.
+Vague commit messages like `"update"`, `"fix"`, `"minor changes"`, or `"wip"` are strictly rejected by the **Quality Assurance Gate**.
 
 ---
 
