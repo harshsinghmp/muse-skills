@@ -1670,18 +1670,20 @@ const PrerenderedPage = makePage(config);
 
     // 3.2.0 Aria Builder (Astro)
     if (config.cms === "ariabuilder") {
-      depsToAdd["ariabuilder"] = "^0.5.0";
+      depsToAdd["@ariabuilder/aria"] = "^0.5.8";
       const ariaConfigContent = `// @ts-check
-import { defineConfig } from 'ariabuilder';
-
-export default defineConfig({
+/**
+ * Aria Builder Configuration
+ * Visual block builder registry and live canvas configuration.
+ */
+export default {
   componentsDir: './src/components',
   previewUrl: 'http://localhost:4321',
   visualBlocks: [
     'AriaHero',
     ${config.ecommerce === "medusa" ? `'AriaMedusaProductGrid', 'AriaCartDrawer',` : ""}
   ],
-});
+};
 `;
       writeFileSync(join(resolvedTarget, "aria.config.mjs"), ariaConfigContent, "utf8");
 
@@ -3420,18 +3422,18 @@ if [ -n "$STAGED_ENV" ]; then
   exit 1
 fi
 
-# 2. Block sensitive credential patterns
-if git diff --cached -S"${stripeLivePrefix}" --quiet 2>/dev/null; then :; else
+# 2. Block sensitive credential patterns (exclude pre-commit script itself)
+if git diff --cached -S"${stripeLivePrefix}" -- ':!scripts/pre-commit.sh' --quiet 2>/dev/null; then :; else
   echo "❌ FATAL: Potential live Stripe secret key detected in staged diff"
   exit 1
 fi
 
-if git diff --cached -S"${ghpPrefix}" --quiet 2>/dev/null; then :; else
+if git diff --cached -S"${ghpPrefix}" -- ':!scripts/pre-commit.sh' --quiet 2>/dev/null; then :; else
   echo "❌ FATAL: Potential GitHub personal access token detected in staged diff"
   exit 1
 fi
 
-if git diff --cached -S"${privKeyPattern}" --quiet 2>/dev/null; then :; else
+if git diff --cached -S"${privKeyPattern}" -- ':!scripts/pre-commit.sh' --quiet 2>/dev/null; then :; else
   echo "❌ FATAL: Private cryptographic key detected in staged diff"
   exit 1
 fi
@@ -3480,6 +3482,7 @@ exit 0
     }
 
     if (pkg && typeof pkg === "object") {
+      pkg.name = projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
       pkg.dependencies = pkg.dependencies || {};
       pkg.devDependencies = pkg.devDependencies || {};
       pkg.scripts = pkg.scripts || {};
