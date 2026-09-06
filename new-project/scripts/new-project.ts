@@ -55,6 +55,7 @@ const { values, positionals } = parseArgs({
     intent: { type: "string", short: "i" }, // static | brochure | content | ecommerce | webapp | app | mobile | custom | governance
     preset: { type: "string" },             // powerhouse | publisher | edge | visual | instatic | mobile | astro-mobile
     type: { type: "string", short: "t" },   // nextjs | astro | instatic | wordpress | expo | custom | none
+    framework: { type: "string" },          // nextjs | astro | instatic | wordpress | expo | custom | none
     "custom-type": { type: "string" },
     styling: { type: "string", short: "s" },// hybrid | unocss | bem | tailwind | custom | none
     "custom-styling": { type: "string" },
@@ -427,7 +428,7 @@ async function main() {
 
   let config: StackConfig = {
     intent: values.intent || "brochure",
-    framework: values.type || "astro",
+    framework: values.framework || values.type || "astro",
     customFramework: values["custom-type"],
     styling: values.styling || "hybrid",
     customStyling: values["custom-styling"],
@@ -454,7 +455,7 @@ async function main() {
     config = {
       ...getPresetConfig(values.preset),
       ...(values.intent ? { intent: values.intent } : {}),
-      ...(values.type ? { framework: values.type } : {}),
+      ...(values.framework || values.type ? { framework: values.framework || values.type } : {}),
       ...(values.styling ? { styling: values.styling } : {}),
       ...(values.animation ? { animation: values.animation } : {}),
       ...(values.state ? { state: values.state } : {}),
@@ -1142,12 +1143,14 @@ async function main() {
   // =========================================================================
   // FRAMEWORK BOOTSTRAP (If framework !== 'none')
   // =========================================================================
+  const skipInstall = values["skip-install"] || false;
+
   if (config.framework !== "none" && !isDryRun) {
     console.log(`🚀 Bootstrapping ${config.framework.toUpperCase()} Framework (@latest)...`);
     try {
       if (config.framework === "astro") {
         const stagingDir = join(os.tmpdir(), `astro-scaffold-${Date.now()}`);
-        spawnSync("bun", ["create", "astro@latest", stagingDir, "--template", "minimal", "--yes", "--no-git", "--install"], {
+        spawnSync("bun", ["create", "astro@latest", stagingDir, "--template", "minimal", "--yes", "--no-git", skipInstall ? "--no-install" : "--install"], {
           stdio: "inherit",
         });
         const claudeMd = join(stagingDir, "CLAUDE.md");
@@ -1177,7 +1180,7 @@ async function main() {
           "--src-dir",
           "--import-alias",
           "@/*",
-          "--use-bun",
+          skipInstall ? "--skip-install" : "--use-bun",
           "--yes",
           "--disable-git",
         ];
@@ -1301,18 +1304,31 @@ export default defineConfig({
         console.log("  ✅ Auto-wired: `./postcss.config.mjs` with @unocss/postcss");
       }
 
-      if ((config.framework === "astro" || config.cms === "studiocms") && config.cms !== "ariabuilder") {
+      if ((config.framework === "astro" || config.cms === "studiocms" || config.cms === "emdash") && config.cms !== "ariabuilder") {
         const astroConfigPath = join(resolvedTarget, "astro.config.mjs");
         const integrations: string[] = [];
         const imports: string[] = ["import { defineConfig } from 'astro/config';"];
+        let needsServer = false;
 
         if (config.styling === "unocss" || config.styling === "hybrid") {
           imports.push("import UnoCSS from 'unocss/astro';");
           integrations.push("UnoCSS({ injectReset: true })");
         }
         if (config.cms === "studiocms") {
-          imports.push("import studioCMS from '@studiocms/core';");
+          imports.push("import node from '@astrojs/node';");
+          imports.push("import studioCMS from 'studiocms';");
           integrations.push("studioCMS()");
+          needsServer = true;
+          depsToAdd["studiocms"] = "^0.4.4";
+          depsToAdd["@astrojs/node"] = "^9.0.0";
+        }
+        if (config.cms === "emdash") {
+          imports.push("import node from '@astrojs/node';");
+          imports.push("import emdash from 'emdash';");
+          integrations.push("emdash()");
+          needsServer = true;
+          depsToAdd["emdash"] = "^0.36.0";
+          depsToAdd["@astrojs/node"] = "^9.0.0";
         }
 
         const astroConfigContent = `// @ts-check
@@ -1320,7 +1336,7 @@ ${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
+  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  adapter: node({ mode: 'standalone' }),\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
@@ -1334,7 +1350,12 @@ export default defineConfig({
       depsToAdd["payload"] = "^3.24.0";
       depsToAdd["@payloadcms/next"] = "^3.24.0";
       depsToAdd["@payloadcms/richtext-lexical"] = "^3.24.0";
-      depsToAdd["@payloadcms/db-postgres"] = "^3.24.0";
+      const isPg = (config.db === "postgres" || config.db === "neon" || config.db === "supabase");
+      if (isPg) {
+        depsToAdd["@payloadcms/db-postgres"] = "^3.24.0";
+      } else {
+        depsToAdd["@payloadcms/db-sqlite"] = "^3.24.0";
+      }
       depsToAdd["graphql"] = "^16.10.0";
 
       const collectionsDir = join(resolvedTarget, "src", "collections");
@@ -1479,7 +1500,7 @@ export const Customers: CollectionConfig = {
       }
 
       const payloadConfig = `import { buildConfig } from 'payload';
-import { postgresAdapter } from '@payloadcms/db-postgres';
+import { ${isPg ? "postgresAdapter" : "sqliteAdapter"} } from '${isPg ? "@payloadcms/db-postgres" : "@payloadcms/db-sqlite"}';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -1507,26 +1528,72 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: postgresAdapter({
+  db: ${isPg ? `postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db',
     },
-  }),
+  })` : `sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URL || 'file:./payload.db',
+    },
+  })`},
 });
 `;
       writeFileSync(join(resolvedTarget, "src", "payload.config.ts"), payloadConfig, "utf8");
 
       if (config.framework === "nextjs" || config.framework === "none") {
-        const payloadAdminDir = join(resolvedTarget, "src", "app", "(payload)", "admin");
-        const payloadApiDir = join(resolvedTarget, "src", "app", "(payload)", "api", "[...slug]");
+        // 1. next.config.mjs with withPayload plugin
+        const nextConfigContent = `import { withPayload } from '@payloadcms/next/withPayload';
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Next.js configuration
+};
+
+export default withPayload(nextConfig);
+`;
+        writeFileSync(join(resolvedTarget, "next.config.mjs"), nextConfigContent, "utf8");
+
+        // 2. Route Group: src/app/(payload)
+        const payloadGroupDir = join(resolvedTarget, "src", "app", "(payload)");
+        const payloadAdminDir = join(payloadGroupDir, "admin", "[[...segments]]");
+        const payloadApiDir = join(payloadGroupDir, "api", "[...slug]");
         mkdirSync(payloadAdminDir, { recursive: true });
         mkdirSync(payloadApiDir, { recursive: true });
 
-        writeFileSync(join(payloadAdminDir, "importMap.js"), `export const importMap = {};\n`, "utf8");
-        writeFileSync(join(payloadAdminDir, "page.tsx"), `import type { Metadata } from 'next';
+        // importMap in admin
+        writeFileSync(join(payloadGroupDir, "admin", "importMap.js"), `export const importMap = {};\n`, "utf8");
+
+        // (payload)/layout.tsx
+        const payloadLayoutContent = `import config from '@/payload.config';
+import { handleServerFunctions, RootLayout } from '@payloadcms/next/layouts';
+import { importMap } from './admin/importMap';
+import '@payloadcms/next/css';
+
+type Args = {
+  children: React.ReactNode;
+};
+
+const serverFunction = async function (args: any) {
+  'use server';
+  return handleServerFunctions({ ...args, config, importMap });
+};
+
+const Layout = ({ children }: Args) => (
+  <RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
+    {children}
+  </RootLayout>
+);
+
+export default Layout;
+`;
+        writeFileSync(join(payloadGroupDir, "layout.tsx"), payloadLayoutContent, "utf8");
+
+        // (payload)/admin/[[...segments]]/page.tsx
+        const payloadAdminPageContent = `import type { Metadata } from 'next';
 import config from '@/payload.config';
 import { RootPage, generatePageMetadata } from '@payloadcms/next/views';
-import { importMap } from './importMap';
+import { importMap } from '../importMap';
 
 type Args = {
   params: Promise<{
@@ -1544,8 +1611,10 @@ const Page = ({ params, searchParams }: Args) =>
   RootPage({ config, params, searchParams, importMap });
 
 export default Page;
-`, "utf8");
+`;
+        writeFileSync(join(payloadAdminDir, "page.tsx"), payloadAdminPageContent, "utf8");
 
+        // (payload)/api/[...slug]/route.ts
         writeFileSync(join(payloadApiDir, "route.ts"), `import config from '@/payload.config';
 import { REST_DELETE, REST_GET, REST_OPTIONS, REST_PATCH, REST_POST } from '@payloadcms/next/routes';
 
@@ -1555,6 +1624,18 @@ export const DELETE = REST_DELETE(config);
 export const PATCH = REST_PATCH(config);
 export const OPTIONS = REST_OPTIONS(config);
 `, "utf8");
+
+        // Update tsconfig.json paths for @payload-config
+        const tsconfigPath = join(resolvedTarget, "tsconfig.json");
+        if (existsSync(tsconfigPath)) {
+          try {
+            const tsconfig = JSON.parse(readFileSync(tsconfigPath, "utf8"));
+            tsconfig.compilerOptions = tsconfig.compilerOptions || {};
+            tsconfig.compilerOptions.paths = tsconfig.compilerOptions.paths || {};
+            tsconfig.compilerOptions.paths["@payload-config"] = ["./src/payload.config.ts"];
+            writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + "\n", "utf8");
+          } catch {}
+        }
 
         if (config.ecommerce === "payload") {
           const payloadCheckoutDir = join(resolvedTarget, "src", "app", "api", "payload-checkout");
@@ -1720,6 +1801,53 @@ const PrerenderedPage = makePage(config);
           }
           if (ariaPkg.devDependencies) {
             Object.assign(devDepsToAdd, ariaPkg.devDependencies);
+          }
+        }
+
+        // Patch admin.astro and login.astro for zero-friction Day-1 initial setup redirect
+        const ariaAdminPath = join(resolvedTarget, "aria", "pages", "admin.astro");
+        if (existsSync(ariaAdminPath)) {
+          let adminSrc = readFileSync(ariaAdminPath, "utf8");
+          if (!adminSrc.includes("countUsers()")) {
+            adminSrc = adminSrc.replace(
+              'if (!Astro.locals.user) {\n  return Astro.redirect("/admin/login");\n}',
+              `if (!Astro.locals.user) {
+  try {
+    const { getAuthAdapterAsync } = await import("../lib/auth/getAuthAdapter");
+    const adapter = await getAuthAdapterAsync(Astro.locals);
+    const count = await adapter.countUsers();
+    if (count === 0) {
+      return Astro.redirect("/admin/setup");
+    }
+  } catch {}
+  return Astro.redirect("/admin/login");
+}`
+            );
+            writeFileSync(ariaAdminPath, adminSrc, "utf8");
+          }
+        }
+
+        const ariaLoginPath = join(resolvedTarget, "aria", "pages", "login.astro");
+        if (existsSync(ariaLoginPath)) {
+          let loginSrc = readFileSync(ariaLoginPath, "utf8");
+          if (!loginSrc.includes("countUsers()")) {
+            loginSrc = loginSrc.replace(
+              'if (!isPreview && Astro.locals.user) {\n  return Astro.redirect("/admin");\n}',
+              `if (!isPreview) {
+  if (Astro.locals.user) {
+    return Astro.redirect("/admin");
+  }
+  try {
+    const { getAuthAdapterAsync } = await import("../lib/auth/getAuthAdapter");
+    const adapter = await getAuthAdapterAsync(Astro.locals);
+    const count = await adapter.countUsers();
+    if (count === 0) {
+      return Astro.redirect("/admin/setup");
+    }
+  } catch {}
+}`
+            );
+            writeFileSync(ariaLoginPath, loginSrc, "utf8");
           }
         }
       } else if (!isDryRun) {
@@ -2070,13 +2198,14 @@ try {
 
     // 3.2.3 StudioCMS (Astro)
     if (config.cms === "studiocms") {
-      depsToAdd["@studiocms/core"] = "^0.1.0";
+      depsToAdd["studiocms"] = "^0.4.4";
+      depsToAdd["@astrojs/node"] = "^9.0.0";
       const studioCmsConfig = `// @ts-check
-import { defineStudioCMSConfig } from '@studiocms/core';
+import { defineStudioCMSConfig } from 'studiocms/config';
 
 export default defineStudioCMSConfig({
   db: {
-    // Astro DB / Turso native persistence
+    dialect: 'libsql',
   },
   dashboardConfig: {
     title: '${projectName.replace(/'/g, "\\'")} StudioCMS Hub',
@@ -2092,7 +2221,8 @@ export default defineStudioCMSConfig({
 
     // 3.2.3b Emdash CMS (Astro)
     if (config.cms === "emdash") {
-      depsToAdd["emdash"] = "^0.4.0";
+      depsToAdd["emdash"] = "^0.36.0";
+      depsToAdd["@astrojs/node"] = "^9.0.0";
       const emdashConfig = `export default {
   contentDir: './src/content/blog',
   mediaStorage: 'cloudflare-r2',
@@ -2310,7 +2440,67 @@ export default async function Page({ params }: { params: Promise<{ puckPath?: st
 
       // 3.3.1 Typed Starter Schema (src/lib/schema.ts)
       if (config.db === "sqlite") {
-        const schemaContent = `import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+        const schemaContent = config.auth === "better-auth"
+          ? `import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).notNull().default(false),
+  image: text('image'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export const user = users;
+
+export const session = sqliteTable('session', {
+  id: text('id').primaryKey(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  token: text('token').notNull().unique(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+});
+
+export const account = sqliteTable('account', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  providerId: text('provider_id').notNull(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  accessToken: text('access_token'),
+  refreshToken: text('refresh_token'),
+  idToken: text('id_token'),
+  accessTokenExpiresAt: integer('access_token_expires_at', { mode: 'timestamp' }),
+  refreshTokenExpiresAt: integer('refresh_token_expires_at', { mode: 'timestamp' }),
+  scope: text('scope'),
+  password: text('password'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export const verification = sqliteTable('verification', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+export const posts = sqliteTable('posts', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  content: text('content'),
+  authorId: text('author_id').references(() => users.id),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+`
+          : `import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
@@ -2330,7 +2520,69 @@ export const posts = sqliteTable('posts', {
 `;
         writeFileSync(join(libDir, "schema.ts"), schemaContent, "utf8");
       } else {
-        const schemaContent = `import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+        const schemaContent = config.auth === "better-auth"
+          ? `import { pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core';
+
+export const users = pgTable('users', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').notNull().default(false),
+  image: text('image'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const user = users;
+
+export const session = pgTable('session', {
+  id: text('id').primaryKey(),
+  expiresAt: timestamp('expires_at').notNull(),
+  token: text('token').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+});
+
+export const account = pgTable('account', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  providerId: text('provider_id').notNull(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  accessToken: text('access_token'),
+  refreshToken: text('refresh_token'),
+  idToken: text('id_token'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: text('scope'),
+  password: text('password'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const verification = pgTable('verification', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const users = user;
+
+export const posts = pgTable('posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  content: text('content'),
+  authorId: text('author_id').references(() => user.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+`
+          : `import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -2468,11 +2720,24 @@ export default defineConfig({
 
       if (config.ecommerce === "medusa") {
         depsToAdd["@medusajs/js-sdk"] = "^2.5.0";
+        devDepsToAdd["concurrently"] = "^9.1.0";
         const medusaClient = `import Medusa from '@medusajs/js-sdk';
 
+const getEnv = (key: string): string | undefined => {
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key];
+  }
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+    // @ts-ignore
+    return import.meta.env[key];
+  }
+  return undefined;
+};
+
 export const medusa = new Medusa({
-  baseUrl: process.env.MEDUSA_BACKEND_URL || 'http://localhost:9000',
-  publishableApiKey: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || process.env.MEDUSA_PUBLISHABLE_KEY,
+  baseUrl: getEnv('MEDUSA_BACKEND_URL') || getEnv('PUBLIC_MEDUSA_BACKEND_URL') || 'http://localhost:9000',
+  publishableApiKey: getEnv('MEDUSA_PUBLISHABLE_KEY') || getEnv('PUBLIC_MEDUSA_PUBLISHABLE_KEY') || getEnv('NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY'),
   maxRetries: 3,
 });
 `;
@@ -2869,13 +3134,22 @@ export const auth = betterAuth({
       writeFileSync(join(libDir, "auth.ts"), authContent, "utf8");
 
       // 3.5.2 Client-Side Auth Client (src/lib/auth-client.ts)
-      const authClientContent = `import { createAuthClient } from 'better-auth/react';
+      const authClientContent = config.framework === "nextjs"
+        ? `import { createAuthClient } from 'better-auth/react';
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.BETTER_AUTH_URL || 'http://localhost:3000',
 });
 
 export const { signIn, signUp, signOut, useSession } = authClient;
+`
+        : `import { createAuthClient } from 'better-auth/client';
+
+export const authClient = createAuthClient({
+  baseURL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4321',
+});
+
+export const { signIn, signUp, signOut, getSession } = authClient;
 `;
       writeFileSync(join(libDir, "auth-client.ts"), authClientContent, "utf8");
 
@@ -3009,11 +3283,13 @@ export default config;
     }
     if (config.cms === "payload") {
       envVars.push("PAYLOAD_SECRET=supersecret_payload_secret_key_at_least_32_chars");
+      const isPg = (config.db === "postgres" || config.db === "neon" || config.db === "supabase");
       if (!envVars.some(v => v.startsWith("DATABASE_URL="))) {
-        envVars.push(`DATABASE_URL=postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db`);
+        envVars.push(`DATABASE_URL=${isPg ? `postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db` : "file:./payload.db"}`);
       }
     } else if (config.cms === "studiocms") {
       envVars.push("CMS_ENCRYPTION_KEY=supersecret_cms_encryption_key_at_least_32_chars");
+      envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
     }
     if (config.auth === "better-auth") {
       envVars.push("BETTER_AUTH_SECRET=supersecret_better_auth_secret_key_at_least_32_chars");
@@ -3034,6 +3310,10 @@ export default config;
     }
     const envExamplePath = join(resolvedTarget, ".env.example");
     writeFileSync(envExamplePath, envVars.join("\n") + "\n", "utf8");
+    const envLocalPath = join(resolvedTarget, ".env");
+    if (!existsSync(envLocalPath)) {
+      writeFileSync(envLocalPath, envVars.join("\n") + "\n", "utf8");
+    }
     // 3.9 Day-1 Proof-of-Life Starter Dashboard UI
     if (config.framework === "nextjs" || existsSync(join(resolvedTarget, "src/app"))) {
       const appDir = join(resolvedTarget, "src", "app");
@@ -3156,9 +3436,9 @@ export default function HomePage() {
               🟢 <strong>${config.cms.toUpperCase()}</strong>${config.puck ? " + Puck Editor" : ""}
             </p>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              ${config.cms === "payload" ? `<a href="/admin" style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /admin</a>` : ""}
+              ${config.cms === "payload" ? `<a href="/admin" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#4f46e5', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>⚙️ Open Payload Admin (/admin)</a>` : ""}
               ${config.cms === "keystatic" ? `<a href="/keystatic" style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /keystatic</a>` : ""}
-              ${config.puck ? `<a href="/puck" style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /puck</a>` : ""}
+              ${config.puck ? `<a href="/puck" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#059669', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>🎨 Open Puck Visual Editor (/puck)</a>` : ""}
             </div>
           </div>` : ""}
         </section>
@@ -3243,9 +3523,9 @@ ${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedu
             <p style="margin: 0 0 0.75rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               🟢 <strong>${config.cms.toUpperCase()}</strong> active.
             </p>
-            ${config.cms === "emdash" ? `<a href="/blog" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">Open Blog</a>` : ""}
-            ${config.cms === "studiocms" ? `<a href="/studiocms" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">Open StudioCMS Hub</a>` : ""}
-            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.8rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin</span></div>` : ""}
+            ${config.cms === "emdash" ? `<div style="display: flex; gap: 0.5rem;"><a href="/blog" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">📰 View Blog</a><a href="/emdash" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-size: 0.8rem;">✍️ Emdash Studio (/emdash)</a></div>` : ""}
+            ${config.cms === "studiocms" ? `<a href="/dashboard" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📊 Open StudioCMS Dashboard (/dashboard)</a>` : ""}
+            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin (guided setup on first visit)</span></div>` : ""}
           </div>` : ""}
         </section>
 
@@ -3612,7 +3892,9 @@ exit 0
       }
 
       if (config.ecommerce === "medusa") {
+        pkg.scripts["backend:install"] = "cd backend && npm install";
         pkg.scripts["dev:backend"] = "cd backend && npm run dev";
+        pkg.scripts["dev:all"] = "concurrently \"bun run dev\" \"bun run dev:backend\"";
         pkg.scripts["backend:build"] = "cd backend && npm run build";
         pkg.scripts["backend:migrate"] = "cd backend && npx medusa db:migrate";
         pkg.scripts["docker:up"] = "docker compose -f backend/docker-compose.yml up -d";
@@ -4218,14 +4500,15 @@ ${config.cms === "ariabuilder" ? `
 
 ${config.cms === "studiocms" ? `
 ### Managing StudioCMS Content
-- **Admin Hub**: Start your Astro dev server and navigate to \`http://localhost:4321/studiocms\` to access the StudioCMS dashboard.
-- **Persistence**: Managed through \`studiocms.config.mjs\` with Astro DB / Turso native backing.
+- **Admin Hub**: Start your Astro dev server and navigate to \`http://localhost:4321/dashboard\` to access the StudioCMS dashboard.
+- **Persistence**: Managed through \`studiocms.config.mjs\` with local LibSQL (zero-Docker) or Turso native backing.
 ` : ""}
 
 ${config.cms === "emdash" ? `
 ### Managing Emdash CMS Edge Publication
 - **Edge Configuration**: Configured in \`emdash.config.ts\` targeting Cloudflare Workers, D1 database, and R2 storage.
 - **Markdown Articles**: Stored in \`src/content/blog/\` and rendered on \`/blog\`.
+- **Emdash Studio**: Access editorial dashboard at \`http://localhost:4321/emdash\`.
 ` : ""}
 
 ${config.puck ? `
@@ -4251,10 +4534,11 @@ ${config.ecommerce === "stripe" ? `
 
 ${config.ecommerce === "medusa" ? `
 ### J. Managing the Medusa E-Commerce Backend
+- **Unified Dev Server**: Run \`bun run dev:all\` to run both the frontend storefront and Medusa 2.0 backend concurrently.
 - **Admin Dashboard**: Start the backend and navigate to \`http://localhost:9000/app\` to configure products, pricing, inventory, regions, and promotions.
-- **Docker Compose**: Start PostgreSQL and Redis containers with \`docker compose -f backend/docker-compose.yml up -d\` (or \`bun run docker:up\`).
+- **Docker Compose**: Start PostgreSQL and Redis containers with \`bun run docker:up\` (or \`docker compose -f backend/docker-compose.yml up -d\`).
 - **Storefront SDK**: Client components query products and manage checkouts via \`src/lib/medusa.ts\` connecting to \`http://localhost:9000\`.
-- **Database Migrations**: Run \`cd backend && bunx medusa db:migrate\` after adding or modifying custom Medusa data models.
+- **Database Migrations**: Run \`bun run backend:migrate\` after adding or modifying custom Medusa data models.
 ` : ""}
 
 ---

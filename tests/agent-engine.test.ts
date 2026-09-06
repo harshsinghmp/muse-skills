@@ -636,16 +636,25 @@ Custom billing engine for healthcare providers.
         targetStudio,
         "--non-interactive",
         "--intent=content",
-        "--type=none",
+        "--type=astro",
         "--cms=studiocms",
         "--styling=hybrid",
         "--skip-install"
       ], { encoding: "utf8" });
       expect(resStudio.status).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
+      const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
+      expect(studioCfg).toContain("from 'studiocms/config'");
       expect(existsSync(join(targetStudio, "astro.config.mjs"))).toBe(true);
       const astroCfg = readFileSync(join(targetStudio, "astro.config.mjs"), "utf8");
+      expect(astroCfg).toContain("from 'studiocms'");
+      expect(astroCfg).toContain("from '@astrojs/node'");
+      expect(astroCfg).toContain('output: "server"');
       expect(astroCfg).toContain("studioCMS()");
+      const studioPkg = JSON.parse(readFileSync(join(targetStudio, "package.json"), "utf8"));
+      expect(studioPkg.dependencies["studiocms"]).toBeDefined();
+      expect(studioPkg.dependencies["@studiocms/core"]).toBeUndefined();
+      expect(studioPkg.dependencies["@astrojs/node"]).toBeDefined();
 
       // 3. Astro + Emdash CMS
       const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
@@ -654,7 +663,7 @@ Custom billing engine for healthcare providers.
         targetEmdash,
         "--non-interactive",
         "--intent=content",
-        "--type=none",
+        "--type=astro",
         "--cms=emdash",
         "--styling=hybrid",
         "--skip-install"
@@ -663,6 +672,9 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/content/blog/welcome.md"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/pages/blog/index.astro"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "astro.config.mjs"))).toBe(true);
+      const emdashAstroCfg = readFileSync(join(targetEmdash, "astro.config.mjs"), "utf8");
+      expect(emdashAstroCfg).toContain("emdash()");
 
       // 4. Next.js + Payload E-Commerce + Puck
       const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
@@ -671,7 +683,7 @@ Custom billing engine for healthcare providers.
         targetPayloadEcom,
         "--non-interactive",
         "--intent=ecommerce",
-        "--type=none",
+        "--type=nextjs",
         "--cms=payload",
         "--ecommerce=payload",
         "--puck",
@@ -686,6 +698,11 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetPayloadEcom, "src/collections/Customers.ts"))).toBe(true);
       expect(existsSync(join(targetPayloadEcom, "src/app/api/payload-checkout/route.ts"))).toBe(true);
       expect(existsSync(join(targetPayloadEcom, "src/lib/puck.config.tsx"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "next.config.mjs"))).toBe(true);
+      const nextCfg = readFileSync(join(targetPayloadEcom, "next.config.mjs"), "utf8");
+      expect(nextCfg).toContain("withPayload");
+      expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/layout.tsx"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/admin/[[...segments]]/page.tsx"))).toBe(true);
 
       // 5. Pure HTML / CSS
       const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
@@ -704,7 +721,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
       expect(htmlPkg.scripts["dev"]).toContain("serve");
-    });
+    }, 30000);
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
       const prohibited = [
