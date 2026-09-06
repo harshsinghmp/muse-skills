@@ -224,6 +224,7 @@ interface StackConfig {
 function getPresetConfig(preset: string): StackConfig {
   switch (preset.toLowerCase()) {
     case "powerhouse":
+    case "next-commerce":
       return {
         intent: "ecommerce",
         framework: "nextjs",
@@ -239,7 +240,24 @@ function getPresetConfig(preset: string): StackConfig {
         auth: "better-auth",
         deploy: "docker",
       };
+    case "astro-commerce":
+      return {
+        intent: "ecommerce",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "none",
+        cms: "ariabuilder",
+        puck: false,
+        ecommerce: "medusa",
+        db: "postgres",
+        orm: "drizzle",
+        auth: "none",
+        deploy: "docker",
+      };
     case "publisher":
+    case "astro-blog":
       return {
         intent: "content",
         framework: "astro",
@@ -256,6 +274,7 @@ function getPresetConfig(preset: string): StackConfig {
         deploy: "cloudflare",
       };
     case "edge":
+    case "astro-emdash":
       return {
         intent: "content",
         framework: "astro",
@@ -287,10 +306,43 @@ function getPresetConfig(preset: string): StackConfig {
         auth: "none",
         deploy: "cloudflare",
       };
+    case "astro-visual":
+      return {
+        intent: "brochure",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "none",
+        cms: "ariabuilder",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
     case "instatic":
       return {
         intent: "brochure",
         framework: "instatic",
+        styling: "bem",
+        animation: "css",
+        state: "none",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
+    case "pure-html":
+    case "html":
+      return {
+        intent: "brochure",
+        framework: "html",
         styling: "bem",
         animation: "css",
         state: "none",
@@ -496,23 +548,43 @@ async function main() {
       console.log("\n⚡ STAGE 2: Hierarchical Decision Tree");
 
       if (config.intent === "brochure") {
-        // Branch A: Static Website
-        console.log("\n⚡ Branch A (Static Website) Framework:");
-        console.log("  [1] Astro v7 (Zero-JS SSG)  [Recommended]");
-        console.log("  [2] Instatic (Pure HTML/CSS, zero JS overhead)");
-        console.log("  [3] Next.js SSG");
-        console.log("  [4] Custom");
-        console.log("  [5] None");
-        const fwChoice = await ask(rl, "Choose static framework [1-5]", "1");
-        if (fwChoice === "1") config.framework = "astro";
-        else if (fwChoice === "2") config.framework = "instatic";
-        else if (fwChoice === "3") config.framework = "nextjs";
-        else if (fwChoice === "4") {
+        // Branch A: Static Website / Landing Page
+        console.log("\n⚡ Branch A (Static Website / Landing Page) Framework:");
+        console.log("  [1] Pure HTML/CSS       (Zero build step, semantic BEM, OKLCH fluid design tokens) [Recommended]");
+        console.log("  [2] Instatic SSG        (Pure HTML/CSS static site generator, zero-runtime) [Recommended]");
+        console.log("  [3] Astro v7            (Zero-JS baseline, component islands, fast SSG)");
+        console.log("  [4] Next.js SSG         (Static export React 19)");
+        console.log("  [5] Custom");
+        console.log("  [6] None");
+        const fwChoice = await ask(rl, "Choose static framework [1-6]", "1");
+        if (fwChoice === "1") {
+          config.framework = "html";
+          config.styling = "bem";
+          config.animation = "css";
+          config.state = "none";
+          config.cms = "none";
+        } else if (fwChoice === "2") {
+          config.framework = "instatic";
+          config.styling = "bem";
+          config.animation = "css";
+          config.state = "none";
+          config.cms = "none";
+        } else if (fwChoice === "3") {
+          config.framework = "astro";
+        } else if (fwChoice === "4") {
+          config.framework = "nextjs";
+        } else if (fwChoice === "5") {
           config.framework = "custom";
           config.customFramework = await ask(rl, "Custom framework name", "custom-ssg");
         } else config.framework = "none";
 
         if (config.framework === "astro") {
+          console.log("\n🏗️  Astro Page Architecture / Visual Builder:");
+          console.log("  [1] Aria Builder (Astro-native visual block editor for landing pages) [Recommended]");
+          console.log("  [2] Native Astro Components (Raw .astro files, zero editor overhead)");
+          const ariaChoice = await ask(rl, "Choose page builder [1-2]", "1");
+          config.cms = ariaChoice === "1" ? "ariabuilder" : "none";
+
           console.log("\n🎨 Styling Engine:");
           console.log("  [1] Hybrid (UnoCSS Wind 4 + Custom BEM) [Recommended]");
           console.log("  [2] UnoCSS Wind 4");
@@ -531,8 +603,8 @@ async function main() {
       } else if (config.intent === "content") {
         // Branch B: Dynamic Content Website
         console.log("\n⚡ Branch B (Dynamic Content Website) Framework:");
-        console.log("  [1] Astro v7            (Zero-JS baseline, islands architecture) [Recommended]");
-        console.log("  [2] Next.js 16          (React 19 App Router)");
+        console.log("  [1] Astro v7            (Zero-JS baseline, islands architecture) [Recommended for Blogs & Publishing]");
+        console.log("  [2] Next.js 16          (React 19 App Router) [Recommended for Fullstack Content Apps]");
         console.log("  [3] WordPress           (Roots Bedrock 12-factor + Composer + Gutenberg)");
         console.log("  [4] Custom");
         console.log("  [5] None");
@@ -547,34 +619,49 @@ async function main() {
 
         if (config.framework === "astro") {
           console.log("\n📦 Content Management Architecture for Astro:");
-          console.log("  [1] StudioCMS (Astro DB / Turso native)                 [Lightweight: Embedded database CMS for Astro] [Recommended]");
-          console.log("  [2] Keystatic (Thinkmill Git-based Content Collections) [Lightweight: Zero DB overhead, markdown/MDX in git repository]");
-          console.log("  [3] SitePins  (Modern Git-based CMS)                     [Lightweight: Static site management via GitHub]");
-          console.log("  [4] Emdash CMS (Cloudflare Workers / D1 / R2)           [Serverless: Edge-native content engine]");
-          console.log("  [5] Payload CMS 3.0 (Headless API + Admin)              [Full-stack: Node.js database collections & Lexical editor]");
-          console.log("  [6] None");
-          const cmsChoice = await ask(rl, "Choose CMS [1-6]", "1");
+          console.log("  [1] StudioCMS     (Astro DB / Turso native, embedded content management) [Recommended for Content Blogs]");
+          console.log("  [2] Emdash CMS    (Cloudflare Workers / D1 / R2, edge-native markdown CMS) [Recommended for Edge Blogs]");
+          console.log("  [3] Aria Builder  (Visual drag-and-drop page builder for Astro) [Recommended for Visual Content]");
+          console.log("  [4] Keystatic     (Thinkmill Git-based Content Collections, markdown in repo)");
+          console.log("  [5] SitePins      (Modern Git-based CMS via GitHub)");
+          console.log("  [6] Payload CMS 3.0 (Headless API + Admin)");
+          console.log("  [7] None");
+          const cmsChoice = await ask(rl, "Choose CMS [1-7]", "1");
           const map: Record<string, string> = {
-            "1": "studiocms", "2": "keystatic", "3": "sitepins", "4": "emdash",
-            "5": "payload", "6": "none"
+            "1": "studiocms", "2": "emdash", "3": "ariabuilder", "4": "keystatic",
+            "5": "sitepins", "6": "payload", "7": "none"
           };
           config.cms = map[cmsChoice] || "studiocms";
         } else if (config.framework === "nextjs") {
           console.log("\n📦 Content Management Architecture for Next.js:");
-          console.log("  [1] Payload CMS 3.0 (Native App Router, TS collections) [Full-stack: Built-in admin UI, Lexical editor, DB models] [Recommended]");
-          console.log("  [2] Keystatic       (Git-based Content Collections)     [Lightweight: Zero DB overhead, content committed to git as MDX]");
-          console.log("  [3] Keystone 6      (TypeScript GraphQL CMS)            [Full-stack: Custom GraphQL schema & admin UI]");
-          console.log("  [4] Pages CMS       (Git-based CMS for GitHub)");
-          console.log("  [5] Strapi          (Decoupled headless CMS API)");
-          console.log("  [6] None");
-          const cmsChoice = await ask(rl, "Choose CMS [1-6]", "1");
-          const map: Record<string, string> = {
-            "1": "payload", "2": "keystatic", "3": "keystone", "4": "pagescms", "5": "strapi", "6": "none"
-          };
-          config.cms = map[cmsChoice] || "payload";
+          console.log("  [1] Payload CMS 3.0 + Puck Visual Builder (Native App Router, TS collections + drag-and-drop builder) [Recommended]");
+          console.log("  [2] Payload CMS 3.0 (Standard Lexical editor without Puck visual canvas)");
+          console.log("  [3] Keystatic       (Git-based Content Collections, zero DB overhead)");
+          console.log("  [4] Keystone 6      (TypeScript GraphQL CMS)");
+          console.log("  [5] Pages CMS       (Git-based CMS for GitHub)");
+          console.log("  [6] Strapi          (Decoupled headless CMS API)");
+          console.log("  [7] None");
+          const cmsChoice = await ask(rl, "Choose CMS [1-7]", "1");
+          if (cmsChoice === "1") {
+            config.cms = "payload";
+            config.puck = true;
+          } else if (cmsChoice === "2") {
+            config.cms = "payload";
+            config.puck = false;
+          } else if (cmsChoice === "3") {
+            config.cms = "keystatic";
+          } else if (cmsChoice === "4") {
+            config.cms = "keystone";
+          } else if (cmsChoice === "5") {
+            config.cms = "pagescms";
+          } else if (cmsChoice === "6") {
+            config.cms = "strapi";
+          } else {
+            config.cms = "none";
+          }
         }
 
-        if (config.cms === "payload") {
+        if (config.cms === "payload" && config.framework === "nextjs" && !config.puck) {
           const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@measured/puck)? [y/n]", "y");
           config.puck = puckChoice.toLowerCase().startsWith("y");
         }
@@ -582,45 +669,61 @@ async function main() {
       } else if (config.intent === "ecommerce") {
         // Branch C: Ecommerce Storefront
         console.log("\n🛍️  Branch C (Ecommerce Storefront) Commerce Engine:");
-        console.log("  [1] Medusa v2 Sovereign Engine  (Full backend with Postgres, Redis, and Admin UI) [Recommended]");
-        console.log("  [2] Stripe Direct Checkout      (Lightweight: Zero backend servers, hosted checkout, webhook routes)");
-        console.log("  [3] Fastrr 1-Click Checkout     (Accelerated: 1-click checkout modal for high-conversion D2C)");
-        console.log("  [4] Payload E-Commerce Module   (Embedded: Custom product & order collections inside Next.js)");
-        console.log("  [5] Razorpay Hosted Checkout    (Regional: Payment buttons & checkout modal for India/SE Asia)");
-        console.log("  [6] Vendure Commerce Engine     (Scalable: Enterprise TypeScript GraphQL backend)");
-        console.log("  [7] Custom");
-        const ecomChoice = await ask(rl, "Choose commerce engine [1-7]", "1");
-        const ecomMap: Record<string, string> = {
-          "1": "medusa", "2": "stripe", "3": "fastrr", "4": "payload",
-          "5": "razorpay", "6": "vendure", "7": "custom"
-        };
-        config.ecommerce = ecomMap[ecomChoice] || "medusa";
+        console.log("  [1] Astro + Aria Builder + MedusaJS (High-performance storefront with Aria visual builder & Medusa v2 Sovereign Engine) [Recommended - Best for Speed & Visual Editing]");
+        console.log("  [2] Next.js + Payload CMS + Puck + Payload E-Commerce (All-in-one Next.js app with Puck visual builder and native Product/Order/Customer/Stripe collections) [Recommended - Best for All-in-One Fullstack]");
+        console.log("  [3] Next.js + Medusa v2 Sovereign Engine (Next.js 16 App Router storefront with Medusa backend)");
+        console.log("  [4] Stripe Direct Checkout (Lightweight: Zero backend servers, hosted checkout, webhook routes)");
+        console.log("  [5] Fastrr 1-Click Checkout (Accelerated: 1-click checkout modal for high-conversion D2C)");
+        console.log("  [6] Razorpay Hosted Checkout (Regional: Payment buttons & checkout modal for India/SE Asia)");
+        console.log("  [7] Vendure Commerce Engine (Enterprise TypeScript GraphQL backend)");
+        console.log("  [8] Custom");
+        const ecomChoice = await ask(rl, "Choose commerce engine [1-8]", "1");
 
-        if (config.ecommerce === "medusa") {
-          console.log("\n⚡ Medusa Architecture:");
-          console.log("  [1] Next.js 16 Storefront + Medusa SDK [Recommended]");
-          console.log("  [2] Headless Astro + Medusa JS SDK");
-          console.log("  [3] Full Monorepo (Backend + Storefront)");
-          const archChoice = await ask(rl, "Choose architecture [1-3]", "1");
-          config.framework = archChoice === "2" ? "astro" : "nextjs";
+        if (ecomChoice === "1") {
+          config.framework = "astro";
+          config.cms = "ariabuilder";
+          config.ecommerce = "medusa";
           config.state = "nanostores";
-        } else if (config.ecommerce === "payload") {
+          config.db = "postgres";
+          config.orm = "drizzle";
+        } else if (ecomChoice === "2") {
           config.framework = "nextjs";
           config.cms = "payload";
+          config.puck = true;
+          config.ecommerce = "payload";
           config.db = "neon";
-          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@measured/puck)? [y/n]", "y");
-          config.puck = puckChoice.toLowerCase().startsWith("y");
-        } else if (config.ecommerce === "stripe") {
+          config.orm = "drizzle";
+        } else if (ecomChoice === "3") {
+          config.framework = "nextjs";
+          config.ecommerce = "medusa";
+          config.state = "nanostores";
+          config.db = "postgres";
+          config.orm = "drizzle";
+        } else if (ecomChoice === "4") {
+          config.ecommerce = "stripe";
           console.log("\n💳 Stripe Integration Style:");
           console.log("  [1] Stripe Hosted Checkout (Redirect to pre-built checkout page) [Recommended]");
           console.log("  [2] Stripe Elements (Embedded custom UI)");
           await ask(rl, "Choose Stripe checkout style [1-2]", "1");
           config.framework = "nextjs";
           config.state = "nanostores";
-        } else if (config.ecommerce === "fastrr" || config.ecommerce === "razorpay") {
+        } else if (ecomChoice === "5") {
+          config.ecommerce = "fastrr";
           config.framework = "astro";
           config.cms = "ariabuilder";
           config.state = "nanostores";
+        } else if (ecomChoice === "6") {
+          config.ecommerce = "razorpay";
+          config.framework = "astro";
+          config.cms = "ariabuilder";
+          config.state = "nanostores";
+        } else if (ecomChoice === "7") {
+          config.ecommerce = "vendure";
+          config.framework = "nextjs";
+          config.state = "nanostores";
+        } else {
+          config.ecommerce = "custom";
+          config.framework = "nextjs";
         }
 
       } else if (config.intent === "app") {
@@ -1130,6 +1233,8 @@ async function main() {
           cwd: resolvedTarget,
           stdio: "inherit",
         });
+      } else if (config.framework === "html") {
+        mkdirSync(join(resolvedTarget, "src", "styles"), { recursive: true });
       }
       console.log(`  ✅ Framework initialized: \`${config.framework.toUpperCase()}\`\n`);
     } catch (err) {
@@ -1196,19 +1301,30 @@ export default defineConfig({
         console.log("  ✅ Auto-wired: `./postcss.config.mjs` with @unocss/postcss");
       }
 
-      if (config.framework === "astro") {
+      if (config.framework === "astro" || config.cms === "studiocms") {
         const astroConfigPath = join(resolvedTarget, "astro.config.mjs");
+        const integrations: string[] = [];
+        const imports: string[] = ["import { defineConfig } from 'astro/config';"];
+
+        if (config.styling === "unocss" || config.styling === "hybrid") {
+          imports.push("import UnoCSS from 'unocss/astro';");
+          integrations.push("UnoCSS({ injectReset: true })");
+        }
+        if (config.cms === "studiocms") {
+          imports.push("import studioCMS from '@studiocms/core';");
+          integrations.push("studioCMS()");
+        }
+
         const astroConfigContent = `// @ts-check
-import { defineConfig } from 'astro/config';
-import UnoCSS from 'unocss/astro';
+${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [UnoCSS({ injectReset: true })],
+  integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
-        console.log("  ✅ Auto-wired: `./astro.config.mjs` with UnoCSS integration");
+        console.log("  ✅ Auto-wired: `./astro.config.mjs` with framework integrations");
       }
     }
 
@@ -1284,6 +1400,9 @@ export const Pages: CollectionConfig = {
 `, "utf8");
 
       if (config.ecommerce === "payload") {
+        depsToAdd["stripe"] = "^17.7.0";
+
+        // Products.ts
         writeFileSync(join(collectionsDir, "Products.ts"), `import type { CollectionConfig } from 'payload';
 
 export const Products: CollectionConfig = {
@@ -1293,8 +1412,67 @@ export const Products: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
-    { name: 'price', type: 'number', required: true },
+    { name: 'price', type: 'number', required: true, admin: { description: 'Price in cents (e.g. 4900 for $49.00)' } },
+    { name: 'sku', type: 'text' },
+    { name: 'inventory', type: 'number', defaultValue: 100 },
     { name: 'description', type: 'textarea' },
+    { name: 'images', type: 'relationship', relationTo: 'media', hasMany: true },
+    { name: 'stripeProductId', type: 'text' },
+  ],
+};
+`, "utf8");
+
+        // Orders.ts
+        writeFileSync(join(collectionsDir, "Orders.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Orders: CollectionConfig = {
+  slug: 'orders',
+  admin: {
+    useAsTitle: 'orderNumber',
+  },
+  fields: [
+    { name: 'orderNumber', type: 'text', required: true, unique: true },
+    {
+      name: 'items',
+      type: 'array',
+      required: true,
+      fields: [
+        { name: 'product', type: 'relationship', relationTo: 'products', required: true },
+        { name: 'quantity', type: 'number', required: true, defaultValue: 1 },
+        { name: 'unitPrice', type: 'number', required: true },
+      ],
+    },
+    { name: 'totalAmount', type: 'number', required: true },
+    {
+      name: 'status',
+      type: 'select',
+      defaultValue: 'pending',
+      options: [
+        { label: 'Pending', value: 'pending' },
+        { label: 'Processing', value: 'processing' },
+        { label: 'Completed', value: 'completed' },
+        { label: 'Cancelled', value: 'cancelled' },
+      ],
+    },
+    { name: 'customer', type: 'relationship', relationTo: 'customers' },
+    { name: 'stripePaymentIntentId', type: 'text' },
+  ],
+};
+`, "utf8");
+
+        // Customers.ts
+        writeFileSync(join(collectionsDir, "Customers.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Customers: CollectionConfig = {
+  slug: 'customers',
+  admin: {
+    useAsTitle: 'name',
+  },
+  fields: [
+    { name: 'name', type: 'text', required: true },
+    { name: 'email', type: 'email', required: true, unique: true },
+    { name: 'stripeCustomerId', type: 'text' },
+    { name: 'orders', type: 'relationship', relationTo: 'orders', hasMany: true },
   ],
 };
 `, "utf8");
@@ -1309,7 +1487,9 @@ import { fileURLToPath } from 'url';
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
 import { Pages } from './collections/Pages';
-${config.ecommerce === "payload" ? `import { Products } from './collections/Products';` : ""}
+${config.ecommerce === "payload" ? `import { Products } from './collections/Products';
+import { Orders } from './collections/Orders';
+import { Customers } from './collections/Customers';` : ""}
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -1321,7 +1501,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Pages${config.ecommerce === "payload" ? `, Products` : ""}],
+  collections: [Users, Media, Pages${config.ecommerce === "payload" ? `, Products, Orders, Customers` : ""}],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'supersecret_payload_secret_key_at_least_32_chars',
   typescript: {
@@ -1336,7 +1516,7 @@ export default buildConfig({
 `;
       writeFileSync(join(resolvedTarget, "src", "payload.config.ts"), payloadConfig, "utf8");
 
-      if (config.framework === "nextjs") {
+      if (config.framework === "nextjs" || config.framework === "none") {
         const payloadAdminDir = join(resolvedTarget, "src", "app", "(payload)", "admin");
         const payloadApiDir = join(resolvedTarget, "src", "app", "(payload)", "api", "[...slug]");
         mkdirSync(payloadAdminDir, { recursive: true });
@@ -1375,6 +1555,50 @@ export const DELETE = REST_DELETE(config);
 export const PATCH = REST_PATCH(config);
 export const OPTIONS = REST_OPTIONS(config);
 `, "utf8");
+
+        if (config.ecommerce === "payload") {
+          const payloadCheckoutDir = join(resolvedTarget, "src", "app", "api", "payload-checkout");
+          mkdirSync(payloadCheckoutDir, { recursive: true });
+          const payloadCheckoutRoute = `import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
+  apiVersion: '2024-12-18.acacia' as any,
+});
+
+export async function POST(req: Request) {
+  try {
+    const { items, customerEmail } = await req.json();
+    if (!items || !items.length) {
+      return NextResponse.json({ error: 'Cart items required' }, { status: 400 });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: items.map((item: any) => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.title || 'Store Item',
+          },
+          unit_amount: item.price || 4900,
+        },
+        quantity: item.quantity || 1,
+      })),
+      mode: 'payment',
+      customer_email: customerEmail,
+      success_url: \`\${req.headers.get('origin') || 'http://localhost:3000'}/checkout/success?session_id={CHECKOUT_SESSION_ID}\`,
+      cancel_url: \`\${req.headers.get('origin') || 'http://localhost:3000'}/checkout/cancel\`,
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+`;
+          writeFileSync(join(payloadCheckoutDir, "route.ts"), payloadCheckoutRoute, "utf8");
+        }
       }
       console.log("  ✅ Auto-wired: Payload CMS 3.0 (`./src/payload.config.ts`, collections, and App Router endpoints)");
     }
@@ -1444,10 +1668,434 @@ const PrerenderedPage = makePage(config);
       console.log("  ✅ Auto-wired: Keystatic Git-Based CMS (`./keystatic.config.ts` and admin endpoints)");
     }
 
+    // 3.2.0 Aria Builder (Astro)
+    if (config.cms === "ariabuilder") {
+      depsToAdd["ariabuilder"] = "^0.5.0";
+      const ariaConfigContent = `// @ts-check
+import { defineConfig } from 'ariabuilder';
+
+export default defineConfig({
+  componentsDir: './src/components',
+  previewUrl: 'http://localhost:4321',
+  visualBlocks: [
+    'AriaHero',
+    ${config.ecommerce === "medusa" ? `'AriaMedusaProductGrid', 'AriaCartDrawer',` : ""}
+  ],
+});
+`;
+      writeFileSync(join(resolvedTarget, "aria.config.mjs"), ariaConfigContent, "utf8");
+
+      const compDir = join(resolvedTarget, "src", "components");
+      mkdirSync(compDir, { recursive: true });
+
+      const ariaHeroContent = `---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const {
+  title = "${projectName.replace(/"/g, '\\"')}",
+  subtitle = "${projectDesc.replace(/"/g, '\\"')}",
+  ctaText = ${config.ecommerce === "medusa" ? '"Explore Catalog"' : '"Get Started"'},
+  ctaLink = ${config.ecommerce === "medusa" ? '"#products"' : '"#explore"'},
+} = Astro.props;
+---
+
+<section class="c-hero fade-in" data-aria-component="AriaHero">
+  <div class="c-hero__container">
+    <span class="c-badge c-badge--primary">Aria Visual Builder Active</span>
+    <h1 class="c-hero__title">{title}</h1>
+    <p class="c-hero__subtitle">{subtitle}</p>
+    {ctaText && (
+      <a href={ctaLink} class="c-btn c-btn--primary hover-lift">{ctaText}</a>
+    )}
+  </div>
+</section>
+
+<style>
+  .c-hero {
+    padding: var(--spacing-3xl, 4rem) var(--spacing-xl, 2rem);
+    text-align: center;
+    background: radial-gradient(circle at top, var(--color-surface-elevated, #1e293b), var(--color-surface, #0b0f19));
+  }
+  .c-hero__container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .c-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: var(--font-size-xs, 0.75rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-primary-dark, #312e81);
+    color: var(--color-text-heading, #fff);
+    margin-bottom: var(--spacing-md, 1rem);
+  }
+  .c-hero__title {
+    font-size: var(--font-size-4xl, 2.5rem);
+    color: var(--color-text-heading, #fff);
+    margin-bottom: var(--spacing-md, 1rem);
+    line-height: 1.2;
+  }
+  .c-hero__subtitle {
+    font-size: var(--font-size-lg, 1.25rem);
+    color: var(--color-text-muted, #94a3b8);
+    margin-bottom: var(--spacing-xl, 2rem);
+    line-height: 1.6;
+  }
+  .c-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .c-btn--primary {
+    background: var(--color-primary, #6366f1);
+    color: #fff;
+  }
+</style>
+`;
+      writeFileSync(join(compDir, "AriaHero.astro"), ariaHeroContent, "utf8");
+
+      if (config.ecommerce === "medusa") {
+        const productGridContent = `---
+import { medusa } from '../lib/medusa';
+
+let products: any[] = [];
+try {
+  const res = await medusa.products.list();
+  products = res.products || [];
+} catch (e) {
+  // Fallback demo product state if Medusa backend is offline
+  products = [
+    { id: 'demo_1', title: 'Signature Minimal Tee', description: 'Heavyweight organic cotton', variants: [{ prices: [{ amount: 4500, currency_code: 'usd' }] }] },
+    { id: 'demo_2', title: 'Everyday Canvas Tote', description: 'Recycled canvas with leather accents', variants: [{ prices: [{ amount: 3500, currency_code: 'usd' }] }] },
+    { id: 'demo_3', title: 'Studio 6-Panel Cap', description: 'Structured twill with brass clasp', variants: [{ prices: [{ amount: 2800, currency_code: 'usd' }] }] },
+  ];
+}
+---
+
+<section id="products" class="c-products-grid" data-aria-component="AriaMedusaProductGrid">
+  <div class="c-products-grid__header">
+    <h2 class="c-products-grid__title">Featured Products</h2>
+    <p class="c-products-grid__subtitle">Synced live from Medusa Sovereign Commerce Engine</p>
+  </div>
+  <div class="c-products-grid__items">
+    {products.map((p) => {
+      const price = p.variants?.[0]?.prices?.[0];
+      const formattedPrice = price ? \`$\${(price.amount / 100).toFixed(2)}\` : '$45.00';
+      return (
+        <article class="c-product-card hover-lift" data-product-id={p.id}>
+          <div class="c-product-card__thumb">
+            <span class="c-product-card__placeholder">🛍️</span>
+          </div>
+          <div class="c-product-card__body">
+            <h3 class="c-product-card__title">{p.title}</h3>
+            <p class="c-product-card__desc">{p.description}</p>
+            <div class="c-product-card__footer">
+              <span class="c-product-card__price">{formattedPrice}</span>
+              <button class="c-product-card__btn" data-add-to-cart={p.id}>Add to Cart</button>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .c-products-grid {
+    padding: var(--spacing-2xl, 3rem) var(--spacing-xl, 2rem);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .c-products-grid__header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl, 3rem);
+  }
+  .c-products-grid__title {
+    font-size: var(--font-size-3xl, 2rem);
+    color: var(--color-text-heading, #fff);
+    margin-bottom: 0.5rem;
+  }
+  .c-products-grid__subtitle {
+    color: var(--color-text-muted, #94a3b8);
+    font-size: var(--font-size-base, 1rem);
+  }
+  .c-products-grid__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl, 2rem);
+  }
+  .c-product-card {
+    background: var(--color-surface-elevated, #1e293b);
+    border: 1px solid var(--color-border, #334155);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .c-product-card__thumb {
+    height: 180px;
+    background: var(--color-surface, #0f172a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+  .c-product-card__body {
+    padding: var(--spacing-lg, 1.5rem);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .c-product-card__title {
+    font-size: 1.125rem;
+    color: var(--color-text-heading, #fff);
+    margin: 0 0 0.5rem 0;
+  }
+  .c-product-card__desc {
+    color: var(--color-text-muted, #94a3b8);
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+    flex: 1;
+  }
+  .c-product-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+  .c-product-card__price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary-light, #818cf8);
+  }
+  .c-product-card__btn {
+    padding: 0.5rem 1rem;
+    background: var(--color-primary, #6366f1);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+</style>
+`;
+        writeFileSync(join(compDir, "AriaMedusaProductGrid.astro"), productGridContent, "utf8");
+
+        const cartDrawerContent = `---
+---
+<aside id="aria-cart-drawer" class="c-cart-drawer" data-aria-component="AriaCartDrawer">
+  <div class="c-cart-drawer__panel">
+    <div class="c-cart-drawer__header">
+      <h3>Your Cart</h3>
+      <button id="aria-cart-close" class="c-cart-drawer__close" aria-label="Close cart">&times;</button>
+    </div>
+    <div id="aria-cart-items" class="c-cart-drawer__items">
+      <p class="c-cart-drawer__empty">Your cart is currently empty.</p>
+    </div>
+    <div class="c-cart-drawer__footer">
+      <div class="c-cart-drawer__total">
+        <span>Total:</span>
+        <span id="aria-cart-total">$0.00</span>
+      </div>
+      <button id="aria-checkout-btn" class="c-btn c-btn--primary" style="width: 100%;">Proceed to Checkout</button>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .c-cart-drawer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+  }
+  .c-cart-drawer.is-open {
+    display: block;
+  }
+  .c-cart-drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    background: var(--color-surface, #0b0f19);
+    border-left: 1px solid var(--color-border, #334155);
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-xl, 2rem);
+  }
+  .c-cart-drawer__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border, #334155);
+    padding-bottom: 1rem;
+  }
+  .c-cart-drawer__close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted, #94a3b8);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .c-cart-drawer__items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+  }
+  .c-cart-drawer__empty {
+    color: var(--color-text-muted, #94a3b8);
+    text-align: center;
+    margin-top: 2rem;
+  }
+  .c-cart-drawer__footer {
+    border-top: 1px solid var(--color-border, #334155);
+    padding-top: 1rem;
+  }
+  .c-cart-drawer__total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .c-btn {
+    display: block;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+  .c-btn--primary {
+    background: var(--color-primary, #6366f1);
+    color: #fff;
+  }
+</style>
+`;
+        writeFileSync(join(compDir, "AriaCartDrawer.astro"), cartDrawerContent, "utf8");
+      }
+
+      console.log("  ✅ Auto-wired: Aria Builder (`./aria.config.mjs`, components in `./src/components/`)");
+    }
+
     // 3.2.3 StudioCMS (Astro)
-    if (config.cms === "studiocms" && config.framework === "astro") {
+    if (config.cms === "studiocms") {
       depsToAdd["@studiocms/core"] = "^0.1.0";
-      console.log("  ✅ Auto-wired: StudioCMS dependencies for Astro");
+      const studioCmsConfig = `// @ts-check
+import { defineStudioCMSConfig } from '@studiocms/core';
+
+export default defineStudioCMSConfig({
+  db: {
+    // Astro DB / Turso native persistence
+  },
+  dashboardConfig: {
+    title: '${projectName.replace(/'/g, "\\'")} StudioCMS Hub',
+    developerConfig: {
+      viewCustomImageRoutes: true,
+    },
+  },
+});
+`;
+      writeFileSync(join(resolvedTarget, "studiocms.config.mjs"), studioCmsConfig, "utf8");
+      console.log("  ✅ Auto-wired: StudioCMS (`./studiocms.config.mjs` and Astro DB integration)");
+    }
+
+    // 3.2.3b Emdash CMS (Astro)
+    if (config.cms === "emdash") {
+      depsToAdd["emdash"] = "^0.4.0";
+      const emdashConfig = `export default {
+  contentDir: './src/content/blog',
+  mediaStorage: 'cloudflare-r2',
+  database: 'cloudflare-d1',
+  routing: {
+    prefix: '/blog',
+  },
+};
+`;
+      writeFileSync(join(resolvedTarget, "emdash.config.ts"), emdashConfig, "utf8");
+
+      const blogDir = join(resolvedTarget, "src", "content", "blog");
+      mkdirSync(blogDir, { recursive: true });
+      const welcomePost = `---
+title: "Welcome to ${projectName.replace(/"/g, '\\"')}"
+description: "Edge-rendered publication powered by Astro v7 and Emdash CMS."
+pubDate: 2026-09-06
+author: "${authorName || "Principal"}"
+tags: ["Astro", "Emdash", "Edge"]
+---
+
+# Welcome to ${projectName}
+
+This publication is built on **Astro v7** and **Emdash CMS**, engineered for edge-native delivery across Cloudflare Workers, D1 database, and R2 object storage.
+
+## Key Features
+- **Zero-JS by Default**: Pure static HTML rendering.
+- **Edge Deployment**: Sub-millisecond global TTFB.
+- **Git & D1 Synced**: Edit content in markdown or via the Emdash visual dashboard.
+`;
+      writeFileSync(join(blogDir, "welcome.md"), welcomePost, "utf8");
+
+      const blogPagesDir = join(resolvedTarget, "src", "pages", "blog");
+      mkdirSync(blogPagesDir, { recursive: true });
+      const blogIndexAstro = `---
+import '../../styles/tokens.css';
+import '../../styles/semantic.css';
+
+const posts = [
+  {
+    title: "Welcome to ${projectName.replace(/"/g, '\\"')}",
+    description: "Edge-rendered publication powered by Astro v7 and Emdash CMS.",
+    slug: "welcome",
+    date: "2026-09-06",
+  }
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blog - ${projectName.replace(/"/g, '\\"')}</title>
+    <meta name="viewport" content="width=device-width" />
+  </head>
+  <body style="margin: 0; padding: 2rem; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, sans-serif;">
+    <main style="max-width: 800px; margin: 0 auto;">
+      <header style="margin-bottom: 2rem;">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
+        <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">Blog & Articles</h1>
+        <p style="color: var(--color-text-muted, #94a3b8);">Serverless edge publication built on Astro and Emdash CMS.</p>
+      </header>
+
+      <section style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {posts.map(p => (
+          <article style="padding: 1.5rem; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155); border-radius: 10px;">
+            <div style="font-size: 0.8rem; color: var(--color-text-muted, #94a3b8); margin-bottom: 0.5rem;">{p.date}</div>
+            <h2 style="font-size: 1.5rem; margin: 0 0 0.5rem 0;">{p.title}</h2>
+            <p style="color: var(--color-text-muted, #94a3b8); margin: 0 0 1rem 0;">{p.description}</p>
+            <a href={\`/blog/\${p.slug}\`} style="color: var(--color-primary, #6366f1); text-decoration: none; font-weight: 600;">Read Article &rarr;</a>
+          </article>
+        ))}
+      </section>
+    </main>
+  </body>
+</html>
+`;
+      writeFileSync(join(blogPagesDir, "index.astro"), blogIndexAstro, "utf8");
+      console.log("  ✅ Auto-wired: Emdash CMS (`./emdash.config.ts`, `./src/content/blog/`, and `./src/pages/blog/`)");
     }
 
     // 3.2.4 Puck Visual Builder
@@ -2463,6 +3111,9 @@ export default function HomePage() {
       const astroDashboardContent = `---
 import '../styles/tokens.css';
 import '../styles/semantic.css';
+${config.cms === "ariabuilder" ? `import AriaHero from '../components/AriaHero.astro';` : ""}
+${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `import AriaMedusaProductGrid from '../components/AriaMedusaProductGrid.astro';
+import AriaCartDrawer from '../components/AriaCartDrawer.astro';` : ""}
 
 const projectName = "${projectName.replace(/"/g, '\\"')}";
 const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
@@ -2476,7 +3127,10 @@ const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
     <title>{projectName}</title>
   </head>
   <body style="margin: 0; padding: 0; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, -apple-system, sans-serif;">
-    <main style="min-height: 100vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+${config.cms === "ariabuilder" ? `    <AriaHero />` : ""}
+${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedusaProductGrid />
+    <AriaCartDrawer />` : ""}
+    <main style="min-height: 50vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
       <div style="max-width: 960px; width: 100%;">
         <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
           <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
@@ -2507,6 +3161,17 @@ const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
               ${config.auth !== "none" ? `🟢 <strong>${config.auth.toUpperCase()}</strong> configured.` : "⚪ No auth configured."}
             </p>
           </div>
+
+          ${config.cms !== "none" ? `
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">📝 Content & CMS</h3>
+            <p style="margin: 0 0 0.75rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+              🟢 <strong>${config.cms.toUpperCase()}</strong> active.
+            </p>
+            ${config.cms === "emdash" ? `<a href="/blog" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">Open Blog</a>` : ""}
+            ${config.cms === "studiocms" ? `<a href="/studiocms" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">Open StudioCMS Hub</a>` : ""}
+            ${config.cms === "ariabuilder" ? `<span style="font-size: 0.8rem; color: #10b981;">Aria Builder visual components rendered above</span>` : ""}
+          </div>` : ""}
         </section>
 
         <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
@@ -2521,6 +3186,57 @@ const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
 `;
       writeFileSync(join(pagesDir, "index.astro"), astroDashboardContent, "utf8");
       console.log("  ✅ Auto-wired: `src/pages/index.astro` (Day-1 Proof-of-Life Live Dashboard)");
+    } else if (config.framework === "html" || (!existsSync(join(resolvedTarget, "src/app")) && !existsSync(join(resolvedTarget, "src/pages")))) {
+      const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${projectName.replace(/"/g, '&quot;')}</title>
+  <meta name="description" content="${projectDesc.replace(/"/g, '&quot;')}" />
+  <link rel="stylesheet" href="./src/styles/tokens.css" />
+  <link rel="stylesheet" href="./src/styles/reset.css" />
+  <link rel="stylesheet" href="./src/styles/semantic.css" />
+  <link rel="stylesheet" href="./src/styles/animations.css" />
+</head>
+<body style="margin: 0; padding: 0; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, -apple-system, sans-serif;">
+  <main style="min-height: 100vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+    <div style="max-width: 960px; width: 100%;">
+      <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
+        <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+          PURE HTML/CSS • ZERO BUILD STEP
+        </div>
+        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin: 0 0 1rem 0; color: var(--color-text-heading, #fff);">${projectName.replace(/</g, '&lt;')}</h1>
+        <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-width: 640px; margin: 0 auto;">${projectDesc.replace(/</g, '&lt;')}</p>
+      </header>
+
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md, 1rem); margin-bottom: var(--spacing-2xl, 3rem);">
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
+          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🚀 Pure Semantic HTML5</h3>
+          <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+            Zero build step required. Sub-millisecond cold load with 100/100 Lighthouse performance.
+          </p>
+        </div>
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
+          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🎨 OKLCH Design Tokens</h3>
+          <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+            Fluid BEM scaling and wide-gamut OKLCH palettes live in <code>src/styles/tokens.css</code>.
+          </p>
+        </div>
+      </section>
+
+      <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
+        <p style="margin: 0 0 1rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+          Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
+        </p>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>
+`;
+      writeFileSync(join(resolvedTarget, "index.html"), htmlContent, "utf8");
+      console.log("  ✅ Auto-wired: `index.html` (Day-1 Pure HTML/CSS Starter Page)");
     }
 
     // 3.10 Generate Production Deployment Artifacts & CI/CD
@@ -2756,9 +3472,9 @@ exit 0
         private: true,
         type: "module",
         scripts: {
-          dev: config.framework === "nextjs" ? "next dev" : "astro dev",
-          build: config.framework === "nextjs" ? "next build" : "astro build",
-          start: config.framework === "nextjs" ? "next start" : "astro preview",
+          dev: config.framework === "nextjs" ? "next dev" : config.framework === "astro" ? "astro dev" : "bun x serve .",
+          build: config.framework === "nextjs" ? "next build" : config.framework === "astro" ? "astro build" : "echo 'Build complete'",
+          start: config.framework === "nextjs" ? "next start" : config.framework === "astro" ? "astro preview" : "bun x serve .",
         },
       };
     }
@@ -2784,6 +3500,8 @@ exit 0
         pkg.scripts["setup"] = "bun install && docker compose up -d && bun run db:push";
       } else if (config.ecommerce === "medusa") {
         pkg.scripts["setup"] = "bun install && docker compose -f backend/docker-compose.yml up -d && cd backend && npm run build && npx medusa db:migrate";
+      } else if (config.framework === "html") {
+        pkg.scripts["setup"] = "bun install";
       } else {
         pkg.scripts["setup"] = "bun install && bun run build";
       }
@@ -3394,8 +4112,32 @@ ${config.auth === "better-auth" ? `
 
 ${config.cms === "payload" ? `
 ### F. Managing Payload CMS 3.0
-- **Admin Dashboard**: Start your dev server and navigate to \`http://localhost:3000/admin\` to manage Collections (Users, Media, Pages${config.ecommerce === "payload" ? ", Products" : ""}).
+- **Admin Dashboard**: Start your dev server and navigate to \`http://localhost:3000/admin\` to manage Collections (Users, Media, Pages${config.ecommerce === "payload" ? ", Products, Orders, Customers" : ""}).
 - **CLI Commands**: Run \`bun run payload\` for Payload-specific generator tasks.
+` : ""}
+
+${config.ecommerce === "payload" ? `
+### Payload E-Commerce Module
+- **Collections**: Managed at \`src/collections/\` (\`Products.ts\`, \`Orders.ts\`, \`Customers.ts\`).
+- **Checkout Route**: \`/api/payload-checkout\` validates cart items and creates Stripe Checkout sessions.
+` : ""}
+
+${config.cms === "ariabuilder" ? `
+### Visual Page Building (Aria Builder)
+- **Visual Block Registry**: Configured in \`aria.config.mjs\` with blocks located in \`src/components/\`.
+- **Aria Components**: Includes \`src/components/AriaHero.astro\`${config.ecommerce === "medusa" ? `, \`src/components/AriaMedusaProductGrid.astro\`, and \`src/components/AriaCartDrawer.astro\`` : ""}.
+` : ""}
+
+${config.cms === "studiocms" ? `
+### Managing StudioCMS Content
+- **Admin Hub**: Start your Astro dev server and navigate to \`http://localhost:4321/studiocms\` to access the StudioCMS dashboard.
+- **Persistence**: Managed through \`studiocms.config.mjs\` with Astro DB / Turso native backing.
+` : ""}
+
+${config.cms === "emdash" ? `
+### Managing Emdash CMS Edge Publication
+- **Edge Configuration**: Configured in \`emdash.config.ts\` targeting Cloudflare Workers, D1 database, and R2 storage.
+- **Markdown Articles**: Stored in \`src/content/blog/\` and rendered on \`/blog\`.
 ` : ""}
 
 ${config.puck ? `

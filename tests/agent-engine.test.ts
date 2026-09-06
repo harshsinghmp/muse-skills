@@ -128,6 +128,53 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(resAstroMobile.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroMobile.stdout).toContain("State:             `NANOSTORES`");
       expect(resAstroMobile.stdout).toContain("Mobile:            `CAPACITOR`");
+
+      // 6. Astro Commerce preset (Astro + Aria Builder + Medusa v2)
+      const targetAstroComm = join(TEST_SANDBOX, "astro-comm-test");
+      const resAstroComm = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resAstroComm.status).toBe(0);
+      expect(resAstroComm.stdout).toContain("Framework:         `ASTRO`");
+      expect(resAstroComm.stdout).toContain("CMS:               `ARIABUILDER`");
+      expect(resAstroComm.stdout).toContain("E-Commerce:        `MEDUSA`");
+
+      // 7. Astro Blog preset (Astro + StudioCMS)
+      const targetAstroBlog = join(TEST_SANDBOX, "astro-blog-test");
+      const resAstroBlog = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resAstroBlog.status).toBe(0);
+      expect(resAstroBlog.stdout).toContain("Framework:         `ASTRO`");
+      expect(resAstroBlog.stdout).toContain("CMS:               `STUDIOCMS`");
+
+      // 8. Astro Emdash preset (Astro + Emdash CMS)
+      const targetAstroEmdash = join(TEST_SANDBOX, "astro-emdash-test");
+      const resAstroEmdash = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resAstroEmdash.status).toBe(0);
+      expect(resAstroEmdash.stdout).toContain("Framework:         `ASTRO`");
+      expect(resAstroEmdash.stdout).toContain("CMS:               `EMDASH`");
+
+      // 9. Pure HTML preset
+      const targetPureHtml = join(TEST_SANDBOX, "pure-html-test");
+      const resPureHtml = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resPureHtml.status).toBe(0);
+      expect(resPureHtml.stdout).toContain("Framework:         `HTML`");
+      expect(resPureHtml.stdout).toContain("Styling:           `BEM`");
+
+      // 10. Next Commerce preset
+      const targetNextComm = join(TEST_SANDBOX, "next-comm-test");
+      const resNextComm = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resNextComm.status).toBe(0);
+      expect(resNextComm.stdout).toContain("Framework:         `NEXTJS`");
+      expect(resNextComm.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
+      expect(resNextComm.stdout).toContain("E-Commerce:        `PAYLOAD`");
     });
 
     it("supports granular intent-first companion composition including NanoStores and Capacitor", () => {
@@ -552,6 +599,106 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts["test"]).toBe("bun test");
       expect(pkg.scripts["lint"]).toBeDefined();
       expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
+    });
+
+    it("provisions complete modular implementations for Aria Builder, Medusa, StudioCMS, Emdash, and Payload E-Commerce", () => {
+      // 1. Astro + Aria Builder + MedusaJS
+      const targetAria = join(TEST_SANDBOX, "aria-medusa-showcase");
+      const resAria = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetAria,
+        "--non-interactive",
+        "--intent=ecommerce",
+        "--type=none",
+        "--cms=ariabuilder",
+        "--ecommerce=medusa",
+        "--styling=hybrid",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resAria.status).toBe(0);
+      expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(true);
+      expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(true);
+      expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(true);
+      expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(true);
+      expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(true);
+      expect(existsSync(join(targetAria, "backend/package.json"))).toBe(true);
+      expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(true);
+
+      // 2. Astro + StudioCMS
+      const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
+      const resStudio = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetStudio,
+        "--non-interactive",
+        "--intent=content",
+        "--type=none",
+        "--cms=studiocms",
+        "--styling=hybrid",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resStudio.status).toBe(0);
+      expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
+      expect(existsSync(join(targetStudio, "astro.config.mjs"))).toBe(true);
+      const astroCfg = readFileSync(join(targetStudio, "astro.config.mjs"), "utf8");
+      expect(astroCfg).toContain("studioCMS()");
+
+      // 3. Astro + Emdash CMS
+      const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
+      const resEmdash = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetEmdash,
+        "--non-interactive",
+        "--intent=content",
+        "--type=none",
+        "--cms=emdash",
+        "--styling=hybrid",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resEmdash.status).toBe(0);
+      expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "src/content/blog/welcome.md"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "src/pages/blog/index.astro"))).toBe(true);
+
+      // 4. Next.js + Payload E-Commerce + Puck
+      const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
+      const resPayloadEcom = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetPayloadEcom,
+        "--non-interactive",
+        "--intent=ecommerce",
+        "--type=none",
+        "--cms=payload",
+        "--ecommerce=payload",
+        "--puck",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resPayloadEcom.status).toBe(0);
+      expect(existsSync(join(targetPayloadEcom, "src/payload.config.ts"))).toBe(true);
+      const payloadCfg = readFileSync(join(targetPayloadEcom, "src/payload.config.ts"), "utf8");
+      expect(payloadCfg).toContain("Products, Orders, Customers");
+      expect(existsSync(join(targetPayloadEcom, "src/collections/Products.ts"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/collections/Orders.ts"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/collections/Customers.ts"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/app/api/payload-checkout/route.ts"))).toBe(true);
+      expect(existsSync(join(targetPayloadEcom, "src/lib/puck.config.tsx"))).toBe(true);
+
+      // 5. Pure HTML / CSS
+      const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
+      const resHtml = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetHtml,
+        "--non-interactive",
+        "--preset=pure-html",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resHtml.status).toBe(0);
+      expect(existsSync(join(targetHtml, "index.html"))).toBe(true);
+      const htmlDoc = readFileSync(join(targetHtml, "index.html"), "utf8");
+      expect(htmlDoc).toContain("PURE HTML/CSS • ZERO BUILD STEP");
+      expect(htmlDoc).toContain("src/styles/tokens.css");
+      expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
+      const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
+      expect(htmlPkg.scripts["dev"]).toContain("serve");
     });
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {

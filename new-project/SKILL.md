@@ -66,11 +66,14 @@ Interactive project creator and Project Operating System provisioner. Implements
 
 | Preset Flag | Target Intent | Core Stack & Companions |
 | :--- | :--- | :--- |
-| `--preset=powerhouse` | E-Commerce / Full-Stack | Next.js 16 (`@latest`) + Hybrid UnoCSS Wind 4 + Motion.dev + NanoStores + Payload CMS + Puck Visual Builder + Payload E-Commerce + Neon DB + Better Auth |
-| `--preset=publisher` | Content / Publication | Astro v7 (`@latest`, zero-JS baseline) + Hybrid UnoCSS + Motion.dev + NanoStores + StudioCMS (LibSQL/Turso) |
+| `--preset=powerhouse` / `next-commerce` | E-Commerce / Full-Stack | Next.js 16 (`@latest`) + Hybrid UnoCSS Wind 4 + Motion.dev + NanoStores + Payload CMS + Puck Visual Builder + Payload E-Commerce + Neon DB + Better Auth |
+| `--preset=astro-commerce` | E-Commerce / High-Performance | Astro v7 (`@latest`) + Hybrid UnoCSS + NanoStores + Aria Builder (`ariabuilder.io`) + Medusa 2.0 Sovereign Backend (Postgres/Redis Docker) |
+| `--preset=publisher` / `astro-blog` | Content / Publication | Astro v7 (`@latest`, zero-JS baseline) + Hybrid UnoCSS + Motion.dev + NanoStores + StudioCMS (LibSQL/Turso native) |
+| `--preset=edge` / `astro-emdash` | Static Edge Publication | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Emdash CMS (Cloudflare D1/R2) |
 | `--preset=visual` | Brochure & Visual Sites | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) + Fastrr 1-click checkout |
-| `--preset=edge` | Static Edge Sites | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + SitePins Git-based CMS |
+| `--preset=astro-visual` | Visual Marketing Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) |
 | `--preset=instatic` | Pure HTML Sites | Instatic SSG + Semantic BEM CSS + Hardware CSS Animations (Zero Node/JS runtime) |
+| `--preset=pure-html` | Standalone Static Site | Pure HTML5 + Semantic BEM CSS + Fluid OKLCH Tokens (Zero build step, instant load) |
 | `--preset=mobile` | Cross-Platform App | React Native (Expo `@latest`) + NativeWind + Supabase Backend |
 | `--preset=astro-mobile` | Web-to-APK / Mobile App | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder + **Ionic Capacitor** (iOS/APK) |
 
@@ -108,19 +111,25 @@ Gathers project name, tagline, author/organization, target audience, core proble
 
 ### Stage 2: Hierarchical Decision Tree & Interactive Tradeoff Engine
 Each selection prunes irrelevant downstream choices while explicitly surfacing architectural tradeoffs (Lightweight vs. Full-Stack, Serverless vs. Local Container, Git-based vs. Embedded DB) so the user is in full control without opaque defaults or mystery breaks:
-- **Branch A (Static Website)**: Astro v7 (Zero-JS SSG, Recommended) vs Instatic (Pure HTML) vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev.
-- **Branch B (Dynamic Content)**: Astro v7 vs Next.js 16 vs Roots Bedrock ➔ CMS Tradeoff Questionnaire:
-  - *Git-based / Flat-file (Keystatic, Tina CMS, Pages CMS)*: Zero database overhead, content commits to git, lightweight.
-  - *Embedded Full Database CMS (Payload CMS 3.0)*: Full Postgres/MongoDB persistence, Next.js App Router admin UI, enterprise-grade schema & collection management.
-  - *Astro-Native (StudioCMS)*: Turso/LibSQL SSR integration for Astro.
-  - *Visual Builder Opt-in*: Puck Visual Builder (`@measured/puck`) for drag-and-drop live editing.
+- **Branch A (Static Website / Landing Page)**: Pure HTML/CSS (Zero build step, semantic BEM, OKLCH fluid design tokens) vs Instatic SSG vs Astro v7 (with optional Aria Builder visual editor) vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev.
+- **Branch B (Dynamic Content Website)**:
+  - *Astro v7 (Zero-JS baseline, islands)*:
+    - **StudioCMS** (Astro DB / Turso native persistence) — Recommended for content blogs.
+    - **Emdash CMS** (Cloudflare Workers, D1 database, and R2 storage) — Recommended for edge publications.
+    - **Aria Builder** (`ariabuilder.io`) — Visual drag-and-drop page builder for marketing sites.
+    - **Keystatic / SitePins** — Zero DB overhead, Git-committed Markdown/MDX collections.
+  - *Next.js 16 (React 19 App Router)*:
+    - **Payload CMS 3.0 + Puck Visual Builder** — Full-stack database collections with interactive visual block editing.
+    - **Payload CMS 3.0 Standard** — Lexical rich text editor and typed collections.
+    - **Keystatic** — Flat-file Git collections.
+  - *Roots Bedrock*: Modern 12-factor WordPress with Composer and Gutenberg blocks.
 - **Branch C (Ecommerce Storefront)**: E-Commerce Tradeoff Questionnaire:
-  - *Full Sovereign Commerce Engine (Medusa 2.0)*: Complete sovereign microservice with PostgreSQL 16, Redis 7, order routing, multi-currency, and admin dashboard.
-  - *Next.js Embedded Commerce (Payload E-Commerce)*: Native database collections, Next.js App Router admin UI.
-  - *Lightweight Direct Payments (Stripe Checkout / Elements)*: Zero backend compute, client-hosted checkout & webhook handlers.
-  - *India Market 1-Click (Fastrr / Razorpay)*: Optimized mobile OTP checkout.
-  - *Enterprise GraphQL (Vendure)*: Headless TypeScript commerce framework.
-  - Storefront architecture: Astro headless SDK vs Next.js Storefront vs Monorepo ➔ NanoStores reactive cart.
+  - **Astro + Aria Builder + MedusaJS**: High-performance zero-JS storefront with Aria visual builder & Medusa v2 Sovereign Engine (Recommended for Speed & Visual Editing).
+  - **Next.js + Payload CMS + Puck + Payload E-Commerce**: All-in-one unified Next.js App Router application with Puck visual builder and native Product/Order/Customer/Stripe collections (Recommended for Fullstack All-in-One).
+  - **Next.js + Medusa v2 Sovereign Engine**: Next.js App Router frontend with Medusa sovereign backend.
+  - **Stripe Direct Checkout**: Lightweight zero-backend payments with hosted checkout and webhook routes.
+  - **Fastrr 1-Click / Razorpay**: Accelerated mobile checkout for D2C brands.
+  - **Vendure**: Scalable enterprise TypeScript GraphQL backend.
 - **Branch D (Full-Stack Web App)**: Next.js 16 App Router vs Astro SSR ➔ Database & Auth Tradeoffs:
   - *Database*: Neon Serverless Postgres (zero local infrastructure) vs Supabase (managed BaaS) vs Local Docker Postgres 16 (isolated local dev container) vs SQLite/Turso.
   - *Authentication*: Better Auth (Drizzle ORM adapter, full local control, typed client SDK) vs Supabase Auth (managed BaaS) vs NextAuth/Auth.js.
@@ -130,6 +139,9 @@ Each selection prunes irrelevant downstream choices while explicitly surfacing a
 
 ### Stage 3: Official Package Installation & Full End-to-End Companion Wiring
 The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is provisioned with its complete working ecosystem—schemas, route handlers, client SDKs, admin UIs, and Docker container services:
+- **Pure HTML/CSS Framework Option (`--type=html` / `pure-html`)**:
+  - Standalone `index.html` with semantic BEM classes, linking wide-gamut OKLCH design tokens, reset, and hardware-accelerated animations with zero build step.
+  - Pinned `package.json` scripts (`bun x serve .`, `bun test`, `biome check src`).
 - **Database & Drizzle ORM**:
   - `src/lib/schema.ts`: Fully-typed starter schema defining relational `users` and `posts` tables.
   - `src/lib/db.ts`: Connection pool client exporting both `db` and re-exporting `* from './schema'`.
@@ -140,21 +152,28 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `src/lib/auth-client.ts`: Client-side React SDK (`createAuthClient`) exporting `signIn`, `signUp`, `signOut`, and `useSession` for immediate UI consumption.
   - Route Handlers: `src/app/api/auth/[...all]/route.ts` (Next.js App Router) or `src/pages/api/auth/[...all].ts` (Astro) wrapping `auth.handler`.
   - `src/lib/supabase-server.ts`: Server-side Supabase client with cookie storage adapters for SSR.
+- **Aria Builder & Visual Page Building**:
+  - `aria.config.mjs`: Visual component registry and preview configuration.
+  - `src/components/AriaHero.astro`: Accessible visual hero banner with custom OKLCH styling.
+  - `src/components/AriaMedusaProductGrid.astro`: Live Medusa product grid query with client cart actions.
+  - `src/components/AriaCartDrawer.astro`: Slide-out shopping cart drawer with checkout trigger.
+- **Content Management Systems (CMS)**:
+  - *Payload CMS 3.0 & E-Commerce Module*: `payload.config.ts`, strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`, `Orders.ts`, `Customers.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), Stripe checkout endpoint (`src/app/api/payload-checkout/route.ts`), and `importMap.js`.
+  - *StudioCMS*: `studiocms.config.mjs`, Astro DB integration, and `astro.config.mjs` integration wiring (`studioCMS()`).
+  - *Emdash CMS*: `emdash.config.ts`, Cloudflare D1/R2 routing, starter markdown article in `src/content/blog/welcome.md`, and blog listing at `src/pages/blog/index.astro`.
+  - *Keystatic*: `keystatic.config.ts`, initial post in `src/content/posts/welcome.mdoc`, Next.js App Router and Astro admin pages (`/keystatic`) and API route handlers (`/api/keystatic`).
+  - *Puck Visual Builder*: Strongly-typed component schema in `src/lib/puck.config.tsx` and Next.js App Router editor (`src/app/puck/[...puckPath]/client.tsx` and `page.tsx`).
 - **E-Commerce Engines**:
+  - *Medusa 2.0 Sovereign Backend*: Fully scaffolded `backend/` directory with `medusa-config.ts`, `docker-compose.yml` (PostgreSQL 16 + Redis 7), `package.json`, `tsconfig.json`, `.env.example`, and custom route `/src/api/store/custom/route.ts`, alongside the frontend client SDK in `src/lib/medusa.ts`.
   - *Stripe*: Server client in `src/lib/stripe.ts`, Checkout session creation route handler in `src/app/api/checkout/route.ts`, and webhook signature verification route in `src/app/api/webhooks/stripe/route.ts`.
   - *Razorpay*: Server client and order creation endpoint in `src/lib/razorpay.ts`.
   - *Vendure*: Typed GraphQL client for catalog queries and mutations in `src/lib/vendure.ts`.
-  - *Medusa 2.0 Sovereign Backend*: Fully scaffolded `backend/` directory with `medusa-config.ts`, `docker-compose.yml` (PostgreSQL 16 + Redis 7), `package.json`, `tsconfig.json`, `.env.example`, and custom route `/src/api/store/custom/route.ts`, alongside the frontend client SDK in `src/lib/medusa.ts`.
-- **Content Management Systems (CMS)**:
-  - *Payload CMS 3.0*: `payload.config.ts` (`buildConfig`), strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), and `importMap.js`.
-  - *Keystatic*: `keystatic.config.ts`, initial post in `src/content/posts/welcome.mdoc`, Next.js App Router and Astro admin pages (`/keystatic`) and API route handlers (`/api/keystatic`).
-  - *Puck Visual Builder*: Strongly-typed component schema in `src/lib/puck.config.tsx` and Next.js App Router editor (`src/app/puck/[...puckPath]/client.tsx` and `page.tsx`).
-  - *StudioCMS*: Astro native integration wiring in `astro.config.mjs`.
 - **Mobile & Styling Integrations**:
   - `capacitor.config.ts`: Cross-platform mobile configuration for Ionic Capacitor (`@capacitor/cli`, `@capacitor/core`).
   - `uno.config.ts` & `postcss.config.mjs`: UnoCSS Wind 4 presets, icon collections, and fluid typography tokens.
   - `src/stores/app.ts`: NanoStores sub-1KB reactive store for cross-framework state.
 - **Day-1 Proof-of-Life Starter Dashboard UI**:
+  - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js), `src/pages/index.astro` (Astro), or `index.html` (Pure HTML): Generates an interactive live dashboard that immediately exercises the selected stack upon startup.
   - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js) or `src/pages/index.astro` (Astro): Generates an interactive live dashboard that immediately exercises the selected stack upon `bun run dev` (Drizzle DB status, Better Auth client SDK status, Stripe checkout trigger, and quick-launch links to `/admin`, `/keystatic`, or `/puck`).
 - **Production Deployment Artifacts & CI/CD**:
   - `.github/workflows/ci.yml`: Automated CI pipeline running dependencies installation, TypeScript checking, test runner, and Vibeguard secret audits.
