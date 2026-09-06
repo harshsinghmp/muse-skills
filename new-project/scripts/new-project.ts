@@ -77,6 +77,8 @@ const { values, positionals } = parseArgs({
     "custom-auth": { type: "string" },
     deploy: { type: "string" },             // cloudflare | docker | vercel | custom | none
     "skip-install": { type: "boolean", default: false },
+    "no-cache": { type: "boolean", default: false },
+    latest: { type: "boolean", default: false },
     "non-interactive": { type: "boolean", default: false },
     "dry-run": { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
@@ -132,6 +134,8 @@ Options:
       --auth <auth>             Authentication: better-auth | supabase | authjs | custom | none
       --deploy <target>         Deployment: cloudflare | docker | vercel | custom | none
       --skip-install            Skip bun install during execution
+      --no-cache                Always fetch latest upstream templates & bypass cache
+      --latest                  Pin dependencies to latest upstream releases
       --non-interactive         Run without interactive prompts
       --dry-run                 Simulate without writing files
   -f, --force                   Force replace existing destination files
@@ -144,6 +148,8 @@ const isDryRun = values["dry-run"] || false;
 const isForce = values.force || false;
 const isNonInteractive = values["non-interactive"] || false;
 const skipInstall = values["skip-install"] || false;
+const noCache = values["no-cache"] || false;
+const useLatest = values.latest || false;
 
 async function ask(rl: ReturnType<typeof createInterface>, question: string, defaultVal: string = ""): Promise<string> {
   const suffix = defaultVal ? ` [${defaultVal}]: ` : ": ";
@@ -220,6 +226,8 @@ interface StackConfig {
   auth: string;
   customAuth?: string;
   deploy: string;
+  noCache?: boolean;
+  latest?: boolean;
 }
 
 function getPresetConfig(preset: string): StackConfig {
@@ -449,6 +457,8 @@ async function main() {
     auth: values.auth || "none",
     customAuth: values["custom-auth"],
     deploy: values.deploy || "cloudflare",
+    noCache: values["no-cache"] || false,
+    latest: values.latest || false,
   };
 
   if (values.preset) {
@@ -1752,10 +1762,22 @@ const PrerenderedPage = makePage(config);
     // 3.2.0 Aria Builder (Astro)
     if (config.cms === "ariabuilder") {
       const ariaTemplateDir = join(homedir(), ".cache", "aria-template");
-      if (!existsSync(join(ariaTemplateDir, "aria")) && !isDryRun) {
-        console.log("  📦 Downloading official Aria Builder platform engine (https://github.com/ariabuilder/aria.git)...");
-        mkdirSync(dirname(ariaTemplateDir), { recursive: true });
-        spawnSync("git", ["clone", "--depth", "1", "https://github.com/ariabuilder/aria.git", ariaTemplateDir], { stdio: "ignore" });
+      if (!isDryRun) {
+        if (noCache && existsSync(ariaTemplateDir)) {
+          console.log("  🔄 [no-cache] Fetching latest official Aria Builder from upstream (https://github.com/ariabuilder/aria.git)...");
+          const pullRes = spawnSync("git", ["fetch", "--depth", "1", "origin", "main"], { cwd: ariaTemplateDir, stdio: "ignore" });
+          if (pullRes.status === 0) {
+            spawnSync("git", ["reset", "--hard", "origin/main"], { cwd: ariaTemplateDir, stdio: "ignore" });
+          } else {
+            rmSync(ariaTemplateDir, { recursive: true, force: true });
+            mkdirSync(dirname(ariaTemplateDir), { recursive: true });
+            spawnSync("git", ["clone", "--depth", "1", "https://github.com/ariabuilder/aria.git", ariaTemplateDir], { stdio: "ignore" });
+          }
+        } else if (!existsSync(join(ariaTemplateDir, "aria"))) {
+          console.log("  📦 Downloading official Aria Builder platform engine (https://github.com/ariabuilder/aria.git)...");
+          mkdirSync(dirname(ariaTemplateDir), { recursive: true });
+          spawnSync("git", ["clone", "--depth", "1", "https://github.com/ariabuilder/aria.git", ariaTemplateDir], { stdio: "ignore" });
+        }
       }
 
       if (existsSync(join(ariaTemplateDir, "aria")) && !isDryRun) {
@@ -3841,10 +3863,10 @@ exit 0
       pkg.scripts = pkg.scripts || {};
 
       for (const [k, v] of Object.entries(depsToAdd)) {
-        pkg.dependencies[k] = v;
+        pkg.dependencies[k] = useLatest ? "latest" : v;
       }
       for (const [k, v] of Object.entries(devDepsToAdd)) {
-        pkg.devDependencies[k] = v;
+        pkg.devDependencies[k] = useLatest ? "latest" : v;
       }
 
       pkg.scripts["test"] = "bun test";
@@ -3905,9 +3927,11 @@ exit 0
       console.log("  ✅ Synchronized: `./package.json` with official companion dependencies and scripts");
 
       if (!skipInstall && existsSync(pkgPath) && config.framework !== "none") {
-        console.log("  📦 Resolving packages with Bun...");
+        console.log(`  📦 Resolving packages with Bun${noCache ? " (--no-cache)" : ""}...`);
         try {
-          spawnSync("bun", ["install"], { cwd: resolvedTarget, stdio: "ignore" });
+          const bunArgs = ["install"];
+          if (noCache) bunArgs.push("--no-cache");
+          spawnSync("bun", bunArgs, { cwd: resolvedTarget, stdio: "ignore" });
         } catch {
           // Gracefully continue if offline or sandbox
         }
@@ -4591,12 +4615,33 @@ Happy building! 🚀
 - **One-Line Tagline**: ${projectDesc}
 - **Industry / Vertical**: ${industry}
 
-## Personality Pillars & Brand Tone
-- **Voice & Tone**: ${brandVoice}
-- **Guiding Principles**:
-  1. Precision, speed, and clarity above all.
-  2. Inclusive, accessible, and high-performance design.
-  3. Structured documentation with zero ambiguity.
+## Brand Purpose
+Why the brand exists beyond commercial transactions: To deliver transformative, accessible, and impeccably engineered digital experiences that elevate standards within ${industry}.
+
+## Brand Vision
+To become the definitive, trusted benchmark in ${industry}, pioneering user-empowering digital products with lasting architectural durability.
+
+## Brand Mission
+Empower ${targetAudience} by resolving critical friction: "${coreProblem}", delivering seamless speed, clarity, and uncompromised utility.
+
+## Core Values
+1. **Uncompromising Craft**: Every token, layout, and interaction is designed with relentless attention to detail and zero bloat.
+2. **Inclusive Accessibility**: Accessibility is non-negotiable. Full WCAG 2.1 AA/AAA compliance from Day One.
+3. **Transparent Integrity**: Clear communication, honest system state, and verifiable evidence over hand-waving assertions.
+4. **Resilient Longevity**: Architecture that scales gracefully and adapts across evolving client requirements without brittle coupling.
+
+## Brand Personality
+- **Primary Trait**: Discerning, authoritative, and deeply knowledgeable.
+- **Secondary Trait**: Empathetic, welcoming, and user-centric.
+- **Supporting Trait**: Modern, agile, and refreshingly direct.
+
+## Brand Promise
+We guarantee high-velocity, reliable, and beautifully functional solutions that honor ${targetAudience}'s time and eliminate complexity.
+
+## Brand Positioning
+- **Target Audience**: ${targetAudience}
+- **Differentiating Edge**: Precision modular engineering backed by autonomous agent governance.
+- **Positioning Statement**: For ${targetAudience} who demand excellence without compromise, ${projectName} provides premium digital foundations tailored to ${industry}.
 `;
     writeFileSync(join(brandDir, "brand-identity.md"), brandIdentityContent, "utf8");
 
@@ -4604,18 +4649,78 @@ Happy building! 🚀
 
 ## Color System
 - **Selected Palette**: ${colorPalette.toUpperCase()}
-- **Color Space**: Native Wide-Gamut OKLCH
+- **Color Space**: Native Wide-Gamut OKLCH (Display P3 capable)
 - **Primary Token**: \`var(--color-primary)\`
 - **Secondary Token**: \`var(--color-secondary)\`
 - **Accent Token**: \`var(--color-accent)\`
 - **Surface Token**: \`var(--color-surface)\`
+- **Surface Layer 2**: \`var(--color-surface-2)\`
+- **WCAG Contrast**: 4.5:1 minimum on all body text; 7:1 for enhanced high-readability elements.
 
 ## Typography & Fluid Scales
 - **Display Font**: \`var(--font-display)\` ('Outfit', sans-serif)
 - **Body Font**: \`var(--font-sans)\` (Inter, system-ui)
-- **Responsive Scales**: Fluid \`clamp()\` scales for font sizes and spacing.
+- **Code/Data Font**: \`var(--font-mono)\` (ui-monospace, monospace)
+- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (320px to 1440px) eliminating layout shifts.
+
+## Spatial Grid & Layout Architecture
+- **Baseline Grid**: 8pt dimensional scale (0.25rem, 0.5rem, 1rem, 1.5rem, 2rem, 3rem, 4rem).
+- **Class Naming**: Semantic BEM (Block-Element-Modifier) class conventions.
+- **Container Architecture**: Max-width responsive shell (1200px) with fluid padding gutters.
+
+## Theme Toggle Contract
+- Full support for \`prefers-color-scheme\` with seamless dark/light class switches.
+- Zero-FOUC (Flash of Unstyled Content) theme initialization script.
 `;
     writeFileSync(join(brandDir, "visual-direction.md"), visualDirectionContent, "utf8");
+
+    const voiceAndToneContent = `# ✍️ Voice & Tone Guidelines — ${projectName}
+
+## Voice & Tone Pillars
+- **Tone Profile**: ${brandVoice}
+- **Guiding Tenets**:
+  1. **Direct & Unflinching**: Speak truth with clarity. Eliminate evasive marketing jargon.
+  2. **Elevated & Articulate**: Communicate with the natural authority of domain leaders.
+  3. **Action-Oriented**: Focus on tangible progress, outcomes, and clear user decisions.
+
+## Contextual Tone Variations
+- **Marketing & Onboarding**: Inspiring, warm, clear, and focused on value realization.
+- **In-App Product Copy**: Terse, functional, intuitive, and distraction-free.
+- **Error States & Alerts**: Calm, diagnostic, transparent, and paired with immediate corrective action.
+
+## Vocabulary & Copywriting Guidelines
+- **Preferred Vocabulary**:
+  - *Engineered* instead of *built*
+  - *Streamlined* instead of *easy*
+  - *Verified* instead of *assumed*
+  - *Shipped* instead of *finished*
+- **Terms to Avoid (Anti-Slop Protocol)**:
+  - Eliminate generic superlatives: "game-changing", "revolutionary", "disruptive", "synergy", "delve".
+  - Refuse passive hand-waving: replace "it is believed" with verifiable data points.
+`;
+    writeFileSync(join(brandDir, "voice-and-tone.md"), voiceAndToneContent, "utf8");
+
+    const brandGuardrailsContent = `# 🛡️ Brand Guardrails & Protection — ${projectName}
+
+## Brand Asset & IP Protection
+- **Asset Integrity**: Brand identity assets represent intellectual property, security, and user trust.
+- **Usage Restrictions**:
+  - Do NOT skew, distort, stretch, or rotate logo marks or glyphs.
+  - Do NOT alter defined OKLCH brand token values without architectural review.
+  - Do NOT superimpose brand assets over visually distracting or low-contrast backgrounds.
+
+## Clear Space & Minimum Sizing
+- **Clear Space Boundary**: Maintain an exclusion zone around the logo equal to at least 100% of the logomark height.
+- **Minimum Digital Dimensions**:
+  - Full Wordmark: Minimum width of 120px on standard and high-DPI displays.
+  - Icon Mark: Minimum 32px x 32px on screen viewports.
+  - Favicon / Touch Icons: Multi-resolution crisp SVG, 32px, and 180px formats.
+
+## Co-Branding & Partner Guidelines
+- **Visual Hierarchy**: Secondary partner lockups must never exceed 80% visual presence of the primary brand mark.
+- **Agency Audit Gate**: Run brand fidelity audits prior to every release milestone.
+`;
+    writeFileSync(join(brandDir, "brand-guardrails.md"), brandGuardrailsContent, "utf8");
 
     // 6.2 Onboarding/02-Business/
     const bizModelContent = `# 💼 Business Model & Strategy — ${projectName}
@@ -4657,7 +4762,7 @@ ${offerings
 `;
     writeFileSync(join(menuDir, "offerings.md"), offeringsContent, "utf8");
 
-    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md)");
+    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md)");
     console.log("  ✅ Generated: `./Onboarding/02-Business/` (business-model.md, audience-persona.md)");
     console.log("  ✅ Generated: `./Onboarding/03-Menu/` (offerings.md)\n");
   }
