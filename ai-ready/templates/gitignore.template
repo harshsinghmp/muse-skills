@@ -141,6 +141,9 @@ export/
 # Astro
 .astro/
 
+# Medusa E-Commerce Engine
+.medusa/
+
 # Next.js, React, Vite & Turborepo
 .next/
 .turbo/

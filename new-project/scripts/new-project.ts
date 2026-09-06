@@ -1362,7 +1362,154 @@ export const medusa = new Medusa({
 });
 `;
         writeFileSync(join(libDir, "medusa.ts"), medusaClient, "utf8");
-        console.log("  ✅ Auto-wired: `./src/lib/medusa.ts` (@medusajs/js-sdk)");
+        console.log("  ✅ Auto-wired: `./src/lib/medusa.ts` (@medusajs/js-sdk client adapter)");
+
+        // 3.4.1 Provision Full Medusa 2.0 Sovereign Backend Application
+        const backendDir = join(resolvedTarget, "backend");
+        const backendSrcApi = join(backendDir, "src", "api");
+        mkdirSync(backendSrcApi, { recursive: true });
+
+        // backend/package.json
+        const backendPkg = {
+          name: `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-backend`,
+          version: "0.0.1",
+          description: `Medusa 2.0 Sovereign E-Commerce Engine for ${projectName}`,
+          author: authorName,
+          private: true,
+          type: "module",
+          scripts: {
+            build: "medusa build",
+            dev: "medusa dev",
+            start: "medusa start",
+            test: "medusa test"
+          },
+          dependencies: {
+            "@medusajs/framework": "^2.5.0",
+            "@medusajs/medusa": "^2.5.0",
+            "@medusajs/js-sdk": "^2.5.0"
+          },
+          devDependencies: {
+            "@medusajs/cli": "^2.5.0",
+            "@types/node": "^22.0.0",
+            typescript: "^5.6.0"
+          }
+        };
+        writeFileSync(join(backendDir, "package.json"), JSON.stringify(backendPkg, null, 2) + "\n", "utf8");
+
+        // backend/medusa-config.ts
+        const medusaConfig = `import { defineConfig, loadEnv } from '@medusajs/framework/utils';
+
+loadEnv(process.env.NODE_ENV || 'development', process.cwd());
+
+export default defineConfig({
+  projectConfig: {
+    databaseUrl: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/medusa-db',
+    redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
+    http: {
+      storeCors: process.env.STORE_CORS || 'http://localhost:3000,http://localhost:4321',
+      adminCors: process.env.ADMIN_CORS || 'http://localhost:9000,http://localhost:5173',
+      authCors: process.env.AUTH_CORS || 'http://localhost:3000,http://localhost:4321,http://localhost:9000',
+      jwtSecret: process.env.JWT_SECRET || 'supersecret_jwt_key_at_least_32_characters_long',
+      cookieSecret: process.env.COOKIE_SECRET || 'supersecret_cookie_key_at_least_32_characters_long',
+    },
+  },
+  admin: {
+    disable: false,
+    backendUrl: process.env.MEDUSA_BACKEND_URL || 'http://localhost:9000',
+  },
+});
+`;
+        writeFileSync(join(backendDir, "medusa-config.ts"), medusaConfig, "utf8");
+
+        // backend/docker-compose.yml
+        const dockerCompose = `services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: medusa-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: ${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+`;
+        writeFileSync(join(backendDir, "docker-compose.yml"), dockerCompose, "utf8");
+
+        // backend/tsconfig.json
+        const backendTsConfig = `{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./.medusa/server",
+    "rootDir": "./"
+  },
+  "include": ["src/**/*", "medusa-config.ts"]
+}
+`;
+        writeFileSync(join(backendDir, "tsconfig.json"), backendTsConfig, "utf8");
+
+        // backend/.env.example
+        const backendEnvExample = `# Medusa 2.0 Sovereign E-Commerce Backend Environment
+PORT=9000
+MEDUSA_BACKEND_URL=http://localhost:9000
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/medusa-db
+REDIS_URL=redis://localhost:6379
+STORE_CORS=http://localhost:3000,http://localhost:4321
+ADMIN_CORS=http://localhost:9000,http://localhost:5173
+AUTH_CORS=http://localhost:3000,http://localhost:4321,http://localhost:9000
+JWT_SECRET=supersecret_jwt_key_at_least_32_characters_long
+COOKIE_SECRET=supersecret_cookie_key_at_least_32_characters_long
+MEDUSA_ADMIN_ONBOARDING_TYPE=default
+`;
+        writeFileSync(join(backendDir, ".env.example"), backendEnvExample, "utf8");
+
+        // backend/src/api/index.ts (custom healthcheck / API route)
+        const apiRoute = `import type { MedusaRequest, MedusaResponse } from '@medusajs/framework/http';
+
+export const GET = (req: MedusaRequest, res: MedusaResponse) => {
+  res.json({
+    status: 'ok',
+    engine: 'Medusa 2.0 Sovereign E-Commerce Engine',
+    message: 'Medusa backend server is active and operational',
+    timestamp: new Date().toISOString(),
+  });
+};
+`;
+        writeFileSync(join(backendSrcApi, "index.ts"), apiRoute, "utf8");
+
+        console.log("  ✅ Auto-wired: `./backend/` (Full Medusa 2.0 Sovereign Backend Engine with Docker, PostgreSQL, Redis, and medusa-config.ts)");
       } else if (config.ecommerce === "stripe") {
         depsToAdd["stripe"] = "^17.0.0";
         depsToAdd["@stripe/stripe-js"] = "^5.0.0";
@@ -1573,6 +1720,14 @@ export default config;
         pkg.scripts["cap:build"] = "bun run build && cap sync";
         pkg.scripts["cap:ios"] = "cap open ios";
         pkg.scripts["cap:android"] = "cap open android";
+      }
+
+      if (config.ecommerce === "medusa") {
+        pkg.scripts["dev:backend"] = "cd backend && npm run dev";
+        pkg.scripts["backend:build"] = "cd backend && npm run build";
+        pkg.scripts["backend:migrate"] = "cd backend && npx medusa db:migrate";
+        pkg.scripts["docker:up"] = "docker compose -f backend/docker-compose.yml up -d";
+        pkg.scripts["docker:down"] = "docker compose -f backend/docker-compose.yml down";
       }
 
       writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
@@ -2013,7 +2168,28 @@ bun run dev
 \`\`\`
 
 Your application will start locally at **\`http://localhost:3000\`** (or **\`http://localhost:4321\`** if using Astro).
+${config.ecommerce === "medusa" ? `
+### E-Commerce Sovereign Backend (Medusa 2.0) Setup
+This project includes a dedicated Medusa 2.0 backend in \`./backend\`:
 
+\`\`\`bash
+# 1. Start PostgreSQL & Redis via Docker
+docker compose -f backend/docker-compose.yml up -d
+# (or: bun run docker:up)
+
+# 2. Install backend dependencies & run database migrations
+cd backend
+bun install
+bunx medusa db:migrate
+
+# 3. Start Medusa backend server (:9000) & Admin Dashboard (:9000/app)
+bun run dev
+
+# 4. In a separate terminal, launch your storefront (:3000 or :4321)
+cd ..
+bun run dev
+\`\`\`
+` : ""}
 ---
 
 ## 3. Project Structure Tour
@@ -2026,7 +2202,12 @@ ${projectName}/
 │   ├── brand/               # Brand guidelines and DTCG design tokens (colors.json, base.css)
 │   ├── context/             # System context (product.md, architecture.md, roadmap.md, current.md)
 │   └── standards/           # 13 modular engineering rulebooks (frontend, backend, security, etc.)
-├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
+${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ Medusa 2.0 Sovereign E-Commerce Backend Engine
+│   ├── src/api/             # Custom endpoints & API routes
+│   ├── docker-compose.yml   # PostgreSQL 16 & Redis 7 containers
+│   ├── medusa-config.ts     # Medusa 2.0 configuration & CORS
+│   └── package.json         # Medusa server dependencies
+` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
 ├── Onboarding/              # 📋 Client and Brand Onboarding Artifacts
 │   ├── 01-Brand/            # Brand identity, vision, and visual direction
 │   ├── 02-Business/         # Business model, audience personas, and value proposition
@@ -2096,6 +2277,13 @@ bunx drizzle-kit generate
 # Push migrations to database
 bunx drizzle-kit push
 \`\`\`
+${config.ecommerce === "medusa" ? `
+### E. Managing the Medusa E-Commerce Backend
+- **Admin Dashboard**: Start the backend and navigate to \`http://localhost:9000/app\` to configure products, pricing, inventory, regions, and promotions.
+- **Docker Compose**: Start PostgreSQL and Redis containers with \`docker compose -f backend/docker-compose.yml up -d\` (or \`bun run docker:up\`).
+- **Storefront SDK**: Client components query products and manage checkouts via \`src/lib/medusa.ts\` connecting to \`http://localhost:9000\`.
+- **Database Migrations**: Run \`cd backend && bunx medusa db:migrate\` after adding or modifying custom Medusa data models.
+` : ""}
 
 ---
 

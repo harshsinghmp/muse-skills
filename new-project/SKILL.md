@@ -120,7 +120,8 @@ Each selection prunes irrelevant downstream choices:
   - `uno.config.ts` (`@unocss/preset-wind4`, `@unocss/preset-icons`, theme tokens)
   - `postcss.config.mjs` (`@unocss/postcss`)
   - `astro.config.mjs` (UnoCSS integration)
-  - `src/lib/medusa.ts` (`@medusajs/js-sdk`)
+  - `src/lib/medusa.ts` (`@medusajs/js-sdk` client adapter)
+  - `backend/` (Full Medusa 2.0 sovereign backend application with `medusa-config.ts`, `docker-compose.yml` for PostgreSQL 16 & Redis 7, `package.json`, `tsconfig.json`, `.env.example`, and custom API endpoints)
   - `src/lib/db.ts` & `drizzle.config.ts` (Neon / Supabase / Postgres / SQLite)
   - `src/lib/auth.ts` (`better-auth`)
   - `src/lib/puck.config.tsx` (`@measured/puck`)
@@ -128,6 +129,7 @@ Each selection prunes irrelevant downstream choices:
   - `capacitor.config.ts` (`@capacitor/cli`, `@capacitor/core`)
   - `.env.example` with exact companion placeholders
 - Synchronizes official package dependencies in `package.json` with self-verification gate.
+- Injects backend orchestration scripts (`dev:backend`, `backend:migrate`, `docker:up`, `docker:down`) when sovereign e-commerce engines are provisioned.
 
 ### Stage 4: Modern Tokens & BEM Architecture Injection
 - `src/styles/tokens.css`: Wide-gamut OKLCH colors, fluid typography scale via `clamp()`, fluid spacing scale via `clamp()`, radii, transitions.
@@ -234,4 +236,5 @@ After scaffolding, verify the project:
 2. **Onboarding Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, and `03-Menu/`.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
-5. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status.
+5. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`.
+6. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status.

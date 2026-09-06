@@ -383,6 +383,29 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(target, ".env.example"))).toBe(true);
       const envExample = readFileSync(join(target, ".env.example"), "utf8");
       expect(envExample).toContain("MEDUSA_BACKEND_URL");
+
+      // 6. Verify Medusa 2.0 full sovereign backend engine
+      expect(existsSync(join(target, "backend/medusa-config.ts"))).toBe(true);
+      expect(existsSync(join(target, "backend/docker-compose.yml"))).toBe(true);
+      expect(existsSync(join(target, "backend/package.json"))).toBe(true);
+      expect(existsSync(join(target, "backend/tsconfig.json"))).toBe(true);
+      expect(existsSync(join(target, "backend/.env.example"))).toBe(true);
+      expect(existsSync(join(target, "backend/src/api/index.ts"))).toBe(true);
+
+      const medusaConfig = readFileSync(join(target, "backend/medusa-config.ts"), "utf8");
+      expect(medusaConfig).toContain("defineConfig");
+      expect(medusaConfig).toContain("databaseUrl");
+
+      const backendPkg = JSON.parse(readFileSync(join(target, "backend/package.json"), "utf8"));
+      expect(backendPkg.dependencies["@medusajs/medusa"]).toBeDefined();
+      expect(backendPkg.dependencies["@medusajs/framework"]).toBeDefined();
+
+      const dockerCompose = readFileSync(join(target, "backend/docker-compose.yml"), "utf8");
+      expect(dockerCompose).toContain("postgres:16-alpine");
+      expect(dockerCompose).toContain("redis:7-alpine");
+
+      expect(startHereContent).toContain("E-Commerce Sovereign Backend (Medusa 2.0) Setup");
+      expect(startHereContent).toContain("Managing the Medusa E-Commerce Backend");
     });
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
