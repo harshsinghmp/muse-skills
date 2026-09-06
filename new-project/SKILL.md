@@ -153,10 +153,13 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - Route Handlers: `src/app/api/auth/[...all]/route.ts` (Next.js App Router) or `src/pages/api/auth/[...all].ts` (Astro) wrapping `auth.handler`.
   - `src/lib/supabase-server.ts`: Server-side Supabase client with cookie storage adapters for SSR.
 - **Aria Builder & Visual Page Building**:
+  - `aria/`: Full sovereign engine containing the Vue 3 visual studio canvas (`pages/admin.astro`, `pages/setup.astro`), Astro integration (`aria/integration.ts`), auth & session manager, actions, and storage drivers (Node/SQLite or Cloudflare workerd D1/KV/R2).
+  - `astro.config.ts`: Pre-wired with `@astrojs/node`, `@unocss/astro`, and `aria()` engine integration.
   - `aria.config.mjs`: Visual component registry and preview configuration.
   - `src/components/AriaHero.astro`: Accessible visual hero banner with custom OKLCH styling.
   - `src/components/AriaMedusaProductGrid.astro`: Live Medusa product grid query with client cart actions.
   - `src/components/AriaCartDrawer.astro`: Slide-out shopping cart drawer with checkout trigger.
+  - `/admin`: Interactive visual drag-and-drop page builder studio (auto-redirects to `/admin/setup` on first launch for zero-friction administrator provisioning).
 - **Content Management Systems (CMS)**:
   - *Payload CMS 3.0 & E-Commerce Module*: `payload.config.ts`, strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`, `Orders.ts`, `Customers.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), Stripe checkout endpoint (`src/app/api/payload-checkout/route.ts`), and `importMap.js`.
   - *StudioCMS*: `studiocms.config.mjs`, Astro DB integration, and `astro.config.mjs` integration wiring (`studioCMS()`).

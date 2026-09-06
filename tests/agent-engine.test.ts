@@ -617,12 +617,17 @@ Custom billing engine for healthcare providers.
       ], { encoding: "utf8" });
       expect(resAria.status).toBe(0);
       expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(true);
+      expect(existsSync(join(targetAria, "astro.config.ts"))).toBe(true);
+      expect(existsSync(join(targetAria, "aria/integration.ts"))).toBe(true);
+      expect(existsSync(join(targetAria, "aria/pages/admin.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(true);
       expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(true);
       expect(existsSync(join(targetAria, "backend/package.json"))).toBe(true);
       expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(true);
+      const ariaPkg = JSON.parse(readFileSync(join(targetAria, "package.json"), "utf8"));
+      expect(ariaPkg.scripts["dev"]).toContain("aria/scripts/project-command.ts dev");
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
