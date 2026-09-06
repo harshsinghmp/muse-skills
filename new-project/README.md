@@ -103,6 +103,9 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--db <db>` | String | `neon` \| `supabase` \| `postgres` \| `sqlite` \| `custom` \| `none` |
 | `--auth <auth>` | String | `better-auth` \| `supabase` \| `authjs` \| `custom` \| `none` |
 | `--deploy <deploy>` | String | `cloudflare` \| `docker` \| `vercel` \| `custom` \| `none` |
+| `--skip-install` | Boolean | Skip automatic `bun install` |
+| `--no-cache` | Boolean | Bypass local template caches and force upstream Git synchronization |
+| `--latest` | Boolean | Pin scaffolded companion dependencies to `@latest` releases |
 | `--dry-run` | Boolean | Simulate scaffolding without writing files |
 | `--non-interactive` | Boolean | Run without interactive prompts |
 | `-f, --force` | Boolean | Overwrite existing files |
@@ -110,20 +113,25 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 ---
 
-## 🎙️ Interactive Onboarding & Dynamic DOX Generation
+## 🎙️ Interactive Onboarding & Client Intake Suite
 
-When running `new-project` interactively or through an AI agent, the onboarding wizard guides users through 5 stages:
-1. **Identity & Scope**: Project name, organization/author, mission tagline, target audience, and core problem.
-2. **Features & Milestones**: Core capabilities, immediate first milestone, and planned sprint roadmap.
-3. **Brand & Design Tokens**: Brand voice/tone and color palette (`slate`, `indigo`, `emerald`, `amber`, `violet`), automatically configuring DTCG design tokens.
-4. **Technical Architecture**: Archetype, framework, styling engine, state, mobile packaging, CMS, e-commerce, database, and auth.
-5. **Agent Governance & Constraints**: Lead autonomous agent name/role and active working invariants.
+When running `new-project` interactively or through an AI agent, the onboarding engine guides users through 6 stages:
+1. **Purpose-First Root Prompt**: Immediate mission definition, target audience, core problem, and archetype routing.
+2. **Hierarchical Decision Tree**: Granular selection across styling, animations, cross-island state, mobile bridges, CMS, and e-commerce.
+3. **Official Companion Auto-Wiring**: Direct configuration files (`astro.config.mjs`, `uno.config.ts`, `medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`).
+4. **Modern Design Tokens & Semantic BEM**: Wide-gamut OKLCH palettes and fluid `clamp()` responsive scales in `src/styles/tokens.css`.
+5. **Empathetic Developer Handbook**: 7-section orientation guide in `start-here.md`.
+6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite in `./Onboarding/`:
+   - `01-Brand/`: Brand identity, visual direction, voice & tone guidelines, brand guardrails, and media kit intake.
+   - `02-Business/`: Business model, audience personas, competitor benchmarks, and target launch KPIs.
+   - `03-Offerings/`: Universal offerings catalog matrix, pricing models, and scope deliverable boundaries.
+   - `04-Technical-Intake/`: Domain/DNS management, repository access, hosting credentials, and third-party integrations.
 
 All gathered answers dynamically populate:
 - `AGENTS.md` (project identity, mission, and agent personas)
 - `.agents/context/` (`product.md`, `brand.md`, `roadmap.md`, `architecture.md`, `decisions.md`, `current.md`)
 - `.agents/brand/tokens/` (`colors.json` and `base.css` with chosen OKLCH palette)
-- `.memory/CURRENT.md` (active invariants, stack rules, and first milestone)
+- `Onboarding/` (complete 4-pillar client intake and brand foundation)
 
 ---
 
