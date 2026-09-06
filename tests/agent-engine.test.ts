@@ -723,6 +723,61 @@ Custom billing engine for healthcare providers.
       expect(htmlPkg.scripts["dev"]).toContain("serve");
     }, 30000);
 
+    it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
+      const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetNoCache,
+        "--non-interactive",
+        "--intent=content",
+        "--type=none",
+        "--no-cache",
+        "--name=Aura Luxury Retail",
+        "--desc=High-end sustainable apparel and luxury lifestyle collection",
+        "--author=Aura Collective",
+        "--audience=Discerning high-net-worth consumers seeking ethical luxury",
+        "--problem=Mass-produced fast fashion lacks soul, longevity, and sustainability",
+        "--features=Curated drops, Digital provenance certificates, Bespoke tailoring",
+        "--industry=Luxury Fashion & Sustainable Lifestyle",
+        "--offerings=Signature Silk Coats, Artisanal Linen Suits, Lifetime Care Membership",
+        "--tone=Understated, sophisticated, sensory, and discerning",
+        "--palette=amber",
+        "--skip-install"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // 1. Verify Complete Agency Brand Guardian Suite
+      const brandDir = join(targetNoCache, "Onboarding/01-Brand");
+      expect(existsSync(join(brandDir, "brand-identity.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "visual-direction.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "voice-and-tone.md"))).toBe(true);
+      expect(existsSync(join(brandDir, "brand-guardrails.md"))).toBe(true);
+
+      const identityDoc = readFileSync(join(brandDir, "brand-identity.md"), "utf8");
+      expect(identityDoc).toContain("## Brand Purpose");
+      expect(identityDoc).toContain("## Brand Vision");
+      expect(identityDoc).toContain("## Brand Mission");
+      expect(identityDoc).toContain("## Core Values");
+      expect(identityDoc).toContain("## Brand Promise");
+
+      const voiceDoc = readFileSync(join(brandDir, "voice-and-tone.md"), "utf8");
+      expect(voiceDoc).toContain("## Voice & Tone Pillars");
+      expect(voiceDoc).toContain("## Vocabulary & Copywriting Guidelines");
+
+      const guardrailsDoc = readFileSync(join(brandDir, "brand-guardrails.md"), "utf8");
+      expect(guardrailsDoc).toContain("## Brand Asset & IP Protection");
+      expect(guardrailsDoc).toContain("## Clear Space & Minimum Sizing");
+
+      // 2. Verify Business Strategy & Offerings Matrix
+      const bizDir = join(targetNoCache, "Onboarding/02-Business");
+      expect(existsSync(join(bizDir, "business-model.md"))).toBe(true);
+      expect(existsSync(join(bizDir, "audience-persona.md"))).toBe(true);
+
+      const menuDir = join(targetNoCache, "Onboarding/03-Menu");
+      expect(existsSync(join(menuDir, "offerings.md"))).toBe(true);
+    }, 15000);
+
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
       const prohibited = [
         "Harsh",
