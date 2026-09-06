@@ -1,8 +1,8 @@
 ---
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree), Stage 3 (Official Package Installation & Config Auto-Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Empathetic 7-Section start-here.md Guide), and Stage 6 (Interactive Brand Onboarding Gate). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Aria Builder, Payload + Puck, StudioCMS, Git-based CMS), e-commerce (Payload, Medusa v2, Fastrr, Razorpay, Stripe), and database (Neon, Supabase, Postgres, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
-version: 2.3.0
+description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Empathetic 7-Section start-here.md Guide), and Stage 6 (Interactive Brand Onboarding Gate). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
+version: 2.4.0
 author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
@@ -106,30 +106,58 @@ The provisioner never guesses the project domain from ambient files. It prompts:
 ```
 Gathers project name, tagline, author/organization, target audience, core problem, features, industry vertical, and catalog offerings.
 
-### Stage 2: Hierarchical Decision Tree (Pruned Branches)
-Each selection prunes irrelevant downstream choices:
-- **Branch A (Static Website)**: Astro v7 (Zero-JS SSG) vs Instatic vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev.
-- **Branch B (Dynamic Content)**: Astro v7 vs Next.js 16 vs Roots Bedrock ➔ CMS (StudioCMS, Emdash, SitePins, Keystatic, Tina CMS, Pages CMS, Payload CMS) ➔ Puck Visual Builder opt-in.
-- **Branch C (Ecommerce Storefront)**: Medusa v2 vs Payload E-Commerce vs Stripe Direct vs Vendure vs Fastrr ➔ Headless Astro SDK vs Next.js Storefront vs Monorepo ➔ Stripe Hosted Checkout vs Embedded Elements ➔ NanoStores reactive cart store.
-- **Branch D (Full-Stack Web App)**: Next.js 16 App Router vs Astro SSR ➔ Neon Serverless Postgres + Drizzle vs Supabase vs Local Docker Postgres vs SQLite/Turso ➔ Better Auth vs Supabase Auth ➔ NanoStores vs Zustand.
+### Stage 2: Hierarchical Decision Tree & Interactive Tradeoff Engine
+Each selection prunes irrelevant downstream choices while explicitly surfacing architectural tradeoffs (Lightweight vs. Full-Stack, Serverless vs. Local Container, Git-based vs. Embedded DB) so the user is in full control without opaque defaults or mystery breaks:
+- **Branch A (Static Website)**: Astro v7 (Zero-JS SSG, Recommended) vs Instatic (Pure HTML) vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev.
+- **Branch B (Dynamic Content)**: Astro v7 vs Next.js 16 vs Roots Bedrock ➔ CMS Tradeoff Questionnaire:
+  - *Git-based / Flat-file (Keystatic, Tina CMS, Pages CMS)*: Zero database overhead, content commits to git, lightweight.
+  - *Embedded Full Database CMS (Payload CMS 3.0)*: Full Postgres/MongoDB persistence, Next.js App Router admin UI, enterprise-grade schema & collection management.
+  - *Astro-Native (StudioCMS)*: Turso/LibSQL SSR integration for Astro.
+  - *Visual Builder Opt-in*: Puck Visual Builder (`@measured/puck`) for drag-and-drop live editing.
+- **Branch C (Ecommerce Storefront)**: E-Commerce Tradeoff Questionnaire:
+  - *Full Sovereign Commerce Engine (Medusa 2.0)*: Complete sovereign microservice with PostgreSQL 16, Redis 7, order routing, multi-currency, and admin dashboard.
+  - *Next.js Embedded Commerce (Payload E-Commerce)*: Native database collections, Next.js App Router admin UI.
+  - *Lightweight Direct Payments (Stripe Checkout / Elements)*: Zero backend compute, client-hosted checkout & webhook handlers.
+  - *India Market 1-Click (Fastrr / Razorpay)*: Optimized mobile OTP checkout.
+  - *Enterprise GraphQL (Vendure)*: Headless TypeScript commerce framework.
+  - Storefront architecture: Astro headless SDK vs Next.js Storefront vs Monorepo ➔ NanoStores reactive cart.
+- **Branch D (Full-Stack Web App)**: Next.js 16 App Router vs Astro SSR ➔ Database & Auth Tradeoffs:
+  - *Database*: Neon Serverless Postgres (zero local infrastructure) vs Supabase (managed BaaS) vs Local Docker Postgres 16 (isolated local dev container) vs SQLite/Turso.
+  - *Authentication*: Better Auth (Drizzle ORM adapter, full local control, typed client SDK) vs Supabase Auth (managed BaaS) vs NextAuth/Auth.js.
+  - *State Management*: NanoStores (sub-1KB cross-framework reactive store) vs Zustand (React-only).
 - **Branch E (Mobile Application)**: React Native with Expo vs Astro + Ionic Capacitor (web-to-APK) vs Next.js + Capacitor.
 - **Branch F (Custom / Infrastructure)**: Custom architecture or governance-only workspace.
 
-### Stage 3: Official Package Installation & Config Auto-Wiring
-- Auto-wires configuration files:
-  - `uno.config.ts` (`@unocss/preset-wind4`, `@unocss/preset-icons`, theme tokens)
-  - `postcss.config.mjs` (`@unocss/postcss`)
-  - `astro.config.mjs` (UnoCSS integration)
-  - `src/lib/medusa.ts` (`@medusajs/js-sdk` client adapter)
-  - `backend/` (Full Medusa 2.0 sovereign backend application with `medusa-config.ts`, `docker-compose.yml` for PostgreSQL 16 & Redis 7, `package.json`, `tsconfig.json`, `.env.example`, and custom API endpoints)
-  - `src/lib/db.ts` & `drizzle.config.ts` (Neon / Supabase / Postgres / SQLite)
-  - `src/lib/auth.ts` (`better-auth`)
-  - `src/lib/puck.config.tsx` (`@measured/puck`)
-  - `src/stores/app.ts` (`nanostores`)
-  - `capacitor.config.ts` (`@capacitor/cli`, `@capacitor/core`)
-  - `.env.example` with exact companion placeholders
-- Synchronizes official package dependencies in `package.json` with self-verification gate.
-- Injects backend orchestration scripts (`dev:backend`, `backend:migrate`, `docker:up`, `docker:down`) when sovereign e-commerce engines are provisioned.
+### Stage 3: Official Package Installation & Full End-to-End Companion Wiring
+The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is provisioned with its complete working ecosystem—schemas, route handlers, client SDKs, admin UIs, and Docker container services:
+- **Database & Drizzle ORM**:
+  - `src/lib/schema.ts`: Fully-typed starter schema defining relational `users` and `posts` tables.
+  - `src/lib/db.ts`: Connection pool client exporting both `db` and re-exporting `* from './schema'`.
+  - `drizzle.config.ts`: Configured pointing to `./src/lib/schema.ts` with output to `./drizzle`.
+  - `docker-compose.yml`: For containerized Postgres (`--db=postgres`), provisions a local PostgreSQL 16 container with healthchecks and persistent volumes.
+- **Authentication (Better Auth & Supabase)**:
+  - `src/lib/auth.ts`: Server-side Better Auth initialization configured with the Drizzle ORM adapter and database schema.
+  - `src/lib/auth-client.ts`: Client-side React SDK (`createAuthClient`) exporting `signIn`, `signUp`, `signOut`, and `useSession` for immediate UI consumption.
+  - Route Handlers: `src/app/api/auth/[...all]/route.ts` (Next.js App Router) or `src/pages/api/auth/[...all].ts` (Astro) wrapping `auth.handler`.
+  - `src/lib/supabase-server.ts`: Server-side Supabase client with cookie storage adapters for SSR.
+- **E-Commerce Engines**:
+  - *Stripe*: Server client in `src/lib/stripe.ts`, Checkout session creation route handler in `src/app/api/checkout/route.ts`, and webhook signature verification route in `src/app/api/webhooks/stripe/route.ts`.
+  - *Razorpay*: Server client and order creation endpoint in `src/lib/razorpay.ts`.
+  - *Vendure*: Typed GraphQL client for catalog queries and mutations in `src/lib/vendure.ts`.
+  - *Medusa 2.0 Sovereign Backend*: Fully scaffolded `backend/` directory with `medusa-config.ts`, `docker-compose.yml` (PostgreSQL 16 + Redis 7), `package.json`, `tsconfig.json`, `.env.example`, and custom route `/src/api/store/custom/route.ts`, alongside the frontend client SDK in `src/lib/medusa.ts`.
+- **Content Management Systems (CMS)**:
+  - *Payload CMS 3.0*: `payload.config.ts` (`buildConfig`), strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), and `importMap.js`.
+  - *Keystatic*: `keystatic.config.ts`, initial post in `src/content/posts/welcome.mdoc`, Next.js App Router and Astro admin pages (`/keystatic`) and API route handlers (`/api/keystatic`).
+  - *Puck Visual Builder*: Strongly-typed component schema in `src/lib/puck.config.tsx` and Next.js App Router editor (`src/app/puck/[...puckPath]/client.tsx` and `page.tsx`).
+  - *StudioCMS*: Astro native integration wiring in `astro.config.mjs`.
+- **Mobile & Styling Integrations**:
+  - `capacitor.config.ts`: Cross-platform mobile configuration for Ionic Capacitor (`@capacitor/cli`, `@capacitor/core`).
+  - `uno.config.ts` & `postcss.config.mjs`: UnoCSS Wind 4 presets, icon collections, and fluid typography tokens.
+  - `src/stores/app.ts`: NanoStores sub-1KB reactive store for cross-framework state.
+- **Package Scripts & Secrets Injection**:
+  - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
+  - Automatically populates all required connection strings, database URLs, and API secret keys into `.env.example`.
+  - Synchronizes official dependencies in `package.json` with self-verification gate.
 
 ### Stage 4: Modern Tokens & BEM Architecture Injection
 - `src/styles/tokens.css`: Wide-gamut OKLCH colors, fluid typography scale via `clamp()`, fluid spacing scale via `clamp()`, radii, transitions.
@@ -226,6 +254,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 - **Cross-Project Bleed**: Never copy client-specific skills, assets, or memory files from sibling projects. Every project starts with a clean isolated container.
 - **Committing Secrets**: Ensure `.env` is listed in `.gitignore` and `.env.example` exists. Follow the Vibeguard protocol.
 - **Monolithic Memory Dumps**: Keep `.memory/CURRENT.md` for machine real-time invariants and `.agents/context/current.md` for durable shipped reality.
+- **Never Ship Half-Baked Companion Stubs**: Never provision an SDK or integration flag without the accompanying route handlers, client SDKs, schemas, admin UIs, or container configs needed to actually run it. Every technology must be immediately runnable from a clean checkout.
 
 ---
 
@@ -236,5 +265,7 @@ After scaffolding, verify the project:
 2. **Onboarding Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, and `03-Menu/`.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
-5. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`.
-6. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status.
+5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
+6. **CMS & Visual Builder Completeness**: If Payload, Keystatic, or Puck is enabled, verify config files (`payload.config.ts`, `keystatic.config.ts`), collection schemas, and admin UI pages exist.
+7. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`. If PostgreSQL container is requested, check `./docker-compose.yml`.
+8. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status. Run `bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts .` to ensure compliance with the Vibeguard protocol.

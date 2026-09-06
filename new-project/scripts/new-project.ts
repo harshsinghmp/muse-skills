@@ -546,29 +546,26 @@ async function main() {
         } else config.framework = "none";
 
         if (config.framework === "astro") {
-          console.log("\n📦 CMS Engine for Astro:");
-          console.log("  [1] StudioCMS           (Astro DB / Turso native) [Recommended]");
-          console.log("  [2] Emdash CMS          (Astro for Cloudflare Workers / D1 / R2)");
-          console.log("  [3] SitePins            (Modern Git-based CMS)");
-          console.log("  [4] Keystatic           (Thinkmill Git-based Content Collections)");
-          console.log("  [5] Tina CMS            (Git-backed visual content engine)");
-          console.log("  [6] Pages CMS           (Open-source Git-based CMS for GitHub)");
-          console.log("  [7] Payload CMS 3.0     (Headless API + Admin)");
-          console.log("  [8] Decap CMS");
-          console.log("  [9] None");
-          const cmsChoice = await ask(rl, "Choose CMS [1-9]", "1");
+          console.log("\n📦 Content Management Architecture for Astro:");
+          console.log("  [1] StudioCMS (Astro DB / Turso native)                 [Lightweight: Embedded database CMS for Astro] [Recommended]");
+          console.log("  [2] Keystatic (Thinkmill Git-based Content Collections) [Lightweight: Zero DB overhead, markdown/MDX in git repository]");
+          console.log("  [3] SitePins  (Modern Git-based CMS)                     [Lightweight: Static site management via GitHub]");
+          console.log("  [4] Emdash CMS (Cloudflare Workers / D1 / R2)           [Serverless: Edge-native content engine]");
+          console.log("  [5] Payload CMS 3.0 (Headless API + Admin)              [Full-stack: Node.js database collections & Lexical editor]");
+          console.log("  [6] None");
+          const cmsChoice = await ask(rl, "Choose CMS [1-6]", "1");
           const map: Record<string, string> = {
-            "1": "studiocms", "2": "emdash", "3": "sitepins", "4": "keystatic",
-            "5": "tina", "6": "pagescms", "7": "payload", "8": "decap", "9": "none"
+            "1": "studiocms", "2": "keystatic", "3": "sitepins", "4": "emdash",
+            "5": "payload", "6": "none"
           };
           config.cms = map[cmsChoice] || "studiocms";
         } else if (config.framework === "nextjs") {
-          console.log("\n📦 CMS Engine for Next.js:");
-          console.log("  [1] Payload CMS 3.0     (Native App Router, TS schemas) [Recommended]");
-          console.log("  [2] Keystatic           (Git-based Content Collections)");
-          console.log("  [3] Keystone 6          (TypeScript GraphQL CMS)");
-          console.log("  [4] Pages CMS");
-          console.log("  [5] Strapi");
+          console.log("\n📦 Content Management Architecture for Next.js:");
+          console.log("  [1] Payload CMS 3.0 (Native App Router, TS collections) [Full-stack: Built-in admin UI, Lexical editor, DB models] [Recommended]");
+          console.log("  [2] Keystatic       (Git-based Content Collections)     [Lightweight: Zero DB overhead, content committed to git as MDX]");
+          console.log("  [3] Keystone 6      (TypeScript GraphQL CMS)            [Full-stack: Custom GraphQL schema & admin UI]");
+          console.log("  [4] Pages CMS       (Git-based CMS for GitHub)");
+          console.log("  [5] Strapi          (Decoupled headless CMS API)");
           console.log("  [6] None");
           const cmsChoice = await ask(rl, "Choose CMS [1-6]", "1");
           const map: Record<string, string> = {
@@ -585,17 +582,17 @@ async function main() {
       } else if (config.intent === "ecommerce") {
         // Branch C: Ecommerce Storefront
         console.log("\n🛍️  Branch C (Ecommerce Storefront) Commerce Engine:");
-        console.log("  [1] Medusa v2           (Modular TypeScript commerce engine) [Recommended]");
-        console.log("  [2] Payload E-Commerce  (Payload 3.0 commerce module)");
-        console.log("  [3] Stripe Direct       (Stripe Checkout & Elements)");
-        console.log("  [4] Vendure             (TypeScript GraphQL commerce engine)");
-        console.log("  [5] Fastrr Checkout     (1-click accelerated checkout)");
-        console.log("  [6] Razorpay Hosted     (Payment buttons & modal)");
+        console.log("  [1] Medusa v2 Sovereign Engine  (Full backend with Postgres, Redis, and Admin UI) [Recommended]");
+        console.log("  [2] Stripe Direct Checkout      (Lightweight: Zero backend servers, hosted checkout, webhook routes)");
+        console.log("  [3] Fastrr 1-Click Checkout     (Accelerated: 1-click checkout modal for high-conversion D2C)");
+        console.log("  [4] Payload E-Commerce Module   (Embedded: Custom product & order collections inside Next.js)");
+        console.log("  [5] Razorpay Hosted Checkout    (Regional: Payment buttons & checkout modal for India/SE Asia)");
+        console.log("  [6] Vendure Commerce Engine     (Scalable: Enterprise TypeScript GraphQL backend)");
         console.log("  [7] Custom");
         const ecomChoice = await ask(rl, "Choose commerce engine [1-7]", "1");
         const ecomMap: Record<string, string> = {
-          "1": "medusa", "2": "payload", "3": "stripe", "4": "vendure",
-          "5": "fastrr", "6": "razorpay", "7": "custom"
+          "1": "medusa", "2": "stripe", "3": "fastrr", "4": "payload",
+          "5": "razorpay", "6": "vendure", "7": "custom"
         };
         config.ecommerce = ecomMap[ecomChoice] || "medusa";
 
@@ -635,22 +632,22 @@ async function main() {
         const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
         config.framework = fwChoice === "2" ? "astro" : fwChoice === "3" ? "custom" : "nextjs";
 
-        console.log("\n🗄️  Database & ORM:");
-        console.log("  [1] Neon Serverless Postgres + Drizzle ORM [Recommended]");
-        console.log("  [2] Supabase (PostgreSQL + Realtime + Auth)");
-        console.log("  [3] Local Postgres / Docker + Drizzle ORM");
-        console.log("  [4] SQLite / Turso + Drizzle ORM");
-        console.log("  [5] None");
+        console.log("\n🗄️  Database & Persistence Architecture:");
+        console.log("  [1] Neon Serverless Postgres + Drizzle ORM  [Lightweight cloud: 0 local Docker/RAM overhead, edge pooling] [Recommended]");
+        console.log("  [2] Sovereign Local Postgres + Docker Compose [Self-contained: Local PostgreSQL 16 container, offline-ready, persistent storage]");
+        console.log("  [3] Embedded SQLite (Bun SQLite) + Drizzle    [Ultralight: Single-file database, zero infrastructure, sub-millisecond cold starts]");
+        console.log("  [4] Supabase (PostgreSQL + Realtime + Auth)   [Managed cloud: Postgres with built-in client auth and realtime]");
+        console.log("  [5] None (Stateless)");
         const dbChoice = await ask(rl, "Choose database [1-5]", "1");
         const dbMap: Record<string, string> = {
-          "1": "neon", "2": "supabase", "3": "postgres", "4": "sqlite", "5": "none"
+          "1": "neon", "2": "postgres", "3": "sqlite", "4": "supabase", "5": "none"
         };
         config.db = dbMap[dbChoice] || "neon";
 
         if (config.db !== "none") {
-          console.log("\n🔑 Authentication Engine:");
-          console.log("  [1] Better Auth (TypeScript-native, self-hosted in DB) [Recommended]");
-          console.log("  [2] Supabase Auth");
+          console.log("\n🔑 Authentication Strategy:");
+          console.log("  [1] Better Auth (Self-hosted in DB tables)  [Full control: Owned DB tables, auth-client + server route handlers] [Recommended]");
+          console.log("  [2] Supabase Auth (Managed cloud auth)      [Lightweight: Offloads auth server & crypto to Supabase, client SDK]");
           console.log("  [3] Auth.js (NextAuth)");
           console.log("  [4] None");
           const authChoice = await ask(rl, "Choose auth [1-4] ", "1");
@@ -1215,7 +1212,245 @@ export default defineConfig({
       }
     }
 
-    // 3.2 Puck Visual Builder
+    // 3.2 CMS & Visual Builder Integration
+    // 3.2.1 Payload CMS 3.0
+    if (config.cms === "payload") {
+      depsToAdd["payload"] = "^3.24.0";
+      depsToAdd["@payloadcms/next"] = "^3.24.0";
+      depsToAdd["@payloadcms/richtext-lexical"] = "^3.24.0";
+      depsToAdd["@payloadcms/db-postgres"] = "^3.24.0";
+      depsToAdd["graphql"] = "^16.10.0";
+
+      const collectionsDir = join(resolvedTarget, "src", "collections");
+      mkdirSync(collectionsDir, { recursive: true });
+
+      writeFileSync(join(collectionsDir, "Users.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Users: CollectionConfig = {
+  slug: 'users',
+  admin: {
+    useAsTitle: 'email',
+  },
+  auth: true,
+  fields: [
+    {
+      name: 'name',
+      type: 'text',
+    },
+  ],
+};
+`, "utf8");
+
+      writeFileSync(join(collectionsDir, "Media.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Media: CollectionConfig = {
+  slug: 'media',
+  upload: true,
+  fields: [
+    {
+      name: 'alt',
+      type: 'text',
+      required: true,
+    },
+  ],
+};
+`, "utf8");
+
+      writeFileSync(join(collectionsDir, "Pages.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  admin: {
+    useAsTitle: 'title',
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+    },
+    {
+      name: 'content',
+      type: 'richText',
+    },
+  ],
+};
+`, "utf8");
+
+      if (config.ecommerce === "payload") {
+        writeFileSync(join(collectionsDir, "Products.ts"), `import type { CollectionConfig } from 'payload';
+
+export const Products: CollectionConfig = {
+  slug: 'products',
+  admin: {
+    useAsTitle: 'title',
+  },
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    { name: 'price', type: 'number', required: true },
+    { name: 'description', type: 'textarea' },
+  ],
+};
+`, "utf8");
+      }
+
+      const payloadConfig = `import { buildConfig } from 'payload';
+import { postgresAdapter } from '@payloadcms/db-postgres';
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+import { Users } from './collections/Users';
+import { Media } from './collections/Media';
+import { Pages } from './collections/Pages';
+${config.ecommerce === "payload" ? `import { Products } from './collections/Products';` : ""}
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+export default buildConfig({
+  admin: {
+    user: Users.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [Users, Media, Pages${config.ecommerce === "payload" ? `, Products` : ""}],
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || 'supersecret_payload_secret_key_at_least_32_chars',
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db',
+    },
+  }),
+});
+`;
+      writeFileSync(join(resolvedTarget, "src", "payload.config.ts"), payloadConfig, "utf8");
+
+      if (config.framework === "nextjs") {
+        const payloadAdminDir = join(resolvedTarget, "src", "app", "(payload)", "admin");
+        const payloadApiDir = join(resolvedTarget, "src", "app", "(payload)", "api", "[...slug]");
+        mkdirSync(payloadAdminDir, { recursive: true });
+        mkdirSync(payloadApiDir, { recursive: true });
+
+        writeFileSync(join(payloadAdminDir, "importMap.js"), `export const importMap = {};\n`, "utf8");
+        writeFileSync(join(payloadAdminDir, "page.tsx"), `import type { Metadata } from 'next';
+import config from '@/payload.config';
+import { RootPage, generatePageMetadata } from '@payloadcms/next/views';
+import { importMap } from './importMap';
+
+type Args = {
+  params: Promise<{
+    segments?: string[];
+  }>;
+  searchParams: Promise<{
+    [key: string]: string | string[];
+  }>;
+};
+
+export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
+  generatePageMetadata({ config, params, searchParams });
+
+const Page = ({ params, searchParams }: Args) =>
+  RootPage({ config, params, searchParams, importMap });
+
+export default Page;
+`, "utf8");
+
+        writeFileSync(join(payloadApiDir, "route.ts"), `import config from '@/payload.config';
+import { REST_DELETE, REST_GET, REST_OPTIONS, REST_PATCH, REST_POST } from '@payloadcms/next/routes';
+
+export const GET = REST_GET(config);
+export const POST = REST_POST(config);
+export const DELETE = REST_DELETE(config);
+export const PATCH = REST_PATCH(config);
+export const OPTIONS = REST_OPTIONS(config);
+`, "utf8");
+      }
+      console.log("  ✅ Auto-wired: Payload CMS 3.0 (`./src/payload.config.ts`, collections, and App Router endpoints)");
+    }
+
+    // 3.2.2 Keystatic Git-Based CMS
+    if (config.cms === "keystatic") {
+      depsToAdd["@keystatic/core"] = "^0.5.0";
+      const keystaticConfig = `import { config, fields, collection } from '@keystatic/core';
+
+export default config({
+  storage: {
+    kind: 'local',
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'src/content/posts/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        publishedDate: fields.date({ label: 'Published Date' }),
+        content: fields.markdoc({ label: 'Content' }),
+      },
+    }),
+  },
+});
+`;
+      writeFileSync(join(resolvedTarget, "keystatic.config.ts"), keystaticConfig, "utf8");
+
+      const postsContentDir = join(resolvedTarget, "src", "content", "posts");
+      mkdirSync(postsContentDir, { recursive: true });
+      writeFileSync(join(postsContentDir, "welcome.mdoc"), `---\ntitle: Welcome to ${projectName}\npublishedDate: 2026-09-06\n---\n\nWelcome to your new project governed by DOX Engine and Keystatic!\n`, "utf8");
+
+      if (config.framework === "nextjs") {
+        depsToAdd["@keystatic/next"] = "^0.5.0";
+        const keystaticAppDir = join(resolvedTarget, "src", "app", "keystatic");
+        const keystaticApiDir = join(resolvedTarget, "src", "app", "api", "keystatic", "[...params]");
+        mkdirSync(keystaticAppDir, { recursive: true });
+        mkdirSync(keystaticApiDir, { recursive: true });
+
+        writeFileSync(join(keystaticAppDir, "page.tsx"), `import { makePage } from '@keystatic/next/ui/app';
+import config from '../../../keystatic.config';
+
+export default makePage(config);
+`, "utf8");
+
+        writeFileSync(join(keystaticApiDir, "route.ts"), `import { makeRouteHandler } from '@keystatic/next/api/app';
+import config from '../../../../keystatic.config';
+
+export const { GET, POST } = makeRouteHandler({ config });
+`, "utf8");
+      } else if (config.framework === "astro") {
+        depsToAdd["@keystatic/astro"] = "^0.5.0";
+        const keystaticPagesDir = join(resolvedTarget, "src", "pages", "keystatic");
+        mkdirSync(keystaticPagesDir, { recursive: true });
+        writeFileSync(join(keystaticPagesDir, "[...params].astro"), `---
+import { makePage } from '@keystatic/astro/ui';
+import config from '../../../keystatic.config';
+
+export const prerender = false;
+const PrerenderedPage = makePage(config);
+---
+<PrerenderedPage />
+`, "utf8");
+      }
+      console.log("  ✅ Auto-wired: Keystatic Git-Based CMS (`./keystatic.config.ts` and admin endpoints)");
+    }
+
+    // 3.2.3 StudioCMS (Astro)
+    if (config.cms === "studiocms" && config.framework === "astro") {
+      depsToAdd["@studiocms/core"] = "^0.1.0";
+      console.log("  ✅ Auto-wired: StudioCMS dependencies for Astro");
+    }
+
+    // 3.2.4 Puck Visual Builder
     if (config.puck) {
       depsToAdd["@measured/puck"] = "^0.16.0";
       const puckConfigContent = `import type { Config } from '@measured/puck';
@@ -1283,7 +1518,64 @@ export const puckConfig: Config<UserConfig> = {
       const libDir = join(resolvedTarget, "src", "lib");
       mkdirSync(libDir, { recursive: true });
       writeFileSync(join(libDir, "puck.config.tsx"), puckConfigContent, "utf8");
-      console.log("  ✅ Auto-wired: `./src/lib/puck.config.tsx` (@measured/puck)");
+
+      if (config.framework === "nextjs") {
+        const puckAppDir = join(resolvedTarget, "src", "app", "puck", "[...puckPath]");
+        mkdirSync(puckAppDir, { recursive: true });
+
+        writeFileSync(join(puckAppDir, "client.tsx"), `'use client';
+
+import { Puck, type Data } from '@measured/puck';
+import '@measured/puck/puck.css';
+import { puckConfig } from '@/lib/puck.config';
+
+const initialData: Data = {
+  content: [
+    {
+      type: 'Hero',
+      props: {
+        title: 'Welcome to Visual Page Building',
+        subtitle: 'Powered by Puck Visual Builder and DOX Engine',
+        ctaText: 'Explore Features',
+        ctaLink: '#features',
+      },
+    },
+    {
+      type: 'Features',
+      props: {
+        items: [
+          { heading: 'OKLCH Design Tokens', description: 'Wide-gamut colors and fluid clamp typography.' },
+          { heading: 'Autonomous AI Agents', description: 'Governed by DOX Engine progressive disclosure.' },
+        ],
+      },
+    },
+  ],
+  root: { props: { title: 'Puck Interactive Page' } },
+};
+
+export function PuckEditor({ path }: { path: string }) {
+  return (
+    <Puck
+      config={puckConfig}
+      data={initialData}
+      onPublish={async (data) => {
+        console.log('[Puck] Published page layout for path:', path, data);
+      }}
+    />
+  );
+}
+`, "utf8");
+
+        writeFileSync(join(puckAppDir, "page.tsx"), `import { PuckEditor } from './client';
+
+export default async function Page({ params }: { params: Promise<{ puckPath?: string[] }> }) {
+  const resolved = await params;
+  const path = '/' + (resolved.puckPath || []).join('/');
+  return <PuckEditor path={path} />;
+}
+`, "utf8");
+      }
+      console.log("  ✅ Auto-wired: Puck Visual Builder (`./src/lib/puck.config.tsx` and `./src/app/puck/`)");
     }
 
     // 3.3 Database & Drizzle ORM
@@ -1293,13 +1585,59 @@ export const puckConfig: Config<UserConfig> = {
       const libDir = join(resolvedTarget, "src", "lib");
       mkdirSync(libDir, { recursive: true });
 
+      // 3.3.1 Typed Starter Schema (src/lib/schema.ts)
+      if (config.db === "sqlite") {
+        const schemaContent = `import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export const posts = sqliteTable('posts', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  content: text('content'),
+  authorId: text('author_id').references(() => users.id),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+`;
+        writeFileSync(join(libDir, "schema.ts"), schemaContent, "utf8");
+      } else {
+        const schemaContent = `import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const posts = pgTable('posts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  content: text('content'),
+  authorId: uuid('author_id').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+`;
+        writeFileSync(join(libDir, "schema.ts"), schemaContent, "utf8");
+      }
+
+      // 3.3.2 Database Client (src/lib/db.ts)
       if (config.db === "neon") {
         depsToAdd["@neondatabase/serverless"] = "^0.10.4";
         const dbContent = `import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
+import * as schema from './schema';
 
 const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql);
+export const db = drizzle(sql, { schema });
+export * from './schema';
 `;
         writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
       } else if (config.db === "supabase") {
@@ -1312,25 +1650,79 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 `;
         writeFileSync(join(libDir, "supabase.ts"), supabaseContent, "utf8");
+
+        const supabaseServerContent = `import { createClient } from '@supabase/supabase-js';
+
+export function createServerClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+`;
+        writeFileSync(join(libDir, "supabase-server.ts"), supabaseServerContent, "utf8");
+
+        const dbContent = `import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import * as schema from './schema';
+
+const client = postgres(process.env.DATABASE_URL!);
+export const db = drizzle(client, { schema });
+export * from './schema';
+`;
+        writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
       } else if (config.db === "sqlite") {
         const dbContent = `import { Database } from 'bun:sqlite';
 import { drizzle } from 'drizzle-orm/bun-sqlite';
+import * as schema from './schema';
 
 const sqlite = new Database('database.sqlite');
-export const db = drizzle(sqlite);
+export const db = drizzle(sqlite, { schema });
+export * from './schema';
 `;
         writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
       } else if (config.db === "postgres") {
         depsToAdd["postgres"] = "^3.4.5";
         const dbContent = `import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
+import * as schema from './schema';
 
-const queryClient = postgres(process.env.DATABASE_URL!);
-export const db = drizzle(queryClient);
+const queryClient = postgres(process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db');
+export const db = drizzle(queryClient, { schema });
+export * from './schema';
 `;
         writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
+
+        // Provision local Docker Compose for PostgreSQL if not already in medusa
+        if (config.ecommerce !== "medusa" && !existsSync(join(resolvedTarget, "docker-compose.yml"))) {
+          const pgDockerCompose = `services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+`;
+          writeFileSync(join(resolvedTarget, "docker-compose.yml"), pgDockerCompose, "utf8");
+          console.log("  ✅ Auto-wired: `./docker-compose.yml` (Local PostgreSQL 16 container with persistent volumes)");
+        }
       }
 
+      // 3.3.3 drizzle.config.ts
       const drizzleConfig = `import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
@@ -1338,12 +1730,12 @@ export default defineConfig({
   out: './drizzle',
   dialect: '${config.db === "sqlite" ? "sqlite" : "postgresql"}',
   dbCredentials: {
-    url: process.env.DATABASE_URL || 'database.sqlite',
+    url: process.env.DATABASE_URL || '${config.db === "sqlite" ? "database.sqlite" : "postgres://postgres:postgres@localhost:5432/" + projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-") + "-db"}',
   },
 });
 `;
       writeFileSync(join(resolvedTarget, "drizzle.config.ts"), drizzleConfig, "utf8");
-      console.log("  ✅ Auto-wired: `./drizzle.config.ts` and `./src/lib/db.ts`");
+      console.log("  ✅ Auto-wired: `./drizzle.config.ts`, `./src/lib/db.ts`, and typed `./src/lib/schema.ts`");
     }
 
     // 3.4 E-Commerce Integration (Medusa, Fastrr, Razorpay, Stripe)
@@ -1515,12 +1907,150 @@ export const GET = (req: MedusaRequest, res: MedusaResponse) => {
         depsToAdd["@stripe/stripe-js"] = "^5.0.0";
         const stripeClient = `import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
 });
 `;
         writeFileSync(join(libDir, "stripe.ts"), stripeClient, "utf8");
-        console.log("  ✅ Auto-wired: `./src/lib/stripe.ts` (Stripe SDK)");
+
+        // Endpoints for Next.js App Router
+        if (config.framework === "nextjs") {
+          const checkoutApiDir = join(resolvedTarget, "src", "app", "api", "checkout");
+          const webhookApiDir = join(resolvedTarget, "src", "app", "api", "webhooks", "stripe");
+          mkdirSync(checkoutApiDir, { recursive: true });
+          mkdirSync(webhookApiDir, { recursive: true });
+
+          writeFileSync(join(checkoutApiDir, "route.ts"), `import { NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
+
+export async function POST(req: Request) {
+  try {
+    const { items, successUrl, cancelUrl } = await req.json();
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: items || [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: '${projectName} Order Item' },
+            unit_amount: 2500,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: successUrl || \`\${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}\`,
+      cancel_url: cancelUrl || \`\${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/cart\`,
+    });
+    return NextResponse.json({ url: session.url });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+`, "utf8");
+
+          writeFileSync(join(webhookApiDir, "route.ts"), `import { NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
+
+export async function POST(req: Request) {
+  const body = await req.text();
+  const signature = req.headers.get('stripe-signature') || '';
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+
+  try {
+    const event = webhookSecret
+      ? stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      : JSON.parse(body);
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      console.log('[Stripe Webhook] Payment successful for session:', session.id);
+    }
+    return NextResponse.json({ received: true });
+  } catch (err: any) {
+    return NextResponse.json({ error: \`Webhook error: \${err.message}\` }, { status: 400 });
+  }
+}
+`, "utf8");
+        } else if (config.framework === "astro") {
+          const apiDir = join(resolvedTarget, "src", "pages", "api");
+          const webhookDir = join(resolvedTarget, "src", "pages", "api", "webhooks");
+          mkdirSync(apiDir, { recursive: true });
+          mkdirSync(webhookDir, { recursive: true });
+
+          writeFileSync(join(apiDir, "checkout.ts"), `import type { APIRoute } from 'astro';
+import { stripe } from '@/lib/stripe';
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const { items, successUrl, cancelUrl } = await request.json();
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: items || [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: '${projectName} Order Item' },
+            unit_amount: 2500,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: successUrl || 'http://localhost:4321/success',
+      cancel_url: cancelUrl || 'http://localhost:4321/cart',
+    });
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+};
+`, "utf8");
+
+          writeFileSync(join(webhookDir, "stripe.ts"), `import type { APIRoute } from 'astro';
+import { stripe } from '@/lib/stripe';
+
+export const POST: APIRoute = async ({ request }) => {
+  const body = await request.text();
+  const signature = request.headers.get('stripe-signature') || '';
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+
+  try {
+    const event = webhookSecret
+      ? stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      : JSON.parse(body);
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      console.log('[Stripe Webhook] Payment received:', session.id);
+    }
+    return new Response(JSON.stringify({ received: true }), { status: 200 });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 400 });
+  }
+};
+`, "utf8");
+        }
+        console.log("  ✅ Auto-wired: `./src/lib/stripe.ts`, checkout endpoint, and webhook handler (Stripe SDK)");
+      } else if (config.ecommerce === "vendure") {
+        const vendureClient = `/**
+ * 🛍️ Vendure GraphQL Shop API Client Adapter
+ */
+export async function queryVendureShop(query: string, variables: Record<string, any> = {}) {
+  const endpoint = process.env.VENDURE_API_URL || 'http://localhost:3000/shop-api';
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
+  });
+  return response.json();
+}
+`;
+        writeFileSync(join(libDir, "vendure.ts"), vendureClient, "utf8");
+        console.log("  ✅ Auto-wired: `./src/lib/vendure.ts` (Vendure GraphQL Shop API)");
       } else if (config.ecommerce === "fastrr") {
         const fastrrClient = `/**
  * ⚡ Fastrr 1-Click Checkout Integration Helper
@@ -1543,7 +2073,47 @@ export function openRazorpayModal(options: { orderId: string; amount: number; na
 }
 `;
         writeFileSync(join(libDir, "razorpay.ts"), razorpayClient, "utf8");
-        console.log("  ✅ Auto-wired: `./src/lib/razorpay.ts` (Razorpay payment helper)");
+
+        if (config.framework === "nextjs") {
+          const razorpayApiDir = join(resolvedTarget, "src", "app", "api", "payment", "razorpay");
+          mkdirSync(razorpayApiDir, { recursive: true });
+          writeFileSync(join(razorpayApiDir, "route.ts"), `import { NextResponse } from 'next/server';
+
+export async function POST(req: Request) {
+  try {
+    const { amount, currency = 'INR' } = await req.json();
+    return NextResponse.json({
+      id: 'order_' + Math.random().toString(36).substring(2, 9),
+      amount: amount || 50000,
+      currency,
+      status: 'created',
+    });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+`, "utf8");
+        } else if (config.framework === "astro") {
+          const apiDir = join(resolvedTarget, "src", "pages", "api", "payment");
+          mkdirSync(apiDir, { recursive: true });
+          writeFileSync(join(apiDir, "razorpay.ts"), `import type { APIRoute } from 'astro';
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const { amount, currency = 'INR' } = await request.json();
+    return new Response(JSON.stringify({
+      id: 'order_' + Math.random().toString(36).substring(2, 9),
+      amount: amount || 50000,
+      currency,
+      status: 'created',
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+};
+`, "utf8");
+        }
+        console.log("  ✅ Auto-wired: `./src/lib/razorpay.ts` and payment order endpoint (Razorpay)");
       }
     }
 
@@ -1552,15 +2122,61 @@ export function openRazorpayModal(options: { orderId: string; amount: number; na
       depsToAdd["better-auth"] = "^1.2.0";
       const libDir = join(resolvedTarget, "src", "lib");
       mkdirSync(libDir, { recursive: true });
-      const authClient = `import { betterAuth } from 'better-auth';
+
+      // 3.5.1 Server-Side Auth Config (src/lib/auth.ts)
+      const authContent = `import { betterAuth } from 'better-auth';
+${config.db !== "none" ? `import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { db } from './db';
+import * as schema from './schema';` : ""}
 
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret: process.env.BETTER_AUTH_SECRET || 'supersecret_better_auth_secret_key_at_least_32_chars',
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+  ${config.db !== "none" ? `database: drizzleAdapter(db, {
+    provider: '${config.db === "sqlite" ? "sqlite" : "pg"}',
+    schema: {
+      ...schema,
+    },
+  }),` : ""}
+  emailAndPassword: {
+    enabled: true,
+  },
 });
 `;
-      writeFileSync(join(libDir, "auth.ts"), authClient, "utf8");
-      console.log("  ✅ Auto-wired: `./src/lib/auth.ts` (better-auth)");
+      writeFileSync(join(libDir, "auth.ts"), authContent, "utf8");
+
+      // 3.5.2 Client-Side Auth Client (src/lib/auth-client.ts)
+      const authClientContent = `import { createAuthClient } from 'better-auth/react';
+
+export const authClient = createAuthClient({
+  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+});
+
+export const { signIn, signUp, signOut, useSession } = authClient;
+`;
+      writeFileSync(join(libDir, "auth-client.ts"), authClientContent, "utf8");
+
+      // 3.5.3 Framework API Route Handler
+      if (config.framework === "nextjs") {
+        const authApiDir = join(resolvedTarget, "src", "app", "api", "auth", "[...all]");
+        mkdirSync(authApiDir, { recursive: true });
+        writeFileSync(join(authApiDir, "route.ts"), `import { auth } from '@/lib/auth';
+import { toNextJsHandler } from 'better-auth/next-js';
+
+export const { GET, POST } = toNextJsHandler(auth);
+`, "utf8");
+      } else if (config.framework === "astro") {
+        const authApiDir = join(resolvedTarget, "src", "pages", "api", "auth");
+        mkdirSync(authApiDir, { recursive: true });
+        writeFileSync(join(authApiDir, "[...all].ts"), `import type { APIRoute } from 'astro';
+import { auth } from '@/lib/auth';
+
+export const ALL: APIRoute = async (ctx) => {
+  return auth.handler(ctx.request);
+};
+`, "utf8");
+      }
+      console.log("  ✅ Auto-wired: `./src/lib/auth.ts`, `./src/lib/auth-client.ts`, and `/api/auth/[...all]` (better-auth)");
     }
 
     // 3.6 NanoStores State
@@ -1656,14 +2272,28 @@ export default config;
 
     // 3.8 Generate .env.example
     const envVars: string[] = ["# Application Environment Configuration"];
-    if (config.db === "neon" || config.db === "postgres") {
-      envVars.push("DATABASE_URL=postgresql://user:password@localhost:5432/dbname?sslmode=require");
+    if (config.db === "neon") {
+      envVars.push("DATABASE_URL=postgresql://[user]:[password]@[neon-hostname]/neondb?sslmode=require");
+    } else if (config.db === "postgres") {
+      envVars.push(`DATABASE_URL=postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db`);
+    } else if (config.db === "sqlite") {
+      envVars.push("DATABASE_URL=database.sqlite");
     } else if (config.db === "supabase") {
       envVars.push("NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co");
       envVars.push("NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key");
+      envVars.push("SUPABASE_SERVICE_ROLE_KEY=your-service-role-key");
+      envVars.push("DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres");
+    }
+    if (config.cms === "payload") {
+      envVars.push("PAYLOAD_SECRET=supersecret_payload_secret_key_at_least_32_chars");
+      if (!envVars.some(v => v.startsWith("DATABASE_URL="))) {
+        envVars.push(`DATABASE_URL=postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db`);
+      }
+    } else if (config.cms === "studiocms") {
+      envVars.push("CMS_ENCRYPTION_KEY=supersecret_cms_encryption_key_at_least_32_chars");
     }
     if (config.auth === "better-auth") {
-      envVars.push("BETTER_AUTH_SECRET=your-secure-random-secret-at-least-32-chars");
+      envVars.push("BETTER_AUTH_SECRET=supersecret_better_auth_secret_key_at_least_32_chars");
       envVars.push("BETTER_AUTH_URL=http://localhost:3000");
     }
     if (config.ecommerce === "medusa") {
@@ -1672,9 +2302,12 @@ export default config;
     } else if (config.ecommerce === "stripe") {
       envVars.push("STRIPE_SECRET_KEY=sk_test_placeholder");
       envVars.push("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_placeholder");
+      envVars.push("STRIPE_WEBHOOK_SECRET=whsec_test_placeholder");
     } else if (config.ecommerce === "razorpay") {
       envVars.push("RAZORPAY_KEY_ID=rzp_test_placeholder");
       envVars.push("RAZORPAY_KEY_SECRET=your_razorpay_secret");
+    } else if (config.ecommerce === "vendure") {
+      envVars.push("VENDURE_API_URL=http://localhost:3000/shop-api");
     }
     const envExamplePath = join(resolvedTarget, ".env.example");
     writeFileSync(envExamplePath, envVars.join("\n") + "\n", "utf8");
@@ -1720,6 +2353,20 @@ export default config;
         pkg.scripts["cap:build"] = "bun run build && cap sync";
         pkg.scripts["cap:ios"] = "cap open ios";
         pkg.scripts["cap:android"] = "cap open android";
+      }
+
+      if (config.db !== "none") {
+        pkg.scripts["db:generate"] = "drizzle-kit generate";
+        pkg.scripts["db:push"] = "drizzle-kit push";
+      }
+
+      if (config.db === "postgres" && config.ecommerce !== "medusa") {
+        pkg.scripts["docker:up"] = "docker compose up -d";
+        pkg.scripts["docker:down"] = "docker compose down";
+      }
+
+      if (config.cms === "payload") {
+        pkg.scripts["payload"] = "payload";
       }
 
       if (config.ecommerce === "medusa") {
@@ -2207,6 +2854,8 @@ ${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ 
 │   ├── docker-compose.yml   # PostgreSQL 16 & Redis 7 containers
 │   ├── medusa-config.ts     # Medusa 2.0 configuration & CORS
 │   └── package.json         # Medusa server dependencies
+` : ""}${config.db === "postgres" && config.ecommerce !== "medusa" ? `├── docker-compose.yml       # 🗄️ Local PostgreSQL 16 container
+` : ""}${config.cms === "keystatic" ? `├── keystatic.config.ts      # 📝 Keystatic Git-based CMS configuration
 ` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
 ├── Onboarding/              # 📋 Client and Brand Onboarding Artifacts
 │   ├── 01-Brand/            # Brand identity, vision, and visual direction
@@ -2214,7 +2863,9 @@ ${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ 
 │   └── 03-Menu/             # Service offerings and product catalog specifications
 ├── src/
 │   ├── components/          # Reusable UI components
-│   ├── lib/                 # Database, auth, and API client adapters
+${config.cms === "payload" ? `│   ├── collections/         # 📦 Payload CMS Collections (Users, Media, Pages)
+│   ├── payload.config.ts    # Payload CMS 3.0 configuration
+` : ""}│   ├── lib/                 # Database, auth, and API client adapters
 │   ├── styles/              # Design tokens, semantic BEM CSS, and animation presets
 │   └── stores/              # NanoStores reactive state management
 ├── uno.config.ts            # UnoCSS Wind 4 configuration (Tailwind v4 compatible)
@@ -2269,16 +2920,66 @@ This workspace is fully governed by the **DOX Engine**. When using an AI coding 
 2. Add your local secret to \`.env\` (never commit \`.env\`!).
 
 ### D. Database Migrations (Drizzle ORM)
-If Drizzle is configured:
+${config.db !== "none" ? `If Drizzle is configured:
 \`\`\`bash
-# Generate migration SQL from schema
-bunx drizzle-kit generate
+# Generate migration SQL from typed schema (src/lib/schema.ts)
+bun run db:generate
 
-# Push migrations to database
-bunx drizzle-kit push
+# Push schema changes directly to your database
+bun run db:push
 \`\`\`
+${config.db === "postgres" && config.ecommerce !== "medusa" ? `
+Start local PostgreSQL container:
+\`\`\`bash
+bun run docker:up
+# (runs docker compose up -d)
+\`\`\`
+` : ""}` : "This project is currently stateless (no database configured)."}
+
+${config.auth === "better-auth" ? `
+### E. Authentication (Better Auth)
+- **Client Components**: Import from \`src/lib/auth-client.ts\` to initiate login, registration, or retrieve active session:
+  \`\`\`tsx
+  import { authClient, useSession, signIn, signOut } from '@/lib/auth-client';
+
+  export function UserMenu() {
+    const { data: session } = useSession();
+    if (!session) return <button onClick={() => signIn.social({ provider: 'github' })}>Sign In</button>;
+    return <button onClick={() => signOut()}>Sign Out ({session.user.name})</button>;
+  }
+  \`\`\`
+- **Server Route Handler**: Active at \`/api/auth/[...all]\` for session resolution and auth callbacks.
+` : ""}
+
+${config.cms === "payload" ? `
+### F. Managing Payload CMS 3.0
+- **Admin Dashboard**: Start your dev server and navigate to \`http://localhost:3000/admin\` to manage Collections (Users, Media, Pages${config.ecommerce === "payload" ? ", Products" : ""}).
+- **CLI Commands**: Run \`bun run payload\` for Payload-specific generator tasks.
+` : ""}
+
+${config.puck ? `
+### G. Visual Page Building (Puck)
+- **Visual Editor**: Navigate to \`http://localhost:3000/puck/demo\` to interactively drag, drop, and edit page layouts using your design tokens.
+- **Component Registry**: Add or customize editable blocks in \`src/lib/puck.config.tsx\`.
+` : ""}
+
+${config.cms === "keystatic" ? `
+### H. Managing Keystatic Git-Based Content
+- **Admin Interface**: Open \`http://localhost:3000/keystatic\` (or \`http://localhost:4321/keystatic\`) to create and edit posts.
+- **Git-Committed**: All content is stored as native files under \`src/content/posts/\`.
+` : ""}
+
+${config.ecommerce === "stripe" ? `
+### I. E-Commerce Checkout & Webhooks (Stripe)
+- **Checkout Endpoint**: POST to \`/api/checkout\` with cart items to create a Stripe Checkout session.
+- **Local Webhook Testing**: Forward Stripe webhook events to your local server:
+  \`\`\`bash
+  stripe listen --forward-to localhost:3000/api/webhooks/stripe
+  \`\`\`
+` : ""}
+
 ${config.ecommerce === "medusa" ? `
-### E. Managing the Medusa E-Commerce Backend
+### J. Managing the Medusa E-Commerce Backend
 - **Admin Dashboard**: Start the backend and navigate to \`http://localhost:9000/app\` to configure products, pricing, inventory, regions, and promotions.
 - **Docker Compose**: Start PostgreSQL and Redis containers with \`docker compose -f backend/docker-compose.yml up -d\` (or \`bun run docker:up\`).
 - **Storefront SDK**: Client components query products and manage checkouts via \`src/lib/medusa.ts\` connecting to \`http://localhost:9000\`.

@@ -408,6 +408,84 @@ Custom billing engine for healthcare providers.
       expect(startHereContent).toContain("Managing the Medusa E-Commerce Backend");
     });
 
+    it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
+      const target = join(TEST_SANDBOX, "fullbaked-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        target,
+        "--non-interactive",
+        "--name=Fullstack Powerhouse",
+        "--author=Enterprise Systems",
+        "--intent=app",
+        "--type=none",
+        "--styling=hybrid",
+        "--db=postgres",
+        "--auth=better-auth",
+        "--ecommerce=stripe",
+        "--cms=payload",
+        "--puck",
+        "--skip-install"
+      ], { encoding: "utf8" });
+
+      expect(res.status).toBe(0);
+
+      // 1. Drizzle ORM typed schema & client
+      expect(existsSync(join(target, "src/lib/schema.ts"))).toBe(true);
+      const schemaContent = readFileSync(join(target, "src/lib/schema.ts"), "utf8");
+      expect(schemaContent).toContain("pgTable('users'");
+      expect(schemaContent).toContain("pgTable('posts'");
+
+      expect(existsSync(join(target, "src/lib/db.ts"))).toBe(true);
+      const dbContent = readFileSync(join(target, "src/lib/db.ts"), "utf8");
+      expect(dbContent).toContain("export * from './schema'");
+
+      expect(existsSync(join(target, "drizzle.config.ts"))).toBe(true);
+
+      // 2. Local PostgreSQL Docker Compose
+      expect(existsSync(join(target, "docker-compose.yml"))).toBe(true);
+      const composeContent = readFileSync(join(target, "docker-compose.yml"), "utf8");
+      expect(composeContent).toContain("postgres:16-alpine");
+
+      // 3. Better Auth server and client SDK
+      expect(existsSync(join(target, "src/lib/auth.ts"))).toBe(true);
+      const authContent = readFileSync(join(target, "src/lib/auth.ts"), "utf8");
+      expect(authContent).toContain("drizzleAdapter");
+
+      expect(existsSync(join(target, "src/lib/auth-client.ts"))).toBe(true);
+      const authClientContent = readFileSync(join(target, "src/lib/auth-client.ts"), "utf8");
+      expect(authClientContent).toContain("createAuthClient");
+
+      // 4. Stripe SDK
+      expect(existsSync(join(target, "src/lib/stripe.ts"))).toBe(true);
+
+      // 5. Payload CMS 3.0 & Collections
+      expect(existsSync(join(target, "src/payload.config.ts"))).toBe(true);
+      const payloadConfig = readFileSync(join(target, "src/payload.config.ts"), "utf8");
+      expect(payloadConfig).toContain("buildConfig");
+      expect(existsSync(join(target, "src/collections/Users.ts"))).toBe(true);
+      expect(existsSync(join(target, "src/collections/Media.ts"))).toBe(true);
+      expect(existsSync(join(target, "src/collections/Pages.ts"))).toBe(true);
+
+      // 6. Puck Visual Builder
+      expect(existsSync(join(target, "src/lib/puck.config.tsx"))).toBe(true);
+
+      // 7. Environment companions
+      expect(existsSync(join(target, ".env.example"))).toBe(true);
+      const envExample = readFileSync(join(target, ".env.example"), "utf8");
+      expect(envExample).toContain("PAYLOAD_SECRET");
+      expect(envExample).toContain("BETTER_AUTH_SECRET");
+      expect(envExample).toContain("STRIPE_SECRET_KEY");
+      expect(envExample).toContain("DATABASE_URL");
+
+      // 8. start-here.md guide recipes
+      const startHereContent = readFileSync(join(target, "start-here.md"), "utf8");
+      expect(startHereContent).toContain("Database Migrations (Drizzle ORM)");
+      expect(startHereContent).toContain("Authentication (Better Auth)");
+      expect(startHereContent).toContain("Managing Payload CMS 3.0");
+      expect(startHereContent).toContain("Visual Page Building (Puck)");
+      expect(startHereContent).toContain("E-Commerce Checkout & Webhooks (Stripe)");
+    });
+
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
       const prohibited = [
         "Harsh",
