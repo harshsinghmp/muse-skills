@@ -1,13 +1,6 @@
 {
-  "name": "@harshsinghmp/muse-skills",
-  "version": "2.4.1",
+  "author": "Harsh",
   "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, editorial anti-slop review, and reflective audits across the LifeOS ecosystem",
-  "type": "module",
-  "scripts": {
-    "test": "bun test",
-    "validate": "bash updateagents/scripts/validate-memory-file.sh",
-    "extract-skill": "bun scripts/extract-skill.ts"
-  },
   "keywords": [
     "skills",
     "agents",
@@ -60,10 +53,17 @@
     "anti-slop",
     "prose"
   ],
-  "author": "Harsh",
   "license": "MIT",
+  "name": "@harshsinghmp/muse-skills",
   "repository": {
     "type": "git",
     "url": "https://github.com/harshsinghmp/muse-skills.git"
-  }
+  },
+  "scripts": {
+    "extract-skill": "bun scripts/extract-skill.ts",
+    "test": "bun test",
+    "validate": "bash updateagents/scripts/validate-memory-file.sh"
+  },
+  "type": "module",
+  "version": "2.5.0"
 }
