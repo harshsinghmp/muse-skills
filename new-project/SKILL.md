@@ -70,6 +70,9 @@ Interactive project creator and Project Operating System provisioner. Implements
 | `--preset=astro-commerce` | E-Commerce / High-Performance | Astro v7 (`@latest`) + Hybrid UnoCSS + NanoStores + Aria Builder (`ariabuilder.io`) + Medusa 2.0 Sovereign Backend (Postgres/Redis Docker) |
 | `--preset=publisher` / `astro-blog` | Content / Publication | Astro v7 (`@latest`, zero-JS baseline) + Hybrid UnoCSS + Motion.dev + NanoStores + StudioCMS (LibSQL/Turso native) |
 | `--preset=edge` / `astro-emdash` | Static Edge Publication | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Emdash CMS (Cloudflare D1/R2) |
+| `--preset=plain-astro` / `astro-plain` | Pure Content Baseline | Astro v7 (Zero-JS, zero React) + Hybrid UnoCSS Wind 4 + Hardware CSS Animations |
+| `--preset=git-cms` / `astro-git` | Git-backed Content Site | Astro v7 + Native Content Collections + Markdown/MDX + RSS Feed + Hybrid UnoCSS |
+| `--preset=sitepins` / `astro-sitepins` | Edge Headless Publishing | Astro v7 + Sitepins Git-backed CMS + Content Collections + Hybrid UnoCSS |
 | `--preset=visual` | Brochure & Visual Sites | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) + Fastrr 1-click checkout |
 | `--preset=astro-visual` | Visual Marketing Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) |
 | `--preset=instatic` | Pure HTML Sites | Instatic SSG + Semantic BEM CSS + Hardware CSS Animations (Zero Node/JS runtime) |
@@ -195,7 +198,8 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - Synchronizes official dependencies in `package.json` with self-verification gate.
 
 ### Stage 4: Modern Tokens & BEM Architecture Injection
-- `src/styles/tokens.css`: Wide-gamut OKLCH colors, fluid typography scale via `clamp()`, fluid spacing scale via `clamp()`, radii, transitions.
+- `src/styles/tokens.css`: Wide-gamut OKLCH colors (choice of 37 official palettes from `oklch.fyi`: 16 Radix scales + 21 curated designer themes like `sunset-vibes`, `deep-sea`, `forest`, `neon-nights`, etc.), fluid typography scale via `clamp()`, fluid spacing scale via `clamp()`, and 12-step numeric scales (`--color-scale-1` through `12`).
+- `.agents/skills/oklch-skill/`: Automatically provisions project-scoped `oklch-skill` (strictly project-only, zero global pollution) with full color conversion, APCA/WCAG contrast guidelines, gamut clamping, and UnoCSS Wind 4 `@theme` mappings.
 - `src/styles/semantic.css`: Reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-product-card`, `.c-cart-drawer`).
 - `src/styles/animations.css`: Hardware-accelerated GPU animations with `prefers-reduced-motion` compliance.
 

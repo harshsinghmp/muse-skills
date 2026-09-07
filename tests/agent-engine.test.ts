@@ -857,4 +857,174 @@ Custom billing engine for healthcare providers.
       scanDir(AI_READY_TEMPLATES);
     });
   });
+
+  /* ========================================================================= */
+  /* PART F: Simplified Setup, Progressive Pipeline & 37 OKLCH Palettes (TDD)   */
+  /* ========================================================================= */
+  describe("Part F: Simplified Setup, Progressive Pipeline & 37 OKLCH Palettes", () => {
+    it("provisions all 37 OKLCH color palettes from oklch.fyi with exact tokens and UnoCSS Wind 4 integration", () => {
+      // Test sunset-vibes curated theme
+      const targetSunset = join(TEST_SANDBOX, "sunset-vibes-showcase");
+      const resSunset = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetSunset,
+        "--non-interactive",
+        "--preset=visual",
+        "--palette=sunset-vibes",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resSunset.status).toBe(0);
+      expect(existsSync(join(targetSunset, "src/styles/tokens.css"))).toBe(true);
+      const tokensCss = readFileSync(join(targetSunset, "src/styles/tokens.css"), "utf8");
+      expect(tokensCss).toContain("oklch(0.3 0.15 25)");
+      expect(tokensCss).toContain("SUNSET-VIBES");
+
+      const colorsJsonPath = join(targetSunset, ".agents/brand/tokens/colors.json");
+      expect(existsSync(colorsJsonPath)).toBe(true);
+      const colorsJson = JSON.parse(readFileSync(colorsJsonPath, "utf8"));
+      expect(colorsJson.color.primary.default.$value).toBe("oklch(0.3 0.15 25)");
+
+      // Test deep-sea curated theme
+      const targetDeepSea = join(TEST_SANDBOX, "deep-sea-showcase");
+      const resDeepSea = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetDeepSea,
+        "--non-interactive",
+        "--preset=visual",
+        "--palette=deep-sea",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resDeepSea.status).toBe(0);
+      const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
+      expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
+      expect(deepSeaTokens).toContain("DEEP-SEA");
+    }, 30000);
+
+    it("provisions project-scoped oklch-skill strictly inside target project with zero global pollution", () => {
+      const targetProject = join(TEST_SANDBOX, "oklch-skill-showcase");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetProject,
+        "--non-interactive",
+        "--preset=instatic",
+        "--palette=ocean-breeze",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+
+      const skillDir = join(targetProject, ".agents/skills/oklch-skill");
+      expect(existsSync(skillDir)).toBe(true);
+      expect(existsSync(join(skillDir, "SKILL.md"))).toBe(true);
+      expect(existsSync(join(skillDir, "palettes.json"))).toBe(true);
+      expect(existsSync(join(skillDir, "accessibility-contrast.md"))).toBe(true);
+      expect(existsSync(join(skillDir, "gamut-and-tailwind.md"))).toBe(true);
+
+      const palettesData = JSON.parse(readFileSync(join(skillDir, "palettes.json"), "utf8"));
+      expect(Object.keys(palettesData).length).toBe(37);
+      expect(palettesData).toHaveProperty("sunset-vibes");
+      expect(palettesData).toHaveProperty("ocean-breeze");
+      expect(palettesData).toHaveProperty("forest");
+      expect(palettesData).toHaveProperty("neon-nights");
+      expect(palettesData).toHaveProperty("slate");
+      expect(palettesData).toHaveProperty("indigo");
+    }, 30000);
+
+    it("simplifies Astro setup to Plain Astro (zero React) vs Aria Builder vs Plain Astro + CMS (Emdash / Git-based)", () => {
+      // 1. Plain Astro (zero React)
+      const targetPlainAstro = join(TEST_SANDBOX, "plain-astro-showcase");
+      const resPlain = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetPlainAstro,
+        "--non-interactive",
+        "--framework=astro",
+        "--cms=none",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resPlain.status).toBe(0);
+      const plainPkg = JSON.parse(readFileSync(join(targetPlainAstro, "package.json"), "utf8"));
+      expect(plainPkg.dependencies).not.toHaveProperty("react");
+      expect(plainPkg.dependencies).not.toHaveProperty("react-dom");
+      expect(plainPkg.dependencies).not.toHaveProperty("@astrojs/react");
+      const plainAstroCfg = readFileSync(join(targetPlainAstro, "astro.config.mjs"), "utf8");
+      expect(plainAstroCfg).not.toContain("react()");
+
+      // 2. Astro + Git-based / Sitepins CMS
+      const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
+      const resGit = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetGitCms,
+        "--non-interactive",
+        "--framework=astro",
+        "--cms=git",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resGit.status).toBe(0);
+      expect(existsSync(join(targetGitCms, "src/content/config.ts"))).toBe(true);
+      expect(existsSync(join(targetGitCms, "src/content/blog/first-post.md"))).toBe(true);
+      expect(existsSync(join(targetGitCms, "src/pages/rss.xml.ts"))).toBe(true);
+    }, 30000);
+
+    it("simplifies HTML setup to Plain HTML vs Instatic Builder and establishes AI-Ready harness first", () => {
+      const targetHtml = join(TEST_SANDBOX, "html-harness-first");
+      const res = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetHtml,
+        "--non-interactive",
+        "--preset=pure-html",
+        "--palette=forest",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+
+      // AI-ready DOX harness first
+      expect(existsSync(join(targetHtml, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, ".agents/standards/tech-stacks.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, ".agents/context/index.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, ".memory/CURRENT.md"))).toBe(true);
+
+      // Client Onboarding suite before completion
+      expect(existsSync(join(targetHtml, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Onboarding/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Onboarding/03-Offerings/offerings-catalog.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Onboarding/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
+    }, 30000);
+
+    it("supports simplified presets plain-astro, git-cms, and sitepins", () => {
+      const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
+      const resPlain = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetPlain,
+        "--non-interactive",
+        "--preset=plain-astro",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resPlain.status).toBe(0);
+      const pkg = JSON.parse(readFileSync(join(targetPlain, "package.json"), "utf8"));
+      expect(pkg.dependencies).not.toHaveProperty("react");
+      expect(pkg.dependencies).not.toHaveProperty("@astrojs/react");
+
+      const targetGit = join(TEST_SANDBOX, "preset-git-cms");
+      const resGit = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetGit,
+        "--non-interactive",
+        "--preset=git-cms",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resGit.status).toBe(0);
+      expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
+
+      const targetSitepins = join(TEST_SANDBOX, "preset-sitepins");
+      const resSitepins = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetSitepins,
+        "--non-interactive",
+        "--preset=sitepins",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resSitepins.status).toBe(0);
+      expect(existsSync(join(targetSitepins, "src/content/config.ts"))).toBe(true);
+    }, 30000);
+  });
 });
+
