@@ -670,11 +670,17 @@ Custom billing engine for healthcare providers.
       ], { encoding: "utf8" });
       expect(resEmdash.status).toBe(0);
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "emdash-env.d.ts"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "seed/seed.json"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "src/live.config.ts"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "src/pages/admin.astro"))).toBe(true);
+      expect(existsSync(join(targetEmdash, "tests/emdash.test.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/content/blog/welcome.md"))).toBe(true);
       expect(existsSync(join(targetEmdash, "src/pages/blog/index.astro"))).toBe(true);
       expect(existsSync(join(targetEmdash, "astro.config.mjs"))).toBe(true);
       const emdashAstroCfg = readFileSync(join(targetEmdash, "astro.config.mjs"), "utf8");
-      expect(emdashAstroCfg).toContain("emdash()");
+      expect(emdashAstroCfg).toContain("emdash(");
+      expect(emdashAstroCfg).toContain("react()");
 
       // 4. Next.js + Payload E-Commerce + Puck
       const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");

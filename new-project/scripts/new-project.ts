@@ -25,6 +25,7 @@ import os, { homedir } from "node:os";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { spawnSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 
 // Template source of truth located in ai-ready/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
@@ -1333,20 +1334,70 @@ export default defineConfig({
           depsToAdd["@astrojs/node"] = "^9.0.0";
         }
         if (config.cms === "emdash") {
-          imports.push("import node from '@astrojs/node';");
-          imports.push("import emdash from 'emdash';");
-          integrations.push("emdash()");
           needsServer = true;
           depsToAdd["emdash"] = "^0.36.0";
-          depsToAdd["@astrojs/node"] = "^9.0.0";
+          depsToAdd["@astrojs/react"] = "^6.0.5";
+          depsToAdd["react"] = "^19.2.4";
+          depsToAdd["react-dom"] = "^19.2.4";
+          devDepsToAdd["@types/react"] = "^19.0.0";
+          devDepsToAdd["@types/react-dom"] = "^19.0.0";
+
+          if (config.deploy === "cloudflare") {
+            depsToAdd["@astrojs/cloudflare"] = "^14.3.0";
+            depsToAdd["@emdash-cms/cloudflare"] = "^0.36.0";
+            depsToAdd["@emdash-cms/plugin-forms"] = "^0.2.5";
+            depsToAdd["@emdash-cms/plugin-webhook-notifier"] = "^0.2.0";
+            devDepsToAdd["wrangler"] = "^4.129.0";
+            devDepsToAdd["@cloudflare/workers-types"] = "^4.20260702.1";
+
+            imports.push("import cloudflare from '@astrojs/cloudflare';");
+            imports.push("import react from '@astrojs/react';");
+            imports.push("import emdash from 'emdash/astro';");
+            imports.push("import { d1, r2, sandbox } from '@emdash-cms/cloudflare';");
+            imports.push("import { formsPlugin } from '@emdash-cms/plugin-forms';");
+            imports.push("import webhookNotifier from '@emdash-cms/plugin-webhook-notifier';");
+
+            integrations.push("react()");
+            integrations.push(`emdash({
+    database: d1({ binding: "DB", session: "auto" }),
+    storage: r2({ binding: "MEDIA" }),
+    plugins: [formsPlugin()],
+    sandboxed: [webhookNotifier],
+    sandboxRunner: sandbox(),
+    marketplace: "https://marketplace.emdashcms.com",
+  })`);
+          } else {
+            depsToAdd["@astrojs/node"] = "^11.1.5";
+            depsToAdd["@emdash-cms/plugin-audit-log"] = "^0.2.0";
+
+            imports.push("import node from '@astrojs/node';");
+            imports.push("import react from '@astrojs/react';");
+            imports.push("import emdash, { local } from 'emdash/astro';");
+            imports.push("import { sqlite } from 'emdash/db';");
+            imports.push("import auditLog from '@emdash-cms/plugin-audit-log';");
+
+            integrations.push("react()");
+            integrations.push(`emdash({
+    database: sqlite({ url: "file:./data.db" }),
+    storage: local({
+      directory: "./uploads",
+      baseUrl: "/_emdash/api/media/file",
+    }),
+    plugins: [auditLog],
+  })`);
+          }
         }
+
+        const adapterExpr = config.cms === "emdash" && config.deploy === "cloudflare"
+          ? "adapter: cloudflare()"
+          : "adapter: node({ mode: 'standalone' })";
 
         const astroConfigContent = `// @ts-check
 ${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  adapter: node({ mode: 'standalone' }),\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
+  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
@@ -2243,19 +2294,225 @@ export default defineStudioCMSConfig({
 
     // 3.2.3b Emdash CMS (Astro)
     if (config.cms === "emdash") {
-      depsToAdd["emdash"] = "^0.36.0";
-      depsToAdd["@astrojs/node"] = "^9.0.0";
-      const emdashConfig = `export default {
+      const slug = projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+
+      const emdashConfig = `/**
+ * Emdash CMS Configuration
+ * 
+ * Note: Core runtime configuration is registered in \`astro.config.mjs\` via \`emdash()\`.
+ * Database schema and content types are typed in \`emdash-env.d.ts\`.
+ */
+export default {
   contentDir: './src/content/blog',
-  mediaStorage: 'cloudflare-r2',
-  database: 'cloudflare-d1',
+  database: '${config.deploy === "cloudflare" ? "cloudflare-d1" : "sqlite"}',
+  mediaStorage: '${config.deploy === "cloudflare" ? "cloudflare-r2" : "local"}',
+  adminRoute: '/_emdash/admin',
   routing: {
-    prefix: '/blog',
+    prefix: '/posts',
   },
 };
 `;
       writeFileSync(join(resolvedTarget, "emdash.config.ts"), emdashConfig, "utf8");
 
+      // emdash-env.d.ts
+      const emdashEnvTypes = `// Generated by EmDash on dev server start
+// Do not edit manually
+
+/// <reference types="emdash/locals" />
+
+import type { ContentBylineCredit, TaxonomyTerm, PortableTextBlock } from "emdash";
+
+export interface Page {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  content?: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Post {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  featured_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  content?: PortableTextBlock[];
+  excerpt?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+declare module "emdash" {
+  interface EmDashCollections {
+    pages: Page;
+    posts: Post;
+  }
+}
+`;
+      writeFileSync(join(resolvedTarget, "emdash-env.d.ts"), emdashEnvTypes, "utf8");
+
+      // Seed directory & seed.json
+      const seedDir = join(resolvedTarget, "seed");
+      mkdirSync(seedDir, { recursive: true });
+      const seedData = {
+        "$schema": "https://emdashcms.com/seed.schema.json",
+        "version": "1",
+        "meta": {
+          "name": `${projectName} Starter`,
+          "description": "Publication powered by Astro and Emdash CMS.",
+          "author": authorName || "Principal"
+        },
+        "settings": {
+          "title": projectName,
+          "tagline": "Dynamic edge publication powered by Astro v7 & Emdash"
+        },
+        "collections": [
+          {
+            "slug": "posts",
+            "label": "Posts",
+            "labelSingular": "Post",
+            "supports": ["drafts", "revisions", "search", "seo"],
+            "commentsEnabled": true,
+            "fields": [
+              { "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+              { "slug": "featured_image", "label": "Featured Image", "type": "image" },
+              { "slug": "content", "label": "Content", "type": "portableText", "searchable": true },
+              { "slug": "excerpt", "label": "Excerpt", "type": "text" }
+            ]
+          },
+          {
+            "slug": "pages",
+            "label": "Pages",
+            "labelSingular": "Page",
+            "supports": ["drafts", "revisions", "search"],
+            "fields": [
+              { "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+              { "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+            ]
+          }
+        ],
+        "taxonomies": [
+          {
+            "name": "category",
+            "label": "Categories",
+            "labelSingular": "Category",
+            "hierarchical": true,
+            "collections": ["posts"],
+            "terms": [
+              { "slug": "editorial", "label": "Editorial" },
+              { "slug": "engineering", "label": "Engineering" }
+            ]
+          },
+          {
+            "name": "tag",
+            "label": "Tags",
+            "labelSingular": "Tag",
+            "hierarchical": false,
+            "collections": ["posts"],
+            "terms": [
+              { "slug": "astro", "label": "Astro" },
+              { "slug": "emdash", "label": "Emdash" },
+              { "slug": "edge", "label": "Edge" }
+            ]
+          }
+        ],
+        "content": [
+          {
+            "collection": "posts",
+            "slug": "welcome-to-" + slug,
+            "status": "published",
+            "data": {
+              "title": `Welcome to ${projectName}`,
+              "excerpt": "Edge-rendered publication powered by Astro v7 and Emdash CMS.",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": `Welcome to ${projectName}! This publication is powered by Astro v7 and Emdash CMS.`
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      };
+      writeFileSync(join(seedDir, "seed.json"), JSON.stringify(seedData, null, 2) + "\n", "utf8");
+
+      // Live content collections
+      writeFileSync(join(resolvedTarget, "src", "live.config.ts"), `import { defineLiveCollection } from "astro:content";
+import { emdashLoader } from "emdash/runtime";
+
+export const collections = {
+  _emdash: defineLiveCollection({ loader: emdashLoader() }),
+};
+`, "utf8");
+
+      // Cloudflare worker handler & wrangler.jsonc (if cloudflare)
+      if (config.deploy === "cloudflare") {
+        writeFileSync(join(resolvedTarget, "src", "worker.ts"), `import handler, { createScheduledHandler, PluginBridge } from "@emdash-cms/cloudflare/worker";
+
+export { PluginBridge };
+
+export default {
+  ...handler,
+  scheduled: createScheduledHandler(),
+} satisfies ExportedHandler;
+`, "utf8");
+
+        const wranglerConfig = {
+          "$schema": "node_modules/wrangler/config-schema.json",
+          "name": slug,
+          "main": "./src/worker.ts",
+          "compatibility_date": "2026-02-24",
+          "compatibility_flags": ["nodejs_compat"],
+          "d1_databases": [
+            {
+              "binding": "DB",
+              "database_name": slug
+            }
+          ],
+          "r2_buckets": [
+            {
+              "binding": "MEDIA",
+              "bucket_name": `${slug}-media`
+            }
+          ],
+          "worker_loaders": [
+            {
+              "binding": "LOADER"
+            }
+          ],
+          "triggers": {
+            "crons": ["* * * * *"]
+          }
+        };
+        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), JSON.stringify(wranglerConfig, null, 2) + "\n", "utf8");
+      }
+
+      // Visual admin redirects (/admin and /emdash)
+      const pagesDir = join(resolvedTarget, "src", "pages");
+      mkdirSync(pagesDir, { recursive: true });
+      writeFileSync(join(pagesDir, "admin.astro"), `---\nreturn Astro.redirect("/_emdash/admin");\n---\n`, "utf8");
+      writeFileSync(join(pagesDir, "emdash.astro"), `---\nreturn Astro.redirect("/_emdash/admin");\n---\n`, "utf8");
+
+      // Theme overrides
+      const stylesDir = join(resolvedTarget, "src", "styles");
+      mkdirSync(stylesDir, { recursive: true });
+      writeFileSync(join(stylesDir, "theme.css"), `:root {}\n\n.nav-admin {\n  margin-inline-start: var(--spacing-5);\n}\n`, "utf8");
+
+      // Markdown fallback in src/content/blog/
       const blogDir = join(resolvedTarget, "src", "content", "blog");
       mkdirSync(blogDir, { recursive: true });
       const welcomePost = `---
@@ -2277,6 +2534,7 @@ This publication is built on **Astro v7** and **Emdash CMS**, engineered for edg
 `;
       writeFileSync(join(blogDir, "welcome.md"), welcomePost, "utf8");
 
+      // Blog pages
       const blogPagesDir = join(resolvedTarget, "src", "pages", "blog");
       mkdirSync(blogPagesDir, { recursive: true });
       const blogIndexAstro = `---
@@ -2305,6 +2563,9 @@ const posts = [
         <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
         <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">Blog & Articles</h1>
         <p style="color: var(--color-text-muted, #94a3b8);">Serverless edge publication built on Astro and Emdash CMS.</p>
+        <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+          <a href="/admin" style="padding: 0.5rem 1rem; border-radius: 6px; background: #059669; color: #fff; text-decoration: none; font-weight: 600;">✍️ Access Emdash Admin (/admin)</a>
+        </div>
       </header>
 
       <section style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -2322,7 +2583,61 @@ const posts = [
 </html>
 `;
       writeFileSync(join(blogPagesDir, "index.astro"), blogIndexAstro, "utf8");
-      console.log("  ✅ Auto-wired: Emdash CMS (`./emdash.config.ts`, `./src/content/blog/`, and `./src/pages/blog/`)");
+
+      // Auto-wire tests/emdash.test.ts
+      const testsDir = join(resolvedTarget, "tests");
+      mkdirSync(testsDir, { recursive: true });
+      const emdashTestContent = `import { describe, expect, it } from "bun:test";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+describe("📰 Emdash CMS & Astro Integration Verification", () => {
+  it("verifies Emdash encryption key is provisioned in .env", () => {
+    expect(existsSync(join(process.cwd(), ".env"))).toBe(true);
+    const env = readFileSync(join(process.cwd(), ".env"), "utf8");
+    expect(env).toContain("EMDASH_ENCRYPTION_KEY=");
+    const keyMatch = env.match(/EMDASH_ENCRYPTION_KEY=(emdash_enc_v1_[A-Za-z0-9_-]+)/);
+    expect(keyMatch).not.toBeNull();
+  });
+
+  it("verifies Emdash live content collection is configured", () => {
+    expect(existsSync(join(process.cwd(), "src/live.config.ts"))).toBe(true);
+    const liveConfig = readFileSync(join(process.cwd(), "src/live.config.ts"), "utf8");
+    expect(liveConfig).toContain("defineLiveCollection");
+    expect(liveConfig).toContain("emdashLoader");
+  });
+
+  it("verifies Emdash seed data and schema typings are present", () => {
+    expect(existsSync(join(process.cwd(), "seed/seed.json"))).toBe(true);
+    const seed = JSON.parse(readFileSync(join(process.cwd(), "seed/seed.json"), "utf8"));
+    expect(seed).toHaveProperty("collections");
+    expect(seed).toHaveProperty("content");
+
+    expect(existsSync(join(process.cwd(), "emdash-env.d.ts"))).toBe(true);
+    const envTypes = readFileSync(join(process.cwd(), "emdash-env.d.ts"), "utf8");
+    expect(envTypes).toContain('declare module "emdash"');
+  });
+
+  it("verifies visual admin routing and redirects are configured", () => {
+    expect(existsSync(join(process.cwd(), "src/pages/admin.astro"))).toBe(true);
+    const adminAstro = readFileSync(join(process.cwd(), "src/pages/admin.astro"), "utf8");
+    expect(adminAstro).toContain('Astro.redirect("/_emdash/admin")');
+
+    expect(existsSync(join(process.cwd(), "src/pages/emdash.astro"))).toBe(true);
+    const emdashAstro = readFileSync(join(process.cwd(), "src/pages/emdash.astro"), "utf8");
+    expect(emdashAstro).toContain('Astro.redirect("/_emdash/admin")');
+  });
+
+  it("verifies astro.config.mjs wires emdash and react integrations", () => {
+    const astroConfig = readFileSync(join(process.cwd(), "astro.config.mjs"), "utf8");
+    expect(astroConfig).toContain('import emdash');
+    expect(astroConfig).toContain("react()");
+    expect(astroConfig).toContain("emdash(");
+  });
+});
+`;
+      writeFileSync(join(testsDir, "emdash.test.ts"), emdashTestContent, "utf8");
+      console.log("  ✅ Auto-wired: Emdash CMS (`./seed/seed.json`, `./emdash-env.d.ts`, `./src/live.config.ts`, `./src/pages/admin.astro`, and `./tests/emdash.test.ts`)");
     }
 
     // 3.2.4 Puck Visual Builder
@@ -3312,6 +3627,9 @@ export default config;
     } else if (config.cms === "studiocms") {
       envVars.push("CMS_ENCRYPTION_KEY=supersecret_cms_encryption_key_at_least_32_chars");
       envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
+    } else if (config.cms === "emdash") {
+      const emdashKey = "emdash_enc_v1_" + randomBytes(32).toString("base64url");
+      envVars.push(`EMDASH_ENCRYPTION_KEY=${emdashKey}`);
     }
     if (config.auth === "better-auth") {
       envVars.push("BETTER_AUTH_SECRET=supersecret_better_auth_secret_key_at_least_32_chars");
@@ -3330,8 +3648,14 @@ export default config;
     } else if (config.ecommerce === "vendure") {
       envVars.push("VENDURE_API_URL=http://localhost:3000/shop-api");
     }
+    const envVarsExample = envVars.map(v => {
+      if (v.startsWith("EMDASH_ENCRYPTION_KEY=")) {
+        return "EMDASH_ENCRYPTION_KEY=emdash_enc_v1_placeholder";
+      }
+      return v;
+    });
     const envExamplePath = join(resolvedTarget, ".env.example");
-    writeFileSync(envExamplePath, envVars.join("\n") + "\n", "utf8");
+    writeFileSync(envExamplePath, envVarsExample.join("\n") + "\n", "utf8");
     const envLocalPath = join(resolvedTarget, ".env");
     if (!existsSync(envLocalPath)) {
       writeFileSync(envLocalPath, envVars.join("\n") + "\n", "utf8");
@@ -3911,6 +4235,14 @@ exit 0
         pkg.scripts["dev:edge"] = "node --import tsx aria/scripts/project-command.ts dev:edge";
         pkg.scripts["build"] = "node --import tsx aria/scripts/project-command.ts build";
         pkg.scripts["preview"] = "node --import tsx aria/scripts/project-command.ts preview";
+      }
+
+      if (config.cms === "emdash") {
+        pkg.emdash = { seed: "seed/seed.json" };
+        pkg.scripts["typecheck"] = "astro check";
+        if (config.deploy === "cloudflare") {
+          pkg.scripts["deploy"] = "astro build && wrangler deploy";
+        }
       }
 
       if (config.ecommerce === "medusa") {
