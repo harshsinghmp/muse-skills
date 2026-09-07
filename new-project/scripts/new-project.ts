@@ -8,7 +8,7 @@
  *   Stage 3: Official Package Installation & Config Auto-Wiring
  *   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
  *   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
- *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
+ *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
  * 
  * Usage:
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
@@ -25,6 +25,7 @@ import os, { homedir } from "node:os";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { spawnSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 
 // Template source of truth located in ai-ready/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
@@ -100,7 +101,7 @@ Core Execution Stages:
   Stage 3: Official Package Installation & Config Auto-Wiring
   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
-  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
+  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
 
 Options:
   -n, --name <name>             Project name (default: directory name)
@@ -163,38 +164,542 @@ interface PaletteColors {
   primaryDark: string;
   secondary: string;
   accent: string;
+  surface?: string;
+  surfaceElevated?: string;
+  border?: string;
+  text?: string;
+  textMuted?: string;
+  textHeading?: string;
+  scale?: string[];
 }
 
 const PALETTES: Record<string, PaletteColors> = {
-  slate: {
-    primaryDefault: "oklch(0.25 0.02 260)",
-    primaryLight: "oklch(0.35 0.02 260)",
-    primaryDark: "oklch(0.15 0.01 260)",
-    secondary: "oklch(0.45 0.03 260)",
-    accent: "oklch(0.65 0.15 250)",
+  "gray": {
+    primaryDefault: "oklch(0.649 0 0)",
+    primaryLight: "oklch(0.606 0 0)",
+    primaryDark: "oklch(0.503 0 0)",
+    secondary: "oklch(0.865 0 0)",
+    accent: "oklch(0.818 0 0)",
+    surface: "oklch(0.162 0 0)",
+    surfaceElevated: "oklch(0.195 0 0)",
+    border: "oklch(0.302 0 0)",
+    text: "oklch(0.933 0 0)",
+    textMuted: "oklch(0.649 0 0)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.993 0 0)","oklch(0.982 0 0)","oklch(0.961 0 0)","oklch(0.94 0 0)","oklch(0.918 0 0)","oklch(0.894 0 0)","oklch(0.865 0 0)","oklch(0.818 0 0)","oklch(0.649 0 0)","oklch(0.606 0 0)","oklch(0.503 0 0)","oklch(0.375 0 0)"],
   },
-  indigo: {
-    primaryDefault: "oklch(0.52 0.22 260)",
-    primaryLight: "oklch(0.62 0.18 260)",
-    primaryDark: "oklch(0.42 0.24 260)",
-    secondary: "oklch(0.68 0.16 200)",
-    accent: "oklch(0.72 0.18 160)",
+  "slate": {
+    primaryDefault: "oklch(0.645 0.018 256)",
+    primaryLight: "oklch(0.601 0.02 256)",
+    primaryDark: "oklch(0.501 0.018 256)",
+    secondary: "oklch(0.859 0.012 256)",
+    accent: "oklch(0.811 0.016 256)",
+    surface: "oklch(0.165 0.007 264)",
+    surfaceElevated: "oklch(0.197 0.008 264)",
+    border: "oklch(0.303 0.013 264)",
+    text: "oklch(0.932 0.004 256)",
+    textMuted: "oklch(0.645 0.018 256)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.993 0.002 256)","oklch(0.982 0.002 256)","oklch(0.959 0.004 256)","oklch(0.936 0.006 256)","oklch(0.914 0.008 256)","oklch(0.889 0.01 256)","oklch(0.859 0.012 256)","oklch(0.811 0.016 256)","oklch(0.645 0.018 256)","oklch(0.601 0.02 256)","oklch(0.501 0.018 256)","oklch(0.378 0.016 256)"],
   },
-  emerald: {
+  "red": {
+    primaryDefault: "oklch(0.647 0.176 17)",
+    primaryLight: "oklch(0.61 0.186 17)",
+    primaryDark: "oklch(0.49 0.155 17)",
+    secondary: "oklch(0.856 0.101 17)",
+    accent: "oklch(0.802 0.124 17)",
+    surface: "oklch(0.195 0.03 17)",
+    surfaceElevated: "oklch(0.227 0.041 17)",
+    border: "oklch(0.348 0.111 17)",
+    text: "oklch(0.927 0.062 17)",
+    textMuted: "oklch(0.647 0.176 17)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.99 0.007 17)","oklch(0.982 0.013 17)","oklch(0.965 0.036 17)","oklch(0.946 0.051 17)","oklch(0.924 0.067 17)","oklch(0.895 0.083 17)","oklch(0.856 0.101 17)","oklch(0.802 0.124 17)","oklch(0.647 0.176 17)","oklch(0.61 0.186 17)","oklch(0.49 0.155 17)","oklch(0.367 0.102 17)"],
+  },
+  "blue": {
+    primaryDefault: "oklch(0.629 0.187 252)",
+    primaryLight: "oklch(0.587 0.193 252)",
+    primaryDark: "oklch(0.471 0.155 252)",
+    secondary: "oklch(0.836 0.112 252)",
+    accent: "oklch(0.772 0.142 252)",
+    surface: "oklch(0.181 0.028 252)",
+    surfaceElevated: "oklch(0.212 0.039 252)",
+    border: "oklch(0.328 0.107 252)",
+    text: "oklch(0.921 0.063 252)",
+    textMuted: "oklch(0.629 0.187 252)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.989 0.008 252)","oklch(0.978 0.014 252)","oklch(0.958 0.035 252)","oklch(0.936 0.053 252)","oklch(0.912 0.071 252)","oklch(0.88 0.09 252)","oklch(0.836 0.112 252)","oklch(0.772 0.142 252)","oklch(0.629 0.187 252)","oklch(0.587 0.193 252)","oklch(0.471 0.155 252)","oklch(0.353 0.103 252)"],
+  },
+  "green": {
+    primaryDefault: "oklch(0.623 0.178 145)",
+    primaryLight: "oklch(0.579 0.179 145)",
+    primaryDark: "oklch(0.464 0.143 145)",
+    secondary: "oklch(0.823 0.125 145)",
+    accent: "oklch(0.762 0.153 145)",
+    surface: "oklch(0.178 0.029 145)",
+    surfaceElevated: "oklch(0.209 0.041 145)",
+    border: "oklch(0.322 0.103 145)",
+    text: "oklch(0.919 0.063 145)",
+    textMuted: "oklch(0.623 0.178 145)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.989 0.01 145)","oklch(0.978 0.018 145)","oklch(0.956 0.042 145)","oklch(0.931 0.062 145)","oklch(0.902 0.082 145)","oklch(0.868 0.102 145)","oklch(0.823 0.125 145)","oklch(0.762 0.153 145)","oklch(0.623 0.178 145)","oklch(0.579 0.179 145)","oklch(0.464 0.143 145)","oklch(0.348 0.095 145)"],
+  },
+  "yellow": {
+    primaryDefault: "oklch(0.725 0.187 91)",
+    primaryLight: "oklch(0.667 0.177 91)",
+    primaryDark: "oklch(0.527 0.136 91)",
+    secondary: "oklch(0.886 0.147 91)",
+    accent: "oklch(0.835 0.176 91)",
+    surface: "oklch(0.192 0.026 91)",
+    surfaceElevated: "oklch(0.223 0.037 91)",
+    border: "oklch(0.336 0.097 91)",
+    text: "oklch(0.943 0.063 91)",
+    textMuted: "oklch(0.725 0.187 91)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.991 0.01 91)","oklch(0.985 0.021 91)","oklch(0.972 0.049 91)","oklch(0.96 0.074 91)","oklch(0.943 0.098 91)","oklch(0.92 0.122 91)","oklch(0.886 0.147 91)","oklch(0.835 0.176 91)","oklch(0.725 0.187 91)","oklch(0.667 0.177 91)","oklch(0.527 0.136 91)","oklch(0.385 0.088 91)"],
+  },
+  "orange": {
+    primaryDefault: "oklch(0.67 0.185 55)",
+    primaryLight: "oklch(0.626 0.187 55)",
+    primaryDark: "oklch(0.505 0.15 55)",
+    secondary: "oklch(0.861 0.128 55)",
+    accent: "oklch(0.804 0.156 55)",
+    surface: "oklch(0.188 0.028 55)",
+    surfaceElevated: "oklch(0.22 0.039 55)",
+    border: "oklch(0.335 0.103 55)",
+    text: "oklch(0.935 0.063 55)",
+    textMuted: "oklch(0.67 0.185 55)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.991 0.009 55)","oklch(0.983 0.017 55)","oklch(0.967 0.042 55)","oklch(0.95 0.063 55)","oklch(0.928 0.084 55)","oklch(0.9 0.105 55)","oklch(0.861 0.128 55)","oklch(0.804 0.156 55)","oklch(0.67 0.185 55)","oklch(0.626 0.187 55)","oklch(0.505 0.15 55)","oklch(0.377 0.099 55)"],
+  },
+  "purple": {
+    primaryDefault: "oklch(0.637 0.185 295)",
+    primaryLight: "oklch(0.594 0.191 295)",
+    primaryDark: "oklch(0.478 0.154 295)",
+    secondary: "oklch(0.843 0.113 295)",
+    accent: "oklch(0.78 0.141 295)",
+    surface: "oklch(0.183 0.027 295)",
+    surfaceElevated: "oklch(0.214 0.038 295)",
+    border: "oklch(0.33 0.105 295)",
+    text: "oklch(0.924 0.063 295)",
+    textMuted: "oklch(0.637 0.185 295)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.991 0.009 295)","oklch(0.982 0.015 295)","oklch(0.963 0.036 295)","oklch(0.942 0.054 295)","oklch(0.917 0.072 295)","oklch(0.886 0.091 295)","oklch(0.843 0.113 295)","oklch(0.78 0.141 295)","oklch(0.637 0.185 295)","oklch(0.594 0.191 295)","oklch(0.478 0.154 295)","oklch(0.358 0.102 295)"],
+  },
+  "pink": {
+    primaryDefault: "oklch(0.641 0.185 343)",
+    primaryLight: "oklch(0.599 0.191 343)",
+    primaryDark: "oklch(0.483 0.154 343)",
+    secondary: "oklch(0.847 0.117 343)",
+    accent: "oklch(0.785 0.144 343)",
+    surface: "oklch(0.186 0.027 343)",
+    surfaceElevated: "oklch(0.217 0.038 343)",
+    border: "oklch(0.333 0.103 343)",
+    text: "oklch(0.927 0.063 343)",
+    textMuted: "oklch(0.641 0.185 343)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.99 0.009 343)","oklch(0.981 0.016 343)","oklch(0.963 0.038 343)","oklch(0.943 0.057 343)","oklch(0.919 0.076 343)","oklch(0.889 0.095 343)","oklch(0.847 0.117 343)","oklch(0.785 0.144 343)","oklch(0.641 0.185 343)","oklch(0.599 0.191 343)","oklch(0.483 0.154 343)","oklch(0.361 0.102 343)"],
+  },
+  "cyan": {
+    primaryDefault: "oklch(0.623 0.178 210)",
+    primaryLight: "oklch(0.579 0.179 210)",
+    primaryDark: "oklch(0.464 0.143 210)",
+    secondary: "oklch(0.823 0.125 210)",
+    accent: "oklch(0.762 0.153 210)",
+    surface: "oklch(0.178 0.029 210)",
+    surfaceElevated: "oklch(0.209 0.041 210)",
+    border: "oklch(0.322 0.103 210)",
+    text: "oklch(0.919 0.063 210)",
+    textMuted: "oklch(0.623 0.178 210)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.989 0.01 210)","oklch(0.978 0.018 210)","oklch(0.956 0.042 210)","oklch(0.931 0.062 210)","oklch(0.902 0.082 210)","oklch(0.868 0.102 210)","oklch(0.823 0.125 210)","oklch(0.762 0.153 210)","oklch(0.623 0.178 210)","oklch(0.579 0.179 210)","oklch(0.464 0.143 210)","oklch(0.348 0.095 210)"],
+  },
+  "teal": {
+    primaryDefault: "oklch(0.618 0.182 180)",
+    primaryLight: "oklch(0.574 0.182 180)",
+    primaryDark: "oklch(0.461 0.146 180)",
+    secondary: "oklch(0.817 0.131 180)",
+    accent: "oklch(0.755 0.16 180)",
+    surface: "oklch(0.176 0.03 180)",
+    surfaceElevated: "oklch(0.207 0.042 180)",
+    border: "oklch(0.319 0.106 180)",
+    text: "oklch(0.916 0.064 180)",
+    textMuted: "oklch(0.618 0.182 180)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.989 0.011 180)","oklch(0.977 0.019 180)","oklch(0.954 0.044 180)","oklch(0.928 0.065 180)","oklch(0.898 0.086 180)","oklch(0.863 0.107 180)","oklch(0.817 0.131 180)","oklch(0.755 0.16 180)","oklch(0.618 0.182 180)","oklch(0.574 0.182 180)","oklch(0.461 0.146 180)","oklch(0.346 0.097 180)"],
+  },
+  "indigo": {
+    primaryDefault: "oklch(0.632 0.185 275)",
+    primaryLight: "oklch(0.59 0.191 275)",
+    primaryDark: "oklch(0.474 0.154 275)",
+    secondary: "oklch(0.84 0.11 275)",
+    accent: "oklch(0.776 0.139 275)",
+    surface: "oklch(0.182 0.027 275)",
+    surfaceElevated: "oklch(0.213 0.038 275)",
+    border: "oklch(0.329 0.104 275)",
+    text: "oklch(0.922 0.063 275)",
+    textMuted: "oklch(0.632 0.185 275)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.99 0.008 275)","oklch(0.979 0.014 275)","oklch(0.96 0.034 275)","oklch(0.939 0.051 275)","oklch(0.914 0.069 275)","oklch(0.883 0.088 275)","oklch(0.84 0.11 275)","oklch(0.776 0.139 275)","oklch(0.632 0.185 275)","oklch(0.59 0.191 275)","oklch(0.474 0.154 275)","oklch(0.355 0.102 275)"],
+  },
+  "amber": {
+    primaryDefault: "oklch(0.733 0.194 75)",
+    primaryLight: "oklch(0.676 0.184 75)",
+    primaryDark: "oklch(0.534 0.141 75)",
+    secondary: "oklch(0.887 0.154 75)",
+    accent: "oklch(0.837 0.184 75)",
+    surface: "oklch(0.193 0.027 75)",
+    surfaceElevated: "oklch(0.224 0.038 75)",
+    border: "oklch(0.338 0.1 75)",
+    text: "oklch(0.945 0.064 75)",
+    textMuted: "oklch(0.733 0.194 75)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.991 0.011 75)","oklch(0.985 0.022 75)","oklch(0.973 0.052 75)","oklch(0.961 0.078 75)","oklch(0.944 0.103 75)","oklch(0.921 0.128 75)","oklch(0.887 0.154 75)","oklch(0.837 0.184 75)","oklch(0.733 0.194 75)","oklch(0.676 0.184 75)","oklch(0.534 0.141 75)","oklch(0.389 0.091 75)"],
+  },
+  "lime": {
+    primaryDefault: "oklch(0.703 0.205 120)",
+    primaryLight: "oklch(0.651 0.195 120)",
+    primaryDark: "oklch(0.512 0.149 120)",
+    secondary: "oklch(0.859 0.162 120)",
+    accent: "oklch(0.805 0.193 120)",
+    surface: "oklch(0.185 0.031 120)",
+    surfaceElevated: "oklch(0.216 0.043 120)",
+    border: "oklch(0.331 0.111 120)",
+    text: "oklch(0.933 0.068 120)",
+    textMuted: "oklch(0.703 0.205 120)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.99 0.012 120)","oklch(0.981 0.024 120)","oklch(0.965 0.055 120)","oklch(0.947 0.082 120)","oklch(0.925 0.108 120)","oklch(0.897 0.134 120)","oklch(0.859 0.162 120)","oklch(0.805 0.193 120)","oklch(0.703 0.205 120)","oklch(0.651 0.195 120)","oklch(0.512 0.149 120)","oklch(0.373 0.096 120)"],
+  },
+  "mint": {
+    primaryDefault: "oklch(0.609 0.192 165)",
+    primaryLight: "oklch(0.565 0.192 165)",
+    primaryDark: "oklch(0.454 0.154 165)",
+    secondary: "oklch(0.811 0.143 165)",
+    accent: "oklch(0.747 0.175 165)",
+    surface: "oklch(0.175 0.032 165)",
+    surfaceElevated: "oklch(0.206 0.045 165)",
+    border: "oklch(0.318 0.113 165)",
+    text: "oklch(0.912 0.068 165)",
+    textMuted: "oklch(0.609 0.192 165)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.989 0.012 165)","oklch(0.977 0.021 165)","oklch(0.953 0.048 165)","oklch(0.926 0.071 165)","oklch(0.895 0.094 165)","oklch(0.859 0.117 165)","oklch(0.811 0.143 165)","oklch(0.747 0.175 165)","oklch(0.609 0.192 165)","oklch(0.565 0.192 165)","oklch(0.454 0.154 165)","oklch(0.341 0.102 165)"],
+  },
+  "tomato": {
+    primaryDefault: "oklch(0.657 0.183 25)",
+    primaryLight: "oklch(0.615 0.189 25)",
+    primaryDark: "oklch(0.497 0.152 25)",
+    secondary: "oklch(0.859 0.118 25)",
+    accent: "oklch(0.803 0.145 25)",
+    surface: "oklch(0.191 0.029 25)",
+    surfaceElevated: "oklch(0.222 0.04 25)",
+    border: "oklch(0.338 0.106 25)",
+    text: "oklch(0.933 0.063 25)",
+    textMuted: "oklch(0.657 0.183 25)",
+    textHeading: "#ffffff",
+    scale: ["oklch(0.99 0.008 25)","oklch(0.982 0.015 25)","oklch(0.966 0.038 25)","oklch(0.948 0.057 25)","oklch(0.926 0.076 25)","oklch(0.898 0.096 25)","oklch(0.859 0.118 25)","oklch(0.803 0.145 25)","oklch(0.657 0.183 25)","oklch(0.615 0.189 25)","oklch(0.497 0.152 25)","oklch(0.372 0.1 25)"],
+  },
+  "olive-garden": {
+    primaryDefault: "oklch(0.24 0.03 115)",
+    primaryLight: "oklch(0.45 0.06 110)",
+    primaryDark: "oklch(0.57 0.13 50)",
+    secondary: "oklch(0.68 0.07 105)",
+    accent: "oklch(0.97 0.03 95)",
+    surface: "oklch(0.24 0.03 115)",
+    surfaceElevated: "oklch(0.45 0.06 110)",
+    border: "oklch(0.68 0.07 105)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.24 0.03 115)","oklch(0.45 0.06 110)","oklch(0.68 0.07 105)","oklch(0.97 0.03 95)","oklch(0.72 0.11 65)","oklch(0.57 0.13 50)"],
+  },
+  "forest": {
+    primaryDefault: "oklch(0.87 0.01 95)",
+    primaryLight: "oklch(0.73 0.05 125)",
+    primaryDark: "oklch(0.35 0.05 150)",
+    secondary: "oklch(0.56 0.08 135)",
+    accent: "oklch(0.56 0.08 135)",
+    surface: "oklch(0.75 0.01 95)",
+    surfaceElevated: "oklch(0.65 0.05 125)",
+    border: "oklch(0.56 0.08 135)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.87 0.01 95)","oklch(0.73 0.05 125)","oklch(0.56 0.08 135)","oklch(0.41 0.06 145)","oklch(0.35 0.05 150)"],
+  },
+  "steel": {
+    primaryDefault: "oklch(0.98 0.001 240)",
+    primaryLight: "oklch(0.94 0.002 240)",
+    primaryDark: "oklch(0.2 0.003 240)",
+    secondary: "oklch(0.9 0.003 240)",
+    accent: "oklch(0.75 0.005 240)",
+    surface: "oklch(0.2 0.003 240)",
+    surfaceElevated: "oklch(0.3 0.004 240)",
+    border: "oklch(0.4 0.005 240)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.98 0.001 240)","oklch(0.94 0.002 240)","oklch(0.9 0.003 240)","oklch(0.85 0.004 240)","oklch(0.75 0.005 240)","oklch(0.54 0.006 240)","oklch(0.4 0.005 240)","oklch(0.3 0.004 240)","oklch(0.2 0.003 240)"],
+  },
+  "deep-sea": {
+    primaryDefault: "oklch(0.48 0.14 255)",
+    primaryLight: "oklch(0.42 0.13 255)",
+    primaryDark: "oklch(0.65 0.02 250)",
+    secondary: "oklch(0.34 0.11 255)",
+    accent: "oklch(0.14 0.05 255)",
+    surface: "oklch(0.48 0.14 255)",
+    surfaceElevated: "oklch(0.42 0.13 255)",
+    border: "oklch(0.34 0.11 255)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.48 0.14 255)","oklch(0.42 0.13 255)","oklch(0.34 0.11 255)","oklch(0.24 0.08 255)","oklch(0.18 0.06 255)","oklch(0.14 0.05 255)","oklch(0.32 0.04 250)","oklch(0.47 0.03 250)","oklch(0.57 0.02 250)","oklch(0.65 0.02 250)"],
+  },
+  "sand": {
+    primaryDefault: "oklch(0.94 0.005 85)",
+    primaryLight: "oklch(0.84 0.02 65)",
+    primaryDark: "oklch(0.79 0.04 45)",
+    secondary: "oklch(0.94 0.02 70)",
+    accent: "oklch(0.94 0.02 70)",
+    surface: "oklch(0.79 0.04 45)",
+    surfaceElevated: "oklch(0.77 0.035 48)",
+    border: "oklch(0.82 0.025 60)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.94 0.005 85)","oklch(0.84 0.02 65)","oklch(0.94 0.02 70)","oklch(0.87 0.03 55)","oklch(0.79 0.04 45)"],
+  },
+  "ocean-breeze": {
+    primaryDefault: "oklch(0.4 0.15 220)",
+    primaryLight: "oklch(0.45 0.15 230)",
+    primaryDark: "oklch(0.85 0.08 250)",
+    secondary: "oklch(0.55 0.18 235)",
+    accent: "oklch(0.65 0.15 240)",
+    surface: "oklch(0.4 0.15 220)",
+    surfaceElevated: "oklch(0.45 0.15 230)",
+    border: "oklch(0.55 0.18 235)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.4 0.15 220)","oklch(0.45 0.15 230)","oklch(0.55 0.18 235)","oklch(0.6 0.16 238)","oklch(0.65 0.15 240)","oklch(0.7 0.13 243)","oklch(0.75 0.12 245)","oklch(0.85 0.08 250)"],
+  },
+  "sunset-vibes": {
+    primaryDefault: "oklch(0.3 0.15 25)",
+    primaryLight: "oklch(0.4 0.18 30)",
+    primaryDark: "oklch(0.85 0.12 55)",
+    secondary: "oklch(0.5 0.2 35)",
+    accent: "oklch(0.65 0.22 45)",
+    surface: "oklch(0.3 0.15 25)",
+    surfaceElevated: "oklch(0.4 0.18 30)",
+    border: "oklch(0.5 0.2 35)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.3 0.15 25)","oklch(0.4 0.18 30)","oklch(0.5 0.2 35)","oklch(0.6 0.22 40)","oklch(0.65 0.22 45)","oklch(0.7 0.2 48)","oklch(0.75 0.18 50)","oklch(0.85 0.12 55)"],
+  },
+  "forest-fresh": {
+    primaryDefault: "oklch(0.3 0.1 145)",
+    primaryLight: "oklch(0.35 0.12 150)",
+    primaryDark: "oklch(0.75 0.12 170)",
+    secondary: "oklch(0.45 0.15 155)",
+    accent: "oklch(0.55 0.18 160)",
+    surface: "oklch(0.3 0.1 145)",
+    surfaceElevated: "oklch(0.35 0.12 150)",
+    border: "oklch(0.45 0.15 155)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.3 0.1 145)","oklch(0.35 0.12 150)","oklch(0.45 0.15 155)","oklch(0.5 0.16 158)","oklch(0.55 0.18 160)","oklch(0.6 0.16 163)","oklch(0.65 0.15 165)","oklch(0.75 0.12 170)"],
+  },
+  "neon-nights": {
+    primaryDefault: "oklch(0.5 0.22 295)",
+    primaryLight: "oklch(0.55 0.25 300)",
+    primaryDark: "oklch(0.75 0.2 340)",
+    secondary: "oklch(0.58 0.27 305)",
+    accent: "oklch(0.63 0.29 315)",
+    surface: "oklch(0.5 0.22 295)",
+    surfaceElevated: "oklch(0.55 0.25 300)",
+    border: "oklch(0.58 0.27 305)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.5 0.22 295)","oklch(0.55 0.25 300)","oklch(0.58 0.27 305)","oklch(0.6 0.28 310)","oklch(0.63 0.29 315)","oklch(0.65 0.3 320)","oklch(0.7 0.25 330)","oklch(0.75 0.2 340)"],
+  },
+  "earthy-tones": {
+    primaryDefault: "oklch(0.35 0.06 55)",
+    primaryLight: "oklch(0.4 0.08 60)",
+    primaryDark: "oklch(0.8 0.08 40)",
+    secondary: "oklch(0.45 0.09 58)",
+    accent: "oklch(0.55 0.11 53)",
+    surface: "oklch(0.35 0.06 55)",
+    surfaceElevated: "oklch(0.4 0.08 60)",
+    border: "oklch(0.45 0.09 58)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.35 0.06 55)","oklch(0.4 0.08 60)","oklch(0.45 0.09 58)","oklch(0.5 0.1 55)","oklch(0.55 0.11 53)","oklch(0.6 0.12 50)","oklch(0.7 0.1 45)","oklch(0.8 0.08 40)"],
+  },
+  "cherry-blossom": {
+    primaryDefault: "oklch(0.75 0.1 350)",
+    primaryLight: "oklch(0.78 0.11 355)",
+    primaryDark: "oklch(0.92 0.05 25)",
+    secondary: "oklch(0.82 0.12 0)",
+    accent: "oklch(0.87 0.11 10)",
+    surface: "oklch(0.65 0.1 350)",
+    surfaceElevated: "oklch(0.68 0.11 355)",
+    border: "oklch(0.72 0.12 0)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.75 0.1 350)","oklch(0.78 0.11 355)","oklch(0.82 0.12 0)","oklch(0.85 0.13 5)","oklch(0.87 0.11 10)","oklch(0.88 0.09 15)","oklch(0.9 0.07 20)","oklch(0.92 0.05 25)"],
+  },
+  "midnight-blue": {
+    primaryDefault: "oklch(0.25 0.08 250)",
+    primaryLight: "oklch(0.3 0.1 255)",
+    primaryDark: "oklch(0.65 0.12 280)",
+    secondary: "oklch(0.35 0.12 260)",
+    accent: "oklch(0.45 0.15 270)",
+    surface: "oklch(0.25 0.08 250)",
+    surfaceElevated: "oklch(0.3 0.1 255)",
+    border: "oklch(0.35 0.12 260)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.25 0.08 250)","oklch(0.3 0.1 255)","oklch(0.35 0.12 260)","oklch(0.4 0.14 265)","oklch(0.45 0.15 270)","oklch(0.5 0.16 273)","oklch(0.55 0.15 275)","oklch(0.65 0.12 280)"],
+  },
+  "lavender-fields": {
+    primaryDefault: "oklch(0.6 0.12 290)",
+    primaryLight: "oklch(0.65 0.13 292)",
+    primaryDark: "oklch(0.88 0.08 308)",
+    secondary: "oklch(0.7 0.14 295)",
+    accent: "oklch(0.78 0.14 300)",
+    surface: "oklch(0.5 0.12 290)",
+    surfaceElevated: "oklch(0.55 0.13 292)",
+    border: "oklch(0.6 0.14 295)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.6 0.12 290)","oklch(0.65 0.13 292)","oklch(0.7 0.14 295)","oklch(0.75 0.15 298)","oklch(0.78 0.14 300)","oklch(0.82 0.12 302)","oklch(0.85 0.1 305)","oklch(0.88 0.08 308)"],
+  },
+  "coral-reef": {
+    primaryDefault: "oklch(0.55 0.18 15)",
+    primaryLight: "oklch(0.6 0.19 18)",
+    primaryDark: "oklch(0.85 0.12 32)",
+    secondary: "oklch(0.65 0.2 20)",
+    accent: "oklch(0.72 0.2 25)",
+    surface: "oklch(0.45 0.18 15)",
+    surfaceElevated: "oklch(0.5 0.19 18)",
+    border: "oklch(0.55 0.2 20)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.55 0.18 15)","oklch(0.6 0.19 18)","oklch(0.65 0.2 20)","oklch(0.68 0.21 22)","oklch(0.72 0.2 25)","oklch(0.75 0.18 28)","oklch(0.8 0.15 30)","oklch(0.85 0.12 32)"],
+  },
+  "autumn-leaves": {
+    primaryDefault: "oklch(0.4 0.15 35)",
+    primaryLight: "oklch(0.45 0.17 38)",
+    primaryDark: "oklch(0.75 0.14 52)",
+    secondary: "oklch(0.5 0.18 40)",
+    accent: "oklch(0.6 0.2 45)",
+    surface: "oklch(0.4 0.15 35)",
+    surfaceElevated: "oklch(0.45 0.17 38)",
+    border: "oklch(0.5 0.18 40)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.4 0.15 35)","oklch(0.45 0.17 38)","oklch(0.5 0.18 40)","oklch(0.55 0.2 42)","oklch(0.6 0.2 45)","oklch(0.65 0.18 48)","oklch(0.7 0.16 50)","oklch(0.75 0.14 52)"],
+  },
+  "arctic-frost": {
+    primaryDefault: "oklch(0.7 0.08 200)",
+    primaryLight: "oklch(0.75 0.09 205)",
+    primaryDark: "oklch(0.93 0.05 235)",
+    secondary: "oklch(0.8 0.1 210)",
+    accent: "oklch(0.85 0.1 220)",
+    surface: "oklch(0.6 0.08 200)",
+    surfaceElevated: "oklch(0.65 0.09 205)",
+    border: "oklch(0.7 0.1 210)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.7 0.08 200)","oklch(0.75 0.09 205)","oklch(0.8 0.1 210)","oklch(0.82 0.11 215)","oklch(0.85 0.1 220)","oklch(0.87 0.09 225)","oklch(0.9 0.07 230)","oklch(0.93 0.05 235)"],
+  },
+  "vintage-rose": {
+    primaryDefault: "oklch(0.5 0.1 340)",
+    primaryLight: "oklch(0.55 0.11 345)",
+    primaryDark: "oklch(0.85 0.08 15)",
+    secondary: "oklch(0.6 0.12 350)",
+    accent: "oklch(0.7 0.14 0)",
+    surface: "oklch(0.5 0.1 340)",
+    surfaceElevated: "oklch(0.55 0.11 345)",
+    border: "oklch(0.6 0.12 350)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.5 0.1 340)","oklch(0.55 0.11 345)","oklch(0.6 0.12 350)","oklch(0.65 0.13 355)","oklch(0.7 0.14 0)","oklch(0.75 0.12 5)","oklch(0.8 0.1 10)","oklch(0.85 0.08 15)"],
+  },
+  "tropical-paradise": {
+    primaryDefault: "oklch(0.5 0.2 140)",
+    primaryLight: "oklch(0.55 0.21 145)",
+    primaryDark: "oklch(0.8 0.14 175)",
+    secondary: "oklch(0.6 0.22 150)",
+    accent: "oklch(0.68 0.2 160)",
+    surface: "oklch(0.5 0.2 140)",
+    surfaceElevated: "oklch(0.55 0.21 145)",
+    border: "oklch(0.6 0.22 150)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.5 0.2 140)","oklch(0.55 0.21 145)","oklch(0.6 0.22 150)","oklch(0.65 0.22 155)","oklch(0.68 0.2 160)","oklch(0.72 0.18 165)","oklch(0.75 0.16 170)","oklch(0.8 0.14 175)"],
+  },
+  "desert-sand": {
+    primaryDefault: "oklch(0.5 0.1 70)",
+    primaryLight: "oklch(0.55 0.11 68)",
+    primaryDark: "oklch(0.85 0.08 52)",
+    secondary: "oklch(0.6 0.12 65)",
+    accent: "oklch(0.7 0.14 60)",
+    surface: "oklch(0.5 0.1 70)",
+    surfaceElevated: "oklch(0.55 0.11 68)",
+    border: "oklch(0.6 0.12 65)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.5 0.1 70)","oklch(0.55 0.11 68)","oklch(0.6 0.12 65)","oklch(0.65 0.13 62)","oklch(0.7 0.14 60)","oklch(0.75 0.12 58)","oklch(0.8 0.1 55)","oklch(0.85 0.08 52)"],
+  },
+  "berry-burst": {
+    primaryDefault: "oklch(0.4 0.18 330)",
+    primaryLight: "oklch(0.45 0.2 335)",
+    primaryDark: "oklch(0.75 0.15 5)",
+    secondary: "oklch(0.5 0.22 340)",
+    accent: "oklch(0.6 0.22 350)",
+    surface: "oklch(0.4 0.18 330)",
+    surfaceElevated: "oklch(0.45 0.2 335)",
+    border: "oklch(0.5 0.22 340)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.4 0.18 330)","oklch(0.45 0.2 335)","oklch(0.5 0.22 340)","oklch(0.55 0.23 345)","oklch(0.6 0.22 350)","oklch(0.65 0.2 355)","oklch(0.7 0.18 0)","oklch(0.75 0.15 5)"],
+  },
+  "pastel-dreamland-adventure": {
+    primaryDefault: "oklch(0.82 0.08 285)",
+    primaryLight: "oklch(0.85 0.08 300)",
+    primaryDark: "oklch(0.85 0.07 240)",
+    secondary: "oklch(0.88 0.06 320)",
+    accent: "oklch(0.85 0.1 350)",
+    surface: "oklch(0.72 0.08 285)",
+    surfaceElevated: "oklch(0.75 0.08 300)",
+    border: "oklch(0.78 0.06 320)",
+    text: "oklch(0.96 0.01 260)",
+    textMuted: "oklch(0.72 0.04 260)",
+    textHeading: "oklch(0.99 0.01 260)",
+    scale: ["oklch(0.82 0.08 285)","oklch(0.85 0.08 300)","oklch(0.88 0.06 320)","oklch(0.86 0.09 340)","oklch(0.85 0.1 350)","oklch(0.87 0.07 10)","oklch(0.88 0.05 220)","oklch(0.85 0.07 240)"],
+  },
+  "emerald": {
     primaryDefault: "oklch(0.55 0.18 150)",
     primaryLight: "oklch(0.65 0.14 150)",
     primaryDark: "oklch(0.45 0.20 150)",
     secondary: "oklch(0.65 0.12 180)",
     accent: "oklch(0.75 0.15 85)",
   },
-  amber: {
-    primaryDefault: "oklch(0.55 0.16 55)",
-    primaryLight: "oklch(0.65 0.13 55)",
-    primaryDark: "oklch(0.45 0.18 55)",
-    secondary: "oklch(0.68 0.12 75)",
-    accent: "oklch(0.75 0.18 40)",
-  },
-  violet: {
+  "violet": {
     primaryDefault: "oklch(0.55 0.25 300)",
     primaryLight: "oklch(0.65 0.20 300)",
     primaryDark: "oklch(0.45 0.27 300)",
@@ -324,6 +829,57 @@ function getPresetConfig(preset: string): StackConfig {
         state: "nanostores",
         mobile: "none",
         cms: "ariabuilder",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
+    case "plain-astro":
+    case "astro-plain":
+      return {
+        intent: "brochure",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "none",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
+    case "git-cms":
+    case "astro-git":
+      return {
+        intent: "content",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "none",
+        cms: "git",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
+    case "sitepins":
+    case "astro-sitepins":
+      return {
+        intent: "content",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "none",
+        cms: "sitepins",
         puck: false,
         ecommerce: "none",
         db: "none",
@@ -489,7 +1045,7 @@ async function main() {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
 
     try {
-      console.log("\n🎯 STAGE 1: Purpose-First Root Prompt & Project Identity");
+      console.log("\n🎯 STAGE 1: Project Destination & Identity");
 
       // 1. Path & Identity
       if (!targetPath) {
@@ -499,291 +1055,66 @@ async function main() {
         const defaultName = basename(resolve(process.cwd(), targetPath));
         projectName = await ask(rl, "🏷️  Project Name", defaultName);
       }
-      if (!projectDesc) {
-        projectDesc = await ask(
-          rl,
-          "📝 One-Line Tagline / Vision",
-          `${projectName} - Modern application governed by DOX Engine.`
-        );
-      }
-      if (!authorName) {
-        authorName = await ask(rl, "👤 Author / Organization", projectName);
-      }
-      if (!targetAudience) {
-        targetAudience = await ask(rl, "👥 Target Audience / Users", "Developers, creators, and modern teams");
-      }
-      if (!coreProblem) {
-        coreProblem = await ask(rl, "🎯 Core Problem Solved", "Delivering fast, accessible, and structured user experiences");
-      }
-      if (!coreFeatures) {
-        coreFeatures = await ask(
-          rl,
-          "✨ Key Features (comma-separated)",
-          "Core application shell, Responsive modern UI, Fast API integration"
-        );
-      }
-      if (!industry) {
-        industry = await ask(rl, "🏢 Industry / Market Niche", "Modern Web & Technology Services");
-      }
-      if (!offerings) {
-        offerings = await ask(
-          rl,
-          "📦 Core Offerings / Catalog Items",
-          "Starter tier, Professional suite, Enterprise solution"
-        );
-      }
 
-      // 2. Purpose-First Root Prompt
-      console.log("\n🎯 What is the primary purpose of this project?");
-      console.log("  [1] Static Website          (Brochure, portfolio, landing page, minimal or zero compute)");
-      console.log("  [2] Dynamic Content Website (Blog, publication, documentation, agency editorial)");
-      console.log("  [3] Ecommerce Storefront    (Catalog, shopping cart, checkout, payments, inventory)");
-      console.log("  [4] Full-Stack Web App      (SaaS, dashboard, auth, multi-tenant DB, background jobs)");
-      console.log("  [5] Mobile Application      (Native iOS/Android, Expo React Native, or web-to-APK)");
-      console.log("  [6] Custom / Infrastructure (Library, monorepo package, agent workspace, custom stack)");
+      // =====================================================================
+      // STAGE 2: Progressive Decision Pipeline (5-Step Technical Architecture)
+      // =====================================================================
+      console.log("\n⚡ STAGE 2: Progressive Technical Architecture Pipeline");
 
-      const purposeChoice = await ask(rl, "Select primary purpose [1-6]", "1");
+      // Step 1: Project Type / Intent
+      console.log("\n🎯 Step 1: Project Type");
+      console.log("  [1] Static & Content Site    (Portfolio, blog, publication, documentation, landing page) [Default]");
+      console.log("  [2] Web Application & SaaS   (Dashboard, authenticated portal, database application)");
+      console.log("  [3] E-Commerce Storefront     (Product catalog, shopping cart, checkout, payments)");
+      console.log("  [4] Mobile Application       (Cross-platform iOS/Android app via Expo or Capacitor)");
+      console.log("  [5] Custom / DOX Baseline    (Agent governance container on existing workspace)");
+
+      const purposeChoice = await ask(rl, "Select project type [1-5]", "1");
       const purposeMap: Record<string, string> = {
-        "1": "brochure",
-        "2": "content",
+        "1": "content",
+        "2": "app",
         "3": "ecommerce",
-        "4": "app",
-        "5": "mobile",
-        "6": "governance",
+        "4": "mobile",
+        "5": "governance",
       };
-      config.intent = purposeMap[purposeChoice] || "brochure";
+      config.intent = purposeMap[purposeChoice] || "content";
 
-      // =====================================================================
-      // STAGE 2: Hierarchical Decision Tree (Choice -> Sub-choice -> Sub-sub-choice)
-      // =====================================================================
-      console.log("\n⚡ STAGE 2: Hierarchical Decision Tree");
-
-      if (config.intent === "brochure") {
-        // Branch A: Static Website / Landing Page
-        console.log("\n⚡ Branch A (Static Website / Landing Page) Framework:");
-        console.log("  [1] Pure HTML/CSS       (Zero build step, semantic BEM, OKLCH fluid design tokens) [Recommended]");
-        console.log("  [2] Instatic SSG        (Pure HTML/CSS static site generator, zero-runtime) [Recommended]");
-        console.log("  [3] Astro v7            (Zero-JS baseline, component islands, fast SSG)");
-        console.log("  [4] Next.js SSG         (Static export React 19)");
-        console.log("  [5] Custom");
-        console.log("  [6] None");
-        const fwChoice = await ask(rl, "Choose static framework [1-6]", "1");
-        if (fwChoice === "1") {
+      // Step 2: Framework Selection
+      console.log("\n⚡ Step 2: Framework Selection (always pinned to @latest):");
+      if (config.intent === "content" || config.intent === "brochure") {
+        console.log("  [1] Astro (@latest)          (Zero-JS baseline, component islands, fast SSG/SSR) [Recommended]");
+        console.log("  [2] Pure HTML                (Zero build step, semantic BEM, OKLCH fluid design tokens)");
+        console.log("  [3] Next.js 16 (@latest)     (React 19 App Router, full-stack static export)");
+        console.log("  [4] Custom");
+        const fwChoice = await ask(rl, "Choose framework [1-4]", "1");
+        if (fwChoice === "1") config.framework = "astro";
+        else if (fwChoice === "2") {
           config.framework = "html";
           config.styling = "bem";
           config.animation = "css";
           config.state = "none";
           config.cms = "none";
-        } else if (fwChoice === "2") {
-          config.framework = "instatic";
-          config.styling = "bem";
-          config.animation = "css";
-          config.state = "none";
-          config.cms = "none";
-        } else if (fwChoice === "3") {
-          config.framework = "astro";
-        } else if (fwChoice === "4") {
-          config.framework = "nextjs";
-        } else if (fwChoice === "5") {
-          config.framework = "custom";
-          config.customFramework = await ask(rl, "Custom framework name", "custom-ssg");
-        } else config.framework = "none";
-
-        if (config.framework === "astro") {
-          console.log("\n🏗️  Astro Page Architecture / Visual Builder:");
-          console.log("  [1] Aria Builder (Astro-native visual block editor for landing pages) [Recommended]");
-          console.log("  [2] Native Astro Components (Raw .astro files, zero editor overhead)");
-          const ariaChoice = await ask(rl, "Choose page builder [1-2]", "1");
-          config.cms = ariaChoice === "1" ? "ariabuilder" : "none";
-
-          console.log("\n🎨 Styling Engine:");
-          console.log("  [1] Hybrid (UnoCSS Wind 4 + Custom BEM) [Recommended]");
-          console.log("  [2] UnoCSS Wind 4");
-          console.log("  [3] Custom Semantic BEM");
-          const stChoice = await ask(rl, "Choose styling [1-3]", "1");
-          config.styling = stChoice === "2" ? "unocss" : stChoice === "3" ? "bem" : "hybrid";
-
-          console.log("\n🎭 Animations Engine:");
-          console.log("  [1] Pure CSS hardware-accelerated [Recommended]");
-          console.log("  [2] Motion.dev");
-          console.log("  [3] None");
-          const anChoice = await ask(rl, "Choose animations [1-3]", "1");
-          config.animation = anChoice === "2" ? "motion" : anChoice === "3" ? "none" : "css";
-        }
-
-      } else if (config.intent === "content") {
-        // Branch B: Dynamic Content Website
-        console.log("\n⚡ Branch B (Dynamic Content Website) Framework:");
-        console.log("  [1] Astro v7            (Zero-JS baseline, islands architecture) [Recommended for Blogs & Publishing]");
-        console.log("  [2] Next.js 16          (React 19 App Router) [Recommended for Fullstack Content Apps]");
-        console.log("  [3] WordPress           (Roots Bedrock 12-factor + Composer + Gutenberg)");
-        console.log("  [4] Custom");
-        console.log("  [5] None");
-        const fwChoice = await ask(rl, "Choose framework [1-5]", "1");
-        if (fwChoice === "1") config.framework = "astro";
-        else if (fwChoice === "2") config.framework = "nextjs";
-        else if (fwChoice === "3") config.framework = "wordpress";
-        else if (fwChoice === "4") {
+        } else if (fwChoice === "3") config.framework = "nextjs";
+        else {
           config.framework = "custom";
           config.customFramework = await ask(rl, "Custom framework name", "custom-content");
-        } else config.framework = "none";
-
-        if (config.framework === "astro") {
-          console.log("\n📦 Content Management Architecture for Astro:");
-          console.log("  [1] StudioCMS     (Astro DB / Turso native, embedded content management) [Recommended for Content Blogs]");
-          console.log("  [2] Emdash CMS    (Cloudflare Workers / D1 / R2, edge-native markdown CMS) [Recommended for Edge Blogs]");
-          console.log("  [3] Aria Builder  (Visual drag-and-drop page builder for Astro) [Recommended for Visual Content]");
-          console.log("  [4] Keystatic     (Thinkmill Git-based Content Collections, markdown in repo)");
-          console.log("  [5] SitePins      (Modern Git-based CMS via GitHub)");
-          console.log("  [6] Payload CMS 3.0 (Headless API + Admin)");
-          console.log("  [7] None");
-          const cmsChoice = await ask(rl, "Choose CMS [1-7]", "1");
-          const map: Record<string, string> = {
-            "1": "studiocms", "2": "emdash", "3": "ariabuilder", "4": "keystatic",
-            "5": "sitepins", "6": "payload", "7": "none"
-          };
-          config.cms = map[cmsChoice] || "studiocms";
-        } else if (config.framework === "nextjs") {
-          console.log("\n📦 Content Management Architecture for Next.js:");
-          console.log("  [1] Payload CMS 3.0 + Puck Visual Builder (Native App Router, TS collections + drag-and-drop builder) [Recommended]");
-          console.log("  [2] Payload CMS 3.0 (Standard Lexical editor without Puck visual canvas)");
-          console.log("  [3] Keystatic       (Git-based Content Collections, zero DB overhead)");
-          console.log("  [4] Keystone 6      (TypeScript GraphQL CMS)");
-          console.log("  [5] Pages CMS       (Git-based CMS for GitHub)");
-          console.log("  [6] Strapi          (Decoupled headless CMS API)");
-          console.log("  [7] None");
-          const cmsChoice = await ask(rl, "Choose CMS [1-7]", "1");
-          if (cmsChoice === "1") {
-            config.cms = "payload";
-            config.puck = true;
-          } else if (cmsChoice === "2") {
-            config.cms = "payload";
-            config.puck = false;
-          } else if (cmsChoice === "3") {
-            config.cms = "keystatic";
-          } else if (cmsChoice === "4") {
-            config.cms = "keystone";
-          } else if (cmsChoice === "5") {
-            config.cms = "pagescms";
-          } else if (cmsChoice === "6") {
-            config.cms = "strapi";
-          } else {
-            config.cms = "none";
-          }
         }
-
-        if (config.cms === "payload" && config.framework === "nextjs" && !config.puck) {
-          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@measured/puck)? [y/n]", "y");
-          config.puck = puckChoice.toLowerCase().startsWith("y");
-        }
-
-      } else if (config.intent === "ecommerce") {
-        // Branch C: Ecommerce Storefront
-        console.log("\n🛍️  Branch C (Ecommerce Storefront) Commerce Engine:");
-        console.log("  [1] Astro + Aria Builder + MedusaJS (High-performance storefront with Aria visual builder & Medusa v2 Sovereign Engine) [Recommended - Best for Speed & Visual Editing]");
-        console.log("  [2] Next.js + Payload CMS + Puck + Payload E-Commerce (All-in-one Next.js app with Puck visual builder and native Product/Order/Customer/Stripe collections) [Recommended - Best for All-in-One Fullstack]");
-        console.log("  [3] Next.js + Medusa v2 Sovereign Engine (Next.js 16 App Router storefront with Medusa backend)");
-        console.log("  [4] Stripe Direct Checkout (Lightweight: Zero backend servers, hosted checkout, webhook routes)");
-        console.log("  [5] Fastrr 1-Click Checkout (Accelerated: 1-click checkout modal for high-conversion D2C)");
-        console.log("  [6] Razorpay Hosted Checkout (Regional: Payment buttons & checkout modal for India/SE Asia)");
-        console.log("  [7] Vendure Commerce Engine (Enterprise TypeScript GraphQL backend)");
-        console.log("  [8] Custom");
-        const ecomChoice = await ask(rl, "Choose commerce engine [1-8]", "1");
-
-        if (ecomChoice === "1") {
-          config.framework = "astro";
-          config.cms = "ariabuilder";
-          config.ecommerce = "medusa";
-          config.state = "nanostores";
-          config.db = "postgres";
-          config.orm = "drizzle";
-        } else if (ecomChoice === "2") {
-          config.framework = "nextjs";
-          config.cms = "payload";
-          config.puck = true;
-          config.ecommerce = "payload";
-          config.db = "neon";
-          config.orm = "drizzle";
-        } else if (ecomChoice === "3") {
-          config.framework = "nextjs";
-          config.ecommerce = "medusa";
-          config.state = "nanostores";
-          config.db = "postgres";
-          config.orm = "drizzle";
-        } else if (ecomChoice === "4") {
-          config.ecommerce = "stripe";
-          console.log("\n💳 Stripe Integration Style:");
-          console.log("  [1] Stripe Hosted Checkout (Redirect to pre-built checkout page) [Recommended]");
-          console.log("  [2] Stripe Elements (Embedded custom UI)");
-          await ask(rl, "Choose Stripe checkout style [1-2]", "1");
-          config.framework = "nextjs";
-          config.state = "nanostores";
-        } else if (ecomChoice === "5") {
-          config.ecommerce = "fastrr";
-          config.framework = "astro";
-          config.cms = "ariabuilder";
-          config.state = "nanostores";
-        } else if (ecomChoice === "6") {
-          config.ecommerce = "razorpay";
-          config.framework = "astro";
-          config.cms = "ariabuilder";
-          config.state = "nanostores";
-        } else if (ecomChoice === "7") {
-          config.ecommerce = "vendure";
-          config.framework = "nextjs";
-          config.state = "nanostores";
-        } else {
-          config.ecommerce = "custom";
-          config.framework = "nextjs";
-        }
-
       } else if (config.intent === "app") {
-        // Branch D: Full-Stack Web App
-        console.log("\n⚡ Branch D (Full-Stack Web App) Framework:");
-        console.log("  [1] Next.js 16 App Router (React 19, Server Actions) [Recommended]");
-        console.log("  [2] Astro v7 SSR (Hybrid server output)");
+        console.log("  [1] Next.js 16 (@latest)     (React 19 App Router, Server Actions) [Recommended]");
+        console.log("  [2] Astro v7 SSR (@latest)   (Hybrid server output, ultra-fast content + islands)");
         console.log("  [3] Custom");
         const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
         config.framework = fwChoice === "2" ? "astro" : fwChoice === "3" ? "custom" : "nextjs";
-
-        console.log("\n🗄️  Database & Persistence Architecture:");
-        console.log("  [1] Neon Serverless Postgres + Drizzle ORM  [Lightweight cloud: 0 local Docker/RAM overhead, edge pooling] [Recommended]");
-        console.log("  [2] Sovereign Local Postgres + Docker Compose [Self-contained: Local PostgreSQL 16 container, offline-ready, persistent storage]");
-        console.log("  [3] Embedded SQLite (Bun SQLite) + Drizzle    [Ultralight: Single-file database, zero infrastructure, sub-millisecond cold starts]");
-        console.log("  [4] Supabase (PostgreSQL + Realtime + Auth)   [Managed cloud: Postgres with built-in client auth and realtime]");
-        console.log("  [5] None (Stateless)");
-        const dbChoice = await ask(rl, "Choose database [1-5]", "1");
-        const dbMap: Record<string, string> = {
-          "1": "neon", "2": "postgres", "3": "sqlite", "4": "supabase", "5": "none"
-        };
-        config.db = dbMap[dbChoice] || "neon";
-
-        if (config.db !== "none") {
-          console.log("\n🔑 Authentication Strategy:");
-          console.log("  [1] Better Auth (Self-hosted in DB tables)  [Full control: Owned DB tables, auth-client + server route handlers] [Recommended]");
-          console.log("  [2] Supabase Auth (Managed cloud auth)      [Lightweight: Offloads auth server & crypto to Supabase, client SDK]");
-          console.log("  [3] Auth.js (NextAuth)");
-          console.log("  [4] None");
-          const authChoice = await ask(rl, "Choose auth [1-4] ", "1");
-          const authMap: Record<string, string> = {
-            "1": "better-auth", "2": "supabase", "3": "authjs", "4": "none"
-          };
-          config.auth = authMap[authChoice] || "better-auth";
-        }
-
-        console.log("\n🧠 State Management:");
-        console.log("  [1] NanoStores [Recommended]");
-        console.log("  [2] Zustand");
-        console.log("  [3] None");
-        const stateChoice = await ask(rl, "Choose state store [1-3]", "1");
-        config.state = stateChoice === "1" ? "nanostores" : stateChoice === "2" ? "custom" : "none";
-
+      } else if (config.intent === "ecommerce") {
+        console.log("  [1] Astro (@latest)          (High-performance storefront with visual editor) [Recommended]");
+        console.log("  [2] Next.js 16 (@latest)     (React 19 App Router fullstack storefront)");
+        console.log("  [3] Custom");
+        const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
+        config.framework = fwChoice === "2" ? "nextjs" : fwChoice === "3" ? "custom" : "astro";
       } else if (config.intent === "mobile") {
-        // Branch E: Mobile Application
-        console.log("\n📱 Branch E (Mobile Application) Architecture:");
-        console.log("  [1] React Native with Expo   [Recommended]");
-        console.log("  [2] Astro + Ionic Capacitor (Convert Astro web app to native APK)");
-        console.log("  [3] Next.js + Capacitor     (Convert Next.js web app to native APK)");
+        console.log("  [1] React Native with Expo   (Native iOS/Android with Expo Router) [Recommended]");
+        console.log("  [2] Astro + Ionic Capacitor  (Convert Astro web app to native APK/iOS)");
+        console.log("  [3] Next.js + Capacitor      (Convert Next.js web app to native APK/iOS)");
         console.log("  [4] Custom");
         const mobChoice = await ask(rl, "Choose mobile architecture [1-4]", "1");
         if (mobChoice === "1") {
@@ -800,9 +1131,254 @@ async function main() {
           config.mobile = "custom";
         }
         config.state = "nanostores";
+      } else {
+        config.framework = "none";
       }
 
-      // Brand Aesthetics & Personality
+      // Step 3: Framework Variant & CMS Selection
+      console.log("\n📦 Step 3: Framework Variant & CMS Selection:");
+      if (config.framework === "astro") {
+        console.log("  [1] Plain Astro Framework    (Clean baseline, pure .astro, zero React) [Recommended]");
+        console.log("  [2] Aria Builder Studio      (Visual block editor platform, Vue studio, /admin)");
+        console.log("  [3] Astro + Emdash CMS       (Cloudflare edge D1/R2, worker bridge, live loader, React admin)");
+        console.log("  [4] Astro + StudioCMS        (LibSQL/Turso SSR blog & docs CMS)");
+        console.log("  [5] Astro + Sitepins CMS     (Edge headless publishing with Git-backed hooks)");
+        console.log("  [6] Astro + Git-based CMS    (Native Content Collections, Markdown/MDX schemas, RSS)");
+        console.log("  [7] Astro + Payload CMS      (Headless Payload CMS connection)");
+        console.log("  [8] None / Pure Baseline");
+        const cmsChoice = await ask(rl, "Choose Astro variant / CMS [1-8]", "1");
+        const cmsMap: Record<string, string> = {
+          "1": "none",
+          "2": "ariabuilder",
+          "3": "emdash",
+          "4": "studiocms",
+          "5": "sitepins",
+          "6": "git",
+          "7": "payload",
+          "8": "none",
+        };
+        config.cms = cmsMap[cmsChoice] || "none";
+      } else if (config.framework === "html") {
+        console.log("  [1] Plain HTML               (Semantic HTML5, OKLCH fluid design tokens, zero build) [Recommended]");
+        console.log("  [2] Instatic Builder         (Full Instatic SSG layout and compiler, zero runtime)");
+        const htmlChoice = await ask(rl, "Choose HTML variant [1-2]", "1");
+        if (htmlChoice === "2") {
+          config.framework = "instatic";
+        }
+      } else if (config.framework === "nextjs") {
+        console.log("  [1] Plain Next.js            (Clean App Router baseline, Server Actions) [Recommended]");
+        console.log("  [2] Next.js + Payload CMS 3.0 (Native App Router, TS collections + optional Puck visual canvas)");
+        console.log("  [3] Next.js + Git-based      (Markdown/MDX collections)");
+        console.log("  [4] None");
+        const nextChoice = await ask(rl, "Choose Next.js variant / CMS [1-4]", "1");
+        if (nextChoice === "2") {
+          config.cms = "payload";
+          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@measured/puck)? [y/n]", "y");
+          config.puck = puckChoice.toLowerCase().startsWith("y");
+        } else if (nextChoice === "3") {
+          config.cms = "git";
+        } else {
+          config.cms = "none";
+        }
+      }
+
+      // Step 4: Features & Add-ons (Styling, Animations, State, Database, Auth, E-Commerce)
+      console.log("\n🎨 Step 4: Features & Add-ons");
+
+      // 4a. Styling Engine
+      if (config.framework !== "html" && config.framework !== "instatic") {
+        console.log("\n🎨 Styling Engine:");
+        console.log("  [1] Hybrid (UnoCSS Wind 4 + Custom BEM) [Recommended]");
+        console.log("  [2] UnoCSS with @unocss/preset-wind4");
+        console.log("  [3] Pure BEM CSS");
+        const stChoice = await ask(rl, "Choose styling [1-3]", "1");
+        config.styling = stChoice === "2" ? "unocss" : stChoice === "3" ? "bem" : "hybrid";
+      }
+
+      // 4b. Animations Engine
+      if (config.framework !== "expo") {
+        console.log("\n🎭 Animations Engine:");
+        console.log("  [1] Pure CSS hardware-accelerated [Recommended]");
+        console.log("  [2] Motion.dev (Modern animation library)");
+        console.log("  [3] GSAP 3 + ScrollTrigger (High-performance timelines)");
+        console.log("  [4] WebGL (Three.js canvas shaders)");
+        console.log("  [5] None");
+        const anChoice = await ask(rl, "Choose animations [1-5]", "1");
+        const anMap: Record<string, string> = {
+          "1": "css",
+          "2": "motion",
+          "3": "gsap",
+          "4": "webgl",
+          "5": "none",
+        };
+        config.animation = anMap[anChoice] || "css";
+      }
+
+      // 4c. State Management
+      if (config.framework === "astro" || config.framework === "nextjs") {
+        console.log("\n🧠 State Management:");
+        console.log("  [1] NanoStores (sub-1KB cross-island reactive store) [Recommended]");
+        console.log("  [2] None");
+        const stateChoice = await ask(rl, "Choose state store [1-2]", "1");
+        config.state = stateChoice === "1" ? "nanostores" : "none";
+      }
+
+      // 4d. Database & Persistence (if app or user wants DB)
+      if (config.intent === "app" || config.intent === "ecommerce" || config.cms === "studiocms" || config.cms === "payload") {
+        console.log("\n🗄️  Database & Persistence Architecture:");
+        console.log("  [1] SQLite / Cloudflare D1 + Drizzle ORM [Lightweight edge: zero container, fast] [Recommended]");
+        console.log("  [2] Supabase (PostgreSQL + Realtime + Auth)");
+        console.log("  [3] Neon Serverless Postgres + Drizzle ORM");
+        console.log("  [4] Turso (libSQL edge database)");
+        console.log("  [5] Local Postgres + Docker Compose");
+        console.log("  [6] None (Stateless)");
+        const dbChoice = await ask(rl, "Choose database [1-6]", "1");
+        const dbMap: Record<string, string> = {
+          "1": "sqlite",
+          "2": "supabase",
+          "3": "neon",
+          "4": "turso",
+          "5": "postgres",
+          "6": "none",
+        };
+        config.db = dbMap[dbChoice] || "sqlite";
+        if (config.db !== "none" && config.db !== "supabase") {
+          config.orm = "drizzle";
+        }
+      }
+
+      // 4e. Authentication Strategy
+      if (config.db !== "none" && config.db !== "undefined") {
+        console.log("\n🔑 Authentication Strategy:");
+        console.log("  [1] Better Auth (TypeScript-native auth in DB tables) [Recommended]");
+        console.log("  [2] Supabase Auth (Managed cloud auth)");
+        console.log("  [3] None");
+        const authChoice = await ask(rl, "Choose auth [1-3]", "1");
+        const authMap: Record<string, string> = {
+          "1": "better-auth",
+          "2": "supabase",
+          "3": "none",
+        };
+        config.auth = authMap[authChoice] || "better-auth";
+      }
+
+      // 4f. E-Commerce Engine (if ecommerce intent)
+      if (config.intent === "ecommerce") {
+        console.log("\n🛍️  E-Commerce Engine:");
+        console.log("  [1] Stripe Hosted Checkout (Hosted checkout, zero backend maintenance) [Recommended]");
+        console.log("  [2] Medusa v2 Sovereign Engine (Full headless ecommerce backend)");
+        console.log("  [3] Fastrr 1-Click Checkout (High-conversion checkout modal)");
+        console.log("  [4] Payload E-Commerce (Native collections in Payload CMS)");
+        console.log("  [5] None / Custom");
+        const ecomChoice = await ask(rl, "Choose commerce engine [1-5]", "1");
+        const ecomMap: Record<string, string> = {
+          "1": "stripe",
+          "2": "medusa",
+          "3": "fastrr",
+          "4": "payload",
+          "5": "none",
+        };
+        config.ecommerce = ecomMap[ecomChoice] || "stripe";
+      }
+
+      // Step 5: OKLCH Color Palette (37 official presets from oklch.fyi)
+      if (!colorPalette) {
+        console.log("\n🌈 Step 5: OKLCH Color Palette (37 official presets from oklch.fyi):");
+        console.log("  [1] Curated Themes (sunset-vibes, deep-sea, forest, neon-nights, cherry-blossom...) [Recommended]");
+        console.log("  [2] Radix Neutrals (slate, gray, sand, steel)");
+        console.log("  [3] Radix Chromatic (indigo, blue, red, green, amber, violet, teal, cyan...)");
+        console.log("  [4] Type palette slug directly");
+        const catChoice = await ask(rl, "Choose palette category [1-4]", "1");
+
+        if (catChoice === "1") {
+          console.log("\n🎨 Curated Designer Themes:");
+          console.log("   [1] sunset-vibes     [2] deep-sea         [3] forest           [4] forest-fresh");
+          console.log("   [5] sand             [6] steel            [7] olive-garden     [8] ocean-breeze");
+          console.log("   [9] neon-nights     [10] earthy-tones    [11] cherry-blossom  [12] midnight-blue");
+          console.log("  [13] lavender-fields [14] coral-reef      [15] autumn-leaves   [16] arctic-frost");
+          console.log("  [17] vintage-rose    [18] tropical-paradise [19] desert-sand   [20] berry-burst");
+          console.log("  [21] pastel-dreamland-adventure");
+          const curatedThemes = [
+            "sunset-vibes", "deep-sea", "forest", "forest-fresh",
+            "sand", "steel", "olive-garden", "ocean-breeze",
+            "neon-nights", "earthy-tones", "cherry-blossom", "midnight-blue",
+            "lavender-fields", "coral-reef", "autumn-leaves", "arctic-frost",
+            "vintage-rose", "tropical-paradise", "desert-sand", "berry-burst",
+            "pastel-dreamland-adventure"
+          ];
+          const cIndex = await ask(rl, "Select theme [1-21]", "1");
+          const idx = parseInt(cIndex, 10) - 1;
+          colorPalette = (idx >= 0 && idx < curatedThemes.length) ? curatedThemes[idx] : "sunset-vibes";
+        } else if (catChoice === "2") {
+          console.log("\n🎨 Radix Neutrals:");
+          console.log("  [1] slate (Minimalist & Modern SaaS) [Default]");
+          console.log("  [2] gray");
+          console.log("  [3] sand");
+          console.log("  [4] steel");
+          const neutrals = ["slate", "gray", "sand", "steel"];
+          const nIndex = await ask(rl, "Select neutral [1-4]", "1");
+          const idx = parseInt(nIndex, 10) - 1;
+          colorPalette = (idx >= 0 && idx < neutrals.length) ? neutrals[idx] : "slate";
+        } else if (catChoice === "3") {
+          console.log("\n🎨 Radix Chromatic Scales:");
+          console.log("   [1] indigo  [2] blue    [3] red     [4] green   [5] amber");
+          console.log("   [6] violet  [7] teal    [8] cyan    [9] lime   [10] mint");
+          console.log("  [11] tomato [12] orange [13] purple [14] pink  [15] yellow");
+          const chromatic = [
+            "indigo", "blue", "red", "green", "amber",
+            "violet", "teal", "cyan", "lime", "mint",
+            "tomato", "orange", "purple", "pink", "yellow"
+          ];
+          const chIndex = await ask(rl, "Select chromatic scale [1-15]", "1");
+          const idx = parseInt(chIndex, 10) - 1;
+          colorPalette = (idx >= 0 && idx < chromatic.length) ? chromatic[idx] : "indigo";
+        } else if (catChoice === "4") {
+          const directSlug = await ask(rl, "Enter palette slug (e.g. sunset-vibes, deep-sea, slate)", "slate");
+          colorPalette = PALETTES[directSlug.toLowerCase()] ? directSlug.toLowerCase() : "slate";
+        } else {
+          colorPalette = "slate";
+        }
+      }
+
+      // =====================================================================
+      // STAGE 6: Client Onboarding & Brand Intake Gate
+      // =====================================================================
+      console.log("\n📋 STAGE 6: Client Onboarding & Brand Intake Gate");
+
+      if (!projectDesc) {
+        projectDesc = await ask(
+          rl,
+          "📝 One-Line Tagline / Vision",
+          `${projectName} - Modern application governed by DOX Engine.`
+        );
+      }
+      if (!authorName) {
+        authorName = await ask(rl, "👤 Author / Parent Organization", projectName);
+      }
+      if (!industry) {
+        industry = await ask(rl, "🏢 Industry / Market Niche", "Modern Web & Technology Services");
+      }
+      if (!targetAudience) {
+        targetAudience = await ask(rl, "👥 Target Audience / Users", "Developers, creators, and modern teams");
+      }
+      if (!coreProblem) {
+        coreProblem = await ask(rl, "🎯 Core Problem Solved", "Delivering fast, accessible, and structured user experiences");
+      }
+      if (!coreFeatures) {
+        coreFeatures = await ask(
+          rl,
+          "✨ Key Features (comma-separated)",
+          "Core application shell, Responsive modern UI, Fast API integration"
+        );
+      }
+      if (!offerings) {
+        offerings = await ask(
+          rl,
+          "📦 Core Offerings / Catalog Items",
+          "Starter tier, Professional suite, Enterprise solution"
+        );
+      }
+
       if (!brandVoice) {
         console.log("\n🎨 Brand Personality & Tone:");
         console.log("  [1] Modern, Technical & Authoritative [Recommended]");
@@ -821,21 +1397,6 @@ async function main() {
         brandVoice = toneMap[toneChoice] || toneMap["1"];
       }
 
-      if (!colorPalette) {
-        console.log("\n🌈 Select Color Palette:");
-        console.log("  [1] Slate & Zinc      (Neutral monochrome / Minimalist) [Default]");
-        console.log("  [2] Ocean Indigo      (Modern SaaS & Tech Indigo)");
-        console.log("  [3] Emerald & Mint    (Fresh / Eco / Fintech Green)");
-        console.log("  [4] Warm Amber        (Artisan / Earthy / Editorial)");
-        console.log("  [5] Cyberpunk Violet  (Creative / High-contrast Neon)");
-        const palChoice = await ask(rl, "Choose color theme [1-5]", "1");
-        const palMap: Record<string, string> = {
-          "1": "slate", "2": "indigo", "3": "emerald", "4": "amber", "5": "violet"
-        };
-        colorPalette = palMap[palChoice] || "slate";
-      }
-
-      // Roadmap & Milestones
       if (!firstMilestone) {
         firstMilestone = await ask(
           rl,
@@ -851,7 +1412,6 @@ async function main() {
         );
       }
 
-      // Agent Governance
       if (!agentName) {
         agentName = await ask(rl, "🤖 Primary AI Agent Name", "Orchestrator");
       }
@@ -1054,6 +1614,17 @@ async function main() {
     }
   }
 
+  // 1.5b Copy Project-Scoped Skills (.agents/skills/oklch-skill)
+  const skillsSrc = join(TEMPLATES_DIR, ".agents/skills");
+  const skillsDest = join(agentsDir, "skills");
+  if (existsSync(skillsSrc)) {
+    if (!existsSync(skillsDest) && !isDryRun) mkdirSync(skillsDest, { recursive: true });
+    if (!isDryRun) {
+      cpSync(skillsSrc, skillsDest, { recursive: true });
+      console.log("  ✅ Provisioned: `./.agents/skills/oklch-skill` (Project-Scoped OKLCH Color Gamut & Tokens)");
+    }
+  }
+
   // 1.6 Copy and Tailor .agents/context/ Templates
   const contextSrc = join(TEMPLATES_DIR, ".agents/context");
   const contextDest = join(agentsDir, "context");
@@ -1076,7 +1647,7 @@ async function main() {
       "{{PROBLEM_SOLVED}}": coreProblem,
       "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
       "{{CORE_FEATURES}}": featureBullets,
-      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Onboarding/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
+      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
       "{{BRAND_VOICE}}": brandVoice,
       "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
       "{{FIRST_MILESTONE}}": firstMilestone,
@@ -1215,13 +1786,84 @@ async function main() {
 
       } else if (config.framework === "instatic") {
         const stagingDir = join(os.tmpdir(), `instatic-scaffold-${Date.now()}`);
-        spawnSync("git", ["clone", "--depth", "1", "https://github.com/corebunch/instatic.git", stagingDir], {
-          stdio: "inherit",
-        });
-        const gitDir = join(stagingDir, ".git");
-        if (existsSync(gitDir)) rmSync(gitDir, { recursive: true, force: true });
-        cpSync(stagingDir, resolvedTarget, { recursive: true });
-        rmSync(stagingDir, { recursive: true, force: true });
+        let cloned = false;
+        try {
+          const res = spawnSync("git", ["clone", "--depth", "1", "https://github.com/corebunch/instatic.git", stagingDir], {
+            stdio: "ignore",
+            timeout: 5000,
+          });
+          if (res.status === 0 && existsSync(stagingDir)) {
+            const gitDir = join(stagingDir, ".git");
+            if (existsSync(gitDir)) rmSync(gitDir, { recursive: true, force: true });
+            cpSync(stagingDir, resolvedTarget, { recursive: true });
+            rmSync(stagingDir, { recursive: true, force: true });
+            cloned = true;
+          }
+        } catch {
+          cloned = false;
+        }
+
+        if (!cloned) {
+          mkdirSync(join(resolvedTarget, "src/layouts"), { recursive: true });
+          mkdirSync(join(resolvedTarget, "src/pages"), { recursive: true });
+          mkdirSync(join(resolvedTarget, "src/components"), { recursive: true });
+
+          const instaticJson = {
+            name: projectName,
+            version: "1.0.0",
+            src: "src",
+            dist: "dist",
+            components: "src/components",
+            layouts: "src/layouts",
+            pages: "src/pages"
+          };
+          writeFileSync(join(resolvedTarget, "instatic.json"), JSON.stringify(instaticJson, null, 2) + "\n", "utf8");
+
+          const layoutHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/semantic.css">
+  <title>{{title}}</title>
+</head>
+<body>
+  {{content}}
+</body>
+</html>
+`;
+          writeFileSync(join(resolvedTarget, "src/layouts/base.html"), layoutHtml, "utf8");
+
+          const indexHtml = `---
+layout: base
+title: ${projectName} - Instatic Builder
+---
+<main class="c-container" style="padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); max-inline-size: var(--container-lg, 50rem); margin-inline: auto;">
+  <header style="margin-block-end: var(--space-xl, 2rem);">
+    <span style="font-size: var(--font-size-xs, 0.75rem); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary, #6366f1);">⚡ Instatic SSG Platform</span>
+    <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: var(--space-xs, 0.5rem) var(--space-md, 1rem);">${projectName}</h1>
+    <p style="color: var(--color-text-muted, #94a3b8);">${projectDesc}</p>
+  </header>
+</main>
+`;
+          writeFileSync(join(resolvedTarget, "src/pages/index.html"), indexHtml, "utf8");
+
+          const pkgJson = {
+            name: projectName,
+            version: "1.0.0",
+            type: "module",
+            scripts: {
+              dev: "instatic dev",
+              build: "instatic build",
+              preview: "instatic serve"
+            },
+            devDependencies: {
+              instatic: "^1.0.0"
+            }
+          };
+          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify(pkgJson, null, 2) + "\n", "utf8");
+        }
 
       } else if (config.framework === "wordpress") {
         const hasComposer = spawnSync("which", ["composer"], { stdio: "ignore" }).status === 0;
@@ -1333,20 +1975,70 @@ export default defineConfig({
           depsToAdd["@astrojs/node"] = "^9.0.0";
         }
         if (config.cms === "emdash") {
-          imports.push("import node from '@astrojs/node';");
-          imports.push("import emdash from 'emdash';");
-          integrations.push("emdash()");
           needsServer = true;
           depsToAdd["emdash"] = "^0.36.0";
-          depsToAdd["@astrojs/node"] = "^9.0.0";
+          depsToAdd["@astrojs/react"] = "^6.0.5";
+          depsToAdd["react"] = "^19.2.4";
+          depsToAdd["react-dom"] = "^19.2.4";
+          devDepsToAdd["@types/react"] = "^19.0.0";
+          devDepsToAdd["@types/react-dom"] = "^19.0.0";
+
+          if (config.deploy === "cloudflare") {
+            depsToAdd["@astrojs/cloudflare"] = "^14.3.0";
+            depsToAdd["@emdash-cms/cloudflare"] = "^0.36.0";
+            depsToAdd["@emdash-cms/plugin-forms"] = "^0.2.5";
+            depsToAdd["@emdash-cms/plugin-webhook-notifier"] = "^0.2.0";
+            devDepsToAdd["wrangler"] = "^4.129.0";
+            devDepsToAdd["@cloudflare/workers-types"] = "^4.20260702.1";
+
+            imports.push("import cloudflare from '@astrojs/cloudflare';");
+            imports.push("import react from '@astrojs/react';");
+            imports.push("import emdash from 'emdash/astro';");
+            imports.push("import { d1, r2, sandbox } from '@emdash-cms/cloudflare';");
+            imports.push("import { formsPlugin } from '@emdash-cms/plugin-forms';");
+            imports.push("import webhookNotifier from '@emdash-cms/plugin-webhook-notifier';");
+
+            integrations.push("react()");
+            integrations.push(`emdash({
+    database: d1({ binding: "DB", session: "auto" }),
+    storage: r2({ binding: "MEDIA" }),
+    plugins: [formsPlugin()],
+    sandboxed: [webhookNotifier],
+    sandboxRunner: sandbox(),
+    marketplace: "https://marketplace.emdashcms.com",
+  })`);
+          } else {
+            depsToAdd["@astrojs/node"] = "^11.1.5";
+            depsToAdd["@emdash-cms/plugin-audit-log"] = "^0.2.0";
+
+            imports.push("import node from '@astrojs/node';");
+            imports.push("import react from '@astrojs/react';");
+            imports.push("import emdash, { local } from 'emdash/astro';");
+            imports.push("import { sqlite } from 'emdash/db';");
+            imports.push("import auditLog from '@emdash-cms/plugin-audit-log';");
+
+            integrations.push("react()");
+            integrations.push(`emdash({
+    database: sqlite({ url: "file:./data.db" }),
+    storage: local({
+      directory: "./uploads",
+      baseUrl: "/_emdash/api/media/file",
+    }),
+    plugins: [auditLog],
+  })`);
+          }
         }
+
+        const adapterExpr = config.cms === "emdash" && config.deploy === "cloudflare"
+          ? "adapter: cloudflare()"
+          : "adapter: node({ mode: 'standalone' })";
 
         const astroConfigContent = `// @ts-check
 ${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  adapter: node({ mode: 'standalone' }),\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
+  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
@@ -1947,37 +2639,39 @@ const {
     background: radial-gradient(circle at top, var(--color-surface-elevated, #1e293b), var(--color-surface, #0b0f19));
   }
   .c-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-inline-size: var(--container-lg, 50rem);
+    margin-inline: auto;
   }
   .c-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+    padding-inline: var(--space-sm, 0.75rem);
+    padding-block: var(--space-3xs, 0.25rem);
+    border-radius: var(--radius-full, 9999rem);
     font-size: var(--font-size-xs, 0.75rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     background: var(--color-primary-dark, #312e81);
     color: var(--color-text-heading, #fff);
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-block-end: var(--spacing-md, 1rem);
   }
   .c-hero__title {
     font-size: var(--font-size-4xl, 2.5rem);
     color: var(--color-text-heading, #fff);
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-block-end: var(--spacing-md, 1rem);
     line-height: 1.2;
   }
   .c-hero__subtitle {
     font-size: var(--font-size-lg, 1.25rem);
     color: var(--color-text-muted, #94a3b8);
-    margin-bottom: var(--spacing-xl, 2rem);
+    margin-block-end: var(--spacing-xl, 2rem);
     line-height: 1.6;
   }
   .c-btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding-inline: var(--space-xl, 1.5rem);
+    padding-block: var(--space-sm, 0.75rem);
+    border-radius: var(--radius-md, 0.5rem);
     font-weight: 600;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -2038,18 +2732,19 @@ try {
 
 <style>
   .c-products-grid {
-    padding: var(--spacing-2xl, 3rem) var(--spacing-xl, 2rem);
-    max-width: 1200px;
-    margin: 0 auto;
+    padding-inline: var(--padding-inline-section, 2rem);
+    padding-block: var(--space-2xl, 3rem);
+    max-inline-size: var(--container-xl, 75rem);
+    margin-inline: auto;
   }
   .c-products-grid__header {
     text-align: center;
-    margin-bottom: var(--spacing-2xl, 3rem);
+    margin-block-end: var(--spacing-2xl, 3rem);
   }
   .c-products-grid__title {
     font-size: var(--font-size-3xl, 2rem);
     color: var(--color-text-heading, #fff);
-    margin-bottom: 0.5rem;
+    margin-block-end: var(--space-xs, 0.5rem);
   }
   .c-products-grid__subtitle {
     color: var(--color-text-muted, #94a3b8);
@@ -2057,19 +2752,19 @@ try {
   }
   .c-products-grid__items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
     gap: var(--spacing-xl, 2rem);
   }
   .c-product-card {
     background: var(--color-surface-elevated, #1e293b);
-    border: 1px solid var(--color-border, #334155);
-    border-radius: 12px;
+    border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    border-radius: var(--radius-lg, 0.75rem);
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   .c-product-card__thumb {
-    height: 180px;
+    block-size: 11.25rem;
     background: var(--color-surface, #0f172a);
     display: flex;
     align-items: center;
@@ -2083,33 +2778,34 @@ try {
     flex-direction: column;
   }
   .c-product-card__title {
-    font-size: 1.125rem;
+    font-size: var(--font-size-md, 1.125rem);
     color: var(--color-text-heading, #fff);
-    margin: 0 0 0.5rem 0;
+    margin-block: 0 var(--space-xs, 0.5rem);
   }
   .c-product-card__desc {
     color: var(--color-text-muted, #94a3b8);
-    font-size: 0.875rem;
-    margin: 0 0 1rem 0;
+    font-size: var(--font-size-sm, 0.875rem);
+    margin-block: 0 var(--space-md, 1rem);
     flex: 1;
   }
   .c-product-card__footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto;
+    margin-block-start: auto;
   }
   .c-product-card__price {
-    font-size: 1.25rem;
+    font-size: var(--font-size-lg, 1.25rem);
     font-weight: 700;
     color: var(--color-primary-light, #818cf8);
   }
   .c-product-card__btn {
-    padding: 0.5rem 1rem;
+    padding-inline: var(--space-md, 1rem);
+    padding-block: var(--space-xs, 0.5rem);
     background: var(--color-primary, #6366f1);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm, 0.375rem);
     cursor: pointer;
     font-weight: 600;
   }
@@ -2143,8 +2839,8 @@ try {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: oklch(0% 0 0 / 0.6);
+    backdrop-filter: blur(0.25rem);
     z-index: 9999;
   }
   .c-cart-drawer.is-open {
@@ -2152,13 +2848,13 @@ try {
   }
   .c-cart-drawer__panel {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    max-width: 400px;
-    height: 100%;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inline-size: 100%;
+    max-inline-size: min(100%, 25rem);
+    block-size: 100%;
     background: var(--color-surface, #0b0f19);
-    border-left: 1px solid var(--color-border, #334155);
+    border-inline-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
     display: flex;
     flex-direction: column;
     padding: var(--spacing-xl, 2rem);
@@ -2167,8 +2863,8 @@ try {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--color-border, #334155);
-    padding-bottom: 1rem;
+    border-block-end: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    padding-block-end: var(--space-md, 1rem);
   }
   .c-cart-drawer__close {
     background: transparent;
@@ -2180,28 +2876,29 @@ try {
   .c-cart-drawer__items {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem 0;
+    padding-block: var(--space-md, 1rem);
   }
   .c-cart-drawer__empty {
     color: var(--color-text-muted, #94a3b8);
     text-align: center;
-    margin-top: 2rem;
+    margin-block-start: var(--space-xl, 2rem);
   }
   .c-cart-drawer__footer {
-    border-top: 1px solid var(--color-border, #334155);
-    padding-top: 1rem;
+    border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    padding-block-start: var(--space-md, 1rem);
   }
   .c-cart-drawer__total {
     display: flex;
     justify-content: space-between;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-block-end: var(--space-md, 1rem);
   }
   .c-btn {
     display: block;
     text-align: center;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
+    padding-inline: var(--space-md, 1rem);
+    padding-block: var(--space-sm, 0.75rem);
+    border-radius: var(--radius-md, 0.5rem);
     font-weight: 600;
     border: none;
     cursor: pointer;
@@ -2243,19 +2940,225 @@ export default defineStudioCMSConfig({
 
     // 3.2.3b Emdash CMS (Astro)
     if (config.cms === "emdash") {
-      depsToAdd["emdash"] = "^0.36.0";
-      depsToAdd["@astrojs/node"] = "^9.0.0";
-      const emdashConfig = `export default {
+      const slug = projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+
+      const emdashConfig = `/**
+ * Emdash CMS Configuration
+ * 
+ * Note: Core runtime configuration is registered in \`astro.config.mjs\` via \`emdash()\`.
+ * Database schema and content types are typed in \`emdash-env.d.ts\`.
+ */
+export default {
   contentDir: './src/content/blog',
-  mediaStorage: 'cloudflare-r2',
-  database: 'cloudflare-d1',
+  database: '${config.deploy === "cloudflare" ? "cloudflare-d1" : "sqlite"}',
+  mediaStorage: '${config.deploy === "cloudflare" ? "cloudflare-r2" : "local"}',
+  adminRoute: '/_emdash/admin',
   routing: {
-    prefix: '/blog',
+    prefix: '/posts',
   },
 };
 `;
       writeFileSync(join(resolvedTarget, "emdash.config.ts"), emdashConfig, "utf8");
 
+      // emdash-env.d.ts
+      const emdashEnvTypes = `// Generated by EmDash on dev server start
+// Do not edit manually
+
+/// <reference types="emdash/locals" />
+
+import type { ContentBylineCredit, TaxonomyTerm, PortableTextBlock } from "emdash";
+
+export interface Page {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  content?: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Post {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  featured_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  content?: PortableTextBlock[];
+  excerpt?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+declare module "emdash" {
+  interface EmDashCollections {
+    pages: Page;
+    posts: Post;
+  }
+}
+`;
+      writeFileSync(join(resolvedTarget, "emdash-env.d.ts"), emdashEnvTypes, "utf8");
+
+      // Seed directory & seed.json
+      const seedDir = join(resolvedTarget, "seed");
+      mkdirSync(seedDir, { recursive: true });
+      const seedData = {
+        "$schema": "https://emdashcms.com/seed.schema.json",
+        "version": "1",
+        "meta": {
+          "name": `${projectName} Starter`,
+          "description": "Publication powered by Astro and Emdash CMS.",
+          "author": authorName || "Principal"
+        },
+        "settings": {
+          "title": projectName,
+          "tagline": "Dynamic edge publication powered by Astro v7 & Emdash"
+        },
+        "collections": [
+          {
+            "slug": "posts",
+            "label": "Posts",
+            "labelSingular": "Post",
+            "supports": ["drafts", "revisions", "search", "seo"],
+            "commentsEnabled": true,
+            "fields": [
+              { "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+              { "slug": "featured_image", "label": "Featured Image", "type": "image" },
+              { "slug": "content", "label": "Content", "type": "portableText", "searchable": true },
+              { "slug": "excerpt", "label": "Excerpt", "type": "text" }
+            ]
+          },
+          {
+            "slug": "pages",
+            "label": "Pages",
+            "labelSingular": "Page",
+            "supports": ["drafts", "revisions", "search"],
+            "fields": [
+              { "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+              { "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+            ]
+          }
+        ],
+        "taxonomies": [
+          {
+            "name": "category",
+            "label": "Categories",
+            "labelSingular": "Category",
+            "hierarchical": true,
+            "collections": ["posts"],
+            "terms": [
+              { "slug": "editorial", "label": "Editorial" },
+              { "slug": "engineering", "label": "Engineering" }
+            ]
+          },
+          {
+            "name": "tag",
+            "label": "Tags",
+            "labelSingular": "Tag",
+            "hierarchical": false,
+            "collections": ["posts"],
+            "terms": [
+              { "slug": "astro", "label": "Astro" },
+              { "slug": "emdash", "label": "Emdash" },
+              { "slug": "edge", "label": "Edge" }
+            ]
+          }
+        ],
+        "content": [
+          {
+            "collection": "posts",
+            "slug": "welcome-to-" + slug,
+            "status": "published",
+            "data": {
+              "title": `Welcome to ${projectName}`,
+              "excerpt": "Edge-rendered publication powered by Astro v7 and Emdash CMS.",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": `Welcome to ${projectName}! This publication is powered by Astro v7 and Emdash CMS.`
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      };
+      writeFileSync(join(seedDir, "seed.json"), JSON.stringify(seedData, null, 2) + "\n", "utf8");
+
+      // Live content collections
+      writeFileSync(join(resolvedTarget, "src", "live.config.ts"), `import { defineLiveCollection } from "astro:content";
+import { emdashLoader } from "emdash/runtime";
+
+export const collections = {
+  _emdash: defineLiveCollection({ loader: emdashLoader() }),
+};
+`, "utf8");
+
+      // Cloudflare worker handler & wrangler.jsonc (if cloudflare)
+      if (config.deploy === "cloudflare") {
+        writeFileSync(join(resolvedTarget, "src", "worker.ts"), `import handler, { createScheduledHandler, PluginBridge } from "@emdash-cms/cloudflare/worker";
+
+export { PluginBridge };
+
+export default {
+  ...handler,
+  scheduled: createScheduledHandler(),
+} satisfies ExportedHandler;
+`, "utf8");
+
+        const wranglerConfig = {
+          "$schema": "node_modules/wrangler/config-schema.json",
+          "name": slug,
+          "main": "./src/worker.ts",
+          "compatibility_date": "2026-02-24",
+          "compatibility_flags": ["nodejs_compat"],
+          "d1_databases": [
+            {
+              "binding": "DB",
+              "database_name": slug
+            }
+          ],
+          "r2_buckets": [
+            {
+              "binding": "MEDIA",
+              "bucket_name": `${slug}-media`
+            }
+          ],
+          "worker_loaders": [
+            {
+              "binding": "LOADER"
+            }
+          ],
+          "triggers": {
+            "crons": ["* * * * *"]
+          }
+        };
+        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), JSON.stringify(wranglerConfig, null, 2) + "\n", "utf8");
+      }
+
+      // Visual admin redirects (/admin and /emdash)
+      const pagesDir = join(resolvedTarget, "src", "pages");
+      mkdirSync(pagesDir, { recursive: true });
+      writeFileSync(join(pagesDir, "admin.astro"), `---\nreturn Astro.redirect("/_emdash/admin");\n---\n`, "utf8");
+      writeFileSync(join(pagesDir, "emdash.astro"), `---\nreturn Astro.redirect("/_emdash/admin");\n---\n`, "utf8");
+
+      // Theme overrides
+      const stylesDir = join(resolvedTarget, "src", "styles");
+      mkdirSync(stylesDir, { recursive: true });
+      writeFileSync(join(stylesDir, "theme.css"), `:root {}\n\n.nav-admin {\n  margin-inline-start: var(--spacing-5);\n}\n`, "utf8");
+
+      // Markdown fallback in src/content/blog/
       const blogDir = join(resolvedTarget, "src", "content", "blog");
       mkdirSync(blogDir, { recursive: true });
       const welcomePost = `---
@@ -2277,6 +3180,7 @@ This publication is built on **Astro v7** and **Emdash CMS**, engineered for edg
 `;
       writeFileSync(join(blogDir, "welcome.md"), welcomePost, "utf8");
 
+      // Blog pages
       const blogPagesDir = join(resolvedTarget, "src", "pages", "blog");
       mkdirSync(blogPagesDir, { recursive: true });
       const blogIndexAstro = `---
@@ -2299,17 +3203,20 @@ const posts = [
     <title>Blog - ${projectName.replace(/"/g, '\\"')}</title>
     <meta name="viewport" content="width=device-width" />
   </head>
-  <body style="margin: 0; padding: 2rem; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, sans-serif;">
-    <main style="max-width: 800px; margin: 0 auto;">
-      <header style="margin-bottom: 2rem;">
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
-        <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">Blog & Articles</h1>
+  <body style="margin: 0; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, sans-serif;">
+    <main class="c-container" style="max-inline-size: var(--container-lg, 50rem); margin-inline: auto;">
+      <header style="margin-block-end: var(--space-xl, 2rem);">
+        <span style="font-size: var(--font-size-xs, 0.75rem); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
+        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: var(--space-xs, 0.5rem) var(--space-md, 1rem);">Blog & Articles</h1>
         <p style="color: var(--color-text-muted, #94a3b8);">Serverless edge publication built on Astro and Emdash CMS.</p>
+        <div style="margin-block-start: var(--space-md, 1rem); display: flex; gap: var(--space-sm, 0.75rem);">
+          <a href="/admin" class="c-btn" style="padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #059669; color: #fff; text-decoration: none; font-weight: 600;">✍️ Access Emdash Admin (/admin)</a>
+        </div>
       </header>
 
-      <section style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <section style="display: flex; flex-direction: column; gap: var(--space-lg, 1.5rem);">
         {posts.map(p => (
-          <article style="padding: 1.5rem; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155); border-radius: 10px;">
+          <article class="c-card" style="padding: var(--space-lg, 1.5rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); border-radius: var(--radius-lg, 0.75rem);">
             <div style="font-size: 0.8rem; color: var(--color-text-muted, #94a3b8); margin-bottom: 0.5rem;">{p.date}</div>
             <h2 style="font-size: 1.5rem; margin: 0 0 0.5rem 0;">{p.title}</h2>
             <p style="color: var(--color-text-muted, #94a3b8); margin: 0 0 1rem 0;">{p.description}</p>
@@ -2322,7 +3229,125 @@ const posts = [
 </html>
 `;
       writeFileSync(join(blogPagesDir, "index.astro"), blogIndexAstro, "utf8");
-      console.log("  ✅ Auto-wired: Emdash CMS (`./emdash.config.ts`, `./src/content/blog/`, and `./src/pages/blog/`)");
+
+      // Auto-wire tests/emdash.test.ts
+      const testsDir = join(resolvedTarget, "tests");
+      mkdirSync(testsDir, { recursive: true });
+      const emdashTestContent = `import { describe, expect, it } from "bun:test";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+describe("📰 Emdash CMS & Astro Integration Verification", () => {
+  it("verifies Emdash encryption key is provisioned in .env", () => {
+    expect(existsSync(join(process.cwd(), ".env"))).toBe(true);
+    const env = readFileSync(join(process.cwd(), ".env"), "utf8");
+    expect(env).toContain("EMDASH_ENCRYPTION_KEY=");
+    const keyMatch = env.match(/EMDASH_ENCRYPTION_KEY=(emdash_enc_v1_[A-Za-z0-9_-]+)/);
+    expect(keyMatch).not.toBeNull();
+  });
+
+  it("verifies Emdash live content collection is configured", () => {
+    expect(existsSync(join(process.cwd(), "src/live.config.ts"))).toBe(true);
+    const liveConfig = readFileSync(join(process.cwd(), "src/live.config.ts"), "utf8");
+    expect(liveConfig).toContain("defineLiveCollection");
+    expect(liveConfig).toContain("emdashLoader");
+  });
+
+  it("verifies Emdash seed data and schema typings are present", () => {
+    expect(existsSync(join(process.cwd(), "seed/seed.json"))).toBe(true);
+    const seed = JSON.parse(readFileSync(join(process.cwd(), "seed/seed.json"), "utf8"));
+    expect(seed).toHaveProperty("collections");
+    expect(seed).toHaveProperty("content");
+
+    expect(existsSync(join(process.cwd(), "emdash-env.d.ts"))).toBe(true);
+    const envTypes = readFileSync(join(process.cwd(), "emdash-env.d.ts"), "utf8");
+    expect(envTypes).toContain('declare module "emdash"');
+  });
+
+  it("verifies visual admin routing and redirects are configured", () => {
+    expect(existsSync(join(process.cwd(), "src/pages/admin.astro"))).toBe(true);
+    const adminAstro = readFileSync(join(process.cwd(), "src/pages/admin.astro"), "utf8");
+    expect(adminAstro).toContain('Astro.redirect("/_emdash/admin")');
+
+    expect(existsSync(join(process.cwd(), "src/pages/emdash.astro"))).toBe(true);
+    const emdashAstro = readFileSync(join(process.cwd(), "src/pages/emdash.astro"), "utf8");
+    expect(emdashAstro).toContain('Astro.redirect("/_emdash/admin")');
+  });
+
+  it("verifies astro.config.mjs wires emdash and react integrations", () => {
+    const astroConfig = readFileSync(join(process.cwd(), "astro.config.mjs"), "utf8");
+    expect(astroConfig).toContain('import emdash');
+    expect(astroConfig).toContain("react()");
+    expect(astroConfig).toContain("emdash(");
+  });
+});
+`;
+      writeFileSync(join(testsDir, "emdash.test.ts"), emdashTestContent, "utf8");
+      console.log("  ✅ Auto-wired: Emdash CMS (`./seed/seed.json`, `./emdash-env.d.ts`, `./src/live.config.ts`, `./src/pages/admin.astro`, and `./tests/emdash.test.ts`)");
+    }
+
+    // 3.2.3c Git-Based / Sitepins CMS for Astro
+    if ((config.cms === "git" || config.cms === "sitepins") && (config.framework === "astro" || config.framework === "none")) {
+      depsToAdd["@astrojs/rss"] = "^4.0.11";
+      const contentDir = join(resolvedTarget, "src", "content");
+      const blogContentDir = join(contentDir, "blog");
+      mkdirSync(blogContentDir, { recursive: true });
+
+      const contentConfigContent = `import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    author: z.string().default('Editorial Team'),
+    tags: z.array(z.string()).default([]),
+    image: z.string().optional(),
+  }),
+});
+
+export const collections = { blog };
+`;
+      writeFileSync(join(contentDir, "config.ts"), contentConfigContent, "utf8");
+
+      const firstPostContent = `---
+title: "Welcome to Our New Publication"
+description: "A fast, edge-native publication powered by Astro and Git-backed content."
+pubDate: 2026-09-07
+author: "${authorName || 'Lead Editor'}"
+tags: ["announcement", "architecture", "publishing"]
+---
+
+# Welcome to the Future of Publishing
+
+This publication is built on Git-backed Content Collections and modern Markdown/MDX workflows. Write content, commit to git, and deploy automatically with zero database overhead.
+`;
+      writeFileSync(join(blogContentDir, "first-post.md"), firstPostContent, "utf8");
+
+      const pagesDir = join(resolvedTarget, "src", "pages");
+      mkdirSync(pagesDir, { recursive: true });
+
+      const rssContent = `import rss from '@astrojs/rss';
+import { getCollection } from 'astro:content';
+
+export async function GET(context: any) {
+  const posts = await getCollection('blog');
+  return rss({
+    title: '${projectName.replace(/'/g, "\\'")} - RSS Feed',
+    description: 'Latest articles and publications.',
+    site: context.site || 'http://localhost:4321',
+    items: posts.map((post: any) => ({
+      title: post.data.title,
+      pubDate: post.data.pubDate,
+      description: post.data.description,
+      link: \`/blog/\${post.slug}/\`,
+    })),
+  });
+}
+`;
+      writeFileSync(join(pagesDir, "rss.xml.ts"), rssContent, "utf8");
+      console.log("  ✅ Auto-wired: Git-backed / Sitepins CMS (`./src/content/config.ts`, `./src/content/blog/first-post.md`, and `./src/pages/rss.xml.ts`)");
     }
 
     // 3.2.4 Puck Visual Builder
@@ -3312,6 +4337,9 @@ export default config;
     } else if (config.cms === "studiocms") {
       envVars.push("CMS_ENCRYPTION_KEY=supersecret_cms_encryption_key_at_least_32_chars");
       envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
+    } else if (config.cms === "emdash") {
+      const emdashKey = "emdash_enc_v1_" + randomBytes(32).toString("base64url");
+      envVars.push(`EMDASH_ENCRYPTION_KEY=${emdashKey}`);
     }
     if (config.auth === "better-auth") {
       envVars.push("BETTER_AUTH_SECRET=supersecret_better_auth_secret_key_at_least_32_chars");
@@ -3330,8 +4358,14 @@ export default config;
     } else if (config.ecommerce === "vendure") {
       envVars.push("VENDURE_API_URL=http://localhost:3000/shop-api");
     }
+    const envVarsExample = envVars.map(v => {
+      if (v.startsWith("EMDASH_ENCRYPTION_KEY=")) {
+        return "EMDASH_ENCRYPTION_KEY=emdash_enc_v1_placeholder";
+      }
+      return v;
+    });
     const envExamplePath = join(resolvedTarget, ".env.example");
-    writeFileSync(envExamplePath, envVars.join("\n") + "\n", "utf8");
+    writeFileSync(envExamplePath, envVarsExample.join("\n") + "\n", "utf8");
     const envLocalPath = join(resolvedTarget, ".env");
     if (!existsSync(envLocalPath)) {
       writeFileSync(envLocalPath, envVars.join("\n") + "\n", "utf8");
@@ -3398,36 +4432,36 @@ export default function HomePage() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', padding: 'var(--spacing-xl, 2rem)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ maxWidth: '960px', width: '100%' }}>
+    <main style={{ minBlockSize: '100dvh', paddingInline: 'var(--padding-inline-section, 1.5rem)', paddingBlock: 'var(--space-xl, 2rem)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ maxInlineSize: 'var(--container-xl, 60rem)', inlineSize: '100%' }}>
         <header style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
-          <div style={{ display: 'inline-block', padding: '0.25rem 0.75rem', borderRadius: '9999px', background: 'var(--color-primary-dark, #312e81)', color: 'var(--color-text-heading, #fff)', fontSize: 'var(--font-size-xs, 0.75rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
+          <div style={{ display: 'inline-block', paddingInline: 'var(--space-sm, 0.75rem)', paddingBlock: 'var(--space-3xs, 0.25rem)', borderRadius: 'var(--radius-full, 9999rem)', background: 'var(--color-primary-dark, #312e81)', color: 'var(--color-text-heading, #fff)', fontSize: 'var(--font-size-xs, 0.75rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             ${config.intent.toUpperCase()} • DOX Engine Active
           </div>
           <h1 style={{ fontSize: 'var(--font-size-4xl, 2.5rem)', margin: '0 0 1rem 0', color: 'var(--color-text-heading, #fff)' }}>
             ${projectName.replace(/'/g, "\\'")}
           </h1>
-          <p style={{ fontSize: 'var(--font-size-lg, 1.25rem)', color: 'var(--color-text-muted, #94a3b8)', maxWidth: '640px', margin: '0 auto' }}>
+          <p style={{ fontSize: 'var(--font-size-lg, 1.25rem)', color: 'var(--color-text-muted, #94a3b8)', maxInlineSize: 'var(--measure-wide, 40rem)', marginInline: 'auto' }}>
             ${projectDesc.replace(/'/g, "\\'")}
           </p>
         </header>
 
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--spacing-md, 1rem)', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr))', gap: 'var(--spacing-md, 1rem)', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🚀 Framework & Runtime</h3>
             <p style={{ margin: 0, color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               <strong>${config.framework.toUpperCase()}</strong> with TypeScript and standard module resolution.
             </p>
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>💾 Database & ORM</h3>
             <p style={{ margin: 0, color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.db !== "none" ? `🟢 <strong>${config.db.toUpperCase()}</strong> + Drizzle ORM configured at \`src/lib/schema.ts\`.` : "⚪ No database configured."}
             </p>
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🔐 Identity & Auth</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.auth !== "none" ? `🟢 <strong>${config.auth.toUpperCase()}</strong> client SDK ready at \`src/lib/auth-client.ts\`.` : "⚪ No auth configured."}
@@ -3435,7 +4469,7 @@ export default function HomePage() {
             ${config.auth === "better-auth" ? `<div style={{ fontSize: '0.75rem', color: '#10b981' }}>✓ Handlers routed at /api/auth/[...all]</div>` : ""}
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🛍️ E-Commerce Engine</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.ecommerce !== "none" ? `🟢 <strong>${config.ecommerce.toUpperCase()}</strong> active.` : "⚪ No e-commerce configured."}
@@ -3444,7 +4478,7 @@ export default function HomePage() {
             <button
               onClick={handleTestCheckout}
               disabled={checkoutLoading}
-              style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: 'var(--color-primary, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
+              style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: 'var(--color-primary, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
             >
               {checkoutLoading ? 'Testing...' : 'Test Checkout Session'}
             </button>` : ""}
@@ -3452,20 +4486,20 @@ export default function HomePage() {
           </div>
 
           ${config.cms !== "none" || config.puck ? `
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>📝 Content Management</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               🟢 <strong>${config.cms.toUpperCase()}</strong>${config.puck ? " + Puck Editor" : ""}
             </p>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              ${config.cms === "payload" ? `<a href="/admin" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#4f46e5', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>⚙️ Open Payload Admin (/admin)</a>` : ""}
-              ${config.cms === "keystatic" ? `<a href="/keystatic" style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /keystatic</a>` : ""}
-              ${config.puck ? `<a href="/puck" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#059669', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>🎨 Open Puck Visual Editor (/puck)</a>` : ""}
+              ${config.cms === "payload" ? `<a href="/admin" style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#4f46e5', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>⚙️ Open Payload Admin (/admin)</a>` : ""}
+              ${config.cms === "keystatic" ? `<a href="/keystatic" style={{ paddingInline: 'var(--space-sm, 0.8rem)', paddingBlock: 'var(--space-xs, 0.4rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /keystatic</a>` : ""}
+              ${config.puck ? `<a href="/puck" style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#059669', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>🎨 Open Puck Visual Editor (/puck)</a>` : ""}
             </div>
           </div>` : ""}
         </section>
 
-        <footer style={{ textAlign: 'center', borderTop: '1px solid var(--color-border, #334155)', paddingTop: 'var(--spacing-lg, 1.5rem)' }}>
+        <footer style={{ textAlign: 'center', borderBlockStart: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)', paddingBlockStart: 'var(--spacing-lg, 1.5rem)' }}>
           <p style={{ margin: '0 0 1rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
             Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
           </p>
@@ -3507,51 +4541,51 @@ const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
 ${config.cms === "ariabuilder" ? `    <AriaHero />` : ""}
 ${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedusaProductGrid />
     <AriaCartDrawer />` : ""}
-    <main style="min-height: 50vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
-      <div style="max-width: 960px; width: 100%;">
-        <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
-          <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+    <main style="min-block-size: 50dvh; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+      <div style="max-inline-size: var(--container-xl, 60rem); inline-size: 100%;">
+        <header style="text-align: center; margin-block-end: var(--spacing-2xl, 3rem);">
+          <div style="display: inline-block; padding-inline: var(--space-sm, 0.75rem); padding-block: var(--space-3xs, 0.25rem); border-radius: var(--radius-full, 9999rem); background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-block-end: var(--space-md, 1rem);">
             ${config.intent.toUpperCase()} • DOX Engine Active
           </div>
-          <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin: 0 0 1rem 0; color: var(--color-text-heading, #fff);">{projectName}</h1>
-          <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-width: 640px; margin: 0 auto;">{projectDesc}</p>
+          <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: 0 var(--space-md, 1rem); color: var(--color-text-heading, #fff);">{projectName}</h1>
+          <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-inline-size: var(--measure-wide, 40rem); margin-inline: auto;">{projectDesc}</p>
         </header>
 
-        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md, 1rem); margin-bottom: var(--spacing-2xl, 3rem);">
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🚀 Framework & Runtime</h3>
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr)); gap: var(--spacing-md, 1rem); margin-block-end: var(--spacing-2xl, 3rem);">
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🚀 Framework & Runtime</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               <strong>${config.framework.toUpperCase()}</strong> (Zero-JS baseline static rendering).
             </p>
           </div>
 
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">💾 Database & ORM</h3>
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">💾 Database & ORM</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               ${config.db !== "none" ? `🟢 <strong>${config.db.toUpperCase()}</strong> + Drizzle ORM active.` : "⚪ No database configured."}
             </p>
           </div>
 
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🔐 Identity & Auth</h3>
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🔐 Identity & Auth</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               ${config.auth !== "none" ? `🟢 <strong>${config.auth.toUpperCase()}</strong> configured.` : "⚪ No auth configured."}
             </p>
           </div>
 
           ${config.cms !== "none" ? `
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">📝 Content & CMS</h3>
-            <p style="margin: 0 0 0.75rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">📝 Content & CMS</h3>
+            <p style="margin-block: 0 var(--space-sm, 0.75rem); color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               🟢 <strong>${config.cms.toUpperCase()}</strong> active.
             </p>
-            ${config.cms === "emdash" ? `<div style="display: flex; gap: 0.5rem;"><a href="/blog" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">📰 View Blog</a><a href="/emdash" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-size: 0.8rem;">✍️ Emdash Studio (/emdash)</a></div>` : ""}
-            ${config.cms === "studiocms" ? `<a href="/dashboard" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📊 Open StudioCMS Dashboard (/dashboard)</a>` : ""}
-            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin (guided setup on first visit)</span></div>` : ""}
+            ${config.cms === "emdash" ? `<div style="display: flex; gap: 0.5rem;"><a href="/blog" style="padding-inline: var(--space-sm, 0.8rem); padding-block: var(--space-xs, 0.4rem); border-radius: var(--radius-sm, 0.375rem); background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">📰 View Blog</a><a href="/emdash" style="padding-inline: var(--space-sm, 0.8rem); padding-block: var(--space-xs, 0.4rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-size: 0.8rem;">✍️ Emdash Studio (/emdash)</a></div>` : ""}
+            ${config.cms === "studiocms" ? `<a href="/dashboard" style="display: inline-block; padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📊 Open StudioCMS Dashboard (/dashboard)</a>` : ""}
+            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin (guided setup on first visit)</span></div>` : ""}
           </div>` : ""}
         </section>
 
-        <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
+        <footer style="text-align: center; border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); padding-block-start: var(--spacing-lg, 1.5rem);">
           <p style="margin: 0 0 1rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
           </p>
@@ -3577,32 +4611,32 @@ ${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedu
   <link rel="stylesheet" href="./src/styles/animations.css" />
 </head>
 <body style="margin: 0; padding: 0; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, -apple-system, sans-serif;">
-  <main style="min-height: 100vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
-    <div style="max-width: 960px; width: 100%;">
-      <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
-        <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+  <main style="min-block-size: 100dvh; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+    <div style="max-inline-size: var(--container-xl, 60rem); inline-size: 100%;">
+      <header style="text-align: center; margin-block-end: var(--spacing-2xl, 3rem);">
+        <div style="display: inline-block; padding-inline: var(--space-sm, 0.75rem); padding-block: var(--space-3xs, 0.25rem); border-radius: var(--radius-full, 9999rem); background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-block-end: var(--space-md, 1rem);">
           PURE HTML/CSS • ZERO BUILD STEP
         </div>
-        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin: 0 0 1rem 0; color: var(--color-text-heading, #fff);">${projectName.replace(/</g, '&lt;')}</h1>
-        <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-width: 640px; margin: 0 auto;">${projectDesc.replace(/</g, '&lt;')}</p>
+        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: 0 var(--space-md, 1rem); color: var(--color-text-heading, #fff);">${projectName.replace(/</g, '&lt;')}</h1>
+        <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-inline-size: var(--measure-wide, 40rem); margin-inline: auto;">${projectDesc.replace(/</g, '&lt;')}</p>
       </header>
 
-      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md, 1rem); margin-bottom: var(--spacing-2xl, 3rem);">
-        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🚀 Pure Semantic HTML5</h3>
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr)); gap: var(--spacing-md, 1rem); margin-block-end: var(--spacing-2xl, 3rem);">
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+          <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🚀 Pure Semantic HTML5</h3>
           <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Zero build step required. Sub-millisecond cold load with 100/100 Lighthouse performance.
           </p>
         </div>
-        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🎨 OKLCH Design Tokens</h3>
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+          <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🎨 OKLCH Design Tokens</h3>
           <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Fluid BEM scaling and wide-gamut OKLCH palettes live in <code>src/styles/tokens.css</code>.
           </p>
         </div>
       </section>
 
-      <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
+      <footer style="text-align: center; border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); padding-block-start: var(--spacing-lg, 1.5rem);">
         <p style="margin: 0 0 1rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
           Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
         </p>
@@ -3913,6 +4947,14 @@ exit 0
         pkg.scripts["preview"] = "node --import tsx aria/scripts/project-command.ts preview";
       }
 
+      if (config.cms === "emdash") {
+        pkg.emdash = { seed: "seed/seed.json" };
+        pkg.scripts["typecheck"] = "astro check";
+        if (config.deploy === "cloudflare") {
+          pkg.scripts["deploy"] = "astro build && wrangler deploy";
+        }
+      }
+
       if (config.ecommerce === "medusa") {
         pkg.scripts["backend:install"] = "cd backend && npm install";
         pkg.scripts["dev:backend"] = "cd backend && npm run dev";
@@ -3951,102 +4993,228 @@ exit 0
     mkdirSync(stylesDir, { recursive: true });
 
     // 4.1 tokens.css with Wide-Gamut OKLCH and Fluid clamp() scales
+    const pal = PALETTES[colorPalette] || PALETTES["slate"];
+    const scaleVars = (pal.scale || [])
+      .map((c, idx) => `  --color-scale-${idx + 1}: ${c};`)
+      .join("\n");
     const tokensCssContent = `/**
- * 🎨 Modern Wide-Gamut OKLCH Tokens & Fluid Scales
+ * 🎨 Modern Wide-Gamut OKLCH Tokens & Fluid Scales (${colorPalette.toUpperCase()})
+ * 100% Modern Responsive Architecture • Zero px Values • Dynamic clamp() Scales
  * Provisioned by DOX Engine (Stage 4)
  */
 :root {
-  /* Color Tokens in OKLCH Color Space */
-  --color-primary: var(--color-primary-default, oklch(0.55 0.22 260));
-  --color-primary-light: oklch(0.65 0.18 260);
-  --color-primary-dark: oklch(0.42 0.24 260);
-  --color-secondary: oklch(0.68 0.18 200);
-  --color-accent: oklch(0.72 0.18 160);
-  --color-surface: oklch(0.18 0.03 260);
-  --color-surface-elevated: oklch(0.24 0.03 260);
-  --color-border: oklch(0.32 0.04 260);
-  --color-text: oklch(0.96 0.01 260);
-  --color-text-muted: oklch(0.72 0.04 260);
-  --color-text-heading: oklch(0.99 0.01 260);
+  /* =========================================================================
+   * 1. COLOR TOKENS (OKLCH Wide-Gamut Color Space)
+   * ========================================================================= */
+  --color-primary: var(--color-primary-default, ${pal.primaryDefault});
+  --color-primary-light: ${pal.primaryLight};
+  --color-primary-dark: ${pal.primaryDark};
+  --color-secondary: ${pal.secondary};
+  --color-accent: ${pal.accent};
+  --color-surface: ${pal.surface || "oklch(0.18 0.03 260)"};
+  --color-surface-elevated: ${pal.surfaceElevated || "oklch(0.24 0.03 260)"};
+  --color-border: ${pal.border || "oklch(0.32 0.04 260)"};
+  --color-text: ${pal.text || "oklch(0.96 0.01 260)"};
+  --color-text-muted: ${pal.textMuted || "oklch(0.72 0.04 260)"};
+  --color-text-heading: ${pal.textHeading || "oklch(0.99 0.01 260)"};
 
-  /* Fluid Typography Scale via clamp(min, preferred, max) */
+  /* Full OKLCH Scale Steps */
+${scaleVars}
+
+  /* =========================================================================
+   * 2. FLUID TYPOGRAPHY SCALE (clamp(min, preferred, max) — ZERO px)
+   * Smoothly scales across viewports (20rem to 90rem)
+   * ========================================================================= */
+  --font-size-2xs: clamp(0.6875rem, 0.65rem + 0.1875vw, 0.75rem);
   --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --font-size-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
   --font-size-base: clamp(1rem, 0.92rem + 0.4vw, 1.125rem);
-  --font-size-lg: clamp(1.125rem, 1rem + 0.6vw, 1.35rem);
-  --font-size-xl: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
-  --font-size-2xl: clamp(1.5rem, 1.25rem + 1.2vw, 2.1rem);
-  --font-size-3xl: clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
-  --font-size-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
+  --font-size-md: clamp(1.125rem, 1.02rem + 0.525vw, 1.25rem);
+  --font-size-lg: clamp(1.25rem, 1.12rem + 0.65vw, 1.5rem);
+  --font-size-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --font-size-2xl: clamp(1.875rem, 1.55rem + 1.625vw, 2.5rem);
+  --font-size-3xl: clamp(2.25rem, 1.8rem + 2.25vw, 3.25rem);
+  --font-size-4xl: clamp(2.75rem, 2.15rem + 3vw, 4.25rem);
+  --font-size-hero: clamp(3.25rem, 2.4rem + 4.25vw, 6rem);
 
-  /* Fluid Spacing Scale via clamp(min, preferred, max) */
-  --spacing-xs: clamp(0.25rem, 0.2rem + 0.2vw, 0.375rem);
-  --spacing-sm: clamp(0.5rem, 0.45rem + 0.25vw, 0.75rem);
-  --spacing-md: clamp(1rem, 0.9rem + 0.5vw, 1.5rem);
-  --spacing-lg: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
-  --spacing-xl: clamp(2rem, 1.7rem + 1.5vw, 3.25rem);
-  --spacing-2xl: clamp(3rem, 2.5rem + 2.5vw, 5rem);
+  /* Font Families */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Radii */
+  /* Line Heights (Unitless Ratio) */
+  --line-height-none: 1;
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  --line-height-loose: 1.8;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* Measure / Max Prose Inline Size */
+  --measure-narrow: min(100%, 45ch);
+  --measure-prose: min(100%, 65ch);
+  --measure-wide: min(100%, 75ch);
+
+  /* =========================================================================
+   * 3. FLUID SPACING & SIZING SCALE (clamp(min, preferred, max) — ZERO px)
+   * ========================================================================= */
+  --space-3xs: clamp(0.125rem, 0.1rem + 0.125vw, 0.1875rem);
+  --space-2xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem);
+  --space-xs: clamp(0.5rem, 0.425rem + 0.375vw, 0.625rem);
+  --space-sm: clamp(0.75rem, 0.65rem + 0.5vw, 0.875rem);
+  --space-md: clamp(1rem, 0.875rem + 0.625vw, 1.25rem);
+  --space-lg: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  --space-xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
+  --space-2xl: clamp(2.5rem, 2rem + 2.5vw, 3.75rem);
+  --space-3xl: clamp(3.75rem, 3rem + 3.75vw, 5.5rem);
+  --space-4xl: clamp(5rem, 4rem + 5vw, 7.5rem);
+
+  /* Semantic Spacing Aliases */
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+
+  /* Numeric Spacing Aliases (Tailwind / Utility compatibility) */
+  --spacing-1: var(--space-3xs);
+  --spacing-2: var(--space-2xs);
+  --spacing-3: var(--space-xs);
+  --spacing-4: var(--space-sm);
+  --spacing-6: var(--space-md);
+  --spacing-8: var(--space-lg);
+  --spacing-12: var(--space-xl);
+  --spacing-16: var(--space-2xl);
+  --spacing-24: var(--space-3xl);
+  --spacing-32: var(--space-4xl);
+
+  /* =========================================================================
+   * 4. FLUID PADDING & INSETS (ZERO px)
+   * ========================================================================= */
+  --padding-inline-component: var(--space-md);
+  --padding-block-component: var(--space-sm);
+  --padding-inline-card: var(--space-lg);
+  --padding-block-card: var(--space-lg);
+  --padding-inline-section: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --padding-block-section: clamp(2.5rem, 1.5rem + 5vw, 6rem);
+  --gap-grid: clamp(1rem, 0.75rem + 1.25vw, 2rem);
+
+  /* =========================================================================
+   * 5. RESPONSIVE CONTAINER MAX INLINE SIZES (ZERO px)
+   * ========================================================================= */
+  --container-xs: min(100%, 20rem);
+  --container-sm: min(100%, 30rem);
+  --container-md: min(100%, 45rem);
+  --container-lg: min(100%, 60rem);
+  --container-xl: min(100%, 75rem);
+  --container-2xl: min(100%, 90rem);
+  --container-max-width: var(--container-xl);
+  --container-max-inline: min(100% - 2 * var(--padding-inline-section), 80rem);
+
+  /* =========================================================================
+   * 6. RADII & BORDER WIDTHS (ZERO px)
+   * ========================================================================= */
+  --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
-  --radius-xl: 1.25rem;
-  --radius-full: 9999px;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999rem;
 
-  /* Typography */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Outfit', var(--font-sans);
+  --border-width-thin: 0.0625rem;
+  --border-width-medium: 0.125rem;
+  --border-width-thick: 0.25rem;
 
-  /* Transitions */
+  /* =========================================================================
+   * 7. MODERN ELEVATION / SHADOWS (OKLCH Alpha — ZERO px)
+   * ========================================================================= */
+  --shadow-sm: 0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.15);
+  --shadow-md: 0 0.25rem 0.5rem -0.0625rem oklch(0 0 0 / 0.2), 0 0.125rem 0.25rem -0.0625rem oklch(0 0 0 / 0.15);
+  --shadow-lg: 0 0.625rem 1rem -0.25rem oklch(0 0 0 / 0.25), 0 0.25rem 0.5rem -0.125rem oklch(0 0 0 / 0.2);
+  --shadow-xl: 0 1.25rem 1.75rem -0.5rem oklch(0 0 0 / 0.3), 0 0.5rem 0.75rem -0.25rem oklch(0 0 0 / 0.2);
+
+  /* =========================================================================
+   * 8. TRANSITIONS & TIMING
+   * ========================================================================= */
   --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Viewport Heights */
+  --vh-full: 100dvh;
+  --vw-full: 100dvw;
 }
 `;
     writeFileSync(join(stylesDir, "tokens.css"), tokensCssContent, "utf8");
 
-    // 4.2 semantic.css with BEM Architecture
+    // 4.2 semantic.css with BEM Architecture (100% Modern Logical Properties, Zero px)
     const semanticCssContent = `/**
  * 📐 Semantic HTML5 & BEM Component Architecture
- * Enforces shallow selector depth (.c-block__element--modifier) and native design tokens.
+ * Enforces shallow selector depth (.c-block__element--modifier), variable tokens, and zero px values.
  */
 @import './tokens.css';
 @import './reset.css';
 @import './animations.css';
 
 /* Base Layout Containers */
-.site-container {
-  width: 100%;
-  max-width: var(--container-max-width, 1280px);
+.site-container,
+.c-container {
+  inline-size: 100%;
+  max-inline-size: var(--container-max-inline, 80rem);
   margin-inline: auto;
-  padding-inline: var(--spacing-md);
+  padding-inline: var(--padding-inline-section);
 }
 
-.site-header {
+.c-section {
+  padding-block: var(--padding-block-section);
+}
+
+.site-header,
+.c-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
+  padding-block: var(--space-md);
+  border-block-end: var(--border-width-thin) solid var(--color-border);
 }
 
-.site-header__brand {
+.site-header__brand,
+.c-header__brand {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   color: var(--color-text-heading);
   text-decoration: none;
 }
 
-.site-header__nav {
+.site-header__nav,
+.c-header__nav {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--space-md);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.site-header__link {
+.site-header__link,
+.c-header__link {
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--font-size-base);
@@ -4054,26 +5222,29 @@ exit 0
 }
 
 .site-header__link:hover,
-.site-header__link--active {
+.site-header__link--active,
+.c-header__link:hover,
+.c-header__link--active {
   color: var(--color-primary);
 }
 
-/* 🧱 BEM Component: Button */
+/* 🧱 BEM Component: Button (Zero px, variable tokens) */
 .c-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: var(--space-xs);
+  padding-inline: var(--space-md);
+  padding-block: var(--space-sm);
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .c-button--primary {
@@ -4082,7 +5253,7 @@ exit 0
 }
 .c-button--primary:hover {
   background-color: var(--color-primary-light);
-  transform: translateY(-1px);
+  transform: translateY(calc(-1 * var(--border-width-thin)));
 }
 
 .c-button--secondary {
@@ -4091,7 +5262,7 @@ exit 0
 }
 .c-button--secondary:hover {
   filter: brightness(1.1);
-  transform: translateY(-1px);
+  transform: translateY(calc(-1 * var(--border-width-thin)));
 }
 
 .c-button--outline {
@@ -4104,30 +5275,31 @@ exit 0
   color: var(--color-primary);
 }
 
-/* 🧱 BEM Component: Card */
+/* 🧱 BEM Component: Card (Zero px, variable tokens) */
 .c-card {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  transition: transform var(--transition-base), border-color var(--transition-base);
+  padding: var(--space-lg);
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .c-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(calc(-2 * var(--border-width-thin)));
   border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .c-card__header {
-  margin-bottom: var(--spacing-sm);
+  margin-block-end: var(--space-sm);
 }
 
 .c-card__title {
   font-family: var(--font-display);
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-heading);
   margin: 0;
 }
@@ -4135,41 +5307,41 @@ exit 0
 .c-card__body {
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
-  line-height: 1.6;
+  line-height: var(--line-height-relaxed);
   flex-grow: 1;
 }
 
 .c-card__footer {
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
+  margin-block-start: var(--space-md);
+  padding-block-start: var(--space-sm);
+  border-block-start: var(--border-width-thin) solid var(--color-border);
 }
 
-/* 🧱 BEM Component: Product Grid & Card */
+/* 🧱 BEM Component: Product Grid & Card (Responsive by default, Zero px) */
 .c-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-block: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+  gap: var(--gap-grid);
+  margin-block: var(--space-xl);
 }
 
 .c-product-card {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .c-product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.4);
+  transform: translateY(calc(-3 * var(--border-width-thin)));
+  box-shadow: var(--shadow-lg);
 }
 
 .c-product-card__image {
-  width: 100%;
+  inline-size: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   background-color: var(--color-surface-elevated);
@@ -4178,36 +5350,37 @@ exit 0
 .c-product-card__title {
   font-family: var(--font-display);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-heading);
-  margin: var(--spacing-md) var(--spacing-md) var(--spacing-xs);
+  margin: var(--space-md) var(--space-md) var(--space-xs);
 }
 
 .c-product-card__price {
   font-size: var(--font-size-base);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  margin-inline: var(--spacing-md);
+  margin-inline: var(--space-md);
 }
 
 .c-product-card__button {
-  margin: var(--spacing-md);
+  margin: var(--space-md);
 }
 
-/* 🧱 BEM Component: Cart Drawer */
+/* 🧱 BEM Component: Cart Drawer (Zero px) */
 .c-cart-drawer {
   position: fixed;
   inset-block: 0;
-  right: 0;
-  width: 100%;
-  max-width: 420px;
+  inset-inline-end: 0;
+  inline-size: 100%;
+  max-inline-size: min(100%, 26.25rem);
   background-color: var(--color-surface-elevated);
-  border-left: 1px solid var(--color-border);
+  border-inline-start: var(--border-width-thin) solid var(--color-border);
   transform: translateX(100%);
   transition: transform var(--transition-base);
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  box-shadow: var(--shadow-xl);
 }
 
 .c-cart-drawer--open {
@@ -4218,27 +5391,77 @@ exit 0
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-md);
+  border-block-end: var(--border-width-thin) solid var(--color-border);
 }
 
 .c-cart-drawer__body {
   flex-grow: 1;
   overflow-y: auto;
-  padding: var(--spacing-md);
+  padding: var(--space-md);
 }
 
 .c-cart-drawer__footer {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
+  padding: var(--space-md);
+  border-block-start: var(--border-width-thin) solid var(--color-border);
+}
+
+/* 🧱 BEM Component: Badge & Tags */
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding-inline: var(--space-xs);
+  padding-block: var(--space-3xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-muted);
+  border: var(--border-width-thin) solid var(--color-border);
+}
+
+/* 🧱 BEM Component: Hero Section */
+.c-hero {
+  padding-block: var(--space-3xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.c-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-heading);
+  max-inline-size: var(--measure-prose);
+}
+
+.c-hero__tagline {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted);
+  max-inline-size: var(--measure-prose);
+}
+
+.c-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-block-start: var(--space-sm);
 }
 `;
     writeFileSync(join(stylesDir, "semantic.css"), semanticCssContent, "utf8");
 
-    // 4.3 animations.css
+    // 4.3 animations.css (Zero px values)
     const animationsCssContent = `/**
  * 🎭 High-Performance Hardware-Accelerated Animations
- * GPU-composited keyframes with prefers-reduced-motion support.
+ * GPU-composited keyframes with prefers-reduced-motion support. Zero px values.
  */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -4248,7 +5471,7 @@ exit 0
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(var(--space-lg, 1.5rem));
   }
   to {
     opacity: 1;
@@ -4257,7 +5480,7 @@ exit 0
 }
 
 .fade-in {
-  animation: fadeIn 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn var(--transition-slow, 400ms) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .slide-up {
@@ -4265,12 +5488,12 @@ exit 0
 }
 
 .hover-lift {
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+  transition: transform var(--transition-fast, 150ms) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--transition-fast, 150ms) ease;
 }
 
 .hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  transform: translateY(calc(-1 * var(--border-width-medium, 0.125rem)));
+  box-shadow: var(--shadow-lg);
 }
 
 .stagger-group > *:nth-child(1) { animation-delay: 50ms; }
@@ -4298,8 +5521,43 @@ exit 0
 `;
     writeFileSync(join(stylesDir, "animations.css"), animationsCssContent, "utf8");
 
-    // 4.4 reset.css
-    writeFileSync(join(stylesDir, "reset.css"), `*, *::before, *::after { box-sizing: border-box; }\nbody { margin: 0; line-height: 1.5; -webkit-font-smoothing: antialiased; background: var(--color-surface, #0f172a); color: var(--color-text, #f8fafc); }\n`, "utf8");
+    // 4.4 reset.css (Zero px values, Modern Responsive Logical Baseline)
+    const resetCssContent = `/**
+ * 🧼 Modern CSS Reset Baseline
+ * Zero px values • Logical properties • Accessible defaults
+ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+body {
+  min-block-size: 100dvh;
+  margin: 0;
+  line-height: var(--line-height-normal, 1.5);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-surface, oklch(0.18 0.03 260));
+  color: var(--color-text, oklch(0.96 0.01 260));
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+`;
+    writeFileSync(join(stylesDir, "reset.css"), resetCssContent, "utf8");
 
     console.log("  ✅ Generated: `./src/styles/` (tokens.css, semantic.css, animations.css, reset.css)\n");
   }
@@ -4406,7 +5664,7 @@ ${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ 
 ` : ""}${config.db === "postgres" && config.ecommerce !== "medusa" ? `├── docker-compose.yml       # 🗄️ Local PostgreSQL 16 container
 ` : ""}${config.cms === "keystatic" ? `├── keystatic.config.ts      # 📝 Keystatic Git-based CMS configuration
 ` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
-├── Onboarding/              # 📋 Client and Brand Onboarding & Intake Artifacts
+├── Client-Intake/           # 📋 Client and Brand Onboarding & Intake Artifacts
 │   ├── 01-Brand/            # Brand identity, visual direction, voice & tone, asset intake
 │   ├── 02-Business/         # Business model, audience personas, competitor benchmarks
 │   ├── 03-Offerings/        # Service offerings, product catalog, scope deliverables
@@ -4598,20 +5856,18 @@ Happy building! 🚀
   console.log("📋 STAGE 6: Interactive Brand Onboarding Gate...");
 
   if (!isDryRun) {
-    const onboardingDir = join(resolvedTarget, "Onboarding");
-    const brandDir = join(onboardingDir, "01-Brand");
-    const bizDir = join(onboardingDir, "02-Business");
-    const offeringsDir = join(onboardingDir, "03-Offerings");
-    const menuDir = join(onboardingDir, "03-Menu");
-    const techDir = join(onboardingDir, "04-Technical-Intake");
+    const intakeDir = join(resolvedTarget, "Client-Intake");
+    const brandDir = join(intakeDir, "01-Brand");
+    const bizDir = join(intakeDir, "02-Business");
+    const offeringsDir = join(intakeDir, "03-Offerings");
+    const techDir = join(intakeDir, "04-Technical-Intake");
 
     mkdirSync(brandDir, { recursive: true });
     mkdirSync(bizDir, { recursive: true });
     mkdirSync(offeringsDir, { recursive: true });
-    mkdirSync(menuDir, { recursive: true });
     mkdirSync(techDir, { recursive: true });
 
-    // 6.1 Onboarding/01-Brand/
+    // 6.1 Client-Intake/01-Brand/
     const brandIdentityContent = `# 🎨 Brand Identity & Vision — ${projectName}
 
 ## Overview
@@ -4666,12 +5922,12 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 - **Display Font**: \`var(--font-display)\` ('Outfit', sans-serif)
 - **Body Font**: \`var(--font-sans)\` (Inter, system-ui)
 - **Code/Data Font**: \`var(--font-mono)\` (ui-monospace, monospace)
-- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (320px to 1440px) eliminating layout shifts.
+- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (20rem to 90rem) eliminating layout shifts.
 
 ## Spatial Grid & Layout Architecture
 - **Baseline Grid**: 8pt dimensional scale (0.25rem, 0.5rem, 1rem, 1.5rem, 2rem, 3rem, 4rem).
 - **Class Naming**: Semantic BEM (Block-Element-Modifier) class conventions.
-- **Container Architecture**: Max-width responsive shell (1200px) with fluid padding gutters.
+- **Container Architecture**: Max-width responsive shell (75rem) with fluid padding gutters.
 
 ## Theme Toggle Contract
 - Full support for \`prefers-color-scheme\` with seamless dark/light class switches.
@@ -4759,7 +6015,7 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(brandDir, "brand-assets-intake.md"), brandAssetsIntakeContent, "utf8");
 
-    // 6.2 Onboarding/02-Business/
+    // 6.2 Client-Intake/02-Business/
     const bizModelContent = `# 💼 Business Model & Strategy — ${projectName}
 
 ## Core Problem & Value Proposition
@@ -4838,7 +6094,7 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(bizDir, "client-goals-kpis.md"), clientGoalsKpisContent, "utf8");
 
-    // 6.3 Onboarding/03-Offerings/
+    // 6.3 Client-Intake/03-Offerings/
     const offeringsCatalogContent = `# 📦 Offerings & Deliverables Matrix — ${projectName}
 
 > **Offerings Engine**: Product catalog, service tiers, pricing architecture, and fulfillment models for ${projectName}.
@@ -4864,7 +6120,6 @@ ${offerings
 `;
     writeFileSync(join(offeringsDir, "offerings-catalog.md"), offeringsCatalogContent, "utf8");
     writeFileSync(join(offeringsDir, "offerings.md"), offeringsCatalogContent, "utf8");
-    writeFileSync(join(menuDir, "offerings.md"), offeringsCatalogContent, "utf8");
 
     const scopeDeliverablesContent = `# 🗺️ Scope Boundaries & Phasing — ${projectName}
 
@@ -4895,7 +6150,7 @@ ${coreFeatures
 `;
     writeFileSync(join(offeringsDir, "scope-deliverables.md"), scopeDeliverablesContent, "utf8");
 
-    // 6.4 Onboarding/04-Technical-Intake/
+    // 6.4 Client-Intake/04-Technical-Intake/
     const accessCredentialsContent = `# 🔑 Access & Infrastructure Credentials Intake — ${projectName}
 
 > **Client Technical Onboarding**: Credentials, cloud services, and access permissions required to build and deploy ${projectName}.
@@ -4948,10 +6203,16 @@ ${coreFeatures
 `;
     writeFileSync(join(techDir, "integrations-matrix.md"), integrationsMatrixContent, "utf8");
 
-    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
-    console.log("  ✅ Generated: `./Onboarding/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
-    console.log("  ✅ Generated: `./Onboarding/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
-    console.log("  ✅ Generated: `./Onboarding/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)\n");
+    // Mirror the primary suite to legacy aliases for backward compatibility.
+    for (const intakeAlias of ["Intake", "Onboarding"]) {
+      cpSync(intakeDir, join(resolvedTarget, intakeAlias), { recursive: true });
+    }
+
+    console.log("  ✅ Generated: `./Client-Intake/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
+    console.log("  ✅ Generated: `./Client-Intake/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
+    console.log("  ✅ Generated: `./Client-Intake/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
+    console.log("  ✅ Generated: `./Client-Intake/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)");
+    console.log("  ✅ Mirrored:   `./Intake/` and `./Onboarding/` (legacy aliases of Client-Intake/)\n");
   }
 
   // =========================================================================
@@ -4984,7 +6245,7 @@ ${coreFeatures
 - **Authentication**: ${config.auth.toUpperCase()}${config.customAuth ? ` (${config.customAuth})` : ""}
 - Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
 - Developer quick start guide provisioned at \`./start-here.md\`.
-- Brand & business onboarding suite generated at \`./Onboarding/\`.
+- Brand & business intake suite generated at \`./Client-Intake/\` (mirrored to \`./Intake/\` and \`./Onboarding/\`).
 
 ## 2. Live Deliverables & Key Artifacts
 ${artifactList}
@@ -5026,7 +6287,7 @@ ${artifactList}
 - **Database & ORM**: ${config.db.toUpperCase()} (Drizzle ORM)
 - **Authentication**: ${config.auth.toUpperCase()}
 - **AI Governance**: Root \`AGENTS.md\` + 9-Folder \`.agents/\` container with 13 modular rulebooks.
-- **Onboarding Matrix**: Detailed brand and business plans in \`./Onboarding/\`.
+- **Client Intake Matrix**: Detailed brand and business plans in \`./Client-Intake/\`.
 
 ---
 
@@ -5136,7 +6397,7 @@ ${offerItems}
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
   console.log(`🛡️  Governance:         DOX Engine Active (Root \`AGENTS.md\` + \`.agents/\` container)`);
   console.log(`📖 Developer Guide:    \`./start-here.md\` (Empathetic 7-section handbook)`);
-  console.log(`📋 Brand Onboarding:   \`./Onboarding/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)`);
+  console.log(`📋 Client Intake:      \`./Client-Intake/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; aliases: Intake/, Onboarding/)`);
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
   if (config.framework === "wordpress") {
