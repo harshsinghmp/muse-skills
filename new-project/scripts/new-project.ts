@@ -8,7 +8,7 @@
  *   Stage 3: Official Package Installation & Config Auto-Wiring
  *   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
  *   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
- *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
+ *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
  * 
  * Usage:
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
@@ -101,7 +101,7 @@ Core Execution Stages:
   Stage 3: Official Package Installation & Config Auto-Wiring
   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
-  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Onboarding/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)
+  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
 
 Options:
   -n, --name <name>             Project name (default: directory name)
@@ -1341,7 +1341,7 @@ async function main() {
       }
 
       // =====================================================================
-      // STAGE 6: Client Onboarding & Brand Intake
+      // STAGE 6: Client Onboarding & Brand Intake Gate
       // =====================================================================
       console.log("\n📋 STAGE 6: Client Onboarding & Brand Intake Gate");
 
@@ -1647,7 +1647,7 @@ async function main() {
       "{{PROBLEM_SOLVED}}": coreProblem,
       "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
       "{{CORE_FEATURES}}": featureBullets,
-      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Onboarding/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
+      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
       "{{BRAND_VOICE}}": brandVoice,
       "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
       "{{FIRST_MILESTONE}}": firstMilestone,
@@ -1839,10 +1839,10 @@ async function main() {
 layout: base
 title: ${projectName} - Instatic Builder
 ---
-<main class="site-container" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
-  <header style="margin-bottom: 2rem;">
-    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary, #6366f1);">⚡ Instatic SSG Platform</span>
-    <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">${projectName}</h1>
+<main class="c-container" style="padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); max-inline-size: var(--container-lg, 50rem); margin-inline: auto;">
+  <header style="margin-block-end: var(--space-xl, 2rem);">
+    <span style="font-size: var(--font-size-xs, 0.75rem); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary, #6366f1);">⚡ Instatic SSG Platform</span>
+    <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: var(--space-xs, 0.5rem) var(--space-md, 1rem);">${projectName}</h1>
     <p style="color: var(--color-text-muted, #94a3b8);">${projectDesc}</p>
   </header>
 </main>
@@ -2639,37 +2639,39 @@ const {
     background: radial-gradient(circle at top, var(--color-surface-elevated, #1e293b), var(--color-surface, #0b0f19));
   }
   .c-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-inline-size: var(--container-lg, 50rem);
+    margin-inline: auto;
   }
   .c-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+    padding-inline: var(--space-sm, 0.75rem);
+    padding-block: var(--space-3xs, 0.25rem);
+    border-radius: var(--radius-full, 9999rem);
     font-size: var(--font-size-xs, 0.75rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     background: var(--color-primary-dark, #312e81);
     color: var(--color-text-heading, #fff);
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-block-end: var(--spacing-md, 1rem);
   }
   .c-hero__title {
     font-size: var(--font-size-4xl, 2.5rem);
     color: var(--color-text-heading, #fff);
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-block-end: var(--spacing-md, 1rem);
     line-height: 1.2;
   }
   .c-hero__subtitle {
     font-size: var(--font-size-lg, 1.25rem);
     color: var(--color-text-muted, #94a3b8);
-    margin-bottom: var(--spacing-xl, 2rem);
+    margin-block-end: var(--spacing-xl, 2rem);
     line-height: 1.6;
   }
   .c-btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding-inline: var(--space-xl, 1.5rem);
+    padding-block: var(--space-sm, 0.75rem);
+    border-radius: var(--radius-md, 0.5rem);
     font-weight: 600;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -2730,18 +2732,19 @@ try {
 
 <style>
   .c-products-grid {
-    padding: var(--spacing-2xl, 3rem) var(--spacing-xl, 2rem);
-    max-width: 1200px;
-    margin: 0 auto;
+    padding-inline: var(--padding-inline-section, 2rem);
+    padding-block: var(--space-2xl, 3rem);
+    max-inline-size: var(--container-xl, 75rem);
+    margin-inline: auto;
   }
   .c-products-grid__header {
     text-align: center;
-    margin-bottom: var(--spacing-2xl, 3rem);
+    margin-block-end: var(--spacing-2xl, 3rem);
   }
   .c-products-grid__title {
     font-size: var(--font-size-3xl, 2rem);
     color: var(--color-text-heading, #fff);
-    margin-bottom: 0.5rem;
+    margin-block-end: var(--space-xs, 0.5rem);
   }
   .c-products-grid__subtitle {
     color: var(--color-text-muted, #94a3b8);
@@ -2749,19 +2752,19 @@ try {
   }
   .c-products-grid__items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
     gap: var(--spacing-xl, 2rem);
   }
   .c-product-card {
     background: var(--color-surface-elevated, #1e293b);
-    border: 1px solid var(--color-border, #334155);
-    border-radius: 12px;
+    border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    border-radius: var(--radius-lg, 0.75rem);
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   .c-product-card__thumb {
-    height: 180px;
+    block-size: 11.25rem;
     background: var(--color-surface, #0f172a);
     display: flex;
     align-items: center;
@@ -2775,33 +2778,34 @@ try {
     flex-direction: column;
   }
   .c-product-card__title {
-    font-size: 1.125rem;
+    font-size: var(--font-size-md, 1.125rem);
     color: var(--color-text-heading, #fff);
-    margin: 0 0 0.5rem 0;
+    margin-block: 0 var(--space-xs, 0.5rem);
   }
   .c-product-card__desc {
     color: var(--color-text-muted, #94a3b8);
-    font-size: 0.875rem;
-    margin: 0 0 1rem 0;
+    font-size: var(--font-size-sm, 0.875rem);
+    margin-block: 0 var(--space-md, 1rem);
     flex: 1;
   }
   .c-product-card__footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto;
+    margin-block-start: auto;
   }
   .c-product-card__price {
-    font-size: 1.25rem;
+    font-size: var(--font-size-lg, 1.25rem);
     font-weight: 700;
     color: var(--color-primary-light, #818cf8);
   }
   .c-product-card__btn {
-    padding: 0.5rem 1rem;
+    padding-inline: var(--space-md, 1rem);
+    padding-block: var(--space-xs, 0.5rem);
     background: var(--color-primary, #6366f1);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm, 0.375rem);
     cursor: pointer;
     font-weight: 600;
   }
@@ -2835,8 +2839,8 @@ try {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: oklch(0% 0 0 / 0.6);
+    backdrop-filter: blur(0.25rem);
     z-index: 9999;
   }
   .c-cart-drawer.is-open {
@@ -2844,13 +2848,13 @@ try {
   }
   .c-cart-drawer__panel {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    max-width: 400px;
-    height: 100%;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inline-size: 100%;
+    max-inline-size: min(100%, 25rem);
+    block-size: 100%;
     background: var(--color-surface, #0b0f19);
-    border-left: 1px solid var(--color-border, #334155);
+    border-inline-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
     display: flex;
     flex-direction: column;
     padding: var(--spacing-xl, 2rem);
@@ -2859,8 +2863,8 @@ try {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--color-border, #334155);
-    padding-bottom: 1rem;
+    border-block-end: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    padding-block-end: var(--space-md, 1rem);
   }
   .c-cart-drawer__close {
     background: transparent;
@@ -2872,28 +2876,29 @@ try {
   .c-cart-drawer__items {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem 0;
+    padding-block: var(--space-md, 1rem);
   }
   .c-cart-drawer__empty {
     color: var(--color-text-muted, #94a3b8);
     text-align: center;
-    margin-top: 2rem;
+    margin-block-start: var(--space-xl, 2rem);
   }
   .c-cart-drawer__footer {
-    border-top: 1px solid var(--color-border, #334155);
-    padding-top: 1rem;
+    border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
+    padding-block-start: var(--space-md, 1rem);
   }
   .c-cart-drawer__total {
     display: flex;
     justify-content: space-between;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-block-end: var(--space-md, 1rem);
   }
   .c-btn {
     display: block;
     text-align: center;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
+    padding-inline: var(--space-md, 1rem);
+    padding-block: var(--space-sm, 0.75rem);
+    border-radius: var(--radius-md, 0.5rem);
     font-weight: 600;
     border: none;
     cursor: pointer;
@@ -3198,20 +3203,20 @@ const posts = [
     <title>Blog - ${projectName.replace(/"/g, '\\"')}</title>
     <meta name="viewport" content="width=device-width" />
   </head>
-  <body style="margin: 0; padding: 2rem; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, sans-serif;">
-    <main style="max-width: 800px; margin: 0 auto;">
-      <header style="margin-bottom: 2rem;">
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
-        <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">Blog & Articles</h1>
+  <body style="margin: 0; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, sans-serif;">
+    <main class="c-container" style="max-inline-size: var(--container-lg, 50rem); margin-inline: auto;">
+      <header style="margin-block-end: var(--space-xl, 2rem);">
+        <span style="font-size: var(--font-size-xs, 0.75rem); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary-light, #818cf8);">Emdash Edge Publication</span>
+        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: var(--space-xs, 0.5rem) var(--space-md, 1rem);">Blog & Articles</h1>
         <p style="color: var(--color-text-muted, #94a3b8);">Serverless edge publication built on Astro and Emdash CMS.</p>
-        <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
-          <a href="/admin" style="padding: 0.5rem 1rem; border-radius: 6px; background: #059669; color: #fff; text-decoration: none; font-weight: 600;">✍️ Access Emdash Admin (/admin)</a>
+        <div style="margin-block-start: var(--space-md, 1rem); display: flex; gap: var(--space-sm, 0.75rem);">
+          <a href="/admin" class="c-btn" style="padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #059669; color: #fff; text-decoration: none; font-weight: 600;">✍️ Access Emdash Admin (/admin)</a>
         </div>
       </header>
 
-      <section style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <section style="display: flex; flex-direction: column; gap: var(--space-lg, 1.5rem);">
         {posts.map(p => (
-          <article style="padding: 1.5rem; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155); border-radius: 10px;">
+          <article class="c-card" style="padding: var(--space-lg, 1.5rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); border-radius: var(--radius-lg, 0.75rem);">
             <div style="font-size: 0.8rem; color: var(--color-text-muted, #94a3b8); margin-bottom: 0.5rem;">{p.date}</div>
             <h2 style="font-size: 1.5rem; margin: 0 0 0.5rem 0;">{p.title}</h2>
             <p style="color: var(--color-text-muted, #94a3b8); margin: 0 0 1rem 0;">{p.description}</p>
@@ -4427,36 +4432,36 @@ export default function HomePage() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', padding: 'var(--spacing-xl, 2rem)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ maxWidth: '960px', width: '100%' }}>
+    <main style={{ minBlockSize: '100dvh', paddingInline: 'var(--padding-inline-section, 1.5rem)', paddingBlock: 'var(--space-xl, 2rem)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ maxInlineSize: 'var(--container-xl, 60rem)', inlineSize: '100%' }}>
         <header style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
-          <div style={{ display: 'inline-block', padding: '0.25rem 0.75rem', borderRadius: '9999px', background: 'var(--color-primary-dark, #312e81)', color: 'var(--color-text-heading, #fff)', fontSize: 'var(--font-size-xs, 0.75rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
+          <div style={{ display: 'inline-block', paddingInline: 'var(--space-sm, 0.75rem)', paddingBlock: 'var(--space-3xs, 0.25rem)', borderRadius: 'var(--radius-full, 9999rem)', background: 'var(--color-primary-dark, #312e81)', color: 'var(--color-text-heading, #fff)', fontSize: 'var(--font-size-xs, 0.75rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             ${config.intent.toUpperCase()} • DOX Engine Active
           </div>
           <h1 style={{ fontSize: 'var(--font-size-4xl, 2.5rem)', margin: '0 0 1rem 0', color: 'var(--color-text-heading, #fff)' }}>
             ${projectName.replace(/'/g, "\\'")}
           </h1>
-          <p style={{ fontSize: 'var(--font-size-lg, 1.25rem)', color: 'var(--color-text-muted, #94a3b8)', maxWidth: '640px', margin: '0 auto' }}>
+          <p style={{ fontSize: 'var(--font-size-lg, 1.25rem)', color: 'var(--color-text-muted, #94a3b8)', maxInlineSize: 'var(--measure-wide, 40rem)', marginInline: 'auto' }}>
             ${projectDesc.replace(/'/g, "\\'")}
           </p>
         </header>
 
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--spacing-md, 1rem)', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr))', gap: 'var(--spacing-md, 1rem)', marginBottom: 'var(--spacing-2xl, 3rem)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🚀 Framework & Runtime</h3>
             <p style={{ margin: 0, color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               <strong>${config.framework.toUpperCase()}</strong> with TypeScript and standard module resolution.
             </p>
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>💾 Database & ORM</h3>
             <p style={{ margin: 0, color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.db !== "none" ? `🟢 <strong>${config.db.toUpperCase()}</strong> + Drizzle ORM configured at \`src/lib/schema.ts\`.` : "⚪ No database configured."}
             </p>
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🔐 Identity & Auth</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.auth !== "none" ? `🟢 <strong>${config.auth.toUpperCase()}</strong> client SDK ready at \`src/lib/auth-client.ts\`.` : "⚪ No auth configured."}
@@ -4464,7 +4469,7 @@ export default function HomePage() {
             ${config.auth === "better-auth" ? `<div style={{ fontSize: '0.75rem', color: '#10b981' }}>✓ Handlers routed at /api/auth/[...all]</div>` : ""}
           </div>
 
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>🛍️ E-Commerce Engine</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               ${config.ecommerce !== "none" ? `🟢 <strong>${config.ecommerce.toUpperCase()}</strong> active.` : "⚪ No e-commerce configured."}
@@ -4473,7 +4478,7 @@ export default function HomePage() {
             <button
               onClick={handleTestCheckout}
               disabled={checkoutLoading}
-              style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: 'var(--color-primary, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
+              style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: 'var(--color-primary, #6366f1)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
             >
               {checkoutLoading ? 'Testing...' : 'Test Checkout Session'}
             </button>` : ""}
@@ -4481,20 +4486,20 @@ export default function HomePage() {
           </div>
 
           ${config.cms !== "none" || config.puck ? `
-          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: '12px', background: 'var(--color-surface-elevated, #1e293b)', border: '1px solid var(--color-border, #334155)' }}>
+          <div className="c-card" style={{ padding: 'var(--spacing-lg, 1.5rem)', borderRadius: 'var(--radius-lg, 0.75rem)', background: 'var(--color-surface-elevated, #1e293b)', border: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--font-size-base, 1rem)' }}>📝 Content Management</h3>
             <p style={{ margin: '0 0 0.75rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
               🟢 <strong>${config.cms.toUpperCase()}</strong>${config.puck ? " + Puck Editor" : ""}
             </p>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              ${config.cms === "payload" ? `<a href="/admin" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#4f46e5', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>⚙️ Open Payload Admin (/admin)</a>` : ""}
-              ${config.cms === "keystatic" ? `<a href="/keystatic" style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /keystatic</a>` : ""}
-              ${config.puck ? `<a href="/puck" style={{ padding: '0.5rem 1rem', borderRadius: '6px', background: '#059669', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>🎨 Open Puck Visual Editor (/puck)</a>` : ""}
+              ${config.cms === "payload" ? `<a href="/admin" style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#4f46e5', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>⚙️ Open Payload Admin (/admin)</a>` : ""}
+              ${config.cms === "keystatic" ? `<a href="/keystatic" style={{ paddingInline: 'var(--space-sm, 0.8rem)', paddingBlock: 'var(--space-xs, 0.4rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#334155', color: '#fff', textDecoration: 'none', fontSize: '0.8rem' }}>Open /keystatic</a>` : ""}
+              ${config.puck ? `<a href="/puck" style={{ paddingInline: 'var(--space-md, 1rem)', paddingBlock: 'var(--space-xs, 0.5rem)', borderRadius: 'var(--radius-sm, 0.375rem)', background: '#059669', color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>🎨 Open Puck Visual Editor (/puck)</a>` : ""}
             </div>
           </div>` : ""}
         </section>
 
-        <footer style={{ textAlign: 'center', borderTop: '1px solid var(--color-border, #334155)', paddingTop: 'var(--spacing-lg, 1.5rem)' }}>
+        <footer style={{ textAlign: 'center', borderBlockStart: 'var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155)', paddingBlockStart: 'var(--spacing-lg, 1.5rem)' }}>
           <p style={{ margin: '0 0 1rem 0', color: 'var(--color-text-muted, #94a3b8)', fontSize: 'var(--font-size-sm, 0.875rem)' }}>
             Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
           </p>
@@ -4536,51 +4541,51 @@ const projectDesc = "${projectDesc.replace(/"/g, '\\"')}";
 ${config.cms === "ariabuilder" ? `    <AriaHero />` : ""}
 ${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedusaProductGrid />
     <AriaCartDrawer />` : ""}
-    <main style="min-height: 50vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
-      <div style="max-width: 960px; width: 100%;">
-        <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
-          <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+    <main style="min-block-size: 50dvh; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+      <div style="max-inline-size: var(--container-xl, 60rem); inline-size: 100%;">
+        <header style="text-align: center; margin-block-end: var(--spacing-2xl, 3rem);">
+          <div style="display: inline-block; padding-inline: var(--space-sm, 0.75rem); padding-block: var(--space-3xs, 0.25rem); border-radius: var(--radius-full, 9999rem); background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-block-end: var(--space-md, 1rem);">
             ${config.intent.toUpperCase()} • DOX Engine Active
           </div>
-          <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin: 0 0 1rem 0; color: var(--color-text-heading, #fff);">{projectName}</h1>
-          <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-width: 640px; margin: 0 auto;">{projectDesc}</p>
+          <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: 0 var(--space-md, 1rem); color: var(--color-text-heading, #fff);">{projectName}</h1>
+          <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-inline-size: var(--measure-wide, 40rem); margin-inline: auto;">{projectDesc}</p>
         </header>
 
-        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md, 1rem); margin-bottom: var(--spacing-2xl, 3rem);">
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🚀 Framework & Runtime</h3>
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr)); gap: var(--spacing-md, 1rem); margin-block-end: var(--spacing-2xl, 3rem);">
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🚀 Framework & Runtime</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               <strong>${config.framework.toUpperCase()}</strong> (Zero-JS baseline static rendering).
             </p>
           </div>
 
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">💾 Database & ORM</h3>
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">💾 Database & ORM</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               ${config.db !== "none" ? `🟢 <strong>${config.db.toUpperCase()}</strong> + Drizzle ORM active.` : "⚪ No database configured."}
             </p>
           </div>
 
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🔐 Identity & Auth</h3>
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🔐 Identity & Auth</h3>
             <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               ${config.auth !== "none" ? `🟢 <strong>${config.auth.toUpperCase()}</strong> configured.` : "⚪ No auth configured."}
             </p>
           </div>
 
           ${config.cms !== "none" ? `
-          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">📝 Content & CMS</h3>
-            <p style="margin: 0 0 0.75rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
+          <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+            <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">📝 Content & CMS</h3>
+            <p style="margin-block: 0 var(--space-sm, 0.75rem); color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
               🟢 <strong>${config.cms.toUpperCase()}</strong> active.
             </p>
-            ${config.cms === "emdash" ? `<div style="display: flex; gap: 0.5rem;"><a href="/blog" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">📰 View Blog</a><a href="/emdash" style="padding: 0.4rem 0.8rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-size: 0.8rem;">✍️ Emdash Studio (/emdash)</a></div>` : ""}
-            ${config.cms === "studiocms" ? `<a href="/dashboard" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📊 Open StudioCMS Dashboard (/dashboard)</a>` : ""}
-            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin (guided setup on first visit)</span></div>` : ""}
+            ${config.cms === "emdash" ? `<div style="display: flex; gap: 0.5rem;"><a href="/blog" style="padding-inline: var(--space-sm, 0.8rem); padding-block: var(--space-xs, 0.4rem); border-radius: var(--radius-sm, 0.375rem); background: #334155; color: #fff; text-decoration: none; font-size: 0.8rem;">📰 View Blog</a><a href="/emdash" style="padding-inline: var(--space-sm, 0.8rem); padding-block: var(--space-xs, 0.4rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-size: 0.8rem;">✍️ Emdash Studio (/emdash)</a></div>` : ""}
+            ${config.cms === "studiocms" ? `<a href="/dashboard" style="display: inline-block; padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📊 Open StudioCMS Dashboard (/dashboard)</a>` : ""}
+            ${config.cms === "ariabuilder" ? `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;"><a href="/admin" style="display: inline-block; padding-inline: var(--space-md, 1rem); padding-block: var(--space-xs, 0.5rem); border-radius: var(--radius-sm, 0.375rem); background: #4f46e5; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.85rem;">🎨 Open Aria Visual Builder (/admin)</a><span style="font-size: 0.75rem; color: #10b981;">Visual canvas active at /admin (guided setup on first visit)</span></div>` : ""}
           </div>` : ""}
         </section>
 
-        <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
+        <footer style="text-align: center; border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); padding-block-start: var(--spacing-lg, 1.5rem);">
           <p style="margin: 0 0 1rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
           </p>
@@ -4606,32 +4611,32 @@ ${config.cms === "ariabuilder" && config.ecommerce === "medusa" ? `    <AriaMedu
   <link rel="stylesheet" href="./src/styles/animations.css" />
 </head>
 <body style="margin: 0; padding: 0; background: var(--color-surface, #0b0f19); color: var(--color-text, #f8fafc); font-family: system-ui, -apple-system, sans-serif;">
-  <main style="min-height: 100vh; padding: var(--spacing-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
-    <div style="max-width: 960px; width: 100%;">
-      <header style="text-align: center; margin-bottom: var(--spacing-2xl, 3rem);">
-        <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+  <main style="min-block-size: 100dvh; padding-inline: var(--padding-inline-section, 1.5rem); padding-block: var(--space-xl, 2rem); display: flex; flex-direction: column; align-items: center;">
+    <div style="max-inline-size: var(--container-xl, 60rem); inline-size: 100%;">
+      <header style="text-align: center; margin-block-end: var(--spacing-2xl, 3rem);">
+        <div style="display: inline-block; padding-inline: var(--space-sm, 0.75rem); padding-block: var(--space-3xs, 0.25rem); border-radius: var(--radius-full, 9999rem); background: var(--color-primary-dark, #312e81); color: var(--color-text-heading, #fff); font-size: var(--font-size-xs, 0.75rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-block-end: var(--space-md, 1rem);">
           PURE HTML/CSS • ZERO BUILD STEP
         </div>
-        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin: 0 0 1rem 0; color: var(--color-text-heading, #fff);">${projectName.replace(/</g, '&lt;')}</h1>
-        <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-width: 640px; margin: 0 auto;">${projectDesc.replace(/</g, '&lt;')}</p>
+        <h1 style="font-size: var(--font-size-4xl, 2.5rem); margin-block: 0 var(--space-md, 1rem); color: var(--color-text-heading, #fff);">${projectName.replace(/</g, '&lt;')}</h1>
+        <p style="font-size: var(--font-size-lg, 1.25rem); color: var(--color-text-muted, #94a3b8); max-inline-size: var(--measure-wide, 40rem); margin-inline: auto;">${projectDesc.replace(/</g, '&lt;')}</p>
       </header>
 
-      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md, 1rem); margin-bottom: var(--spacing-2xl, 3rem);">
-        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🚀 Pure Semantic HTML5</h3>
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr)); gap: var(--spacing-md, 1rem); margin-block-end: var(--spacing-2xl, 3rem);">
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+          <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🚀 Pure Semantic HTML5</h3>
           <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Zero build step required. Sub-millisecond cold load with 100/100 Lighthouse performance.
           </p>
         </div>
-        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: 12px; background: var(--color-surface-elevated, #1e293b); border: 1px solid var(--color-border, #334155);">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: var(--font-size-base, 1rem);">🎨 OKLCH Design Tokens</h3>
+        <div class="c-card" style="padding: var(--spacing-lg, 1.5rem); border-radius: var(--radius-lg, 0.75rem); background: var(--color-surface-elevated, #1e293b); border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);">
+          <h3 style="margin-block: 0 var(--space-xs, 0.5rem); font-size: var(--font-size-base, 1rem);">🎨 OKLCH Design Tokens</h3>
           <p style="margin: 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
             Fluid BEM scaling and wide-gamut OKLCH palettes live in <code>src/styles/tokens.css</code>.
           </p>
         </div>
       </section>
 
-      <footer style="text-align: center; border-top: 1px solid var(--color-border, #334155); padding-top: var(--spacing-lg, 1.5rem);">
+      <footer style="text-align: center; border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155); padding-block-start: var(--spacing-lg, 1.5rem);">
         <p style="margin: 0 0 1rem 0; color: var(--color-text-muted, #94a3b8); font-size: var(--font-size-sm, 0.875rem);">
           Empathetic developer guide: <code>./start-here.md</code> | Architecture: <code>./.agents/context/architecture.md</code>
         </p>
@@ -4994,10 +4999,13 @@ exit 0
       .join("\n");
     const tokensCssContent = `/**
  * 🎨 Modern Wide-Gamut OKLCH Tokens & Fluid Scales (${colorPalette.toUpperCase()})
+ * 100% Modern Responsive Architecture • Zero px Values • Dynamic clamp() Scales
  * Provisioned by DOX Engine (Stage 4)
  */
 :root {
-  /* Color Tokens in OKLCH Color Space */
+  /* =========================================================================
+   * 1. COLOR TOKENS (OKLCH Wide-Gamut Color Space)
+   * ========================================================================= */
   --color-primary: var(--color-primary-default, ${pal.primaryDefault});
   --color-primary-light: ${pal.primaryLight};
   --color-primary-dark: ${pal.primaryDark};
@@ -5013,84 +5021,200 @@ exit 0
   /* Full OKLCH Scale Steps */
 ${scaleVars}
 
-  /* Fluid Typography Scale via clamp(min, preferred, max) */
+  /* =========================================================================
+   * 2. FLUID TYPOGRAPHY SCALE (clamp(min, preferred, max) — ZERO px)
+   * Smoothly scales across viewports (20rem to 90rem)
+   * ========================================================================= */
+  --font-size-2xs: clamp(0.6875rem, 0.65rem + 0.1875vw, 0.75rem);
   --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --font-size-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
   --font-size-base: clamp(1rem, 0.92rem + 0.4vw, 1.125rem);
-  --font-size-lg: clamp(1.125rem, 1rem + 0.6vw, 1.35rem);
-  --font-size-xl: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
-  --font-size-2xl: clamp(1.5rem, 1.25rem + 1.2vw, 2.1rem);
-  --font-size-3xl: clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
-  --font-size-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
+  --font-size-md: clamp(1.125rem, 1.02rem + 0.525vw, 1.25rem);
+  --font-size-lg: clamp(1.25rem, 1.12rem + 0.65vw, 1.5rem);
+  --font-size-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --font-size-2xl: clamp(1.875rem, 1.55rem + 1.625vw, 2.5rem);
+  --font-size-3xl: clamp(2.25rem, 1.8rem + 2.25vw, 3.25rem);
+  --font-size-4xl: clamp(2.75rem, 2.15rem + 3vw, 4.25rem);
+  --font-size-hero: clamp(3.25rem, 2.4rem + 4.25vw, 6rem);
 
-  /* Fluid Spacing Scale via clamp(min, preferred, max) */
-  --spacing-xs: clamp(0.25rem, 0.2rem + 0.2vw, 0.375rem);
-  --spacing-sm: clamp(0.5rem, 0.45rem + 0.25vw, 0.75rem);
-  --spacing-md: clamp(1rem, 0.9rem + 0.5vw, 1.5rem);
-  --spacing-lg: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
-  --spacing-xl: clamp(2rem, 1.7rem + 1.5vw, 3.25rem);
-  --spacing-2xl: clamp(3rem, 2.5rem + 2.5vw, 5rem);
+  /* Font Families */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Radii */
+  /* Line Heights (Unitless Ratio) */
+  --line-height-none: 1;
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  --line-height-loose: 1.8;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* Measure / Max Prose Inline Size */
+  --measure-narrow: min(100%, 45ch);
+  --measure-prose: min(100%, 65ch);
+  --measure-wide: min(100%, 75ch);
+
+  /* =========================================================================
+   * 3. FLUID SPACING & SIZING SCALE (clamp(min, preferred, max) — ZERO px)
+   * ========================================================================= */
+  --space-3xs: clamp(0.125rem, 0.1rem + 0.125vw, 0.1875rem);
+  --space-2xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem);
+  --space-xs: clamp(0.5rem, 0.425rem + 0.375vw, 0.625rem);
+  --space-sm: clamp(0.75rem, 0.65rem + 0.5vw, 0.875rem);
+  --space-md: clamp(1rem, 0.875rem + 0.625vw, 1.25rem);
+  --space-lg: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  --space-xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
+  --space-2xl: clamp(2.5rem, 2rem + 2.5vw, 3.75rem);
+  --space-3xl: clamp(3.75rem, 3rem + 3.75vw, 5.5rem);
+  --space-4xl: clamp(5rem, 4rem + 5vw, 7.5rem);
+
+  /* Semantic Spacing Aliases */
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+
+  /* Numeric Spacing Aliases (Tailwind / Utility compatibility) */
+  --spacing-1: var(--space-3xs);
+  --spacing-2: var(--space-2xs);
+  --spacing-3: var(--space-xs);
+  --spacing-4: var(--space-sm);
+  --spacing-6: var(--space-md);
+  --spacing-8: var(--space-lg);
+  --spacing-12: var(--space-xl);
+  --spacing-16: var(--space-2xl);
+  --spacing-24: var(--space-3xl);
+  --spacing-32: var(--space-4xl);
+
+  /* =========================================================================
+   * 4. FLUID PADDING & INSETS (ZERO px)
+   * ========================================================================= */
+  --padding-inline-component: var(--space-md);
+  --padding-block-component: var(--space-sm);
+  --padding-inline-card: var(--space-lg);
+  --padding-block-card: var(--space-lg);
+  --padding-inline-section: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --padding-block-section: clamp(2.5rem, 1.5rem + 5vw, 6rem);
+  --gap-grid: clamp(1rem, 0.75rem + 1.25vw, 2rem);
+
+  /* =========================================================================
+   * 5. RESPONSIVE CONTAINER MAX INLINE SIZES (ZERO px)
+   * ========================================================================= */
+  --container-xs: min(100%, 20rem);
+  --container-sm: min(100%, 30rem);
+  --container-md: min(100%, 45rem);
+  --container-lg: min(100%, 60rem);
+  --container-xl: min(100%, 75rem);
+  --container-2xl: min(100%, 90rem);
+  --container-max-width: var(--container-xl);
+  --container-max-inline: min(100% - 2 * var(--padding-inline-section), 80rem);
+
+  /* =========================================================================
+   * 6. RADII & BORDER WIDTHS (ZERO px)
+   * ========================================================================= */
+  --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
-  --radius-xl: 1.25rem;
-  --radius-full: 9999px;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999rem;
 
-  /* Typography */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Outfit', var(--font-sans);
+  --border-width-thin: 0.0625rem;
+  --border-width-medium: 0.125rem;
+  --border-width-thick: 0.25rem;
 
-  /* Transitions */
+  /* =========================================================================
+   * 7. MODERN ELEVATION / SHADOWS (OKLCH Alpha — ZERO px)
+   * ========================================================================= */
+  --shadow-sm: 0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.15);
+  --shadow-md: 0 0.25rem 0.5rem -0.0625rem oklch(0 0 0 / 0.2), 0 0.125rem 0.25rem -0.0625rem oklch(0 0 0 / 0.15);
+  --shadow-lg: 0 0.625rem 1rem -0.25rem oklch(0 0 0 / 0.25), 0 0.25rem 0.5rem -0.125rem oklch(0 0 0 / 0.2);
+  --shadow-xl: 0 1.25rem 1.75rem -0.5rem oklch(0 0 0 / 0.3), 0 0.5rem 0.75rem -0.25rem oklch(0 0 0 / 0.2);
+
+  /* =========================================================================
+   * 8. TRANSITIONS & TIMING
+   * ========================================================================= */
   --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Viewport Heights */
+  --vh-full: 100dvh;
+  --vw-full: 100dvw;
 }
 `;
     writeFileSync(join(stylesDir, "tokens.css"), tokensCssContent, "utf8");
 
-    // 4.2 semantic.css with BEM Architecture
+    // 4.2 semantic.css with BEM Architecture (100% Modern Logical Properties, Zero px)
     const semanticCssContent = `/**
  * 📐 Semantic HTML5 & BEM Component Architecture
- * Enforces shallow selector depth (.c-block__element--modifier) and native design tokens.
+ * Enforces shallow selector depth (.c-block__element--modifier), variable tokens, and zero px values.
  */
 @import './tokens.css';
 @import './reset.css';
 @import './animations.css';
 
 /* Base Layout Containers */
-.site-container {
-  width: 100%;
-  max-width: var(--container-max-width, 1280px);
+.site-container,
+.c-container {
+  inline-size: 100%;
+  max-inline-size: var(--container-max-inline, 80rem);
   margin-inline: auto;
-  padding-inline: var(--spacing-md);
+  padding-inline: var(--padding-inline-section);
 }
 
-.site-header {
+.c-section {
+  padding-block: var(--padding-block-section);
+}
+
+.site-header,
+.c-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
+  padding-block: var(--space-md);
+  border-block-end: var(--border-width-thin) solid var(--color-border);
 }
 
-.site-header__brand {
+.site-header__brand,
+.c-header__brand {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   color: var(--color-text-heading);
   text-decoration: none;
 }
 
-.site-header__nav {
+.site-header__nav,
+.c-header__nav {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--space-md);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.site-header__link {
+.site-header__link,
+.c-header__link {
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--font-size-base);
@@ -5098,26 +5222,29 @@ ${scaleVars}
 }
 
 .site-header__link:hover,
-.site-header__link--active {
+.site-header__link--active,
+.c-header__link:hover,
+.c-header__link--active {
   color: var(--color-primary);
 }
 
-/* 🧱 BEM Component: Button */
+/* 🧱 BEM Component: Button (Zero px, variable tokens) */
 .c-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: var(--space-xs);
+  padding-inline: var(--space-md);
+  padding-block: var(--space-sm);
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .c-button--primary {
@@ -5126,7 +5253,7 @@ ${scaleVars}
 }
 .c-button--primary:hover {
   background-color: var(--color-primary-light);
-  transform: translateY(-1px);
+  transform: translateY(calc(-1 * var(--border-width-thin)));
 }
 
 .c-button--secondary {
@@ -5135,7 +5262,7 @@ ${scaleVars}
 }
 .c-button--secondary:hover {
   filter: brightness(1.1);
-  transform: translateY(-1px);
+  transform: translateY(calc(-1 * var(--border-width-thin)));
 }
 
 .c-button--outline {
@@ -5148,30 +5275,31 @@ ${scaleVars}
   color: var(--color-primary);
 }
 
-/* 🧱 BEM Component: Card */
+/* 🧱 BEM Component: Card (Zero px, variable tokens) */
 .c-card {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  transition: transform var(--transition-base), border-color var(--transition-base);
+  padding: var(--space-lg);
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .c-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(calc(-2 * var(--border-width-thin)));
   border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .c-card__header {
-  margin-bottom: var(--spacing-sm);
+  margin-block-end: var(--space-sm);
 }
 
 .c-card__title {
   font-family: var(--font-display);
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-heading);
   margin: 0;
 }
@@ -5179,41 +5307,41 @@ ${scaleVars}
 .c-card__body {
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
-  line-height: 1.6;
+  line-height: var(--line-height-relaxed);
   flex-grow: 1;
 }
 
 .c-card__footer {
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
+  margin-block-start: var(--space-md);
+  padding-block-start: var(--space-sm);
+  border-block-start: var(--border-width-thin) solid var(--color-border);
 }
 
-/* 🧱 BEM Component: Product Grid & Card */
+/* 🧱 BEM Component: Product Grid & Card (Responsive by default, Zero px) */
 .c-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-block: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+  gap: var(--gap-grid);
+  margin-block: var(--space-xl);
 }
 
 .c-product-card {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .c-product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.4);
+  transform: translateY(calc(-3 * var(--border-width-thin)));
+  box-shadow: var(--shadow-lg);
 }
 
 .c-product-card__image {
-  width: 100%;
+  inline-size: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   background-color: var(--color-surface-elevated);
@@ -5222,36 +5350,37 @@ ${scaleVars}
 .c-product-card__title {
   font-family: var(--font-display);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-heading);
-  margin: var(--spacing-md) var(--spacing-md) var(--spacing-xs);
+  margin: var(--space-md) var(--space-md) var(--space-xs);
 }
 
 .c-product-card__price {
   font-size: var(--font-size-base);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  margin-inline: var(--spacing-md);
+  margin-inline: var(--space-md);
 }
 
 .c-product-card__button {
-  margin: var(--spacing-md);
+  margin: var(--space-md);
 }
 
-/* 🧱 BEM Component: Cart Drawer */
+/* 🧱 BEM Component: Cart Drawer (Zero px) */
 .c-cart-drawer {
   position: fixed;
   inset-block: 0;
-  right: 0;
-  width: 100%;
-  max-width: 420px;
+  inset-inline-end: 0;
+  inline-size: 100%;
+  max-inline-size: min(100%, 26.25rem);
   background-color: var(--color-surface-elevated);
-  border-left: 1px solid var(--color-border);
+  border-inline-start: var(--border-width-thin) solid var(--color-border);
   transform: translateX(100%);
   transition: transform var(--transition-base);
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  box-shadow: var(--shadow-xl);
 }
 
 .c-cart-drawer--open {
@@ -5262,27 +5391,77 @@ ${scaleVars}
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-md);
+  border-block-end: var(--border-width-thin) solid var(--color-border);
 }
 
 .c-cart-drawer__body {
   flex-grow: 1;
   overflow-y: auto;
-  padding: var(--spacing-md);
+  padding: var(--space-md);
 }
 
 .c-cart-drawer__footer {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
+  padding: var(--space-md);
+  border-block-start: var(--border-width-thin) solid var(--color-border);
+}
+
+/* 🧱 BEM Component: Badge & Tags */
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding-inline: var(--space-xs);
+  padding-block: var(--space-3xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-muted);
+  border: var(--border-width-thin) solid var(--color-border);
+}
+
+/* 🧱 BEM Component: Hero Section */
+.c-hero {
+  padding-block: var(--space-3xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.c-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-heading);
+  max-inline-size: var(--measure-prose);
+}
+
+.c-hero__tagline {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted);
+  max-inline-size: var(--measure-prose);
+}
+
+.c-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-block-start: var(--space-sm);
 }
 `;
     writeFileSync(join(stylesDir, "semantic.css"), semanticCssContent, "utf8");
 
-    // 4.3 animations.css
+    // 4.3 animations.css (Zero px values)
     const animationsCssContent = `/**
  * 🎭 High-Performance Hardware-Accelerated Animations
- * GPU-composited keyframes with prefers-reduced-motion support.
+ * GPU-composited keyframes with prefers-reduced-motion support. Zero px values.
  */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -5292,7 +5471,7 @@ ${scaleVars}
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(var(--space-lg, 1.5rem));
   }
   to {
     opacity: 1;
@@ -5301,7 +5480,7 @@ ${scaleVars}
 }
 
 .fade-in {
-  animation: fadeIn 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn var(--transition-slow, 400ms) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .slide-up {
@@ -5309,12 +5488,12 @@ ${scaleVars}
 }
 
 .hover-lift {
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+  transition: transform var(--transition-fast, 150ms) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--transition-fast, 150ms) ease;
 }
 
 .hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  transform: translateY(calc(-1 * var(--border-width-medium, 0.125rem)));
+  box-shadow: var(--shadow-lg);
 }
 
 .stagger-group > *:nth-child(1) { animation-delay: 50ms; }
@@ -5342,8 +5521,43 @@ ${scaleVars}
 `;
     writeFileSync(join(stylesDir, "animations.css"), animationsCssContent, "utf8");
 
-    // 4.4 reset.css
-    writeFileSync(join(stylesDir, "reset.css"), `*, *::before, *::after { box-sizing: border-box; }\nbody { margin: 0; line-height: 1.5; -webkit-font-smoothing: antialiased; background: var(--color-surface, #0f172a); color: var(--color-text, #f8fafc); }\n`, "utf8");
+    // 4.4 reset.css (Zero px values, Modern Responsive Logical Baseline)
+    const resetCssContent = `/**
+ * 🧼 Modern CSS Reset Baseline
+ * Zero px values • Logical properties • Accessible defaults
+ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+body {
+  min-block-size: 100dvh;
+  margin: 0;
+  line-height: var(--line-height-normal, 1.5);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-surface, oklch(0.18 0.03 260));
+  color: var(--color-text, oklch(0.96 0.01 260));
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+`;
+    writeFileSync(join(stylesDir, "reset.css"), resetCssContent, "utf8");
 
     console.log("  ✅ Generated: `./src/styles/` (tokens.css, semantic.css, animations.css, reset.css)\n");
   }
@@ -5450,7 +5664,7 @@ ${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ 
 ` : ""}${config.db === "postgres" && config.ecommerce !== "medusa" ? `├── docker-compose.yml       # 🗄️ Local PostgreSQL 16 container
 ` : ""}${config.cms === "keystatic" ? `├── keystatic.config.ts      # 📝 Keystatic Git-based CMS configuration
 ` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
-├── Onboarding/              # 📋 Client and Brand Onboarding & Intake Artifacts
+├── Client-Intake/           # 📋 Client and Brand Onboarding & Intake Artifacts
 │   ├── 01-Brand/            # Brand identity, visual direction, voice & tone, asset intake
 │   ├── 02-Business/         # Business model, audience personas, competitor benchmarks
 │   ├── 03-Offerings/        # Service offerings, product catalog, scope deliverables
@@ -5642,20 +5856,18 @@ Happy building! 🚀
   console.log("📋 STAGE 6: Interactive Brand Onboarding Gate...");
 
   if (!isDryRun) {
-    const onboardingDir = join(resolvedTarget, "Onboarding");
-    const brandDir = join(onboardingDir, "01-Brand");
-    const bizDir = join(onboardingDir, "02-Business");
-    const offeringsDir = join(onboardingDir, "03-Offerings");
-    const menuDir = join(onboardingDir, "03-Menu");
-    const techDir = join(onboardingDir, "04-Technical-Intake");
+    const intakeDir = join(resolvedTarget, "Client-Intake");
+    const brandDir = join(intakeDir, "01-Brand");
+    const bizDir = join(intakeDir, "02-Business");
+    const offeringsDir = join(intakeDir, "03-Offerings");
+    const techDir = join(intakeDir, "04-Technical-Intake");
 
     mkdirSync(brandDir, { recursive: true });
     mkdirSync(bizDir, { recursive: true });
     mkdirSync(offeringsDir, { recursive: true });
-    mkdirSync(menuDir, { recursive: true });
     mkdirSync(techDir, { recursive: true });
 
-    // 6.1 Onboarding/01-Brand/
+    // 6.1 Client-Intake/01-Brand/
     const brandIdentityContent = `# 🎨 Brand Identity & Vision — ${projectName}
 
 ## Overview
@@ -5710,12 +5922,12 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 - **Display Font**: \`var(--font-display)\` ('Outfit', sans-serif)
 - **Body Font**: \`var(--font-sans)\` (Inter, system-ui)
 - **Code/Data Font**: \`var(--font-mono)\` (ui-monospace, monospace)
-- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (320px to 1440px) eliminating layout shifts.
+- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (20rem to 90rem) eliminating layout shifts.
 
 ## Spatial Grid & Layout Architecture
 - **Baseline Grid**: 8pt dimensional scale (0.25rem, 0.5rem, 1rem, 1.5rem, 2rem, 3rem, 4rem).
 - **Class Naming**: Semantic BEM (Block-Element-Modifier) class conventions.
-- **Container Architecture**: Max-width responsive shell (1200px) with fluid padding gutters.
+- **Container Architecture**: Max-width responsive shell (75rem) with fluid padding gutters.
 
 ## Theme Toggle Contract
 - Full support for \`prefers-color-scheme\` with seamless dark/light class switches.
@@ -5803,7 +6015,7 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(brandDir, "brand-assets-intake.md"), brandAssetsIntakeContent, "utf8");
 
-    // 6.2 Onboarding/02-Business/
+    // 6.2 Client-Intake/02-Business/
     const bizModelContent = `# 💼 Business Model & Strategy — ${projectName}
 
 ## Core Problem & Value Proposition
@@ -5882,7 +6094,7 @@ We guarantee high-velocity, reliable, and beautifully functional solutions that 
 `;
     writeFileSync(join(bizDir, "client-goals-kpis.md"), clientGoalsKpisContent, "utf8");
 
-    // 6.3 Onboarding/03-Offerings/
+    // 6.3 Client-Intake/03-Offerings/
     const offeringsCatalogContent = `# 📦 Offerings & Deliverables Matrix — ${projectName}
 
 > **Offerings Engine**: Product catalog, service tiers, pricing architecture, and fulfillment models for ${projectName}.
@@ -5908,7 +6120,6 @@ ${offerings
 `;
     writeFileSync(join(offeringsDir, "offerings-catalog.md"), offeringsCatalogContent, "utf8");
     writeFileSync(join(offeringsDir, "offerings.md"), offeringsCatalogContent, "utf8");
-    writeFileSync(join(menuDir, "offerings.md"), offeringsCatalogContent, "utf8");
 
     const scopeDeliverablesContent = `# 🗺️ Scope Boundaries & Phasing — ${projectName}
 
@@ -5939,7 +6150,7 @@ ${coreFeatures
 `;
     writeFileSync(join(offeringsDir, "scope-deliverables.md"), scopeDeliverablesContent, "utf8");
 
-    // 6.4 Onboarding/04-Technical-Intake/
+    // 6.4 Client-Intake/04-Technical-Intake/
     const accessCredentialsContent = `# 🔑 Access & Infrastructure Credentials Intake — ${projectName}
 
 > **Client Technical Onboarding**: Credentials, cloud services, and access permissions required to build and deploy ${projectName}.
@@ -5992,10 +6203,16 @@ ${coreFeatures
 `;
     writeFileSync(join(techDir, "integrations-matrix.md"), integrationsMatrixContent, "utf8");
 
-    console.log("  ✅ Generated: `./Onboarding/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
-    console.log("  ✅ Generated: `./Onboarding/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
-    console.log("  ✅ Generated: `./Onboarding/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
-    console.log("  ✅ Generated: `./Onboarding/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)\n");
+    // Mirror the primary suite to legacy aliases for backward compatibility.
+    for (const intakeAlias of ["Intake", "Onboarding"]) {
+      cpSync(intakeDir, join(resolvedTarget, intakeAlias), { recursive: true });
+    }
+
+    console.log("  ✅ Generated: `./Client-Intake/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
+    console.log("  ✅ Generated: `./Client-Intake/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
+    console.log("  ✅ Generated: `./Client-Intake/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
+    console.log("  ✅ Generated: `./Client-Intake/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)");
+    console.log("  ✅ Mirrored:   `./Intake/` and `./Onboarding/` (legacy aliases of Client-Intake/)\n");
   }
 
   // =========================================================================
@@ -6028,7 +6245,7 @@ ${coreFeatures
 - **Authentication**: ${config.auth.toUpperCase()}${config.customAuth ? ` (${config.customAuth})` : ""}
 - Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
 - Developer quick start guide provisioned at \`./start-here.md\`.
-- Brand & business onboarding suite generated at \`./Onboarding/\`.
+- Brand & business intake suite generated at \`./Client-Intake/\` (mirrored to \`./Intake/\` and \`./Onboarding/\`).
 
 ## 2. Live Deliverables & Key Artifacts
 ${artifactList}
@@ -6070,7 +6287,7 @@ ${artifactList}
 - **Database & ORM**: ${config.db.toUpperCase()} (Drizzle ORM)
 - **Authentication**: ${config.auth.toUpperCase()}
 - **AI Governance**: Root \`AGENTS.md\` + 9-Folder \`.agents/\` container with 13 modular rulebooks.
-- **Onboarding Matrix**: Detailed brand and business plans in \`./Onboarding/\`.
+- **Client Intake Matrix**: Detailed brand and business plans in \`./Client-Intake/\`.
 
 ---
 
@@ -6180,7 +6397,7 @@ ${offerItems}
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
   console.log(`🛡️  Governance:         DOX Engine Active (Root \`AGENTS.md\` + \`.agents/\` container)`);
   console.log(`📖 Developer Guide:    \`./start-here.md\` (Empathetic 7-section handbook)`);
-  console.log(`📋 Brand Onboarding:   \`./Onboarding/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake)`);
+  console.log(`📋 Client Intake:      \`./Client-Intake/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; aliases: Intake/, Onboarding/)`);
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
   if (config.framework === "wordpress") {

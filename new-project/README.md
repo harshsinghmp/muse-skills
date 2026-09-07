@@ -121,7 +121,7 @@ When running `new-project` interactively or through an AI agent, the onboarding 
 3. **Official Companion Auto-Wiring**: Direct configuration files (`astro.config.mjs`, `uno.config.ts`, `medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`).
 4. **Modern Design Tokens & Semantic BEM**: Wide-gamut OKLCH palettes and fluid `clamp()` responsive scales in `src/styles/tokens.css`.
 5. **Empathetic Developer Handbook**: 7-section orientation guide in `start-here.md`.
-6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite in `./Onboarding/`:
+6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite in `./Client-Intake/` (mirrored to `./Intake/` and `./Onboarding/` for backward compatibility):
    - `01-Brand/`: Brand identity, visual direction, voice & tone guidelines, brand guardrails, and media kit intake.
    - `02-Business/`: Business model, audience personas, competitor benchmarks, and target launch KPIs.
    - `03-Offerings/`: Universal offerings catalog matrix, pricing models, and scope deliverable boundaries.
@@ -131,7 +131,7 @@ All gathered answers dynamically populate:
 - `AGENTS.md` (project identity, mission, and agent personas)
 - `.agents/context/` (`product.md`, `brand.md`, `roadmap.md`, `architecture.md`, `decisions.md`, `current.md`)
 - `.agents/brand/tokens/` (`colors.json` and `base.css` with chosen OKLCH palette)
-- `Onboarding/` (complete 4-pillar client intake and brand foundation)
+- `Client-Intake/` (complete 4-pillar client intake and brand foundation, mirrored to `Intake/` and `Onboarding/`)
 
 ---
 
