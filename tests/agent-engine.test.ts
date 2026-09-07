@@ -350,14 +350,16 @@ Custom billing engine for healthcare providers.
       expect(currentMd).toContain("Sentinel");
       expect(currentMd).toContain("Implement EHR webhook listener");
 
-      // Verify start-here.md and Onboarding
+      // Verify start-here.md and Client-Intake suite (with legacy aliases)
       expect(existsSync(join(target, "start-here.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/03-Menu/offerings.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/03-Offerings/offerings.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/03-Offerings/offerings.md"))).toBe(true);
+      expect(existsSync(join(target, "Intake/03-Offerings/offerings.md"))).toBe(true);
     });
 
-    it("provisions beginner-friendly start-here.md, Onboarding suite, fluid tokens, and BEM semantic classes", () => {
+    it("provisions beginner-friendly start-here.md, Client-Intake suite, fluid tokens, and BEM semantic classes", () => {
       const target = join(TEST_SANDBOX, "ecommerce-showcase");
       const res = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -391,18 +393,21 @@ Custom billing engine for healthcare providers.
       expect(startHereContent).toContain("6. Common Tasks & Recipes");
       expect(startHereContent).toContain("7. Verification & Definition of Done");
 
-      // 2. Verify Onboarding 3-folder structure and artifacts
+      // 2. Verify Client-Intake 4-folder structure, artifacts, and legacy aliases
+      expect(existsSync(join(target, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/01-Brand/visual-direction.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/02-Business/audience-persona.md"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/03-Offerings/offerings.md"))).toBe(true);
+      expect(existsSync(join(target, "Intake/01-Brand/brand-identity.md"))).toBe(true);
       expect(existsSync(join(target, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/01-Brand/visual-direction.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/02-Business/audience-persona.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/03-Menu/offerings.md"))).toBe(true);
+      expect(existsSync(join(target, "Onboarding/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
 
-      const brandIdentity = readFileSync(join(target, "Onboarding/01-Brand/brand-identity.md"), "utf8");
+      const brandIdentity = readFileSync(join(target, "Client-Intake/01-Brand/brand-identity.md"), "utf8");
       expect(brandIdentity).toContain("Sovereign Store");
       expect(brandIdentity).toContain("Direct to Consumer Apparel");
 
-      const offeringsMd = readFileSync(join(target, "Onboarding/03-Menu/offerings.md"), "utf8");
+      const offeringsMd = readFileSync(join(target, "Client-Intake/03-Offerings/offerings.md"), "utf8");
       expect(offeringsMd).toContain("Signature Denim");
 
       // 3. Verify OKLCH tokens and fluid clamp scales in src/styles/tokens.css
@@ -411,7 +416,8 @@ Custom billing engine for healthcare providers.
       const tokensCss = readFileSync(tokensCssPath, "utf8");
       expect(tokensCss).toContain("oklch(");
       expect(tokensCss).toContain("--font-size-base: clamp(");
-      expect(tokensCss).toContain("--spacing-md: clamp(");
+      expect(tokensCss).toContain("--space-md: clamp(");
+      expect(tokensCss).toContain("--spacing-md: var(--space-md);");
 
       // 4. Verify Semantic BEM classes in src/styles/semantic.css
       const semanticCssPath = join(target, "src/styles/semantic.css");
@@ -754,7 +760,7 @@ Custom billing engine for healthcare providers.
       expect(res.status).toBe(0);
 
       // 1. Verify Complete Agency Brand Guardian Suite
-      const brandDir = join(targetNoCache, "Onboarding/01-Brand");
+      const brandDir = join(targetNoCache, "Client-Intake/01-Brand");
       expect(existsSync(join(brandDir, "brand-identity.md"))).toBe(true);
       expect(existsSync(join(brandDir, "visual-direction.md"))).toBe(true);
       expect(existsSync(join(brandDir, "voice-and-tone.md"))).toBe(true);
@@ -782,7 +788,7 @@ Custom billing engine for healthcare providers.
       expect(brandAssetsDoc).toContain("## Photography & Media Library Assets");
 
       // 2. Verify Business Strategy & Market Discovery
-      const bizDir = join(targetNoCache, "Onboarding/02-Business");
+      const bizDir = join(targetNoCache, "Client-Intake/02-Business");
       expect(existsSync(join(bizDir, "business-model.md"))).toBe(true);
       expect(existsSync(join(bizDir, "audience-persona.md"))).toBe(true);
       expect(existsSync(join(bizDir, "competitor-benchmark.md"))).toBe(true);
@@ -798,7 +804,7 @@ Custom billing engine for healthcare providers.
       expect(kpiDoc).toContain("## Key Conversion Metrics & KPIs");
 
       // 3. Verify Products, Services & Offerings (renamed from 03-Menu)
-      const offeringsDir = join(targetNoCache, "Onboarding/03-Offerings");
+      const offeringsDir = join(targetNoCache, "Client-Intake/03-Offerings");
       expect(existsSync(join(offeringsDir, "offerings-catalog.md"))).toBe(true);
       expect(existsSync(join(offeringsDir, "scope-deliverables.md"))).toBe(true);
 
@@ -812,7 +818,7 @@ Custom billing engine for healthcare providers.
       expect(scopeDoc).toContain("## Explicitly Out-of-Scope");
 
       // 4. Verify Technical Intake & Integrations
-      const techDir = join(targetNoCache, "Onboarding/04-Technical-Intake");
+      const techDir = join(targetNoCache, "Client-Intake/04-Technical-Intake");
       expect(existsSync(join(techDir, "access-and-credentials.md"))).toBe(true);
       expect(existsSync(join(techDir, "integrations-matrix.md"))).toBe(true);
 
@@ -983,10 +989,12 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, ".memory/CURRENT.md"))).toBe(true);
 
       // Client Onboarding suite before completion
+      expect(existsSync(join(targetHtml, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Client-Intake/02-Business/business-model.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Client-Intake/03-Offerings/offerings-catalog.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Client-Intake/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
       expect(existsSync(join(targetHtml, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Onboarding/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Onboarding/03-Offerings/offerings-catalog.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Onboarding/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Intake/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
     }, 30000);
 
     it("supports simplified presets plain-astro, git-cms, and sitepins", () => {
