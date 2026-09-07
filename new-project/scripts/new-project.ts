@@ -7,8 +7,8 @@
  *   Stage 2: Hierarchical Decision Tree (Choice -> Sub-choice -> Sub-sub-choice)
  *   Stage 3: Official Package Installation & Config Auto-Wiring
  *   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
- *   Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
- *   Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
+ *   Stage 5: Client Intake Brief (employee checklist + agent-produced docs)
+ *   Stage 6: Closeout (context sync, health check)
  * 
  * Usage:
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
@@ -100,8 +100,8 @@ Core Execution Stages:
   Stage 2: Hierarchical Decision Tree (Choice -> Sub-choice -> Sub-sub-choice)
   Stage 3: Official Package Installation & Config Auto-Wiring
   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
-  Stage 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
-  Stage 6: Interactive Brand Onboarding & Client Intake Gate (Client-Intake/01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; mirrored to Intake/ and Onboarding/)
+  Stage 5: Client Intake Brief (employee checklist + agent-produced docs)
+  Stage 6: Closeout (context sync, health check)
 
 Options:
   -n, --name <name>             Project name (default: directory name)
@@ -5561,662 +5561,64 @@ input, button, textarea, select {
 
     console.log("  ✅ Generated: `./src/styles/` (tokens.css, semantic.css, animations.css, reset.css)\n");
   }
-
   // =========================================================================
-  // STAGE 5: Beginner-Friendly start-here.md Guide (7 Empathetic Sections)
+  // STAGE 5: Client Intake Brief (employee answers -> agent-produced docs)
   // =========================================================================
-  console.log("📖 STAGE 5: Generating Empathetic Developer Guide (start-here.md)...");
-
-  if (!isDryRun) {
-    const startHereContent = `# 🚀 Welcome to ${projectName} — Developer Quick Start & Architecture Guide
-
-> **Hello and welcome!** This project was scaffolded and is actively governed by the **DOX Engine** (Agent Engine). Whether you are a solo developer, agency teammate, or AI agent pair programming here, this guide will orient you quickly so you can ship with confidence.
-
----
-
-## 1. Welcome & Architecture Snapshot
-
-You are working on **${projectName}**, designed for **${targetAudience}**.
-- **Core Mission**: ${projectDesc}
-- **Problem Solved**: ${coreProblem}
-- **Selected Archetype**: \`${config.framework.toUpperCase()}\`
-- **Styling Architecture**: \`${config.styling.toUpperCase()}\`
-- **Lead Orchestrator**: \`${agentName}\` (${agentRole})
-
-### System Architecture Matrix
-| Domain Layer | Technology Selection | Purpose & Mental Model |
-| :--- | :--- | :--- |
-| **Framework** | \`${config.framework.toUpperCase()}\` | Core application rendering baseline |
-| **Styling** | \`${config.styling.toUpperCase()}\` | Hybrid UnoCSS Wind 4 + Semantic BEM with OKLCH tokens |
-| **Animations** | \`${config.animation.toUpperCase()}\` | 60-120fps GPU-composited keyframes with reduced-motion support |
-| **State** | \`${config.state.toUpperCase()}\` | Reactive cross-component / cross-island store |
-| **Mobile** | \`${config.mobile.toUpperCase()}\` | ${config.mobile === "capacitor" ? "Ionic Capacitor iOS & Android APK bridge" : config.mobile === "expo" ? "React Native Expo mobile app" : "Standard web delivery"} |
-| **CMS** | \`${config.cms.toUpperCase()}\` | Content management layer ${config.puck ? "with Puck Visual Builder" : ""} |
-| **E-Commerce** | \`${config.ecommerce.toUpperCase()}\` | Checkout, product catalog, and payment integration |
-| **Database** | \`${config.db.toUpperCase()}\` | Structured persistence layer with Drizzle ORM |
-| **Authentication** | \`${config.auth.toUpperCase()}\` | User authentication & identity management |
-| **AI Governance** | DOX Engine | 9-folder \`.agents/\` container + 13 modular standards |
-
----
-
-## 2. Prerequisites & Quick Start
-
-### Prerequisites
-- **Runtime**: [Bun](https://bun.sh) (v1.1+ recommended) or Node.js (v20+)
-- **Git**: Modern git client
-
-### Step-by-Step Setup
-\`\`\`bash
-# 1. Enter the project directory
-cd ${relative(process.cwd(), resolvedTarget) || "."}
-
-# 2. Automated Bootstrap (Installs dependencies, starts Docker, pushes DB schema)
-bun run setup
-
-# 3. Verify Baseline Health & Quality Gates
-bun test
-bun run lint
-
-# 4. Start local development server
-bun run dev
-\`\`\`
-
-Your application will start locally at **\`http://localhost:3000\`** (or **\`http://localhost:4321\`** if using Astro).
-${config.ecommerce === "medusa" ? `
-### E-Commerce Sovereign Backend (Medusa 2.0) Setup
-This project includes a dedicated Medusa 2.0 backend in \`./backend\`:
-
-\`\`\`bash
-# 1. Start PostgreSQL & Redis via Docker
-docker compose -f backend/docker-compose.yml up -d
-# (or: bun run docker:up)
-
-# 2. Install backend dependencies & run database migrations
-cd backend
-bun install
-bunx medusa db:migrate
-
-# 3. Start Medusa backend server (:9000) & Admin Dashboard (:9000/app)
-bun run dev
-
-# 4. In a separate terminal, launch your storefront (:3000 or :4321)
-cd ..
-bun run dev
-\`\`\`
-` : ""}
----
-
-## 3. Project Structure Tour
-
-The codebase is organized with clear separation of concerns:
-
-\`\`\`text
-${projectName}/
-├── .agents/                 # 🛡️ AI Agent Governance & Progressive Disclosure Container
-│   ├── brand/               # Brand guidelines and DTCG design tokens (colors.json, base.css)
-│   ├── context/             # System context (product.md, architecture.md, roadmap.md, current.md)
-│   └── standards/           # 13 modular engineering rulebooks (frontend, backend, security, etc.)
-${config.ecommerce === "medusa" ? `├── backend/                 # 🛍️ Medusa 2.0 Sovereign E-Commerce Backend Engine
-│   ├── src/api/             # Custom endpoints & API routes
-│   ├── docker-compose.yml   # PostgreSQL 16 & Redis 7 containers
-│   ├── medusa-config.ts     # Medusa 2.0 configuration & CORS
-│   └── package.json         # Medusa server dependencies
-` : ""}${config.db === "postgres" && config.ecommerce !== "medusa" ? `├── docker-compose.yml       # 🗄️ Local PostgreSQL 16 container
-` : ""}${config.cms === "keystatic" ? `├── keystatic.config.ts      # 📝 Keystatic Git-based CMS configuration
-` : ""}├── .memory/                 # 🧠 Persistent Cognitive Memory (CURRENT.md invariant ledger)
-├── Client-Intake/           # 📋 Client and Brand Onboarding & Intake Artifacts
-│   ├── 01-Brand/            # Brand identity, visual direction, voice & tone, asset intake
-│   ├── 02-Business/         # Business model, audience personas, competitor benchmarks
-│   ├── 03-Offerings/        # Service offerings, product catalog, scope deliverables
-│   └── 04-Technical-Intake/ # Domain/DNS, cloud credentials, integrations matrix
-├── src/
-│   ├── components/          # Reusable UI components
-${config.cms === "payload" ? `│   ├── collections/         # 📦 Payload CMS Collections (Users, Media, Pages)
-│   ├── payload.config.ts    # Payload CMS 3.0 configuration
-` : ""}│   ├── lib/                 # Database, auth, and API client adapters
-│   ├── styles/              # Design tokens, semantic BEM CSS, and animation presets
-│   └── stores/              # NanoStores reactive state management
-├── uno.config.ts            # UnoCSS Wind 4 configuration (Tailwind v4 compatible)
-├── AGENTS.md                # Root agent orientation document (<50 lines)
-├── start-here.md            # You are here! Developer orientation and handbook
-└── package.json             # Pinned modern dependencies
-\`\`\`
-
----
-
-## 4. How Styling & Design Tokens Work
-
-This project uses a modern **Wide-Gamut OKLCH Design Token & BEM Architecture**:
-
-1. **Design Tokens Bridge (\`src/styles/tokens.css\`)**:
-   - Wide-gamut color variables (\`--color-primary\`, \`--color-secondary\`, \`--color-accent\`, \`--color-surface\`).
-   - Fluid typography and spacing scales defined via CSS \`clamp()\` so elements scale smoothly between mobile and desktop viewports without jumpy media query breakpoints.
-2. **Semantic BEM Architecture (\`src/styles/semantic.css\`)**:
-   - Ready-to-use semantic classes: \`.c-button\`, \`.c-card\`, \`.c-product-grid\`, \`.c-product-card\`, \`.c-cart-drawer\`.
-   - Modifiers follow BEM syntax (e.g. \`.c-button--primary\`, \`.c-button--outline\`, \`.c-cart-drawer--open\`).
-3. **UnoCSS Wind 4 Utility Integration (\`uno.config.ts\`)**:
-   - You can combine utility classes with semantic BEM classes freely. All brand theme colors are accessible via \`text-brand-primary\`, \`bg-brand-surface\`, etc.
-
----
-
-## 5. Working with AI Agents
-
-This workspace is fully governed by the **DOX Engine**. When using an AI coding assistant:
-- **Root Orientation**: Agents always read \`./AGENTS.md\` first.
-- **Progressive Disclosure**: Detailed requirements live in \`./.agents/context/\`. Agents only read the specific context file they need.
-- **Cognitive Memory**: Real-time constraints and active workstreams live in \`./.memory/CURRENT.md\`. Agents never violate active constraints listed there.
-- **Prompting Tip**: You can instruct any agent: *"Read .agents/context/architecture.md and implement the next milestone from roadmap.md"*.
-
----
-
-## 6. Common Tasks & Recipes
-
-### A. Adding a New Page
-- If using **Astro**: Create \`src/pages/my-page.astro\`.
-- If using **Next.js**: Create \`src/app/my-page/page.tsx\`.
-
-### B. Creating a New BEM Component
-1. Add component styles to \`src/styles/semantic.css\` using the \`.c-componentName\` convention.
-2. Use native design tokens (\`var(--color-primary)\`, \`var(--spacing-md)\`, \`var(--radius-md)\`).
-3. Import and render in your template.
-
-### C. Adding an Environment Variable
-1. Add the variable to \`.env.example\` with a placeholder value:
-   \`\`\`bash
-   MY_NEW_KEY=placeholder_value
-   \`\`\`
-2. Add your local secret to \`.env\` (never commit \`.env\`!).
-
-### D. Database Migrations (Drizzle ORM)
-${config.db !== "none" ? `If Drizzle is configured:
-\`\`\`bash
-# Generate migration SQL from typed schema (src/lib/schema.ts)
-bun run db:generate
-
-# Push schema changes directly to your database
-bun run db:push
-\`\`\`
-${config.db === "postgres" && config.ecommerce !== "medusa" ? `
-Start local PostgreSQL container:
-\`\`\`bash
-bun run docker:up
-# (runs docker compose up -d)
-\`\`\`
-` : ""}` : "This project is currently stateless (no database configured)."}
-
-${config.auth === "better-auth" ? `
-### E. Authentication (Better Auth)
-- **Client Components**: Import from \`src/lib/auth-client.ts\` to initiate login, registration, or retrieve active session:
-  \`\`\`tsx
-  import { authClient, useSession, signIn, signOut } from '@/lib/auth-client';
-
-  export function UserMenu() {
-    const { data: session } = useSession();
-    if (!session) return <button onClick={() => signIn.social({ provider: 'github' })}>Sign In</button>;
-    return <button onClick={() => signOut()}>Sign Out ({session.user.name})</button>;
-  }
-  \`\`\`
-- **Server Route Handler**: Active at \`/api/auth/[...all]\` for session resolution and auth callbacks.
-` : ""}
-
-${config.cms === "payload" ? `
-### F. Managing Payload CMS 3.0
-- **Admin Dashboard**: Start your dev server and navigate to \`http://localhost:3000/admin\` to manage Collections (Users, Media, Pages${config.ecommerce === "payload" ? ", Products, Orders, Customers" : ""}).
-- **CLI Commands**: Run \`bun run payload\` for Payload-specific generator tasks.
-` : ""}
-
-${config.ecommerce === "payload" ? `
-### Payload E-Commerce Module
-- **Collections**: Managed at \`src/collections/\` (\`Products.ts\`, \`Orders.ts\`, \`Customers.ts\`).
-- **Checkout Route**: \`/api/payload-checkout\` validates cart items and creates Stripe Checkout sessions.
-` : ""}
-
-${config.cms === "ariabuilder" ? `
-### Visual Page Building (Aria Builder)
-- **Admin Studio Access**: Open \`http://localhost:4321/admin\` in your browser. On first launch, it redirects to \`http://localhost:4321/admin/setup\` to create your administrator account and immediately launch into the visual builder canvas.
-- **Visual Block Registry**: Configured in \`aria.config.mjs\` with components located in \`src/components/\` (such as \`AriaHero.astro\`${config.ecommerce === "medusa" ? `, \`AriaMedusaProductGrid.astro\`, and \`AriaCartDrawer.astro\`` : ""}).
-- **Development Commands**:
-  - \`bun run dev\` (or \`npm run dev\`): Starts local dev server with Node + SQLite storage.
-  - \`bun run dev:edge\`: Starts local dev server with Cloudflare workerd + D1 bindings.
-  - \`bun run build\`: Compiles production Cloudflare / Node assets.
-` : ""}
-
-${config.cms === "studiocms" ? `
-### Managing StudioCMS Content
-- **Admin Hub**: Start your Astro dev server and navigate to \`http://localhost:4321/dashboard\` to access the StudioCMS dashboard.
-- **Persistence**: Managed through \`studiocms.config.mjs\` with local LibSQL (zero-Docker) or Turso native backing.
-` : ""}
-
-${config.cms === "emdash" ? `
-### Managing Emdash CMS Edge Publication
-- **Edge Configuration**: Configured in \`emdash.config.ts\` targeting Cloudflare Workers, D1 database, and R2 storage.
-- **Markdown Articles**: Stored in \`src/content/blog/\` and rendered on \`/blog\`.
-- **Emdash Studio**: Access editorial dashboard at \`http://localhost:4321/emdash\`.
-` : ""}
-
-${config.puck ? `
-### G. Visual Page Building (Puck)
-- **Visual Editor**: Navigate to \`http://localhost:3000/puck/demo\` to interactively drag, drop, and edit page layouts using your design tokens.
-- **Component Registry**: Add or customize editable blocks in \`src/lib/puck.config.tsx\`.
-` : ""}
-
-${config.cms === "keystatic" ? `
-### H. Managing Keystatic Git-Based Content
-- **Admin Interface**: Open \`http://localhost:3000/keystatic\` (or \`http://localhost:4321/keystatic\`) to create and edit posts.
-- **Git-Committed**: All content is stored as native files under \`src/content/posts/\`.
-` : ""}
-
-${config.ecommerce === "stripe" ? `
-### I. E-Commerce Checkout & Webhooks (Stripe)
-- **Checkout Endpoint**: POST to \`/api/checkout\` with cart items to create a Stripe Checkout session.
-- **Local Webhook Testing**: Forward Stripe webhook events to your local server:
-  \`\`\`bash
-  stripe listen --forward-to localhost:3000/api/webhooks/stripe
-  \`\`\`
-` : ""}
-
-${config.ecommerce === "medusa" ? `
-### J. Managing the Medusa E-Commerce Backend
-- **Unified Dev Server**: Run \`bun run dev:all\` to run both the frontend storefront and Medusa 2.0 backend concurrently.
-- **Admin Dashboard**: Start the backend and navigate to \`http://localhost:9000/app\` to configure products, pricing, inventory, regions, and promotions.
-- **Docker Compose**: Start PostgreSQL and Redis containers with \`bun run docker:up\` (or \`docker compose -f backend/docker-compose.yml up -d\`).
-- **Storefront SDK**: Client components query products and manage checkouts via \`src/lib/medusa.ts\` connecting to \`http://localhost:9000\`.
-- **Database Migrations**: Run \`bun run backend:migrate\` after adding or modifying custom Medusa data models.
-` : ""}
-
----
-
-## 7. Verification & Definition of Done
-
-Before considering any task complete, verify through evidence:
-
-1. **Run Automated Tests**:
-   \`\`\`bash
-   bun test
-   \`\`\`
-2. **Verify Clean Production Build**:
-   \`\`\`bash
-   bun run build
-   \`\`\`
-3. **Vibeguard Secret Check**:
-   Confirm no secrets or credentials appear in git status or committed files.
-4. **Update Shipped Reality**:
-   Record completed deliverables in \`./.agents/context/current.md\`.
-
-Happy building! 🚀
-`;
-
-    writeFileSync(join(resolvedTarget, "start-here.md"), startHereContent, "utf8");
-    console.log("  ✅ Created: `./start-here.md` (Empathetic 7-section developer handbook)\n");
-  }
-
-  // =========================================================================
-  // STAGE 6: Interactive Brand Onboarding Gate
-  // =========================================================================
-  console.log("📋 STAGE 6: Interactive Brand Onboarding Gate...");
+  console.log("📋 STAGE 5: Provisioning Client Intake Brief...");
 
   if (!isDryRun) {
     const intakeDir = join(resolvedTarget, "Client-Intake");
-    const brandDir = join(intakeDir, "01-Brand");
-    const bizDir = join(intakeDir, "02-Business");
-    const offeringsDir = join(intakeDir, "03-Offerings");
-    const techDir = join(intakeDir, "04-Technical-Intake");
-
-    mkdirSync(brandDir, { recursive: true });
-    mkdirSync(bizDir, { recursive: true });
-    mkdirSync(offeringsDir, { recursive: true });
-    mkdirSync(techDir, { recursive: true });
-
-    // 6.1 Client-Intake/01-Brand/
-    const brandIdentityContent = `# 🎨 Brand Identity & Vision — ${projectName}
-
-## Overview
-- **Brand / Product Name**: ${projectName}
-- **Author / Parent Organization**: ${authorName}
-- **One-Line Tagline**: ${projectDesc}
-- **Industry / Vertical**: ${industry}
-
-## Brand Purpose
-Why the brand exists beyond commercial transactions: To deliver transformative, accessible, and impeccably engineered digital experiences that elevate standards within ${industry}.
-
-## Brand Vision
-To become the definitive, trusted benchmark in ${industry}, pioneering user-empowering digital products with lasting architectural durability.
-
-## Brand Mission
-Empower ${targetAudience} by resolving critical friction: "${coreProblem}", delivering seamless speed, clarity, and uncompromised utility.
-
-## Core Values
-1. **Uncompromising Craft**: Every token, layout, and interaction is designed with relentless attention to detail and zero bloat.
-2. **Inclusive Accessibility**: Accessibility is non-negotiable. Full WCAG 2.1 AA/AAA compliance from Day One.
-3. **Transparent Integrity**: Clear communication, honest system state, and verifiable evidence over hand-waving assertions.
-4. **Resilient Longevity**: Architecture that scales gracefully and adapts across evolving client requirements without brittle coupling.
-
-## Brand Personality
-- **Primary Trait**: Discerning, authoritative, and deeply knowledgeable.
-- **Secondary Trait**: Empathetic, welcoming, and user-centric.
-- **Supporting Trait**: Modern, agile, and refreshingly direct.
-
-## Brand Promise
-We guarantee high-velocity, reliable, and beautifully functional solutions that honor ${targetAudience}'s time and eliminate complexity.
-
-## Brand Positioning
-- **Target Audience**: ${targetAudience}
-- **Differentiating Edge**: Precision modular engineering backed by autonomous agent governance.
-- **Positioning Statement**: For ${targetAudience} who demand excellence without compromise, ${projectName} provides premium digital foundations tailored to ${industry}.
-`;
-    writeFileSync(join(brandDir, "brand-identity.md"), brandIdentityContent, "utf8");
-
-    const visualDirectionContent = `# 🌈 Visual Direction & Aesthetics — ${projectName}
-
-## Color System
-- **Selected Palette**: ${colorPalette.toUpperCase()}
-- **Color Space**: Native Wide-Gamut OKLCH (Display P3 capable)
-- **Primary Token**: \`var(--color-primary)\`
-- **Secondary Token**: \`var(--color-secondary)\`
-- **Accent Token**: \`var(--color-accent)\`
-- **Surface Token**: \`var(--color-surface)\`
-- **Surface Layer 2**: \`var(--color-surface-2)\`
-- **WCAG Contrast**: 4.5:1 minimum on all body text; 7:1 for enhanced high-readability elements.
-
-## Typography & Fluid Scales
-- **Display Font**: \`var(--font-display)\` ('Outfit', sans-serif)
-- **Body Font**: \`var(--font-sans)\` (Inter, system-ui)
-- **Code/Data Font**: \`var(--font-mono)\` (ui-monospace, monospace)
-- **Responsive Scales**: Fluid \`clamp()\` formulas across viewports (20rem to 90rem) eliminating layout shifts.
-
-## Spatial Grid & Layout Architecture
-- **Baseline Grid**: 8pt dimensional scale (0.25rem, 0.5rem, 1rem, 1.5rem, 2rem, 3rem, 4rem).
-- **Class Naming**: Semantic BEM (Block-Element-Modifier) class conventions.
-- **Container Architecture**: Max-width responsive shell (75rem) with fluid padding gutters.
-
-## Theme Toggle Contract
-- Full support for \`prefers-color-scheme\` with seamless dark/light class switches.
-- Zero-FOUC (Flash of Unstyled Content) theme initialization script.
-`;
-    writeFileSync(join(brandDir, "visual-direction.md"), visualDirectionContent, "utf8");
-
-    const voiceAndToneContent = `# ✍️ Voice & Tone Guidelines — ${projectName}
-
-## Voice & Tone Pillars
-- **Tone Profile**: ${brandVoice}
-- **Guiding Tenets**:
-  1. **Direct & Unflinching**: Speak truth with clarity. Eliminate evasive marketing jargon.
-  2. **Elevated & Articulate**: Communicate with the natural authority of domain leaders.
-  3. **Action-Oriented**: Focus on tangible progress, outcomes, and clear user decisions.
-
-## Contextual Tone Variations
-- **Marketing & Onboarding**: Inspiring, warm, clear, and focused on value realization.
-- **In-App Product Copy**: Terse, functional, intuitive, and distraction-free.
-- **Error States & Alerts**: Calm, diagnostic, transparent, and paired with immediate corrective action.
-
-## Vocabulary & Copywriting Guidelines
-- **Preferred Vocabulary**:
-  - *Engineered* instead of *built*
-  - *Streamlined* instead of *easy*
-  - *Verified* instead of *assumed*
-  - *Shipped* instead of *finished*
-- **Terms to Avoid (Anti-Slop Protocol)**:
-  - Eliminate generic superlatives: "game-changing", "revolutionary", "disruptive", "synergy", "delve".
-  - Refuse passive hand-waving: replace "it is believed" with verifiable data points.
-`;
-    writeFileSync(join(brandDir, "voice-and-tone.md"), voiceAndToneContent, "utf8");
-
-    const brandGuardrailsContent = `# 🛡️ Brand Guardrails & Protection — ${projectName}
-
-## Brand Asset & IP Protection
-- **Asset Integrity**: Brand identity assets represent intellectual property, security, and user trust.
-- **Usage Restrictions**:
-  - Do NOT skew, distort, stretch, or rotate logo marks or glyphs.
-  - Do NOT alter defined OKLCH brand token values without architectural review.
-  - Do NOT superimpose brand assets over visually distracting or low-contrast backgrounds.
-
-## Clear Space & Minimum Sizing
-- **Clear Space Boundary**: Maintain an exclusion zone around the logo equal to at least 100% of the logomark height.
-- **Minimum Digital Dimensions**:
-  - Full Wordmark: Minimum width of 120px on standard and high-DPI displays.
-  - Icon Mark: Minimum 32px x 32px on screen viewports.
-  - Favicon / Touch Icons: Multi-resolution crisp SVG, 32px, and 180px formats.
-
-## Co-Branding & Partner Guidelines
-- **Visual Hierarchy**: Secondary partner lockups must never exceed 80% visual presence of the primary brand mark.
-- **Agency Audit Gate**: Run brand fidelity audits prior to every release milestone.
-`;
-    writeFileSync(join(brandDir, "brand-guardrails.md"), brandGuardrailsContent, "utf8");
-
-    const brandAssetsIntakeContent = `# 📥 Brand Assets & Media Kit Intake — ${projectName}
-
-> **Client Intake Form**: Essential creative assets and media items required from ${authorName || projectName} prior to final UI implementation and launch.
-
----
-
-## Vector Brand Marks & Logo Assets
-- [ ] **Primary Wordmark**: Vector format (\`.svg\`, \`.ai\`, or \`.eps\`) in full color for primary surfaces.
-- [ ] **Reversed Wordmark**: Monochrome white vector for dark surfaces and navigation overlays.
-- [ ] **Standalone Brand Icon / Glyphs**: Scalable icon format for mobile app icons, favicons, and avatars.
-- [ ] **Favicon Package**: Crisp 16x16, 32x32, 180x180 (Apple Touch Icon), and \`favicon.svg\`.
-
-## Typography & Font Licensing
-- [ ] **Licensed Web Font Files**: Web font files (\`.woff2\`, \`.woff\`) for custom brand typefaces.
-- [ ] **Proof of Commercial Web License**: Confirmation of domain entitlement or Google Fonts / Adobe Typekit ID.
-- [ ] **Fallback Hierarchy**: Approved system fallbacks (\`system-ui\`, \`sans-serif\`, \`serif\`).
-
-## Photography & Media Library Assets
-- [ ] **Brand Photography Repository**: Shared cloud link (Google Drive, Dropbox, Box) with organized folders:
-  - *Hero / Banner Visuals* (High-DPI minimum 2560px width)
-  - *Product / Service Showcase Imagery*
-  - *Leadership / Team Headshots*
-  - *Authentic Lifestyle & B-Roll Imagery*
-- [ ] **Video Assets & Motion Graphics**: 4K/1080p B-roll loops or ambient background MP4/WebM files.
-- [ ] **Model & Property Releases**: Confirmation of commercial usage rights.
-
-## Brand Guidelines & Pitch Materials
-- [ ] **Legacy Brand Book**: PDF reference document (if available).
-- [ ] **Recent Pitch Decks & Marketing Collateral**: Past presentations reflecting active customer-facing positioning.
-`;
-    writeFileSync(join(brandDir, "brand-assets-intake.md"), brandAssetsIntakeContent, "utf8");
-
-    // 6.2 Client-Intake/02-Business/
-    const bizModelContent = `# 💼 Business Model & Strategy — ${projectName}
-
-## Core Problem & Value Proposition
-- **Target Audience**: ${targetAudience}
-- **Problem Statement**: ${coreProblem}
-- **Value Proposition**: High-performance, accessible, and resilient digital experiences solving ${coreProblem.toLowerCase()}.
-
-## Strategic Goals
-- Provide sub-second initial render and optimal user conversion.
-- Ensure strict agent governance and verifiable code quality.
-`;
-    writeFileSync(join(bizDir, "business-model.md"), bizModelContent, "utf8");
-
-    const personaContent = `# 👥 Target Audience & Persona — ${projectName}
-
-## Primary User Persona
-- **Audience Segment**: ${targetAudience}
-- **Key Pain Point**: ${coreProblem}
-- **Desired Outcome**: Reliable, fast, and structured workflow with minimal friction.
-`;
-    writeFileSync(join(bizDir, "audience-persona.md"), personaContent, "utf8");
-
-    const competitorBenchmarkContent = `# 🔍 Competitor Benchmark & Market Positioning — ${projectName}
-
-> **Client Intake Form**: Analysis of direct and indirect competitors in the ${industry} market to establish differentiation and UI/UX benchmarks.
-
----
-
-## Key Competitors
-1. **Competitor A (Direct Benchmark)**:
-   - **URL**: \`https://competitor-a.com\`
-   - **What to Emulate**: Clean layout hierarchy, high-converting pricing table, smooth checkout flow.
-   - **What to Avoid**: Cluttered navigation, aggressive pop-up modals, poor mobile performance.
-
-2. **Competitor B (Visual & Brand Benchmark)**:
-   - **URL**: \`https://competitor-b.com\`
-   - **What to Emulate**: Elevated typography, subtle micro-animations, authentic lifestyle imagery.
-   - **What to Avoid**: Vague value proposition, hidden pricing tiers.
-
-3. **Competitor C (Alternative / Legacy Provider)**:
-   - **URL**: \`https://competitor-c.com\`
-   - **What to Emulate**: Thorough FAQ section, social proof testimonials.
-   - **What to Avoid**: Outdated design language, slow initial page loads.
-
-## Competitive Differentiation & Unfair Advantage
-- **Core Market Pain**: ${coreProblem}
-- **Our Unfair Advantage**: Unified modern digital architecture engineered for velocity, complete data sovereignty, and accessible human-centric design.
-- **Why Customers Choose ${projectName}**: Superior speed, uncompromising craft, and direct alignment with ${targetAudience}.
-`;
-    writeFileSync(join(bizDir, "competitor-benchmark.md"), competitorBenchmarkContent, "utf8");
-
-    const clientGoalsKpisContent = `# 🎯 Business Objectives & Target KPIs — ${projectName}
-
-> **Client Intake Form**: Strategic launch targets, conversion definitions, and measurable key performance indicators for ${projectName}.
-
----
-
-## Primary Business Objectives
-1. **Commercial Growth**: Establish a high-converting digital storefront and lead generation engine for ${targetAudience}.
-2. **Brand Elevation**: Present an authoritative, polished brand image that instills institutional trust in ${industry}.
-3. **Operational Efficiency**: Automate inquiries, sales, and content management to minimize manual overhead.
-
-## Target Launch Timeline & Milestones
-- **Target Launch Date**: Q3/Q4 Target Release
-- **Milestone 1 (Design & Intake Signoff)**: Completion of Brand and Architecture intake.
-- **Milestone 2 (Staging Review)**: End-to-end user flows, catalog, and checkout verification on staging.
-- **Milestone 3 (Public Go-Live)**: DNS switchover, production deployment, and monitoring activation.
-
-## Key Conversion Metrics & KPIs
-- **Primary Conversion Event**: Direct checkout purchase, demo booking, or membership registration.
-- **Target Conversion Rate**: Minimum 3.5% on qualified traffic.
-- **Target Core Web Vitals**:
-  - *Largest Contentful Paint (LCP)*: < 1.2s
-  - *Cumulative Layout Shift (CLS)*: < 0.05
-  - *Interaction to Next Paint (INP)*: < 100ms
-`;
-    writeFileSync(join(bizDir, "client-goals-kpis.md"), clientGoalsKpisContent, "utf8");
-
-    // 6.3 Client-Intake/03-Offerings/
-    const offeringsCatalogContent = `# 📦 Offerings & Deliverables Matrix — ${projectName}
-
-> **Offerings Engine**: Product catalog, service tiers, pricing architecture, and fulfillment models for ${projectName}.
-
----
-
-## Offerings & Deliverables Matrix
-${offerings
-  .split(",")
-  .map((o) => `### ${o.trim()}
-- **Category**: Core Offering
-- **Target Buyer**: ${targetAudience}
-- **Value Delivery**: Direct resolution for "${coreProblem}".
-- **Status**: Production Shipped tier.
-`)
-  .join("\n")}
-
-## Pricing Architecture & Commercial Models
-- **Billing Paradigm**: Subscription, One-Time, or Retainer.
-- **Currency & Settlement**: Multi-currency support (Default: USD, EUR, GBP).
-- **Payment Processing**: Integrated via Stripe / Medusa Commerce.
-- **Tax & Compliance**: Automated nexus and regional tax calculation.
-`;
-    writeFileSync(join(offeringsDir, "offerings-catalog.md"), offeringsCatalogContent, "utf8");
-    writeFileSync(join(offeringsDir, "offerings.md"), offeringsCatalogContent, "utf8");
-
-    const scopeDeliverablesContent = `# 🗺️ Scope Boundaries & Phasing — ${projectName}
-
-> **Agency Scope Governance**: Clear boundaries between Day-1 MVP release commitments, Phase 2 enhancements, and out-of-scope requests.
-
----
-
-## Scope Boundaries & Phasing
-
-### Phase 1 (MVP Shipped Deliverables)
-${coreFeatures
-  .split(",")
-  .map((f) => `- [x] **${f.trim()}**: Production feature provisioned, integrated, and verified in test suite.`)
-  .join("\n")}
-- [x] **Brand & Design Tokens**: Wide-gamut OKLCH palettes and fluid typography clamp scales.
-- [x] **Governance Container**: Root \`AGENTS.md\` and 9-folder \`.agents/\` context system.
-- [x] **Developer Handbook**: Empathetic 7-section \`start-here.md\` walkthrough.
-
-### Phase 2 (Post-Launch Roadmap)
-- [ ] Advanced personalization algorithms and behavioral recommendations.
-- [ ] Multi-regional warehouse and localized currency routing.
-- [ ] Automated customer re-engagement lifecycle flows.
-
-### Explicitly Out-of-Scope
-- Custom mobile app development outside of Capacitor wrappers (unless explicitly contracted).
-- Legacy database manual data cleansing (client provides clean CSV/JSON exports).
-- Custom bespoke hardware or IoT integrations.
-`;
-    writeFileSync(join(offeringsDir, "scope-deliverables.md"), scopeDeliverablesContent, "utf8");
-
-    // 6.4 Client-Intake/04-Technical-Intake/
-    const accessCredentialsContent = `# 🔑 Access & Infrastructure Credentials Intake — ${projectName}
-
-> **Client Technical Onboarding**: Credentials, cloud services, and access permissions required to build and deploy ${projectName}.
-
----
-
-## Domain & DNS Management
-- [ ] **DNS Provider**: [Cloudflare / Namecheap / GoDaddy / AWS Route53]
-- [ ] **Domain Name**: \`[clientdomain.com]\`
-- [ ] **Access Method**: Team invitation sent to agency engineering lead, or delegated nameservers.
-
-## Code Repository & Deployment Infrastructure
-- [ ] **Git Host**: GitHub (\`harshsinghmp/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}\`)
-- [ ] **Hosting Provider**: [Cloudflare Pages / Vercel / Docker Container / AWS]
-- [ ] **Database Host**: [PostgreSQL Docker / Neon Serverless / Supabase]
-
-## Merchant & Payment Processing
-- [ ] **Payment Gateway**: [Stripe / Medusa / PayPal / LemonSqueezy]
-- [ ] **Environment**: Restricted API keys provisioned for test & live environments.
-- [ ] **Webhooks**: Endpoint configured to \`/api/webhooks/stripe\`.
-
-## Secure Credential Transfer Protocol
-> 🛡️ **LifeOS Vibeguard Security Protocol**: NEVER email, Slack, or commit raw passwords or API keys to git repositories.
-- [ ] Share all sensitive credentials via a secure, end-to-end encrypted 1Password or Bitwarden share link.
-- [ ] All production environment variables must strictly live in \`.env.production\` and never be committed.
-`;
-    writeFileSync(join(techDir, "access-and-credentials.md"), accessCredentialsContent, "utf8");
-
-    const integrationsMatrixContent = `# 🔌 Third-Party Integrations Matrix — ${projectName}
-
-> **System Interoperability**: Required third-party service connections, analytics, messaging, and compliance tools for ${projectName}.
-
----
-
-## Third-Party Platform Integrations
-- [ ] **Customer Relationship Management (CRM)**: [HubSpot / Salesforce / Attio / None]
-- [ ] **Transactional Email**: [Resend / SendGrid / Postmark] (Configured with SPF, DKIM, and DMARC)
-- [ ] **Customer Support / Chat**: [Intercom / Crisp / Plain / Zendesk]
-- [ ] **CMS Backing**: [Payload CMS / Aria Builder / StudioCMS / Keystatic]
-
-## Marketing, Analytics & Tag Management
-- [ ] **Analytics Engine**: [PostHog / Google Analytics 4 (GA4) / Plausible]
-- [ ] **Tag Container**: [Google Tag Manager (GTM) Container ID]
-- [ ] **Advertising Pixels**: [Meta Pixel / LinkedIn Insight Tag / Google Ads Conversion ID]
-
-## Compliance & Legal Prerequisites
-- [ ] **Privacy Policy & Terms of Service**: Final legal copy provided by client counsel.
-- [ ] **Cookie Consent Banner**: GDPR / CCPA compliant consent management platform.
-- [ ] **Accessibility Standard**: Target WCAG 2.1 AA certification.
-`;
-    writeFileSync(join(techDir, "integrations-matrix.md"), integrationsMatrixContent, "utf8");
-
-    // Mirror the primary suite to legacy aliases for backward compatibility.
-    for (const intakeAlias of ["Intake", "Onboarding"]) {
-      cpSync(intakeDir, join(resolvedTarget, intakeAlias), { recursive: true });
+    // ponytail: single canonical folder; no Intake//Onboarding/ mirrors —
+    // re-add alias copy pass only if an external consumer appears.
+    for (const sub of ["01-Brand", "02-Business", "03-Offerings", "04-Technical-Intake"]) {
+      mkdirSync(join(intakeDir, sub), { recursive: true });
     }
 
-    console.log("  ✅ Generated: `./Client-Intake/01-Brand/` (brand-identity.md, visual-direction.md, voice-and-tone.md, brand-guardrails.md, brand-assets-intake.md)");
-    console.log("  ✅ Generated: `./Client-Intake/02-Business/` (business-model.md, audience-persona.md, competitor-benchmark.md, client-goals-kpis.md)");
-    console.log("  ✅ Generated: `./Client-Intake/03-Offerings/` (offerings-catalog.md, scope-deliverables.md, offerings.md)");
-    console.log("  ✅ Generated: `./Client-Intake/04-Technical-Intake/` (access-and-credentials.md, integrations-matrix.md)");
-    console.log("  ✅ Mirrored:   `./Intake/` and `./Onboarding/` (legacy aliases of Client-Intake/)\n");
-  }
+    const intakeBriefContent = `# Client Intake Brief — ${projectName}
 
-  // =========================================================================
-  // CLOSEOUT PASS: Synchronize context/current.md & architecture.md
+> **How this works**: You (the employee/client) answer the checklist below in
+> conversation with your AI agent. The agent then writes every document in this
+> folder for you. Do not hand-write these docs; that is the agent's job.
+> Answers already captured at scaffold time are pre-filled below — correct
+> anything that is wrong, leave the rest untouched.
+
+## Pre-Filled From Scaffold
+- **Project Name**: ${projectName}
+- **Organization**: ${authorName || "(unanswered)"}
+- **One-Line Purpose**: ${projectDesc}
+- **Industry / Vertical**: ${industry || "(unanswered)"}
+- **Target Audience**: ${targetAudience || "(unanswered)"}
+- **Core Problem Solved**: ${coreProblem || "(unanswered)"}
+- **Brand Voice**: ${brandVoice || "(unanswered)"}
+- **OKLCH Palette**: ${colorPalette}
+- **Offerings**: ${offerings || "(unanswered)"}
+- **Stack**: framework \`${config.framework}\`, CMS \`${config.cms}\`, e-commerce \`${config.ecommerce}\`, database \`${config.db}\`, auth \`${config.auth}\`, styling \`${config.styling}\`, animation \`${config.animation}\`, state \`${config.state}\`
+
+## Employee Checklist (answer these with your agent)
+1. **Brand**: Name anything the pre-filled fields above get wrong; share logo/asset locations if they exist.
+2. **Business**: Who buys, who uses, top 3 competitors, and the single goal that defines launch success.
+3. **Offerings**: List every product/service/package with a one-line promise each.
+4. **Technical**: Domain + DNS host, git host, deployment target, and any third-party services already in use (CRM, email, analytics, payments).
+5. **Boundaries**: What is explicitly OUT of scope for launch.
+
+## Agent Instructions (after the employee answers)
+1. Write \`01-Brand/\`: \`brand-identity.md\` (purpose, vision, mission, values, positioning), \`visual-direction.md\` (tied to the ${colorPalette} OKLCH tokens in \`src/styles/tokens.css\`), and \`voice-and-tone.md\` — grounded ONLY in the employee's answers, no invented filler.
+2. Write \`02-Business/\`: \`business-model.md\` and \`audience-persona.md\`.
+3. Write \`03-Offerings/\`: \`offerings-catalog.md\` and \`scope-deliverables.md\` (split launch vs. later).
+4. Write \`04-Technical-Intake/\`: \`access-and-credentials.md\` (placeholders only — never real secrets) and \`integrations-matrix.md\`.
+5. Write \`start-here.md\` at the repo root: a short developer orientation (what this is, prerequisites, install/run commands from \`package.json\`, where tokens live, how to verify). Derive it from the actual scaffolded stack — do not paste generic content.
+6. Sync the answers into \`.agents/context/product.md\` and \`.memory/CURRENT.md\`.
+
+## Non-Negotiables
+- Real answers only: every doc cites something the employee actually said.
+- Zero secrets in any file; credential docs contain placeholder links (1Password/Bitwarden share) only.
+- Modern fluid CSS only: \`clamp()\`, logical properties, zero \`px\` in fluid contexts.
+`;
+    writeFileSync(join(intakeDir, "00-Intake-Brief.md"), intakeBriefContent, "utf8");
+
+    console.log("  ✅ Generated: `./Client-Intake/00-Intake-Brief.md` (employee checklist + agent instructions)");
+    console.log("  ℹ️  Docs in 01-Brand/, 02-Business/, 03-Offerings/, 04-Technical-Intake/ are written by your AI agent from the brief.");
+  }
   // =========================================================================
   console.log("📋 STAGE Closeout: Recording Shipped State in .agents/context/current.md...");
 
@@ -6244,8 +5646,8 @@ ${coreFeatures
 - **Database**: ${config.db.toUpperCase()}${config.customDb ? ` (${config.customDb})` : ""}
 - **Authentication**: ${config.auth.toUpperCase()}${config.customAuth ? ` (${config.customAuth})` : ""}
 - Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
-- Developer quick start guide provisioned at \`./start-here.md\`.
-- Brand & business intake suite generated at \`./Client-Intake/\` (mirrored to \`./Intake/\` and \`./Onboarding/\`).
+- Client intake brief provisioned at \`./Client-Intake/00-Intake-Brief.md\`.
+- Intake docs are produced by the AI agent from the brief after employee answers.
 
 ## 2. Live Deliverables & Key Artifacts
 ${artifactList}
@@ -6263,7 +5665,7 @@ ${artifactList}
 
 ## 5. Next Immediate Focus
 - **Milestone 1**: ${firstMilestone}
-- Review developer quick start guide in \`./start-here.md\`.
+- Walk through the Client-Intake brief with your agent: \`./Client-Intake/00-Intake-Brief.md\`.
 - Run \`bun install\` to resolve dependencies.
 - Verify initial local development server (\`bun run dev\`).
 `;
@@ -6396,8 +5798,8 @@ ${offerItems}
   console.log(`🛍️  E-Commerce:        \`${config.ecommerce.toUpperCase()}\``);
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
   console.log(`🛡️  Governance:         DOX Engine Active (Root \`AGENTS.md\` + \`.agents/\` container)`);
-  console.log(`📖 Developer Guide:    \`./start-here.md\` (Empathetic 7-section handbook)`);
-  console.log(`📋 Client Intake:      \`./Client-Intake/\` (01-Brand, 02-Business, 03-Offerings, 04-Technical-Intake; aliases: Intake/, Onboarding/)`);
+  console.log(`📖 Developer Guide:    \`./start-here.md\` (written by your agent after intake)`);
+  console.log(`📋 Client Intake:      \`./Client-Intake/00-Intake-Brief.md\` (answer with your agent; docs generated after)`);
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
   if (config.framework === "wordpress") {
