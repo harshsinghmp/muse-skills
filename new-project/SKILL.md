@@ -1,7 +1,7 @@
 ---
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Empathetic 7-Section start-here.md Guide), and Stage 6 (Interactive Brand Onboarding Gate). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
+description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Client Intake Brief with post-scaffold agent onboarding), and Stage 6 (Closeout). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 version: 2.4.1
 author: DOX Engine Provisioner
 license: MIT
@@ -37,7 +37,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 [ 🎨 Stage 4: Modern OKLCH / BEM ]   ◄── [ 🔌 Stage 3: Official Package Wiring ]
          │
          ▼
-[ 📖 Stage 5: Empathetic start-here.md ] ──► [ 📋 Stage 6: Brand Onboarding Gate ]
+[ 📖 Stage 5: Client Intake Brief ] ──► [ ✅ Stage 6: Closeout ]
 ```
 
 0. **Stage 0: AI-Ready Pre-Flight Gate**: Audits if root `AGENTS.md` and `.agents/` container already exist and pass `ai-ready` audit.
@@ -45,8 +45,8 @@ Interactive project creator and Project Operating System provisioner. Implements
 2. **Stage 2: Hierarchical Decision Tree**: Prunes irrelevant questions based on selected purpose across 6 branches (Static, Content, Ecommerce, WebApp, Mobile, Custom).
 3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Automatically wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
 4. **Stage 4: Modern Tokens & BEM Architecture Injection**: Injects wide-gamut OKLCH tokens, fluid `clamp()` typography & spacing scales (`src/styles/tokens.css`), and reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-cart-drawer`).
-5. **Stage 5: Beginner-Friendly `start-here.md` Guide**: Generates an empathetic 7-section developer handbook covering architecture, quick start, directory tour, styling, AI agent collaboration, recipes, and verification.
-6. **Stage 6: Interactive Brand Onboarding & Client Intake Gate**: Generates structured brand, business, offerings, and technical intake documentation (`Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, `04-Technical-Intake/`), synchronizing DTCG tokens and context files.
+5. **Stage 5: Client Intake Brief**: Writes `Client-Intake/00-Intake-Brief.md` (employee checklist pre-filled from scaffold answers + agent instructions). Intake docs and `start-here.md` are written by the AI agent AFTER scaffolding, from real employee answers.
+6. **Stage 6: Closeout**: Synchronizes `.agents/context/` (decisions ADRs, product, current, architecture) and runs the health check.
 
 ---
 
@@ -203,34 +203,26 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 - `src/styles/semantic.css`: Reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-product-card`, `.c-cart-drawer`).
 - `src/styles/animations.css`: Hardware-accelerated GPU animations with `prefers-reduced-motion` compliance.
 
-### Stage 5: Beginner-Friendly `start-here.md` Guide
-Empathetic 7-section handbook generated at project root:
-1. **Welcome & Architecture Snapshot**: Purpose, mental model, and stack matrix.
-2. **Prerequisites & Quick Start**: One-command setup (`bun run setup`), health verification (`bun test`), and development workflow.
-3. **Project Structure Tour**: Annotated visual tree map of all directories.
-4. **How Styling & Tokens Work**: OKLCH color space, fluid clamp scales, and BEM conventions.
-5. **Working with AI Agents**: DOX Engine orientation, cognitive memory, and effective prompting.
-6. **Common Tasks & Recipes**: Adding routes, creating BEM components, env vars, Drizzle migrations.
-7. **Verification & Definition of Done**: Verification commands, Vibeguard secret defense, and DoD checklist.
+### Stage 5: Client Intake Brief (Instructions, Not Documents)
+The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled with scaffold-time answers (name, purpose, audience, palette, etc.) plus an employee checklist and agent instructions. It does NOT pre-generate the intake documents; those are produced by the AI agent AFTER scaffolding, grounded in real employee answers:
 
-### Stage 6: Interactive Brand Onboarding & Client Intake Gate
-Generates structured 4-pillar onboarding and client intake documents:
-- `Onboarding/01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`, `brand-guardrails.md`, `brand-assets-intake.md`
-- `Onboarding/02-Business/`: `business-model.md`, `audience-persona.md`, `competitor-benchmark.md`, `client-goals-kpis.md`
-- `Onboarding/03-Offerings/`: `offerings-catalog.md`, `scope-deliverables.md` (with backward-compatible `offerings.md`)
-- `Onboarding/04-Technical-Intake/`: `access-and-credentials.md`, `integrations-matrix.md`
-- Dynamically injects chosen OKLCH palette into `.agents/brand/tokens/colors.json` and `base.css`.
-- **Durable DOX Closeout**:
-  - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
-  - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
-  - Records initial shipped state in `.agents/context/current.md` and `.agents/context/architecture.md`.
+**Post-scaffold onboarding flow (agent-driven)**:
+1. Read `./Client-Intake/00-Intake-Brief.md` with the employee and collect answers to the checklist (brand corrections, business context, offerings, technical access, scope boundaries).
+2. Write `01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/` documents from those answers — real content only, no invented filler.
+3. Write `./start-here.md`: a short developer orientation derived from the actual scaffolded stack (install/run commands from `package.json`, token locations, verification steps).
+4. Sync answers into `.agents/context/product.md` and `.memory/CURRENT.md`.
+
+**Durable DOX Closeout (engine-run at scaffold)**:
+- Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
+- Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
+- Records initial shipped state in `.agents/context/current.md` and `.agents/context/architecture.md`.
 
 ---
 
 ## CLI Usage & Flags Reference
 
 ```bash
-# Interactive Mode (Prompts for Purpose -> Hierarchical Tree -> Onboarding)
+# Interactive Mode (Prompts for Purpose -> Hierarchical Tree -> Stack)
 bun new-project/scripts/new-project.ts
 
 # 1-Click Agency Golden Presets
@@ -291,6 +283,38 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 ---
 
+## Official Stack Setup References (Post-Scaffold Agent Procedures)
+
+When the intake brief or a stack change requires provisioning a companion manually, follow these official procedures. Always use `@latest` resolution (`bun add <pkg>` / `npm i <pkg>`), never pinned versions.
+
+### Payload CMS 3.0 (Next.js App Router)
+1. Install: `payload`, `@payloadcms/next`, `@payloadcms/db-sqlite` (or `@payloadcms/db-postgres`), `@payloadcms/richtext-lexical`, `@payloadcms/translations`, `sharp`.
+2. Copy the `(payload)` route group into `src/app/(payload)/` from `node_modules/@payloadcms/templates` (or generate `payload.config.ts` with collections, Lexical editor, `secret: process.env.PAYLOAD_SECRET`, and the chosen `db` adapter).
+3. Wire `next.config.mjs` with `withPayload` and add `"@payload-config": ["./src/payload.config.ts"]` to `tsconfig.json` paths.
+4. Add `PAYLOAD_SECRET` to `.env`, then `npm run dev` and open `/admin` to create the first user.
+
+### Aria Builder (Vue visual block studio)
+1. `git clone https://github.com/ariabuilder/aria` into the project workspace, then `npm install`.
+2. `npm run dev` to launch the development server, then open `/admin` and run the Setup Wizard to configure the database.
+3. `db/data/app.db` is the SQLite data store (git-ignored; local file storage by default).
+4. Point S3/R2 env vars at MinIO or any S3-compatible endpoint for media storage.
+
+### Emdash CMS (Astro edge CMS)
+1. Install `@emdash/cms`; configure the Astro integration, then `npx emdash key` to generate `EMDASH_ENCRYPTION_KEY` and the auth key in `.env`.
+2. Local dev uses SQLite + file storage out of the box (`npm run dev` -> `/admin` with `npx emdash dev-bypass --user <name>` for local auth bypass).
+3. Content lives as `_emdash` live collections; edit via `/admin`, consume via `getLiveCollection`/`getLiveEntry`.
+4. For production on Cloudflare Workers, provision D1/R2 bindings (this is what the engine's `preset=edge` path generates with `wrangler.jsonc` and `src/worker.ts`).
+
+### Puck Visual Editor
+1. Install `@measured/puck` (pairs with Payload CMS for data).
+2. Create `puck.config.ts` with field and component definitions, generate static params from the CMS page collection, and render pages with `<Puck>` (edit route) / `<Render>` (public route).
+
+### Instatic (zero-runtime SSG)
+1. `npx create-instatic@latest` (or wire `instatic` into an existing Astro/HTML project) to generate `instatic.json`, content collections, and layout templates.
+2. Author Markdown/MDX under the configured content directory; the compiler emits fully static pages at build time with zero client runtime.
+
+---
+
 ## Pitfalls
 
 - **Skipping Agents First**: Never run framework generation before AI governance is initialized, or framework defaults may overwrite or conflict with agent boundaries.
@@ -304,8 +328,8 @@ bun new-project/scripts/new-project.ts <targetPath> \
 ## Verification
 
 After scaffolding, verify the project:
-1. **Developer Guide**: Check that `./start-here.md` exists and contains all 7 sections.
-2. **Onboarding & Intake Gate**: Check `./Onboarding/01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/`.
+1. **Intake Brief**: Check that `./Client-Intake/00-Intake-Brief.md` exists with pre-filled scaffold answers.
+2. **Post-Scaffold Onboarding**: Walk the employee through the brief with your agent, then write the intake docs and `./start-here.md` it prescribes.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
