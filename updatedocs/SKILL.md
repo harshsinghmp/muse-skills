@@ -2,7 +2,7 @@
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates."
-version: 2.0.0
+version: 2.1.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -471,10 +471,20 @@ REVIEW REQUIRED
 EXPLICIT PERMISSION REQUIRED
     Protected architecture, high-risk client/business docs, or repository-governed material.
 
+GOVERNED
+    Documents owned by another governed workflow (e.g. AGENTS.md → `updateagents`).
+    Analyze and report only; never modify directly.
+
+HISTORICAL
+    Immutable records of past states (released changelog sections, accepted ADRs).
+    Never rewritten; superseded only by new records.
+
 DO NOT TOUCH
     `.memory/`, protected/generated artifacts where direct editing is prohibited,
     historical records where modification is disallowed, LICENSE unless explicitly requested.
 ```
+
+The ownership classes in the Documentation Ownership Model map onto these permission levels as follows: `SOURCE-OF-TRUTH` and `DERIVED` → AUTO-UPDATE/NORMAL UPDATE; `HUMAN-CURATED` → NORMAL UPDATE with surgical edits only; `GENERATED` → DO NOT TOUCH (Direct); `HISTORICAL` → HISTORICAL; `PROTECTED` and `CLIENT-FACING` → EXPLICIT PERMISSION REQUIRED; `AGENT-CONTEXT` → GOVERNED; `TEMPORARY` and `PLANNED` → evaluate case by case against repository governance.
 
 Never escalate from analysis to modification automatically when a permission boundary exists.
 
@@ -562,20 +572,24 @@ If implementation and intended documentation differ, report the discrepancy rath
 
 ### Operating Modes
 
-| Mode | Context & Trigger | Operational Focus |
-|:---|:---|:---|
-| **Quick** | Small targeted fix or single CLI flag change | Inspect targeted diff; update only directly affected document section. |
-| **Change** | Feature, API, migration, or config change | Full impact analysis, dependency propagation, targeted sync, and verification. |
-| **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. |
-| **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. |
-| **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt. |
+| Mode | Context & Trigger | Operational Focus | Pipeline Steps | Report |
+|:---|:---|:---|:---|:---|
+| **Quick** | Small targeted fix or single CLI flag change | Inspect targeted diff; update only directly affected document section. | 1–5, 8, 14, 19, 20 (skip audits 12–13, 15–17) | Condensed report |
+| **Change** | Feature, API, migration, or config change | Full impact analysis, dependency propagation, targeted sync, and verification. | All 20 | Full report |
+| **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. | 1–5, 8, 11 (CHANGELOG/README focus), 14–15, 19, 20 | Full report |
+| **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 20 | Full report |
+| **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt. | All 20 | Full report |
+
+Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated.
 
 ---
 
 ## Procedure
 
-### Step 1 — Establish Repository Boundary
+### Step 1 — Establish Repository Boundary and Select Mode
 Identify project root. Remain strictly inside the workspace.
+
+First, select the operating mode (Quick / Change / Release / Sprint / Full) from the Operating Modes table and state it. The mode determines which pipeline steps are mandatory; later steps marked "when relevant" are optional in all modes. Escalate Quick → Change only when evidence shows the change touches a public contract (API, CLI, schema, configuration surface).
 
 Exclude implementation artifacts:
 ```text
@@ -834,7 +848,7 @@ Understand synchronization boundaries: `WORKTREE`, `COMMIT`, `PR`, `MERGE`, `REL
 ---
 
 ### Step 20 — Final Verification
-Execute the 14-point audit protocol ([references/AUDIT-CHECKLIST.md](./references/AUDIT-CHECKLIST.md)) and verify that all non-negotiable boundaries were respected.
+Execute the 14-point audit protocol ([references/AUDIT-CHECKLIST.md](./references/AUDIT-CHECKLIST.md)) for every modified document, and verify that all non-negotiable boundaries were respected. In Quick mode, run the audit protocol only against the documents actually edited.
 
 ---
 
@@ -881,6 +895,25 @@ Before declaring documentation synchronized, verify:
 ---
 
 ## Output Format
+
+Report depth scales with mode. Use the **Full Report** for Change, Release, Sprint, and Full modes. Use the **Condensed Report** for Quick mode — a targeted single-section fix does not justify a full governance scaffolding.
+
+### Condensed Report (Quick mode)
+
+```markdown
+## 📚 Doc Sync — <target document>
+
+**Mode:** Quick | **Change inspected:** <files/diff scope>
+
+- **Updated:** `<path>` — <one-line reason, evidence-backed>
+- **Verified:** <command/link/claim checked against source>
+- **Boundaries:** `.memory/` untouched; `.agents/` <not affected / permission required>
+- **Skipped:** <nearby docs deliberately not touched and why>
+```
+
+Omit any line that does not apply. If more than ~3 documents were touched or a second-order impact was discovered, the mode should have been escalated — note it in the report.
+
+### Full Report (Change / Release / Sprint / Full modes)
 
 Always provide a structured synchronization report:
 
@@ -940,9 +973,9 @@ Always provide a structured synchronization report:
   - Evidence needed: [what would resolve it]
 
 ### 🤝 Recommended Companion Handoffs
-*(Include only where useful)*
-- `updateagents` → agent-context or instruction architecture requires deeper maintenance
-- `musememory` → durable state may require its own automatic lifecycle
+*(Include only where useful; state the fallback when a companion is not installed)*
+- `updateagents` → agent-context or instruction architecture requires deeper maintenance (fallback: report the exact proposed change and leave the decision to the user)
+- `musememory` → durable state may require its own automatic lifecycle (musememory is a runtime system, not a suite skill; when absent, simply report the durable fact in the output — never write it to `.memory/` yourself)
 - `handoff` → concrete implementation task should be delegated
 ```
 
