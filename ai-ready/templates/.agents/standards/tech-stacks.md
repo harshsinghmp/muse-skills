@@ -8,7 +8,7 @@ All digital products and application builds are scaffolded via the **Intent-Firs
 
 | Intent Category | Primary Frameworks | Recommended Styling | Recommended CMS / Commerce | Database & Backend |
 | :--- | :--- | :--- | :--- | :--- |
-| **Brochure & Static Site** | Astro v7 / Instatic HTML | Hybrid (UnoCSS Wind 4 + BEM) | SitePins / Aria Builder / None | None / SQLite |
+| **Brochure & Static Site** | Astro v7 / Instatic HTML | Hybrid (UnoCSS Wind 4 + BEM) | Aria Builder / None | None / SQLite |
 | **Content / Publication** | Astro v7 / Next.js 16 / Bedrock | Hybrid (UnoCSS Wind 4 + BEM) | Tina CMS / StudioCMS / Keystatic | SQLite / Turso / Neon |
 | **E-Commerce Storefront** | Next.js 16 / Astro v7 | Hybrid (UnoCSS Wind 4 + BEM) | Payload CMS / Medusa v2 / Fastrr | PostgreSQL (Neon / Supabase) |
 | **Web App / SaaS** | Next.js 16 | Hybrid (UnoCSS Wind 4 + BEM) | Payload + Puck / Keystone | Supabase / Neon + Better Auth |
@@ -31,7 +31,8 @@ All digital products and application builds are scaffolded via the **Intent-Firs
 - **CMS & Visual Builders**:
   - **Aria Builder** (`ariabuilder.io`): Astro-native visual builder #1 choice.
   - **StudioCMS**: Astro-native headless CMS (Astro DB / LibSQL / Turso).
-  - **Git-Based Headless**: SitePins, Tina CMS, Keystatic, Pages CMS, Decap CMS.
+  - **WollyCMS**: Self-hosted headless CMS for Astro (`@wollycms/astro` integration, SQLite/Postgres).
+  - **Git-Based Headless**: Tina CMS, Keystatic, Decap CMS.
 - **E-Commerce Companions**: Fastrr (1-click checkout), Razorpay, Stripe Hosted, Medusa v2, or Payload CMS.
 - **Testing**: **Vitest** (Unit, component, and utility tests).
 - **Runtime & Deployment**: **`@astrojs/cloudflare`** on Cloudflare Free Tier or GitHub Pages.

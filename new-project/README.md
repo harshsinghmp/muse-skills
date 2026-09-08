@@ -25,7 +25,7 @@
 - **🎭 High-Performance Animations**: Hardware-accelerated CSS presets (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`) alongside Motion.dev and GSAP ScrollTrigger.
 - **🧠 NanoStores Cross-Island State Engine**: Sub-1KB, framework-agnostic reactive state sharing across Astro islands (React, Vue, Svelte, vanilla) and Next.js components.
 - **📱 Native Mobile Conversion**: Converts Astro, Next.js, or static HTML web applications into native iOS and Android APK binaries via **Ionic Capacitor** (`@capacitor/cli`), or managed React Native via **Expo**.
-- **📦 Sovereign Open-Source CMS & Commerce**: Priority support for Payload CMS (+ Puck Visual Builder), Medusa v2, Aria Builder (`ariabuilder.io`), StudioCMS, and Git-based CMS (SitePins, Tina, Keystatic).
+- **📦 Sovereign Open-Source CMS & Commerce**: Priority support for Payload CMS (+ Puck Visual Builder), Medusa v2, Aria Builder (`ariabuilder.io`), StudioCMS, and Git-based CMS (Tina, Keystatic).
 - **🗄️ Database & Auth**: Native Drizzle ORM configuration for Neon, Supabase, Self-Hosted Postgres, and SQLite, paired with Better Auth.
 - **⚡ Strict `@latest` Resolution**: All scaffolders and dependencies resolve to the latest stable release.
 
@@ -67,7 +67,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--preset=powerhouse` | E-Commerce / Full-Stack | Next.js 16 (`@latest`) + Hybrid UnoCSS + Motion.dev + NanoStores + Payload CMS + Puck + Payload E-Commerce + Neon DB + Better Auth |
 | `--preset=publisher` | Content / Publication | Astro v7 (`@latest`) + Hybrid UnoCSS + Motion.dev + NanoStores + StudioCMS (LibSQL/Turso) |
 | `--preset=visual` | Visual Marketing Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) + Fastrr 1-click checkout |
-| `--preset=edge` | Static Edge Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + SitePins Git CMS |
+| `--preset=edge` | Static Edge Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Emdash CMS (Cloudflare D1/R2) |
 | `--preset=instatic` | Pure HTML Site | Instatic SSG + Semantic BEM CSS + Hardware CSS Animations (Zero JS runtime) |
 | `--preset=mobile` | Mobile Application | React Native (Expo `@latest`) + NativeWind + Supabase |
 | `--preset=astro-mobile` | Web-to-APK / Mobile App | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder + **Ionic Capacitor** (iOS/APK) |
@@ -97,7 +97,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `-a, --animation <anim>` | String | `css` (Hardware presets) \| `motion` \| `gsap` \| `webgl` \| `custom` \| `none` |
 | `--state <engine>` | String | `nanostores` (Sub-1KB cross-island store) \| `custom` \| `none` |
 | `-m, --mobile <target>` | String | `capacitor` (Ionic Capacitor iOS/APK wrapper) \| `expo` (React Native) \| `custom` \| `none` |
-| `-c, --cms <cms>` | String | `ariabuilder` \| `studiocms` \| `sitepins` \| `tina` \| `keystatic` \| `pagescms` \| `emdash` \| `payload` \| `decap` \| `keystone` \| `sanity` \| `strapi` \| `custom` \| `none` |
+| `-c, --cms <cms>` | String | `ariabuilder` \| `studiocms` \| `tina` \| `keystatic` \| `emdash` \| `payload` \| `wollycms` \| `decap` \| `keystone` \| `sanity` \| `strapi` \| `custom` \| `none` |
 | `--puck` | Boolean | Inject Puck Visual Builder configuration |
 | `-e, --ecommerce <ecom>` | String | `payload` \| `medusa` \| `vendure` \| `fastrr` \| `razorpay` \| `stripe` \| `custom` \| `none` |
 | `--db <db>` | String | `neon` \| `supabase` \| `postgres` \| `sqlite` \| `custom` \| `none` |
@@ -120,8 +120,8 @@ When running `new-project` interactively or through an AI agent, the onboarding 
 2. **Hierarchical Decision Tree**: Granular selection across styling, animations, cross-island state, mobile bridges, CMS, and e-commerce.
 3. **Official Companion Auto-Wiring**: Direct configuration files (`astro.config.mjs`, `uno.config.ts`, `medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`).
 4. **Modern Design Tokens & Semantic BEM**: Wide-gamut OKLCH palettes and fluid `clamp()` responsive scales in `src/styles/tokens.css`.
-5. **Empathetic Developer Handbook**: 7-section orientation guide in `start-here.md`.
-6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite in `./Client-Intake/` (mirrored to `./Intake/` and `./Onboarding/` for backward compatibility):
+5. **Client Intake Brief**: One pre-filled brief at `./Client-Intake/00-Intake-Brief.md`; your AI agent writes `start-here.md` and the intake docs after collecting the employee's answers.
+6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite scaffolded in `./Client-Intake/` (single canonical folder — no `./Intake/` or `./Onboarding/` mirrors):
    - `01-Brand/`: Brand identity, visual direction, voice & tone guidelines, brand guardrails, and media kit intake.
    - `02-Business/`: Business model, audience personas, competitor benchmarks, and target launch KPIs.
    - `03-Offerings/`: Universal offerings catalog matrix, pricing models, and scope deliverable boundaries.
@@ -131,7 +131,7 @@ All gathered answers dynamically populate:
 - `AGENTS.md` (project identity, mission, and agent personas)
 - `.agents/context/` (`product.md`, `brand.md`, `roadmap.md`, `architecture.md`, `decisions.md`, `current.md`)
 - `.agents/brand/tokens/` (`colors.json` and `base.css` with chosen OKLCH palette)
-- `Client-Intake/` (complete 4-pillar client intake and brand foundation, mirrored to `Intake/` and `Onboarding/`)
+- `Client-Intake/` (4-pillar client intake and brand foundation, single canonical folder)
 
 ---
 

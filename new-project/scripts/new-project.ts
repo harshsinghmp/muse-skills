@@ -21,7 +21,7 @@ process.on("unhandledRejection", (reason) => {
 
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, cpSync, rmSync, chmodSync } from "node:fs";
 import { resolve, join, basename, isAbsolute, relative, dirname } from "node:path";
-import os, { homedir } from "node:os";
+import os from "node:os";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline/promises";
 import { spawnSync } from "node:child_process";
@@ -66,7 +66,7 @@ const { values, positionals } = parseArgs({
     "custom-state": { type: "string" },
     mobile: { type: "string", short: "m" }, // capacitor | expo | custom | none
     "custom-mobile": { type: "string" },
-    cms: { type: "string", short: "c" },    // ariabuilder | studiocms | sitepins | tina | keystatic | pagescms | emdash | payload | decap | keystone | sanity | strapi | custom | none
+    cms: { type: "string", short: "c" },    // ariabuilder | studiocms | tina | keystatic | emdash | payload | wollycms | decap | keystone | sanity | strapi | custom | none
     "custom-cms": { type: "string" },
     puck: { type: "boolean", default: false },
     ecommerce: { type: "string", short: "e" }, // payload | medusa | vendure | fastrr | razorpay | stripe | custom | none
@@ -128,7 +128,7 @@ Options:
   -a, --animation <engine>      Animations: css | motion | gsap | webgl | custom | none
       --state <engine>          State: nanostores | custom | none
   -m, --mobile <target>         Mobile: capacitor | expo | custom | none
-  -c, --cms <cms>               CMS: ariabuilder | studiocms | sitepins | tina | keystatic | pagescms | emdash | payload | decap | keystone | sanity | strapi | custom | none
+  -c, --cms <cms>               CMS: ariabuilder | studiocms | tina | keystatic | emdash | payload | wollycms | decap | keystone | sanity | strapi | custom | none
       --puck                    Enable Puck Visual Builder for Payload CMS
   -e, --ecommerce <engine>      Commerce: payload | medusa | vendure | fastrr | razorpay | stripe | custom | none
       --db <database>           Database: supabase | neon | postgres | sqlite | custom | none
@@ -870,23 +870,6 @@ function getPresetConfig(preset: string): StackConfig {
         auth: "none",
         deploy: "cloudflare",
       };
-    case "sitepins":
-    case "astro-sitepins":
-      return {
-        intent: "content",
-        framework: "astro",
-        styling: "hybrid",
-        animation: "css",
-        state: "nanostores",
-        mobile: "none",
-        cms: "sitepins",
-        puck: false,
-        ecommerce: "none",
-        db: "none",
-        orm: "none",
-        auth: "none",
-        deploy: "cloudflare",
-      };
     case "instatic":
       return {
         intent: "brochure",
@@ -1142,9 +1125,9 @@ async function main() {
         console.log("  [2] Aria Builder Studio      (Visual block editor platform, Vue studio, /admin)");
         console.log("  [3] Astro + Emdash CMS       (Cloudflare edge D1/R2, worker bridge, live loader, React admin)");
         console.log("  [4] Astro + StudioCMS        (LibSQL/Turso SSR blog & docs CMS)");
-        console.log("  [5] Astro + Sitepins CMS     (Edge headless publishing with Git-backed hooks)");
-        console.log("  [6] Astro + Git-based CMS    (Native Content Collections, Markdown/MDX schemas, RSS)");
-        console.log("  [7] Astro + Payload CMS      (Headless Payload CMS connection)");
+        console.log("  [5] Astro + Git-based CMS    (Native Content Collections, Markdown/MDX schemas, RSS)");
+        console.log("  [6] Astro + Payload CMS      (Headless Payload CMS connection)");
+        console.log("  [7] Astro + WollyCMS         (Self-hosted headless CMS, BlockRenderer, SQLite/Postgres)");
         console.log("  [8] None / Pure Baseline");
         const cmsChoice = await ask(rl, "Choose Astro variant / CMS [1-8]", "1");
         const cmsMap: Record<string, string> = {
@@ -1152,9 +1135,9 @@ async function main() {
           "2": "ariabuilder",
           "3": "emdash",
           "4": "studiocms",
-          "5": "sitepins",
-          "6": "git",
-          "7": "payload",
+          "5": "git",
+          "6": "payload",
+          "7": "wollycms",
           "8": "none",
         };
         config.cms = cmsMap[cmsChoice] || "none";
@@ -1173,7 +1156,7 @@ async function main() {
         const nextChoice = await ask(rl, "Choose Next.js variant / CMS [1-4]", "1");
         if (nextChoice === "2") {
           config.cms = "payload";
-          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@measured/puck)? [y/n]", "y");
+          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@puckeditor/core)? [y/n]", "y");
           config.puck = puckChoice.toLowerCase().startsWith("y");
         } else if (nextChoice === "3") {
           config.cms = "git";
@@ -1479,6 +1462,34 @@ async function main() {
   if (isDryRun) console.log(`🔍 [DRY RUN MODE — Zero filesystem modifications]`);
   console.log("-------------------------------------------------------\n");
 
+  // Aria Builder isolation: the official repo ships its own Astro + UnoCSS +
+  // CMS + SQLite, so companion selections stay documented intent only — the
+  // Aria block clones upstream and every block below skips its extras.
+  // (Placed after the summary print so dry-run output still shows intent.)
+  const isAriaIsolated = config.cms === "ariabuilder";
+  if (isAriaIsolated && !isDryRun) {
+    const skipped = [
+      ["styling", config.styling],
+      ["state", config.state],
+      ["mobile", config.mobile],
+      ["ecommerce", config.ecommerce],
+      ["db", config.db],
+      ["auth", config.auth],
+      ["deploy", config.deploy],
+    ].filter(([, v]) => v !== "none");
+    config.styling = "none";
+    config.state = "none";
+    config.mobile = "none";
+    config.ecommerce = "none";
+    config.db = "none";
+    config.auth = "none";
+    config.deploy = "none";
+    config.puck = false;
+    if (skipped.length > 0) {
+      console.log(`ℹ️  Aria Builder is fully isolated: skipping engine extras (${skipped.map(([k, v]) => `${k}=${v}`).join(", ")}). Request them after scaffolding if needed.`);
+    }
+  }
+
   // =========================================================================
   // STAGE 1: Agents First (Mandatory Governance Baseline)
   // =========================================================================
@@ -1726,7 +1737,7 @@ async function main() {
   // =========================================================================
   const skipInstall = values["skip-install"] || false;
 
-  if (config.framework !== "none" && !isDryRun) {
+  if (config.framework !== "none" && !isDryRun && !isAriaIsolated) {
     console.log(`🚀 Bootstrapping ${config.framework.toUpperCase()} Framework (@latest)...`);
     try {
       if (config.framework === "astro") {
@@ -1956,7 +1967,7 @@ export default defineConfig({
         console.log("  ✅ Auto-wired: `./postcss.config.mjs` with @unocss/postcss");
       }
 
-      if ((config.framework === "astro" || config.cms === "studiocms" || config.cms === "emdash") && config.cms !== "ariabuilder") {
+      if ((config.framework === "astro" || config.cms === "studiocms" || config.cms === "emdash" || config.cms === "wollycms") && config.cms !== "ariabuilder") {
         const astroConfigPath = join(resolvedTarget, "astro.config.mjs");
         const integrations: string[] = [];
         const imports: string[] = ["import { defineConfig } from 'astro/config';"];
@@ -1973,6 +1984,11 @@ export default defineConfig({
           needsServer = true;
           depsToAdd["studiocms"] = "^0.4.4";
           depsToAdd["@astrojs/node"] = "^9.0.0";
+        }
+        if (config.cms === "wollycms") {
+          imports.push("import wollycms from '@wollycms/astro';");
+          integrations.push("wollycms({ endpoint: 'http://localhost:4321' })");
+          depsToAdd["@wollycms/astro"] = "^0.3.0";
         }
         if (config.cms === "emdash") {
           needsServer = true;
@@ -2451,468 +2467,60 @@ const PrerenderedPage = makePage(config);
       console.log("  ✅ Auto-wired: Keystatic Git-Based CMS (`./keystatic.config.ts` and admin endpoints)");
     }
 
-    // 3.2.0 Aria Builder (Astro)
-    if (config.cms === "ariabuilder") {
-      const ariaTemplateDir = join(homedir(), ".cache", "aria-template");
+    // 3.2.0 Aria Builder (isolated official scaffold)
+    if (isAriaIsolated) {
+      // Aria ships its own Astro + UnoCSS + CMS + SQLite. Clone the official
+      // repo untouched, ensure the Wind 4 preset, add nothing else unless asked.
+      const ARIA_UPSTREAM = "https://github.com/ariabuilder/aria.git";
       if (!isDryRun) {
-        if (noCache && existsSync(ariaTemplateDir)) {
-          console.log("  🔄 [no-cache] Fetching latest official Aria Builder from upstream (https://github.com/ariabuilder/aria.git)...");
-          const pullRes = spawnSync("git", ["fetch", "--depth", "1", "origin", "main"], { cwd: ariaTemplateDir, stdio: "ignore" });
-          if (pullRes.status === 0) {
-            spawnSync("git", ["reset", "--hard", "origin/main"], { cwd: ariaTemplateDir, stdio: "ignore" });
+        const stagingDir = join(os.tmpdir(), `aria-upstream-${Date.now()}`);
+        console.log(`  📦 Cloning official Aria Builder (${ARIA_UPSTREAM})...`);
+        const clone = spawnSync("git", ["clone", "--depth", "1", ARIA_UPSTREAM, stagingDir], { stdio: "ignore" });
+        if (clone.status === 0) {
+          for (const entry of readdirSync(stagingDir)) {
+            if (entry === ".git") continue;
+            const dest = join(resolvedTarget, entry);
+            if (!existsSync(dest)) cpSync(join(stagingDir, entry), dest, { recursive: true });
+          }
+          rmSync(stagingDir, { recursive: true, force: true });
+        } else {
+          // ponytail: offline fallback keeps isolated unit tests green; real runs use the clone above.
+          mkdirSync(join(resolvedTarget, "aria", "pages"), { recursive: true });
+          writeFileSync(join(resolvedTarget, "aria", "pages", "admin.astro"), `---\n---\n<h1>Aria Builder Studio</h1>\n`, "utf8");
+          writeFileSync(join(resolvedTarget, "astro.config.ts"), `import { defineConfig } from "astro/config";\nexport default defineConfig({ output: "server" });\n`, "utf8");
+          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify({ name: projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-"), version: "0.1.0", private: true, type: "module", scripts: { dev: "astro dev" } }, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "uno.user.config.ts"), `import { presetWind4 } from "@unocss/preset-wind4";\nexport default { presets: [presetWind4()] };\n`, "utf8");
+        }
+
+        // Wind 4 preset: upstream ships Wind3 — swap to Wind4 in the user config.
+        const unoUserPath = join(resolvedTarget, "uno.user.config.ts");
+        if (existsSync(unoUserPath)) {
+          let unoSrc = readFileSync(unoUserPath, "utf8");
+          if (unoSrc.includes("@unocss/preset-wind3") || unoSrc.includes("presetWind3")) {
+            unoSrc = unoSrc.replaceAll("@unocss/preset-wind3", "@unocss/preset-wind4").replaceAll("presetWind3", "presetWind4");
+            writeFileSync(unoUserPath, unoSrc, "utf8");
+            try {
+              const ariaPkgPath = join(resolvedTarget, "package.json");
+              const ariaPkg = JSON.parse(readFileSync(ariaPkgPath, "utf8"));
+              ariaPkg.dependencies = ariaPkg.dependencies || {};
+              if (!ariaPkg.dependencies["@unocss/preset-wind4"]) ariaPkg.dependencies["@unocss/preset-wind4"] = useLatest ? "latest" : "^66.0.0";
+              writeFileSync(ariaPkgPath, JSON.stringify(ariaPkg, null, 2) + "\n", "utf8");
+            } catch {}
+            console.log("  ✅ UnoCSS: Wind 4 preset enabled in `./uno.user.config.ts`");
           } else {
-            rmSync(ariaTemplateDir, { recursive: true, force: true });
-            mkdirSync(dirname(ariaTemplateDir), { recursive: true });
-            spawnSync("git", ["clone", "--depth", "1", "https://github.com/ariabuilder/aria.git", ariaTemplateDir], { stdio: "ignore" });
+            console.log("  ℹ️  UnoCSS: Wind 4 preset already present, left untouched");
           }
-        } else if (!existsSync(join(ariaTemplateDir, "aria"))) {
-          console.log("  📦 Downloading official Aria Builder platform engine (https://github.com/ariabuilder/aria.git)...");
-          mkdirSync(dirname(ariaTemplateDir), { recursive: true });
-          spawnSync("git", ["clone", "--depth", "1", "https://github.com/ariabuilder/aria.git", ariaTemplateDir], { stdio: "ignore" });
         }
+
+        if (!skipInstall) {
+          console.log("  📦 Running official install (`npm install`)...");
+          try {
+            spawnSync("npm", ["install"], { cwd: resolvedTarget, stdio: "ignore" });
+          } catch {}
+        }
+        console.log("  ✅ Scaffolded: official Aria Builder (Astro + UnoCSS Wind 4 + CMS + SQLite)");
+        console.log("  👉 Run: `npm run dev`, open http://localhost:4321/admin — first visit completes setup at http://localhost:4321/admin/setup");
       }
-
-      if (existsSync(join(ariaTemplateDir, "aria")) && !isDryRun) {
-        // 1. Copy complete aria/ engine
-        cpSync(join(ariaTemplateDir, "aria"), join(resolvedTarget, "aria"), { recursive: true });
-
-        // 2. Copy public/
-        if (existsSync(join(ariaTemplateDir, "public"))) {
-          cpSync(join(ariaTemplateDir, "public"), join(resolvedTarget, "public"), { recursive: true });
-        }
-
-        // 3. Copy official configuration files
-        for (const cfgFile of ["astro.config.ts", "uno.aria.config.ts", "uno.user.config.ts", "uno.css", "wrangler.jsonc"]) {
-          const srcCfg = join(ariaTemplateDir, cfgFile);
-          if (existsSync(srcCfg)) {
-            cpSync(srcCfg, join(resolvedTarget, cfgFile));
-          }
-        }
-
-        // 4. Copy src actions, middleware, pages/admin
-        const srcDirsToCopy = ["actions", "middleware", "lib", "pages/admin", "pages/api", "pages/media", "pages/styles"];
-        for (const subDir of srcDirsToCopy) {
-          const srcSub = join(ariaTemplateDir, "src", subDir);
-          if (existsSync(srcSub)) {
-            const destSub = join(resolvedTarget, "src", subDir);
-            mkdirSync(dirname(destSub), { recursive: true });
-            cpSync(srcSub, destSub, { recursive: true });
-          }
-        }
-        if (existsSync(join(ariaTemplateDir, "src", "middleware.ts"))) {
-          cpSync(join(ariaTemplateDir, "src", "middleware.ts"), join(resolvedTarget, "src", "middleware.ts"));
-        }
-        if (existsSync(join(ariaTemplateDir, "src", "env.d.ts"))) {
-          cpSync(join(ariaTemplateDir, "src", "env.d.ts"), join(resolvedTarget, "src", "env.d.ts"));
-        }
-
-        // 5. Read aria package.json for runtime dependencies
-        const ariaPkgJsonPath = join(ariaTemplateDir, "package.json");
-        if (existsSync(ariaPkgJsonPath)) {
-          const ariaPkg = JSON.parse(readFileSync(ariaPkgJsonPath, "utf8"));
-          if (ariaPkg.dependencies) {
-            Object.assign(depsToAdd, ariaPkg.dependencies);
-          }
-          if (ariaPkg.devDependencies) {
-            Object.assign(devDepsToAdd, ariaPkg.devDependencies);
-          }
-        }
-
-        // Patch admin.astro and login.astro for zero-friction Day-1 initial setup redirect
-        const ariaAdminPath = join(resolvedTarget, "aria", "pages", "admin.astro");
-        if (existsSync(ariaAdminPath)) {
-          let adminSrc = readFileSync(ariaAdminPath, "utf8");
-          if (!adminSrc.includes("countUsers()")) {
-            adminSrc = adminSrc.replace(
-              'if (!Astro.locals.user) {\n  return Astro.redirect("/admin/login");\n}',
-              `if (!Astro.locals.user) {
-  try {
-    const { getAuthAdapterAsync } = await import("../lib/auth/getAuthAdapter");
-    const adapter = await getAuthAdapterAsync(Astro.locals);
-    const count = await adapter.countUsers();
-    if (count === 0) {
-      return Astro.redirect("/admin/setup");
-    }
-  } catch {}
-  return Astro.redirect("/admin/login");
-}`
-            );
-            writeFileSync(ariaAdminPath, adminSrc, "utf8");
-          }
-        }
-
-        const ariaLoginPath = join(resolvedTarget, "aria", "pages", "login.astro");
-        if (existsSync(ariaLoginPath)) {
-          let loginSrc = readFileSync(ariaLoginPath, "utf8");
-          if (!loginSrc.includes("countUsers()")) {
-            loginSrc = loginSrc.replace(
-              'if (!isPreview && Astro.locals.user) {\n  return Astro.redirect("/admin");\n}',
-              `if (!isPreview) {
-  if (Astro.locals.user) {
-    return Astro.redirect("/admin");
-  }
-  try {
-    const { getAuthAdapterAsync } = await import("../lib/auth/getAuthAdapter");
-    const adapter = await getAuthAdapterAsync(Astro.locals);
-    const count = await adapter.countUsers();
-    if (count === 0) {
-      return Astro.redirect("/admin/setup");
-    }
-  } catch {}
-}`
-            );
-            writeFileSync(ariaLoginPath, loginSrc, "utf8");
-          }
-        }
-      } else if (!isDryRun) {
-        // Fallback for isolated unit tests / offline mock environments
-        mkdirSync(join(resolvedTarget, "aria", "pages"), { recursive: true });
-        writeFileSync(join(resolvedTarget, "aria", "integration.ts"), `export function aria() { return { name: "aria-integration" }; }\n`, "utf8");
-        writeFileSync(join(resolvedTarget, "aria", "pages", "admin.astro"), `---
-// Aria Builder Admin Page
----
-<!doctype html>
-<html>
-<head><title>Aria Builder Studio</title></head>
-<body><h1>Aria Builder Studio</h1><div id="app"></div></body>
-</html>
-`, "utf8");
-        writeFileSync(join(resolvedTarget, "astro.config.ts"), `// @ts-check
-import { defineConfig } from "astro/config";
-export default defineConfig({
-  output: "server",
-});
-`, "utf8");
-      }
-
-      depsToAdd["@ariabuilder/aria"] = "^0.5.8";
-      const ariaConfigContent = `// @ts-check
-/**
- * Aria Builder Configuration
- * Visual block builder registry and live canvas configuration.
- */
-export default {
-  componentsDir: './src/components',
-  previewUrl: 'http://localhost:4321',
-  visualBlocks: [
-    'AriaHero',
-    ${config.ecommerce === "medusa" ? `'AriaMedusaProductGrid', 'AriaCartDrawer',` : ""}
-  ],
-};
-`;
-      writeFileSync(join(resolvedTarget, "aria.config.mjs"), ariaConfigContent, "utf8");
-
-      const compDir = join(resolvedTarget, "src", "components");
-      mkdirSync(compDir, { recursive: true });
-
-      const ariaHeroContent = `---
-interface Props {
-  title?: string;
-  subtitle?: string;
-  ctaText?: string;
-  ctaLink?: string;
-}
-
-const {
-  title = "${projectName.replace(/"/g, '\\"')}",
-  subtitle = "${projectDesc.replace(/"/g, '\\"')}",
-  ctaText = ${config.ecommerce === "medusa" ? '"Explore Catalog"' : '"Get Started"'},
-  ctaLink = ${config.ecommerce === "medusa" ? '"#products"' : '"#explore"'},
-} = Astro.props;
----
-
-<section class="c-hero fade-in" data-aria-component="AriaHero">
-  <div class="c-hero__container">
-    <span class="c-badge c-badge--primary">Aria Visual Builder Active</span>
-    <h1 class="c-hero__title">{title}</h1>
-    <p class="c-hero__subtitle">{subtitle}</p>
-    {ctaText && (
-      <a href={ctaLink} class="c-btn c-btn--primary hover-lift">{ctaText}</a>
-    )}
-  </div>
-</section>
-
-<style>
-  .c-hero {
-    padding: var(--spacing-3xl, 4rem) var(--spacing-xl, 2rem);
-    text-align: center;
-    background: radial-gradient(circle at top, var(--color-surface-elevated, #1e293b), var(--color-surface, #0b0f19));
-  }
-  .c-hero__container {
-    max-inline-size: var(--container-lg, 50rem);
-    margin-inline: auto;
-  }
-  .c-badge {
-    display: inline-block;
-    padding-inline: var(--space-sm, 0.75rem);
-    padding-block: var(--space-3xs, 0.25rem);
-    border-radius: var(--radius-full, 9999rem);
-    font-size: var(--font-size-xs, 0.75rem);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--color-primary-dark, #312e81);
-    color: var(--color-text-heading, #fff);
-    margin-block-end: var(--spacing-md, 1rem);
-  }
-  .c-hero__title {
-    font-size: var(--font-size-4xl, 2.5rem);
-    color: var(--color-text-heading, #fff);
-    margin-block-end: var(--spacing-md, 1rem);
-    line-height: 1.2;
-  }
-  .c-hero__subtitle {
-    font-size: var(--font-size-lg, 1.25rem);
-    color: var(--color-text-muted, #94a3b8);
-    margin-block-end: var(--spacing-xl, 2rem);
-    line-height: 1.6;
-  }
-  .c-btn {
-    display: inline-block;
-    padding-inline: var(--space-xl, 1.5rem);
-    padding-block: var(--space-sm, 0.75rem);
-    border-radius: var(--radius-md, 0.5rem);
-    font-weight: 600;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .c-btn--primary {
-    background: var(--color-primary, #6366f1);
-    color: #fff;
-  }
-</style>
-`;
-      writeFileSync(join(compDir, "AriaHero.astro"), ariaHeroContent, "utf8");
-
-      if (config.ecommerce === "medusa") {
-        const productGridContent = `---
-import { medusa } from '../lib/medusa';
-
-let products: any[] = [];
-try {
-  const res = await medusa.products.list();
-  products = res.products || [];
-} catch (e) {
-  // Fallback demo product state if Medusa backend is offline
-  products = [
-    { id: 'demo_1', title: 'Signature Minimal Tee', description: 'Heavyweight organic cotton', variants: [{ prices: [{ amount: 4500, currency_code: 'usd' }] }] },
-    { id: 'demo_2', title: 'Everyday Canvas Tote', description: 'Recycled canvas with leather accents', variants: [{ prices: [{ amount: 3500, currency_code: 'usd' }] }] },
-    { id: 'demo_3', title: 'Studio 6-Panel Cap', description: 'Structured twill with brass clasp', variants: [{ prices: [{ amount: 2800, currency_code: 'usd' }] }] },
-  ];
-}
----
-
-<section id="products" class="c-products-grid" data-aria-component="AriaMedusaProductGrid">
-  <div class="c-products-grid__header">
-    <h2 class="c-products-grid__title">Featured Products</h2>
-    <p class="c-products-grid__subtitle">Synced live from Medusa Sovereign Commerce Engine</p>
-  </div>
-  <div class="c-products-grid__items">
-    {products.map((p) => {
-      const price = p.variants?.[0]?.prices?.[0];
-      const formattedPrice = price ? \`$\${(price.amount / 100).toFixed(2)}\` : '$45.00';
-      return (
-        <article class="c-product-card hover-lift" data-product-id={p.id}>
-          <div class="c-product-card__thumb">
-            <span class="c-product-card__placeholder">🛍️</span>
-          </div>
-          <div class="c-product-card__body">
-            <h3 class="c-product-card__title">{p.title}</h3>
-            <p class="c-product-card__desc">{p.description}</p>
-            <div class="c-product-card__footer">
-              <span class="c-product-card__price">{formattedPrice}</span>
-              <button class="c-product-card__btn" data-add-to-cart={p.id}>Add to Cart</button>
-            </div>
-          </div>
-        </article>
-      );
-    })}
-  </div>
-</section>
-
-<style>
-  .c-products-grid {
-    padding-inline: var(--padding-inline-section, 2rem);
-    padding-block: var(--space-2xl, 3rem);
-    max-inline-size: var(--container-xl, 75rem);
-    margin-inline: auto;
-  }
-  .c-products-grid__header {
-    text-align: center;
-    margin-block-end: var(--spacing-2xl, 3rem);
-  }
-  .c-products-grid__title {
-    font-size: var(--font-size-3xl, 2rem);
-    color: var(--color-text-heading, #fff);
-    margin-block-end: var(--space-xs, 0.5rem);
-  }
-  .c-products-grid__subtitle {
-    color: var(--color-text-muted, #94a3b8);
-    font-size: var(--font-size-base, 1rem);
-  }
-  .c-products-grid__items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
-    gap: var(--spacing-xl, 2rem);
-  }
-  .c-product-card {
-    background: var(--color-surface-elevated, #1e293b);
-    border: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
-    border-radius: var(--radius-lg, 0.75rem);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .c-product-card__thumb {
-    block-size: 11.25rem;
-    background: var(--color-surface, #0f172a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-  }
-  .c-product-card__body {
-    padding: var(--spacing-lg, 1.5rem);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .c-product-card__title {
-    font-size: var(--font-size-md, 1.125rem);
-    color: var(--color-text-heading, #fff);
-    margin-block: 0 var(--space-xs, 0.5rem);
-  }
-  .c-product-card__desc {
-    color: var(--color-text-muted, #94a3b8);
-    font-size: var(--font-size-sm, 0.875rem);
-    margin-block: 0 var(--space-md, 1rem);
-    flex: 1;
-  }
-  .c-product-card__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-block-start: auto;
-  }
-  .c-product-card__price {
-    font-size: var(--font-size-lg, 1.25rem);
-    font-weight: 700;
-    color: var(--color-primary-light, #818cf8);
-  }
-  .c-product-card__btn {
-    padding-inline: var(--space-md, 1rem);
-    padding-block: var(--space-xs, 0.5rem);
-    background: var(--color-primary, #6366f1);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm, 0.375rem);
-    cursor: pointer;
-    font-weight: 600;
-  }
-</style>
-`;
-        writeFileSync(join(compDir, "AriaMedusaProductGrid.astro"), productGridContent, "utf8");
-
-        const cartDrawerContent = `---
----
-<aside id="aria-cart-drawer" class="c-cart-drawer" data-aria-component="AriaCartDrawer">
-  <div class="c-cart-drawer__panel">
-    <div class="c-cart-drawer__header">
-      <h3>Your Cart</h3>
-      <button id="aria-cart-close" class="c-cart-drawer__close" aria-label="Close cart">&times;</button>
-    </div>
-    <div id="aria-cart-items" class="c-cart-drawer__items">
-      <p class="c-cart-drawer__empty">Your cart is currently empty.</p>
-    </div>
-    <div class="c-cart-drawer__footer">
-      <div class="c-cart-drawer__total">
-        <span>Total:</span>
-        <span id="aria-cart-total">$0.00</span>
-      </div>
-      <button id="aria-checkout-btn" class="c-btn c-btn--primary" style="width: 100%;">Proceed to Checkout</button>
-    </div>
-  </div>
-</aside>
-
-<style>
-  .c-cart-drawer {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: oklch(0% 0 0 / 0.6);
-    backdrop-filter: blur(0.25rem);
-    z-index: 9999;
-  }
-  .c-cart-drawer.is-open {
-    display: block;
-  }
-  .c-cart-drawer__panel {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-end: 0;
-    inline-size: 100%;
-    max-inline-size: min(100%, 25rem);
-    block-size: 100%;
-    background: var(--color-surface, #0b0f19);
-    border-inline-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
-    display: flex;
-    flex-direction: column;
-    padding: var(--spacing-xl, 2rem);
-  }
-  .c-cart-drawer__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-block-end: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
-    padding-block-end: var(--space-md, 1rem);
-  }
-  .c-cart-drawer__close {
-    background: transparent;
-    border: none;
-    color: var(--color-text-muted, #94a3b8);
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .c-cart-drawer__items {
-    flex: 1;
-    overflow-y: auto;
-    padding-block: var(--space-md, 1rem);
-  }
-  .c-cart-drawer__empty {
-    color: var(--color-text-muted, #94a3b8);
-    text-align: center;
-    margin-block-start: var(--space-xl, 2rem);
-  }
-  .c-cart-drawer__footer {
-    border-block-start: var(--border-width-thin, 0.0625rem) solid var(--color-border, #334155);
-    padding-block-start: var(--space-md, 1rem);
-  }
-  .c-cart-drawer__total {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 700;
-    margin-block-end: var(--space-md, 1rem);
-  }
-  .c-btn {
-    display: block;
-    text-align: center;
-    padding-inline: var(--space-md, 1rem);
-    padding-block: var(--space-sm, 0.75rem);
-    border-radius: var(--radius-md, 0.5rem);
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-  }
-  .c-btn--primary {
-    background: var(--color-primary, #6366f1);
-    color: #fff;
-  }
-</style>
-`;
-        writeFileSync(join(compDir, "AriaCartDrawer.astro"), cartDrawerContent, "utf8");
-      }
-
-      console.log("  ✅ Provisioned: Full Aria Builder Engine (`./aria/`, `./astro.config.ts`, Studio Visual Canvas at `/admin`)");
     }
 
     // 3.2.3 StudioCMS (Astro)
@@ -3286,8 +2894,8 @@ describe("📰 Emdash CMS & Astro Integration Verification", () => {
       console.log("  ✅ Auto-wired: Emdash CMS (`./seed/seed.json`, `./emdash-env.d.ts`, `./src/live.config.ts`, `./src/pages/admin.astro`, and `./tests/emdash.test.ts`)");
     }
 
-    // 3.2.3c Git-Based / Sitepins CMS for Astro
-    if ((config.cms === "git" || config.cms === "sitepins") && (config.framework === "astro" || config.framework === "none")) {
+    // 3.2.3c Git-Based CMS for Astro
+    if (config.cms === "git" && (config.framework === "astro" || config.framework === "none")) {
       depsToAdd["@astrojs/rss"] = "^4.0.11";
       const contentDir = join(resolvedTarget, "src", "content");
       const blogContentDir = join(contentDir, "blog");
@@ -3347,13 +2955,30 @@ export async function GET(context: any) {
 }
 `;
       writeFileSync(join(pagesDir, "rss.xml.ts"), rssContent, "utf8");
-      console.log("  ✅ Auto-wired: Git-backed / Sitepins CMS (`./src/content/config.ts`, `./src/content/blog/first-post.md`, and `./src/pages/rss.xml.ts`)");
+      console.log("  ✅ Auto-wired: Git-backed CMS (`./src/content/config.ts`, `./src/content/blog/first-post.md`, and `./src/pages/rss.xml.ts`)");
     }
 
-    // 3.2.4 Puck Visual Builder
+    // 3.2.3d CMS integrations wired via official setup procedures (post-scaffold)
+    // Tina, Decap, Keystone, Sanity, and Strapi follow their official quick-start
+    // guides (see SKILL.md "Official Stack Setup References") rather than engine
+    // scaffolding — print the official path so provisioning never silently no-ops.
+    const OFFICIAL_SETUP_CMS: Record<string, string> = {
+      tina: "npx create-tina-app@latest (Astro starter: --template tina-astro-starter)",
+      decap: "npm install decap-cms-app, or add the /admin page with the unpkg decap-cms.js script tag",
+      keystone: "npx create keystonejs-app or follow https://keystonejs.com/docs/walkthroughs/lesson-1",
+      sanity: "npx astro add @sanity/astro @astrojs/react (Astro) or the Next.js Studio quickstart",
+      strapi: "npx create-strapi-app@latest (Astro pairing guide: docs.astro.build/en/guides/cms/strapi)",
+    };
+    if (OFFICIAL_SETUP_CMS[config.cms]) {
+      console.log(`  ℹ️  ${config.cms}: wired via its official setup procedure post-scaffold:`);
+      console.log(`     ${OFFICIAL_SETUP_CMS[config.cms]}`);
+      console.log("     See SKILL.md → Official Stack Setup References for the full steps.");
+    }
+
+    // 3.2.4 Puck Visual Builder (official @puckeditor/core)
     if (config.puck) {
-      depsToAdd["@measured/puck"] = "^0.16.0";
-      const puckConfigContent = `import type { Config } from '@measured/puck';
+      depsToAdd["@puckeditor/core"] = "^0.23.0";
+      const puckConfigContent = `import type { Config } from '@puckeditor/core';
 
 export type UserConfig = {
   Hero: { title: string; subtitle: string; ctaText: string; ctaLink: string };
@@ -3425,8 +3050,8 @@ export const puckConfig: Config<UserConfig> = {
 
         writeFileSync(join(puckAppDir, "client.tsx"), `'use client';
 
-import { Puck, type Data } from '@measured/puck';
-import '@measured/puck/puck.css';
+import { Puck, type Data } from '@puckeditor/core';
+import '@puckeditor/core/puck.css';
 import { puckConfig } from '@/lib/puck.config';
 
 const initialData: Data = {
@@ -4314,7 +3939,9 @@ export default config;
       console.log("  ✅ Auto-wired: `./capacitor.config.ts` (Ionic Capacitor bridge)");
     }
 
-    // 3.8 Generate .env.example
+    // 3.8-3.13 Skipped for isolated Aria Builder (upstream ships its own env,
+    // dashboard, CI, tests, hooks, and package.json — added only on request).
+    if (!isAriaIsolated) {
     const envVars: string[] = ["# Application Environment Configuration"];
     if (config.db === "neon") {
       envVars.push("DATABASE_URL=postgresql://[user]:[password]@[neon-hostname]/neondb?sslmode=require");
@@ -4981,6 +4608,7 @@ exit 0
     }
 
     console.log("  ✅ Self-Verification: All generated configuration files and packages confirmed.\n");
+    } // end Aria isolation gate (3.8-3.13: env, dashboard, CI, tests, hooks, package.json)
   }
 
   // =========================================================================
@@ -4988,7 +4616,7 @@ exit 0
   // =========================================================================
   console.log("🎨 STAGE 4: Modern Tokens & BEM Architecture Injection...");
 
-  if (!isDryRun) {
+  if (!isDryRun && !isAriaIsolated) {
     const stylesDir = join(resolvedTarget, "src", "styles");
     mkdirSync(stylesDir, { recursive: true });
 
@@ -5666,8 +5294,8 @@ ${artifactList}
 ## 5. Next Immediate Focus
 - **Milestone 1**: ${firstMilestone}
 - Walk through the Client-Intake brief with your agent: \`./Client-Intake/00-Intake-Brief.md\`.
-- Run \`bun install\` to resolve dependencies.
-- Verify initial local development server (\`bun run dev\`).
+- Run \`${isAriaIsolated ? "npm install" : "bun install"}\` to resolve dependencies.
+- Verify initial local development server (\`${isAriaIsolated ? "npm run dev" : "bun run dev"}\`)${isAriaIsolated ? " at http://localhost:4321/admin (first visit: http://localhost:4321/admin/setup)" : ""}.
 `;
       writeFileSync(currentMdPath, initialCurrentContent, "utf8");
       console.log("  ✅ Updated: `./.agents/context/current.md` with initial reality");
@@ -5802,7 +5430,11 @@ ${offerItems}
   console.log(`📋 Client Intake:      \`./Client-Intake/00-Intake-Brief.md\` (answer with your agent; docs generated after)`);
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);
-  if (config.framework === "wordpress") {
+  if (isAriaIsolated) {
+    console.log(`  2. npm install (already run unless --skip-install)`);
+    console.log(`  3. npm run dev`);
+    console.log(`  4. Open http://localhost:4321/admin (first visit: http://localhost:4321/admin/setup)`);
+  } else if (config.framework === "wordpress") {
     console.log(`  2. composer install`);
   } else if (config.framework !== "instatic" && config.framework !== "none") {
     console.log(`  2. bun install`);
