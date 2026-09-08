@@ -786,6 +786,20 @@ muse-skills/
 │   │   ├── fast-skip-protocol.md
 │   │   ├── pr-review-mining.md
 │   │   └── twelve-asset-matrix.md
+│   ├── templates/
+│   │   ├── github/
+│   │   │   ├── ISSUE_TEMPLATE/
+│   │   │   │   ├── bug_report.md
+│   │   │   │   └── feature_request.md
+│   │   │   ├── dependabot.yml
+│   │   │   └── pull_request_template.md
+│   │   ├── llms.txt
+│   │   ├── mcp.json.template
+│   │   ├── AGENTS.md
+│   │   ├── env.example
+│   │   └── gitignore.template
+│   ├── scripts/
+│   │   └── ai-ready.ts
 │   ├── README.md
 │   └── SKILL.md
 │

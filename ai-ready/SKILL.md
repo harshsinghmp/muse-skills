@@ -1,8 +1,8 @@
 ---
 name: ai-ready
 aliases: ["repo-ai-ready","audit-ai-ready","ai-audit"]
-description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically, and integrates as the foundational pre-flight check for new-project and updateagents."
-version: 1.0.0
+description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents."
+version: 1.2.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -54,12 +54,14 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 ```bash
 # Rapid 12-Asset Presence Check
 [ -f "AGENTS.md" ] && [ -d ".agents/standards" ] && [ -d ".agents/context" ] && \
-[ -f ".mcp.json" -o -d ".gemini" ] && [ -f "llms.txt" ] && \
+{ [ -f ".mcp.json" ] || [ -d ".gemini" ] || [ -d ".claude" ] || [ -d ".cursor" ]; } && \
+[ -f "llms.txt" ] && \
 [ -d ".github/workflows" ] && [ -d ".github/ISSUE_TEMPLATE" ] && \
-[ -f ".github/pull_request_template.md" -o -f ".github/PULL_REQUEST_TEMPLATE.md" ] && \
+{ [ -f ".github/pull_request_template.md" ] || [ -f ".github/PULL_REQUEST_TEMPLATE.md" ]; } && \
 [ -f ".github/dependabot.yml" ] && [ -f "CHANGELOG.md" ] && \
-[ -f "CONTRIBUTING.md" ] && [ -d "docs" -o -d ".agents/context" ] && \
-[ -f ".gitignore" ] && (rg -q "^\.e\[n\]v" .gitignore 2>/dev/null || grep -qE "^\.e\[n\]v" .gitignore)
+[ -f "CONTRIBUTING.md" ] && { [ -d "docs" ] || [ -d ".agents/context" ]; } && \
+[ -f ".gitignore" ] && (rg -q "^\.e\[n\]v" .gitignore 2>/dev/null || grep -qE "^\.e\[n\]v" .gitignore) && \
+[ -f ".env.example" ]
 ```
 
 - **If ALL 12 assets are present and valid**:
@@ -81,7 +83,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 |:---|:---|:---|:---|
 | 1 | **Root Agent Router** | `AGENTS.md` | Exists in root, strictly `<50 lines`, acts as a progressive disclosure routing table pointing to `.agents/`. |
 | 2 | **DOX Hierarchy Tree** | `.agents/` | Complete 9-folder container (`standards`, `context`, `brand`, `archive`, `artifacts`, `goals`, `research`, `skills`, `workflows`). |
-| 3 | **Tool / MCP Config** | `.mcp.json` or `.gemini/` | Defines authorized MCP servers or project agent tools with scoped capabilities. |
+| 3 | **Tool / MCP Config** | `.mcp.json` or `.claude/`, `.cursor/`, `.gemini/` | Defines authorized MCP servers or project agent tools with scoped capabilities. |
 | 4 | **AI Discovery Manifest** | `llms.txt` | Clean markdown index summarizing repo scope, key entrypoints, and documentation links for agent web crawlers. |
 
 ### 2. 🔧 Dev Workflow (What keeps PRs clean and agents on track)
@@ -158,6 +160,10 @@ bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold --dry-run
 4. **Missing CI Workflow**: Generate `.github/workflows/ci.yml` running linter and tests matching detected stack.
 5. **Missing Issue / PR Templates**: Drop standard bug/feature templates and anti-slop PR verification checklist.
 6. **Missing Security / Secret Guards**: Ensure `.env` is in `.gitignore` and generate `.env.example` with empty keys.
+7. **Missing `.github/` Bundle**: Deploy `dependabot.yml`, bug/feature issue templates, and the anti-slop PR template from `ai-ready/templates/github/` — never overwriting existing files.
+8. **Missing `.mcp.json` / `llms.txt`**: Deploy the least-privilege tool-config template and the discovery-index skeleton for the team to refine with real repository facts.
+
+For CI gating, run the audit with `--fail-under N`: the process exits `1` when the verified score is below `N`.
 
 ### Step 4: Verification & Scorecard Report
 Print the structured AI-Readiness scorecard:
@@ -204,4 +210,5 @@ Print the structured AI-Readiness scorecard:
 - [ ] Root `AGENTS.md` template is strictly `<50 lines`.
 - [ ] All 12 assets are tested against detection patterns in `references/twelve-asset-matrix.md`.
 - [ ] PR review mining gracefully falls back if GitHub CLI / network is unavailable.
+- [ ] `--fail-under N` exits `1` when the score is below `N` and `0` otherwise.
 - [ ] Passes `bun test tests/skills.test.ts`.
