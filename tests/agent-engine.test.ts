@@ -592,9 +592,9 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
     });
 
-    it("provisions complete modular implementations for Aria Builder, Medusa, StudioCMS, Emdash, and Payload E-Commerce", () => {
-      // 1. Astro + Aria Builder + MedusaJS
-      const targetAria = join(TEST_SANDBOX, "aria-medusa-showcase");
+    it("provisions complete modular implementations for isolated Aria Builder, StudioCMS, Emdash, and Payload E-Commerce", () => {
+      // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
+      const targetAria = join(TEST_SANDBOX, "aria-showcase");
       const resAria = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetAria,
@@ -607,18 +607,23 @@ Custom billing engine for healthcare providers.
         "--skip-install"
       ], { encoding: "utf8" });
       expect(resAria.status).toBe(0);
-      expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(true);
+      expect(resAria.stdout).toContain("admin/setup");
+      // Official upstream markers (present via clone and offline fallback).
+      expect(existsSync(join(targetAria, "package.json"))).toBe(true);
       expect(existsSync(join(targetAria, "astro.config.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "aria/integration.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "aria/pages/admin.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "backend/package.json"))).toBe(true);
-      expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(true);
-      const ariaPkg = JSON.parse(readFileSync(join(targetAria, "package.json"), "utf8"));
-      expect(ariaPkg.scripts["dev"]).toContain("aria/scripts/project-command.ts dev");
+      expect(existsSync(join(targetAria, "uno.user.config.ts"))).toBe(true);
+      expect(readFileSync(join(targetAria, "uno.user.config.ts"), "utf8")).toContain("presetWind4");
+      // Engine governance still provisioned.
+      expect(existsSync(join(targetAria, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(targetAria, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
+      // Isolation: no engine-invented extras despite medusa+hybrid requested.
+      expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(false);
+      expect(existsSync(join(targetAria, "backend/package.json"))).toBe(false);
+      expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(false);
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
@@ -718,7 +723,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
       expect(htmlPkg.scripts["dev"]).toContain("serve");
-    }, 30000);
+    }, 60000);
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
       const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");
@@ -802,13 +807,14 @@ Custom billing engine for healthcare providers.
   /* ========================================================================= */
   describe("Part F: Simplified Setup, Progressive Pipeline & 37 OKLCH Palettes", () => {
     it("provisions all 37 OKLCH color palettes from oklch.fyi with exact tokens and UnoCSS Wind 4 integration", () => {
-      // Test sunset-vibes curated theme
+      // Test sunset-vibes curated theme (plain-astro keeps engine token injection;
+      // Aria presets are isolated official clones without engine tokens)
       const targetSunset = join(TEST_SANDBOX, "sunset-vibes-showcase");
       const resSunset = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetSunset,
         "--non-interactive",
-        "--preset=visual",
+        "--preset=plain-astro",
         "--palette=sunset-vibes",
         "--skip-install"
       ], { encoding: "utf8" });
@@ -823,13 +829,13 @@ Custom billing engine for healthcare providers.
       const colorsJson = JSON.parse(readFileSync(colorsJsonPath, "utf8"));
       expect(colorsJson.color.primary.default.$value).toBe("oklch(0.3 0.15 25)");
 
-      // Test deep-sea curated theme
+      // Test deep-sea curated theme (same: plain-astro keeps engine tokens)
       const targetDeepSea = join(TEST_SANDBOX, "deep-sea-showcase");
       const resDeepSea = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetDeepSea,
         "--non-interactive",
-        "--preset=visual",
+        "--preset=plain-astro",
         "--palette=deep-sea",
         "--skip-install"
       ], { encoding: "utf8" });
@@ -837,7 +843,7 @@ Custom billing engine for healthcare providers.
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
       expect(deepSeaTokens).toContain("DEEP-SEA");
-    }, 30000);
+    }, 60000);
 
     it("provisions project-scoped oklch-skill strictly inside target project with zero global pollution", () => {
       const targetProject = join(TEST_SANDBOX, "oklch-skill-showcase");
@@ -887,7 +893,7 @@ Custom billing engine for healthcare providers.
       const plainAstroCfg = readFileSync(join(targetPlainAstro, "astro.config.mjs"), "utf8");
       expect(plainAstroCfg).not.toContain("react()");
 
-      // 2. Astro + Git-based / Sitepins CMS
+      // 2. Astro + Git-based CMS
       const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
       const resGit = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -927,7 +933,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "Client-Intake/04-Technical-Intake"))).toBe(true);
     }, 30000);
 
-    it("supports simplified presets plain-astro, git-cms, and sitepins", () => {
+    it("supports simplified presets plain-astro and git-cms", () => {
       const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
       const resPlain = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -951,17 +957,6 @@ Custom billing engine for healthcare providers.
       ], { encoding: "utf8" });
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
-
-      const targetSitepins = join(TEST_SANDBOX, "preset-sitepins");
-      const resSitepins = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetSitepins,
-        "--non-interactive",
-        "--preset=sitepins",
-        "--skip-install"
-      ], { encoding: "utf8" });
-      expect(resSitepins.status).toBe(0);
-      expect(existsSync(join(targetSitepins, "src/content/config.ts"))).toBe(true);
     }, 30000);
   });
 });

@@ -72,13 +72,14 @@ Interactive project creator and Project Operating System provisioner. Implements
 | `--preset=edge` / `astro-emdash` | Static Edge Publication | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Emdash CMS (Cloudflare D1/R2) |
 | `--preset=plain-astro` / `astro-plain` | Pure Content Baseline | Astro v7 (Zero-JS, zero React) + Hybrid UnoCSS Wind 4 + Hardware CSS Animations |
 | `--preset=git-cms` / `astro-git` | Git-backed Content Site | Astro v7 + Native Content Collections + Markdown/MDX + RSS Feed + Hybrid UnoCSS |
-| `--preset=sitepins` / `astro-sitepins` | Edge Headless Publishing | Astro v7 + Sitepins Git-backed CMS + Content Collections + Hybrid UnoCSS |
 | `--preset=visual` | Brochure & Visual Sites | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) + Fastrr 1-click checkout |
 | `--preset=astro-visual` | Visual Marketing Site | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder (`ariabuilder.io`) |
 | `--preset=instatic` | Pure HTML Sites | Instatic SSG + Semantic BEM CSS + Hardware CSS Animations (Zero Node/JS runtime) |
 | `--preset=pure-html` | Standalone Static Site | Pure HTML5 + Semantic BEM CSS + Fluid OKLCH Tokens (Zero build step, instant load) |
 | `--preset=mobile` | Cross-Platform App | React Native (Expo `@latest`) + NativeWind + Supabase Backend |
 | `--preset=astro-mobile` | Web-to-APK / Mobile App | Astro v7 + Hybrid UnoCSS + Hardware CSS Animations + NanoStores + Aria Builder + **Ionic Capacitor** (iOS/APK) |
+
+**Aria isolation rule**: any preset or flag set selecting `ariabuilder` provisions the official `ariabuilder/aria` clone only (Astro + UnoCSS with Wind 4 preset + CMS + SQLite included). Every other companion in the preset is skipped with a printed notice and added only on explicit request.
 
 ---
 
@@ -114,20 +115,21 @@ Gathers project name, tagline, author/organization, target audience, core proble
 
 ### Stage 2: Hierarchical Decision Tree & Interactive Tradeoff Engine
 Each selection prunes irrelevant downstream choices while explicitly surfacing architectural tradeoffs (Lightweight vs. Full-Stack, Serverless vs. Local Container, Git-based vs. Embedded DB) so the user is in full control without opaque defaults or mystery breaks:
-- **Branch A (Static Website / Landing Page)**: Pure HTML/CSS (Zero build step, semantic BEM, OKLCH fluid design tokens) vs Instatic SSG vs Astro v7 (with optional Aria Builder visual editor) vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev.
+- **Branch A (Static Website / Landing Page)**: Pure HTML/CSS (Zero build step, semantic BEM, OKLCH fluid design tokens) vs Instatic SSG vs Astro v7 vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev. (Aria Builder is not an Astro add-on — selecting it provisions the isolated official scaffold instead of this branch's companions.)
 - **Branch B (Dynamic Content Website)**:
   - *Astro v7 (Zero-JS baseline, islands)*:
     - **StudioCMS** (Astro DB / Turso native persistence) — Recommended for content blogs.
     - **Emdash CMS** (Cloudflare Workers, D1 database, and R2 storage) — Recommended for edge publications.
-    - **Aria Builder** (`ariabuilder.io`) — Visual drag-and-drop page builder for marketing sites.
-    - **Keystatic / SitePins** — Zero DB overhead, Git-committed Markdown/MDX collections.
+    - **Aria Builder** (`ariabuilder.io`) — Visual drag-and-drop page builder for marketing sites. Isolated official clone (ships its own Astro + UnoCSS + CMS + SQLite); all other companions are skipped unless explicitly requested.
+    - **WollyCMS** — Self-hosted headless CMS for Astro (pages, blocks, media, revisions, Content/Admin/GraphQL APIs). Official Astro integration `@wollycms/astro` wired with local endpoint; run the CMS via `npx create-wolly@latest` per its quick start.
+    - **Keystatic** — Zero DB overhead, Git-committed Markdown/MDX collections.
   - *Next.js 16 (React 19 App Router)*:
     - **Payload CMS 3.0 + Puck Visual Builder** — Full-stack database collections with interactive visual block editing.
     - **Payload CMS 3.0 Standard** — Lexical rich text editor and typed collections.
     - **Keystatic** — Flat-file Git collections.
   - *Roots Bedrock*: Modern 12-factor WordPress with Composer and Gutenberg blocks.
-- **Branch C (Ecommerce Storefront)**: E-Commerce Tradeoff Questionnaire:
-  - **Astro + Aria Builder + MedusaJS**: High-performance zero-JS storefront with Aria visual builder & Medusa v2 Sovereign Engine (Recommended for Speed & Visual Editing).
+- **Branch C (Ecommerce Storefront)**: E-Commerce Tradeoff Questionnaire (Aria Builder never pairs here — it provisions as the isolated official scaffold; pair Medusa with plain Astro or Next.js instead):
+  - **Astro + MedusaJS**: High-performance zero-JS storefront with Medusa v2 Sovereign Engine (Recommended for Speed).
   - **Next.js + Payload CMS + Puck + Payload E-Commerce**: All-in-one unified Next.js App Router application with Puck visual builder and native Product/Order/Customer/Stripe collections (Recommended for Fullstack All-in-One).
   - **Next.js + Medusa v2 Sovereign Engine**: Next.js App Router frontend with Medusa sovereign backend.
   - **Stripe Direct Checkout**: Lightweight zero-backend payments with hosted checkout and webhook routes.
@@ -155,14 +157,10 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `src/lib/auth-client.ts`: Client-side React SDK (`createAuthClient`) exporting `signIn`, `signUp`, `signOut`, and `useSession` for immediate UI consumption.
   - Route Handlers: `src/app/api/auth/[...all]/route.ts` (Next.js App Router) or `src/pages/api/auth/[...all].ts` (Astro) wrapping `auth.handler`.
   - `src/lib/supabase-server.ts`: Server-side Supabase client with cookie storage adapters for SSR.
-- **Aria Builder & Visual Page Building**:
-  - `aria/`: Full sovereign engine containing the Vue 3 visual studio canvas (`pages/admin.astro`, `pages/setup.astro`), Astro integration (`aria/integration.ts`), auth & session manager, actions, and storage drivers (Node/SQLite or Cloudflare workerd D1/KV/R2).
-  - `astro.config.ts`: Pre-wired with `@astrojs/node`, `@unocss/astro`, and `aria()` engine integration.
-  - `aria.config.mjs`: Visual component registry and preview configuration.
-  - `src/components/AriaHero.astro`: Accessible visual hero banner with custom OKLCH styling.
-  - `src/components/AriaMedusaProductGrid.astro`: Live Medusa product grid query with client cart actions.
-  - `src/components/AriaCartDrawer.astro`: Slide-out shopping cart drawer with checkout trigger.
-  - `/admin`: Interactive visual drag-and-drop page builder studio (auto-redirects to `/admin/setup` on first launch for zero-friction administrator provisioning).
+- **Aria Builder (isolated official scaffold)**: Aria ships its own Astro + UnoCSS + CMS + SQLite, so selecting it clones the official repo untouched and adds nothing else unless explicitly requested:
+  - `git clone https://github.com/ariabuilder/aria.git` into the target, `npm install` (skipped with `--skip-install`), `npm run dev`.
+  - Open `http://localhost:4321/admin`; first visit completes setup at `http://localhost:4321/admin/setup` to create the first administrator.
+  - Engine ensures the UnoCSS **Wind 4 preset** in `./uno.user.config.ts` (upstream ships Wind3) and leaves everything else byte-identical to upstream. No `bun create astro`, no companion overlays, no token injection, no package.json rewrite.
 - **Content Management Systems (CMS)**:
   - *Payload CMS 3.0 & E-Commerce Module*: `payload.config.ts`, strongly-typed collections (`Users.ts`, `Media.ts`, `Pages.ts`, `Products.ts`, `Orders.ts`, `Customers.ts`), Next.js App Router admin UI (`src/app/(payload)/admin/page.tsx`), REST API route handler (`src/app/(payload)/api/[...slug]/route.ts`), Stripe checkout endpoint (`src/app/api/payload-checkout/route.ts`), and `importMap.js`.
   - *StudioCMS*: `studiocms.config.mjs`, Astro DB integration, and `astro.config.mjs` integration wiring (`studioCMS()`).
@@ -270,7 +268,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `-a, --animation <anim>` | String | `css` (Hardware presets) \| `motion` \| `gsap` \| `webgl` \| `custom` \| `none` |
 | `--state <engine>` | String | `nanostores` (Sub-1KB cross-island store) \| `custom` \| `none` |
 | `-m, --mobile <target>` | String | `capacitor` (Ionic Capacitor iOS/APK wrapper) \| `expo` (React Native) \| `custom` \| `none` |
-| `-c, --cms <cms>` | String | `ariabuilder` \| `studiocms` \| `sitepins` \| `tina` \| `keystatic` \| `pagescms` \| `emdash` \| `payload` \| `decap` \| `keystone` \| `sanity` \| `strapi` \| `custom` \| `none` |
+| `-c, --cms <cms>` | String | `ariabuilder` \| `studiocms` \| `tina` \| `keystatic` \| `emdash` \| `payload` \| `wollycms` \| `decap` \| `keystone` \| `sanity` \| `strapi` \| `custom` \| `none` |
 | `--puck` | Boolean | Enable Puck Visual Builder (for Payload CMS) |
 | `-e, --ecommerce <ecom>` | String | `payload` \| `medusa` \| `vendure` \| `fastrr` \| `razorpay` \| `stripe` \| `custom` \| `none` |
 | `--db <db>` | String | `neon` \| `supabase` \| `postgres` \| `sqlite` \| `custom` \| `none` |
@@ -287,27 +285,87 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 When the intake brief or a stack change requires provisioning a companion manually, follow these official procedures. Always use `@latest` resolution (`bun add <pkg>` / `npm i <pkg>`), never pinned versions.
 
-### Payload CMS 3.0 (Next.js App Router)
-1. Install: `payload`, `@payloadcms/next`, `@payloadcms/db-sqlite` (or `@payloadcms/db-postgres`), `@payloadcms/richtext-lexical`, `@payloadcms/translations`, `sharp`.
+### Payload CMS 3.0
+Official docs: **Astro** → https://docs.astro.build/en/guides/cms/payload/ · **All other frameworks** → https://payloadcms.com/docs/getting-started/installation
+1. Next.js App Router: install `payload`, `@payloadcms/next`, `@payloadcms/db-sqlite` (or `@payloadcms/db-postgres`), `@payloadcms/richtext-lexical`, `@payloadcms/translations`, `sharp`.
 2. Copy the `(payload)` route group into `src/app/(payload)/` from `node_modules/@payloadcms/templates` (or generate `payload.config.ts` with collections, Lexical editor, `secret: process.env.PAYLOAD_SECRET`, and the chosen `db` adapter).
 3. Wire `next.config.mjs` with `withPayload` and add `"@payload-config": ["./src/payload.config.ts"]` to `tsconfig.json` paths.
 4. Add `PAYLOAD_SECRET` to `.env`, then `npm run dev` and open `/admin` to create the first user.
 
-### Aria Builder (Vue visual block studio)
-1. `git clone https://github.com/ariabuilder/aria` into the project workspace, then `npm install`.
-2. `npm run dev` to launch the development server, then open `/admin` and run the Setup Wizard to configure the database.
-3. `db/data/app.db` is the SQLite data store (git-ignored; local file storage by default).
-4. Point S3/R2 env vars at MinIO or any S3-compatible endpoint for media storage.
+### Payload E-Commerce Module
+Follow the official overview: https://payloadcms.com/docs/ecommerce/overview
+
+### Aria Builder (isolated official scaffold — Astro + UnoCSS + CMS + SQLite included)
+1. `git clone https://github.com/ariabuilder/aria.git`
+2. `cd aria && npm install`
+3. `npm run dev`
+4. Open `http://localhost:4321/admin`. On first visit, complete setup at `http://localhost:4321/admin/setup` to create the first administrator.
+5. The engine additionally ensures the UnoCSS **Wind 4 preset** in `./uno.user.config.ts` (upstream ships Wind3). Nothing else is added or overlaid — no framework re-scaffold, no companion wiring, no token injection. Request extra features after scaffolding and they will be layered on explicitly.
+
+### WollyCMS (self-hosted headless CMS for Astro)
+1. New WollyCMS project: `npx create-wolly@latest my-site && cd my-site && npm run migrate && npm run seed && npm run dev` (requires Node.js 22 LTS; API + admin at `http://localhost:4321`, default login `admin@wollycms.local` / `admin123`). Templates: `blog`, `marketing`, `wordpress`, `drupal`, `college` via `--template=<name>`.
+2. In the scaffolded Astro project the engine wires the official integration: `npm install @wollycms/astro` + `wollycms({ endpoint: 'http://localhost:4321' })` in `astro.config.mjs`.
+3. Docker/self-host: `ghcr.io/wollycms/wollycms:latest` with `JWT_SECRET` set and `/app/data` persisted. Full docs at `https://docs.wollycms.com/` — always refer to the latest upstream docs before changing this flow.
 
 ### Emdash CMS (Astro edge CMS)
-1. Install `@emdash/cms`; configure the Astro integration, then `npx emdash key` to generate `EMDASH_ENCRYPTION_KEY` and the auth key in `.env`.
-2. Local dev uses SQLite + file storage out of the box (`npm run dev` -> `/admin` with `npx emdash dev-bypass --user <name>` for local auth bypass).
-3. Content lives as `_emdash` live collections; edit via `/admin`, consume via `getLiveCollection`/`getLiveEntry`.
-4. For production on Cloudflare Workers, provision D1/R2 bindings (this is what the engine's `preset=edge` path generates with `wrangler.jsonc` and `src/worker.ts`).
+1. Create a new project: `npm create emdash@latest`, then follow the prompts to name the project and set your preferences.
+2. Move in and start the dev server: `cd my-emdash-site && npm install && npm run dev`, then open http://localhost:4321.
+3. Complete the Setup Wizard: visit http://localhost:4321/_emdash/admin — you are redirected to the wizard. Enter **Site Title**, **Tagline**, and **Admin Email**, then click **Create Site** to register your passkey (Touch ID, Face ID, Windows Hello, or a security key). Once registered you are logged in and redirected to the admin dashboard.
+4. Content lives as `_emdash` live collections; edit via `/admin`, consume via `getLiveCollection`/`getLiveEntry`.
+5. For production on Cloudflare Workers, provision D1/R2 bindings (this is what the engine's `preset=edge` path generates with `wrangler.jsonc` and `src/worker.ts`; the engine also wires `adminRoute: '/_emdash/admin'` to match the official wizard URL).
+
+### Tina CMS
+- **Interactive TinaCMS starter site locally**: `npx create-tina-app@latest`
+- **Scaffold the Astro starter directly**: `npx create-tina-app@latest --template tina-astro-starter`
+
+### Keystatic CMS
+- Starting a new Astro + Keystatic project from scratch: `npm create @keystatic@latest` (generates a ready-to-run project in seconds). In an existing scaffold, the engine wires `keystatic.config.ts` plus `/keystatic` admin pages and `/api/keystatic` handlers.
+
+### Decap CMS (Astro)
+Two options for adding Decap to Astro:
+1. Install Decap via a package manager: `npm install decap-cms-app`, then import the package into a `<script>` tag in your page `<body>` (e.g. `/admin`).
+2. Or include the CDN bundle directly in the `/admin` page body: `<script src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>`
+
+### Keystone CMS
+Follow the official walkthrough: https://keystonejs.com/docs/walkthroughs/lesson-1
+
+### Sanity CMS
+- **Astro**: official integration at https://www.sanity.io/plugins/sanity-astro — install with `npx astro add @sanity/astro @astrojs/react` (note: `@astrojs/react` is only needed if you plan to embed a Sanity Studio in the project). Manual dependency install: `npm install @astrojs/react @sanity/astro @sanity/client sanity @types/react-dom @types/react-is @types/react react-dom react-is react styled-components`. Starter template: https://www.sanity.io/templates/astro-sanity-clean
+- **Next.js**: follow the Studio quickstart at https://www.sanity.io/docs/next-js-quickstart/setting-up-your-studio
+
+### Strapi CMS
+- **Astro**: https://docs.astro.build/en/guides/cms/strapi/
+- **Other frameworks**: `npx create-strapi-app@latest`
+
+### Custom CMS
+Bring your own: wire the CMS strictly per its official documentation, keep credentials in `.env` (never committed), and record the integration as an ADR in `.agents/context/decisions.md`.
 
 ### Puck Visual Editor
-1. Install `@measured/puck` (pairs with Payload CMS for data).
-2. Create `puck.config.ts` with field and component definitions, generate static params from the CMS page collection, and render pages with `<Puck>` (edit route) / `<Render>` (public route).
+1. Install `@puckeditor/core` (the official package — renamed from `@measured/puck`): `npm i @puckeditor/core --save`.
+2. Or generate a Puck application using a recipe: `npx create-puck-app my-app`.
+3. Full getting-started detail (rendering the editor): https://puckeditor.com/docs/getting-started#render-the-editor — render pages with `<Puck>` (edit route) / `<Render>` (public route).
+
+### Medusa JS (Sovereign Commerce Backend)
+1. **Prerequisites**: Node.js v20.19.0+ or v22.12.0+ (LTS versions only; use Node v24 LTS or lower if installing the Next.js Starter Storefront), the Git CLI, and PostgreSQL installed and running.
+2. Create the application: `npx create-medusa-app@latest my-medusa-store` (tip: yarn/pnpm install faster than npm — `yarn dlx create-medusa-app@latest my-medusa-store` or add `--use-yarn`). The PostgreSQL database created is named `medusa-my-medusa-store`; you are asked whether to install the Next.js Starter Storefront.
+3. The command installs a monorepo: backend + admin dashboard in `apps/backend`, and (if chosen) the storefront in `apps/storefront`.
+4. On success the Medusa app runs at http://localhost:9000 and the Admin dashboard at http://localhost:9000/app (the installer opens it to create the first user). The Next.js Starter Storefront runs at http://localhost:8000.
+5. Engine path: when provisioned by the engine, `./backend/` ships `medusa-config.ts`, `docker-compose.yml` (PostgreSQL 16 + Redis 7), and the frontend SDK in `src/lib/medusa.ts` — always defer to the official `create-medusa-app` flow above for a fresh backend.
+
+### Vendure
+1. `npx @vendure/create my-shop` (replace `my-shop` with your project name), then choose the **Quick Start** option — the fastest path, handling all configuration.
+2. With Docker Desktop installed it creates and configures a Postgres database; otherwise it uses SQLite.
+3. Official docs: https://docs.vendure.io/current/core/getting-started/installation
+
+### Neon Serverless Postgres
+- **Next.js**: https://neon.com/docs/guides/nextjs
+- **Astro**: https://neon.com/docs/guides/astro
+- **Medusa**: https://neon.com/docs/guides/medusajs
+
+### Supabase
+- **Next.js**: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
+- **Astro**: https://supabase.com/docs/guides/getting-started/quickstarts/astrojs
+- **Expo React Native**: https://supabase.com/docs/guides/getting-started/quickstarts/expo-react-native
 
 ### Instatic (zero-runtime SSG)
 1. `npx create-instatic@latest` (or wire `instatic` into an existing Astro/HTML project) to generate `instatic.json`, content collections, and layout templates.
@@ -334,7 +392,8 @@ After scaffolding, verify the project:
 4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
 6. **CMS & Visual Builder Completeness**: If Payload, Keystatic, or Puck is enabled, verify config files (`payload.config.ts`, `keystatic.config.ts`), collection schemas, and admin UI pages exist.
-7. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`. If PostgreSQL container is requested, check `./docker-compose.yml`.
+7. **Aria Builder Isolation**: If Aria is enabled, verify the target holds the official upstream clone (`package.json` named `@ariabuilder/aria`, `astro.config.ts`, `uno.user.config.ts` with the Wind 4 preset) plus engine governance only — no `aria.config.mjs`, no `Aria*.astro` components, no `backend/`, no engine tokens/CI. Run `npm run dev` and complete first-admin setup at `http://localhost:4321/admin/setup`.
+8. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`. If PostgreSQL container is requested, check `./docker-compose.yml`.
 8. **Day-1 Starter Dashboard**: Check that `src/app/page.tsx` (Next.js) or `src/pages/index.astro` (Astro) is provisioned with live stack badges and quick links.
 9. **Deployment & CI/CD**: Verify `.github/workflows/ci.yml` is present, alongside `Dockerfile` / `wrangler.toml` / `vercel.json` matching `--deploy`.
 10. **Quality Gates & Test Suite**: Run `bun test` inside the scaffolded workspace to confirm `tests/health.test.ts` passes cleanly.
