@@ -10,8 +10,10 @@
 
 - **🛡️ Strict `.memory/` Boundary**: Zero read, write, or modification of `.memory/` (owned exclusively by `musememory`).
 - **🔐 Protected `.agents/` DOX Gate**: Treats `.agents/` as protected operational infrastructure; requires explicit human permission before any mutation.
-- **🔍 20-Step Synchronization Pipeline**: Traces code changes through direct and second-order documentation consequences.
+- **🔍 20-Step Synchronization Pipeline**: Traces code changes through direct and second-order documentation consequences, gated by operating mode (Quick, Change, Release, Sprint, Full).
 - **⚖️ Automatic Change Safety Matrix**: Classifies docs by ownership (`SOURCE-OF-TRUTH`, `DERIVED`, `PROTECTED`, `HISTORICAL`, `CLIENT-FACING`) with least-privileged actions.
+- **📊 Mode-Scaled Reporting**: Full governance report for Change/Release/Sprint/Full modes; condensed report for Quick mode.
+- **💡 Worked Examples**: Sample full and condensed reports in [`examples/`](examples/sample-sync-report.md).
 - **✅ 14-Point Pre-Ship Audit**: Rigorous quality checklist covering internal links, commands, schemas, secret scrubbing, and prompt-injection defense.
 - **🤝 Clean Companion Handoff**: Coordinates smoothly with `updateagents` for agent-context refactoring and `musememory` for cognitive state.
 
@@ -25,6 +27,10 @@
 - When performing a sprint closeout or periodic documentation health audit.
 
 ---
+
+## 💡 Example Reports
+
+- [Sample Synchronization Reports](examples/sample-sync-report.md) — full (Change mode) and condensed (Quick mode) report examples.
 
 ## 📚 Reference Guides
 

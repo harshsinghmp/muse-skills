@@ -4,7 +4,7 @@ Mandatory security guardrails for documentation synchronization, untrusted data 
 
 ---
 
-## 1. Zero Secret Exposure Protocol (Vibeguard)
+## 1. Zero Secret Exposure Protocol
 
 Never allow confidential data, private tokens, or server secrets to enter project documentation, commit messages, or agent context:
 
