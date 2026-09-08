@@ -18,7 +18,7 @@ A comprehensive reference mapping repository changes to their canonical document
 | **LICENSE** | `LICENSE`, `LICENSE.md`, `COPYING`, `NOTICE` | Legal, Users, Package Consumers | Explicit legal re-licensing requests (never edit automatically) | Authoritative license grant from repository owner | `DO NOT TOUCH`: Never modify automatically | Critical |
 | **CODE OF CONDUCT** | `CODE_OF_CONDUCT.md`, `.github/CODE_OF_CONDUCT.md` | Community Contributors | Community policy changes, reporting emails | Official Contributor Covenant baseline | `REVIEW REQUIRED`: Human-curated | Low |
 | **ROADMAP / STATUS** | `ROADMAP.md`, `docs/roadmap.md`, `STATUS.md`, `STATE.md` | Stakeholders, Project Managers | Milestone completion, sprint closeout, priority shifts | Verified test receipts, issue tracker, release milestones | `REVIEW REQUIRED`: Milestone tracking | Medium |
-| **SESSION LOG** | `SESSION_LOG.md`, `docs/sessions/*`, `SUMMARY.md` | Active Agents, Developers | Task handoffs, daily sprint logs, rolling workstream notes | Working tree diffs, active branch changes | `NORMAL UPDATE`: Rolling session ledger | Medium |
+| **SESSION LOG** | `SESSION_LOG.md`, `docs/sessions/*`, `SUMMARY.md` | Active Agents, Developers | Task handoffs, daily sprint logs, rolling workstream notes | Working tree diffs, active branch changes | `NORMAL UPDATE` (conditional): append verified entries only when the project explicitly maintains a change ledger; otherwise leave untouched | Medium |
 | **MEMORY** | `.memory/*` | Automatic System State | Real-time agent memory, active constraints | `musememory` system | `DO NOT TOUCH`: Owned exclusively by musememory | Critical |
 | **DOX / AGENT ARCHITECTURE** | `.agents/*` | DOX Operational Infrastructure | Progressive disclosure standards, brand tokens, context rails | DOX engine & architecture | `EXPLICIT PERMISSION REQUIRED`: Read governance first; NEVER modify without explicit user permission | Critical |
 | **ACTIVE AGENT CONTEXT** | `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, Cursor rules | Autonomous AI Agents | Invariants, essential commands, code conventions, boundaries | Live repository tooling, execution kernel, security rules | `GOVERNED`: Impact analysis; normally hand off to `updateagents` | Critical |
@@ -69,7 +69,7 @@ Changes in codebase primitives ripple across multiple documentation tiers. Use t
    │
    ├──► SECURITY.md (Security boundary, reporting channel, token specs)
    ├──► API Documentation (Auth header format, permission scopes)
-   └──► AGENTS.md (Vibeguard boundary & testing guardrails)
+   └──► AGENTS.md (security boundary & testing guardrails)
 ```
 
 ---

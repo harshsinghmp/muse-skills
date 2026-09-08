@@ -76,11 +76,12 @@ To prevent flat, low-signal changelog descriptions, every released version and u
 4. **Nested Sub-Bullets for Transformations**:
    - Use nested arrows (`- `old-name` ➔ `new-name``) or breakdown lists for renames, migrations, or multi-part refactors.
 5. **Issue & Pull Request Attribution**:
-   - Every bullet must link to the corresponding PR or issue: `([#123](https://github.com/harshsinghmp/muse-skills/pull/123))`.
+   - Every bullet must link to the corresponding PR or issue, using the target repository's canonical remote URL: `([#123](<canonical-remote>/pull/123))`. Derive the remote from the repository's actual `origin` URL — never substitute a hardcoded or assumed host.
 6. **Full Changelog Compare Diff Link**:
-   - Every tagged release section must conclude with the GitHub compare diff URL immediately preceding the divider:
+   - Every tagged release section must conclude with the compare diff URL immediately preceding the divider, built from the repository's actual remote:
      ```markdown
-     **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v<PREVIOUS_TAG>...v<NEW_TAG>
+     **Full Changelog**: <canonical-remote>/compare/v<PREVIOUS_TAG>...v<NEW_TAG>
      ```
+   - On forges without native compare URLs (e.g. self-hosted GitLab instances with differing paths), use the forge's documented equivalent or omit the link rather than fabricating a URL.
 7. **Release Divider**:
    - Terminate every released version section with a horizontal rule (`---`).

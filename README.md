@@ -626,6 +626,8 @@ muse-skills/
 ├── updatedocs/                     # Documentation synchronization & drift detection
 │   ├── agents/
 │   │   └── openai.yaml
+│   ├── examples/
+│   │   └── sample-sync-report.md   # Full & condensed sync report examples
 │   ├── references/                 # 8 policy & matrix reference guides
 │   ├── README.md
 │   └── SKILL.md
