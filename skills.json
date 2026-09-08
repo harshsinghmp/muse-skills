@@ -608,9 +608,9 @@
     },
     {
       "name": "audit",
-      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions. Generates brain-audit-report.md.",
+      "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md.",
       "path": "audit/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "reflection-maintenance",
       "priority": 18,
       "tools": [

@@ -220,7 +220,7 @@ flowchart TD
 | **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | **#16** | [**`pua`**](pua/README.md) | **Quality & Review** | `PIP`, `/pua`, `try harder`, `figure it out` | `dead-letter`, `code-review`, `gauntlet-loop` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
-| **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `evidence-ledger`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
+| **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor with severity-routed remediation (auto-repair / propose-diff / report-only / defer-route), per-step progress reporting, re-verification delta, and companion-skill routing. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
 | **#21** | [**`humanize`**](humanize/README.md) | **Quality & Review** | `humanize prose`, `remove AI patterns`, `de-ai text` | `code-review`, `updatedocs`, `evidence-ledger`, `secretary` | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, significance inflation, and robotic cadence while preserving authentic authorial voice. |
@@ -760,7 +760,8 @@ muse-skills/
 │   ├── examples/
 │   │   └── sample-audit-report.md
 │   ├── references/
-│   │   └── hygiene-rules.md
+│   │   ├── hygiene-rules.md
+│   │   └── remediation-matrix.md
 │   ├── README.md
 │   └── SKILL.md
 │
