@@ -350,16 +350,15 @@ Custom billing engine for healthcare providers.
       expect(currentMd).toContain("Sentinel");
       expect(currentMd).toContain("Implement EHR webhook listener");
 
-      // Verify start-here.md and Client-Intake suite (with legacy aliases)
-      expect(existsSync(join(target, "start-here.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/03-Offerings/offerings.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/03-Offerings/offerings.md"))).toBe(true);
-      expect(existsSync(join(target, "Intake/03-Offerings/offerings.md"))).toBe(true);
+      // Verify Client-Intake brief (intake docs are agent-produced post-scaffold)
+      const briefPath = join(target, "Client-Intake/00-Intake-Brief.md");
+      expect(existsSync(briefPath)).toBe(true);
+      const brief = readFileSync(briefPath, "utf8");
+      expect(brief).toContain("Employee Checklist");
+      expect(brief).toContain("Agent Instructions");
     });
 
-    it("provisions beginner-friendly start-here.md, Client-Intake suite, fluid tokens, and BEM semantic classes", () => {
+    it("provisions Client-Intake brief, fluid tokens, and BEM semantic classes", () => {
       const target = join(TEST_SANDBOX, "ecommerce-showcase");
       const res = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -381,34 +380,24 @@ Custom billing engine for healthcare providers.
 
       expect(res.status).toBe(0);
 
-      // 1. Verify start-here.md exists and contains all 7 sections
-      const startHerePath = join(target, "start-here.md");
-      expect(existsSync(startHerePath)).toBe(true);
-      const startHereContent = readFileSync(startHerePath, "utf8");
-      expect(startHereContent).toContain("1. Welcome & Architecture Snapshot");
-      expect(startHereContent).toContain("2. Prerequisites & Quick Start");
-      expect(startHereContent).toContain("3. Project Structure Tour");
-      expect(startHereContent).toContain("4. How Styling & Design Tokens Work");
-      expect(startHereContent).toContain("5. Working with AI Agents");
-      expect(startHereContent).toContain("6. Common Tasks & Recipes");
-      expect(startHereContent).toContain("7. Verification & Definition of Done");
+      // 1. Verify Client-Intake brief exists with pre-filled scaffold answers
+      const briefPath = join(target, "Client-Intake/00-Intake-Brief.md");
+      expect(existsSync(briefPath)).toBe(true);
+      const brief = readFileSync(briefPath, "utf8");
+      expect(brief).toContain("Sovereign Store");
+      expect(brief).toContain("Direct to Consumer Apparel");
+      expect(brief).toContain("Signature Denim");
+      expect(brief).toContain("Employee Checklist");
+      expect(brief).toContain("Agent Instructions");
+      expect(brief).toContain("01-Brand/");
+      expect(brief).toContain("04-Technical-Intake/");
 
-      // 2. Verify Client-Intake 4-folder structure, artifacts, and legacy aliases
-      expect(existsSync(join(target, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/01-Brand/visual-direction.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/02-Business/audience-persona.md"))).toBe(true);
-      expect(existsSync(join(target, "Client-Intake/03-Offerings/offerings.md"))).toBe(true);
-      expect(existsSync(join(target, "Intake/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(target, "Onboarding/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
-
-      const brandIdentity = readFileSync(join(target, "Client-Intake/01-Brand/brand-identity.md"), "utf8");
-      expect(brandIdentity).toContain("Sovereign Store");
-      expect(brandIdentity).toContain("Direct to Consumer Apparel");
-
-      const offeringsMd = readFileSync(join(target, "Client-Intake/03-Offerings/offerings.md"), "utf8");
-      expect(offeringsMd).toContain("Signature Denim");
+      // 2. Verify the 4-pillar intake folders exist (docs agent-produced post-scaffold)
+      expect(existsSync(join(target, "Client-Intake/01-Brand"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/02-Business"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/03-Offerings"))).toBe(true);
+      expect(existsSync(join(target, "Client-Intake/04-Technical-Intake"))).toBe(true);
+      expect(existsSync(join(target, "start-here.md"))).toBe(false);
 
       // 3. Verify OKLCH tokens and fluid clamp scales in src/styles/tokens.css
       const tokensCssPath = join(target, "src/styles/tokens.css");
@@ -457,8 +446,7 @@ Custom billing engine for healthcare providers.
       expect(dockerCompose).toContain("postgres:16-alpine");
       expect(dockerCompose).toContain("redis:7-alpine");
 
-      expect(startHereContent).toContain("E-Commerce Sovereign Backend (Medusa 2.0) Setup");
-      expect(startHereContent).toContain("Managing the Medusa E-Commerce Backend");
+      expect(readFileSync(join(target, "Client-Intake/00-Intake-Brief.md"), "utf8")).toContain("medusa");
     });
 
     it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
@@ -530,13 +518,10 @@ Custom billing engine for healthcare providers.
       expect(envExample).toContain("STRIPE_SECRET_KEY");
       expect(envExample).toContain("DATABASE_URL");
 
-      // 8. start-here.md guide recipes
-      const startHereContent = readFileSync(join(target, "start-here.md"), "utf8");
-      expect(startHereContent).toContain("Database Migrations (Drizzle ORM)");
-      expect(startHereContent).toContain("Authentication (Better Auth)");
-      expect(startHereContent).toContain("Managing Payload CMS 3.0");
-      expect(startHereContent).toContain("Visual Page Building (Puck)");
-      expect(startHereContent).toContain("E-Commerce Checkout & Webhooks (Stripe)");
+      // 8. Intake brief carries stack-specific agent instructions
+      const briefContent = readFileSync(join(target, "Client-Intake/00-Intake-Brief.md"), "utf8");
+      expect(briefContent).toContain("package.json");
+      expect(briefContent).toContain("src/styles/tokens.css");
     });
 
     it("provisions starter dashboard, deployment artifacts, test suite, pre-commit hook, and dynamic ADRs", () => {
@@ -607,9 +592,9 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
     });
 
-    it("provisions complete modular implementations for Aria Builder, Medusa, StudioCMS, Emdash, and Payload E-Commerce", () => {
-      // 1. Astro + Aria Builder + MedusaJS
-      const targetAria = join(TEST_SANDBOX, "aria-medusa-showcase");
+    it("provisions complete modular implementations for isolated Aria Builder, StudioCMS, Emdash, and Payload E-Commerce", () => {
+      // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
+      const targetAria = join(TEST_SANDBOX, "aria-showcase");
       const resAria = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetAria,
@@ -622,18 +607,23 @@ Custom billing engine for healthcare providers.
         "--skip-install"
       ], { encoding: "utf8" });
       expect(resAria.status).toBe(0);
-      expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(true);
+      expect(resAria.stdout).toContain("admin/setup");
+      // Official upstream markers (present via clone and offline fallback).
+      expect(existsSync(join(targetAria, "package.json"))).toBe(true);
       expect(existsSync(join(targetAria, "astro.config.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "aria/integration.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "aria/pages/admin.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(true);
-      expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(true);
-      expect(existsSync(join(targetAria, "backend/package.json"))).toBe(true);
-      expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(true);
-      const ariaPkg = JSON.parse(readFileSync(join(targetAria, "package.json"), "utf8"));
-      expect(ariaPkg.scripts["dev"]).toContain("aria/scripts/project-command.ts dev");
+      expect(existsSync(join(targetAria, "uno.user.config.ts"))).toBe(true);
+      expect(readFileSync(join(targetAria, "uno.user.config.ts"), "utf8")).toContain("presetWind4");
+      // Engine governance still provisioned.
+      expect(existsSync(join(targetAria, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(targetAria, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
+      // Isolation: no engine-invented extras despite medusa+hybrid requested.
+      expect(existsSync(join(targetAria, "aria.config.mjs"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaHero.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaMedusaProductGrid.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/components/AriaCartDrawer.astro"))).toBe(false);
+      expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(false);
+      expect(existsSync(join(targetAria, "backend/package.json"))).toBe(false);
+      expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(false);
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
@@ -733,7 +723,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
       expect(htmlPkg.scripts["dev"]).toContain("serve");
-    }, 30000);
+    }, 60000);
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
       const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");
@@ -759,78 +749,26 @@ Custom billing engine for healthcare providers.
 
       expect(res.status).toBe(0);
 
-      // 1. Verify Complete Agency Brand Guardian Suite
-      const brandDir = join(targetNoCache, "Client-Intake/01-Brand");
-      expect(existsSync(join(brandDir, "brand-identity.md"))).toBe(true);
-      expect(existsSync(join(brandDir, "visual-direction.md"))).toBe(true);
-      expect(existsSync(join(brandDir, "voice-and-tone.md"))).toBe(true);
-      expect(existsSync(join(brandDir, "brand-guardrails.md"))).toBe(true);
-      expect(existsSync(join(brandDir, "brand-assets-intake.md"))).toBe(true);
+      // 1. Verify Client-Intake brief with pre-filled agency answers
+      const briefPath = join(targetNoCache, "Client-Intake/00-Intake-Brief.md");
+      expect(existsSync(briefPath)).toBe(true);
+      const brief = readFileSync(briefPath, "utf8");
+      expect(brief).toContain("Employee Checklist");
+      expect(brief).toContain("Agent Instructions");
+      expect(brief).toContain("Pre-Filled From Scaffold");
+      expect(brief).toContain("01-Brand/");
+      expect(brief).toContain("02-Business/");
+      expect(brief).toContain("03-Offerings/");
+      expect(brief).toContain("04-Technical-Intake/");
+      expect(brief).toContain("start-here.md");
+      expect(brief).toContain("Zero secrets");
 
-      const identityDoc = readFileSync(join(brandDir, "brand-identity.md"), "utf8");
-      expect(identityDoc).toContain("## Brand Purpose");
-      expect(identityDoc).toContain("## Brand Vision");
-      expect(identityDoc).toContain("## Brand Mission");
-      expect(identityDoc).toContain("## Core Values");
-      expect(identityDoc).toContain("## Brand Promise");
-
-      const voiceDoc = readFileSync(join(brandDir, "voice-and-tone.md"), "utf8");
-      expect(voiceDoc).toContain("## Voice & Tone Pillars");
-      expect(voiceDoc).toContain("## Vocabulary & Copywriting Guidelines");
-
-      const guardrailsDoc = readFileSync(join(brandDir, "brand-guardrails.md"), "utf8");
-      expect(guardrailsDoc).toContain("## Brand Asset & IP Protection");
-      expect(guardrailsDoc).toContain("## Clear Space & Minimum Sizing");
-
-      const brandAssetsDoc = readFileSync(join(brandDir, "brand-assets-intake.md"), "utf8");
-      expect(brandAssetsDoc).toContain("## Vector Brand Marks & Logo Assets");
-      expect(brandAssetsDoc).toContain("## Typography & Font Licensing");
-      expect(brandAssetsDoc).toContain("## Photography & Media Library Assets");
-
-      // 2. Verify Business Strategy & Market Discovery
-      const bizDir = join(targetNoCache, "Client-Intake/02-Business");
-      expect(existsSync(join(bizDir, "business-model.md"))).toBe(true);
-      expect(existsSync(join(bizDir, "audience-persona.md"))).toBe(true);
-      expect(existsSync(join(bizDir, "competitor-benchmark.md"))).toBe(true);
-      expect(existsSync(join(bizDir, "client-goals-kpis.md"))).toBe(true);
-
-      const compDoc = readFileSync(join(bizDir, "competitor-benchmark.md"), "utf8");
-      expect(compDoc).toContain("## Key Competitors");
-      expect(compDoc).toContain("## Competitive Differentiation & Unfair Advantage");
-
-      const kpiDoc = readFileSync(join(bizDir, "client-goals-kpis.md"), "utf8");
-      expect(kpiDoc).toContain("## Primary Business Objectives");
-      expect(kpiDoc).toContain("## Target Launch Timeline & Milestones");
-      expect(kpiDoc).toContain("## Key Conversion Metrics & KPIs");
-
-      // 3. Verify Products, Services & Offerings (renamed from 03-Menu)
-      const offeringsDir = join(targetNoCache, "Client-Intake/03-Offerings");
-      expect(existsSync(join(offeringsDir, "offerings-catalog.md"))).toBe(true);
-      expect(existsSync(join(offeringsDir, "scope-deliverables.md"))).toBe(true);
-
-      const offeringsDoc = readFileSync(join(offeringsDir, "offerings-catalog.md"), "utf8");
-      expect(offeringsDoc).toContain("## Offerings & Deliverables Matrix");
-      expect(offeringsDoc).toContain("## Pricing Architecture & Commercial Models");
-
-      const scopeDoc = readFileSync(join(offeringsDir, "scope-deliverables.md"), "utf8");
-      expect(scopeDoc).toContain("## Scope Boundaries & Phasing");
-      expect(scopeDoc).toContain("## Phase 1 (MVP Shipped Deliverables)");
-      expect(scopeDoc).toContain("## Explicitly Out-of-Scope");
-
-      // 4. Verify Technical Intake & Integrations
-      const techDir = join(targetNoCache, "Client-Intake/04-Technical-Intake");
-      expect(existsSync(join(techDir, "access-and-credentials.md"))).toBe(true);
-      expect(existsSync(join(techDir, "integrations-matrix.md"))).toBe(true);
-
-      const accessDoc = readFileSync(join(techDir, "access-and-credentials.md"), "utf8");
-      expect(accessDoc).toContain("## Domain & DNS Management");
-      expect(accessDoc).toContain("## Code Repository & Deployment Infrastructure");
-      expect(accessDoc).toContain("## Secure Credential Transfer Protocol");
-
-      const integrationsDoc = readFileSync(join(techDir, "integrations-matrix.md"), "utf8");
-      expect(integrationsDoc).toContain("## Third-Party Platform Integrations");
-      expect(integrationsDoc).toContain("## Marketing, Analytics & Tag Management");
-      expect(integrationsDoc).toContain("## Compliance & Legal Prerequisites");
+      // 2. Verify the 4-pillar intake folders exist (docs agent-produced post-scaffold)
+      expect(existsSync(join(targetNoCache, "Client-Intake/01-Brand"))).toBe(true);
+      expect(existsSync(join(targetNoCache, "Client-Intake/02-Business"))).toBe(true);
+      expect(existsSync(join(targetNoCache, "Client-Intake/03-Offerings"))).toBe(true);
+      expect(existsSync(join(targetNoCache, "Client-Intake/04-Technical-Intake"))).toBe(true);
+      expect(existsSync(join(targetNoCache, "start-here.md"))).toBe(false);
     }, 15000);
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
@@ -869,13 +807,14 @@ Custom billing engine for healthcare providers.
   /* ========================================================================= */
   describe("Part F: Simplified Setup, Progressive Pipeline & 37 OKLCH Palettes", () => {
     it("provisions all 37 OKLCH color palettes from oklch.fyi with exact tokens and UnoCSS Wind 4 integration", () => {
-      // Test sunset-vibes curated theme
+      // Test sunset-vibes curated theme (plain-astro keeps engine token injection;
+      // Aria presets are isolated official clones without engine tokens)
       const targetSunset = join(TEST_SANDBOX, "sunset-vibes-showcase");
       const resSunset = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetSunset,
         "--non-interactive",
-        "--preset=visual",
+        "--preset=plain-astro",
         "--palette=sunset-vibes",
         "--skip-install"
       ], { encoding: "utf8" });
@@ -890,13 +829,13 @@ Custom billing engine for healthcare providers.
       const colorsJson = JSON.parse(readFileSync(colorsJsonPath, "utf8"));
       expect(colorsJson.color.primary.default.$value).toBe("oklch(0.3 0.15 25)");
 
-      // Test deep-sea curated theme
+      // Test deep-sea curated theme (same: plain-astro keeps engine tokens)
       const targetDeepSea = join(TEST_SANDBOX, "deep-sea-showcase");
       const resDeepSea = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
         targetDeepSea,
         "--non-interactive",
-        "--preset=visual",
+        "--preset=plain-astro",
         "--palette=deep-sea",
         "--skip-install"
       ], { encoding: "utf8" });
@@ -904,7 +843,7 @@ Custom billing engine for healthcare providers.
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
       expect(deepSeaTokens).toContain("DEEP-SEA");
-    }, 30000);
+    }, 60000);
 
     it("provisions project-scoped oklch-skill strictly inside target project with zero global pollution", () => {
       const targetProject = join(TEST_SANDBOX, "oklch-skill-showcase");
@@ -954,7 +893,7 @@ Custom billing engine for healthcare providers.
       const plainAstroCfg = readFileSync(join(targetPlainAstro, "astro.config.mjs"), "utf8");
       expect(plainAstroCfg).not.toContain("react()");
 
-      // 2. Astro + Git-based / Sitepins CMS
+      // 2. Astro + Git-based CMS
       const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
       const resGit = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -988,16 +927,13 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, ".agents/context/index.md"))).toBe(true);
       expect(existsSync(join(targetHtml, ".memory/CURRENT.md"))).toBe(true);
 
-      // Client Onboarding suite before completion
-      expect(existsSync(join(targetHtml, "Client-Intake/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Client-Intake/02-Business/business-model.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Client-Intake/03-Offerings/offerings-catalog.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Client-Intake/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Onboarding/01-Brand/brand-identity.md"))).toBe(true);
-      expect(existsSync(join(targetHtml, "Intake/04-Technical-Intake/access-and-credentials.md"))).toBe(true);
+      // Client Intake brief before completion
+      expect(existsSync(join(targetHtml, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Client-Intake/01-Brand"))).toBe(true);
+      expect(existsSync(join(targetHtml, "Client-Intake/04-Technical-Intake"))).toBe(true);
     }, 30000);
 
-    it("supports simplified presets plain-astro, git-cms, and sitepins", () => {
+    it("supports simplified presets plain-astro and git-cms", () => {
       const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
       const resPlain = spawnSync("bun", [
         NEW_PROJECT_SCRIPT,
@@ -1021,17 +957,6 @@ Custom billing engine for healthcare providers.
       ], { encoding: "utf8" });
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
-
-      const targetSitepins = join(TEST_SANDBOX, "preset-sitepins");
-      const resSitepins = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetSitepins,
-        "--non-interactive",
-        "--preset=sitepins",
-        "--skip-install"
-      ], { encoding: "utf8" });
-      expect(resSitepins.status).toBe(0);
-      expect(existsSync(join(targetSitepins, "src/content/config.ts"))).toBe(true);
     }, 30000);
   });
 });
