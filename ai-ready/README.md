@@ -14,14 +14,15 @@ Inspects repository health and outputs the 12-asset scorecard (exits in `<100ms`
 bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --audit
 ```
 
-### 2. Scaffold Agent Engine DOX Architecture
-Directly provisions the complete 9-folder container, 13 modular standards (including WordPress), brand tokens, and lean root `AGENTS.md`:
+### 2. Scaffold Agent Engine & Workflow Assets
+Directly provisions the complete 9-folder container, 13 modular standards (including WordPress), brand tokens, lean root `AGENTS.md`, the `.mcp.json` tool-config template, an `llms.txt` discovery skeleton, the `.github/` bundle (dependabot, issue templates, PR template), and `.env.example`:
 ```bash
 bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold
 
 # Or dry-run simulation:
 bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold --dry-run
 ```
+Never overwrites existing files; scaffolding fills only genuine gaps.
 
 ### 3. Stage-0 Fast-Skip Gate
 On repositories that already have all 12 assets in place and verified:
@@ -29,6 +30,12 @@ On repositories that already have all 12 assets in place and verified:
 [ai-ready] Repository is AI-ready (12/12). Skipping pass.
 ```
 *Zero token burn. Exits immediately so the agent can focus on your feature work.*
+
+### 4. CI Gate (`--fail-under`)
+Use the audit as a merge gate — the process exits `1` when the verified score falls below the threshold:
+```bash
+bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --fail-under 8
+```
 
 ---
 
@@ -38,7 +45,7 @@ On repositories that already have all 12 assets in place and verified:
 |:---|:---|:---|:---|
 | **AI Context** | 1 | `AGENTS.md` | Lean root router (`<50 lines`) pointing to modular standards. |
 | | 2 | `.agents/` | 9-folder progressive disclosure container. |
-| | 3 | `.mcp.json` / `.gemini/` | Authorized MCP tools and server configs. |
+| | 3 | `.mcp.json` or `.claude/`, `.cursor/`, `.gemini/` | Authorized MCP tools and server configs. |
 | | 4 | `llms.txt` | Machine-readable index for agent web crawlers & discovery. |
 | **Dev Workflow** | 5 | `.github/workflows/ci.yml` | Automated build, lint, and test gate on PRs. |
 | | 6 | `.github/ISSUE_TEMPLATE/` | Structured bug and feature issue forms. |

@@ -28,11 +28,12 @@ This reference documents the 12 tracked assets required for a repository to achi
     8. `artifacts/` — Generated deliverables, schemas, and diagrams.
     9. `archive/` — Completed work, retired plans, and historical logs.
 
-### Asset 3: Tool & MCP Configuration (`.mcp.json` / `.gemini/`)
-- **Location**: `./.mcp.json` or `.gemini/antigravity.json`
+### Asset 3: Tool & MCP Configuration (`.mcp.json` or agent tool config)
+- **Location**: `./.mcp.json` or any of `.claude/`, `.cursor/`, `.gemini/`
 - **Criteria**:
   - Declares authorized Model Context Protocol (MCP) servers or CLI tool permissions.
   - Limits agent blast radius by defining safe environment variables and command scopes.
+  - Modern agent tool directories (`.claude/`, `.cursor/`) satisfy the asset equally; the auditor accepts the breadth rather than a single vendor path.
 
 ### Asset 4: Machine-Readable Discovery Index (`llms.txt`)
 - **Location**: Repository root (`./llms.txt`)
