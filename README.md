@@ -33,7 +33,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #3 Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
 | #4 Review code rigorously (Linus Torvalds Style) | [`code-review`](code-review/README.md) | Calibrated review verdict, Karpathy minimal-diff gate & zero special cases |
 | #5 Scaffold Project OS & Progressive Disclosure DOX | [`new-project`](new-project/README.md) | Project OS foundation, 9-folder container, and framework generators |
-| #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Structured context packet with constraints and verification criteria |
+| #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Context packets, boundary-safe resumption, and an ambient HANDOFF.md live-state file for cross-conversation continuity |
 | #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 12-asset audit scorecard, PR review mining, and Stage-0 Fast-Skip gate |
 | #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Compact snapshot of current state and next action |
 | #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with security headers and visual breakpoint gates |
@@ -208,7 +208,7 @@ flowchart TD
 | **#3** | [**`git`**](git/README.md) | **Core Engine** | `/git`, `manage git workflow`, `cut release`, `triage issues` | `code-review`, `updatedocs`, `ai-ready`, `gauntlet-loop` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
 | **#4** | [**`code-review`**](code-review/README.md) | **Quality & Review** | `/torvalds`, `/linus-review`, `review PR` | `git`, `gauntlet-loop`, `refactor-ui`, `pua` | Language-agnostic code review method derived from Linus Torvalds' corpus and Karpathy minimal-diff doctrine. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | **#5** | [**`new-project`**](new-project/README.md) | **Core Engine** | `/new-project`, `Agent Engine`, `DOX Engine`, `scaffold app` | `ai-ready`, `updateagents`, `updatedocs`, `git` | Progressive Disclosure DOX provisioner (AGENTS.md, 9-folder container, 12 modular standards, brand tokens, and cognitive memory). |
-| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `dead-letter`, `coupling-router`, `updateagents` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
+| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `dead-letter`, `coupling-router`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), and an always-current HANDOFF.md so new conversations continue prior work at lowest token cost. |
 | **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 12-asset AI-readiness audit, Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
 | **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/context-anchor` | `handoff`, `updateagents`, `dead-letter` | Preserve a lightweight working-state snapshot to prevent cascading context drift across sessions. |
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
@@ -640,11 +640,15 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── handoff/                        # Structured subagent context packet generator
+├── handoff/                        # Handoff, resumption & ambient continuity engine
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
+│   │   ├── sample-HANDOFF.md
 │   │   └── sample-handoff.md
+│   ├── references/
+│   │   ├── ambient-handoff.md
+│   │   └── resumption-protocol.md
 │   ├── README.md
 │   └── SKILL.md
 │
