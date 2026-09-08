@@ -55,6 +55,46 @@ feat(new-project): add dynamic llms.txt generation and reality machine
 
 ---
 
+## 🌿 Git Workflow & Release Lifecycle (Mandatory)
+
+### Branches
+
+- `main` → Production. **Never commit directly to** `main`**.**
+- `dev` → Staging/integration branch.
+- `feature/*` or `feat/*` → Created from `dev` for individual features/tasks.
+- `release/vX.Y.Z` → Created from `dev` when changes are ready for production; merge into `main`, then back into `dev`.
+- `hotfix/*` → Created from `main` for urgent production fixes; merge into both `main` and `dev`.
+
+### Rules
+
+- Feature branches must be created from `dev`.
+- Use descriptive branch names.
+- Every merge into `dev` or `main` requires a Pull Request and code review.
+- Do not rewrite or force-push `dev` or `main` history.
+- Prefer `rebase` within feature branches when integrating changes and keeping history linear.
+- For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
+- Prefer a new revert commit over rewriting shared history.
+
+### Commit Message Standard
+
+- **Subject (≤50 chars)**: Capitalized imperative Conventional Commit (e.g., `Skill: Added New - Designs Scope`, never `Added designscope` or `Fix stuff`).
+- **Body (≤72 chars/line)**: Focus on *why* and non-obvious rationale instead of restating the diff; avoid pronouns (`I`, `we`) and meta-phrasing (`This commit/PR`).
+- **Issue References**: Link issues at the bottom (e.g., `Closes #123`, `Resolves #456`).
+
+### Releases & Semantic Versioning (`vX.Y.Z`)
+
+- `X` **(Major)**: Breaking architectural changes, core schema shifts, or protocol overhauls (`vX.0.0`).
+- `Y` **(Feature)**: Substantive new agent capabilities, MCP tools, or CLI subcommands (`vX.Y.0`).
+- `Z` **(Minor / Hotfix)**: Bug fixes, security patches, performance, and urgent hotfixes (`vX.Y.Z`).
+
+Invariants:
+
+- Sync `package.json` `"version"` with the `vX.Y.Z` tag in the release commit.
+- Stage on `release/vX.Y.Z` from `dev` → merge to `main` → back-merge to `dev`.
+- CI publishes on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). Never `npm publish` manually.
+
+---
+
 ## Adding a New Skill
 
 1. Create a directory for your skill: `mkdir my-skill`
