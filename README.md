@@ -39,7 +39,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with security headers and visual breakpoint gates |
 | #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | Six-mode UI engine (review/audit/improve/sweep/tokens/polish) with 11 heuristics, WCAG 2.2 AA gate, and zero-dep verification scripts |
 | #11 Extract design systems & component layout trees | [`designscope`](designscope/README.md) | `design.md` brief with CSS Grid/Flexbox layout tree and DTCG token JSON |
-| #12 Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
+| #12 Route task DAGs, audit skill-stack conflicts & lease shared worktrees | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing, MVSS conflict auditor, and shared-worktree lease for multi-session checkouts |
 | #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, and SHA-256 hash seal |
 | #14 Track project evidence & verify factual claims | [`evidence-ledger`](evidence-ledger/README.md) | Per-project decision/commitment/claim tracking, 4-tier confidence taxonomy, staleness detection |
 | #15 Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | 9-mode failure triage, root-cause learning, and retry/escalation packets |
@@ -214,7 +214,7 @@ flowchart TD
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
 | **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `review this UI`, `audit UI contrast`, `refactor this component`, `make pages consistent`, `extract design tokens`, `final polish` | `designscope`, `animate`, `gauntlet-loop`, `code-review` | Six-mode UI engine (review/audit/improve/sweep/tokens/polish): 10 Refactoring UI heuristics plus modern container-query, typography, and theming techniques, a WCAG 2.2 AA blocking gate, proof-gated findings, and zero-dependency Bun verification scripts. |
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
-| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling` | `handoff`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router & skill-stack compatibility auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
+| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `handoff`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router, skill-stack compatibility auditor, and shared-worktree lease gate; resolves prompt conflicts, enforces MVSS, routes DAGs, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
 | **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and cryptographic SHA-256 seal. |
 | **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `evidence status`, `brief me on this project` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Persistent per-project evidence tracking and claim verification gate: decisions, client commitments, verified claims, and status facts with staleness detection and six `/evidence` commands. |
 | **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
@@ -435,6 +435,7 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 - **High Coupling Routing**: Routes interdependent tasks (shared types, database schemas, rendering pipeline) to a single sequential builder.
 - **Low Coupling Fan-Out**: Dispatches truly orthogonal tasks (isolated test suites, independent docs, separate microservices) to parallel subagents.
 - **DAG & Allocation Generation**: Outputs `ROUTING_PLAN.md` with active MVSS, suppressed skills, Mermaid dependency graph, and file isolation boundaries.
+- **Shared-Worktree Lease (`/worktree-lease`)**: Probes, acquires, and releases `.agents/artifacts/WORKTREE-LEASE.md` so two agent sessions in one checkout never collide on branches, stashes, or shared files — with a takeover rule for stale heartbeats and a repair ladder for collisions that slip through.
 
 [Read full documentation →](coupling-router/README.md)
 
@@ -728,7 +729,8 @@ muse-skills/
 │   │   └── sample-routing-decision.md
 │   ├── references/
 │   │   ├── coupling-matrix.md
-│   │   └── skill-compatibility-matrix.md
+│   │   ├── skill-compatibility-matrix.md
+│   │   └── worktree-lease-protocol.md
 │   ├── README.md
 │   └── SKILL.md
 │
