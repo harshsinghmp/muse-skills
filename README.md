@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of twenty-one portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
+**A curated suite of twenty-two portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-2.4.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-21%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Version](https://img.shields.io/badge/Version-2.6.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-one-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-two-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -33,15 +33,15 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #3 Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
 | #4 Review code rigorously (Linus Torvalds Style) | [`code-review`](code-review/README.md) | Calibrated review verdict, Karpathy minimal-diff gate & zero special cases |
 | #5 Scaffold Project OS & Progressive Disclosure DOX | [`new-project`](new-project/README.md) | Project OS foundation, 9-folder container, and framework generators |
-| #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Structured context packet with constraints and verification criteria |
-| #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 12-asset audit scorecard, PR review mining, and Stage-0 Fast-Skip gate |
-| #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Compact snapshot of current state and next action |
+| #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Context packets, boundary-safe resumption, and an ambient HANDOFF.md live-state file for cross-conversation continuity |
+| #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 13-asset audit scorecard (incl. working-artifacts container), PR review mining, and Stage-0 Fast-Skip gate |
+| #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Working-reference snapshots, named client-workstream parking, and the anchor ↔ HANDOFF.md layering protocol |
 | #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with security headers and visual breakpoint gates |
-| #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | 10 Refactoring UI heuristics and 5-state anti-slop UI coverage gate |
+| #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | Six-mode UI engine (review/audit/improve/sweep/tokens/polish) with 11 heuristics, WCAG 2.2 AA gate, and zero-dep verification scripts |
 | #11 Extract design systems & component layout trees | [`designscope`](designscope/README.md) | `design.md` brief with CSS Grid/Flexbox layout tree and DTCG token JSON |
-| #12 Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
+| #12 Route task DAGs, audit skill-stack conflicts & lease shared worktrees | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing, MVSS conflict auditor, and shared-worktree lease for multi-session checkouts |
 | #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, and SHA-256 hash seal |
-| #14 Verify factual claims & academic citations | [`evidence-ledger`](evidence-ledger/README.md) | Academic DOI citations, 4-tier confidence taxonomy, and missing receipt audits |
+| #14 Track project evidence & verify factual claims | [`evidence-ledger`](evidence-ledger/README.md) | Per-project decision/commitment/claim tracking, 4-tier confidence taxonomy, staleness detection |
 | #15 Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | 9-mode failure triage, root-cause learning, and retry/escalation packets |
 | #16 Push through a difficult debugging stall | [`pua`](pua/README.md) | Structured escalation, big-tech perf rhetoric, and exhaustive problem-solving |
 | #17 Score daily controllable effort & focus | [`coach`](coach/README.md) | 5-pillar input scorecard and daily reflection log |
@@ -49,6 +49,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #19 Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | #20 Clean developer, designer & browser caches | [`clean-system-cache`](clean-system-cache/README.md) | Multi-platform cache purge, zero-session interruption & cache-only safety |
 | #21 Remove AI writing patterns & polish prose | [`humanize`](humanize/README.md) | Editorial review, anti-slop pattern detection & authentic voice preservation |
+| #22 Design & implement UI motion & animation | [`animate`](animate/README.md) | Library selection, canonical easing/duration, & correct code for entrances, exits, micro-interactions, scroll, page transitions |
 
 ### Explore the repository
 
@@ -92,9 +93,10 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 npx skills add harshsinghmp/muse-skills --skill secretary
 npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 
-# Design & Interface (#10, #11)
+# Design & Interface (#10, #11, #22)
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 npx skills add harshsinghmp/muse-skills --skill designscope
+npx skills add harshsinghmp/muse-skills --skill animate
 
 # Reflection & Maintenance (#17, #18, #19, #20)
 npx skills add harshsinghmp/muse-skills --skill coach
@@ -120,7 +122,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all eighteen skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, code-review, governance, and audit toolkit:
+Install all twenty-two skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, and audit toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -193,7 +195,7 @@ flowchart TD
 | Layer | Architectural Role | Shipped Skills | Core Governance & Invariants |
 | :--- | :--- | :--- | :--- |
 | **1. Orchestration & Governance** | Intake, DAG coupling analysis, staff work approval, and bounded subagent context isolation | [`coupling-router`](coupling-router/README.md) (#12)<br/>[`secretary`](secretary/README.md) (#13)<br/>[`handoff`](handoff/README.md) (#6)<br/>[`context-anchor`](context-anchor/README.md) (#8) | Socratic adversarial challenge, single-use SHA-256 hash approval gate, negative boundary constraints, sub-15-line working state snapshots. |
-| **2. Foundation & DOX Engine** | Progressive disclosure scaffolding, workspace memory sync, and documentation governance | [`updatedocs`](updatedocs/README.md) (#1)<br/>[`updateagents`](updateagents/README.md) (#2)<br/>[`new-project`](new-project/README.md) (#5)<br/>[`ai-ready`](ai-ready/README.md) (#7) | 12-asset AI readiness scorecard, sub-100ms Stage-0 Fast-Skip gate, 9-folder DOX container, `.memory/` no-touch boundary. |
+| **2. Foundation & DOX Engine** | Progressive disclosure scaffolding, workspace memory sync, and documentation governance | [`updatedocs`](updatedocs/README.md) (#1)<br/>[`updateagents`](updateagents/README.md) (#2)<br/>[`new-project`](new-project/README.md) (#5)<br/>[`ai-ready`](ai-ready/README.md) (#7) | 13-asset AI readiness scorecard, sub-100ms Stage-0 Fast-Skip gate, 9-folder DOX container, artifacts working-state boundary, `.memory/` no-touch boundary. |
 | **3. Execution & Quality Gates** | Design system extraction, UI refactoring, adversarial code reviews, claim verification, editorial anti-slop, and failure triage | [`code-review`](code-review/README.md) (#4)<br/>[`gauntlet-loop`](gauntlet-loop/README.md) (#9)<br/>[`refactor-ui`](refactor-ui/README.md) (#10)<br/>[`designscope`](designscope/README.md) (#11)<br/>[`evidence-ledger`](evidence-ledger/README.md) (#14)<br/>[`dead-letter`](dead-letter/README.md) (#15)<br/>[`pua`](pua/README.md) (#16)<br/>[`humanize`](humanize/README.md) (#21) | Linus Torvalds & Karpathy minimal-diff doctrine, 5-state anti-slop UI gate, DTCG design tokens, 4-tier citation taxonomy, 9-mode failure classification, 4-tier PIP escalation, editorial anti-slop rules. |
 | **4. Delivery & Lifecycle Maintenance** | Autonomous Git release cuts, cache cleanup, knowledge hygiene, and strategic reflection | [`git`](git/README.md) (#3)<br/>[`coach`](coach/README.md) (#17)<br/>[`audit`](audit/README.md) (#18)<br/>[`periodic-retreat`](periodic-retreat/README.md) (#19)<br/>[`clean-system-cache`](clean-system-cache/README.md) (#20) | 11-phase release pipeline, SemVer tagging, zero-runtime cache cleaner with running process guards, 5-pillar controllable effort rubric. |
 
@@ -208,29 +210,29 @@ flowchart TD
 | **#3** | [**`git`**](git/README.md) | **Core Engine** | `/git`, `manage git workflow`, `cut release`, `triage issues` | `code-review`, `updatedocs`, `ai-ready`, `gauntlet-loop` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
 | **#4** | [**`code-review`**](code-review/README.md) | **Quality & Review** | `/torvalds`, `/linus-review`, `review PR` | `git`, `gauntlet-loop`, `refactor-ui`, `pua` | Language-agnostic code review method derived from Linus Torvalds' corpus and Karpathy minimal-diff doctrine. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | **#5** | [**`new-project`**](new-project/README.md) | **Core Engine** | `/new-project`, `Agent Engine`, `DOX Engine`, `scaffold app` | `ai-ready`, `updateagents`, `updatedocs`, `git` | Progressive Disclosure DOX provisioner (AGENTS.md, 9-folder container, 12 modular standards, brand tokens, and cognitive memory). |
-| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `dead-letter`, `coupling-router`, `updateagents` | Generate structured context packets before dispatching subagents. Prevents context drift and ruled-out repeats. |
-| **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 12-asset AI-readiness audit, Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
-| **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/context-anchor` | `handoff`, `updateagents`, `dead-letter` | Preserve a lightweight working-state snapshot to prevent cascading context drift across sessions. |
+| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `coupling-router`, `dead-letter`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), an always-current HANDOFF.md so new conversations continue prior work at lowest token cost, and worktree-lease-aware dispatches for shared checkouts. |
+| **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 13-asset AI-readiness audit (including the working-artifacts container rule), Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
+| **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/park`, `/switch-task` | `handoff`, `updateagents`, `dead-letter`, `audit` | Working-reference snapshots and named client-workstream parking (`/park`, `/switch-task`, `/list-anchors`) with the normative anchor ↔ HANDOFF.md layering protocol and a client-confidentiality guard. |
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
-| **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | `designscope`, `gauntlet-loop`, `code-review` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI and 5-state anti-slop gate. |
+| **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `review this UI`, `audit UI contrast`, `refactor this component`, `make pages consistent`, `extract design tokens`, `final polish` | `designscope`, `animate`, `gauntlet-loop`, `code-review` | Six-mode UI engine (review/audit/improve/sweep/tokens/polish): 10 Refactoring UI heuristics plus modern container-query, typography, and theming techniques, a WCAG 2.2 AA blocking gate, proof-gated findings, and zero-dependency Bun verification scripts. |
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
-| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling` | `handoff`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router & skill-stack compatibility auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
+| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `handoff`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router, skill-stack compatibility auditor, and shared-worktree lease gate; resolves prompt conflicts, enforces MVSS, routes DAGs, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
 | **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and cryptographic SHA-256 seal. |
-| **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `/claim` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Source-cited claim verification gate with academic DOI citations, empirical vs speculative audit, and missing receipt flagger. |
+| **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `evidence status`, `brief me on this project` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Persistent per-project evidence tracking and claim verification gate: decisions, client commitments, verified claims, and status facts with staleness detection and six `/evidence` commands. |
 | **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | **#16** | [**`pua`**](pua/README.md) | **Quality & Review** | `PIP`, `/pua`, `try harder`, `figure it out` | `dead-letter`, `code-review`, `gauntlet-loop` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
-| **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `evidence-ledger`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor for link integrity, dead references, frontmatter validity, and secret sweeps. |
+| **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor with severity-routed remediation (auto-repair / propose-diff / report-only / defer-route), per-step progress reporting, re-verification delta, and companion-skill routing. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
-| **#21** | [**`humanize`**](humanize/README.md) | **Quality & Review** | `humanize prose`, `remove AI patterns`, `de-ai text` | `code-review`, `updatedocs`, `evidence-ledger`, `secretary` | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, significance inflation, and robotic cadence while preserving authentic authorial voice. |
+| **#22** | [**`animate`**](animate/README.md) | **Design & Interface** | `animate this`, `add motion`, `framer motion`, `scroll animation`, `page transition` | `refactor-ui`, `designscope`, `code-review`, `gauntlet-loop` | Web UI animation and motion: library selection, canonical easing/duration tables, and segregated per-domain references (Motion, CSS, WAAPI, GSAP, native mobile) with reduced-motion and performance defaults. Five modes (build/review/improve/audit/find). |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 21 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 22 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -355,16 +357,17 @@ npx skills add harshsinghmp/muse-skills --skill designscope
 
 ### 🪄 `refactor-ui`
 
-Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics established by Adam Wathan and Steve Schoger (*Refactoring UI*).
+Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics of Wathan & Schoger (*Refactoring UI*) plus a modern-techniques layer distilled from a 127-source agent-skill corpus.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 ```
 
-- **10 Core Heuristics**: Visual hierarchy, typography scales, functional color palettes, 4px/8px spacing grid, button hierarchy, visual clutter elimination, high-value empty states, natural shadows/elevation, WCAG 2.1 AA/AAA contrast, and spatial grouping.
-- **Monochrome-First Workflow**: Solidify layout, optical weights, and spacing in grayscale before introducing accent colors.
-- **De-emphasis Strategy**: Softens surrounding borders, background tones, and metadata instead of making primary elements oversized.
-- **Zero-Dependency Tooling**: Ships with `check_contrast.py` (WCAG 2.1 ratio calculator) and `audit_ui.py` (static anti-pattern linter for JSX/HTML/CSS).
+- **Six Execution Modes**: `review` (verdict table, default), `audit` (scripted scan + scored report), `improve` (5-step refactor), `sweep` (multi-page consistency matrix), `tokens` (extract-and-centralize), and `polish` (launch triage) — each a scoped contract in `references/modes.md`.
+- **Modern Techniques**: Concentric radius law, 2× grouping ratio, container-query doctrine, 60–75ch measure with role-based line-heights, named z-scale tokens, surface ladder, and light/dark theme parity (`references/modern-techniques.md`).
+- **WCAG 2.2 AA Blocking Gate**: Contrast failures block completion; scripts produce pasted receipts.
+- **Proof-Gated Findings**: Candidates need contract + runtime + correction evidence; unrun checks are reported `Not verified`.
+- **Zero-Dependency Tooling**: `check-contrast.ts` (AA/AAA + large-text/UI thresholds) and `audit-ui.ts` (anti-pattern scanner incl. raw z-index and missing focus alternatives) — CI-ready exit codes.
 
 [Read full documentation →](refactor-ui/README.md)
 
@@ -434,6 +437,7 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 - **High Coupling Routing**: Routes interdependent tasks (shared types, database schemas, rendering pipeline) to a single sequential builder.
 - **Low Coupling Fan-Out**: Dispatches truly orthogonal tasks (isolated test suites, independent docs, separate microservices) to parallel subagents.
 - **DAG & Allocation Generation**: Outputs `ROUTING_PLAN.md` with active MVSS, suppressed skills, Mermaid dependency graph, and file isolation boundaries.
+- **Shared-Worktree Lease (`/worktree-lease`)**: Probes, acquires, and releases `.agents/artifacts/WORKTREE-LEASE.md` so two agent sessions in one checkout never collide on branches, stashes, or shared files — with a takeover rule for stale heartbeats and a repair ladder for collisions that slip through.
 
 [Read full documentation →](coupling-router/README.md)
 
@@ -441,17 +445,17 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 
 ### 📜 `evidence-ledger`
 
-Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
+Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only `evidence-ledger.md` per project — decisions, client commitments, verified claims, and status facts — all backed by receipts. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 ```
 
-- **Academic & Primary Citations**: Requires peer-reviewed DOI links (`https://doi.org/...`) or canonical specification URLs for all technical assertions.
-- **Empirical vs Speculative Demarcation**: Enforces strict boundaries between measured empirical benchmark facts (`[EMPIRICAL]`) and theoretical extrapolations (`[SPECULATIVE]`).
-- **Statistical Audit & Missing Receipts Flagger**: Scans statistical statements (percentages, multipliers, latency numbers) and emits `MISSING_RECEIPTS_REPORT.md` for unbacked assertions.
-- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL / DOI), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction).
-- **Structured Audit**: Outputs `claim-ledger.md` documenting verification paths, timestamps, and exact command receipts.
+- **Six Commands**: `/evidence onboard` (mine context files into a starter ledger), `/evidence status` (dashboard + health score + staleness sweep), `/evidence decide` (decision records with alternatives and evidence trail), `/evidence commit` (client commitments with deadlines and delivery proof), `/evidence audit` (claim verification gate → `claim-ledger.md` + `MISSING_RECEIPTS_REPORT.md`), `/evidence brief` (context-switch briefing).
+- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL / DOI), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction) — with `[EMPIRICAL]` vs `[SPECULATIVE]` demarcation.
+- **Status Lifecycle**: append-only entries move through `ACTIVE`/`VERIFIED`/`FULFILLED`/`PROMISED`/`OVERDUE`/`STALE`/`SUPERSEDED`/`QUARANTINED`/`REDACTED` — never deleted, always auditable.
+- **Staleness Detection**: overdue commitments, claims unverified >30 days, and blockers >14 days auto-flag on every dashboard regeneration.
+- **Agency Orchestration**: context-anchor parks workstreams before briefs/audits; secretary gates high-stakes decisions; dead-letter triages quarantined claims; handoff dispatches the briefing to subagents.
 
 [Read full documentation →](evidence-ledger/README.md)
 
@@ -571,6 +575,24 @@ npx skills add harshsinghmp/muse-skills --skill humanize
 
 [Read full documentation →](humanize/README.md)
 
+---
+
+### 🎬 `animate` (Priority #22 — Design & Interface)
+
+Design and implement web UI animation and motion that survives strict design-engineering review on the first pass.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill animate
+```
+
+- **Library router**: walks a "cheapest tool that fits" ladder — CSS transition → `@starting-style` → CSS animation → WAAPI → Motion (`motion.dev`) — with GSAP and native mobile gated behind an explicit ask.
+- **Canonical easing & duration**: strong cubic-bezier tokens (`--ease-out: cubic-bezier(0.23,1,0.32,1)`) and sub-300ms UI budgets, grounded in the Emil Kowalski design-engineering bar.
+- **Segregated references**: nine per-domain files (principles, motion-dev, css, performance, accessibility, review, gsap, mobile, other-libraries) loaded on demand to keep token cost low.
+- **Ships reduced-motion + pointer gating** with every animation, and a frequency gate that correctly returns *"no animation"* for keyboard/100×-daily actions.
+- **Five modes**: build (default) / review / improve / audit / find — routed on the verb; only build edits code.
+
+[Read full documentation →](animate/README.md)
+
 </details>
 
 ---
@@ -640,19 +662,26 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── handoff/                        # Structured subagent context packet generator
+├── handoff/                        # Handoff, resumption & ambient continuity engine
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
+│   │   ├── sample-HANDOFF.md
 │   │   └── sample-handoff.md
+│   ├── references/
+│   │   ├── ambient-handoff.md
+│   │   └── resumption-protocol.md
 │   ├── README.md
 │   └── SKILL.md
 │
-├── context-anchor/                 # Working reference snapshot generator
+├── context-anchor/                 # Working references & workstream parking
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
-│   │   └── sample-anchor.md
+│   │   ├── sample-anchor.md
+│   │   └── sample-workstream-anchor.md
+│   ├── references/
+│   │   └── layering-protocol.md
 │   ├── README.md
 │   └── SKILL.md
 │
@@ -673,11 +702,12 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+├── refactor-ui/                    # Atomic UI design & interface refactoring engine (6 modes)
 │   ├── agents/
 │   │   └── openai.yaml             # Agent tool definition
-│   ├── references/                 # 10 Heuristic reference guides
-│   ├── scripts/                    # WCAG contrast calculator & static UI auditor
+│   ├── examples/                   # Worked audit-mode report sample
+│   ├── references/                 # 11 heuristic guides + modes.md + modern-techniques.md
+│   ├── scripts/                    # audit-ui.ts scanner & check-contrast.ts (zero-dep Bun)
 │   ├── LICENSE                     # MIT (with Refactoring UI attribution)
 │   ├── README.md
 │   └── SKILL.md
@@ -719,18 +749,26 @@ muse-skills/
 │   │   └── sample-routing-decision.md
 │   ├── references/
 │   │   ├── coupling-matrix.md
-│   │   └── skill-compatibility-matrix.md
+│   │   ├── skill-compatibility-matrix.md
+│   │   └── worktree-lease-protocol.md
+│   ├── scripts/
+│   │   └── worktree-lease.ts       # One-command lease gate (probe/hold/release)
 │   ├── README.md
 │   └── SKILL.md
 │
-├── evidence-ledger/                # Source-cited claim verification & academic receipt gate
+├── evidence-ledger/                # Persistent project evidence tracking & claim verification gate
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
-│   │   └── sample-claim-ledger.md
+│   │   ├── sample-claim-ledger.md
+│   │   ├── sample-evidence-brief.md
+│   │   └── sample-evidence-ledger.md
 │   ├── references/
 │   │   ├── academic-citation-protocol.md
-│   │   └── claim-verification-taxonomy.md
+│   │   ├── claim-verification-taxonomy.md
+│   │   ├── evidence-entry-schema.md
+│   │   ├── skill-orchestration.md
+│   │   └── staleness-rules.md
 │   ├── README.md
 │   └── SKILL.md
 │
@@ -760,7 +798,8 @@ muse-skills/
 │   ├── examples/
 │   │   └── sample-audit-report.md
 │   ├── references/
-│   │   └── hygiene-rules.md
+│   │   ├── hygiene-rules.md
+│   │   └── remediation-matrix.md
 │   ├── README.md
 │   └── SKILL.md
 │
@@ -781,6 +820,20 @@ muse-skills/
 │   │   ├── fast-skip-protocol.md
 │   │   ├── pr-review-mining.md
 │   │   └── twelve-asset-matrix.md
+│   ├── templates/
+│   │   ├── github/
+│   │   │   ├── ISSUE_TEMPLATE/
+│   │   │   │   ├── bug_report.md
+│   │   │   │   └── feature_request.md
+│   │   │   ├── dependabot.yml
+│   │   │   └── pull_request_template.md
+│   │   ├── llms.txt
+│   │   ├── mcp.json.template
+│   │   ├── AGENTS.md
+│   │   ├── env.example
+│   │   └── gitignore.template
+│   ├── scripts/
+│   │   └── ai-ready.ts
 │   ├── README.md
 │   └── SKILL.md
 │
@@ -800,6 +853,15 @@ muse-skills/
 │   │   ├── patterns.md
 │   │   ├── style-guide.md
 │   │   └── verification.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── animate/                        # Web UI motion & animation router (5 modes)
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── micro-interaction.md
+│   ├── references/                 # 9 per-domain guides (principles, motion-dev, css, performance, a11y, review, gsap, mobile, other)
 │   ├── README.md
 │   └── SKILL.md
 │
@@ -828,6 +890,7 @@ muse-skills/
 - [Skill Authoring Specification](docs/SKILL_SPECIFICATION.md) explains the required shape of a skill and its frontmatter.
 - [Architecture](docs/ARCHITECTURE.md) describes the repository’s design and packaging model.
 - [Changelog](docs/CHANGELOG.md) records released changes.
+- [Dogfooding Runbook](docs/DOGFOOD.md) validates the suite on real foreign projects (continuity, parking, evidence, lease).
 - [Contributing](CONTRIBUTING.md) explains how to propose improvements.
 - [Security policy](SECURITY.md) explains how to report vulnerabilities privately.
 

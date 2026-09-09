@@ -16,7 +16,7 @@ The **Fast-Skip Gate** enforces a binary pre-flight check:
 
 ## ⚡ Execution Mechanism
 
-The gate runs a non-destructive, sub-100ms shell check across the 12 tracked assets:
+The gate runs a non-destructive, sub-100ms shell check across the 13 tracked assets:
 
 ```bash
 #!/usr/bin/env bash
@@ -26,13 +26,13 @@ PASS=0
 FAIL=0
 
 # 1. Root Router
-[ -f "AGENTS.md" ] && [ $(wc -l < "AGENTS.md") -le 60 ] && ((PASS++)) || ((FAIL++))
+[ -f "AGENTS.md" ] && [ $(wc -l < "AGENTS.md") -le 50 ] && ((PASS++)) || ((FAIL++))
 
 # 2. DOX Container
 [ -d ".agents/standards" ] && [ -d ".agents/context" ] && ((PASS++)) || ((FAIL++))
 
-# 3. Tool / MCP Config
-[ -f ".mcp.json" -o -d ".gemini" ] && ((PASS++)) || ((FAIL++))
+# 3. Tool / MCP Config (modern agent tool config breadth)
+{ [ -f ".mcp.json" ] || [ -d ".gemini" ] || [ -d ".claude" ] || [ -d ".cursor" ]; } && ((PASS++)) || ((FAIL++))
 
 # 4. LLMs Discovery
 [ -f "llms.txt" ] && ((PASS++)) || ((FAIL++))
@@ -56,13 +56,13 @@ FAIL=0
 [ -f "CONTRIBUTING.md" ] && ((PASS++)) || ((FAIL++))
 
 # 11. Durable Documentation
-[ -d "docs" -o -d ".agents/context" ] && ((PASS++)) || ((FAIL++))
+{ [ -d "docs" ] || [ -d ".agents/context" ]; } && ((PASS++)) || ((FAIL++))
 
 # 12. Secret Hygiene
-[ -f ".gitignore" ] && grep -qE "^\.e\[n\]v" .gitignore && ((PASS++)) || ((FAIL++))
+[ -f ".gitignore" ] && grep -qE "^\.e\[n\]v" .gitignore && [ -f ".env.example" ] && ((PASS++)) || ((FAIL++))
 
 if [ "$PASS" -eq 12 ]; then
-  echo "[ai-ready] Repository is AI-ready (12/12). Skipping pass."
+  echo "[ai-ready] Repository is AI-ready (13/13). Skipping pass."
   exit 0
 else
   echo "[ai-ready] Repository score: $PASS/12. Remediation required."
@@ -77,7 +77,7 @@ fi
 When the Fast-Skip check succeeds (`PASS == 12`):
 1. **Single Line Output**: The agent must output only:
    ```text
-   [ai-ready] Repository is AI-ready (12/12). Skipping pass.
+   [ai-ready] Repository is AI-ready (13/13). Skipping pass.
    ```
 2. **Immediate Turn Termination / Next Task**: The agent immediately moves to the user's primary feature request or command.
 3. **No Retrospective Analysis**: Do not explain why the files are compliant, do not re-list the file paths, and do not congratulate the user. Silence is efficiency.

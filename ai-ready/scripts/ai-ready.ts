@@ -3,8 +3,9 @@
  * 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
  * 
  * Capabilities:
- *   --audit     (default) Audits 12 tracked assets with sub-100ms Stage-0 Fast-Skip gate.
+ *   --audit     (default) Audits 13 tracked assets with sub-100ms Stage-0 Fast-Skip gate.
  *   --scaffold  Directly provisions the complete Agent Engine DOX container from templates.
+ *   --fail-under N  Exit 1 when the audit score falls below N (CI gate).
  * 
  * Rules:
  *   - Sub-100ms Fast-Skip on fully compliant repositories (zero token burn).
@@ -23,6 +24,9 @@ import { spawnSync } from "node:child_process";
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 
+/** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
+const AGENTS_MD_MAX_LINES = 50;
+
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
   options: {
@@ -30,6 +34,7 @@ const { values, positionals } = parseArgs({
     scaffold: { type: "boolean", short: "s", default: false },
     sanitize: { type: "boolean", default: false },
     "dry-run": { type: "boolean", default: false },
+    "fail-under": { type: "string", default: "" },
     json: { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
     help: { type: "boolean", short: "h", default: false },
@@ -45,8 +50,9 @@ Usage:
   bun ai-ready.ts [targetPath] [options]
 
 Options:
-  --audit          Audit 12 tracked assets, modern tools & synthetic artifacts (default)
-  -s, --scaffold   Scaffold missing Agent Engine DOX container from templates
+  --audit          Audit 13 tracked assets, modern tools & synthetic artifacts (default)
+  -s, --scaffold   Scaffold missing Agent Engine assets (DOX container, AGENTS.md, .github templates, .env.example)
+  --fail-under N   Exit 1 when the audit score falls below N (CI gate)
   --sanitize       Scan and unwrap synthetic ADE/IDE artifacts (ORCA_RICH_MD, Cursor, etc.)
   --dry-run        Simulate without writing files to disk
   --json           Output audit results in JSON format
@@ -186,8 +192,24 @@ export function auditWorkspace(target: string): AssetCheck[] {
   let agentsMdOk = false;
   if (existsSync(agentsMdPath)) {
     const lines = readFileSync(agentsMdPath, "utf8").split("\n").length;
-    agentsMdOk = lines <= 60; // Lean DOX router
+    agentsMdOk = lines <= AGENTS_MD_MAX_LINES; // Lean DOX router (<50 lines)
   }
+
+  // Asset 3: accept the breadth of modern agent tool configs, not just Gemini-era paths.
+  const toolConfigOk =
+    existsSync(join(target, ".mcp.json")) ||
+    existsSync(join(target, ".gemini")) ||
+    existsSync(join(target, ".claude")) ||
+    existsSync(join(target, ".cursor"));
+  const toolConfigDetail = toolConfigOk ? "Authorized agent tool configuration detected" : "Missing agent tool configuration";
+
+  // Asset 12: .gitignore guard AND .env.example template (per twelve-asset-matrix.md).
+  const envExampleOk = existsSync(join(target, ".env.example"));
+
+  // Asset 13: working-artifacts container with its contract stub (artifacts rule).
+  const artifactsOk =
+    existsSync(join(target, ".agents/artifacts")) &&
+    existsSync(join(target, ".agents/artifacts/README.md"));
 
   const checks: AssetCheck[] = [
     {
@@ -196,7 +218,7 @@ export function auditWorkspace(target: string): AssetCheck[] {
       category: "AI Context",
       path: "AGENTS.md",
       passed: existsSync(agentsMdPath) && agentsMdOk,
-      details: existsSync(agentsMdPath) ? "Exists (<60 lines DOX router)" : "Missing or exceeds 60 lines",
+      details: existsSync(agentsMdPath) ? `Exists (<${AGENTS_MD_MAX_LINES + 1} lines DOX router)` : `Missing or exceeds ${AGENTS_MD_MAX_LINES} lines`,
     },
     {
       id: 2,
@@ -210,9 +232,9 @@ export function auditWorkspace(target: string): AssetCheck[] {
       id: 3,
       name: "Tool / MCP Config",
       category: "AI Context",
-      path: ".mcp.json or .gemini/",
-      passed: existsSync(join(target, ".mcp.json")) || existsSync(join(target, ".gemini")),
-      details: "Authorized agent tool configurations",
+      path: ".mcp.json or agent config",
+      passed: toolConfigOk,
+      details: toolConfigDetail,
     },
     {
       id: 4,
@@ -282,9 +304,21 @@ export function auditWorkspace(target: string): AssetCheck[] {
       id: 12,
       name: "Secret Hygiene & Guards",
       category: "Onboarding & Governance",
-      path: ".gitignore",
-      passed: existsSync(gitignorePath) && gitignoreHasEnv,
-      details: ".gitignore explicitly blocks environment secret files",
+      path: ".gitignore + .env.example",
+      passed: existsSync(gitignorePath) && gitignoreHasEnv && envExampleOk,
+      details: envExampleOk
+        ? ".gitignore blocks environment secret files; .env.example present"
+        : ".gitignore guard OK, but .env.example missing",
+    },
+    {
+      id: 13,
+      name: "Working Artifacts Container",
+      category: "Onboarding & Governance",
+      path: ".agents/artifacts",
+      passed: artifactsOk,
+      details: artifactsOk
+        ? "Artifacts container with contract stub present (research/planning stay out of the repo tree)"
+        : "Missing .agents/artifacts/ or its README.md contract stub",
     },
   ];
 
@@ -396,6 +430,22 @@ export function scaffoldAgentEngine(target: string, options: { dryRun?: boolean;
     skipped.push("AGENTS.md");
   }
 
+  // 5b. Deploy .mcp.json tool config if missing (asset 3)
+  const srcMcp = join(TEMPLATES_DIR, "mcp.json.template");
+  const destMcp = join(target, ".mcp.json");
+  if (!existsSync(destMcp) && existsSync(srcMcp)) {
+    if (!dry) cpSync(srcMcp, destMcp);
+    created.push(".mcp.json");
+  }
+
+  // 5c. Deploy llms.txt skeleton if missing (asset 4)
+  const srcLlms = join(TEMPLATES_DIR, "llms.txt");
+  const destLlms = join(target, "llms.txt");
+  if (!existsSync(destLlms) && existsSync(srcLlms)) {
+    if (!dry) cpSync(srcLlms, destLlms);
+    created.push("llms.txt");
+  }
+
   // 6. Deploy .gitignore.template if .gitignore missing
   const gitignore = join(target, ".gitignore");
   const srcGitignore = join(TEMPLATES_DIR, "gitignore.template");
@@ -404,21 +454,60 @@ export function scaffoldAgentEngine(target: string, options: { dryRun?: boolean;
     created.push(".gitignore");
   }
 
+  // 7. Deploy GitHub workflow & template bundle if missing (assets 6, 7, 8)
+  const githubTemplates = join(TEMPLATES_DIR, "github");
+  if (existsSync(githubTemplates)) {
+    for (const item of readdirSync(githubTemplates)) {
+      const src = join(githubTemplates, item);
+      const dest = join(target, ".github", item);
+      if (!existsSync(dest)) {
+        if (!dry) {
+          mkdirSync(join(target, ".github"), { recursive: true });
+          cpSync(src, dest, { recursive: true });
+        }
+        created.push(`.github/${item}`);
+      } else {
+        skipped.push(`.github/${item}`);
+      }
+    }
+  }
+
+  // 8. Deploy .env.example if missing (asset 12)
+  const srcEnvExample = join(TEMPLATES_DIR, "env.example");
+  const destEnvExample = join(target, ".env.example");
+  if (!existsSync(destEnvExample) && existsSync(srcEnvExample)) {
+    if (!dry) cpSync(srcEnvExample, destEnvExample);
+    created.push(".env.example");
+  }
+
+  // 9. Deploy artifacts contract stub if missing (asset 13 — artifacts rule)
+  const srcArtifactsStub = join(TEMPLATES_DIR, ".agents/artifacts/README.md");
+  const destArtifactsStub = join(target, ".agents/artifacts/README.md");
+  if (!existsSync(destArtifactsStub) && existsSync(srcArtifactsStub)) {
+    if (!dry) {
+      mkdirSync(join(target, ".agents/artifacts"), { recursive: true });
+      cpSync(srcArtifactsStub, destArtifactsStub);
+    }
+    created.push(".agents/artifacts/README.md");
+  }
+
   return { created, skipped };
 }
 
 // Execution Loop
 const checks = auditWorkspace(workspaceDir);
 const score = checks.filter((c) => c.passed).length;
+const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
+const TOTAL_ASSETS = 13;
 
 // Stage-0 Fast-Skip Gate
-if (!isScaffold && score === 12) {
-  console.log(`[ai-ready] Repository is AI-ready (12/12). Skipping pass.`);
+if (!isScaffold && score === TOTAL_ASSETS) {
+  console.log(`[ai-ready] Repository is AI-ready (${TOTAL_ASSETS}/${TOTAL_ASSETS}). Skipping pass.`);
   process.exit(0);
 }
 
 if (values.json) {
-  console.log(JSON.stringify({ score, total: 12, passed: score === 12, checks }, null, 2));
+  console.log(JSON.stringify({ score, total: TOTAL_ASSETS, passed: score === TOTAL_ASSETS, checks }, null, 2));
   process.exit(0);
 }
 
@@ -508,7 +597,21 @@ if (contaminated.length > 0) {
 }
 
 console.log("============================================================");
+const failedIds = checks.filter((c) => !c.passed).map((c) => c.id);
+const scaffoldable = new Set([1, 2, 3, 4, 6, 7, 8, 12]);
+const humanOnly = failedIds.filter((id) => !scaffoldable.has(id));
+
 if (score < 12) {
-  console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to automatically provision missing Agent Engine assets.\n`);
+  console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to auto-provision scaffolding-owned assets (1 AGENTS.md, 2 DOX container, 3 tool config, 4 llms.txt, 6 issue templates, 7 PR template, 8 dependabot, 12 .env.example, 13 artifacts stub).`);
+  if (humanOnly.length > 0) {
+    console.log(`   Remaining assets (${humanOnly.join(", ")}) are repository-specific and must be authored by the team: 5 CI pipeline, 9 changelog, 10 contributing, 11 durable docs.\n`);
+  } else {
+    console.log("");
+  }
+}
+
+if (failUnder !== null && !Number.isNaN(failUnder) && score < failUnder) {
+  console.log(`❌ Fail-under gate: score ${score} < ${failUnder}.`);
+  process.exit(1);
 }
 

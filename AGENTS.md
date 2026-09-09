@@ -1,102 +1,45 @@
 # AGENTS.md - muse-skills
 
-Curated suite of twenty-one universal AI agent skills (project provisioning,
-workspace memory sync, documentation synchronization, autonomous Git release lifecycle,
-AI-readiness audits, cross-platform cache cleanup, design system extraction, Refactoring UI heuristics,
-Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing,
-claim verification, reflective audits, and editorial anti-slop review). MIT. Install via
+Curated suite of twenty-two universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working
 
-Durable project truth lives in [`.agents/context/`](.agents/context/).
-Start at [`index.md`](.agents/context/index.md), then read only the files
-your task needs:
-
-- Product scope and skill inventory: [`product.md`](.agents/context/product.md)
-- Repo layout, skill anatomy, registry, verification: [`architecture.md`](.agents/context/architecture.md)
-- Voice, naming, doc presentation rules: [`brand.md`](.agents/context/brand.md)
-- Current shipped state and known gaps: [`current.md`](.agents/context/current.md)
-- Durable decisions (do not reopen casually): [`decisions.md`](.agents/context/decisions.md)
-- Parked future work: [`roadmap.md`](.agents/context/roadmap.md)
+Durable project truth lives in `.agents/context/` (local, untracked).
+Working artifacts (research corpora, planning docs, reports) belong in
+`.agents/artifacts/<topic>/` — never the repo tree, never `.memory/`
+(musememory owns it); durable findings are promoted to `.agents/context/`
+via `updateagents`.
+Start at `.agents/context/index.md`, then read only the files your task
+needs: `product.md`, `architecture.md`, `brand.md`, `current.md`,
+`decisions.md`, `roadmap.md`. Code and skill frontmatter are canonical
+when docs drift.
 
 ## Working rules
 
 - Skills are the product. Read the exact `SKILL.md` before editing one.
-- Keep YAML frontmatter valid (`name` + trigger-rich `description`) on every
-SKILL.md; it is the discovery surface for all runtimes.
+- Keep YAML frontmatter valid (`name` + trigger-rich `description`); it
+  is the discovery surface for all runtimes.
 - Adding/removing a skill requires updating in the same change: README
-badges + tables + structure tree, `skills.json`, `llms.txt`.
-- Commits follow [CONTRIBUTING.md](CONTRIBUTING.md) (Meaningful Git Commit
-Protocol: `<type>(<scope>): summary` with Why / What / Verification).
+  badges + tables + structure tree, `skills.json`, `llms.txt`.
+- Commits follow `CONTRIBUTING.md` (Meaningful Git Commit Protocol).
+- Branch and release lifecycle lives in `CONTRIBUTING.md` as well:
+  never commit to `main`; cut `feat/*` from `dev`.
 - No secrets or personal environment values in any shipped file.
-- Canonical aliases: "Agent Engine" and "DOX Engine" explicitly refer to the `new-project` Progressive Disclosure DOX scaffolding engine.
-- Modern Tool Primacy: Always invoke modern CLI tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `choose` > `cut`, `procs` > `ps`, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Agent subshells run non-interactively without `.bashrc` aliases—agents MUST call modern tools explicitly by binary name.
-- Synthetic ADE/IDE Artifact Sanitization: Never accept or commit synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude artifacts). Always unwrap and decode them to raw content, and enclose template variables in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
-- Clean Package Syntax & No Published Refs: In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is a git reference (branch, tag, or commit hash). Never append or publish raw commit hashes or arbitrary branch references (`#<ref>`); downstream installers execute `git clone --depth 1 --branch <ref>` which fatally rejects commit SHAs (`fatal: Remote branch <sha> not found`). Keep repository links and skill installation commands clean (`skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it never breaks linking or downstream resolution. For package managers (`npm`, `bun`, etc.), use `@latest` when specified as a parameter; otherwise keep commands clean without redundant arguments to fetch latest automatically.
+- Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
+  Progressive Disclosure DOX scaffolding engine.
+- Modern Tool Primacy: call modern CLI tools explicitly by binary name
+  (`fd`, `rg`, `bat`, `eza`, `sd`, `choose`, `procs`, `zoxide`, `delta`);
+  agent subshells have no `.bashrc` aliases.
+- Synthetic ADE/IDE Artifact Sanitization: never accept or commit
+  synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude
+  artifacts); unwrap to raw content, backtick template variables
+  (`<issue-id>`).
+- Clean Package Syntax: in `<owner>/<repo>#<ref>` specs, never append
+  raw commit hashes; keep install commands clean (`npx skills add
+  <owner>/<repo>`).
+- Test gate: `bun test` must pass before any merge.
 
+## Verification
 
-
-
-# Git Workflow
-
-Follow this Git workflow strictly.
-
-## Branches
-
-- `master` → Production. **Never commit directly to** `master`**.**
-- `dev` → Staging/integration branch.
-- `feature/*` → Created from `dev` for individual features/tasks.
-- `release/*` → Created from `dev` when changes are ready for production; merge into `master`, then back into `dev`.
-- `hotfix/*` → Created from `master` for urgent production fixes; merge into both `master` and `dev`.
-
-## Rules
-
-- Feature branches must be created from `dev`.
-- Use descriptive branch names.
-- Every merge into `dev` or `master` requires a Pull Request and code review.
-- Do not rewrite or force-push `master` or `dev` history.
-- Prefer `rebase` within feature branches when integrating changes and keeping history linear.
-- For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
-- Prefer a new revert commit over rewriting shared history.
-
-## Commit Message Standard
-
-- **Subject (≤50 chars)**: Capitalized imperative Conventional Commit (e.g., `Skill: Added New - Designs Scope`, never `Added designscope` or `Fix stuff`).
-- **Body (≤72 chars/line)**: Focus on *why* and non-obvious rationale instead of restating the diff; avoid pronouns (`I`, `we`) and meta-phrasing (`This commit/PR`).
-- **Issue References**: Link issues at the bottom (e.g., `Closes #123`, `Resolves #456`).
-
-## Scope of Work &amp; Sprint Lifecycle
-
-All development moves across 4 deterministic lifecycle phases:
-
-```
-[ 📋 Requested ] ──► [ 📅 Planned ] ──► [ ⚡ In Progress ] ──► [ ✅ Done ]
- (Issues / PRs)     (Sprint Backlog)    (Active PR / Milestone)  (Shipped to Main)
-```
-
-1. **📋 Requested**: Community proposals, PR suggestions, and ecosystem requests pending sprint triage.
-2. **📅 Planned**: Scoped SOW items selected for the upcoming sprint.
-3. **⚡ In Progress**:
-  - Feature branch created from `dev` (`feat/*`).
-  - Dedicated GitHub milestone created and draft PR opened against `dev`.
-  - Item moved to `In Progress` on the README roadmap board.
-4. **✅ Done**:
-  - Tests and static typing pass cleanly (`bun test`, `tsc --noEmit`).
-  - PR merged into `dev`, fast-forwarded to `main`, and milestone closed.
-  - Item moved to `Done` on the README roadmap board.
-
-## Releases &amp; Semantic Versioning (`vX.Y.Z`)
-
-All releases and git tags must follow strict `vX.Y.Z` semantic versioning:
-
-- `X` **(Major)**: Breaking architectural changes, core schema shifts, or protocol overhauls (`vX.0.0`).
-- `Y` **(Feature)**: Substantive new agent capabilities, MCP tools, or CLI subcommands (`vX.Y.0`).
-- `Z` **(Minor / Hotfix / Critical Fix)**: Bug fixes, security patches, performance, and urgent hotfixes (`vX.Y.Z`).
-
-### Invariants:
-
-- Sync `package.json` `"version"` with the `vX.Y.Z` tag in the release commit.
-- Stage on `release/vX.Y.Z` from `dev` → merge to `master` → back-merge to `dev`.
-- CI publishes on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). Never `npm publish` manually.
-
+The Bun test suite (`bun test`) is the pre-merge contract.

@@ -1,26 +1,29 @@
 ---
 name: coupling-router
-aliases: ["task-router","skill-router","coupling-analysis"]
-description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat."
-version: 1.1.0
+aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
+description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files."
+version: 1.2.2
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: context-orchestration
 metadata:
+  skill_orchestration:
+    post: ["handoff"]
+    optional: ["secretary", "gauntlet-loop"]
   category: context-orchestration
   priority: 12
-  aliases: ["task-router","skill-router","coupling-analysis"]
-  suggested_skills: ["handoff","secretary","gauntlet-loop","updateagents"]
+  aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
+  suggested_skills: ["handoff","context-anchor","secretary","gauntlet-loop","updateagents"]
   hermes:
     tags: [coupling, task-routing, subagents, orchestration, multi-agent, architecture, concurrency, skill-compatibility, token-optimization]
-    related_skills: [handoff, secretary, gauntlet-loop, updateagents]
-    suggested_skills: [handoff, secretary, gauntlet-loop, updateagents]
+    related_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
+    suggested_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
     requires_tools: [bash, view_file, grep, glob]
   openclaw:
     category: context-orchestration
-    suggested_skills: [handoff, secretary, gauntlet-loop, updateagents]
-    primary_triggers: ["route tasks","analyze task coupling","audit skill compatibility","optimize token budget"]
+    suggested_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
+    primary_triggers: ["route tasks","analyze task coupling","audit skill compatibility","optimize token budget","shared worktree","two sessions one checkout","worktree lease"]
     requires_tools: [bash, view_file, grep, glob]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -41,6 +44,7 @@ Execute this skill when:
 4. **Preventing Merge Collisions**: Multiple files or modules share mutable state, type contracts, or lifecycle flows.
 5. **Deciding Concurrency Strategy**: Resolving whether to spawn subagents concurrently in parallel or pipeline them sequentially.
 6. **Complex Refactors**: Multi-layer changes spanning database schemas, API controllers, and frontend clients.
+7. **Shared Checkout, Multiple Sessions** (`/worktree-lease`): Another agent session (or a human) may be working in the same git clone — acquire or respect the worktree lease before switching branches, touching stashes, or staging shared files.
 
 ### Anti-Triggers
 Do NOT use this skill when:
@@ -110,6 +114,17 @@ Tier 1: Governance & Verification (secretary, evidence-ledger, gauntlet-loop)
 
 ## Procedure
 
+### Step 0 — Worktree Lease Gate (shared checkouts)
+
+Before any git mutation (branch switch, stash push/pop, `git checkout --`, commit, branch force-update) in a clone that another session may share:
+
+1. **Probe** `.agents/artifacts/WORKTREE-LEASE.md`. Absent → acquire (write owner/branch/heartbeat/scope/notes, ≤20 lines). Present with a fresh heartbeat (≤30 min) → you are the second session: take a separate `git worktree add` directory (preferred), stay read-only, or wait — never mutate shared git state. Present with a stale heartbeat → takeover: append a takeover line, preserve any WIP recorded in the lease `notes` as foreign.
+   - One-command gate: `bun <skill-dir>/coupling-router/scripts/worktree-lease.ts probe --owner <id> --scope "<paths>"` (exit 0 = clear to mutate, exit 1 = defer; also `hold` and `release` subcommands).
+2. **Re-probe before each mutation**; stage explicit paths only; never pop a stash you did not create; audit shared-surface diffs hunk-by-hunk (skills.json, llms.txt, README, CHANGELOG).
+3. **Release at close**: fold state into `HANDOFF.md`, delete the lease, leave a residual-state note for whatever stays in the worktree.
+
+Full contract, takeover rules, and the collision repair ladder: `references/worktree-lease-protocol.md`.
+
 ### Step 1 — Skill-Stack Compatibility & Conflict Audit
 1. **Inventory Candidate Skills**: Identify all installed or triggered skills requested for the workflow.
 2. **Pairwise Conflict Check**: Consult `references/skill-compatibility-matrix.md` to evaluate interactions between candidate skills.
@@ -139,6 +154,7 @@ Output structured routing instructions:
 - **Execution Strategy**: `SEQUENTIAL` | `STAGED_PIPELINE` | `PARALLEL_FAN_OUT`.
 - **Task Ordering Graph**: Mermaid DAG showing execution phases, barriers, and subagent assignments.
 - **Context Allocation**: Explicit scope and file boundaries for each assigned agent.
+- **Lease Handshake** (shared checkouts): every git-mutating task spec embeds the one-command lease probe (`scripts/worktree-lease.ts probe --owner <task-id> --scope "<paths>"`) as its first step; tasks whose scopes overlap on one checkout are never dispatched concurrently.
 
 ---
 
@@ -149,6 +165,7 @@ Output structured routing instructions:
 - **False Parallelism**: Spawning 3 parallel agents to write client, server, and shared types simultaneously guarantees merge conflicts and divergent interfaces.
 - **Premature Concurrency**: Parallelizing tasks before the database schema or shared interfaces are committed and tested.
 - **Over-Serialization**: Forcing documentation, standalone unit tests, and independent CSS styling into sequential bottlenecks when they share zero files.
+- **Blind Staging in a Shared Checkout**: `git add .` in a clone where another session left WIP sweeps their hunks into your commit; a branch switch behind their back orphans their uncommitted work onto the wrong branch. Probe the lease first; stage explicit paths only.
 
 ---
 
@@ -161,3 +178,4 @@ Before executing subagent delegation:
 4. [ ] No two parallel tasks have overlapping target write file paths.
 5. [ ] Shared types and database schemas are fully committed before fan-out begins.
 6. [ ] Output `ROUTING_PLAN.md` provides unambiguous subagent assignments, skill stacks, and isolation boundaries.
+7. [ ] Worktree lease probed (and held, if mutating) before every branch switch, stash operation, or shared-surface staging; foreign WIP untouched.

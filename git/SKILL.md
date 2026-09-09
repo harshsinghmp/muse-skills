@@ -2,12 +2,15 @@
 name: git
 aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
-version: 1.0.0
+version: 1.0.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: core-engine
 metadata:
+  skill_orchestration:
+    pre: ["updatedocs", "code-review"]
+    optional: ["gauntlet-loop"]
   category: core-engine
   priority: 3
   aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
