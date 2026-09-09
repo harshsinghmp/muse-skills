@@ -15,6 +15,8 @@ instructions: |
   Execute the deterministic procedures defined in SKILL.md across three modes:
   (A) inbound resumption with strict directory-boundary matching and unanswered
   questions leading; (B) outbound dispatch packets saved to .agents/artifacts/ and
+  lease-aware (dispatches that include git mutations embed the worktree-lease
+  probe: workers run coupling-router's worktree-lease.ts before mutating);
   embedded into subagent prompts; (C) ambient continuity — probe for
   .agents/artifacts/HANDOFF.md on every workspace entry, overwrite it at checkpoints,
   decisions, incomplete turn-ends, and ending signals, and resolve prior state via

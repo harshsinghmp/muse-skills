@@ -2,9 +2,9 @@
   "skills": [
     {
       "name": "updatedocs",
-      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
+      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates.",
       "path": "updatedocs/SKILL.md",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "core-engine",
       "priority": 1,
       "tools": [
@@ -187,9 +187,9 @@
     },
     {
       "name": "handoff",
-      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) so any new conversation or agent in a workspace continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested.",
+      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
       "path": "handoff/SKILL.md",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "category": "context-orchestration",
       "priority": 6,
       "tools": [
@@ -401,7 +401,7 @@
       "name": "coupling-router",
       "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.",
       "path": "coupling-router/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "category": "context-orchestration",
       "priority": 12,
       "tools": [

@@ -55,6 +55,14 @@ When two agent sessions share one git clone, the worktree is a HIGH-coupling sha
 
 Collisions that slip through have a repair ladder: backup foreign WIP → rebuild your hunks on a feature branch (explicit paths) → `push --force-with-lease` → PR → restore foreign WIP. Full contract: [worktree-lease-protocol.md](references/worktree-lease-protocol.md).
 
+**One-command gate** (zero-dependency Bun script, exit-code friendly for CI and agent runtimes):
+
+```bash
+bun <skill-dir>/coupling-router/scripts/worktree-lease.ts probe --owner <session-id> --scope "<paths>"  # exit 0 = clear to mutate, exit 1 = defer
+bun <skill-dir>/coupling-router/scripts/worktree-lease.ts hold      # refresh heartbeat at milestones
+bun <skill-dir>/coupling-router/scripts/worktree-lease.ts release   # delete lease at session close
+```
+
 ---
 
 ## 🛡️ Skill Compatibility & Conflict Matrix
