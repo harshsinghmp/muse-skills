@@ -2,12 +2,15 @@
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files."
-version: 1.2.1
+version: 1.2.2
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: context-orchestration
 metadata:
+  skill_orchestration:
+    post: ["handoff"]
+    optional: ["secretary", "gauntlet-loop"]
   category: context-orchestration
   priority: 12
   aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]

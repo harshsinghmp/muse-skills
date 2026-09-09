@@ -2,12 +2,15 @@
 name: context-anchor
 aliases: ["anchor","session-anchor","working-reference","park","switch-task"]
 description: "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session."
-version: 1.1.0
+version: 1.1.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: context-orchestration
 metadata:
+  skill_orchestration:
+    post: ["handoff"]
+    optional: ["audit"]
   category: context-orchestration
   priority: 8
   aliases: ["anchor","session-anchor","working-reference","park","switch-task"]

@@ -2,12 +2,16 @@
 name: refactor-ui
 aliases: ["refactoring-ui","ui-polish","ui-audit","ui-review","ui-improve","ui-sweep"]
 description: "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI plus modern container-query, typography, and theming techniques. Six quick modes: review (default verdict with severity table), audit (scripted anti-pattern + WCAG 2.2 AA scan with scored report), improve (5-step refactor), sweep (multi-page consistency matrix), tokens (extract-and-centralize, pixels don't move), and polish (launch readiness with drift triage). Ships zero-dependency Bun scripts: audit-ui.ts anti-pattern scanner and check-contrast.ts WCAG contrast checker. Trigger on 'review this UI', 'audit UI contrast and spacing', 'refactor this component', 'make this dashboard consistent', 'extract design tokens', 'final polish before launch', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts."
-version: 1.1.0
+version: 1.1.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: design-interface
 metadata:
+  skill_orchestration:
+    pre: ["designscope"]
+    post: ["code-review"]
+    optional: ["animate", "gauntlet-loop"]
   category: design-interface
   priority: 10
   aliases: ["refactoring-ui","ui-polish","ui-audit","ui-review","ui-improve","ui-sweep"]

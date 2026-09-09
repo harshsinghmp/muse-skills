@@ -2,12 +2,15 @@
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates."
-version: 2.3.0
+version: 2.3.1
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
 category: core-engine
 metadata:
+  skill_orchestration:
+    post: ["git"]
+    optional: ["updateagents"]
   category: core-engine
   priority: 1
   aliases: ["sync-docs","doc-sync","docs-audit"]
