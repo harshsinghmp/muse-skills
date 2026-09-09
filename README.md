@@ -208,7 +208,7 @@ flowchart TD
 | **#3** | [**`git`**](git/README.md) | **Core Engine** | `/git`, `manage git workflow`, `cut release`, `triage issues` | `code-review`, `updatedocs`, `ai-ready`, `gauntlet-loop` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
 | **#4** | [**`code-review`**](code-review/README.md) | **Quality & Review** | `/torvalds`, `/linus-review`, `review PR` | `git`, `gauntlet-loop`, `refactor-ui`, `pua` | Language-agnostic code review method derived from Linus Torvalds' corpus and Karpathy minimal-diff doctrine. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | **#5** | [**`new-project`**](new-project/README.md) | **Core Engine** | `/new-project`, `Agent Engine`, `DOX Engine`, `scaffold app` | `ai-ready`, `updateagents`, `updatedocs`, `git` | Progressive Disclosure DOX provisioner (AGENTS.md, 9-folder container, 12 modular standards, brand tokens, and cognitive memory). |
-| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `dead-letter`, `coupling-router`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), and an always-current HANDOFF.md so new conversations continue prior work at lowest token cost. |
+| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `coupling-router`, `dead-letter`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), an always-current HANDOFF.md so new conversations continue prior work at lowest token cost, and worktree-lease-aware dispatches for shared checkouts. |
 | **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 13-asset AI-readiness audit (including the working-artifacts container rule), Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
 | **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/park`, `/switch-task` | `handoff`, `updateagents`, `dead-letter`, `audit` | Working-reference snapshots and named client-workstream parking (`/park`, `/switch-task`, `/list-anchors`) with the normative anchor ↔ HANDOFF.md layering protocol and a client-confidentiality guard. |
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
@@ -731,6 +731,8 @@ muse-skills/
 │   │   ├── coupling-matrix.md
 │   │   ├── skill-compatibility-matrix.md
 │   │   └── worktree-lease-protocol.md
+│   ├── scripts/
+│   │   └── worktree-lease.ts       # One-command lease gate (probe/hold/release)
 │   ├── README.md
 │   └── SKILL.md
 │

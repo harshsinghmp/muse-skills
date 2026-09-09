@@ -2,7 +2,7 @@
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files."
-version: 1.2.0
+version: 1.2.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -116,6 +116,7 @@ Tier 1: Governance & Verification (secretary, evidence-ledger, gauntlet-loop)
 Before any git mutation (branch switch, stash push/pop, `git checkout --`, commit, branch force-update) in a clone that another session may share:
 
 1. **Probe** `.agents/artifacts/WORKTREE-LEASE.md`. Absent → acquire (write owner/branch/heartbeat/scope/notes, ≤20 lines). Present with a fresh heartbeat (≤30 min) → you are the second session: take a separate `git worktree add` directory (preferred), stay read-only, or wait — never mutate shared git state. Present with a stale heartbeat → takeover: append a takeover line, preserve any WIP recorded in the lease `notes` as foreign.
+   - One-command gate: `bun <skill-dir>/coupling-router/scripts/worktree-lease.ts probe --owner <id> --scope "<paths>"` (exit 0 = clear to mutate, exit 1 = defer; also `hold` and `release` subcommands).
 2. **Re-probe before each mutation**; stage explicit paths only; never pop a stash you did not create; audit shared-surface diffs hunk-by-hunk (skills.json, llms.txt, README, CHANGELOG).
 3. **Release at close**: fold state into `HANDOFF.md`, delete the lease, leave a residual-state note for whatever stays in the worktree.
 

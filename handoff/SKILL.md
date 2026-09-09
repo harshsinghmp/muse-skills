@@ -2,7 +2,7 @@
 name: handoff
 aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
 description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) so any new conversation or agent in a workspace continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested."
-version: 2.1.0
+version: 2.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -156,8 +156,9 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
    - **Deterministic Verification**: Exact test or build command.
    - **If Blocked**: Escalation fallback.
 2. **Write Handoff Packet** to `.agents/artifacts/handoff-<timestamp>.md` (structure in [README](README.md#-packet-structure) and worked example in [examples/sample-handoff.md](examples/sample-handoff.md)).
-3. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
-4. **Refresh the live file**: update HANDOFF.md to point at the dispatched task so an interrupting conversation still lands correctly.
+3. **Lease hand-off to workers** (shared checkouts): if the packet's Target Scope includes git mutations (branch switches, stashes, commits to shared surfaces), embed the worktree-lease instruction in the dispatch prompt — the worker probes `.agents/artifacts/WORKTREE-LEASE.md` before its first git mutation and inherits or acquires per the lease protocol (`coupling-router` Step 0). Never dispatch two workers whose scopes overlap on one checkout.
+4. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
+5. **Refresh the live file**: update HANDOFF.md to point at the dispatched task so an interrupting conversation still lands correctly.
 
 ### 🌊 Mode C: Ambient Continuity Procedure
 
@@ -174,6 +175,7 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
 **Read side:**
 - **Workspace entry always probes** for HANDOFF.md before any other work. If present and fresh (same branch, plausible timestamp), emit the ≤5-line resumption block and continue — even though nobody said "resume".
 - If the user's first message is a fresh instruction, treat the resumption block as silent context: proceed with the instruction, informed by state.
+- **Lease check on entry** (shared checkouts): if `.agents/artifacts/WORKTREE-LEASE.md` exists with a fresh heartbeat, another session is live — the ≤5-line resumption block notes this, and the entry session takes a separate worktree or stays read-only until the lease releases (decision rules: `coupling-router` Step 0).
 
 **Anti-noise guardrails:**
 - One file, overwritten — never append, never accumulate.
@@ -191,6 +193,7 @@ Handoff integrates with whatever memory system the runtime provides (e.g. museme
 ### Neighboring Skill Boundaries
 
 - `context-anchor` → manual mid-session drift stop within one conversation. Ambient `handoff` → session-boundary continuity across conversations; the live file doubles as a rolling anchor.
+- `coupling-router` → owns the shared-worktree lease. Handoff routes to it: dispatches embed the lease instruction (Mode B step 3) and workspace entry respects an active lease (Mode C read side). A session that died holding the lease is exactly the case handoff's ladder reconstructs — check its `notes` for preserved WIP.
 - `dead-letter` → failure-path escape hatch. A blocked task lands in both: HANDOFF.md Next Step (continuity) + dead-letter packet (diagnosis).
 - `updateagents` → owns durable `.agents/context/` truth; ambient handoff reads it (ladder rung 3) and routes durable changes to it rather than editing governed context directly.
 
@@ -218,6 +221,7 @@ Handoff integrates with whatever memory system the runtime provides (e.g. museme
 - [ ] Resumption output stayed within the ≤5-line budget before the first productive action.
 - [ ] Memory integration used the runtime's tool API (or reported the durable fact) — `.memory/**` never touched by hand.
 - [ ] All 7 outbound packet sections are populated with zero placeholder text.
+- [ ] In shared checkouts, dispatched workers carry the worktree-lease instruction, and entry respected any active lease before mutating.
 
 ---
 

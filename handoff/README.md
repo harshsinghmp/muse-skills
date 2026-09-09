@@ -175,3 +175,7 @@ branch: <branch> | phase: <one-line state>
 
 - [Inbound Resumption & Boundary Protection Protocol](references/resumption-protocol.md)
 - [Ambient Continuity & Live Handoff File Contract](references/ambient-handoff.md)
+
+## 🔒 Shared checkouts
+
+Dispatches that include git mutations embed the worktree-lease gate (`coupling-router`): workers probe `.agents/artifacts/WORKTREE-LEASE.md` before their first git mutation, and workspace entry respects an active lease. Two sessions, one checkout, zero collisions.
