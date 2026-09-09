@@ -4,19 +4,21 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /evidence](https://img.shields.io/badge/Triggers-%2Fevidence%20%7C%20%2Fclaim-purple.svg?style=for-the-badge)](#)
 
-Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."* Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`), primary DOI receipts, and strict empirical vs. speculative demarcation.
+Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only `evidence-ledger.md` per project tracking decisions, client commitments, verified claims, and status facts — all backed by receipts. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
 
 ---
 
 ## 🧭 What is this?
 
-AI agents frequently introduce ungrounded claims, hallucinated benchmarks, and speculative assertions disguised as facts into documentation, technical whitepapers, and proposals.
+When your agency switches between 10+ client projects, no one can answer: *"What decisions were made on Project X, and why?"*, *"What did we promise Client Y, and did we deliver?"*, or *"What's the current factual state of Project Z?"*
 
-`evidence-ledger` provides an uncompromising verification gate:
-- **Academic & Primary Documentation Citations**: Requires peer-reviewed DOI links (`https://doi.org/...`) or canonical specification URLs for technical claims.
-- **Empirical vs. Speculative Demarcation**: Disentangles measured benchmark observations (`[EMPIRICAL]`) from theoretical extrapolations (`[SPECULATIVE]`).
-- **Statistical Audit & Missing Receipts Flagger**: Automatically detects ungrounded percentages, multipliers, and latency numbers, generating a `MISSING_RECEIPTS_REPORT.md` before release.
-- **4-Tier Provenance Taxonomy**: Classifies claims under `[RAW]`, `[FETCH]`, `[SEARCH]`, and `[INFER]`.
+`evidence-ledger` provides:
+- **Persistent Evidence Tracking**: One `evidence-ledger.md` per project in `.agents/context/` — append-only log + regenerated dashboard.
+- **Decision Records**: Every technical decision captured with alternatives considered, evidence for the winner, and trade-offs acknowledged.
+- **Commitment Tracking**: Client promises with deadlines, proof of promise, and delivery evidence — auto-flags `OVERDUE` when past deadline without proof.
+- **Claim Verification Gate**: 4-tier confidence taxonomy (`[RAW]`, `[FETCH]`, `[SEARCH]`, `[INFER]`) with empirical vs. speculative classification and automatic missing receipt detection.
+- **Context-Switch Briefings**: Structured project briefings for switching between clients with zero ramp-up time.
+- **Staleness Detection**: Automatic flagging of overdue commitments (past deadline), stale claims (>30 days unverified), and stale blockers (>14 days without update).
 
 ---
 
@@ -30,19 +32,71 @@ npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 
 ## 🚀 Usage & Triggers
 
-```bash
-# Slash commands
-/evidence
-/claim
+### Six Commands
 
-# Natural language
-"Audit all technical claims and academic citations in this whitepaper"
-"Verify the statistical benchmark claims in this proposal and flag missing receipts"
+| Command | Purpose |
+| :--- | :--- |
+| `/evidence onboard` | Initialize a project's evidence ledger from existing context files |
+| `/evidence status` | Quick project health snapshot — verified, stale, overdue at a glance |
+| `/evidence decide` | Record a technical decision with alternatives and evidence trail |
+| `/evidence commit` | Record a client commitment with deadline and delivery proof |
+| `/evidence audit` | Original claim verification gate — extract, tag, classify, flag |
+| `/evidence brief` | Generate a context-switch briefing for diving into a project |
+
+### Natural Language
+
 ```
+"Set up evidence tracking for this project"
+"What's the state of this project?"
+"We decided to use Supabase over Firebase — record that"
+"We promised the client a homepage by Sep 1"
+"Verify the benchmark claims in this proposal"
+"Brief me on the Acme project before I switch to it"
+```
+
+---
+
+## 🔗 Skill Orchestration
+
+Each command integrates with sibling muse-skills:
+
+| Command | Before | After | Optional |
+| :--- | :--- | :--- | :--- |
+| `onboard` | — | `audit` | `updateagents` |
+| `status` | — | — | `coach` · `periodic-retreat` |
+| `decide` | — | `secretary` (high-stakes) | `updatedocs` |
+| `commit` | — | — | `updatedocs` |
+| `audit` | `context-anchor` | `dead-letter` | `updatedocs` · `coupling-router` |
+| `brief` | `context-anchor` | `handoff` | — |
 
 ---
 
 ## 📄 Artifacts Generated
 
-1. `claim-ledger.md` — Complete inventory of claims, epistemological classes, confidence tiers, and verification receipts.
-2. `MISSING_RECEIPTS_REPORT.md` — Quarantined statistical assertions lacking reproducible benchmarks or DOI links.
+| File | Location | Generated By |
+| :--- | :--- | :--- |
+| `evidence-ledger.md` | `.agents/context/` | All commands (persistent ledger) |
+| `claim-ledger.md` | Project root | `/evidence audit` (standalone report) |
+| `MISSING_RECEIPTS_REPORT.md` | Project root | `/evidence audit` (quarantined claims) |
+
+---
+
+## 📚 References
+
+| File | Contents |
+| :--- | :--- |
+| `references/evidence-entry-schema.md` | Canonical entry schema — fields, status values, format |
+| `references/staleness-rules.md` | Auto-flagging thresholds and health score calculation |
+| `references/skill-orchestration.md` | Full orchestration map with conditions per skill |
+| `references/academic-citation-protocol.md` | DOI/URL citation standards for `/evidence audit` |
+| `references/claim-verification-taxonomy.md` | 4-tier confidence taxonomy definitions |
+
+---
+
+## 📖 Examples
+
+| File | Shows |
+| :--- | :--- |
+| `examples/sample-evidence-ledger.md` | Full project evidence-ledger.md with all 4 entry types |
+| `examples/sample-evidence-brief.md` | Context-switch briefing output |
+| `examples/sample-claim-ledger.md` | Standalone audit report (v1.x format, still generated) |

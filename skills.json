@@ -472,9 +472,9 @@
     },
     {
       "name": "evidence-ledger",
-      "description": "Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: 'No source, no claim. No verification path, no release.' Audits technical claims, benchmark statistics, architecture assertions, and documentation against a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, and empirical vs speculative classification. Generates claim-ledger.md and MISSING_RECEIPTS_REPORT.md.",
+      "description": "Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only evidence-ledger.md per project tracking decisions, client commitments, verified claims, and status facts with a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]) and empirical vs speculative classification. Six commands: /evidence onboard, /evidence status, /evidence decide, /evidence commit, /evidence audit, /evidence brief.",
       "path": "evidence-ledger/SKILL.md",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "category": "context-orchestration",
       "priority": 14,
       "tools": [

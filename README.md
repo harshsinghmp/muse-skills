@@ -41,7 +41,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #11 Extract design systems & component layout trees | [`designscope`](designscope/README.md) | `design.md` brief with CSS Grid/Flexbox layout tree and DTCG token JSON |
 | #12 Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
 | #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, and SHA-256 hash seal |
-| #14 Verify factual claims & academic citations | [`evidence-ledger`](evidence-ledger/README.md) | Academic DOI citations, 4-tier confidence taxonomy, and missing receipt audits |
+| #14 Track project evidence & verify factual claims | [`evidence-ledger`](evidence-ledger/README.md) | Per-project decision/commitment/claim tracking, 4-tier confidence taxonomy, staleness detection |
 | #15 Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | 9-mode failure triage, root-cause learning, and retry/escalation packets |
 | #16 Push through a difficult debugging stall | [`pua`](pua/README.md) | Structured escalation, big-tech perf rhetoric, and exhaustive problem-solving |
 | #17 Score daily controllable effort & focus | [`coach`](coach/README.md) | 5-pillar input scorecard and daily reflection log |
@@ -216,7 +216,7 @@ flowchart TD
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
 | **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling` | `handoff`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router & skill-stack compatibility auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
 | **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and cryptographic SHA-256 seal. |
-| **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `/claim` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Source-cited claim verification gate with academic DOI citations, empirical vs speculative audit, and missing receipt flagger. |
+| **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `evidence status`, `brief me on this project` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Persistent per-project evidence tracking and claim verification gate: decisions, client commitments, verified claims, and status facts with staleness detection and six `/evidence` commands. |
 | **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
 | **#16** | [**`pua`**](pua/README.md) | **Quality & Review** | `PIP`, `/pua`, `try harder`, `figure it out` | `dead-letter`, `code-review`, `gauntlet-loop` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
@@ -442,17 +442,17 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 
 ### 📜 `evidence-ledger`
 
-Source-cited claim verification gate, academic citation synthesizer, and research ledger. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
+Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only `evidence-ledger.md` per project — decisions, client commitments, verified claims, and status facts — all backed by receipts. Enforces the strict doctrine: *"No source, no claim. No verification path, no release."*
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 ```
 
-- **Academic & Primary Citations**: Requires peer-reviewed DOI links (`https://doi.org/...`) or canonical specification URLs for all technical assertions.
-- **Empirical vs Speculative Demarcation**: Enforces strict boundaries between measured empirical benchmark facts (`[EMPIRICAL]`) and theoretical extrapolations (`[SPECULATIVE]`).
-- **Statistical Audit & Missing Receipts Flagger**: Scans statistical statements (percentages, multipliers, latency numbers) and emits `MISSING_RECEIPTS_REPORT.md` for unbacked assertions.
-- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL / DOI), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction).
-- **Structured Audit**: Outputs `claim-ledger.md` documenting verification paths, timestamps, and exact command receipts.
+- **Six Commands**: `/evidence onboard` (mine context files into a starter ledger), `/evidence status` (dashboard + health score + staleness sweep), `/evidence decide` (decision records with alternatives and evidence trail), `/evidence commit` (client commitments with deadlines and delivery proof), `/evidence audit` (claim verification gate → `claim-ledger.md` + `MISSING_RECEIPTS_REPORT.md`), `/evidence brief` (context-switch briefing).
+- **4-Tier Confidence Taxonomy**: `[RAW]` (local test output), `[FETCH]` (primary URL / DOI), `[SEARCH]` (corroborated search), `[INFER]` (declared logical deduction) — with `[EMPIRICAL]` vs `[SPECULATIVE]` demarcation.
+- **Status Lifecycle**: append-only entries move through `ACTIVE`/`VERIFIED`/`FULFILLED`/`PROMISED`/`OVERDUE`/`STALE`/`SUPERSEDED`/`QUARANTINED`/`REDACTED` — never deleted, always auditable.
+- **Staleness Detection**: overdue commitments, claims unverified >30 days, and blockers >14 days auto-flag on every dashboard regeneration.
+- **Agency Orchestration**: context-anchor parks workstreams before briefs/audits; secretary gates high-stakes decisions; dead-letter triages quarantined claims; handoff dispatches the briefing to subagents.
 
 [Read full documentation →](evidence-ledger/README.md)
 
@@ -732,14 +732,19 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── evidence-ledger/                # Source-cited claim verification & academic receipt gate
+├── evidence-ledger/                # Persistent project evidence tracking & claim verification gate
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
-│   │   └── sample-claim-ledger.md
+│   │   ├── sample-claim-ledger.md
+│   │   ├── sample-evidence-brief.md
+│   │   └── sample-evidence-ledger.md
 │   ├── references/
 │   │   ├── academic-citation-protocol.md
-│   │   └── claim-verification-taxonomy.md
+│   │   ├── claim-verification-taxonomy.md
+│   │   ├── evidence-entry-schema.md
+│   │   ├── skill-orchestration.md
+│   │   └── staleness-rules.md
 │   ├── README.md
 │   └── SKILL.md
 │
