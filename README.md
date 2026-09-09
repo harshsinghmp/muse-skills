@@ -37,7 +37,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 12-asset audit scorecard, PR review mining, and Stage-0 Fast-Skip gate |
 | #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Working-reference snapshots, named client-workstream parking, and the anchor ↔ HANDOFF.md layering protocol |
 | #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with security headers and visual breakpoint gates |
-| #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | 10 Refactoring UI heuristics and 5-state anti-slop UI coverage gate |
+| #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | Six-mode UI engine (review/audit/improve/sweep/tokens/polish) with 11 heuristics, WCAG 2.2 AA gate, and zero-dep verification scripts |
 | #11 Extract design systems & component layout trees | [`designscope`](designscope/README.md) | `design.md` brief with CSS Grid/Flexbox layout tree and DTCG token JSON |
 | #12 Route task DAGs & audit skill-stack conflicts | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing & minimal viable skill set (MVSS) conflict auditor |
 | #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, and SHA-256 hash seal |
@@ -212,7 +212,7 @@ flowchart TD
 | **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 12-asset AI-readiness audit, Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
 | **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/park`, `/switch-task` | `handoff`, `updateagents`, `dead-letter`, `audit` | Working-reference snapshots and named client-workstream parking (`/park`, `/switch-task`, `/list-anchors`) with the normative anchor ↔ HANDOFF.md layering protocol and a client-confidentiality guard. |
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
-| **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `refactor this UI`, `improve visual hierarchy`, `fix UI spacing` | `designscope`, `gauntlet-loop`, `code-review` | Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI and 5-state anti-slop gate. |
+| **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `review this UI`, `audit UI contrast`, `refactor this component`, `make pages consistent`, `extract design tokens`, `final polish` | `designscope`, `animate`, `gauntlet-loop`, `code-review` | Six-mode UI engine (review/audit/improve/sweep/tokens/polish): 10 Refactoring UI heuristics plus modern container-query, typography, and theming techniques, a WCAG 2.2 AA blocking gate, proof-gated findings, and zero-dependency Bun verification scripts. |
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
 | **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling` | `handoff`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router & skill-stack compatibility auditor; resolves prompt conflicts, enforces MVSS, and routes DAGs. |
 | **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and cryptographic SHA-256 seal. |
@@ -355,16 +355,17 @@ npx skills add harshsinghmp/muse-skills --skill designscope
 
 ### 🪄 `refactor-ui`
 
-Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics established by Adam Wathan and Steve Schoger (*Refactoring UI*).
+Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics of Wathan & Schoger (*Refactoring UI*) plus a modern-techniques layer distilled from a 127-source agent-skill corpus.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 ```
 
-- **10 Core Heuristics**: Visual hierarchy, typography scales, functional color palettes, 4px/8px spacing grid, button hierarchy, visual clutter elimination, high-value empty states, natural shadows/elevation, WCAG 2.1 AA/AAA contrast, and spatial grouping.
-- **Monochrome-First Workflow**: Solidify layout, optical weights, and spacing in grayscale before introducing accent colors.
-- **De-emphasis Strategy**: Softens surrounding borders, background tones, and metadata instead of making primary elements oversized.
-- **Zero-Dependency Tooling**: Ships with `check_contrast.py` (WCAG 2.1 ratio calculator) and `audit_ui.py` (static anti-pattern linter for JSX/HTML/CSS).
+- **Six Execution Modes**: `review` (verdict table, default), `audit` (scripted scan + scored report), `improve` (5-step refactor), `sweep` (multi-page consistency matrix), `tokens` (extract-and-centralize), and `polish` (launch triage) — each a scoped contract in `references/modes.md`.
+- **Modern Techniques**: Concentric radius law, 2× grouping ratio, container-query doctrine, 60–75ch measure with role-based line-heights, named z-scale tokens, surface ladder, and light/dark theme parity (`references/modern-techniques.md`).
+- **WCAG 2.2 AA Blocking Gate**: Contrast failures block completion; scripts produce pasted receipts.
+- **Proof-Gated Findings**: Candidates need contract + runtime + correction evidence; unrun checks are reported `Not verified`.
+- **Zero-Dependency Tooling**: `check-contrast.ts` (AA/AAA + large-text/UI thresholds) and `audit-ui.ts` (anti-pattern scanner incl. raw z-index and missing focus alternatives) — CI-ready exit codes.
 
 [Read full documentation →](refactor-ui/README.md)
 
@@ -680,11 +681,12 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+├── refactor-ui/                    # Atomic UI design & interface refactoring engine (6 modes)
 │   ├── agents/
 │   │   └── openai.yaml             # Agent tool definition
-│   ├── references/                 # 10 Heuristic reference guides
-│   ├── scripts/                    # WCAG contrast calculator & static UI auditor
+│   ├── examples/                   # Worked audit-mode report sample
+│   ├── references/                 # 11 heuristic guides + modes.md + modern-techniques.md
+│   ├── scripts/                    # audit-ui.ts scanner & check-contrast.ts (zero-dep Bun)
 │   ├── LICENSE                     # MIT (with Refactoring UI attribution)
 │   ├── README.md
 │   └── SKILL.md
