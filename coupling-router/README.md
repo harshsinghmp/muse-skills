@@ -4,7 +4,7 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /router](https://img.shields.io/badge/Triggers-%2Frouter%20%7C%20%2Fcoupling-purple.svg?style=for-the-badge)](#)
 
-Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat.
+Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.
 
 ---
 
@@ -32,11 +32,28 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 # Slash commands
 /router
 /coupling
+/worktree-lease
 
 # Natural language
 "Audit active skills and analyze this task breakdown for coupling"
 "Resolve skill stack conflicts and determine whether to run in parallel or sequentially"
+"Another agent session is working in this checkout — respect the worktree lease"
+"Two sessions, one clone — who owns the branch right now?"
 ```
+
+---
+
+## 🔒 Shared-Worktree Lease (multi-session checkouts)
+
+When two agent sessions share one git clone, the worktree is a HIGH-coupling shared resource: one session's branch switch or stash pop can orphan the other's uncommitted work (the exact failure this skill's own repo hit and repaired). Before any git mutation:
+
+1. **Probe** `.agents/artifacts/WORKTREE-LEASE.md` — absent → acquire it (owner, branch, heartbeat, scope, notes; ≤20 lines).
+2. **Fresh heartbeat (≤30 min)?** You are the second session: take a separate `git worktree add` directory (preferred), work read-only, or wait. Never mutate shared git state.
+3. **Stale heartbeat?** Takeover: append a takeover line, treat WIP recorded in the lease `notes` as foreign — preserve, never commit it.
+4. **While holding**: stage explicit paths only, never pop a stash you did not create, re-diff shared surfaces (`skills.json`, `llms.txt`, `README.md`, `CHANGELOG.md`) hunk-by-hunk before staging, refresh the heartbeat at milestones.
+5. **On release**: fold surviving state into `HANDOFF.md`, delete the lease, leave a residual-state note.
+
+Collisions that slip through have a repair ladder: backup foreign WIP → rebuild your hunks on a feature branch (explicit paths) → `push --force-with-lease` → PR → restore foreign WIP. Full contract: [worktree-lease-protocol.md](references/worktree-lease-protocol.md).
 
 ---
 
