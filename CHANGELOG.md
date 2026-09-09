@@ -4,7 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
-_(nothing)_
+### Fixed
+
+- **Lease Gate on Fresh Checkouts (`coupling-router`)**: every lease write path (`probe`-acquire, `hold` heartbeat refresh, stale takeover) now creates `.agents/artifacts/` recursively before writing — the directory is gitignored and absent on fresh checkouts, which broke the gate's first run on any new clone (caught by CI on `main` immediately after v2.7.0, fixed via hotfix PR #83, merged to `main` and back-merged to `dev` per lifecycle). Also merged Dependabot's `actions/checkout` v4→v7 bump (#82), the SHA-mutation mitigation accepted by the security audit's F3.
+
+_(nothing else)_
 
 ## [2.7.0] - 2026-09-10
 
