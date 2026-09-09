@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of twenty-one portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, and repository AI-readiness auditing.**
+**A curated suite of twenty-two portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-2.4.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-21%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-one-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-two-skill suite with `npx skills`.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -49,6 +49,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #19 Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
 | #20 Clean developer, designer & browser caches | [`clean-system-cache`](clean-system-cache/README.md) | Multi-platform cache purge, zero-session interruption & cache-only safety |
 | #21 Remove AI writing patterns & polish prose | [`humanize`](humanize/README.md) | Editorial review, anti-slop pattern detection & authentic voice preservation |
+| #22 Design & implement UI motion & animation | [`animate`](animate/README.md) | Library selection, canonical easing/duration, & correct code for entrances, exits, micro-interactions, scroll, page transitions |
 
 ### Explore the repository
 
@@ -92,9 +93,10 @@ npx skills add harshsinghmp/muse-skills --skill coupling-router
 npx skills add harshsinghmp/muse-skills --skill secretary
 npx skills add harshsinghmp/muse-skills --skill evidence-ledger
 
-# Design & Interface (#10, #11)
+# Design & Interface (#10, #11, #22)
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 npx skills add harshsinghmp/muse-skills --skill designscope
+npx skills add harshsinghmp/muse-skills --skill animate
 
 # Reflection & Maintenance (#17, #18, #19, #20)
 npx skills add harshsinghmp/muse-skills --skill coach
@@ -120,7 +122,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all eighteen skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, code-review, governance, and audit toolkit:
+Install all twenty-two skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, and audit toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -223,14 +225,14 @@ flowchart TD
 | **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor with severity-routed remediation (auto-repair / propose-diff / report-only / defer-route), per-step progress reporting, re-verification delta, and companion-skill routing. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
-| **#21** | [**`humanize`**](humanize/README.md) | **Quality & Review** | `humanize prose`, `remove AI patterns`, `de-ai text` | `code-review`, `updatedocs`, `evidence-ledger`, `secretary` | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, significance inflation, and robotic cadence while preserving authentic authorial voice. |
+| **#22** | [**`animate`**](animate/README.md) | **Design & Interface** | `animate this`, `add motion`, `framer motion`, `scroll animation`, `page transition` | `refactor-ui`, `designscope`, `code-review`, `gauntlet-loop` | Web UI animation and motion: library selection, canonical easing/duration tables, and segregated per-domain references (Motion, CSS, WAAPI, GSAP, native mobile) with reduced-motion and performance defaults. Five modes (build/review/improve/audit/find). |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 21 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 22 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -573,6 +575,24 @@ npx skills add harshsinghmp/muse-skills --skill humanize
 
 [Read full documentation →](humanize/README.md)
 
+---
+
+### 🎬 `animate` (Priority #22 — Design & Interface)
+
+Design and implement web UI animation and motion that survives strict design-engineering review on the first pass.
+
+```bash
+npx skills add harshsinghmp/muse-skills --skill animate
+```
+
+- **Library router**: walks a "cheapest tool that fits" ladder — CSS transition → `@starting-style` → CSS animation → WAAPI → Motion (`motion.dev`) — with GSAP and native mobile gated behind an explicit ask.
+- **Canonical easing & duration**: strong cubic-bezier tokens (`--ease-out: cubic-bezier(0.23,1,0.32,1)`) and sub-300ms UI budgets, grounded in the Emil Kowalski design-engineering bar.
+- **Segregated references**: nine per-domain files (principles, motion-dev, css, performance, accessibility, review, gsap, mobile, other-libraries) loaded on demand to keep token cost low.
+- **Ships reduced-motion + pointer gating** with every animation, and a frequency gate that correctly returns *"no animation"* for keyboard/100×-daily actions.
+- **Five modes**: build (default) / review / improve / audit / find — routed on the verb; only build edits code.
+
+[Read full documentation →](animate/README.md)
+
 </details>
 
 ---
@@ -831,6 +851,15 @@ muse-skills/
 │   │   ├── patterns.md
 │   │   ├── style-guide.md
 │   │   └── verification.md
+│   ├── README.md
+│   └── SKILL.md
+│
+├── animate/                        # Web UI motion & animation router (5 modes)
+│   ├── agents/
+│   │   └── openai.yaml
+│   ├── examples/
+│   │   └── micro-interaction.md
+│   ├── references/                 # 9 per-domain guides (principles, motion-dev, css, performance, a11y, review, gsap, mobile, other)
 │   ├── README.md
 │   └── SKILL.md
 │
