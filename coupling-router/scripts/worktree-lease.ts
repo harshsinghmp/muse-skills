@@ -17,8 +17,8 @@
  *             1 = DEFER (fresh foreign lease — do not mutate shared state),
  *             2 = usage/parse error.
  */
-import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 const LEASE_PATH = join(".agents", "artifacts", "WORKTREE-LEASE.md");
 const WINDOW_MIN = 30;
@@ -59,6 +59,12 @@ function nowIso(): string {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
+/** The lease dir is gitignored and may not exist on a fresh checkout or foreign project. */
+function writeLease(body: string): void {
+  mkdirSync(dirname(LEASE_PATH), { recursive: true });
+  writeFileSync(LEASE_PATH, body);
+}
+
 function acquire(owner: string, scope: string): void {
   const branch = execGit("rev-parse --abbrev-ref HEAD") ?? "unknown";
   const body = [
@@ -71,13 +77,13 @@ function acquire(owner: string, scope: string): void {
     "notes: none",
     "",
   ].join("\n");
-  writeFileSync(LEASE_PATH, body);
+  writeLease(body);
 }
 
 function refreshHeartbeat(): void {
   const l = readLease();
   if (!l) fail("hold: no lease to refresh");
-  writeFileSync(LEASE_PATH, l.raw.replace(/^heartbeat:.*$/m, `heartbeat: ${nowIso()}`));
+  writeLease(l.raw.replace(/^heartbeat:.*$/m, `heartbeat: ${nowIso()}`));
 }
 
 function takeover(l: LeaseInfo, owner: string, scope: string): void {
@@ -92,7 +98,7 @@ function takeover(l: LeaseInfo, owner: string, scope: string): void {
     `notes: took over from ${l.owner ?? "unknown"} (stale heartbeat >${WINDOW_MIN}m); preserve any WIP they recorded`,
     "",
   ].join("\n");
-  writeFileSync(LEASE_PATH, body);
+  writeLease(body);
 }
 
 function execGit(args: string): string | null {
