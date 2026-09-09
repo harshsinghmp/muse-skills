@@ -154,6 +154,7 @@ Output structured routing instructions:
 - **Execution Strategy**: `SEQUENTIAL` | `STAGED_PIPELINE` | `PARALLEL_FAN_OUT`.
 - **Task Ordering Graph**: Mermaid DAG showing execution phases, barriers, and subagent assignments.
 - **Context Allocation**: Explicit scope and file boundaries for each assigned agent.
+- **Lease Handshake** (shared checkouts): every git-mutating task spec embeds the one-command lease probe (`scripts/worktree-lease.ts probe --owner <task-id> --scope "<paths>"`) as its first step; tasks whose scopes overlap on one checkout are never dispatched concurrently.
 
 ---
 
