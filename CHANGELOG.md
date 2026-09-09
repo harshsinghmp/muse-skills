@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+_(nothing)_
+
+## [2.7.0] - 2026-09-10
+
 ### Added
 
 - **animate Skill (#22, v1.0.0)**: web UI motion & animation as a router + build sequence — should-it-animate frequency gate (keyboard/100×-daily = never), named-purpose gate, cheapest-tool library ladder (CSS transition/`@starting-style`/animation → WAAPI → Motion; GSAP, native mobile, and other heavy libraries explicit-ask-only; existing project libraries and `--ease-*`/`--duration-*` tokens win first), `transform`/`opacity`-only properties, canonical easing/duration tables (sub-300ms UI), interruption/exit rules, and reduced-motion + pointer gating shipping by default. Five modes routed on the verb (build/review/improve/audit/find — only build edits code), nine segregated per-domain references, full hermes/openclaw metadata, and worked micro-interaction example. Recovered from a session that died mid-registration; recovered hunks completed the registrar step (skills.json P22 with sequential priorities 1..22, llms.txt, root README 21→22 everywhere, 22-skill test ordering).
@@ -46,6 +50,8 @@ All notable changes to this project are documented in this file.
 - **Secret-Hygiene Check Completeness (`ai-ready` v1.2.0)**: Asset 12 now actually verifies `.env.example` exists (as the matrix always required) instead of checking only the `.gitignore` guard.
 - **Handoff Version & Artifact Parity**: `skills.json` tracked `handoff` at 1.0.0 while SKILL.md was at 2.x; synced to 2.1.0, and the sample packet's dead-letter path moved from a `.claude/` route to the suite-standard `.agents/artifacts/` convention. Root README structure tree for `handoff/` now lists its `references/` and `examples/` files.
 - **Doc-Sync Drift Sweep (updatedocs Sprint mode)**: README version badge 2.4.1→2.6.0, AGENTS.md skill count 21→22, `docs/ARCHITECTURE.md` tree (animate entry, expanded tests/ block), and `docs/CHANGELOG.md` mirror backfilled with the released 2.5.0/2.5.1/2.6.0 sections.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.6.0...v2.7.0
 
 ## [2.6.0] - 2026-09-08
 
