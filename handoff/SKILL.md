@@ -2,12 +2,15 @@
 name: handoff
 aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
 description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) so any new conversation or agent in a workspace continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested."
-version: 2.2.0
+version: 2.2.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: context-orchestration
 metadata:
+  skill_orchestration:
+    pre: ["context-anchor"]
+    optional: ["coupling-router", "dead-letter"]
   category: context-orchestration
   priority: 6
   aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]

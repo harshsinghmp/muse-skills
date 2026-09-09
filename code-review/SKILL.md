@@ -2,12 +2,15 @@
 name: code-review
 aliases: ["code-review-linus-torvalds-style","linus-review","rigorous-review"]
 description: "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review."
-version: 1.0.0
+version: 1.1.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: quality-review
 metadata:
+  skill_orchestration:
+    post: ["git"]
+    optional: ["dead-letter", "pua"]
   category: quality-review
   priority: 4
   aliases: ["code-review-linus-torvalds-style","linus-review","rigorous-review"]
@@ -28,6 +31,19 @@ metadata:
 # 🐧 Code Review - Linus Torvalds Style
 
 > A language-agnostic code review method synthesized from thousands of public code review decisions across a 30+ year corpus. Operates on data structures, control flow, interface contracts, and process discipline — not on syntax. Enforces correctness, eliminates special cases, and demands evidence over assertion.
+
+---
+
+## Modes — quick commands
+
+Every invocation resolves to one of four depths. Route on the *scope of change*, not the artifact size — review depth scales with blast radius:
+
+| Mode | Trigger phrases | Scope | Loads |
+|:---|:---|:---|:---|
+| **diff** (default) | "review this PR", "review this diff", `/torvalds` | Full 15-theme adversarial review with severity calibration | this file |
+| **hotfix** | "quick review", "one-liner review", "is this safe to merge" | Single-hunk changes: correctness + surgical-diff + tests-only; skips architectural themes | this file (Steps 1, 4–7) |
+| **audit** | "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over a whole module, not one diff | this file + [references/severity-decision-tree.md](references/severity-decision-tree.md) if present |
+| **contract** | "review the API change", "is this breaking" | API/ABI stability only: signatures, return semantics, error conventions | Quick Reference table |
 
 ---
 
@@ -82,6 +98,8 @@ Synthesizes Andrej Karpathy's 4 core behavioral guidelines into the review disci
 ---
 
 ## Procedure
+
+**Mode gate**: resolve the mode from the trigger *before* Step 1. `hotfix` runs Steps 1 → 4 → 5 → 6 → 7 only (correctness + surgical-diff + evidence; architectural themes are skipped by design — a one-liner does not need a data-structure dissertation). `contract` runs the Quick Reference API row + Step 6 and stops. `audit` runs all steps with the diff boundary widened to the module. Default `diff` runs everything.
 
 ### Step 1: Adopt the Reviewer Mindset
 

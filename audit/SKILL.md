@@ -2,12 +2,16 @@
 name: audit
 aliases: ["brain-audit","memory-audit","knowledge-audit"]
 description: "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md."
-version: 1.1.0
+version: 1.1.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
 category: reflection-maintenance
 metadata:
+  skill_orchestration:
+    pre: ["context-anchor"]
+    post: ["dead-letter", "updatedocs"]
+    optional: ["updateagents", "evidence-ledger"]
   category: reflection-maintenance
   priority: 18
   aliases: ["brain-audit","memory-audit","knowledge-audit"]

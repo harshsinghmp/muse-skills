@@ -4,7 +4,7 @@
       "name": "updatedocs",
       "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates.",
       "path": "updatedocs/SKILL.md",
-      "version": "2.3.0",
+      "version": "2.3.1",
       "category": "core-engine",
       "priority": 1,
       "tools": [
@@ -77,7 +77,7 @@
       "name": "git",
       "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'.",
       "path": "git/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "category": "core-engine",
       "priority": 3,
       "tools": [
@@ -116,7 +116,7 @@
       "name": "code-review",
       "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review.",
       "path": "code-review/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.1",
       "category": "quality-review",
       "priority": 4,
       "tools": [
@@ -189,7 +189,7 @@
       "name": "handoff",
       "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
       "path": "handoff/SKILL.md",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "category": "context-orchestration",
       "priority": 6,
       "tools": [
@@ -221,7 +221,7 @@
       "name": "ai-ready",
       "description": "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example, artifacts contract stub), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents.",
       "path": "ai-ready/SKILL.md",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "category": "core-engine",
       "priority": 7,
       "tools": [
@@ -258,7 +258,7 @@
       "name": "context-anchor",
       "description": "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session.",
       "path": "context-anchor/SKILL.md",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "context-orchestration",
       "priority": 8,
       "tools": [
@@ -289,7 +289,7 @@
       "name": "gauntlet-loop",
       "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
       "path": "gauntlet-loop/SKILL.md",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "quality-review",
       "priority": 9,
       "tools": [
@@ -328,7 +328,7 @@
       "name": "refactor-ui",
       "description": "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI plus modern container-query, typography, and theming techniques. Six quick modes: review (default verdict with severity table), audit (scripted anti-pattern + WCAG 2.2 AA scan with scored report), improve (5-step refactor), sweep (multi-page consistency matrix), tokens (extract-and-centralize, pixels don't move), and polish (launch readiness with drift triage). Ships zero-dependency Bun scripts: audit-ui.ts anti-pattern scanner and check-contrast.ts WCAG contrast checker. Trigger on 'review this UI', 'audit UI contrast and spacing', 'refactor this component', 'make this dashboard consistent', 'extract design tokens', 'final polish before launch', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts.",
       "path": "refactor-ui/SKILL.md",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "design-interface",
       "priority": 10,
       "tools": [
@@ -364,7 +364,7 @@
       "name": "designscope",
       "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
       "path": "designscope/SKILL.md",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "design-interface",
       "priority": 11,
       "tools": [
@@ -401,7 +401,7 @@
       "name": "coupling-router",
       "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.",
       "path": "coupling-router/SKILL.md",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "category": "context-orchestration",
       "priority": 12,
       "tools": [
@@ -610,7 +610,7 @@
       "name": "audit",
       "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md.",
       "path": "audit/SKILL.md",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "reflection-maintenance",
       "priority": 18,
       "tools": [
