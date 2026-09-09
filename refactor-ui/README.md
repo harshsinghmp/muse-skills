@@ -1,91 +1,106 @@
 # 🪄 refactor-ui
 
-**Atomic UI design and interface refactoring engine based on the principles of *Refactoring UI* by Adam Wathan and Steve Schoger.**
+**Turn "developer-designed" interfaces into polished, accessible, production-ready UI — with AI agents.**
 
-`refactor-ui` equips AI agents with deterministic, engineering-grade visual design heuristics to transform crowded, amateurish, or unstyled UI components into polished, high-conversion, accessible interfaces.
+`refactor-ui` gives any coding agent a deterministic design-engineering method: a
+mode for every job, 11 hard heuristics, modern responsive/typography/theming
+techniques, and two zero-dependency verification scripts. No taste required —
+the rules are the taste.
+
+Based on the atomic heuristics of *Refactoring UI* (Wathan & Schoger), extended
+with modern techniques (container queries, WCAG 2.2, theming parity, z-scale
+discipline) distilled from a 127-source corpus of production agent skills.
 
 ---
 
 ## ⚡ Install
 
 ```bash
-# Install refactor-ui skill directly
+# Just this skill
 npx skills add harshsinghmp/muse-skills --skill refactor-ui
 
-# Or install the complete Muse Skills suite
+# Or the complete suite
 npx skills add harshsinghmp/muse-skills
 ```
 
----
-
-## 🎯 How to Use
-
-Describe your UI refactoring goal in plain language:
-
-```text
-Refactor this pricing table component to improve visual hierarchy and remove border clutter.
-```
-
-```text
-Audit this dashboard screen for spacing consistency, typography scale, and WCAG AA contrast.
-```
-
-```text
-Make this registration form look clean, modern, and professional using Refactoring UI principles.
-```
+**Requirements:** any agent runtime with file + shell tools (Claude Code,
+Codex, Cursor, Gemini CLI, OpenCode, …). Scripts run with [Bun](https://bun.sh)
+and have **zero dependencies**.
 
 ---
 
-## 📊 The 10 Atomic Heuristics
+## 🎯 Pick a mode, say the words
 
-| # | Heuristic Domain | Core Principle | Primary Transformation |
-| :--- | :--- | :--- | :--- |
-| **01** | **Visual Hierarchy** | Not all elements are created equal | Establish 1 primary focal point; aggressively de-emphasize metadata using weight and color rather than size alone. |
-| **02** | **Typography Scale** | Limit font sizes to a curated scale | Apply a fixed 6-tier modular scale (`xs`, `sm`, `base`, `lg`, `xl`, `2xl`) with tight heading line-heights and relaxed body line-heights. |
-| **03** | **Color Palette** | Restrict color to functional roles | Build a solid 9-step neutral ramp first (monochrome-first), then introduce 1 primary brand hue and strict status accents. |
-| **04** | **Spacing Grid** | Use a consistent spatial rhythm | Enforce a strict 4px/8px geometric interval; double interior component padding to give elements room to breathe. |
-| **05** | **Button Hierarchy** | Clarify the primary user action | Assign exactly one Solid Primary CTA; map secondary actions to Outline/Ghost variants and tertiary actions to minimal links. |
-| **06** | **Visual Clutter** | Less visual noise = higher clarity | Strip border soup and container boxes; separate sections using whitespace, subtle background shifts, and alignment. |
-| **07** | **Empty States** | Turn blank slates into on-ramps | Replace dead empty screens with actionable micro-onboarding, illustrative placeholders, and direct primary creation buttons. |
-| **08** | **Shadows & Depth** | Light comes from above | Replace harsh single-line drop-shadows with subtle, layered ambient/direct shadow pairs to simulate realistic elevation. |
-| **09** | **Color Contrast** | Accessibility is non-negotiable | Verify all foreground/background pairings meet WCAG AA standards (≥ 4.5:1 for body copy, ≥ 3:1 for large text & UI controls). |
-| **10** | **Grouping & Alignment** | Proximity creates semantic meaning | Ensure spacing *within* related element groups is strictly tighter than spacing *between* unrelated groups (Gestalt Law of Proximity). |
-| **11** | **Anti-Slop 5-State Gate** | Never ship only the happy path | Explicitly implement Empty, Loading (skeleton), Error (retry CTA), Success, and Overflow defensive wrapping. |
+| Say | Mode | What you get |
+|:---|:---|:---|
+| *"Review this UI"* | **review** (default) | Verdict + severity table. No edits. |
+| *"Audit this UI for contrast and anti-patterns"* | **audit** | Scripted scan + WCAG 2.2 AA check → scored report (Block/Approve) |
+| *"Refactor this component / make it professional"* | **improve** | The 5-step refactor, applied |
+| *"Make all pages consistent"* | **sweep** | Multi-page consistency matrix → batched fixes |
+| *"Extract design tokens / too many grays"* | **tokens** | Named token scales; pixels don't move |
+| *"Final pass before launch"* | **polish** | Ship-readiness triage; zero smuggled redesigns |
+
+Every mode: **proof-gated findings** (no invented problems), **honest
+verification** (unrun checks are reported as `Not verified`), and a
+**Block/Approve verdict** you can act on.
 
 ---
 
-## 🛠️ Verification Scripts (Zero Dependencies)
+## 🔍 What it checks
 
-The skill includes standalone Python stdlib tools for deterministic audit and contrast verification:
+- **Hierarchy** — squint test, focal point, tiered de-emphasis
+- **Spacing** — 4px/8px ramp, 2× grouping ratio, concentric radii
+- **Typography** — 6-tier scale, 60–75ch measure, line-height by role, tabular numerals
+- **Color** — token discipline, semantic states, WCAG 2.2 AA (blocking)
+- **Depth** — layered shadows vs structural borders, named z-scale, surface ladder
+- **Responsive** — container-aware components, logical properties, safe areas, 200% zoom
+- **States** — the 5-state anti-slop gate: Empty · Loading · Error · Success · Overflow
+- **Themes** — light/dark parity on logos, icons, charts, focus rings
+
+---
+
+## 🧪 Verification scripts (zero dependencies)
 
 ```bash
-# Check WCAG 2.1 contrast between color pairs
-python scripts/check_contrast.py --fg "#64748B" --bg "#FFFFFF"
+# Anti-pattern scanner: arbitrary pixels, low-contrast grays, raw z-index,
+# symmetric shadows, missing tracking on uppercase, missing focus alternatives
+bun refactor-ui/scripts/audit-ui.ts src/components/
 
-# Audit a JSX / HTML / CSS file for common Refactoring UI anti-patterns
-python scripts/audit_ui.py src/components/DashboardCard.tsx
+# WCAG contrast checker with AA/AAA + large-text/UI thresholds
+bun refactor-ui/scripts/check-contrast.ts #64748b #ffffff
+bun refactor-ui/scripts/check-contrast.ts #ffffff #18181b --large --aaa
 ```
 
----
-
-## 📚 Disclosed Reference Guides
-
-- [`01-visual-hierarchy.md`](references/01-visual-hierarchy.md) — Sizing, optical weights, and the squint test.
-- [`02-typography-scale.md`](references/02-typography-scale.md) — Type scaling, line-height proportions, and letter spacing.
-- [`03-color-palette.md`](references/03-color-palette.md) — 9-step neutrals, primary accents, and accessible palette generation.
-- [`04-spacing-layout.md`](references/04-spacing-layout.md) — 4px/8px spatial rhythm and component breathing room.
-- [`05-button-hierarchy.md`](references/05-button-hierarchy.md) — Primary, secondary, tertiary, and destructive action hierarchy.
-- [`06-visual-clutter.md`](references/06-visual-clutter.md) — Eliminating border soup, redundant labels, and container noise.
-- [`07-empty-states.md`](references/07-empty-states.md) — High-conversion empty states and onboarding patterns.
-- [`08-shadows-elevation.md`](references/08-shadows-elevation.md) — Natural elevation, directional lighting, and layered shadows.
-- [`09-contrast-accessibility.md`](references/09-contrast-accessibility.md) — WCAG 2.1 math and accessible gray scales.
-- [`10-grouping-alignment.md`](references/10-grouping-alignment.md) — Gestalt proximity, table alignment, and optical balance.
+Both scripts exit non-zero on findings — drop them straight into CI.
 
 ---
 
-## 📜 Attribution, Credit & Licensing
+## 📖 How a run works
 
-- **Original Principles**: Extracted from [*Refactoring UI*](https://refactoringui.com/) by **Adam Wathan** and **Steve Schoger** (© Tailwind Labs Inc.). All conceptual methodology and design philosophy credit belongs to the original authors.
-- **Skill Formulation**: Clean-room AI agent skill synthesis authored by **Harsh Singh** for the **LifeOS** / **Muse Skills** open ecosystem.
-- **Inspiration**: Acknowledgment to **George Nurijanian** (`gnurio/refactoring-ui-plugin`) for the initial concept of packaging Refactoring UI rules for agent runtimes.
-- **License**: [MIT](LICENSE)
+1. **Name the mode** (or just describe the problem — the trigger phrases route it).
+2. The agent loads **only that mode's contract** from `references/modes.md` — tokens stay low.
+3. Findings require **proof** (a binding rule + runtime path + one deterministic fix). Invented problems don't survive.
+4. You get a **severity table** (`Severity | Location | Before | After | Why`), a **verdict**, and routing to companion skills (`designscope` for extraction, `animate` for motion, `gauntlet-loop` for hardening).
+5. Say the word and the next mode executes — review → improve → audit is the common chain.
+
+A worked example lives in [`examples/sample-5-state-refactor.md`](examples/sample-5-state-refactor.md).
+
+---
+
+## 🤝 Plays well with
+
+| Skill | Why |
+|:---|:---|
+| [`designscope`](../designscope/SKILL.md) | Extract a design system from a URL/screenshot first; refactor against it |
+| [`animate`](../animate/SKILL.md) | This skill owns static polish + the static-cue rule; motion choreography lives there |
+| [`gauntlet-loop`](../gauntlet-loop/SKILL.md) | Harden the refactored surface (security headers, multi-viewport gates) |
+| [`code-review`](../code-review/SKILL.md) | Interaction-correctness defects found during review route here |
+
+---
+
+## 📜 Attribution
+
+Design principles from [*Refactoring UI*](https://refactoringui.com/) by Adam
+Wathan & Steve Schoger (© Tailwind Labs Inc.). Skill formulation by Harsh Singh
+for the [Muse Skills](https://github.com/harshsinghmp/muse-skills) ecosystem.
+MIT licensed. Concept credit to `gnurio/refactoring-ui-plugin`.

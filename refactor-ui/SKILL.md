@@ -1,8 +1,8 @@
 ---
 name: refactor-ui
-aliases: ["refactoring-ui","ui-polish","ui-audit"]
-description: "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI. Transforms amateurish, crowded, or unstyled UI into clean, high-conversion, production-ready interfaces. Covers visual hierarchy, typography scales, color systems, spacing grids, button tiers, clutter reduction, empty states, natural shadows, accessible contrast, and optical grouping. Trigger on 'refactor this UI', 'improve this design', 'fix visual hierarchy', 'make this component look professional', 'audit UI contrast and spacing', 'clean up this messy dashboard', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts."
-version: 1.0.0
+aliases: ["refactoring-ui","ui-polish","ui-audit","ui-review","ui-improve","ui-sweep"]
+description: "Audit, polish, and refactor user interfaces using the 10 atomic design heuristics from Refactoring UI plus modern container-query, typography, and theming techniques. Six quick modes: review (default verdict with severity table), audit (scripted anti-pattern + WCAG 2.2 AA scan with scored report), improve (5-step refactor), sweep (multi-page consistency matrix), tokens (extract-and-centralize, pixels don't move), and polish (launch readiness with drift triage). Ships zero-dependency Bun scripts: audit-ui.ts anti-pattern scanner and check-contrast.ts WCAG contrast checker. Trigger on 'review this UI', 'audit UI contrast and spacing', 'refactor this component', 'make this dashboard consistent', 'extract design tokens', 'final polish before launch', or whenever reviewing frontend templates, JSX, CSS, or Tailwind layouts."
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -10,57 +10,61 @@ category: design-interface
 metadata:
   category: design-interface
   priority: 10
-  aliases: ["refactoring-ui","ui-polish","ui-audit"]
-  suggested_skills: ["designscope","gauntlet-loop","code-review"]
+  aliases: ["refactoring-ui","ui-polish","ui-audit","ui-review","ui-improve","ui-sweep"]
+  suggested_skills: ["designscope","gauntlet-loop","code-review","animate"]
   hermes:
-    tags: [ui-design, refactoring-ui, tailwind, typography, color-palette, visual-hierarchy, accessibility, frontend, design-systems, 5-state-gate]
-    related_skills: [designscope, gauntlet-loop, code-review]
-    suggested_skills: [designscope, gauntlet-loop, code-review]
+    tags: [ui-design, refactoring-ui, tailwind, typography, color-palette, visual-hierarchy, accessibility, frontend, design-systems, 5-state-gate, wcag-2.2, container-queries, mode-router, ui-sweep, token-extraction]
+    related_skills: [designscope, gauntlet-loop, code-review, animate]
+    suggested_skills: [designscope, gauntlet-loop, code-review, animate]
     requires_tools: [view_file, replace_file_content, write_to_file, run_command]
   openclaw:
     category: design-interface
-    suggested_skills: [designscope, gauntlet-loop, code-review]
-    primary_triggers: ["refactor this UI","improve visual hierarchy","make component professional","audit UI contrast"]
+    suggested_skills: [designscope, gauntlet-loop, code-review, animate]
+    primary_triggers: ["review this UI","audit UI contrast","refactor this component","make pages consistent","extract design tokens","final polish before launch"]
     requires_tools: [view_file, replace_file_content, write_to_file, run_command]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # 🪄 refactor-ui — Atomic UI Design & Interface Refactoring Engine
 
-Systematically evaluate, refine, and refactor user interface components, layouts, and design systems using the 10 atomic heuristics established by Adam Wathan and Steve Schoger (*Refactoring UI*). This skill transforms amateur, cluttered, or inconsistent UI into clean, balanced, and accessible interfaces by treating design as a sequence of deterministic, engineering-grade visual decisions.
+Systematically evaluate, refine, and refactor user interfaces using the 10 atomic
+heuristics of Wathan & Schoger's *Refactoring UI*, extended with modern techniques
+(container queries, WCAG 2.2, theming parity, z-scale discipline) distilled from a
+127-source corpus of production UI skills. Design treated as deterministic,
+engineering-grade visual decisions — routed through six execution modes so the
+agent loads only what the task needs.
 
 ---
 
 ## When to Use
 
-**Triggers:**
-- *"Refactor this UI / component / screen"*
-- *"Improve the visual hierarchy of this dashboard / form / card"*
-- *"Make this interface look clean, modern, and professional"*
-- *"Fix the typography scale, spacing, or color palette"*
-- *"Audit this layout for visual clutter and excessive borders"*
-- *"Review button hierarchy or empty states on this page"*
-- Frontend review passes where the layout technically works but feels "developer-designed" or visually unbalanced.
+**Triggers** (mode chosen by phrase, default `review`):
+- *"Review this UI / screen / component"* — verdict + severity table, no edits.
+- *"Audit this UI for contrast, spacing, anti-patterns"* — scripted scan + scored report.
+- *"Refactor this UI / make it look professional / improve this design"* — the 5-step refactor.
+- *"Make all pages consistent / refactor the whole dashboard"* — multi-page sweep.
+- *"Extract design tokens / too many grays / set up a type scale"* — rename-and-centralize.
+- *"Final pass before launch / ship-readiness"* — polish triage.
 
 **Anti-triggers:**
 - Extracting tokens from a live URL or screenshot without refactoring existing code — use [`designscope`](../designscope/SKILL.md).
-- Backend API logic, database schemas, or state architecture changes unrelated to presentation.
-- Generating novel branding, illustrations, or vector artwork from scratch.
+- Motion choreography, easings, entrance/exit sequences — use the `animate` skill (this skill owns only the static-cue rule).
+- Backend logic, state architecture, or novel branding/illustration from scratch.
 
 ---
 
 ## Quick Reference
 
-### Leading Principles & Priors
+### Mode router (full contracts in `references/modes.md`)
 
-Recruit these core mental models when executing any UI refactor:
-
-1. **Squint Test**: When blurred, the interface's primary action and core metric must immediately draw the eye before secondary details.
-2. **De-emphasize to Emphasize**: Instead of making important elements bigger and louder, soften surrounding borders, background tones, and metadata.
-3. **Monochrome Foundation**: Solidify layout, optical weights, and spacing in grayscale before introducing brand or accent hues.
-4. **Stepped Scale Discipline**: Enforce a strict 4px/8px geometric interval for spacing and a fixed 6-tier type scale. Eliminate arbitrary pixel values (e.g., `13px`, `22px`, `38px`).
-5. **Whitespace-First Grouping**: Separate distinct sections using whitespace (`gap-8`, `space-y-6`) and subtle surface shifts rather than heavy 1px borders.
-6. **The 5-State Anti-Slop Law**: Never stop at the happy path. Every interactive component or view must explicitly handle Empty, Loading, Error, Success, and Overflow states.
+| Mode | Scope | Writes | Blocking gate |
+|:---|:---|:---|:---|
+| **review** (default) | One component; verdict | Nothing | — |
+| **audit** | One surface; scripted + heuristic scan | `.agents/artifacts/ui-audit-report-<ts>.md` | WCAG 2.2 AA failure = Block |
+| **improve** | One surface; 5-step refactor | Component code | 5-state + contrast gates |
+| **sweep** | Multi-page system | Code + `sweep-matrix-<ts>.md` | Consistency matrix |
+| **tokens** | Styling layer | Token defs + call sites | Zero literals remain |
+| **polish** | Whole path, all states | Narrow fixes | Zero P1 drift |
 
 ### The Atomic Heuristics
 
@@ -73,16 +77,27 @@ Recruit these core mental models when executing any UI refactor:
 | **05** | **Button Hierarchy** | Competing CTAs of equal visual weight | Primary (Solid), Secondary (Ghost/Outline), Tertiary (Link/Minimal) |
 | **06** | **Visual Clutter** | Border soup, redundant labels, noisy boxes | Surface contrast, directional spacing, removing self-evident labels |
 | **07** | **Empty States** | Blank, lifeless screens that confuse users | Action-oriented onboarding, illustrative placeholder, direct CTA |
-| **08** | **Shadows & Depth** | Flat cards, muddy dropshadows | Layered 2-part shadows with ambient light and simulated elevation |
-| **09** | **Color Contrast** | Low-contrast text failing accessibility | WCAG AA compliance (≥ 4.5:1 text, ≥ 3:1 UI components) |
-| **10** | **Grouping & Proximity** | Related items drifting apart | Law of proximity: spacing *inside* group must be < spacing *between* groups |
+| **08** | **Shadows & Depth** | Flat cards, muddy dropshadows | Layered 2-part shadows; shadows = depth, borders = structure |
+| **09** | **Color Contrast** | Low-contrast text failing accessibility | WCAG 2.2 AA (≥ 4.5:1 text, ≥ 3:1 UI/large) — blocking gate |
+| **10** | **Grouping & Proximity** | Related items drifting apart | Inter-group gap ≥ 2× intra-group; space before surfaces before lines |
 | **11** | **Anti-Slop 5-State Gate** | Happy-path only components break in prod | Explicit Empty, Loading, Error, Success, and Overflow state handling |
+
+### v1.1.0 additions (details in `references/modern-techniques.md`)
+
+Concentric radius law (`inner = outer − padding`) · optical alignment & icon-stroke
+matching · container-aware responsive doctrine (components adapt to their container;
+logical properties; safe areas) · modern typography mechanics (60–75ch measure,
+line-height by role, size-specific tracking, tabular-nums, 16px mobile inputs) ·
+named z-scale tokens (no raw 9999) · surface ladder via lightness steps in dark
+mode · theme parity (verify light AND dark) · static-cue rule (motion routes to
+`animate`).
 
 ---
 
 ## Procedure
 
-Always execute UI refactoring in this ordered sequence to prevent circular styling edits:
+The 5-step sequence below is the **improve** mode. Every other mode has its own
+scoped procedure in `references/modes.md` — load only the mode you're running.
 
 ```
 ┌─────────────────┐     ┌─────────────────────┐     ┌──────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
@@ -92,78 +107,76 @@ Always execute UI refactoring in this ordered sequence to prevent circular styli
 ```
 
 ### Step 1 — Element Inventory & Hierarchy Triage
-1. **Identify the Single Primary Focal Point**: Determine the one action or data point that matters most in this viewport section.
-2. **Assign Tiers (1 to 3)**:
-   - **Tier 1 (Primary)**: Key metric, main CTA button, primary header.
-   - **Tier 2 (Secondary)**: Supporting text, input fields, secondary actions, table rows.
-   - **Tier 3 (Tertiary / Metadata)**: Timestamps, field labels, breadcrumbs, helper hints.
-3. **Execute De-emphasis**: Tone down all Tier 3 elements before increasing the size of Tier 1.
+1. **Identify the Single Primary Focal Point**: the one action or data point that matters most in this viewport section.
+2. **Assign Tiers (1 to 3)**: Tier 1 (key metric, main CTA, primary header) · Tier 2 (supporting text, inputs, table rows) · Tier 3 (timestamps, labels, breadcrumbs, hints).
+3. **Execute De-emphasis**: tone down all Tier 3 elements before increasing the size of Tier 1.
 
 ### Step 2 — Spatial Grid & Whitespace Architecture
-1. **Strip Border Soup**: Delete interior 1px borders dividing cards, list rows, and sidebar items.
-2. **Establish Proximity**:
-   - Spacing *between related label and input*: `gap-1.5` or `mb-1.5` (4–6px).
-   - Spacing *between distinct form fields*: `gap-4` or `space-y-4` (16px).
-   - Spacing *between major layout sections*: `gap-8` to `gap-12` (32–48px).
-3. **Increase Component Breathing Room**: If a card or container feels cramped, double the inner padding (e.g., upgrade `p-3` to `p-6`).
+1. **Strip Border Soup**: delete interior 1px borders dividing cards, rows, sidebar items.
+2. **Establish Proximity**: label↔input `gap-1.5` (4–6px) · between fields `gap-4` (16px) · between sections `gap-8`–`gap-12` (32–48px). Enforce the 2× grouping ratio.
+3. **Increase Breathing Room**: cramped container → double inner padding (`p-3` → `p-6`).
 
-### Step 3 — Typography & Color Systematization
-1. **Apply Stepped Typography Scale**:
-   - Page Titles: `text-2xl` to `text-3xl` (`font-bold`, `tracking-tight`, `leading-tight`).
-   - Section Headers: `text-lg` to `text-xl` (`font-semibold`, `tracking-tight`, `leading-snug`).
-   - Body Copy: `text-sm` to `text-base` (`font-normal`, `leading-relaxed`).
-   - Metadata / Badges: `text-xs` (`font-medium`, `text-muted-foreground`, `tracking-normal`).
-2. **Standardize Color Tokens**:
-   - Darken/lighten text using semantic steps (`text-foreground` → `text-muted-foreground` → `text-muted-foreground/70`).
-   - Ensure interactive accents are reserved for actionable targets (links, active tabs, primary CTAs).
+### Step 3 — Typography, Color & Elevation Systematization
+1. **Apply the stepped type scale** (page titles `text-2xl`–`text-3xl` bold/track-tight · section headers `text-lg`–`text-xl` semibold · body `text-sm`–`text-base` relaxed · metadata `text-xs` muted). Add the modern mechanics: measure cap, line-height by role, size-specific tracking.
+2. **Standardize color tokens** (`text-foreground` → `text-muted-foreground` → `/70`); accent reserved for actionable targets.
+3. **Natural elevation**: layered 2-part shadows, background surface shifts; concentric radius on nested elements; named z-scale.
 
-### Step 4 — Elevation, Borders & Surface Treatment
-1. **Apply Natural Elevation**: Replace harsh single-line shadows (`box-shadow: 0 4px 6px rgba(0,0,0,0.3)`) with subtle layered shadows:
-   ```css
-   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-   ```
-2. **Use Background Surface Shifts**: Separate cards using subtle background contrast (`bg-background` on `bg-muted/40` parent) rather than heavy outlines.
+### Step 4 — Verification & Contrast Oracle
+1. Run the mechanical receipts: `bun refactor-ui/scripts/audit-ui.ts <paths>` then `bun refactor-ui/scripts/check-contrast.ts <fg> <bg>` for every rendered text pair (normal + large). Paste outputs.
+2. Verify WCAG 2.2 AA (≥4.5:1 normal text, ≥3:1 large text/UI components). A failure blocks completion.
+3. Theme parity: re-check the surface in light AND dark.
 
 ### Step 5 — The 5-State Anti-Slop Coverage Gate
-Never declare a component refactor complete without verifying all 5 lifecycle states:
-1. **Empty State**: Dataset empty (`length === 0`)? Render a soft icon, clear explanation, and direct CTA (`Create First ...`).
-2. **Loading State**: Data fetching? Render a geometry-matching pulse skeleton (`animate-pulse bg-muted`) to eliminate layout shift (CLS).
-3. **Error State**: Query failed? Display an inline non-blocking error banner with human-friendly diagnosis and a direct "Retry" action button.
-4. **Success State**: Action resolved? Show immediate visual confirmation (toast, badge, or transient checkmark).
-5. **Overflow State**: Long strings or narrow viewports? Enforce `min-w-0` on flex items, `truncate` with `title="..."`, `line-clamp-2`/`line-clamp-3`, and responsive wrapping.
+1. **Empty**: dataset empty → soft icon, explanation, direct CTA.
+2. **Loading**: pulse skeleton matching geometry (`animate-pulse bg-muted`) to kill CLS.
+3. **Error**: inline non-blocking banner with human diagnosis + Retry.
+4. **Success**: immediate confirmation (toast, badge, transient check).
+5. **Overflow**: `min-w-0` on flex items, `truncate` + `title`, `line-clamp-2/3`, responsive wrapping.
 
 ---
 
 ## Pitfalls
 
-- **Happy-Path Blindness**: Shipping a component assuming mock data will always be present, short, and error-free. Every component must handle empty datasets, slow networks, failed APIs, and long strings.
-- **Invisible Focus Rings**: Removing focus outlines (`outline-none`) without providing an accessible alternative (`focus-visible:ring-2`). Interactive controls must remain navigable via keyboard.
-- **Relying Exclusively on Font Size for Hierarchy**: Changing everything to huge text makes the UI loud and unreadable. Use font weight and muted colors to create contrast without size bloat.
-- **Centering Everything**: Centered body copy or left-aligned labels with centered inputs creates ragged, amateur scanlines. Left-align text by default.
-- **Using Pure Black Text on Pure White**: `#000000` text on `#FFFFFF` background creates harsh optical vibration. Use a deep slate or zinc neutral (`#0f172a` or `#18181b`).
-- **Icons Without Optical Balance**: Raw icon SVGs often look heavier than adjacent text. Size icons down by 1 step (e.g., 16px icon beside 14px text) and apply muted color.
-- **Burying Actions in Low-Contrast Grays**: Never set placeholder or button text so light that it fails WCAG AA standards.
+- **Happy-Path Blindness**: shipping against mock data that is always present, short, and error-free.
+- **Invisible Focus Rings**: `outline-none` without a `focus-visible:ring-2` alternative — keyboard navigation must stay visible.
+- **Mismatched Nested Radii**: the most common "feels off" cause — apply the concentric law.
+- **Viewport-Breakpoint Reflex**: reaching for `md:` when the component should adapt to its container.
+- **Raw z-Index Values**: `z-[9999]` leaks stacking across surfaces; use the named scale.
+- **Relying Exclusively on Font Size for Hierarchy**: weight and muted color create contrast without size bloat.
+- **Centering Everything**: left-align text by default; centered body copy reads amateur.
+- **Pure Black on Pure White**: harsh optical vibration — use deep slate/zinc neutrals.
+- **Icons Without Optical Balance**: size icons down 1 step and match stroke to text weight.
+- **Burying Actions in Low-Contrast Grays**: never fail WCAG AA for aesthetics.
+- **Smuggled Redesigns**: polish mode refines; it never conceals a redesign — say "recommend redesign" instead.
+- **Unsupported Findings**: search hits are candidates; without Contract + Runtime + Correction proof, discard them.
 
 ---
 
 ## Verification
 
-Before signing off on any UI refactor, verify every gate:
+Before signing off any mode:
 
-- [ ] **5-State Anti-Slop Coverage**: Empty, Loading, Error, Success, and Overflow states are explicitly implemented and verified.
-- [ ] **Visible Focus Rings**: All interactive controls feature high-visibility focus states (`focus-visible:ring-2 focus-visible:ring-offset-2`).
-- [ ] **Squint Test Passed**: The primary action or metric remains unmistakably distinct when looking at the interface through blurred vision.
-- [ ] **Zero Arbitrary Values**: All margins, paddings, and font sizes map 1:1 to defined scale tokens (Tailwind / CSS variables).
-- [ ] **Single Primary Action**: Exactly one primary CTA exists per visible section or modal; secondary actions use outline/ghost styles.
-- [ ] **Proximity Law Upheld**: Inner spacing within any logical component is strictly smaller than outer spacing to adjacent components.
-- [ ] **WCAG AA Compliance**: All text-to-background contrast ratios measure ≥ 4.5:1 (normal text) and ≥ 3:1 (large text and UI components).
-- [ ] **No Border Overload**: Structural separation is achieved primarily through whitespace and background tinting, not nested boxes.
+- [ ] **Mode contract honored**: only the mode's reads/writes performed.
+- [ ] **Script receipts pasted**: `audit-ui.ts` and `check-contrast.ts` outputs included when audit/improve ran.
+- [ ] **WCAG 2.2 AA**: all rendered text/UI pairs pass — blocking gate.
+- [ ] **5-State Anti-Slop Coverage**: Empty, Loading, Error, Success, Overflow implemented and verified.
+- [ ] **Theme parity**: surface verified in light and dark mode.
+- [ ] **Responsive proof**: container/smallest/largest checks (or `Not verified` declared).
+- [ ] **Visible Focus Rings**: all interactive controls have `focus-visible` states.
+- [ ] **Squint Test Passed**: primary action unmistakable when blurred.
+- [ ] **Zero Arbitrary Values**: spacing/sizes map 1:1 to scale tokens.
+- [ ] **Single Primary Action** per section; proximity law upheld; no border overload.
+- [ ] **Honest verdict**: Block if any HIGH or AA failure remains; unrun checks listed as `Not verified`.
 
 ---
 
 ## 📚 Disclosed Reference Guides
 
-For deep reference on specific heuristics, consult the specialized guides in `references/`:
+Mode contracts and the research additions live in `references/` — load only
+what the running mode needs:
+
+- [modes.md](references/modes.md) — router table, per-mode procedures, report format, cross-skill routing.
+- [modern-techniques.md](references/modern-techniques.md) — v1.1.0 corpus-derived rules composing with the heuristics.
 - [01-visual-hierarchy.md](references/01-visual-hierarchy.md) — Sizing, optical weight, and focal points.
 - [02-typography-scale.md](references/02-typography-scale.md) — Modular type scales and line-height ratios.
 - [03-color-palette.md](references/03-color-palette.md) — Neutrals, primary brand, and semantic state hues.
@@ -172,7 +185,7 @@ For deep reference on specific heuristics, consult the specialized guides in `re
 - [06-visual-clutter.md](references/06-visual-clutter.md) — Eliminating border soup, redundant labels, and visual noise.
 - [07-empty-states.md](references/07-empty-states.md) — High-value empty states, onboarding patterns, and action CTAs.
 - [08-shadows-elevation.md](references/08-shadows-elevation.md) — Directional lighting, layered shadows, and elevation systems.
-- [09-contrast-accessibility.md](references/09-contrast-accessibility.md) — WCAG 2.1 contrast formulas and accessible color pairing.
+- [09-contrast-accessibility.md](references/09-contrast-accessibility.md) — WCAG contrast formulas and accessible color pairing.
 - [10-grouping-alignment.md](references/10-grouping-alignment.md) — Gestalt proximity, alignment grids, and optical balancing.
 - [11-five-state-anti-slop.md](references/11-five-state-anti-slop.md) — Mandatory 5-state lifecycle coverage and anti-slop patterns.
 
@@ -181,6 +194,7 @@ For deep reference on specific heuristics, consult the specialized guides in `re
 ## 📜 Attribution & Licensing
 
 - **Original Principles & Methodology**: Derived from the landmark design book [*Refactoring UI*](https://refactoringui.com/) by **Adam Wathan** and **Steve Schoger** (© Tailwind Labs Inc.). All conceptual design principles belong to the original authors.
-- **Skill Formulation & Architecture**: Independent clean-room synthesis engineered by **Harsh Singh** for the **LifeOS** and **Muse Skills** open-source ecosystem.
+- **v1.1.0 Modern-techniques layer**: Clean-room synthesis from public agent-skill corpus research (container queries, WCAG 2.2, theming, z-scale discipline); independent formulation, no source text reproduced.
+- **Skill Formulation & Architecture**: Engineered by **Harsh Singh** for the **Muse Skills** open-source ecosystem.
 - **Inspiration**: Acknowledgment to **George Nurijanian** (`gnurio/refactoring-ui-plugin`) for the initial concept of packaging Refactoring UI rules for agent runtimes.
 - **License**: MIT License. Compatible with all autonomous agent runtimes.
