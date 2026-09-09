@@ -2250,7 +2250,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Pages${config.ecommerce === "payload" ? `, Products, Orders, Customers` : ""}],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || 'supersecret_payload_secret_key_at_least_32_chars',
+  secret: process.env.PAYLOAD_SECRET || '${randomBytes(32).toString("base64url")}',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -3469,8 +3469,8 @@ export default defineConfig({
       storeCors: process.env.STORE_CORS || 'http://localhost:3000,http://localhost:4321',
       adminCors: process.env.ADMIN_CORS || 'http://localhost:9000,http://localhost:5173',
       authCors: process.env.AUTH_CORS || 'http://localhost:3000,http://localhost:4321,http://localhost:9000',
-      jwtSecret: process.env.JWT_SECRET || 'supersecret_jwt_key_at_least_32_characters_long',
-      cookieSecret: process.env.COOKIE_SECRET || 'supersecret_cookie_key_at_least_32_characters_long',
+      jwtSecret: process.env.JWT_SECRET || '${randomBytes(32).toString("base64url")}',
+      cookieSecret: process.env.COOKIE_SECRET || '${randomBytes(32).toString("base64url")}',
     },
   },
   admin: {
@@ -3549,8 +3549,8 @@ REDIS_URL=redis://localhost:6379
 STORE_CORS=http://localhost:3000,http://localhost:4321
 ADMIN_CORS=http://localhost:9000,http://localhost:5173
 AUTH_CORS=http://localhost:3000,http://localhost:4321,http://localhost:9000
-JWT_SECRET=supersecret_jwt_key_at_least_32_characters_long
-COOKIE_SECRET=supersecret_cookie_key_at_least_32_characters_long
+JWT_SECRET=${randomBytes(32).toString("base64url")}
+COOKIE_SECRET=${randomBytes(32).toString("base64url")}
 MEDUSA_ADMIN_ONBOARDING_TYPE=default
 `;
         writeFileSync(join(backendDir, ".env.example"), backendEnvExample, "utf8");
@@ -3798,7 +3798,7 @@ import { db } from './db';
 import * as schema from './schema';` : ""}
 
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET || 'supersecret_better_auth_secret_key_at_least_32_chars',
+  secret: process.env.BETTER_AUTH_SECRET || '${randomBytes(32).toString("base64url")}',
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
   ${config.db !== "none" ? `database: drizzleAdapter(db, {
     provider: '${config.db === "sqlite" ? "sqlite" : "pg"}',
@@ -3964,20 +3964,20 @@ export default config;
       envVars.push("DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres");
     }
     if (config.cms === "payload") {
-      envVars.push("PAYLOAD_SECRET=supersecret_payload_secret_key_at_least_32_chars");
+      envVars.push(`PAYLOAD_SECRET=${randomBytes(32).toString("base64url")}`);
       const isPg = (config.db === "postgres" || config.db === "neon" || config.db === "supabase");
       if (!envVars.some(v => v.startsWith("DATABASE_URL="))) {
         envVars.push(`DATABASE_URL=${isPg ? `postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db` : "file:./payload.db"}`);
       }
     } else if (config.cms === "studiocms") {
-      envVars.push("CMS_ENCRYPTION_KEY=supersecret_cms_encryption_key_at_least_32_chars");
+      envVars.push(`CMS_ENCRYPTION_KEY=${randomBytes(32).toString("base64url")}`);
       envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
     } else if (config.cms === "emdash") {
       const emdashKey = "emdash_enc_v1_" + randomBytes(32).toString("base64url");
       envVars.push(`EMDASH_ENCRYPTION_KEY=${emdashKey}`);
     }
     if (config.auth === "better-auth") {
-      envVars.push("BETTER_AUTH_SECRET=supersecret_better_auth_secret_key_at_least_32_chars");
+      envVars.push(`BETTER_AUTH_SECRET=${randomBytes(32).toString("base64url")}`);
       envVars.push("BETTER_AUTH_URL=http://localhost:3000");
     }
     if (config.ecommerce === "medusa") {
@@ -3986,7 +3986,9 @@ export default config;
     } else if (config.ecommerce === "stripe") {
       envVars.push("STRIPE_SECRET_KEY=sk_test_placeholder");
       envVars.push("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_placeholder");
-      envVars.push("STRIPE_WEBHOOK_SECRET=whsec_test_placeholder");
+      // Webhook secrets cannot be generated client-side (must match the Stripe
+      // dashboard); placeholder stays in .env only, never signed at boot.
+      envVars.push("STRIPE_WEBHOOK_SECRET=whsec_replace_with_dashboard_value");
     } else if (config.ecommerce === "razorpay") {
       envVars.push("RAZORPAY_KEY_ID=rzp_test_placeholder");
       envVars.push("RAZORPAY_KEY_SECRET=your_razorpay_secret");

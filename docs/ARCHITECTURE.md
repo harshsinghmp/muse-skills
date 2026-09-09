@@ -172,8 +172,18 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
+├── animate/                        # UI motion & animation: 5-mode router, frequency/named-purpose gates (Priority #22)
+│   ├── agents/openai.yaml          # Agent tool definition
+│   ├── references/                 # Easing tables, library ladder, per-pattern motion recipes
+│   ├── README.md                   # Child documentation
+│   └── SKILL.md                    # Core operational procedure
+│
 ├── tests/                          # Automated TDD test suite
-│   └── skills.test.ts              # Catalog, schema, and RFC assertions
+│   ├── skills.test.ts              # Catalog, schema, and RFC assertions
+│   ├── agent-engine.test.ts        # Agent-engine sandbox conformance
+│   ├── doc-sync.test.ts            # Doc drift detection
+│   ├── extract-skill.test.ts       # Skill extraction gates
+│   └── hardening.test.ts           # Drift pins: parity, lease gate, CI perms
 │
 ├── CONTRIBUTING.md                 # Meaningful Git Commit Protocol
 ├── LICENSE                         # MIT License
