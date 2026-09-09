@@ -2,9 +2,9 @@
   "skills": [
     {
       "name": "updatedocs",
-      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
+      "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates.",
       "path": "updatedocs/SKILL.md",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "category": "core-engine",
       "priority": 1,
       "tools": [
@@ -150,9 +150,9 @@
     },
     {
       "name": "new-project",
-      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace.",
+      "description": "Interactive project creator, DOX Engine, and Agent Engine provisioner. Bootstraps the 2-stage Agents-First architecture (AGENTS.md, 9-folder .agents/ container with the working-artifacts contract stub, 12 modular standards, brand tokens, and cognitive memory) before launching interactive framework creators (Astro, Next.js, Instatic, Hono, Vite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace.",
       "path": "new-project/SKILL.md",
-      "version": "2.0.0",
+      "version": "2.5.0",
       "category": "core-engine",
       "priority": 5,
       "tools": [
@@ -219,9 +219,9 @@
     },
     {
       "name": "ai-ready",
-      "description": "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents.",
+      "description": "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example, artifacts contract stub), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents.",
       "path": "ai-ready/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "core-engine",
       "priority": 7,
       "tools": [

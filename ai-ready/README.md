@@ -2,14 +2,14 @@
 
 > Universal AI-readiness auditor, Agent Engine DOX scaffolder, and PR convention miner.
 
-`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It serves as the **master home of the Agent Engine DOX template bundle**, cuts token burn via a **Stage-0 Fast-Skip Gate**, and mines merged PR reviews into explicit agent rules.
+`ai-ready` audits any software repository against **13 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It serves as the **master home of the Agent Engine DOX template bundle**, cuts token burn via a **Stage-0 Fast-Skip Gate**, and mines merged PR reviews into explicit agent rules.
 
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Run Complete Audit (Fast-Skip Enabled)
-Inspects repository health and outputs the 12-asset scorecard (exits in `<100ms` if already 12/12):
+Inspects repository health and outputs the 13-asset scorecard (exits in `<100ms` if already 13/13):
 ```bash
 bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --audit
 ```
@@ -25,9 +25,9 @@ bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --scaffold --dry-run
 Never overwrites existing files; scaffolding fills only genuine gaps.
 
 ### 3. Stage-0 Fast-Skip Gate
-On repositories that already have all 12 assets in place and verified:
+On repositories that already have all 13 assets in place and verified:
 ```text
-[ai-ready] Repository is AI-ready (12/12). Skipping pass.
+[ai-ready] Repository is AI-ready (13/13). Skipping pass.
 ```
 *Zero token burn. Exits immediately so the agent can focus on your feature work.*
 
@@ -65,7 +65,7 @@ bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --fail-under 8
 | **1–4** | 🥉 **Getting Started** | Basics present, but agents guess conventions and lack CI verification. |
 | **5–7** | 🥈 **On Track** | Agents assist effectively, but lack structural boundaries and issue schemas. |
 | **8–10** | 🥇 **Solid** | High confidence; agents follow automated testing and branch rules. |
-| **11–12** | 🏆 **AI-Ready** | Autonomous excellence; zero-slop PRs, self-testing CI, and verified isolation. |
+| **12–13** | 🏆 **AI-Ready** | Autonomous excellence; zero-slop PRs, self-testing CI, and verified isolation. |
 
 ---
 

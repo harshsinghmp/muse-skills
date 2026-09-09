@@ -1552,6 +1552,14 @@ async function main() {
   }
   console.log("  ✅ Provisioned: `./.agents/` 9-folder tree");
 
+  // 1.3b Drop the working-artifacts contract stub (artifacts rule)
+  const artifactsStubSrc = join(TEMPLATES_DIR, ".agents/artifacts/README.md");
+  const artifactsStubDest = join(agentsDir, "artifacts", "README.md");
+  if (existsSync(artifactsStubSrc) && !existsSync(artifactsStubDest) && !isDryRun) {
+    cpSync(artifactsStubSrc, artifactsStubDest);
+    console.log("  ✅ Provisioned: `./.agents/artifacts/README.md` (working-artifacts contract)");
+  }
+
   // 1.4 Copy Standards
   const standardsSrc = join(TEMPLATES_DIR, ".agents/standards");
   const standardsDest = join(agentsDir, "standards");

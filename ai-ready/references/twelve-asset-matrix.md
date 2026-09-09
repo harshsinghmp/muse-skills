@@ -1,6 +1,6 @@
-# 📋 The 12-Asset AI-Readiness Matrix
+# 📋 The 13-Asset AI-Readiness Matrix
 
-This reference documents the 12 tracked assets required for a repository to achieve **🏆 AI-Ready** status.
+This reference documents the 13 tracked assets required for a repository to achieve **🏆 AI-Ready** status.
 
 ---
 
@@ -26,7 +26,8 @@ This reference documents the 12 tracked assets required for a repository to achi
     6. `goals/` — Sprints, milestones, and roadmaps.
     7. `research/` — Technical investigations, benchmarks, and spikes.
     8. `artifacts/` — Generated deliverables, schemas, and diagrams.
-    9. `archive/` — Completed work, retired plans, and historical logs.
+    9. `artifacts/` — Research corpora, planning docs, and generated reports (working state, local-only, with a README contract stub; durable findings are promoted to `context/`).
+    10. `archive/` — Completed work, retired plans, and historical logs.
 
 ### Asset 3: Tool & MCP Configuration (`.mcp.json` or agent tool config)
 - **Location**: `./.mcp.json` or any of `.claude/`, `.cursor/`, `.gemini/`
@@ -77,6 +78,13 @@ This reference documents the 12 tracked assets required for a repository to achi
 ---
 
 ## 3. 📖 Onboarding & Governance Assets
+
+### Asset 13: Working Artifacts Container (`.agents/artifacts/`)
+- **Location**: `./.agents/artifacts/` with a `README.md` contract stub
+- **Criteria**:
+  - Research corpora, planning docs, and generated reports live here under one folder per topic — never in the tracked repo tree, never in `.memory/`.
+  - The stub declares the conventions: dated reports, method headers on research, local-only by default, promote-or-perish to `.agents/context/`.
+  - Absence of the container or its stub fails the asset; littered research files in the tracked tree are an `audit`-skill finding.
 
 ### Asset 9: Changelog (`CHANGELOG.md`)
 - **Location**: Repository root (`./CHANGELOG.md`)

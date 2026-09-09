@@ -1,8 +1,8 @@
 ---
 name: ai-ready
 aliases: ["repo-ai-ready","audit-ai-ready","ai-audit"]
-description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 12 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents."
-version: 1.2.0
+description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example, artifacts contract stub), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents."
+version: 1.3.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -31,7 +31,7 @@ metadata:
 > **Canonical Home**: Holds the master Agent Engine DOX templates (`ai-ready/templates/`).
 > **Core Mandate**: Eliminate agent guessing, guarantee zero token waste via Stage-0 Fast-Skip, and provide autonomous Agent Engine scaffolding.
 
-`ai-ready` audits any software repository against **12 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It grades repositories across a 4-tier maturity matrix, houses the master Agent Engine DOX template canon, and surgically scaffolds missing configuration files without clobbering existing human work.
+`ai-ready` audits any software repository against **13 tracked assets** across AI Context, Dev Workflow, and Onboarding & Governance. It grades repositories across a 4-tier maturity matrix, houses the master Agent Engine DOX template canon, and surgically scaffolds missing configuration files without clobbering existing human work.
 
 ---
 
@@ -64,10 +64,10 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 [ -f ".env.example" ]
 ```
 
-- **If ALL 12 assets are present and valid**:
+- **If ALL 13 assets are present and valid**:
   Emit exactly ONE line and exit immediately:
   ```text
-  [ai-ready] Repository is AI-ready (12/12). Skipping pass.
+  [ai-ready] Repository is AI-ready (13/13). Skipping pass.
   ```
   **Stop execution immediately. Do not burn tokens explaining what was skipped.**
 
@@ -76,7 +76,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 
 ---
 
-## 📊 The 12 Tracked Assets & Scoring Rubric
+## 📊 The 13 Tracked Assets & Scoring Rubric
 
 ### 1. 🤖 AI Context (What AI agents read to understand the repo)
 | # | Asset | Canonical Path | Verification Criteria |
@@ -101,19 +101,20 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 | 10 | **Contributing Protocol** | `CONTRIBUTING.md` | Defines Conventional Commits (`<type>(<scope>): summary`), branch rules, and PR standards. |
 | 11 | **Durable Documentation** | `docs/` or `.agents/context/` | Contains durable domain truth (`product.md`, `architecture.md`, `current.md`). |
 | 12 | **Secret Hygiene & Guards** | `.gitignore` + `.env.example` | `.gitignore` explicitly excludes `.env*`, credentials, and temporary data; `.env.example` exists. |
+| 13 | **Working Artifacts Container** | `.agents/artifacts/` | Folder exists with its `README.md` contract stub: research corpora, planning docs, and reports live in `.agents/artifacts/<topic>/`, never the repo tree, never `.memory/`; durable findings are promoted to `.agents/context/`. |
 
 ---
 
 ## 🏆 Scoring Maturity Matrix
 
-Count the number of verified compliant assets (out of 12):
+Count the number of verified compliant assets (out of 13):
 
 | Medal | Tier Name | Verified Score | Behavioral State |
 |:---|:---|:---|:---|
-| 🥉 | **Getting Started** | 1–4 / 12 | Basics in place, but agents guess conventions, drift, and lack CI gates. |
-| 🥈 | **On Track** | 5–7 / 12 | Agents can assist, but lack architectural boundaries, issue hygiene, and secret guards. |
-| 🥇 | **Solid** | 8–10 / 12 | High reliability; agents follow testing and branch conventions with minimal oversight. |
-| 🏆 | **AI-Ready** | 11–12 / 12 | Peer-level autonomy; zero-slop PRs, self-verifying pipelines, and airtight context isolation. |
+| 🥉 | **Getting Started** | 1–5 / 13 | Basics in place, but agents guess conventions, drift, and lack CI gates. |
+| 🥈 | **On Track** | 6–8 / 13 | Agents can assist, but lack architectural boundaries, issue hygiene, and secret guards. |
+| 🥇 | **Solid** | 9–11 / 13 | High reliability; agents follow testing and branch conventions with minimal oversight. |
+| 🏆 | **AI-Ready** | 12–13 / 13 | Peer-level autonomy; zero-slop PRs, self-verifying pipelines, and airtight context isolation. |
 
 ---
 
@@ -121,7 +122,7 @@ Count the number of verified compliant assets (out of 12):
 
 ```mermaid
 flowchart TD
-    A["Step 0: Stage-0 Fast-Skip Gate"] -->|12/12 Compliant| B["Exit Immediately (0 Token Burn)"]
+    A["Step 0: Stage-0 Fast-Skip Gate"] -->|13/13 Compliant| B["Exit Immediately (0 Token Burn)"]
     A -->|Gaps Found| C["Step 1: Codebase & Tech Stack Discovery"]
     C --> D["Step 2: PR Review & Convention Mining"]
     D --> E["Step 3: Surgical Remediation (Missing Assets Only)"]
@@ -208,7 +209,7 @@ Print the structured AI-Readiness scorecard:
 
 - [ ] Fast-Skip Gate exits in `<100ms` with zero modifications on already-compliant repos.
 - [ ] Root `AGENTS.md` template is strictly `<50 lines`.
-- [ ] All 12 assets are tested against detection patterns in `references/twelve-asset-matrix.md`.
+- [ ] All 13 assets are tested against detection patterns in `references/twelve-asset-matrix.md`.
 - [ ] PR review mining gracefully falls back if GitHub CLI / network is unavailable.
 - [ ] `--fail-under N` exits `1` when the score is below `N` and `0` otherwise.
 - [ ] Passes `bun test tests/skills.test.ts`.
