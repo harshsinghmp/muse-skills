@@ -3,7 +3,7 @@
  * 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
  * 
  * Capabilities:
- *   --audit     (default) Audits 12 tracked assets with sub-100ms Stage-0 Fast-Skip gate.
+ *   --audit     (default) Audits 13 tracked assets with sub-100ms Stage-0 Fast-Skip gate.
  *   --scaffold  Directly provisions the complete Agent Engine DOX container from templates.
  *   --fail-under N  Exit 1 when the audit score falls below N (CI gate).
  * 
@@ -50,7 +50,7 @@ Usage:
   bun ai-ready.ts [targetPath] [options]
 
 Options:
-  --audit          Audit 12 tracked assets, modern tools & synthetic artifacts (default)
+  --audit          Audit 13 tracked assets, modern tools & synthetic artifacts (default)
   -s, --scaffold   Scaffold missing Agent Engine assets (DOX container, AGENTS.md, .github templates, .env.example)
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
   --sanitize       Scan and unwrap synthetic ADE/IDE artifacts (ORCA_RICH_MD, Cursor, etc.)
@@ -206,6 +206,11 @@ export function auditWorkspace(target: string): AssetCheck[] {
   // Asset 12: .gitignore guard AND .env.example template (per twelve-asset-matrix.md).
   const envExampleOk = existsSync(join(target, ".env.example"));
 
+  // Asset 13: working-artifacts container with its contract stub (artifacts rule).
+  const artifactsOk =
+    existsSync(join(target, ".agents/artifacts")) &&
+    existsSync(join(target, ".agents/artifacts/README.md"));
+
   const checks: AssetCheck[] = [
     {
       id: 1,
@@ -304,6 +309,16 @@ export function auditWorkspace(target: string): AssetCheck[] {
       details: envExampleOk
         ? ".gitignore blocks environment secret files; .env.example present"
         : ".gitignore guard OK, but .env.example missing",
+    },
+    {
+      id: 13,
+      name: "Working Artifacts Container",
+      category: "Onboarding & Governance",
+      path: ".agents/artifacts",
+      passed: artifactsOk,
+      details: artifactsOk
+        ? "Artifacts container with contract stub present (research/planning stay out of the repo tree)"
+        : "Missing .agents/artifacts/ or its README.md contract stub",
     },
   ];
 
@@ -465,6 +480,17 @@ export function scaffoldAgentEngine(target: string, options: { dryRun?: boolean;
     created.push(".env.example");
   }
 
+  // 9. Deploy artifacts contract stub if missing (asset 13 — artifacts rule)
+  const srcArtifactsStub = join(TEMPLATES_DIR, ".agents/artifacts/README.md");
+  const destArtifactsStub = join(target, ".agents/artifacts/README.md");
+  if (!existsSync(destArtifactsStub) && existsSync(srcArtifactsStub)) {
+    if (!dry) {
+      mkdirSync(join(target, ".agents/artifacts"), { recursive: true });
+      cpSync(srcArtifactsStub, destArtifactsStub);
+    }
+    created.push(".agents/artifacts/README.md");
+  }
+
   return { created, skipped };
 }
 
@@ -472,15 +498,16 @@ export function scaffoldAgentEngine(target: string, options: { dryRun?: boolean;
 const checks = auditWorkspace(workspaceDir);
 const score = checks.filter((c) => c.passed).length;
 const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
+const TOTAL_ASSETS = 13;
 
 // Stage-0 Fast-Skip Gate
-if (!isScaffold && score === 12) {
-  console.log(`[ai-ready] Repository is AI-ready (12/12). Skipping pass.`);
+if (!isScaffold && score === TOTAL_ASSETS) {
+  console.log(`[ai-ready] Repository is AI-ready (${TOTAL_ASSETS}/${TOTAL_ASSETS}). Skipping pass.`);
   process.exit(0);
 }
 
 if (values.json) {
-  console.log(JSON.stringify({ score, total: 12, passed: score === 12, checks }, null, 2));
+  console.log(JSON.stringify({ score, total: TOTAL_ASSETS, passed: score === TOTAL_ASSETS, checks }, null, 2));
   process.exit(0);
 }
 
@@ -575,7 +602,7 @@ const scaffoldable = new Set([1, 2, 3, 4, 6, 7, 8, 12]);
 const humanOnly = failedIds.filter((id) => !scaffoldable.has(id));
 
 if (score < 12) {
-  console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to auto-provision scaffolding-owned assets (1 AGENTS.md, 2 DOX container, 3 tool config, 4 llms.txt, 6 issue templates, 7 PR template, 8 dependabot, 12 .env.example).`);
+  console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to auto-provision scaffolding-owned assets (1 AGENTS.md, 2 DOX container, 3 tool config, 4 llms.txt, 6 issue templates, 7 PR template, 8 dependabot, 12 .env.example, 13 artifacts stub).`);
   if (humanOnly.length > 0) {
     console.log(`   Remaining assets (${humanOnly.join(", ")}) are repository-specific and must be authored by the team: 5 CI pipeline, 9 changelog, 10 contributing, 11 durable docs.\n`);
   } else {

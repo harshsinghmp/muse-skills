@@ -9,6 +9,7 @@
 ## ⚡ Key Architectural Features
 
 - **🛡️ Strict `.memory/` Boundary**: Zero read, write, or modification of `.memory/` (owned exclusively by `musememory`).
+- **🗂️ Working-Artifacts Boundary**: `.agents/artifacts/` is session-owned research/planning working state — never synced as documentation, never committed; durable findings are promoted to `.agents/context/` via `updateagents`.
 - **🔐 Protected `.agents/` DOX Gate**: Treats `.agents/` as protected operational infrastructure; requires explicit human permission before any mutation.
 - **🔍 20-Step Synchronization Pipeline**: Traces code changes through direct and second-order documentation consequences, gated by operating mode (Quick, Change, Release, Sprint, Full).
 - **⚖️ Automatic Change Safety Matrix**: Classifies docs by ownership (`SOURCE-OF-TRUTH`, `DERIVED`, `PROTECTED`, `HISTORICAL`, `CLIENT-FACING`) with least-privileged actions.

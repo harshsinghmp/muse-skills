@@ -2,7 +2,7 @@
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary and .agents/ DOX permission gates, audits for semantic drift, and applies minimal, evidence-backed updates."
-version: 2.1.0
+version: 2.2.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -568,6 +568,7 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **AGENTS.md** | `GOVERNED` | Governance-aware; normally hand off to `updateagents`. |
 | **`.agents/`** | `EXPLICIT PERMISSION` | Protected DOX architecture; NEVER modify without explicit user permission. |
 | **`.memory/`** | `DO NOT TOUCH` | Completely off-limits; owned by `musememory`. |
+| **`.agents/artifacts/`** | `DO NOT TOUCH` | Session-owned research/planning working state, not documentation. Durable findings are promoted to `.agents/context/` via `updateagents`. |
 | **LICENSE** | `DO NOT TOUCH` | Never automatically modify unless explicitly requested. |
 
 ### Operating Modes

@@ -2,7 +2,7 @@
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Client Intake Brief with post-scaffold agent onboarding), and Stage 6 (Closeout). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
-version: 2.4.1
+version: 2.5.0
 author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
@@ -389,7 +389,7 @@ After scaffolding, verify the project:
 1. **Intake Brief**: Check that `./Client-Intake/00-Intake-Brief.md` exists with pre-filled scaffold answers.
 2. **Post-Scaffold Onboarding**: Walk the employee through the brief with your agent, then write the intake docs and `./start-here.md` it prescribes.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
-4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`.
+4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`. Working artifacts (research corpora, planning docs, reports) live under `./.agents/artifacts/<topic>/` per its README contract stub — never the repo tree, never `./.memory`; durable findings promote to `./.agents/context/`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
 6. **CMS & Visual Builder Completeness**: If Payload, Keystatic, or Puck is enabled, verify config files (`payload.config.ts`, `keystatic.config.ts`), collection schemas, and admin UI pages exist.
 7. **Aria Builder Isolation**: If Aria is enabled, verify the target holds the official upstream clone (`package.json` named `@ariabuilder/aria`, `astro.config.ts`, `uno.user.config.ts` with the Wind 4 preset) plus engine governance only — no `aria.config.mjs`, no `Aria*.astro` components, no `backend/`, no engine tokens/CI. Run `npm run dev` and complete first-admin setup at `http://localhost:4321/admin/setup`.

@@ -6,6 +6,10 @@ Curated suite of twenty-one universal AI agent skills. MIT. Install via
 ## Read before working
 
 Durable project truth lives in `.agents/context/` (local, untracked).
+Working artifacts (research corpora, planning docs, reports) belong in
+`.agents/artifacts/<topic>/` — never the repo tree, never `.memory/`
+(musememory owns it); durable findings are promoted to `.agents/context/`
+via `updateagents`.
 Start at `.agents/context/index.md`, then read only the files your task
 needs: `product.md`, `architecture.md`, `brand.md`, `current.md`,
 `decisions.md`, `roadmap.md`. Code and skill frontmatter are canonical
