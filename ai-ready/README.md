@@ -45,7 +45,7 @@ bun path/to/ai-ready/scripts/ai-ready.ts [targetPath] --fail-under 8
 |:---|:---|:---|:---|
 | **AI Context** | 1 | `AGENTS.md` | Lean root router (`<50 lines`) pointing to modular standards. |
 | | 2 | `.agents/` | 9-folder progressive disclosure container. |
-| | 3 | `.mcp.json` or `.claude/`, `.cursor/`, `.gemini/` | Authorized MCP tools and server configs. |
+| | 3 | `.mcp.json` or `.agents/`, `.cursor/`, `.gemini/` | Authorized MCP tools and server configs. `.agents/` is universal for any AI agent. |
 | | 4 | `llms.txt` | Machine-readable index for agent web crawlers & discovery. |
 | **Dev Workflow** | 5 | `.github/workflows/ci.yml` | Automated build, lint, and test gate on PRs. |
 | | 6 | `.github/ISSUE_TEMPLATE/` | Structured bug and feature issue forms. |

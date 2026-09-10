@@ -23,8 +23,7 @@ npx skills add harshsinghmp/muse-skills --skill refactor-ui
 npx skills add harshsinghmp/muse-skills
 ```
 
-**Requirements:** any agent runtime with file + shell tools (Claude Code,
-Codex, Cursor, Gemini CLI, OpenCode, …). Scripts run with [Bun](https://bun.sh)
+**Requirements:** any agent runtime with file + shell tools (any AI coding agent — Claude Code, Codex, Cursor, Gemini CLI, OpenCode, etc.). Scripts run with [Bun](https://bun.sh)
 and have **zero dependencies**.
 
 ---

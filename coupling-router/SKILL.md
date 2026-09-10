@@ -1,8 +1,8 @@
 ---
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
-description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files."
-version: 1.2.2
+description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, then analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Completion claims require verification receipts. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files."
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -136,25 +136,42 @@ Full contract, takeover rules, and the collision repair ladder: `references/work
    - Ensure the total active skill prompt footprint remains $\le 6,000$ tokens ($\le 3$ active skills per subagent context).
    - Prune auxiliary skills into staged sequential handoffs if the token budget is exceeded.
 
-### Step 2 — Dependency & Artifact Overlap Audit
+### Step 2 — Plan-Evaluation Gate (pre-execution)
+
+Before any dispatch, evaluate the routing plan itself against five checks. A plan that fails any check is **rejected and reworked** — not dispatched with caveats:
+
+| # | Check | Reject When |
+| :--- | :--- | :--- |
+| 1 | **Spec alignment** | Every task must trace to a declared spec/source requirement; unclaimed work is cut or the spec is amended first |
+| 2 | **Verifiable acceptance criteria** | A task without testable done-criteria cannot be dispatched — it produces unverifiable completion claims |
+| 3 | **DAG integrity** | Dependency graph has cycles, or tasks reference dependencies not in the plan |
+| 4 | **Scope overlap with completed work** | A task reimplements what an earlier task already delivered |
+| 5 | **Evidence-backed assumptions** | Estimates and premises cite an artifact (measurement, doc, receipt) — not speculation |
+
+The primary verdict is spec alignment: a plan missing spec alignment is rejected as primary, before the other checks are even consulted.
+
+**Multi-perspective review (plans with ≥5 tasks):** a large plan is reviewed through more than one lens before dispatch — at minimum three, in sequence: (1) **spec/devil's-advocate lens** — does each task trace to the spec, and what premise could invalidate it; (2) **coupling lens** — write-overlap matrix, interface locks, wave structure (the checks of Steps 3–4); (3) **failure lens** — for each wave, what happens when it fails: recovery owner, dead-letter route, dependent-skip policy. Findings from each lens are recorded against the plan; unresolved findings reject the plan. Single-lens review is acceptable only below 5 tasks.
+
+### Step 3 — Dependency & Artifact Overlap Audit
 1. List all planned subtasks: $T_1, T_2, \dots, T_n$.
 2. For each task, list intended **Input Dependencies** and **Target Write Files**.
 3. Calculate the Write-Overlap Matrix:
    - If two tasks write to the same file or package interface $\rightarrow$ **HIGH COUPLING ($C \ge 0.6$)**.
    - If Task $B$ reads the output of Task $A$ before starting $\rightarrow$ **SEQUENTIAL DEPENDENCY**.
 
-### Step 3 — Interface Invariant Check
+### Step 4 — Interface Invariant Check
 Audit whether shared types, API schemas, or configuration contracts are already established and locked:
 - **Unlocked Interfaces**: Must be assigned to a single precursor task before any downstream work begins.
 - **Locked Interfaces**: Downstream implementations can safely parallelize.
 
-### Step 4 — Emit Routing Plan (`ROUTING_PLAN.md`)
+### Step 5 — Emit Routing Plan (`ROUTING_PLAN.md`)
 Output structured routing instructions:
 - **Skill Stack Allocation**: Active Minimal Viable Skill Set (MVSS) and explicitly suppressed skills.
 - **Execution Strategy**: `SEQUENTIAL` | `STAGED_PIPELINE` | `PARALLEL_FAN_OUT`.
 - **Task Ordering Graph**: Mermaid DAG showing execution phases, barriers, and subagent assignments.
 - **Context Allocation**: Explicit scope and file boundaries for each assigned agent.
 - **Lease Handshake** (shared checkouts): every git-mutating task spec embeds the one-command lease probe (`scripts/worktree-lease.ts probe --owner <task-id> --scope "<paths>"`) as its first step; tasks whose scopes overlap on one checkout are never dispatched concurrently.
+- **Implementation-Existence Clause**: every task marked complete in the plan carries a verification receipt — the test run, file path, or command output proving the work exists and passes. A completion claim without a receipt reopens the task.
 
 ---
 
@@ -164,6 +181,8 @@ Output structured routing instructions:
 - **Contradictory Mandates**: Running un-audited skills where one demands "speculative architectural refactoring" and another demands "surgical, minimal diffs".
 - **False Parallelism**: Spawning 3 parallel agents to write client, server, and shared types simultaneously guarantees merge conflicts and divergent interfaces.
 - **Premature Concurrency**: Parallelizing tasks before the database schema or shared interfaces are committed and tested.
+- **Dispatching an Unverified Plan**: Skipping the Plan-Evaluation Gate because the plan "looks right" — spec-misaligned or unverifiable tasks produce rework that exceeds the gate's cost by an order of magnitude.
+- **Unverified Completion Claims**: Accepting "done" from a subagent without a verification receipt — premature completion is the #1 multi-agent failure mode.
 - **Over-Serialization**: Forcing documentation, standalone unit tests, and independent CSS styling into sequential bottlenecks when they share zero files.
 - **Blind Staging in a Shared Checkout**: `git add .` in a clone where another session left WIP sweeps their hunks into your commit; a branch switch behind their back orphans their uncommitted work onto the wrong branch. Probe the lease first; stage explicit paths only.
 
@@ -172,10 +191,11 @@ Output structured routing instructions:
 ## Verification
 
 Before executing subagent delegation:
-1. [ ] Active skills audited for trigger collisions and contradictory instructions against the Precedence Hierarchy.
-2. [ ] Minimal Viable Skill Set (MVSS) selected; redundant secondary skills marked as `SUPPRESSED`.
-3. [ ] Combined skill instruction token footprint verified within budget ($\le 6,000$ tokens).
-4. [ ] No two parallel tasks have overlapping target write file paths.
-5. [ ] Shared types and database schemas are fully committed before fan-out begins.
-6. [ ] Output `ROUTING_PLAN.md` provides unambiguous subagent assignments, skill stacks, and isolation boundaries.
-7. [ ] Worktree lease probed (and held, if mutating) before every branch switch, stash operation, or shared-surface staging; foreign WIP untouched.
+1. [ ] Plan-Evaluation Gate passed: spec alignment, verifiable acceptance criteria, DAG integrity, no overlap with completed work, evidence-backed assumptions.
+2. [ ] Active skills audited for trigger collisions and contradictory instructions against the Precedence Hierarchy.
+3. [ ] Minimal Viable Skill Set (MVSS) selected; redundant secondary skills marked as `SUPPRESSED`.
+4. [ ] Combined skill instruction token footprint verified within budget ($\le 6,000$ tokens).
+5. [ ] No two parallel tasks have overlapping target write file paths.
+6. [ ] Shared types and database schemas are fully committed before fan-out begins.
+7. [ ] Output `ROUTING_PLAN.md` provides unambiguous subagent assignments, skill stacks, isolation boundaries, and verification receipts for every completion claim.
+8. [ ] Worktree lease probed (and held, if mutating) before every branch switch, stash operation, or shared-surface staging; foreign WIP untouched.
