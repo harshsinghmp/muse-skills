@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented in this file.
 
+## [3.0.0] - 2026-09-10
+
+### Major Changes
+
+- **Agent-Independence Upgrade**: All skills now use `.agents/` as the universal agent-agnostic folder. Replaced `.claude/` path references with `.agents/` across ai-ready, dead-letter, refactor-ui, and handoff. Added `agent_independent: true` metadata to ai-ready. The `.agents/` folder is now documented as the standard location any AI coding agent can use — not Claude-specific.
+- **Suite Version Bump to 3.0.0**: Major version increment reflecting the agent-independence architecture shift.
+
+### Changed
+
+- **Agent Independence Pass (7 skills)**: replaced `.claude/` path references with `.agents/` across `ai-ready`, `dead-letter`, `refactor-ui`, and `handoff` — the `.agents/` folder is now documented as the universal agent-agnostic location any AI coding agent can use, not Claude-specific. Added `agent_independent: true` metadata to `ai-ready` frontmatter. Updated `dead-letter` record paths in SKILL.md, README, and examples (`.claude/dead-letter-*` → `.agents/dead-letter-*`). Updated `refactor-ui` requirements text to say "any AI coding agent". Updated README handoff persistence path.
+- **Skill Version Sync to GitHub**: synced `skills.json` versions to match GitHub main branch for `code-review` (1.3.0), `gauntlet-loop` (1.2.0), `coupling-router` (1.4.0), `secretary` (1.4.0), `dead-letter` (1.5.0), `refactor-ui` (1.1.2), `pua` (1.1.0) — no version jumps; all versions match or align with GitHub.
+
+### Fixed
+
+- **Lease Gate on Fresh Checkouts (`coupling-router`)**: every lease write path (`probe`-acquire, `hold` heartbeat refresh, stale takeover) now creates `.agents/artifacts/` recursively before writing — the directory is gitignored and absent on fresh checkouts, which broke the gate's first run on any new clone (caught by CI on `main` immediately after v2.7.0, fixed via hotfix PR #83, merged to `main` and back-merged to `dev` per lifecycle). Also merged Dependabot's `actions/checkout` v4→v7 bump (#82), the SHA-mutation mitigation accepted by the security audit's F3.
+
 ## [Unreleased]
 
 ### Added

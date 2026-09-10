@@ -5,10 +5,10 @@
 **A curated suite of twenty-two portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-2.7.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-3.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-22%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
-[![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
+[![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
 
@@ -315,7 +315,7 @@ npx skills add harshsinghmp/muse-skills --skill handoff
 - **Explicit Working Model**: Externalizes orchestrator facts, ruled-out failed paths, and exact line ranges.
 - **Hard Negative Boundaries**: Codifies `MUST NOT` constraints that propagate cleanly to subagent prompts.
 - **Deterministic Verification**: Establishes unambiguous success criteria before work begins.
-- **Persistence**: Writes a timestamped handoff record to the configured agent-context location (the current default is `.claude/handoff-<timestamp>.md`).
+- **Persistence**: Writes a timestamped handoff record to the configured agent-context location (the current default is `.agents/handoff-<timestamp>.md`).
 
 [Read full documentation →](handoff/README.md)
 
