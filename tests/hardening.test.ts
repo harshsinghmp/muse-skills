@@ -124,6 +124,28 @@ describe("Worktree lease gate (coupling-router/scripts/worktree-lease.ts)", () =
     expect(ci).toContain("contents: read");
   });
 
+  test("selection system: scope + categories + named selections resolve correctly", () => {
+    const run = (args: string[]) =>
+      Bun.spawnSync(["bun", "scripts/select-skills.ts", ...args], { cwd: ROOT });
+    const globalSet = run(["global"]).stdout.toString().trim().split("\n");
+    const localSet = run(["local"]).stdout.toString().trim().split("\n");
+    const all = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8")).skills.map(
+      (s: any) => s.name
+    );
+    expect(globalSet.length).toBeGreaterThan(0);
+    expect(localSet.length).toBeGreaterThan(0);
+    expect(globalSet.length + localSet.length).toBe(all.length);
+    expect(globalSet.filter((n) => localSet.includes(n))).toEqual([]);
+    // category selection must be a subset of all
+    const design = run(["design"]).stdout.toString().trim().split("\n");
+    for (const n of design) expect(all).toContain(n);
+    // minimal selection exists and resolves
+    const minimal = run(["minimal"]).stdout.toString().trim().split("\n");
+    expect(minimal.length).toBeGreaterThanOrEqual(3);
+    // unknown selection exits non-zero
+    expect(run(["definitely-not-a-selection"]).exitCode).not.toBe(0);
+  });
+
   test("new-project generator writes no static placeholder secrets (audit F1)", () => {
     const src = fs.readFileSync("new-project/scripts/new-project.ts", "utf8");
     expect(src).not.toMatch(/supersecret/);

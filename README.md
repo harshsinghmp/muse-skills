@@ -5,10 +5,10 @@
 **A curated suite of twenty-two portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, and repository AI-readiness auditing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-2.6.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-3.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-22%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
-[![Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
+[![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
 
@@ -31,19 +31,19 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #1 Synchronize documentation & detect drift | [`updatedocs`](updatedocs/README.md) | Evidence-backed doc sync, semantic drift audit & changelog updates |
 | #2 Refresh repository instructions & memory | [`updateagents`](updateagents/README.md) | Workspace-scoped cognitive memory and instruction synchronization |
 | #3 Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
-| #4 Review code rigorously (Linus Torvalds Style) | [`code-review`](code-review/README.md) | Calibrated review verdict, Karpathy minimal-diff gate & zero special cases |
+| #4 Review code rigorously (Linus Torvalds Style) | [`code-review`](code-review/README.md) | 7 review modes (diff/audit/security/receive/fix…), calibrated verdict, Karpathy minimal-diff gate & test-spec immutability |
 | #5 Scaffold Project OS & Progressive Disclosure DOX | [`new-project`](new-project/README.md) | Project OS foundation, 9-folder container, and framework generators |
 | #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Context packets, boundary-safe resumption, and an ambient HANDOFF.md live-state file for cross-conversation continuity |
 | #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 13-asset audit scorecard (incl. working-artifacts container), PR review mining, and Stage-0 Fast-Skip gate |
 | #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Working-reference snapshots, named client-workstream parking, and the anchor ↔ HANDOFF.md layering protocol |
-| #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with security headers and visual breakpoint gates |
+| #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with quality-bar regression gate, fail-closed eval check, security headers & visual breakpoint gates |
 | #10 Refactor UI components & visual hierarchy | [`refactor-ui`](refactor-ui/README.md) | Six-mode UI engine (review/audit/improve/sweep/tokens/polish) with 11 heuristics, WCAG 2.2 AA gate, and zero-dep verification scripts |
 | #11 Extract design systems & component layout trees | [`designscope`](designscope/README.md) | `design.md` brief with CSS Grid/Flexbox layout tree and DTCG token JSON |
-| #12 Route task DAGs, audit skill-stack conflicts & lease shared worktrees | [`coupling-router`](coupling-router/README.md) | Architectural delegation routing, MVSS conflict auditor, and shared-worktree lease for multi-session checkouts |
-| #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, and SHA-256 hash seal |
+| #12 Route task DAGs, audit skill-stack conflicts & lease shared worktrees | [`coupling-router`](coupling-router/README.md) | Plan-evaluation gate, architectural delegation routing, MVSS conflict auditor, and shared-worktree lease for multi-session checkouts |
+| #13 Control staff work with Socratic adversarial gates | [`secretary`](secretary/README.md) | Socratic devil's advocate challenges, preserved dissent, SHA-256 hash seal, and delegation control (teachback + two-stage review + feedback reception) |
 | #14 Track project evidence & verify factual claims | [`evidence-ledger`](evidence-ledger/README.md) | Per-project decision/commitment/claim tracking, 4-tier confidence taxonomy, staleness detection |
-| #15 Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | 9-mode failure triage, root-cause learning, and retry/escalation packets |
-| #16 Push through a difficult debugging stall | [`pua`](pua/README.md) | Structured escalation, big-tech perf rhetoric, and exhaustive problem-solving |
+| #15 Preserve a failed or blocked task | [`dead-letter`](dead-letter/README.md) | 9-mode failure triage, transient/permanent recovery gate, state-verified bounded retries, root-cause cluster sweep with findings ledger, and escalation packets |
+| #16 Push through a difficult debugging stall | [`pua`](pua/README.md) | Structured escalation, big-tech perf rhetoric (8 flavor packs + auto-selector), and exhaustive problem-solving |
 | #17 Score daily controllable effort & focus | [`coach`](coach/README.md) | 5-pillar input scorecard and daily reflection log |
 | #18 Audit link integrity & knowledge hygiene | [`audit`](audit/README.md) | 100% relative link validation, dead-reference detection, and secret sweeps |
 | #19 Facilitate quarterly reviews & debt purges | [`periodic-retreat`](periodic-retreat/README.md) | Multi-scale strategic review, architecture purge, and next-Q OKRs |
@@ -105,7 +105,22 @@ npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 ```
 
-### 3. Ask your agent to use it
+### 3. Install a named selection
+
+`skills.json` groups the suite into five categories and tags every skill with a `scope` — `global` (agent-level: install once, works in any workspace) or `local` (per-project). A resolver CLI turns a named selection into the concrete skill list or copy-pasteable install commands:
+
+```bash
+bun scripts/select-skills.ts list              # every named selection + category
+bun scripts/select-skills.ts global            # agent-level skills (session continuity, orchestration, maintenance)
+bun scripts/select-skills.ts design            # one category's skills
+bun scripts/select-skills.ts minimal           # smallest useful set: updatedocs, handoff, dead-letter, secretary
+bun scripts/select-skills.ts global --format install   # copy-pasteable `npx skills add` commands
+bun scripts/select-skills.ts core --format json        # JSON array, for scripting
+```
+
+Named selections: `global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal` — every category id and every individual skill name also resolve.
+
+### 4. Ask your agent to use it
 
 After installation, describe the task in plain language. The skill's frontmatter supplies the trigger language that compatible runtimes use for discovery.
 
@@ -127,6 +142,8 @@ Install all twenty-two skills when you want the full Project OS, context, recove
 ```bash
 npx skills add harshsinghmp/muse-skills
 ```
+
+> **Tip:** The complete suite is also the `all` selection — `bun scripts/select-skills.ts all --format install` prints the full command list one skill at a time.
 
 > **Tip:** You can also install a skill from its GitHub tree URL: `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/<skill-name>`.
 
@@ -216,10 +233,10 @@ flowchart TD
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
 | **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `review this UI`, `audit UI contrast`, `refactor this component`, `make pages consistent`, `extract design tokens`, `final polish` | `designscope`, `animate`, `gauntlet-loop`, `code-review` | Six-mode UI engine (review/audit/improve/sweep/tokens/polish): 10 Refactoring UI heuristics plus modern container-query, typography, and theming techniques, a WCAG 2.2 AA blocking gate, proof-gated findings, and zero-dependency Bun verification scripts. |
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
-| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `handoff`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router, skill-stack compatibility auditor, and shared-worktree lease gate; resolves prompt conflicts, enforces MVSS, routes DAGs, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
-| **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, and cryptographic SHA-256 seal. |
+| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `handoff`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router with a pre-execution plan-evaluation gate (spec alignment, verifiable acceptance criteria, DAG integrity, no completed-work overlap, evidence-backed assumptions), skill-stack compatibility auditor, and shared-worktree lease gatewith multi-perspective review for plans of 5+ tasks; enforces MVSS, routes DAGs, requires verification receipts for completion claims, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
+| **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, cryptographic SHA-256 seal, teachback-gated subagent dispatch with two-stage review and DAG wave dispatch, intake triage with WIP limits, blast-radius replan ladder, orient briefings, persistent task ledger, and session handover with three-tier harvest. |
 | **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `evidence status`, `brief me on this project` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Persistent per-project evidence tracking and claim verification gate: decisions, client commitments, verified claims, and status facts with staleness detection and six `/evidence` commands. |
-| **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with actionable retry or escalation packets. |
+| **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl`, `dead-letter status` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with a transient/permanent recovery gate, precondition-checked bounded retries against a last-known-good baseline, ordered recovery sequence, close-out repro test packs for deterministic failures, root-cause cluster triage across open records, orphaned-resource cleanup, and actionable escalations. |
 | **#16** | [**`pua`**](pua/README.md) | **Quality & Review** | `PIP`, `/pua`, `try harder`, `figure it out` | `dead-letter`, `code-review`, `gauntlet-loop` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor with severity-routed remediation (auto-repair / propose-diff / report-only / defer-route), per-step progress reporting, re-verification delta, and companion-skill routing. |
@@ -298,7 +315,7 @@ npx skills add harshsinghmp/muse-skills --skill handoff
 - **Explicit Working Model**: Externalizes orchestrator facts, ruled-out failed paths, and exact line ranges.
 - **Hard Negative Boundaries**: Codifies `MUST NOT` constraints that propagate cleanly to subagent prompts.
 - **Deterministic Verification**: Establishes unambiguous success criteria before work begins.
-- **Persistence**: Writes a timestamped handoff record to the configured agent-context location (the current default is `.claude/handoff-<timestamp>.md`).
+- **Persistence**: Writes a timestamped handoff record to the configured agent-context location (the current default is `.agents/handoff-<timestamp>.md`).
 
 [Read full documentation →](handoff/README.md)
 
@@ -306,14 +323,16 @@ npx skills add harshsinghmp/muse-skills --skill handoff
 
 ### 📮 `dead-letter`
 
-Capture failed or blocked tasks before context clears. Categorizes failure modes into a 9-part taxonomy, extracts what was learned, and generates either a mechanical retry prompt or an escalation decision point.
+Capture failed or blocked tasks before context clears. Categorizes failure modes into a 9-part taxonomy, distinguishes transient from permanent failures, verifies actual state before any retry, and generates either a bounded autonomous retry prompt or an escalation decision point.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill dead-letter
 ```
 
 - **9-Code Failure Taxonomy**: `BLOCKED-CRED`, `BLOCKED-PERM`, `BLOCKED-DATA`, `BLOCKED-AMBIG`, `BLOCKED-RATE`, `FAILED-LOGIC`, `FAILED-TOOL`, `FAILED-SCOPE`, and `PARTIAL`.
-- **Preserves Partial Output**: Guarantees partial file writes and intermediate states are not lost.
+- **Recovery Decision Gate**: seen-before count, transient/permanent classification, and an autonomy level (`auto` / `confirm` / `escalate`) — permanent failures never get retry packets, and a third occurrence of the same root cause always escalates.
+- **State Verification Before Retry**: every retry packet carries a precondition check so a mid-backoff or half-applied state is never retried blindly; verification runs in bounded fix-poll rounds (max 3) before escalating.
+- **Preserves Partial Output & Orphans**: Guarantees partial file writes are not lost and orphaned PRs, branches, processes, and temp files are enumerated with cleanup commands.
 - **Actionable Escalations**: Generates specific decision questions routed to Council agents (`NEXUS`, `SOL`, `JASPER`, `CREW`).
 
 [Read full documentation →](dead-letter/README.md)
@@ -410,7 +429,7 @@ npx skills add harshsinghmp/muse-skills --skill gauntlet-loop
 
 ### 📑 `secretary` (Priority #13 — Context & Orchestration)
 
-Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions.
+Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions — extended with delegation control: teachback-gated subagent dispatch, two-stage review, intake triage, blast-radius replan, and structured session handover.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill secretary
@@ -420,6 +439,9 @@ npx skills add harshsinghmp/muse-skills --skill secretary
 - **Judgment, Not Authority**: Recommends with rigor; stops dead at `NEEDS_APPROVAL` for any filesystem write or external mutation.
 - **Dissent Preservation**: Explicitly highlights contradictions, uncertainties, and `[NO-DATA]` gaps in the formal Dissent Ledger.
 - **Single-Use Hash Gate**: Computes SHA-256 fingerprint of proposed payload; requires exact user confirmation token before execution.
+- **Delegation Control Gates**: Dispatched subagents confirm a teachback (restated scope, acceptance criteria, dependencies) before starting work; deliveries pass two reviewer stages (spec-compliance + quality) with a 3-retry fix cycle before escalation.
+- **Intake Triage & Replan**: Raw input is classified before action with WIP limits and mandatory `done_when`/`next_action`; invalidated plans are re-scoped through a blast-radius ladder (NEXT_ACTION → MILESTONE → OUTCOME → KILL) and logged.
+- **Session Handover**: Structured state plus unstructured temperature notes survive context resets via `.agents/secretary-handover.md`; on-entry briefings give a read-only orient view with one recommendation.
 
 [Read full documentation →](secretary/README.md)
 
@@ -427,16 +449,17 @@ npx skills add harshsinghmp/muse-skills --skill secretary
 
 ### 🔀 `coupling-router`
 
-Coupling-aware architectural delegation and skill-stack compatibility router. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks.
+Coupling-aware architectural delegation and skill-stack compatibility router. Evaluates the routing plan against a pre-execution gate, then analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks.
 
 ```bash
 npx skills add harshsinghmp/muse-skills --skill coupling-router
 ```
 
+- **Plan-Evaluation Gate**: five pre-execution checks — spec alignment (primary verdict), verifiable acceptance criteria, DAG integrity, scope overlap with completed work, evidence-backed assumptions — a failing plan is reworked, not dispatched with caveats.
 - **Skill-Stack & Token Conflict Auditor**: Audits active skills against the Skill Compatibility Matrix, silences conflicting instructions, and enforces the Minimal Viable Skill Set (MVSS $\le$ 6,000 tokens).
 - **High Coupling Routing**: Routes interdependent tasks (shared types, database schemas, rendering pipeline) to a single sequential builder.
 - **Low Coupling Fan-Out**: Dispatches truly orthogonal tasks (isolated test suites, independent docs, separate microservices) to parallel subagents.
-- **DAG & Allocation Generation**: Outputs `ROUTING_PLAN.md` with active MVSS, suppressed skills, Mermaid dependency graph, and file isolation boundaries.
+- **DAG & Allocation Generation**: Outputs `ROUTING_PLAN.md` with active MVSS, suppressed skills, Mermaid dependency graph, and file isolation boundaries; every completion claim carries a verification receipt — claims without receipts reopen the task.
 - **Shared-Worktree Lease (`/worktree-lease`)**: Probes, acquires, and releases `.agents/artifacts/WORKTREE-LEASE.md` so two agent sessions in one checkout never collide on branches, stashes, or shared files — with a takeover rule for stale heartbeats and a repair ladder for collisions that slip through.
 
 [Read full documentation →](coupling-router/README.md)
@@ -689,7 +712,8 @@ muse-skills/
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
-│   │   └── sample-dead-letter.md
+│   │   ├── sample-dead-letter.md
+│   │   └── sample-repro-pack.md
 │   ├── README.md
 │   └── SKILL.md
 │

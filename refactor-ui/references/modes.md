@@ -48,7 +48,9 @@ per root cause listing every location it appears in:
 - Location is `path/to/file:line`. Why names the principle and the user impact.
 - Severity: **HIGH** blocks an interaction, breaks accessibility, or makes a
   state unreachable. **MEDIUM** breaks the system (scale, tokens, hierarchy).
-  **LOW** is isolated polish.
+  **LOW** is isolated polish. Severity is never encoded in color alone — every
+  marker ships text (HIGH/MEDIUM/LOW) + symbol; color is a redundant third channel.
+  Same rule applies to rendered HTML report artifacts.
 - Verdict: **Block** when any HIGH remains (or any WCAG 2.2 AA text failure);
   **Approve** otherwise, with remaining rows as tracked work.
 - Close with the cross-skill routing table (below).

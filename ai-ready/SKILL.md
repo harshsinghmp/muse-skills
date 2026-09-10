@@ -25,8 +25,8 @@ metadata:
     category: core-engine
     suggested_skills: [new-project, updateagents, git, updatedocs]
     primary_triggers: ["make repo AI-ready","audit AI readiness","check repo health","ai-audit"]
-    requires_tools: [bash, view_file, write_to_file, run_command, grep_search]
-  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
+    requires_tools: [bash, view_file, write_to_file, run_command, grep_search]   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
+   agent_independent: true  # .agents/ folder is universal - any AI agent runtime can read/use it, not Claude-specific
 ---
 
 # 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
@@ -58,7 +58,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 ```bash
 # Rapid 12-Asset Presence Check
 [ -f "AGENTS.md" ] && [ -d ".agents/standards" ] && [ -d ".agents/context" ] && \
-{ [ -f ".mcp.json" ] || [ -d ".gemini" ] || [ -d ".claude" ] || [ -d ".cursor" ]; } && \
+{ [ -f ".mcp.json" ] || [ -d ".gemini" ] || [ -d ".agents" ] || [ -d ".cursor" ]; } && \
 [ -f "llms.txt" ] && \
 [ -d ".github/workflows" ] && [ -d ".github/ISSUE_TEMPLATE" ] && \
 { [ -f ".github/pull_request_template.md" ] || [ -f ".github/PULL_REQUEST_TEMPLATE.md" ]; } && \
@@ -87,7 +87,7 @@ Before running detailed analysis, file generation, or PR mining, execute this hi
 |:---|:---|:---|:---|
 | 1 | **Root Agent Router** | `AGENTS.md` | Exists in root, strictly `<50 lines`, acts as a progressive disclosure routing table pointing to `.agents/`. |
 | 2 | **DOX Hierarchy Tree** | `.agents/` | Complete 9-folder container (`standards`, `context`, `brand`, `archive`, `artifacts`, `goals`, `research`, `skills`, `workflows`). |
-| 3 | **Tool / MCP Config** | `.mcp.json` or `.claude/`, `.cursor/`, `.gemini/` | Defines authorized MCP servers or project agent tools with scoped capabilities. |
+| 3 | **Tool / MCP Config** | `.mcp.json` or `.agents/`, `.cursor/`, `.gemini/` | Defines authorized MCP servers or project agent tools with scoped capabilities. `.agents/` is the universal folder any AI agent can use. |
 | 4 | **AI Discovery Manifest** | `llms.txt` | Clean markdown index summarizing repo scope, key entrypoints, and documentation links for agent web crawlers. |
 
 ### 2. 🔧 Dev Workflow (What keeps PRs clean and agents on track)

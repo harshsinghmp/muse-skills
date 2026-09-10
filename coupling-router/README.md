@@ -4,7 +4,7 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /router](https://img.shields.io/badge/Triggers-%2Frouter%20%7C%20%2Fcoupling-purple.svg?style=for-the-badge)](#)
 
-Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.
+Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, then analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Completion claims require verification receipts. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.
 
 ---
 
@@ -14,7 +14,7 @@ When an orchestrator agent breaks a project into subtasks or loads multiple skil
 1. **Concurrency Failures**: Parallelizing coupled tasks creates diverging interfaces, broken imports, and merge hell. Serializing independent tasks wastes latency and agent compute.
 2. **Skill Stack & Token Failures**: Loading multiple skills simultaneously causes prompt instruction collisions (e.g. speculative refactoring vs surgical diffs) and blows token budgets before writing code.
 
-`coupling-router` audits both the **task graph's shared state** and the **active skill stack** to output a mathematically sound execution DAG and a Minimal Viable Skill Set (MVSS).
+`coupling-router` audits both the **task graph's shared state** and the **active skill stack** to output a mathematically sound execution DAG and a Minimal Viable Skill Set (MVSS). Plans pass a five-check pre-execution gate (with multi-lens review on large plans) before dispatch, and every completion claim must carry a verification receipt.
 
 ---
 

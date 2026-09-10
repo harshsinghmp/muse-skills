@@ -1,6 +1,6 @@
 # Skill Authoring Specification (RFC)
 
-This document establishes the official standard for authoring, structuring, and maintaining skills in the **`muse-skills`** repository.
+This document establishes the official standard for authoring, structuring, and maintaining skills in the `**muse-skills**` repository.
 
 ---
 
@@ -45,13 +45,14 @@ metadata:
 ```
 
 ### Field Definitions:
-- **`name`** *(string, required)*: Kebab-case unique identifier matching directory name.
-- **`description`** *(string, required)*: Clear trigger condition and action summary.
-- **`version`** *(string, required)*: Semantic version (`1.0.0`).
-- **`author`** *(string, required)*: Skill author (`Harsh Singh`).
-- **`license`** *(string, required)*: License (`MIT`).
-- **`platforms`** *(array of strings, optional)*: Supported OS platforms (`[macos, linux, windows]`).
-- **`metadata.hermes`** *(object, optional)*: Hermes-specific metadata namespace.
+
+- `**name**` *(string, required)*: Kebab-case unique identifier matching directory name.
+- `**description**` *(string, required)*: Clear trigger condition and action summary.
+- `**version**` *(string, required)*: Semantic version (`1.0.0`).
+- `**author**` *(string, required)*: Skill author (`Harsh Singh`).
+- `**license**` *(string, required)*: License (`MIT`).
+- `**platforms**` *(array of strings, optional)*: Supported OS platforms (`[macos, linux, windows]`).
+- `**metadata.hermes**` *(object, optional)*: Hermes-specific metadata namespace.
   - `tags`: Classification tags.
   - `related_skills`: Companion skills in the catalog.
   - `requires_tools`: Specific tool capabilities required by the skill.
@@ -63,21 +64,27 @@ metadata:
 The body of `SKILL.md` must adhere to these 5 standard sections:
 
 ### `# <Icon> <skill-name> — <Concise Subtitle>`
+
 Introductory overview defining the purpose and operational scope of the skill.
 
 ### `## When to Use`
+
 Explicit trigger conditions and anti-triggers (when *not* to use).
 
 ### `## Quick Reference`
+
 Scannable markdown table summarizing modes, taxonomy, parameter combinations, or command cheat-sheets.
 
 ### `## Procedure`
+
 Numbered, step-by-step instructions the agent follows during execution. Must include concrete command examples, file targets, and deterministic steps.
 
 ### `## Pitfalls`
+
 Catalog of known failure modes, anti-rationalizations, and constraints (e.g., negative boundaries, forbidden paths, anti-patterns).
 
 ### `## Verification`
+
 Explicit assertions, validation commands, or checklists the agent must execute and satisfy before declaring the task complete.
 
 ---
@@ -85,5 +92,7 @@ Explicit assertions, validation commands, or checklists the agent must execute a
 ## 4. Flagship Skill Ordering Invariant
 
 `new-project` and `updateagents` are the foundational flagship skills of the `muse-skills` catalog.
+
 - In `skills.json`, `new-project` must always be index `0`, and `updateagents` must be index `1`.
 - In `README.md`, `new-project` and `updateagents` must always appear first in the Quick Start, Available Skills Table, and Detailed Breakdown.
+

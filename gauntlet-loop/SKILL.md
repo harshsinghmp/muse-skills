@@ -2,7 +2,7 @@
 name: gauntlet-loop
 aliases: ["gauntlet","quality-loop","verification-loop"]
 description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
-version: 1.1.1
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -118,11 +118,13 @@ Round N (N = 1..max_rounds):
      - Strip labels from candidate and bar.
      - Put candidate next to the bar blind; judge which is better and name the single biggest remaining gap.
      - Score 0.0–10.0 across: Correctness (40%), Minimal Diff (25%), Edge Cases (20%), Architecture (15%).
-  3. GATE: Run automated proof suite AND Web App Security & Visual Gate:
+  3. GATE: Run automated proof suite AND integrity checks AND Web App Security & Visual Gate:
      - Check 5 mandatory security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
      - Check 3 responsive viewports (375px, 768px, 1280px) for zero horizontal overflow.
-     - Any test failure, missing critical security header, or visual overflow zeroes the round score (0.0).
-  4. RECORD: Append round metrics, header receipts, and viewport outcomes to ITERATION_LEDGER.md.
+     - **Quality-bar regression check**: scan the round's diff for a lowered bar — new suppression directives, skipped or deleted tests, weakened assertions, thresholds edited down. Any of these zeroes the round score (0.0): a build that passes because the bar was lowered is a regression, not a pass.
+     - **Fail-closed eval check**: confirm the proof suite contains at least one test that CAN fail on the defect class the round claims to fix. If nothing in the suite could have caught the defect, a green run proves nothing — the round does not pass until a capable test exists (write it, watch it fail on the pre-fix state).
+     - Any test failure, missing critical security header, visual overflow, quality-bar regression, or failed fail-closed check zeroes the round score (0.0).
+  4. RECORD: Append round metrics, header receipts, viewport outcomes, and finding counts (new findings vs fixed findings this round) to ITERATION_LEDGER.md — the ledger is the convergence instrument: when new findings outnumber fixed findings two rounds running, the loop is diverging, not converging — stop and escalate instead of burning the remaining budget.
   5. DECIDE: Evaluate Stop Conditions Matrix.
 ```
 
@@ -153,6 +155,8 @@ When the user asks to *"make a gauntlet prompt"* or *"loop until it beats X"*, c
 - **Horizontal Scroll Blowout**: Failing to audit the 375px mobile viewport for layout blowouts.
 - **Diff Bloat Across Iterations**: Reject candidates that expand the diff surface by $>30\%$ without a proportional score increase.
 - **Ignoring Score Plateau**: If round 2 scores 7.5 and round 3 scores 7.4, STOP immediately. Do not attempt round 4.
+- **Lowered-Bar Green**: Passing the gate by suppressing, skipping, or weakening checks in the same diff — the gate measures the artifact, not the artifact's ability to evade measurement.
+- **Vacuous Green**: Accepting a green proof suite that contains no test capable of failing on the round's defect class — an unevaluatable claim is not a pass; add the capable test first.
 
 ---
 

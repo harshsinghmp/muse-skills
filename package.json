@@ -4,7 +4,6 @@
   "keywords": [
     "skills",
     "agents",
-    "claude",
     "codex",
     "hermes",
     "gemini",
@@ -65,5 +64,5 @@
     "validate": "bash updateagents/scripts/validate-memory-file.sh"
   },
   "type": "module",
-  "version": "2.7.0"
+  "version": "3.0.0"
 }
