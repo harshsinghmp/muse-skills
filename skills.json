@@ -193,7 +193,7 @@
     },
     {
       "name": "handoff",
-      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
+      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost \u2014 even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
       "path": "handoff/SKILL.md",
       "version": "2.2.1",
       "category": "context-orchestration",
@@ -373,7 +373,7 @@
     },
     {
       "name": "designscope",
-      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
+      "description": "Analyze any visual source \u2014 image, website URL, or Figma file \u2014 to extract its structured design system \u2014 a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
       "path": "designscope/SKILL.md",
       "version": "1.1.1",
       "category": "design-interface",
@@ -502,7 +502,8 @@
         "view_file",
         "grep",
         "write_to_file",
-        "replace_file_content"
+        "replace_file_content",
+        "list_dir"
       ],
       "tags": [
         "evidence",
@@ -516,24 +517,39 @@
         "citation-synthesis",
         "receipt-audit",
         "doi",
-        "empirical-verification"
+        "empirical-verification",
+        "project-tracking",
+        "decisions",
+        "commitments",
+        "agency-workflow",
+        "context-switch",
+        "evidence-dashboard",
+        "staleness-detection"
       ],
       "suggested_skills": [
         "secretary",
         "updatedocs",
         "audit",
-        "coupling-router"
+        "coupling-router",
+        "context-anchor",
+        "handoff",
+        "dead-letter",
+        "updateagents",
+        "coach",
+        "periodic-retreat"
       ],
       "aliases": [
         "claim-ledger",
         "verification-ledger",
-        "citation-gate"
+        "citation-gate",
+        "project-evidence",
+        "evidence-tracker"
       ],
       "scope": "local"
     },
     {
       "name": "dead-letter",
-      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix — with a findings ledger that deduplicates recurring sweeps and measures convergence.",
+      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix \u2014 with a findings ledger that deduplicates recurring sweeps and measures convergence.",
       "path": "dead-letter/SKILL.md",
       "version": "1.5.0",
       "category": "quality-review",
@@ -569,7 +585,7 @@
     },
     {
       "name": "pua",
-      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive—not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
+      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive\u2014not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
       "path": "pua/SKILL.md",
       "version": "1.1.0",
       "category": "quality-review",
