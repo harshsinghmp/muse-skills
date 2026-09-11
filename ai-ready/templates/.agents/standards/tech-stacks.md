@@ -9,7 +9,7 @@ All digital products and application builds are scaffolded via the **Intent-Firs
 | Intent Category | Primary Frameworks | Recommended Styling | Recommended CMS / Commerce | Database & Backend |
 | :--- | :--- | :--- | :--- | :--- |
 | **Brochure & Static Site** | Astro v7 / Instatic HTML | Hybrid (UnoCSS Wind 4 + BEM) | Aria Builder / None | None / SQLite |
-| **Content / Publication** | Astro v7 / Next.js 16 / Bedrock | Hybrid (UnoCSS Wind 4 + BEM) | Tina CMS / StudioCMS / Keystatic | SQLite / Turso / Neon |
+| **Content / Publication** | Astro v7 / Next.js 16 / Bedrock | Hybrid (UnoCSS Wind 4 + BEM) | Tina CMS / StudioCMS / Keystatic / Atomic Payload | SQLite / Turso / Neon |
 | **E-Commerce Storefront** | Next.js 16 / Astro v7 | Hybrid (UnoCSS Wind 4 + BEM) | Payload CMS / Medusa v2 / Fastrr | PostgreSQL (Neon / Supabase) |
 | **Web App / SaaS** | Next.js 16 | Hybrid (UnoCSS Wind 4 + BEM) | Payload + Puck / Keystone | Supabase / Neon + Better Auth |
 | **Mobile App** | React Native (Expo `@latest`) | NativeWind / StyleSheet | Headless API / Strapi | Supabase / PostgreSQL |
@@ -65,6 +65,7 @@ All digital products and application builds are scaffolded via the **Intent-Firs
 - **State Management**: **Nano Stores** or lightweight atomic stores for micro-interactions without massive client hydration.
 - **CMS & Builders**:
   - **Payload CMS (`@latest`)**: Full-stack TypeScript headless CMS with optional **Puck Visual Builder**.
+  - **Atomic Payload** (`atomicpayload.com`): official isolated website-builder template — Payload + Next.js + Tailwind with every `@pro-laico/*` plugin (MongoDB + Vercel Blob, pnpm, admin at `localhost:42100/admin`); scaffolded via `npx @pro-laico/create-atomic-payload`; not affiliated with Payload CMS.
   - **Keystone CMS / Strapi**: Self-hosted headless alternatives.
 - **E-Commerce Backend**:
   - **Payload E-Commerce Module**: Native unified database-level checkout and cart management.
