@@ -2,23 +2,29 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+_(nothing)_
+
+## [3.1.0] - 2026-09-11
+
+### Added
+
+- **Atomic Payload Website Builder (`new-project` v2.6.0)**: `--cms=atomic-payload` and `--preset=atomic-payload` provision the official pro-laico Atomic Payload template (Payload 3 + Next.js 16 + Tailwind, every `@pro-laico/*` plugin, MongoDB + Vercel Blob, pnpm, admin at `localhost:42100/admin`) as a fully isolated official scaffold — engine governance only, every companion selection skipped with a printed notice (same contract as Aria Builder); the official published template is extracted untouched via npm-pack of `@pro-laico/create-atomic-payload`, `.env.example` copied to `.env` and the upstream gitignore merged per the official CLI's own steps, with a ponytail offline fallback keeping isolation tests green. Doc-sync CMS charset extended to hyphenated values. Verified against the live official CLI (v0.5.0) and the official quick-start; placed as a website builder — commerce is added later via the Payload E-Commerce plugin.
+
+### Fixed
+
+- **evidence-ledger Registry Metadata (skills.json)**: the v3.0.0 release bumped `evidence-ledger` SKILL.md to v2.0.0 but left the registry with the old v1.x metadata — backfilled 7 tags (project-tracking, decisions, commitments, agency-workflow, context-switch, evidence-dashboard, staleness-detection), 6 suggested_skills (context-anchor, handoff, dead-letter, updateagents, coach, periodic-retreat), 2 aliases (project-evidence, evidence-tracker), and the `list_dir` tool; also fixed two unicode-encoding glitches in the `handoff` and `designscope` descriptions. (PR #85)
+- **v3.0.0 Changelog Stamp Drift**: the release stamp left the v3.0.0 detail entries stranded under `[Unreleased]` (duplicating `[3.0.0]`'s Major Changes/Changed summaries) and omitted the v3.0.0 compare link; the `docs/CHANGELOG.md` mirror was missing the `[3.0.0]` section entirely. All repaired: details folded into `[3.0.0]` under Changed/Fixed, compare links added (`v2.7.0...v3.0.0` and `v3.0.0...v3.1.0`), mirror backfilled.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v3.0.0...v3.1.0
+
 ## [3.0.0] - 2026-09-10
 
 ### Major Changes
 
 - **Agent-Independence Upgrade**: All skills now use `.agents/` as the universal agent-agnostic folder. Replaced `.claude/` path references with `.agents/` across ai-ready, dead-letter, refactor-ui, and handoff. Added `agent_independent: true` metadata to ai-ready. The `.agents/` folder is now documented as the standard location any AI coding agent can use — not Claude-specific.
 - **Suite Version Bump to 3.0.0**: Major version increment reflecting the agent-independence architecture shift.
-
-### Changed
-
-- **Agent Independence Pass (7 skills)**: replaced `.claude/` path references with `.agents/` across `ai-ready`, `dead-letter`, `refactor-ui`, and `handoff` — the `.agents/` folder is now documented as the universal agent-agnostic location any AI coding agent can use, not Claude-specific. Added `agent_independent: true` metadata to `ai-ready` frontmatter. Updated `dead-letter` record paths in SKILL.md, README, and examples (`.claude/dead-letter-*` → `.agents/dead-letter-*`). Updated `refactor-ui` requirements text to say "any AI coding agent". Updated README handoff persistence path.
-- **Skill Version Sync to GitHub**: synced `skills.json` versions to match GitHub main branch for `code-review` (1.3.0), `gauntlet-loop` (1.2.0), `coupling-router` (1.4.0), `secretary` (1.4.0), `dead-letter` (1.5.0), `refactor-ui` (1.1.2), `pua` (1.1.0) — no version jumps; all versions match or align with GitHub.
-
-### Fixed
-
-- **Lease Gate on Fresh Checkouts (`coupling-router`)**: every lease write path (`probe`-acquire, `hold` heartbeat refresh, stale takeover) now creates `.agents/artifacts/` recursively before writing — the directory is gitignored and absent on fresh checkouts, which broke the gate's first run on any new clone (caught by CI on `main` immediately after v2.7.0, fixed via hotfix PR #83, merged to `main` and back-merged to `dev` per lifecycle). Also merged Dependabot's `actions/checkout` v4→v7 bump (#82), the SHA-mutation mitigation accepted by the security audit's F3.
-
-## [Unreleased]
 
 ### Added
 
@@ -31,16 +37,16 @@ All notable changes to this project are documented in this file.
 - **Recovery Hardening Pass (`dead-letter` v1.2.0)**: the Recovery Decision flow (v1.1.0) gains two mechanisms from the same corpus research — a **Recovery Sequence**: the ordered checklist (classify → decide → precondition → fix → verify-against-baseline → close) embedded in the record and marked step-by-step, making the record the single resume point for any retry (never an arbitrary step); and a **Baseline Reference**: path/commit/receipt of the last-known-good state, with the verification loop comparing retried output against it — a regression fails the round even when the exit code is clean. New pitfalls (improvised recovery order, clean-exit regression) and extended verification checks. Also fixed duplicated Verification-section lines left by v1.1.0.
 - **Selection System (`skills.json` + `scripts/select-skills.ts`)**: the registry now carries three selection primitives — per-skill `scope` (`global`: agent-level, install once, works in any workspace — session continuity, orchestration, personal workflow, machine maintenance; `local`: per-project — docs, git lifecycle, review, design, audits), five top-level `categories[]` (core-engine, context-orchestration, quality-review, design-interface, reflection-maintenance), and named `selections{}` (`global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal` — the smallest useful set: updatedocs, handoff, dead-letter, secretary). A zero-dependency Bun resolver (`bun scripts/select-skills.ts <selection> [--format names|install|json]`) turns a selection into the concrete skill list or copy-pasteable `npx skills add` commands; `list` prints the menu, unknown selections exit 2, and category ids, `all`, and individual skill names also resolve. Pinned by a hardening test (scope partition covers all 22 skills with no overlap, category selections are subsets, minimal resolves, unknown fails).
 
+### Changed
+
+- **Agent Independence Pass (7 skills)**: replaced `.claude/` path references with `.agents/` across `ai-ready`, `dead-letter`, `refactor-ui`, and `handoff` — the `.agents/` folder is now documented as the universal agent-agnostic location any AI coding agent can use, not Claude-specific. Added `agent_independent: true` metadata to `ai-ready` frontmatter. Updated `dead-letter` record paths in SKILL.md, README, and examples (`.claude/dead-letter-*` → `.agents/dead-letter-*`). Updated `refactor-ui` requirements text to say "any AI coding agent". Updated README handoff persistence path.
+- **Skill Version Sync to GitHub**: synced `skills.json` versions to match GitHub main branch for `code-review` (1.3.0), `gauntlet-loop` (1.2.0), `coupling-router` (1.4.0), `secretary` (1.4.0), `dead-letter` (1.5.0), `refactor-ui` (1.1.2), `pua` (1.1.0) — no version jumps; all versions match or align with GitHub.
+
 ### Fixed
 
 - **Lease Gate on Fresh Checkouts (`coupling-router`)**: every lease write path (`probe`-acquire, `hold` heartbeat refresh, stale takeover) now creates `.agents/artifacts/` recursively before writing — the directory is gitignored and absent on fresh checkouts, which broke the gate's first run on any new clone (caught by CI on `main` immediately after v2.7.0, fixed via hotfix PR #83, merged to `main` and back-merged to `dev` per lifecycle). Also merged Dependabot's `actions/checkout` v4→v7 bump (#82), the SHA-mutation mitigation accepted by the security audit's F3.
 
-### Changed
-
-- **Agent Independence Pass (7 skills)**: replaced `.claude/` path references with `.agents/` across `ai-ready`, `dead-letter`, and `refactor-ui` — the `.agents/` folder is now documented as the universal agent-agnostic location any AI coding agent can use, not Claude-specific. Added `agent_independent: true` metadata to `ai-ready` frontmatter. Updated `dead-letter` record paths in SKILL.md, README, and examples (`.claude/dead-letter-*` → `.agents/dead-letter-*`). Updated `refactor-ui` requirements text to say "any AI coding agent".
-- **Skill Version Sync to GitHub**: synced `skills.json` versions to match GitHub main branch for `code-review` (1.3.0), `gauntlet-loop` (1.2.0), `coupling-router` (1.4.0), `secretary` (1.4.0), `dead-letter` (1.5.0), `refactor-ui` (1.1.2), `pua` (1.1.0) — no version jumps; all versions match or align with GitHub.
-
-_(nothing else)_
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.7.0...v3.0.0
 
 ## [2.7.0] - 2026-09-10
 

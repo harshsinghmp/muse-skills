@@ -79,7 +79,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(res.stdout).toContain("Synced: ./.agents/standards/ (13 standards, including WordPress)");
     });
 
-    it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile)", () => {
+    it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile, atomic-payload)", () => {
       // 1. Powerhouse preset
       const targetPower = join(TEST_SANDBOX, "power-test");
       const resPower = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"], {
@@ -175,6 +175,16 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(resNextComm.stdout).toContain("Framework:         `NEXTJS`");
       expect(resNextComm.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
       expect(resNextComm.stdout).toContain("E-Commerce:        `PAYLOAD`");
+
+      // 11. Atomic Payload preset (isolated official website-builder scaffold)
+      const targetAtomic = join(TEST_SANDBOX, "atomic-preset-test");
+      const resAtomic = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.stdout).toContain("Framework:         `NEXTJS`");
+      expect(resAtomic.stdout).toContain("CMS:               `ATOMIC-PAYLOAD`");
+      expect(resAtomic.stdout).toContain("Styling:           `NONE`");
     });
 
     it("supports granular intent-first companion composition including NanoStores and Capacitor", () => {
@@ -592,7 +602,7 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
     });
 
-    it("provisions complete modular implementations for isolated Aria Builder, StudioCMS, Emdash, and Payload E-Commerce", () => {
+    it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
       // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
       const targetAria = join(TEST_SANDBOX, "aria-showcase");
       const resAria = spawnSync("bun", [
@@ -624,6 +634,43 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetAria, "src/lib/medusa.ts"))).toBe(false);
       expect(existsSync(join(targetAria, "backend/package.json"))).toBe(false);
       expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(false);
+
+      // 1b. Atomic Payload (isolated official website-builder scaffold — extras skipped even when requested)
+      const targetAtomic = join(TEST_SANDBOX, "atomic-showcase");
+      const resAtomic = spawnSync("bun", [
+        NEW_PROJECT_SCRIPT,
+        targetAtomic,
+        "--non-interactive",
+        "--intent=content",
+        "--type=nextjs",
+        "--cms=atomic-payload",
+        "--db=postgres",
+        "--styling=hybrid",
+        "--skip-install"
+      ], { encoding: "utf8" });
+      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.stdout).toContain("localhost:42100/admin");
+      expect(resAtomic.stdout).toContain("Atomic Payload is fully isolated");
+      // Official upstream markers (present via both the npm-pack merge and the offline fallback).
+      expect(existsSync(join(targetAtomic, "package.json"))).toBe(true);
+      expect(JSON.parse(readFileSync(join(targetAtomic, "package.json"), "utf8")).name).toBe("atomic-payload");
+      expect(existsSync(join(targetAtomic, "next.config.ts"))).toBe(true);
+      expect(readFileSync(join(targetAtomic, "next.config.ts"), "utf8")).toContain("withPayload");
+      expect(existsSync(join(targetAtomic, "src/payload.config.ts"))).toBe(true);
+      const atomicPayloadCfg = readFileSync(join(targetAtomic, "src/payload.config.ts"), "utf8");
+      expect(atomicPayloadCfg).toContain("buildConfig");
+      expect(atomicPayloadCfg).toContain("mongooseAdapter");
+      // Engine governance still provisioned.
+      expect(existsSync(join(targetAtomic, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(targetAtomic, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
+      // Isolation: no engine extras despite postgres+hybrid requested.
+      expect(existsSync(join(targetAtomic, "src/styles/tokens.css"))).toBe(false);
+      expect(existsSync(join(targetAtomic, "uno.config.ts"))).toBe(false);
+      expect(existsSync(join(targetAtomic, "src/lib/db.ts"))).toBe(false);
+      expect(existsSync(join(targetAtomic, "drizzle.config.ts"))).toBe(false);
+      expect(existsSync(join(targetAtomic, "docker-compose.yml"))).toBe(false);
+      expect(existsSync(join(targetAtomic, ".github/workflows/ci.yml"))).toBe(false);
+      expect(existsSync(join(targetAtomic, "src/lib/auth.ts"))).toBe(false);
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
@@ -723,7 +770,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
       expect(htmlPkg.scripts["dev"]).toContain("serve");
-    }, 60000);
+    }, 120000);
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
       const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");

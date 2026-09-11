@@ -21,7 +21,7 @@ const README_PATH = join(REPO_ROOT, "new-project/README.md");
 
 /** Values declared in the script's help text: `-c, --cms <cms>  CMS: a | b | ...` */
 function extractScriptDeclaredCms(source: string): string[] {
-  const helpMatch = source.match(/-c,\s*--cms <cms>\s+CMS:\s*([a-z| ]+)/);
+  const helpMatch = source.match(/-c,\s*--cms <cms>\s+CMS:\s*([a-z| -]+)/);
   if (!helpMatch) return [];
   return helpMatch[1]
     .split("|")
@@ -37,7 +37,7 @@ function extractDocCmsValues(docSource: string): string[] {
     /^\|\s*`-c,\s*--cms <cms>`\s*\|\s*String\s*\|(.+)\|\s*$/m,
   );
   if (!flagRowMatch) return [];
-  return [...flagRowMatch[1].matchAll(/`([a-z]+)`/g)]
+  return [...flagRowMatch[1].matchAll(/`([a-z-]+)`/g)]
     .map((m) => m[1])
     .sort();
 }
@@ -72,14 +72,14 @@ describe("📄 Doc-Sync Parity — new-project CMS flag list", () => {
 
   it("every declared CMS value is honored by the script (wired branch or official-setup notice)", () => {
     const wired = new Set(
-      [...scriptSource.matchAll(/config\.cms === "([a-z]+)"/g)].map((m) => m[1]),
+      [...scriptSource.matchAll(/config\.cms === "([a-z-]+)"/g)].map((m) => m[1]),
     );
     const officialSetup = scriptSource.match(
       /const OFFICIAL_SETUP_CMS[^=]*=\s*\{([\s\S]*?)\}/,
     );
     const officialKeys = new Set(
       officialSetup
-        ? [...officialSetup[1].matchAll(/^\s*([a-z]+):/gm)].map((m) => m[1])
+        ? [...officialSetup[1].matchAll(/^\s*([a-z-]+):/gm)].map((m) => m[1])
         : [],
     );
     const unhandled = declared.filter(
