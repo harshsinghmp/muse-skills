@@ -284,12 +284,12 @@ Custom billing engine for healthcare providers.
 
   describe("Part D: handoff & gauntlet-loop Upgrades", () => {
     it("handoff contains session resumption and zero .claude references", () => {
-      const handoffContent = readFileSync(join(REPO_ROOT, "handoff/SKILL.md"), "utf8");
+      const handoffContent = readFileSync(join(REPO_ROOT, "relay/SKILL.md"), "utf8");
       expect(handoffContent).toContain("Inbound Session Resumption");
       expect(handoffContent).toContain("where were we");
       expect(handoffContent).toContain("directory-boundary");
       expect(handoffContent).not.toContain(".claude/");
-      expect(existsSync(join(REPO_ROOT, "handoff/references/resumption-protocol.md"))).toBe(true);
+      expect(existsSync(join(REPO_ROOT, "relay/references/resumption-protocol.md"))).toBe(true);
     });
 
     it("gauntlet-loop contains 'The Bar is the Whole Trick' and blind A/B critique", () => {

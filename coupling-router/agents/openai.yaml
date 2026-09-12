@@ -24,6 +24,6 @@ instructions: |
   and preserve recorded WIP as foreign. Stage explicit paths only, never pop
   a stash you did not create, and audit shared-surface diffs hunk-by-hunk.
   Release the lease at close: fold state into HANDOFF.md and delete the file.
-  Cooperate with suggested skills: handoff, context-anchor, secretary,
+  Cooperate with suggested skills: relay, context-anchor, secretary,
   gauntlet-loop, updateagents.
   Always enforce verification before completing any task.

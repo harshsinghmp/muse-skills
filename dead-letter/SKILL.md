@@ -11,15 +11,15 @@ metadata:
   category: quality-review
   priority: 15
   aliases: ["failure-triage","blocked-task","dead-letter-queue"]
-  suggested_skills: ["handoff","pua","context-anchor","secretary"]
+  suggested_skills: ["relay","pua","context-anchor","secretary"]
   hermes:
     tags: [triage, error-handling, debugging, subagents, escalation, reliability, retry-gate, state-verification, orphan-cleanup, recovery-sequence, baseline-regression, repro-pack, cluster-triage]
-    related_skills: [handoff, pua, context-anchor, secretary]
-    suggested_skills: [handoff, pua, context-anchor, secretary]
+    related_skills: [relay, pua, context-anchor, secretary]
+    suggested_skills: [relay, pua, context-anchor, secretary]
     requires_tools: [bash, view_file, write_to_file]
   openclaw:
     category: quality-review
-    suggested_skills: [handoff, pua, context-anchor, secretary]
+    suggested_skills: [relay, pua, context-anchor, secretary]
     primary_triggers: ["task failed","blocked on error","dead letter capture","escalate failure","retry failed task","dead letter status","repro pack","reproduction steps for the bug","triage open failures","nightly failure triage"]
     requires_tools: [bash, view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]

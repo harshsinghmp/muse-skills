@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of twenty-two portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, and repository AI-readiness auditing.**
+**A curated suite of thirty-six portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, and client communication.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-3.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-36%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete twenty-two-skill suite with `npx skills`.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete thirty-six-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -33,7 +33,7 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #3 Automate Git release lifecycle & anti-slop triage | [`git`](git/README.md) | 9-tier issue triage, strict 4-phase branching, doc sync, and SemVer release cuts |
 | #4 Review code rigorously (Linus Torvalds Style) | [`code-review`](code-review/README.md) | 7 review modes (diff/audit/security/receive/fix…), calibrated verdict, Karpathy minimal-diff gate & test-spec immutability |
 | #5 Scaffold Project OS & Progressive Disclosure DOX | [`new-project`](new-project/README.md) | Project OS foundation, 9-folder container, and framework generators |
-| #6 Delegate work to subagents without losing context | [`handoff`](handoff/README.md) | Context packets, boundary-safe resumption, and an ambient HANDOFF.md live-state file for cross-conversation continuity |
+| #6 Delegate work to subagents without losing context | [`relay`](relay/README.md) | Context packets, boundary-safe resumption, and an ambient HANDOFF.md live-state file for cross-conversation continuity |
 | #7 Audit repository AI-readiness & zero-token fast-skip | [`ai-ready`](ai-ready/README.md) | 13-asset audit scorecard (incl. working-artifacts container), PR review mining, and Stage-0 Fast-Skip gate |
 | #8 Resume focused work after an interruption | [`context-anchor`](context-anchor/README.md) | Working-reference snapshots, named client-workstream parking, and the anchor ↔ HANDOFF.md layering protocol |
 | #9 Run bounded multi-round quality improvement loops | [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded Builder/Critic loop with quality-bar regression gate, fail-closed eval check, security headers & visual breakpoint gates |
@@ -50,6 +50,20 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #20 Clean developer, designer & browser caches | [`clean-system-cache`](clean-system-cache/README.md) | Multi-platform cache purge, zero-session interruption & cache-only safety |
 | #21 Remove AI writing patterns & polish prose | [`humanize`](humanize/README.md) | Editorial review, anti-slop pattern detection & authentic voice preservation |
 | #22 Design & implement UI motion & animation | [`animate`](animate/README.md) | Library selection, canonical easing/duration, & correct code for entrances, exits, micro-interactions, scroll, page transitions |
+| #23 Design a website, brand, or graphics | [`design`](design/README.md) | One head skill, seven modes: UI, UX, wireframe, logo, branding, socials, graphics |
+| #24 Buy and optimize paid advertising | [`paidads`](paidads/README.md) | Ten channels (Google, Meta, TikTok, LinkedIn…) with targeting, creative, and audit modes |
+| #25 Rank in search and AI answers | [`seo`](seo/README.md) | Technical, onpage, content, local, links, and AEO/GEO modes plus a synthesized audit |
+| #26 Build websites and web apps | [`webdev`](webdev/README.md) | Frontend, backend, fullstack, ecommerce, CMS, performance, accessibility, and migrations |
+| #27 Ship mobile apps | [`mobile`](mobile/README.md) | iOS, Android, cross-platform, PWA, and app store optimization modes |
+| #28 Grow organic social | [`smm`](smm/README.md) | Strategy, calendar, content, community, influencer, UGC, and analytics modes |
+| #29 Produce content and copy | [`content`](content/README.md) | Blog, copy, email, video, case-study, and humanize modes |
+| #30 Measure and optimize performance | [`analytics`](analytics/README.md) | Tracking, dashboards, attribution, reporting, and CRO modes |
+| #31 Automate work with AI | [`automation`](automation/README.md) | Workflow, chatbot, agents, RAG, integrations, and prompt modes |
+| #32 Deploy and keep services reliable | [`devops`](devops/README.md) | Hosting, CI/CD, domains, security, monitoring, and incident modes |
+| #33 Run the agency | [`ops`](ops/README.md) | Onboarding, proposal, SOW, milestone, retro, and multi-client modes |
+| #34 Set strategy and scale | [`growth`](growth/README.md) | Positioning, funnels, pricing, launch, and competitor modes |
+| #35 Gate the launch | [`qa-launch`](qa-launch/README.md) | Matrix, functional verification, release gate, and regression |
+| #36 Talk to clients | [`client-comms`](client-comms/README.md) | Status, change-request, handover, and feedback modes |
 
 ### Explore the repository
 
@@ -87,7 +101,7 @@ npx skills add harshsinghmp/muse-skills --skill pua
 npx skills add harshsinghmp/muse-skills --skill humanize
 
 # Context & Orchestration (#6, #8, #12, #13, #14)
-npx skills add harshsinghmp/muse-skills --skill handoff
+npx skills add harshsinghmp/muse-skills --skill relay
 npx skills add harshsinghmp/muse-skills --skill context-anchor
 npx skills add harshsinghmp/muse-skills --skill coupling-router
 npx skills add harshsinghmp/muse-skills --skill secretary
@@ -103,22 +117,38 @@ npx skills add harshsinghmp/muse-skills --skill coach
 npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
+
+# Agency Delivery (#23–#36)
+npx skills add harshsinghmp/muse-skills --skill design
+npx skills add harshsinghmp/muse-skills --skill paidads
+npx skills add harshsinghmp/muse-skills --skill seo
+npx skills add harshsinghmp/muse-skills --skill webdev
+npx skills add harshsinghmp/muse-skills --skill mobile
+npx skills add harshsinghmp/muse-skills --skill smm
+npx skills add harshsinghmp/muse-skills --skill content
+npx skills add harshsinghmp/muse-skills --skill analytics
+npx skills add harshsinghmp/muse-skills --skill automation
+npx skills add harshsinghmp/muse-skills --skill devops
+npx skills add harshsinghmp/muse-skills --skill ops
+npx skills add harshsinghmp/muse-skills --skill growth
+npx skills add harshsinghmp/muse-skills --skill qa-launch
+npx skills add harshsinghmp/muse-skills --skill client-comms
 ```
 
 ### 3. Install a named selection
 
-`skills.json` groups the suite into five categories and tags every skill with a `scope` — `global` (agent-level: install once, works in any workspace) or `local` (per-project). A resolver CLI turns a named selection into the concrete skill list or copy-pasteable install commands:
+`skills.json` groups the suite into six categories and tags every skill with a `scope` — `global` (agent-level: install once, works in any workspace) or `local` (per-project). A resolver CLI turns a named selection into the concrete skill list or copy-pasteable install commands:
 
 ```bash
 bun scripts/select-skills.ts list              # every named selection + category
 bun scripts/select-skills.ts global            # agent-level skills (session continuity, orchestration, maintenance)
 bun scripts/select-skills.ts design            # one category's skills
-bun scripts/select-skills.ts minimal           # smallest useful set: updatedocs, handoff, dead-letter, secretary
+bun scripts/select-skills.ts minimal           # smallest useful set: updatedocs, relay, dead-letter, secretary
 bun scripts/select-skills.ts global --format install   # copy-pasteable `npx skills add` commands
 bun scripts/select-skills.ts core --format json        # JSON array, for scripting
 ```
 
-Named selections: `global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal` — every category id and every individual skill name also resolve.
+Named selections: `global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal`, `agency` — every category id and every individual skill name also resolve.
 
 ### 4. Ask your agent to use it
 
@@ -137,7 +167,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all twenty-two skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, and audit toolkit:
+Install all thirty-six skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, and full-service creative web marketing agency toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -180,7 +210,7 @@ flowchart TD
         direction TB
         Muse --> Router["🔀 coupling-router (#12)<br/>DAG Analysis & Skill Selection"]
         Router --> Sec["📑 secretary (#13)<br/>Staff Work & SHA-256 Approval Gate"]
-        Router --> Bounds["🤝 handoff (#6) & ⚓ context-anchor (#8)<br/>Context Packets & Working State Bounds"]
+        Router --> Bounds["🤝 relay (#6) & ⚓ context-anchor (#8)<br/>Context Packets & Working State Bounds"]
     end
 
     subgraph L2 ["2. Foundation & DOX Scaffolding Engine"]
@@ -211,7 +241,7 @@ flowchart TD
 
 | Layer | Architectural Role | Shipped Skills | Core Governance & Invariants |
 | :--- | :--- | :--- | :--- |
-| **1. Orchestration & Governance** | Intake, DAG coupling analysis, staff work approval, and bounded subagent context isolation | [`coupling-router`](coupling-router/README.md) (#12)<br/>[`secretary`](secretary/README.md) (#13)<br/>[`handoff`](handoff/README.md) (#6)<br/>[`context-anchor`](context-anchor/README.md) (#8) | Socratic adversarial challenge, single-use SHA-256 hash approval gate, negative boundary constraints, sub-15-line working state snapshots. |
+| **1. Orchestration & Governance** | Intake, DAG coupling analysis, staff work approval, and bounded subagent context isolation | [`coupling-router`](coupling-router/README.md) (#12)<br/>[`secretary`](secretary/README.md) (#13)<br/>[`relay`](relay/README.md) (#6)<br/>[`context-anchor`](context-anchor/README.md) (#8) | Socratic adversarial challenge, single-use SHA-256 hash approval gate, negative boundary constraints, sub-15-line working state snapshots. |
 | **2. Foundation & DOX Engine** | Progressive disclosure scaffolding, workspace memory sync, and documentation governance | [`updatedocs`](updatedocs/README.md) (#1)<br/>[`updateagents`](updateagents/README.md) (#2)<br/>[`new-project`](new-project/README.md) (#5)<br/>[`ai-ready`](ai-ready/README.md) (#7) | 13-asset AI readiness scorecard, sub-100ms Stage-0 Fast-Skip gate, 9-folder DOX container, artifacts working-state boundary, `.memory/` no-touch boundary. |
 | **3. Execution & Quality Gates** | Design system extraction, UI refactoring, adversarial code reviews, claim verification, editorial anti-slop, and failure triage | [`code-review`](code-review/README.md) (#4)<br/>[`gauntlet-loop`](gauntlet-loop/README.md) (#9)<br/>[`refactor-ui`](refactor-ui/README.md) (#10)<br/>[`designscope`](designscope/README.md) (#11)<br/>[`evidence-ledger`](evidence-ledger/README.md) (#14)<br/>[`dead-letter`](dead-letter/README.md) (#15)<br/>[`pua`](pua/README.md) (#16)<br/>[`humanize`](humanize/README.md) (#21) | Linus Torvalds & Karpathy minimal-diff doctrine, 5-state anti-slop UI gate, DTCG design tokens, 4-tier citation taxonomy, 9-mode failure classification, 4-tier PIP escalation, editorial anti-slop rules. |
 | **4. Delivery & Lifecycle Maintenance** | Autonomous Git release cuts, cache cleanup, knowledge hygiene, and strategic reflection | [`git`](git/README.md) (#3)<br/>[`coach`](coach/README.md) (#17)<br/>[`audit`](audit/README.md) (#18)<br/>[`periodic-retreat`](periodic-retreat/README.md) (#19)<br/>[`clean-system-cache`](clean-system-cache/README.md) (#20) | 11-phase release pipeline, SemVer tagging, zero-runtime cache cleaner with running process guards, 5-pillar controllable effort rubric. |
@@ -223,33 +253,48 @@ flowchart TD
 | Priority | Skill | Category | Primary Triggers | Suggested Skills | Description |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **#1** | [**`updatedocs`**](updatedocs/README.md) | **Core Engine** | `update docs`, `sync documentation`, `audit docs` | `updateagents`, `git`, `ai-ready`, `audit` | Project-wide documentation synchronization, drift detection, and governance engine with strict `.memory/` and `.agents/` boundaries. |
-| **#2** | [**`updateagents`**](updateagents/README.md) | **Core Engine** | `update agents.md`, `sync memory` | `updatedocs`, `new-project`, `handoff`, `context-anchor` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
+| **#2** | [**`updateagents`**](updateagents/README.md) | **Core Engine** | `update agents.md`, `sync memory` | `updatedocs`, `new-project`, `relay`, `context-anchor` | Auto-discover, scan, and sync agent memory files (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`) in workspace root. |
 | **#3** | [**`git`**](git/README.md) | **Core Engine** | `/git`, `manage git workflow`, `cut release`, `triage issues` | `code-review`, `updatedocs`, `ai-ready`, `gauntlet-loop` | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, and SemVer release cuts. |
 | **#4** | [**`code-review`**](code-review/README.md) | **Quality & Review** | `/torvalds`, `/linus-review`, `review PR` | `git`, `gauntlet-loop`, `refactor-ui`, `pua` | Language-agnostic code review method derived from Linus Torvalds' corpus and Karpathy minimal-diff doctrine. Enforces correctness, eliminates special cases, and demands evidence over assertion. |
 | **#5** | [**`new-project`**](new-project/README.md) | **Core Engine** | `/new-project`, `Agent Engine`, `DOX Engine`, `scaffold app` | `ai-ready`, `updateagents`, `updatedocs`, `git` | Progressive Disclosure DOX provisioner (AGENTS.md, 9-folder container, 12 modular standards, brand tokens, and cognitive memory). |
-| **#6** | [**`handoff`**](handoff/README.md) | **Context & Orchestration** | `/handoff`, `/agent-handoff` | `context-anchor`, `coupling-router`, `dead-letter`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), an always-current HANDOFF.md so new conversations continue prior work at lowest token cost, and worktree-lease-aware dispatches for shared checkouts. |
+| **#6** | [**`relay`**](relay/README.md) | **Context & Orchestration** | `/relay`, `/agent-handoff` | `context-anchor`, `coupling-router`, `dead-letter`, `updateagents`, `ai-ready` | Bidirectional handoff, resumption, and ambient continuity: context packets, state-source ladder (live file → memory → context → git forensics), an always-current HANDOFF.md so new conversations continue prior work at lowest token cost, and worktree-lease-aware dispatches for shared checkouts. |
 | **#7** | [**`ai-ready`**](ai-ready/README.md) | **Core Engine** | `ai-ready`, `audit repo`, `check ai readiness` | `new-project`, `updateagents`, `git`, `updatedocs` | Comprehensive 13-asset AI-readiness audit (including the working-artifacts container rule), Stage-0 zero-token Fast-Skip Gate, and PR review convention mining. |
-| **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/park`, `/switch-task` | `handoff`, `updateagents`, `dead-letter`, `audit` | Working-reference snapshots and named client-workstream parking (`/park`, `/switch-task`, `/list-anchors`) with the normative anchor ↔ HANDOFF.md layering protocol and a client-confidentiality guard. |
+| **#8** | [**`context-anchor`**](context-anchor/README.md) | **Context & Orchestration** | `/anchor`, `/park`, `/switch-task` | `relay`, `updateagents`, `dead-letter`, `audit` | Working-reference snapshots and named client-workstream parking (`/park`, `/switch-task`, `/list-anchors`) with the normative anchor ↔ HANDOFF.md layering protocol and a client-confidentiality guard. |
 | **#9** | [**`gauntlet-loop`**](gauntlet-loop/README.md) | **Quality & Review** | `/gauntlet`, `/gauntlet-loop` | `code-review`, `refactor-ui`, `secretary`, `git` | Bounded multi-agent loop with security headers, multi-viewport visual audits, and plateau stop conditions. |
 | **#10** | [**`refactor-ui`**](refactor-ui/README.md) | **Design & Interface** | `review this UI`, `audit UI contrast`, `refactor this component`, `make pages consistent`, `extract design tokens`, `final polish` | `designscope`, `animate`, `gauntlet-loop`, `code-review` | Six-mode UI engine (review/audit/improve/sweep/tokens/polish): 10 Refactoring UI heuristics plus modern container-query, typography, and theming techniques, a WCAG 2.2 AA blocking gate, proof-gated findings, and zero-dependency Bun verification scripts. |
 | **#11** | [**`designscope`**](designscope/README.md) | **Design & Interface** | `extract the design system`, `deconstruct this layout`, `recreate this website design` | `refactor-ui`, `new-project`, `code-review` | Analyze images, websites, or Figma files into a `design.md` brief with responsive layout tree, DTCG tokens, and WCAG report. |
-| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `handoff`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router with a pre-execution plan-evaluation gate (spec alignment, verifiable acceptance criteria, DAG integrity, no completed-work overlap, evidence-backed assumptions), skill-stack compatibility auditor, and shared-worktree lease gatewith multi-perspective review for plans of 5+ tasks; enforces MVSS, routes DAGs, requires verification receipts for completion claims, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
+| **#12** | [**`coupling-router`**](coupling-router/README.md) | **Context & Orchestration** | `/router`, `/coupling`, `/worktree-lease` | `relay`, `context-anchor`, `secretary`, `gauntlet-loop`, `updateagents` | Coupling-aware architectural router with a pre-execution plan-evaluation gate (spec alignment, verifiable acceptance criteria, DAG integrity, no completed-work overlap, evidence-backed assumptions), skill-stack compatibility auditor, and shared-worktree lease gatewith multi-perspective review for plans of 5+ tasks; enforces MVSS, routes DAGs, requires verification receipts for completion claims, and keeps two agent sessions in one checkout from colliding on branches, stashes, or shared files. |
 | **#13** | [**`secretary`**](secretary/README.md) | **Context & Orchestration** | `/secretary`, `/memo` | `evidence-ledger`, `coupling-router`, `gauntlet-loop`, `code-review` | Evidence-grounded staff controller with Socratic adversarial challenge, preserved dissent, cryptographic SHA-256 seal, teachback-gated subagent dispatch with two-stage review and DAG wave dispatch, intake triage with WIP limits, blast-radius replan ladder, orient briefings, persistent task ledger, and session handover with three-tier harvest. |
 | **#14** | [**`evidence-ledger`**](evidence-ledger/README.md) | **Context & Orchestration** | `/evidence`, `evidence status`, `brief me on this project` | `secretary`, `updatedocs`, `audit`, `coupling-router` | Persistent per-project evidence tracking and claim verification gate: decisions, client commitments, verified claims, and status facts with staleness detection and six `/evidence` commands. |
-| **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl`, `dead-letter status` | `handoff`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with a transient/permanent recovery gate, precondition-checked bounded retries against a last-known-good baseline, ordered recovery sequence, close-out repro test packs for deterministic failures, root-cause cluster triage across open records, orphaned-resource cleanup, and actionable escalations. |
+| **#15** | [**`dead-letter`**](dead-letter/README.md) | **Quality & Review** | `/dead-letter`, `/dl`, `dead-letter status` | `relay`, `pua`, `context-anchor`, `secretary` | Capture failed/blocked agent tasks into structured failure records with a transient/permanent recovery gate, precondition-checked bounded retries against a last-known-good baseline, ordered recovery sequence, close-out repro test packs for deterministic failures, root-cause cluster triage across open records, orphaned-resource cleanup, and actionable escalations. |
 | **#16** | [**`pua`**](pua/README.md) | **Quality & Review** | `PIP`, `/pua`, `try harder`, `figure it out` | `dead-letter`, `code-review`, `gauntlet-loop` | Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with big-tech perf rhetoric. |
 | **#17** | [**`coach`**](coach/README.md) | **Reflection & Maintenance** | `/standup`, `/daily` | `audit`, `periodic-retreat`, `context-anchor` | Daily reflective check-in and 5-pillar controllable input effort scorecard (TDD, minimal diffs, hygiene, focus, triage). |
 | **#18** | [**`audit`**](audit/README.md) | **Reflection & Maintenance** | `/audit-brain`, `/hygiene` | `updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`, `coach`, `periodic-retreat` | Knowledge hygiene and referential integrity auditor with severity-routed remediation (auto-repair / propose-diff / report-only / defer-route), per-step progress reporting, re-verification delta, and companion-skill routing. |
 | **#19** | [**`periodic-retreat`**](periodic-retreat/README.md) | **Reflection & Maintenance** | `/retreat`, `/quarterly` | `coach`, `audit`, `updateagents`, `updatedocs` | Quarterly personal and project strategic retreat facilitator for architecture debt purges, TELOS alignment, and next-Q OKRs. |
 | **#20** | [**`clean-system-cache`**](clean-system-cache/README.md) | **Reflection & Maintenance** | `/clean-cache`, `/purge-cache` | `audit`, `periodic-retreat`, `code-review` | Cross-platform developer, designer, and browser cache cleaner across Windows, Linux, and macOS with active session protection and zero-session interruption. |
+| **#21** | [**`humanize`**](humanize/README.md) | **Quality & Review** | `humanize this`, `remove AI writing`, `de-slop`, `make it sound natural` | `code-review`, `updatedocs`, `evidence-ledger`, `secretary` | Editorial review and prose humanization engine that removes AI-writing artifacts, significance inflation, and robotic cadence without altering facts, claims, or voice. |
 | **#22** | [**`animate`**](animate/README.md) | **Design & Interface** | `animate this`, `add motion`, `framer motion`, `scroll animation`, `page transition` | `refactor-ui`, `designscope`, `code-review`, `gauntlet-loop` | Web UI animation and motion: library selection, canonical easing/duration tables, and segregated per-domain references (Motion, CSS, WAAPI, GSAP, native mobile) with reduced-motion and performance defaults. Five modes (build/review/improve/audit/find). |
+| **#23** | [**`design`**](design/README.md) | **Agency Delivery** | `design a website`, `wireframe`, `design a logo`, `brand identity`, `social templates` | `refactor-ui`, `designscope`, `animate`, `new-project` | Website design department head with seven modes: UI, UX, wireframe, logo, branding, socials, and graphics — deterministic playbooks with a per-mode quality gate. |
+| **#24** | [**`paidads`**](paidads/README.md) | **Agency Delivery** | `google ads`, `meta ads`, `tiktok ads`, `retargeting`, `ad audit` | `analytics`, `content`, `smm`, `evidence-ledger` | Paid advertising department head with ten modes: Google, Meta, LinkedIn, Reddit, TikTok, Snapchat, YouTube, programmatic, retargeting, and audit. |
+| **#25** | [**`seo`**](seo/README.md) | **Agency Delivery** | `technical seo`, `keyword research`, `local seo`, `link building`, `AEO` | `content`, `analytics`, `webdev`, `evidence-ledger` | Search department head with seven modes: technical, onpage, content, local, links, AEO/GEO, and a synthesized audit with a 90-day roadmap. |
+| **#26** | [**`webdev`**](webdev/README.md) | **Agency Delivery** | `build this app`, `frontend`, `backend api`, `ecommerce`, `cms`, `performance` | `new-project`, `code-review`, `gauntlet-loop`, `relay` | Web engineering department head with eight modes: frontend, backend, fullstack, ecommerce, CMS, performance, accessibility, and migrations. |
+| **#27** | [**`mobile`**](mobile/README.md) | **Agency Delivery** | `mobile app`, `ios app`, `android app`, `react native`, `pwa`, `aso` | `new-project`, `webdev`, `design`, `code-review` | Mobile department head with five modes: iOS (SwiftUI), Android (Compose), cross-platform (Expo/Flutter), PWA, and app store optimization, with a stack-honest path ladder. |
+| **#28** | [**`smm`**](smm/README.md) | **Agency Delivery** | `social strategy`, `content calendar`, `community management`, `influencer`, `ugc` | `content`, `design`, `analytics`, `paidads` | Organic social department head with seven modes: strategy, calendar, content, community, influencer, UGC, and analytics. |
+| **#29** | [**`content`**](content/README.md) | **Agency Delivery** | `write a blog post`, `landing page copy`, `email sequence`, `video script`, `case study` | `seo`, `design`, `humanize`, `smm` | Content studio department head with six modes: blog, copy, email, video, case-study, and humanize — source-anchored writing plus an editorial anti-slop pass. |
+| **#30** | [**`analytics`**](analytics/README.md) | **Agency Delivery** | `set up analytics`, `kpi dashboard`, `attribution`, `marketing report`, `cro` | `seo`, `paidads`, `webdev`, `growth` | Data and analytics department head with five modes: tracking, dashboards, attribution, reporting, and CRO — decide the question, then instrument. |
+| **#31** | [**`automation`**](automation/README.md) | **Agency Delivery** | `automate this process`, `build a chatbot`, `ai agent`, `rag`, `connect two apps` | `webdev`, `analytics`, `devops`, `new-project` | Automation and AI services department head with six modes: workflow, chatbot, agents, RAG, integrations, and prompt — least autonomy that solves the problem. |
+| **#32** | [**`devops`**](devops/README.md) | **Agency Delivery** | `deploy this`, `ci/cd pipeline`, `configure domain`, `harden security`, `monitoring`, `incident` | `git`, `webdev`, `automation`, `code-review` | Infrastructure and reliability department head with six modes: hosting, CI/CD, domains, security, monitoring, and incident response — reproducible, reversible changes. |
+| **#33** | [**`ops`**](ops/README.md) | **Agency Delivery** | `onboard a client`, `write a proposal`, `statement of work`, `track milestones`, `project retro` | `relay`, `context-anchor`, `secretary`, `evidence-ledger`, `git` | Agency operations department head with six modes: onboarding, proposal, SOW, milestone, retro, and multi-client — scope written, tracked, and change-controlled. |
+| **#34** | [**`growth`**](growth/README.md) | **Agency Delivery** | `positioning`, `funnel strategy`, `pricing strategy`, `product launch`, `competitor analysis` | `analytics`, `content`, `paidads`, `seo` | Strategy and scaling department head with five modes: positioning, funnels, pricing, launch, and competitor — choose the playing field, then make the bets measurable. |
+| **#35** | [**`qa-launch`**](qa-launch/README.md) | **Agency Delivery** | `QA before launch`, `release gate`, `browser coverage`, `regression check` | `webdev`, `mobile`, `refactor-ui`, `devops` | Pre-launch quality gate with four modes: matrix, functional, gate, and regression — Block-or-Ship verdict before every launch. |
+| **#36** | [**`client-comms`**](client-comms/README.md) | **Agency Delivery** | `client status update`, `change request`, `project handover`, `client feedback` | `ops`, `growth`, `analytics` | Client-facing communication with four modes: status, change, handover, and feedback — outward voice, internal machinery routed to ops. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 22 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 36 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -304,12 +349,12 @@ npx skills add harshsinghmp/muse-skills --skill pua
 
 ---
 
-### 🤝 `handoff` (Priority #6 — Context & Orchestration)
+### 🤝 `relay` (Priority #6 — Context & Orchestration)
 
 Generate a structured context packet before dispatching any subagent. Prevents context drift, hallucinated constraints, and re-exploring dead ends.
 
 ```bash
-npx skills add harshsinghmp/muse-skills --skill handoff
+npx skills add harshsinghmp/muse-skills --skill relay
 ```
 
 - **Explicit Working Model**: Externalizes orchestrator facts, ruled-out failed paths, and exact line ranges.
@@ -317,7 +362,7 @@ npx skills add harshsinghmp/muse-skills --skill handoff
 - **Deterministic Verification**: Establishes unambiguous success criteria before work begins.
 - **Persistence**: Writes a timestamped handoff record to the configured agent-context location (the current default is `.agents/handoff-<timestamp>.md`).
 
-[Read full documentation →](handoff/README.md)
+[Read full documentation →](relay/README.md)
 
 ---
 
@@ -616,6 +661,30 @@ npx skills add harshsinghmp/muse-skills --skill animate
 
 [Read full documentation →](animate/README.md)
 
+### 🏢 Agency Delivery Department Heads (Priorities #23–#36)
+
+The suite ships a full-service creative web marketing agency layer: one head skill
+per department, each a mode router (Quick Reference table → per-mode `references/<mode>.md`
+loaded only for the resolved mode). Add `--skill <name>` to any of the commands in the
+[Agency Delivery install block](#2-install-one-skill). Heads note solo-operator behavior where roles would otherwise assume a team.
+
+- **`design`** (#23) — seven modes: `ui`, `ux`, `wireframe`, `logo`, `branding`, `socials`, `graphics`. Original visual design from a brief, plus brand identity and asset production. Routes to `refactor-ui`, `designscope`, and `animate` for their specialties.
+- **`paidads`** (#24) — ten modes: `google`, `meta`, `linkedin`, `reddit`, `tiktok`, `snapchat`, `youtube`, `programmatic`, `retargeting`, `audit`. Campaign structure, targeting, creative angles, and a cross-channel audit.
+- **`seo`** (#25) — seven modes: `technical`, `onpage`, `content`, `local`, `links`, `aeo`, `audit`. Indexability-gated technical work, onpage optimization, AEO/GEO for AI answer engines, and a synthesized 90-day roadmap.
+- **`webdev`** (#26) — eight modes: `frontend`, `backend`, `fullstack`, `ecommerce`, `cms`, `performance`, `accessibility`, `migrations`. Production delivery with `code-review` and `gauntlet-loop` as verification gates.
+- **`mobile`** (#27) — five modes: `ios`, `android`, `cross`, `pwa`, `aso`. A stack-honest path ladder (wrap / cross / native) decided before any code.
+- **`smm`** (#28) — seven modes: `strategy`, `calendar`, `content`, `community`, `influencer`, `ugc`, `analytics`. Platform-fit strategy, then a repeatable publishing and community engine.
+- **`content`** (#29) — six modes: `blog`, `copy`, `email`, `video`, `case-study`, `humanize`. Source-anchored writing with an editorial anti-slop pass (delegates to `humanize`).
+- **`analytics`** (#30) — five modes: `tracking`, `dashboards`, `attribution`, `reporting`, `cro`. Decide the question, instrument cleanly, then optimize on evidence.
+- **`automation`** (#31) — six modes: `workflow`, `chatbot`, `agents`, `rag`, `integrations`, `prompt`. Deterministic where possible, AI where it earns its place.
+- **`devops`** (#32) — six modes: `hosting`, `cicd`, `domains`, `security`, `monitoring`, `incident`. Reproducible, reversible, observable changes; release workflows route to `git`.
+- **`ops`** (#33) — six modes: `onboarding`, `proposal`, `sow`, `milestone`, `retro`, `multi-client`. Scope written, tracked, and change-controlled; composes on `handoff`, `context-anchor`, `secretary`, and `evidence-ledger`.
+- **`growth`** (#34) — five modes: `positioning`, `funnels`, `pricing`, `launch`, `competitor`. Choose the playing field, then make every bet measurable.
+- **`qa-launch`** (#35) — four modes: `matrix`, `functional`, `gate`, `regression`. Plan the coverage, walk the critical paths, gate the release, re-verify the fixes.
+- **`client-comms`** (#36) — four modes: `status`, `change`, `handover`, `feedback`. Client language outward, routed machinery inward.
+
+Each head skill ships a `README.md`, an `agents/openai.yaml` tool definition, and one `references/<mode>.md` per mode so only the resolved mode's detail is loaded on any run.
+
 </details>
 
 ---
@@ -685,7 +754,7 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
-├── handoff/                        # Handoff, resumption & ambient continuity engine
+├── relay/                        # Handoff, resumption & ambient continuity engine
 │   ├── agents/
 │   │   └── openai.yaml
 │   ├── examples/
@@ -886,6 +955,90 @@ muse-skills/
 │   ├── examples/
 │   │   └── micro-interaction.md
 │   ├── references/                 # 9 per-domain guides (principles, motion-dev, css, performance, a11y, review, gsap, mobile, other)
+│   ├── README.md
+│   └── SKILL.md
+│
+├── design/                         # Website design department head (7 modes: ui, ux, logo, branding, wireframe, socials, graphics)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── paidads/                        # Paid advertising department head (10 channel modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # google, meta, linkedin, reddit, tiktok, snapchat, youtube, programmatic, retargeting, audit
+│   ├── README.md
+│   └── SKILL.md
+│
+├── seo/                            # Search (SEO + AEO/GEO) department head (7 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # technical, onpage, content, local, links, aeo, audit
+│   ├── README.md
+│   └── SKILL.md
+│
+├── webdev/                         # Web engineering department head (8 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations
+│   ├── README.md
+│   └── SKILL.md
+│
+├── mobile/                         # Mobile apps department head (5 modes: ios, android, cross, pwa, aso)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── smm/                            # Organic social department head (7 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # strategy, calendar, content, community, influencer, ugc, analytics
+│   ├── README.md
+│   └── SKILL.md
+│
+├── content/                        # Content studio department head (6 modes: blog, copy, email, video, case-study, humanize)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── analytics/                      # Data & analytics department head (5 modes: tracking, dashboards, attribution, reporting, cro)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── automation/                     # Automation & AI services department head (6 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # workflow, chatbot, agents, rag, integrations, prompt
+│   ├── README.md
+│   └── SKILL.md
+│
+├── devops/                         # Infrastructure & reliability department head (6 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # hosting, cicd, domains, security, monitoring, incident
+│   ├── README.md
+│   └── SKILL.md
+│
+├── ops/                            # Agency operations department head (6 modes)
+│   ├── agents/openai.yaml
+│   ├── references/                 # onboarding, proposal, sow, milestone, retro, multi-client
+│   ├── README.md
+│   └── SKILL.md
+│
+├── growth/                         # Strategy & scaling department head (5 modes: positioning, funnels, pricing, launch, competitor)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── qa-launch/                      # Pre-launch quality gate (4 modes: matrix, functional, gate, regression)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── client-comms/                   # Client communication head (4 modes: status, change, handover, feedback)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
 │   ├── README.md
 │   └── SKILL.md
 │

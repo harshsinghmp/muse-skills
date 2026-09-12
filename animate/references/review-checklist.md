@@ -81,7 +81,8 @@ The default-to-boring signals to kill:
 
 ## Output format
 
-Table of findings (`Before | After | Why`), then verdict tiers (feel-breaking → simplifications → performance → interruptibility/timing → origin/cohesion → a11y), then explicit **Block** / **Approve** with `file:line` citations. When feel can't be judged from code, put a slow-motion / frame-by-frame / real-device feel-check in the plan instead of guessing.
+**Proof-gated findings.** A finding needs all three: Contract (binding checklist/standards rule broken) + Runtime (reaches a real rendered surface — dropped frames, jank, vestibular risk, bad timing) + Correction (one deterministic change). Candidates missing any leg are notes, not findings. Max 3 prioritized findings. Unrun checks → **Not verified**.
+**Report format.** One row per root cause: `Severity | Location (file:line) | Before | After | Why`. Block if any HIGH remains, else Approve.
 
 ## Gotchas
 

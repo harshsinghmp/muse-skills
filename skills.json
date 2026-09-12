@@ -65,7 +65,7 @@
       "suggested_skills": [
         "updatedocs",
         "new-project",
-        "handoff",
+        "relay",
         "context-anchor"
       ],
       "aliases": [
@@ -192,9 +192,9 @@
       "scope": "global"
     },
     {
-      "name": "handoff",
+      "name": "relay",
       "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost \u2014 even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
-      "path": "handoff/SKILL.md",
+      "path": "relay/SKILL.md",
       "version": "2.2.1",
       "category": "context-orchestration",
       "priority": 6,
@@ -283,7 +283,7 @@
         "reliability"
       ],
       "suggested_skills": [
-        "handoff",
+        "relay",
         "updateagents",
         "dead-letter"
       ],
@@ -436,7 +436,7 @@
         "verification-receipts"
       ],
       "suggested_skills": [
-        "handoff",
+        "relay",
         "secretary",
         "gauntlet-loop",
         "updateagents"
@@ -532,7 +532,7 @@
         "audit",
         "coupling-router",
         "context-anchor",
-        "handoff",
+        "relay",
         "dead-letter",
         "updateagents",
         "coach",
@@ -571,7 +571,7 @@
         "orphan-cleanup"
       ],
       "suggested_skills": [
-        "handoff",
+        "relay",
         "pua",
         "context-anchor",
         "secretary"
@@ -858,6 +858,679 @@
         "transitions"
       ],
       "scope": "local"
+    },
+    {
+      "name": "design",
+      "description": "Full website design department: creates original visual design from a brief, idea, or reference \u2014 UI design, UX flows, wireframes, logos, brand identity, social templates, and graphic assets \u2014 routed through seven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, or produce any graphic design deliverable. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
+      "path": "design/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 23,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
+      ],
+      "tags": [
+        "design",
+        "ui",
+        "ux",
+        "wireframe",
+        "logo",
+        "branding",
+        "brand-identity",
+        "social-media-design",
+        "graphics",
+        "visual-design",
+        "design-tokens",
+        "typography",
+        "color",
+        "layout"
+      ],
+      "suggested_skills": [
+        "refactor-ui",
+        "designscope",
+        "animate",
+        "new-project"
+      ],
+      "aliases": [
+        "design-department",
+        "ui-design",
+        "visual-design",
+        "graphic-design",
+        "branding",
+        "wireframe",
+        "logo-design"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "paidads",
+      "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic \u2014 plus cross-channel retargeting, budget pacing, and account audits \u2014 routed through ten modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
+      "path": "paidads/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 24,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "web_fetch",
+        "run_command"
+      ],
+      "tags": [
+        "paid-advertising",
+        "google-ads",
+        "meta-ads",
+        "facebook-ads",
+        "instagram-ads",
+        "linkedin-ads",
+        "reddit-ads",
+        "tiktok-ads",
+        "snapchat-ads",
+        "youtube-ads",
+        "ppc",
+        "sem",
+        "programmatic",
+        "retargeting",
+        "remarketing",
+        "budget",
+        "bidding",
+        "ad-copy",
+        "conversion-tracking",
+        "audiences"
+      ],
+      "suggested_skills": [
+        "analytics",
+        "content",
+        "smm",
+        "evidence-ledger"
+      ],
+      "aliases": [
+        "paid-ads",
+        "ads",
+        "advertising",
+        "ppc",
+        "sem",
+        "google-ads",
+        "meta-ads",
+        "paid-media",
+        "media-buying"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "seo",
+      "description": "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits \u2014 routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics).",
+      "path": "seo/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 25,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "web_fetch"
+      ],
+      "tags": [
+        "seo",
+        "aeo",
+        "geo",
+        "answer-engine-optimization",
+        "organic-search",
+        "technical-seo",
+        "on-page",
+        "local-seo",
+        "link-building",
+        "backlinks",
+        "crawlability",
+        "indexing",
+        "sitemap",
+        "robots",
+        "structured-data",
+        "schema-org",
+        "ai-search",
+        "llm-citations",
+        "e-e-a-t",
+        "serp"
+      ],
+      "suggested_skills": [
+        "content",
+        "analytics",
+        "webdev",
+        "evidence-ledger"
+      ],
+      "aliases": [
+        "search-engine-optimization",
+        "seo-department",
+        "aeo",
+        "geo",
+        "organic-search",
+        "link-building",
+        "local-seo"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "webdev",
+      "description": "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, and migrations \u2014 routed through eight modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, or migrate sites and stacks. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
+      "path": "webdev/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 26,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name",
+        "run_command"
+      ],
+      "tags": [
+        "web-development",
+        "frontend",
+        "backend",
+        "fullstack",
+        "api",
+        "rest",
+        "graphql",
+        "database",
+        "orm",
+        "ecommerce",
+        "cms",
+        "performance",
+        "core-web-vitals",
+        "accessibility",
+        "wcag",
+        "migrations",
+        "nextjs",
+        "react",
+        "astro",
+        "nodejs",
+        "typescript"
+      ],
+      "suggested_skills": [
+        "new-project",
+        "code-review",
+        "gauntlet-loop",
+        "relay"
+      ],
+      "aliases": [
+        "web-development",
+        "web-engineering",
+        "frontend",
+        "backend",
+        "fullstack",
+        "ecommerce",
+        "cms"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "mobile",
+      "description": "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization \u2014 routed through five modes. Use when asked to build, refactor, or ship mobile apps, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs).",
+      "path": "mobile/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 27,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "mobile",
+        "ios",
+        "android",
+        "swiftui",
+        "compose",
+        "react-native",
+        "expo",
+        "flutter",
+        "capacitor",
+        "pwa",
+        "aso",
+        "app-store",
+        "play-store",
+        "push-notifications",
+        "offline-first"
+      ],
+      "suggested_skills": [
+        "new-project",
+        "webdev",
+        "design",
+        "code-review"
+      ],
+      "aliases": [
+        "mobile-apps",
+        "app-development",
+        "ios-development",
+        "android-development",
+        "react-native",
+        "expo",
+        "flutter"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "smm",
+      "description": "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, and social analytics \u2014 routed through seven modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content).",
+      "path": "smm/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 28,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "social-media",
+        "organic-social",
+        "strategy",
+        "calendar",
+        "content",
+        "community",
+        "influencer",
+        "ugc",
+        "instagram",
+        "tiktok",
+        "linkedin",
+        "youtube",
+        "engagement",
+        "social-analytics"
+      ],
+      "suggested_skills": [
+        "content",
+        "design",
+        "analytics",
+        "paidads"
+      ],
+      "aliases": [
+        "organic-social",
+        "social-media",
+        "social-media-marketing",
+        "community-management",
+        "influencer-marketing",
+        "ugc"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "content",
+      "description": "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, customer case studies, and prose humanization \u2014 routed through six modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads).",
+      "path": "content/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 29,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "content",
+        "blog",
+        "copywriting",
+        "email",
+        "video",
+        "case-study",
+        "humanize",
+        "seo-writing",
+        "landing-page",
+        "newsletter",
+        "editorial",
+        "prose"
+      ],
+      "suggested_skills": [
+        "seo",
+        "design",
+        "humanize",
+        "smm"
+      ],
+      "aliases": [
+        "content-studio",
+        "copywriting",
+        "blogging",
+        "email-marketing",
+        "video-scripting",
+        "editorial"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "analytics",
+      "description": "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization \u2014 routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics).",
+      "path": "analytics/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 30,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "analytics",
+        "tracking",
+        "ga4",
+        "events",
+        "dashboards",
+        "kpis",
+        "attribution",
+        "reporting",
+        "cro",
+        "experimentation",
+        "ab-testing",
+        "funnels",
+        "conversion"
+      ],
+      "suggested_skills": [
+        "seo",
+        "paidads",
+        "webdev",
+        "growth"
+      ],
+      "aliases": [
+        "data-analytics",
+        "measurement",
+        "tracking",
+        "dashboards",
+        "attribution",
+        "cro",
+        "reporting"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "automation",
+      "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering \u2014 routed through six modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics).",
+      "path": "automation/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 31,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "automation",
+        "workflow",
+        "chatbot",
+        "ai-agents",
+        "rag",
+        "llm",
+        "integrations",
+        "webhooks",
+        "api",
+        "prompt-engineering",
+        "evals",
+        "n8n",
+        "zapier"
+      ],
+      "suggested_skills": [
+        "webdev",
+        "analytics",
+        "devops",
+        "new-project"
+      ],
+      "aliases": [
+        "ai-services",
+        "ai-automation",
+        "workflow-automation",
+        "chatbots",
+        "agents",
+        "rag",
+        "prompt-engineering"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "devops",
+      "description": "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, security hardening, monitoring and alerting, and incident response \u2014 routed through six modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git).",
+      "path": "devops/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 32,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "devops",
+        "hosting",
+        "deployment",
+        "cicd",
+        "github-actions",
+        "domains",
+        "dns",
+        "security",
+        "monitoring",
+        "alerting",
+        "incident-response",
+        "uptime",
+        "infrastructure-as-code"
+      ],
+      "suggested_skills": [
+        "git",
+        "webdev",
+        "automation",
+        "code-review"
+      ],
+      "aliases": [
+        "infrastructure",
+        "reliability",
+        "sre",
+        "deployment",
+        "hosting",
+        "cicd",
+        "platform"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "ops",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, and multi-client portfolio management \u2014 routed through six modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, or manage across multiple client engagements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "path": "ops/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 33,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "operations",
+        "agency-ops",
+        "onboarding",
+        "proposal",
+        "sow",
+        "scope",
+        "milestones",
+        "retrospective",
+        "multi-client",
+        "project-management",
+        "account-management"
+      ],
+      "suggested_skills": [
+        "relay",
+        "context-anchor",
+        "secretary",
+        "evidence-ledger",
+        "git"
+      ],
+      "aliases": [
+        "agency-ops",
+        "client-operations",
+        "project-management",
+        "proposals",
+        "sow",
+        "account-management"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "growth",
+      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, and competitor analysis \u2014 routed through five modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, or analyze competitors and the market. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
+      "path": "growth/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 34,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "growth",
+        "strategy",
+        "positioning",
+        "messaging",
+        "funnels",
+        "pricing",
+        "launch",
+        "go-to-market",
+        "competitor-analysis",
+        "market",
+        "scaling",
+        "value-proposition"
+      ],
+      "suggested_skills": [
+        "analytics",
+        "content",
+        "paidads",
+        "seo"
+      ],
+      "aliases": [
+        "strategy",
+        "scaling",
+        "positioning",
+        "go-to-market",
+        "gtm",
+        "pricing-strategy",
+        "competitive-analysis"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "qa-launch",
+      "description": "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression \u2014 routed through four modes. Use when asked to QA a site before launch, verify a release candidate, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops).",
+      "path": "qa-launch/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 35,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "qa",
+        "launch-qa",
+        "quality-gate",
+        "cross-browser",
+        "device-matrix",
+        "functional-testing",
+        "release-gate",
+        "regression",
+        "verification",
+        "block-or-ship"
+      ],
+      "suggested_skills": [
+        "webdev",
+        "mobile",
+        "refactor-ui",
+        "devops",
+        "code-review"
+      ],
+      "aliases": [
+        "launch-qa",
+        "pre-launch-qa",
+        "release-qa",
+        "qa-gate",
+        "browser-matrix",
+        "regression-check"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "client-comms",
+      "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake \u2014 routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth).",
+      "path": "client-comms/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 36,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "client-communication",
+        "status-report",
+        "change-request",
+        "scope-triage",
+        "handover",
+        "training",
+        "feedback",
+        "account-management",
+        "client-facing"
+      ],
+      "suggested_skills": [
+        "ops",
+        "growth",
+        "analytics"
+      ],
+      "aliases": [
+        "client-communication",
+        "status-update",
+        "change-request",
+        "project-handover",
+        "client-feedback",
+        "handover-docs"
+      ],
+      "scope": "local"
     }
   ],
   "categories": [
@@ -885,6 +1558,11 @@
       "id": "reflection-maintenance",
       "label": "Reflection & Maintenance",
       "description": "Reflective check-ins, knowledge-hygiene audits, strategic retreats, cross-platform cache cleanup."
+    },
+    {
+      "id": "agency-delivery",
+      "label": "Agency Delivery",
+      "description": "Full-service creative web marketing agency departments: design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency ops, growth strategy, launch QA, and client communication."
     }
   ],
   "selections": {
@@ -918,7 +1596,11 @@
     },
     "minimal": {
       "description": "Smallest useful set: docs sync, session continuity, failure triage, orchestration.",
-      "resolve": "names:updatedocs,handoff,dead-letter,secretary"
+      "resolve": "names:updatedocs,relay,dead-letter,secretary"
+    },
+    "agency": {
+      "description": "All agency-delivery department heads.",
+      "resolve": "category:agency-delivery"
     }
   }
 }
