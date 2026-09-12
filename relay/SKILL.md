@@ -1,5 +1,5 @@
 ---
-name: handoff
+name: relay
 aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
 description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts."
 version: 2.2.1
@@ -28,7 +28,7 @@ metadata:
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
-# 🤝 handoff — Bidirectional Handoff, Resumption & Ambient Continuity Engine
+# 🤝 relay — Bidirectional Handoff, Resumption & Ambient Continuity Engine
 
 > **Aliases**: `agent-handoff` | `subagent-handoff` | `context-packet` | `resume` | `where-were-we`
 

@@ -30,7 +30,7 @@ Install via `npx skills` shorthand:
 
 ```bash
 # Recommended shorthand
-npx skills add harshsinghmp/muse-skills --skill handoff
+npx skills add harshsinghmp/muse-skills --skill relay
 ```
 
 ---

@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 _(nothing)_
 
+## [4.0.0] - 2026-09-13
+
+### Added
+
+- **Agency Delivery Layer (14 new skills)**: 12 department head skills — strategy, creative, and delivery leadership each with a mode router that switches between solo-operator and full-agency behavior — plus **`qa-launch`** (#35) and **`client-comms`** (#36). UI-corpus and digital-marketing-pro mechanisms distilled tool-independently: no hard vendor dependencies. **OSS default stacks** and **solo-operator lines** across the whole agency layer. Full suite now 36 skills across 6 categories (registry, README, and `llms.txt` synced).
+
+### Changed
+
+- **`handoff` renamed to `relay`** — **breaking**: update any triggers or scripts that reference the old skill name. The `handoff` tag is kept as a keyword so existing discovery still works.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v3.1.0...v4.0.0
+
 ## [3.1.0] - 2026-09-11
 
 ### Added

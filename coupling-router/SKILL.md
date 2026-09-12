@@ -9,20 +9,20 @@ platforms: [macos, linux, windows]
 category: context-orchestration
 metadata:
   skill_orchestration:
-    post: ["handoff"]
+    post: ["relay"]
     optional: ["secretary", "gauntlet-loop"]
   category: context-orchestration
   priority: 12
   aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
-  suggested_skills: ["handoff","context-anchor","secretary","gauntlet-loop","updateagents"]
+  suggested_skills: ["relay","context-anchor","secretary","gauntlet-loop","updateagents"]
   hermes:
     tags: [coupling, task-routing, subagents, orchestration, multi-agent, architecture, concurrency, skill-compatibility, token-optimization]
-    related_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
-    suggested_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
+    related_skills: [relay, context-anchor, secretary, gauntlet-loop, updateagents]
+    suggested_skills: [relay, context-anchor, secretary, gauntlet-loop, updateagents]
     requires_tools: [bash, view_file, grep, glob]
   openclaw:
     category: context-orchestration
-    suggested_skills: [handoff, context-anchor, secretary, gauntlet-loop, updateagents]
+    suggested_skills: [relay, context-anchor, secretary, gauntlet-loop, updateagents]
     primary_triggers: ["route tasks","analyze task coupling","audit skill compatibility","optimize token budget","shared worktree","two sessions one checkout","worktree lease"]
     requires_tools: [bash, view_file, grep, glob]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
