@@ -42,5 +42,5 @@ instructions: |
   [EMPIRICAL]/[SPECULATIVE] epistemological classification. Entries are append-only with
   sequential EVD-IDs. Dashboard is regenerated after every write.
   Cooperate with suggested skills: secretary, updatedocs, audit, coupling-router, context-anchor,
-  handoff, dead-letter, updateagents, coach, periodic-retreat.
+  relay, dead-letter, updateagents, coach, periodic-retreat.
   Always enforce verification before completing any task.

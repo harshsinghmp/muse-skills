@@ -32,7 +32,7 @@ const EXPECTED_ORDERED_SKILLS = [
   "git",
   "code-review",
   "new-project",
-  "handoff",
+  "relay",
   "ai-ready",
   "context-anchor",
   "gauntlet-loop",
@@ -49,6 +49,20 @@ const EXPECTED_ORDERED_SKILLS = [
   "clean-system-cache",
   "humanize",
   "animate",
+  "design",
+  "paidads",
+  "seo",
+  "webdev",
+  "mobile",
+  "smm",
+  "content",
+  "analytics",
+  "automation",
+  "devops",
+  "ops",
+  "growth",
+  "qa-launch",
+  "client-comms",
 ];
 
 describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
@@ -67,18 +81,18 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(parsed).toHaveProperty("name", "@harshsinghmp/muse-skills");
   });
 
-  test("skills.json preserves requested priority ordering (#1 updatedocs through #22 animate)", () => {
+  test("skills.json preserves requested priority ordering (#1 updatedocs through #36 client-comms)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(22);
+    expect(skills.length).toBe(36);
     for (let i = 0; i < EXPECTED_ORDERED_SKILLS.length; i++) {
       expect(skills[i].name).toBe(EXPECTED_ORDERED_SKILLS[i]);
       expect(skills[i].priority).toBe(i + 1);
     }
   });
 
-  test("skills.json contains all 22 total skills categorized across 5 divisions", () => {
+  test("skills.json contains all 36 total skills categorized across 6 divisions", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(22);
+    expect(skills.length).toBe(36);
 
     const skillNames = skills.map((s: { name: string }) => s.name);
     for (const skill of EXPECTED_ORDERED_SKILLS) {
@@ -91,6 +105,7 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(categories.has("context-orchestration")).toBe(true);
     expect(categories.has("design-interface")).toBe(true);
     expect(categories.has("reflection-maintenance")).toBe(true);
+    expect(categories.has("agency-delivery")).toBe(true);
   });
 
   test("every skill defined in skills.json exists and conforms to Hermes, OpenClaw, and RFC agent specifications", () => {

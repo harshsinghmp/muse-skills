@@ -11,7 +11,7 @@ metadata:
   category: context-orchestration
   priority: 14
   aliases: ["claim-ledger","verification-ledger","citation-gate","project-evidence","evidence-tracker"]
-  suggested_skills: ["secretary","updatedocs","audit","coupling-router","context-anchor","handoff","dead-letter","updateagents","coach","periodic-retreat"]
+  suggested_skills: ["secretary","updatedocs","audit","coupling-router","context-anchor","relay","dead-letter","updateagents","coach","periodic-retreat"]
   skill_orchestration:
     evidence_onboard:
       post: ["audit"]
@@ -29,15 +29,15 @@ metadata:
       optional: ["updatedocs","coupling-router"]
     evidence_brief:
       pre: ["context-anchor"]
-      post: ["handoff"]
+      post: ["relay"]
   hermes:
     tags: [evidence, verification, citation, fact-checking, claims, research-gate, provenance, academic-research, citation-synthesis, receipt-audit, doi, empirical-verification, project-tracking, decisions, commitments, agency-workflow, context-switch, evidence-dashboard, staleness-detection]
-    related_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, handoff, dead-letter, updateagents, coach, periodic-retreat]
-    suggested_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, handoff, dead-letter, updateagents, coach, periodic-retreat]
+    related_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, relay, dead-letter, updateagents, coach, periodic-retreat]
+    suggested_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, relay, dead-letter, updateagents, coach, periodic-retreat]
     requires_tools: [bash, view_file, grep, write_to_file, replace_file_content, list_dir]
   openclaw:
     category: context-orchestration
-    suggested_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, handoff, dead-letter, updateagents, coach, periodic-retreat]
+    suggested_skills: [secretary, updatedocs, audit, coupling-router, context-anchor, relay, dead-letter, updateagents, coach, periodic-retreat]
     primary_triggers: ["verify claims","audit evidence","generate claim ledger","cite sources","missing receipts report","evidence status","project health","record decision","evidence decide","record commitment","evidence commit","evidence onboard","initialize evidence","evidence brief","brief me on this project","context switch","what's the state of this project"]
     requires_tools: [bash, view_file, grep, write_to_file, replace_file_content, list_dir]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode, antigravity]
