@@ -12,7 +12,7 @@
   - [x] Responsive layout verified at 375px, 768px, and 1280px with zero horizontal scroll overflow.
 - **Proof Commands**:
   - `bun test tests/auth.test.ts`
-  - `curl -s -I http://localhost:3000 | grep -Ei "(content-security-policy|strict-transport-security|x-frame-options)"`
+  - `curl -s -I http://localhost:3000 | rg -i "(content-security-policy|strict-transport-security|x-frame-options)"`
 - **Max Iterations**: 3
 ```
 

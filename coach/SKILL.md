@@ -2,6 +2,8 @@
 name: coach
 aliases: ["daily-standup-coach","standup-coach","daily-standup"]
 description: "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md."
+argument-hint: "daily standup, effort scorecard, end-of-day review"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

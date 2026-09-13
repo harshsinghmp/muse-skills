@@ -63,7 +63,7 @@ is the last reliable witness. Reconstruct state in this order:
 ```bash
 git status -sb          # branch + uncommitted work = in-flight state
 git log --oneline -5    # recent trajectory
-ls .agents/artifacts/ 2>/dev/null   # any prior packets despite no HANDOFF.md
+eza .agents/artifacts/ 2>/dev/null || ls .agents/artifacts/ 2>/dev/null   # any prior packets despite no HANDOFF.md
 ```
 
 1. Uncommitted modifications = the in-flight work; `git diff --stat` sizes it.

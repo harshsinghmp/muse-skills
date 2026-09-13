@@ -2,6 +2,8 @@
 name: clean-system-cache
 aliases: ["clean-cache","purge-cache","cache-cleaner","disk-cleanup"]
 description: "Cross-platform developer, designer, and browser cache cleaner for Windows, Linux, and macOS. Safely purges only unreferenced, dangling, and disposable caches from package managers (uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle, brew), IDEs and compilers (xcode, android, vscode, cursor, cypress), containers (docker, podman), creative suites (adobe media cache, photoshop temp, figma, blender, electron), and web browsers (chrome, chromium, brave, edge, firefox, zen, vivaldi, safari). Enforces active running session protection and strict cache-only isolation with zero external runtimes (pure Bash on POSIX, native CMD on Windows)."
+argument-hint: "clean cache, free disk space, purge build layers"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

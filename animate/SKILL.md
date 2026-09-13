@@ -2,6 +2,8 @@
 name: animate
 aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions"]
 description: "Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. Use when asked to animate something, add motion, build a transition, make a component feel alive, review/audit/improve existing motion, or find places that should animate. Defaults to Motion (motion.dev, formerly Framer Motion) for React and CSS for quick fixes; uses any animation library already present in the project first; GSAP, WebGL, and native-mobile (Reanimated/SwiftUI/Compose/Flutter) are loaded only on explicit request."
+argument-hint: "[build|review|improve|audit|find]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

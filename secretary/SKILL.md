@@ -2,6 +2,8 @@
 name: secretary
 aliases: ["secretary-controller","staff-controller","approval-gate"]
 description: "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest."
+argument-hint: "executive brief, approval gate, socratic review"
+user-invocable: true
 version: 1.4.0
 author: Harsh Singh
 license: MIT

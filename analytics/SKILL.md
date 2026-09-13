@@ -2,6 +2,8 @@
 name: analytics
 aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attribution", "cro", "reporting"]
 description: "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics)."
+argument-hint: "[tracking|dashboards|attribution|reporting|cro]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

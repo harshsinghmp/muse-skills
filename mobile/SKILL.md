@@ -2,6 +2,8 @@
 name: mobile
 aliases: ["mobile-apps", "app-development", "ios-development", "android-development", "react-native", "expo", "flutter"]
 description: "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization — routed through five modes. Use when asked to build, refactor, or ship mobile apps, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs)."
+argument-hint: "[ios|android|cross|pwa|aso]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

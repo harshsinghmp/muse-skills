@@ -4587,7 +4587,7 @@ set -e
 echo "🛡️ Vibeguard: Inspecting staged files for secrets..."
 
 # 1. Block staged .env files
-STAGED_ENV=$(git diff --cached --name-only 2>/dev/null | grep -E '^(\\.env|\\.env\\.local|\\.env\\.production)$' || true)
+STAGED_ENV=$(git diff --cached --name-only 2>/dev/null | (rg -E '^(\\.env|\\.env\\.local|\\.env\\.production)$' 2>/dev/null || grep -E '^(\\.env|\\.env\\.local|\\.env\\.production)$') || true)
 if [ -n "$STAGED_ENV" ]; then
   echo "❌ FATAL: Attempted to commit real environment file: $STAGED_ENV"
   echo "💡 Rule: Only .env.example should be committed. Keep .env in .gitignore."

@@ -74,6 +74,10 @@ Trigger the skill in your AI assistant:
 10. **Back-Merge**: Merge `master` back into `dev` to keep staging synchronized.
 11. **Safe Pruning & Teardown**: Bulk prune merged feature branches, remove worktrees, and close resolved issues.
 
+### Modes
+
+Scoped shortcuts (see `SKILL.md` Modes table): `triage`, `branch`, `pr`, `release`, `cleanup`, `resolve`, `history` — each loads only its listed references.
+
 ---
 
 ## 📚 References
@@ -84,6 +88,10 @@ Trigger the skill in your AI assistant:
 - 🌳 [Branching & Release Matrix](references/branching-and-release-matrix.md)
 - 🛡️ [Anti-Slop Issue & PR Triage Guide](references/anti-slop-triage.md)
 - 🎨 [GitHub SEO & Presentation Standards](references/github-seo-and-presentation.md)
+- 📥 [Issue-to-PR Discipline](references/issue-to-pr-discipline.md)
+- 🕘 [Session-Linked Commit History](references/history.md)
+- 🩺 [Troubleshooting](references/TROUBLESHOOTING.md)
+- 🧾 [Run Report Template](references/report-template.md)
 - 📜 [Changelog Policy & High-Signal Craft Standard](../updatedocs/references/CHANGELOG-POLICY.md)
 
 ---

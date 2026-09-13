@@ -141,7 +141,7 @@ fi
 Never overwrite or collide with existing Git tags:
 
 ```bash
-if git tag -l "$TAG_NAME" | grep -q "^${TAG_NAME}$"; then
+if git tag -l "$TAG_NAME" | (rg -q "^${TAG_NAME}$" 2>/dev/null || grep -q "^${TAG_NAME}$"); then
   echo "🚨 ERROR: Tag $TAG_NAME already exists in repository!"
   echo "Cannot cut release. Bump version in package.json to next SemVer increment."
   exit 1

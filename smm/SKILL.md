@@ -2,6 +2,8 @@
 name: smm
 aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc"]
 description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, and social analytics — routed through seven modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
+argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

@@ -131,7 +131,7 @@ Agents must prioritize modern, high-speed, and resource-safe CLI utilities over 
 > **Subshell Alias Isolation Invariant**:
 > AI agent execution harnesses (Antigravity, OpenCode, Codex, subagents) execute shell commands in **non-interactive subshells** (`bash -c "..."`). Non-interactive subshells **do NOT load `~/.bashrc`** and disable alias expansion (`expand_aliases` is off).
 > 
-> Therefore, aliases like `alias grep=rg` or `alias find=fd` defined in `.bashrc` **are never available to agents**. Agents MUST explicitly invoke modern binaries by name (`fd`, `rg`, `bat`, `eza`, `sd`, `choose`, etc.) or use native agent tools (`find_by_name`, `grep_search`).
+> Therefore, aliases like `alias grep=rg` or `alias find=fd` defined in `.bashrc` **are never available to agents**. Agents MUST explicitly invoke installed modern binaries by name (`fd`, `rg`, `bat`, `eza`, `sd`, `zoxide`, `delta`, etc.) or use native agent tools (`find_by_name`, `grep_search`).
 
 ### The Grand 32-Tool Modernization Taxonomy & Fallback Matrix
 

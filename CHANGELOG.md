@@ -6,6 +6,16 @@ All notable changes to this project are documented in this file.
 
 _(nothing)_
 
+## [4.0.1] - 2026-09-14
+
+### Fixed
+
+- Invocation UX frontmatter (`argument-hint`, `user-invocable`) on all 36 skills
+- Conventions checklist + test pins (modes tables, default-stack lines, byte-parity)
+- Modern-tool primacy sweep (modern-first with `|| legacy` fallback)
+- Git skill modes upgrade (4 new references: history, issue-to-pr, troubleshooting, report-template)
+- Review fixes from spec/code/frontend/design audit passes
+
 ## [4.0.0] - 2026-09-13
 
 ### Added

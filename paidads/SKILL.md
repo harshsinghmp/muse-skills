@@ -2,6 +2,8 @@
 name: paidads
 aliases: ["paid-ads", "ads", "advertising", "ppc", "sem", "google-ads", "meta-ads", "paid-media", "media-buying"]
 description: "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, budget pacing, and account audits — routed through ten modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics)."
+argument-hint: "[google|meta|linkedin|reddit|tiktok|snapchat|youtube|programmatic|retargeting|audit|extra-platforms]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

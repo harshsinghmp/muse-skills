@@ -2,6 +2,8 @@
 name: client-comms
 aliases: ["client-communication", "status-update", "change-request", "project-handover", "client-feedback", "handover-docs"]
 description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth)."
+argument-hint: "[status|change|handover|feedback]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

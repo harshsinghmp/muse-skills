@@ -2,6 +2,8 @@
 name: devops
 aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform"]
 description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, security hardening, monitoring and alerting, and incident response — routed through six modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
+argument-hint: "[hosting|cicd|domains|security|monitoring|incident]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

@@ -2,6 +2,8 @@
 name: automation
 aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering"]
 description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through six modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics)."
+argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

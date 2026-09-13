@@ -2,6 +2,8 @@
 name: content
 aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "editorial"]
 description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, customer case studies, and prose humanization — routed through six modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
+argument-hint: "[blog|copy|email|video|case-study|humanize]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

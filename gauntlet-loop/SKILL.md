@@ -2,6 +2,8 @@
 name: gauntlet-loop
 aliases: ["gauntlet","quality-loop","verification-loop"]
 description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
+argument-hint: "[gauntlet|quality-loop|refine]"
+user-invocable: true
 version: 1.2.0
 author: Harsh Singh
 license: MIT

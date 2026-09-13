@@ -2,6 +2,8 @@
 name: design
 aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design"]
 description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, and graphic assets — routed through seven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, or produce any graphic design deliverable. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
+argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

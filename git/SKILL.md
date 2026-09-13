@@ -2,6 +2,8 @@
 name: git
 aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
+argument-hint: "[triage|branch|pr|release|cleanup|resolve|history]"
+user-invocable: true
 version: 1.0.1
 author: Harsh Singh
 license: MIT
@@ -73,6 +75,19 @@ Do **NOT** use this skill for:
 │ 11. Branch Cleanup & Linked Issue Closure                                   │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+### Modes Quick-Commands
+
+| Mode | Covers | Loads ONLY |
+| :--- | :--- | :--- |
+| `triage` | Issue intake + triage + thread read + dup sweep | `anti-slop-triage.md` + `issue-to-pr-discipline.md` |
+| `branch` | Branch creation + worktree lanes | `branching-and-release-matrix.md` + `worktree-parallel-lanes.md` |
+| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
+| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
+| `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
+| `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
+| `history` | Session-linked commit history | `history.md` |
+
+Token rule: in a mode, load only the references in its row — never the full set.
 
 ### 9-Tier Anti-Slop Classification Matrix
 
@@ -365,6 +380,7 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    ```bash
    gh issue close <issue-id> --comment "Resolved and released in vX.Y.Z."
    ```
+*(For worktree audit taxonomy before deleting anything, see [Worktree Parallel Lanes](references/worktree-parallel-lanes.md) § Worktree Audit.)*
 
 ---
 
@@ -376,6 +392,7 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
 - **Never Include Unredacted Credentials**: Scan diffs for `.env` files, API keys (`sk-*`, `ghp_*`), and private tokens before pushing.
 - **No Vague Commit Messages**: Messages like "fixes bug" or "updates" are strictly forbidden. Always use Conventional Commits with scope and rationale.
 - **Never Force-Push Shared Branches**: `--force-with-lease` is permissible only on isolated feature branches; force-pushing `dev` or `master` is catastrophic.
+- **Stuck?** See [Troubleshooting](references/TROUBLESHOOTING.md) for symptom → one-command fix → deeper link.
 
 ---
 
@@ -388,6 +405,7 @@ Before marking this skill complete, verify:
 4. Tests and secret scans pass cleanly.
 5. GitHub release is published with valid tag `vX.Y.Z` (or `{package}-vX.Y.Z` in monorepos).
 6. Obsolete feature branches and worktrees have been deleted locally and remotely.
+7. Delivery uses the [run report template](references/report-template.md) — fill it at delivery.
 
 ---
 
@@ -399,4 +417,8 @@ Before marking this skill complete, verify:
 - 🌳 [Branching, Commits & Release Matrix](references/branching-and-release-matrix.md)
 - 🛡️ [Anti-Slop Issue Intake Matrix](references/anti-slop-triage.md)
 - 🎨 [GitHub SEO & Open Graph Presentation Guide](references/github-seo-and-presentation.md)
+- 📥 [Issue-to-PR Discipline](references/issue-to-pr-discipline.md)
+- 🕘 [Session-Linked Commit History](references/history.md)
+- 🩺 [Troubleshooting](references/TROUBLESHOOTING.md)
+- 🧾 [Run Report Template](references/report-template.md)
 - 📜 [Changelog Policy & High-Signal Craft Standard](../updatedocs/references/CHANGELOG-POLICY.md)

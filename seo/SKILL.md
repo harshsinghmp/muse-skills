@@ -2,6 +2,8 @@
 name: seo
 aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic-search", "link-building", "local-seo"]
 description: "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics)."
+argument-hint: "[technical|onpage|content|local|links|aeo|audit]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

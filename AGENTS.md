@@ -28,9 +28,7 @@ when docs drift.
 - No secrets or personal environment values in any shipped file.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
-- Modern Tool Primacy: call modern CLI tools explicitly by binary name
-  (`fd`, `rg`, `bat`, `eza`, `sd`, `choose`, `procs`, `zoxide`, `delta`);
-  agent subshells have no `.bashrc` aliases.
+- Modern Tool Primacy: call installed modern CLI tools explicitly by binary name, modern-first with `|| legacy` fallback (`rg` > `grep`, `fd` > `find`, `bat` > `cat` for display, `eza` > `ls`, `sd` > `sed`, `zoxide` > `cd`, `delta` > `diff` for display); agent subshells have no `.bashrc` aliases. Never mandate tools outside the installed set.
 - Synthetic ADE/IDE Artifact Sanitization: never accept or commit
   synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude
   artifacts); unwrap to raw content, backtick template variables
@@ -43,3 +41,12 @@ when docs drift.
 ## Verification
 
 The Bun test suite (`bun test`) is the pre-merge contract.
+
+## Skill Conventions Checklist (enforced by bun test)
+- Valid frontmatter (name + trigger-rich description + argument-hint + user-invocable)
+- Description/version byte-parity across SKILL.md/skills.json/llms.txt
+- One SKILL.md per dir + README.md + agents/openai.yaml
+- Agency-delivery heads carry a Modes table with one references/<mode>.md per mode; load only the resolved mode
+- Modern-tool primacy (installed set only, never mandate outside it)
+- Tool-independent mechanisms with Default-stack lines where a stack was chosen
+- No secrets or personal values in shipped files

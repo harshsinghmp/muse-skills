@@ -29,7 +29,7 @@ The Automated Gate verifies that the application or server configuration returns
 ### Audit Command Recipe
 ```bash
 # Verify headers on local server or preview build
-curl -s -I http://localhost:3000 | grep -Ei "(content-security-policy|strict-transport-security|x-frame-options|x-content-type-options|referrer-policy)"
+curl -s -I http://localhost:3000 | rg -i "(content-security-policy|strict-transport-security|x-frame-options|x-content-type-options|referrer-policy)"
 ```
 
 ---

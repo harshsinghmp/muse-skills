@@ -2,6 +2,8 @@
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management"]
 description: "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, and multi-client portfolio management — routed through six modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, or manage across multiple client engagements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

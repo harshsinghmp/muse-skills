@@ -2,6 +2,8 @@
 name: ai-ready
 aliases: ["repo-ai-ready","audit-ai-ready","ai-audit"]
 description: "Comprehensive repository AI-readiness auditor and scaffolding engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Onboarding & Governance with a 4-tier grading matrix (Getting Started to AI-Ready). Features a Stage-0 Fast-Skip Gate that outputs a single status line and exits with zero token waste if the repository is already verified compliant. Mines merged PR reviews for team conventions, scaffolds missing assets surgically (DOX container, AGENTS.md router, .mcp.json and llms.txt skeletons, GitHub template bundle, .env.example, artifacts contract stub), gates CI via --fail-under, and integrates as the foundational pre-flight check for new-project and updateagents."
+argument-hint: "[audit|health-check|ai-audit]"
+user-invocable: true
 version: 1.3.1
 author: Agency Council
 license: MIT

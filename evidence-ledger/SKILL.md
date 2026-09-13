@@ -2,6 +2,8 @@
 name: evidence-ledger
 aliases: ["claim-ledger","verification-ledger","citation-gate","project-evidence","evidence-tracker"]
 description: "Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only evidence-ledger.md per project tracking decisions (with options considered and evidence trail), client commitments (with deadlines and delivery proof), verified claims (with confidence taxonomy and receipts), and status facts (with blocker tracking). Six commands: /evidence onboard, /evidence status, /evidence decide, /evidence commit, /evidence audit, /evidence brief. Enforces the doctrine: 'No source, no claim. No verification path, no release.' Uses a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, empirical vs speculative classification, and automatic staleness detection."
+argument-hint: "onboard project, record decision, verify claims, project brief"
+user-invocable: true
 version: 2.0.0
 author: Harsh Singh
 license: MIT

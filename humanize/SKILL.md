@@ -2,6 +2,8 @@
 name: humanize
 aliases: ["anti-ai","de-ai","human-writer","prose-polish","voice-editor"]
 description: "Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. Trigger on 'humanize this text', 'make this read naturally', 'remove AI writing patterns', 'de-ai this article', 'audit this copy for chatbot slop', 'polish this prose', or whenever technical, documentation, blog, or marketing copy sounds robotic or template-driven."
+argument-hint: "humanize text, remove AI patterns, polish prose"
+user-invocable: true
 version: 2.0.0
 author: Harsh Singh
 license: MIT

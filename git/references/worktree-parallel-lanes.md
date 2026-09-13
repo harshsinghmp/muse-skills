@@ -146,3 +146,9 @@ git branch -d "$BRANCH_NAME"
 # Prune stale worktree references
 git worktree prune
 ```
+
+---
+
+## 8. Worktree Audit
+
+Classify every worktree before deleting anything: `protect-dirty` (uncommitted changes), `protect-current` (checked out elsewhere), `candidate-merged` (branch merged into `dev`), `candidate-gone` (upstream gone), `review-no-upstream` (no upstream — needs human review), `active` (recent commits), `protected-branch` (`dev`/`master`/`main` — never delete). Gone does not prove merge, especially after squash-merges — verify with `git branch --merged dev` and `git log`. Require approval before any delete; default to inspection-first (`git worktree list`, `git branch --merged dev`) and delete only classified candidates.

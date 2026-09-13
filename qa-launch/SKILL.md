@@ -2,6 +2,8 @@
 name: qa-launch
 aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check"]
 description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through four modes. Use when asked to QA a site before launch, verify a release candidate, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
+argument-hint: "[matrix|functional|gate|regression]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

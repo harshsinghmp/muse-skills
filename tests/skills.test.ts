@@ -173,3 +173,32 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     }
   });
 });
+
+describe("Invocation UX & conventions", () => {
+  test("every skills.json skill's SKILL.md frontmatter contains argument-hint and user-invocable: true", () => {
+    const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
+
+    for (const skill of skills) {
+      const skillPath = path.join(REPO_ROOT, skill.path);
+      const content = fs.readFileSync(skillPath, "utf8");
+      const frontmatter = content.split("---")[1];
+      expect(frontmatter).toContain("argument-hint:");
+      expect(frontmatter).toContain("user-invocable: true");
+    }
+  });
+
+  test("every agency-delivery skill body carries a Modes table", () => {
+    const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
+    const agencySkills = skills.filter(
+      (s: { category: string }) => s.category === "agency-delivery"
+    );
+    expect(agencySkills.length).toBeGreaterThan(0);
+
+    for (const skill of agencySkills) {
+      const skillPath = path.join(REPO_ROOT, skill.path);
+      const content = fs.readFileSync(skillPath, "utf8");
+      const body = content.split("---").slice(2).join("---");
+      expect(body).toMatch(/\| Mode \|/);
+    }
+  });
+});

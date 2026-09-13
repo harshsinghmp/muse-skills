@@ -16,7 +16,7 @@
 | You are the only session in the clone | No (acquire is trivially free; still cheap to write one) |
 | Two or more sessions share **one checkout** | **Yes — mandatory before any git mutation** |
 | Sessions use separate `git worktree add` directories | No — separate worktrees are the *preferred* alternative; lease is moot |
-| Read-only session (grep, search, no branch/index/stash mutation) | No — but declare intent to stay read-only |
+| Read-only session (rg, search, no branch/index/stash mutation) | No — but declare intent to stay read-only |
 
 The lease is **advisory mutual exclusion, not a lock**: it works because every
 session that follows this protocol probes it first. It cannot stop a session

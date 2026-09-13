@@ -2,6 +2,8 @@
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis"]
 description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, and competitor analysis — routed through five modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, or analyze competitors and the market. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

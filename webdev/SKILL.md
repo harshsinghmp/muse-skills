@@ -2,6 +2,8 @@
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "ecommerce", "cms"]
 description: "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, and migrations — routed through eight modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, or migrate sites and stacks. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations]"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT

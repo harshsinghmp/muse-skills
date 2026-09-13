@@ -117,7 +117,7 @@ bun test
 ### Recipe 2: Recover from an Accidental `git reset --hard`
 ```bash
 # Find commit prior to reset
-COMMIT_SHA=$(git reflog | grep "reset: moving to" -m 1 | awk '{print $1}')
+COMMIT_SHA=$(git reflog | rg "reset: moving to" -m 1 | awk '{print $1}')
 
 # Reset safely back to that commit
 git reset --hard "$COMMIT_SHA"
@@ -130,3 +130,7 @@ git reset --hard "$COMMIT_SHA"
 1. **Always Use `--force-with-lease`**: Never use bare `--force`. `--force-with-lease` aborts if someone else pushed commits to the remote branch while you were rebasing.
 2. **Never Force-Push `master` or `dev`**: Force-pushing to production or staging destroys shared team history and triggers merge cascades.
 3. **Verify Tests After Every Conflict Resolution**: Always execute `bun test` or equivalent before pushing a resolved branch.
+
+## 7. Intent Preservation
+
+Read the commits, PRs, or issues behind both sides for *why* before keeping either. Preserve both intents in the resolution, never `git rebase --abort` your way out of understanding, never invent behavior neither side had, and run checks after.

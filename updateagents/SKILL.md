@@ -2,6 +2,8 @@
 name: updateagents
 aliases: ["sync-agents","update-memory","agent-sync"]
 description: "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon."
+argument-hint: "[sync-context|update-memory|sync-AGENTS]"
+user-invocable: true
 version: 2.0.0
 author: Agency Council
 license: MIT

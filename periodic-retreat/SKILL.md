@@ -2,6 +2,8 @@
 name: periodic-retreat
 aliases: ["retreat","quarterly-retreat","strategic-retreat"]
 description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md."
+argument-hint: "quarterly retreat, purge debt, next-quarter OKRs"
+user-invocable: true
 version: 1.0.0
 author: Harsh Singh
 license: MIT
