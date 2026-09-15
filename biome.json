@@ -1,0 +1,43 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "files": {
+    "includes": [
+      "**",
+      "!.venv-report",
+      "!node_modules",
+      "!**/*.map",
+      "!.agents",
+      "!.opencode",
+      "!.codex",
+      "!.cursor",
+      "!.gemini",
+      "!.continue",
+      "!.crush",
+      "!.aider",
+      "!.cline",
+      "!.trae",
+      "!.omo",
+      "!.antigravity",
+      "!**/*.css"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  }
+}

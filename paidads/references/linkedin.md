@@ -22,6 +22,10 @@ Campaign plan: audience definition (job title/company/industry combos with reach
 7. Retarget site visitors and engagers as a second layer (small but hot audience).
 8. Pre-screen messages on a synthetic panel for resonance/clarity/credibility/urgency/differentiation before live spend.
 9. Define the anti-persona with exclusion criteria, map the buying committee (champion/economic buyer/blocker), and spec the lookalike seed (source, size, recency).
+10. Reconstruct the lookalike seed profile first: industry/size/region plus top category-defining tech (CRM, MAP, warehouse, primary cloud) — never ubiquitous infra.
+11. Grant champion status only on engagement evidence (title alone never counts); flag single-thread risk when one contact carries the deal.
+12. Check landing-page speed before scaling spend: confirm LCP/INP on the target URL and keep third-party tags (Insight Tag, chat, consent) off the critical render path — premium CPC punishes slow pages twice.
+13. Score sponsored creative against the author's own top-decile posts first (engagement = reactions + 3×comments; extract winning hook types, length, format) — data-backed patterns beat generic best practices.
 
 ## Quality gate
 
@@ -32,6 +36,14 @@ Campaign plan: audience definition (job title/company/industry combos with reach
 - [ ] Budget floor respects premium CPC reality.
 - [ ] Message pre-screened (resonance/clarity/credibility/urgency/differentiation) before spend.
 - [ ] Anti-persona exclusions, buying-committee map, and lookalike seed spec recorded.
+- [ ] Lookalike seed reconstructed from category-defining signals, not infra noise.
+- [ ] Champions evidenced; single-thread risk flagged.
+- [ ] Landing-page LCP/INP checked; third-party tags off critical path.
+
+## Routing
+
+- Landing-page copy behind the click → content copy mode for the proof wording.
+- Organic LinkedIn drafting, hooks, and ideation grids → smm content mode.
 
 ## Sources
 

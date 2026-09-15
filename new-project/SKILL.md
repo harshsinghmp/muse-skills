@@ -50,6 +50,20 @@ Interactive project creator and Project Operating System provisioner. Implements
 5. **Stage 5: Client Intake Brief**: Writes `Client-Intake/00-Intake-Brief.md` (employee checklist pre-filled from scaffold answers + agent instructions). Intake docs and `start-here.md` are written by the AI agent AFTER scaffolding, from real employee answers.
 6. **Stage 6: Closeout**: Synchronizes `.agents/context/` (decisions ADRs, product, current, architecture) and runs the health check.
 
+## Audit routing
+
+new-project embeds audit at two stages:
+- **Stage 0** runs `ai-ready` — the 13-asset repository audit (see `ai-ready` skill)
+- **Stage 6** runs the health check — `.agents/context/` sync verification
+
+For deeper audit of the scaffolded output, route to:
+- **UI/component audit** → `refactor-ui` audit mode (scored UI report)
+- **Code-quality audit** → `code-review` audit mode (cross-file invariants)
+- **Design-system audit** → `designscope` audit/score modes
+- **Skill-registry audit** → `sync_registry.py` check (run `audit-quick-on-skill-use.sh`)
+
+Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + routing.
+
 ---
 
 ## When to Use

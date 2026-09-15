@@ -1,41 +1,34 @@
-# audit — Full audit: technical + onpage + links + AEO synthesized into one prioritized plan.
+# audit — seo audit mode
 
-## Intake
+## When to Use
 
-- Access: GSC, analytics, crawl tool, AI prompt-set permission
-- Time window and KPI baselines
-- Business context (seasonality, migrations, redesigns)
-- Depth requested (surface vs deep)
-- Default stack: GSC, Serpbear for tracked trends (or proprietary equivalent).
+- **SERP audit**: On-page, off-page, technical SEO health
+- **Content freshness audit**: Identify stale content needing update
 
-## Deliverable
+## Checklist
 
-Audit report: health scores per pillar (indexability, relevance, authority, AEO), findings synthesized across modes with evidence, a prioritized 90-day roadmap, and expected-impact statements per item.
+- [ ] Title tags ≤60 chars, unique per page
+- [ ] Meta descriptions ≤160 chars, unique
+- [ ] Heading hierarchy logical (h1→h2→h3, no skips)
+- [ ] All images have alt text
+- [ ] Canonical URLs set for duplicate content
+- [ ] Sitemap.xml present and valid
+- [ ] robots.txt not blocking indexable pages
+- [ ] Core Web Vitals within thresholds (LCP ≤2.5s, FID ≤100ms, CLS ≤0.1)
+- [ ] Internal links use descriptive anchor text
+- [ ] No broken internal links (404 detection)
+- [ ] Content refreshed within documented cadence
 
-## Procedure
+## Severity & routing
 
-1. Run the technical pass (technical mode procedure) — indexability gate first.
-2. Run relevance pass: sampling of key templates and money pages (onpage procedure).
-3. Run authority pass: profile + competitor gap (links procedure).
-4. Run AEO pass: prompt-set baseline (aeo procedure).
-5. Synthesize: cross-pillar findings (e.g., great content that isn't indexed).
-6. Roadmap: 90 days, impact × effort ranked, quick wins first.
-7. Set re-audit cadence and the KPIs each roadmap item should move.
-8. Core-update volatility triage: freeze non-urgent changes during rollout, allow a settling window after, then diagnose scope as site-wide vs section vs template before acting.
-9. Score fixed dimensions 1-10 plus an overall health score; the weakest pillar becomes the roadmap lead theme.
-10. Drift classification on fixed triggers: label each moved query/page as growth, decline, reshuffle, stable, new, or lost.
+| Severity | Action | Route to |
+|:---|:---|:---|
+| Broken internal link | `AUTO-REPAIR` | update link or add redirect |
+| Missing meta description | `AUTO-REPAIR` | `content` (generate) |
+| Core Web Vitals fail | `REPORT-ONLY` | `webdev` (perf fix) |
+| Stale content (>12mo unupdated) | `REPORT-ONLY` | `content` (refresh) |
+| Duplicate title tags | `AUTO-REPAIR` | `seo` (differentiate) |
 
-## Quality gate
+## Output
 
-- [ ] All four pillars covered; indexability gated first.
-- [ ] Every finding cites evidence (URL, report, prompt result).
-- [ ] Cross-pillar synthesis present, not just concatenated sections.
-- [ ] Roadmap is 90 days, ranked, with owners.
-- [ ] Re-audit KPIs defined per roadmap item.
-- [ ] Volatility triage applied (freeze during rollout + settling window + scope diagnosis).
-- [ ] Dimension scores 1-10 with overall health recorded; weakest pillar leads the roadmap.
-- [ ] Drift classified (growth/decline/reshuffle/stable/new/lost) on fixed triggers.
-
-## Sources
-
-Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+`.agents/artifacts/audit-seo-<ts>.md` with findings table per canonical spec: `../skills/references/audit-mode-guidance.md`.

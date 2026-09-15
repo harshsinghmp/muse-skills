@@ -21,6 +21,9 @@ Status update in the client's language: shipped, in-flight, blocked (with owner 
 6. Follow the narrative spine: KPIs-vs-targets, then channel breakdown, then wins, then root-caused misses — with tiered depth (headline, detail, appendix).
 7. Run QBRs on a 45-60 min agenda ending in owned action items with dates.
 8. Solo: the status update is also your own continuity record — keep a copy per client even when the client never asks.
+9. Pre-read briefs carry attendee posture (cold/warm/active/hostile), talking points ranked and tied to facts, and 1-3 what-NOT-to-dos for this meeting.
+10. Verify before explaining: check the claim against the diff, test output, artifact, or observed metric first; label inference as inference, never as verified (keeper: mengto/audit-verify-explain-grade-5).
+11. Explain in grade-5 shape — What changed / Why it matters / How to verify — short sentences, terms defined, caveats kept visible (keeper: mengto/audit-verify-explain-grade-5).
 
 ## Quality gate
 
@@ -30,6 +33,8 @@ Status update in the client's language: shipped, in-flight, blocked (with owner 
 - [ ] Exec summary leads (top-3 wins/risks, continuity check) with audience-adapted cuts.
 - [ ] Narrative follows KPI-to-channel-to-wins-to-root-caused-misses spine with tiered depth.
 - [ ] QBR agenda 45-60 min; every action owned with a date.
+- [ ] Pre-read brief has postures, fact-tied talking points, and what-NOT-to-dos.
+- [ ] Revision updates use audit shape — safe changes / moved-with-destination / kept-inline / flagged, each naming exact what + where (keeper: 99rebels/skill-polisher).
 
 ## Routing
 

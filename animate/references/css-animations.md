@@ -4,7 +4,7 @@ The cheapest tool for quick fixes: hovers, presses, state toggles, and predeterm
 
 ## When to load
 
-Hover/press/color changes, `@starting-style` entry, keyframes, `@property`, scroll-driven animations, WAAPI, View Transitions, Tailwind animation config.
+Hover/press/color changes, `@starting-style` entry, keyframes, `@property`, scroll-driven animations, WAAPI, View Transitions, Tailwind animation config, seamless marquee loops, dependency-free word reveals, scroll-scrubbed text, progress timelines, progressive blur, spotlight reveals, static gradient borders.
 
 ## 1. Transition vs keyframe
 
@@ -46,6 +46,7 @@ Make non-interpolable values (gradients, colors) animatable:
 ```
 
 `syntax` REQUIRES `initial-value` — omit it and registration silently drops (property stays un-animatable). Register without the at-rule: `CSS.registerProperty({ name: "--angle", syntax: "<angle>", initialValue: "0deg", inherits: false });`
+- Static variant (no animation needed): double-background `linear-gradient(surface, surface) padding-box, linear-gradient(135deg, highlight, accent, fade) border-box` over a `1px transparent` border, inheriting the parent radius; keep most stops below `0.4` opacity and reserve `2px` for large hero cards or active states — subtle beats shiny.
 
 ## 4. Easing
 
@@ -76,6 +77,8 @@ Ties progress to scroll position — no JS, no `IntersectionObserver`. Safeguard
 - `animation-range` named phases: `entry` | `exit` | `entry-crossing` | `exit-crossing` | `cover` | `contain` (view timelines). Pair with `contain` to start when the element is fully in view, or `entry 0% contain 100%` for arbitrary brackets. Set `animation-fill-mode: both` (or `forwards`) so the effect holds before/after the range instead of snapping.
 - Named timelines decouple declaration from use: `.scroller { scroll-timeline: --chapter block; }` (or `view-timeline: --card block`), then any descendant reads `animation-timeline: --chapter`. For a *distant* (non-ancestor) source, hoist the name onto a shared ancestor with `timeline-scope: --chapter`.
 - WAAPI equivalents: `el.animate(keyframes, { timeline: new ViewTimeline({ subject: el }) })` and `new ScrollTimeline({ source: scroller, axis: "block" })` — no CSS registration needed.
+- Scroll-scrubbed word reveal (dependency-free): tokenize with `TreeWalker` — never flatten with `textContent`/`innerHTML`, preserve links/`em`/whitespace nodes, `aria-hidden` split spans over one untouched accessible copy. Map section progress to per-word `--word-progress`; hidden state `opacity 0.12–0.3`, `blur 4–10px`, `0.08–0.22em` rise. Scale the scroll span to text length (`120–220%` viewport per paragraph, `10–30%` word overlap); native scroll position is the single source of truth — never wheel delta, elapsed time, or autoplay.
+- Scroll progress timeline: render steps as a real ordered list first, then enhance — one base line plus one fill line driven by `scaleY/scaleX(progress)` (compositor-only), progress normalized between measured first/last point centers, steps marked active as the head crosses their centers. Left rail on small screens (never preserve alternation at reading-order cost); recalc geometry after fonts/images/resize.
 
 ## 6. View Transitions API
 
@@ -175,6 +178,11 @@ theme: {
 
 /* Border beam — conic-gradient rotating angle via @property */
 ```
+
+- Seamless marquee loop: duplicate the item sequence so end meets beginning, animate the track `0 → -50%` linear, keep item widths stable (no jumps), mask/fade the entry/exit edges, pause-or-slow on hover only when interaction is useful. Never animate must-read unique content; no CPU-heavy shadows/filters on moving items.
+- Word reveal (no library): `opacity 0 → 1`, `translateY(20px) → 0`, `0.8s cubic-bezier(0.16,1,0.3,1)`, `transition-delay: calc(var(--word-index) * 0.07s)`; fire once via `IntersectionObserver` at ~20% visible. Keep content visible without JS (`html.js` gate hides only post-activation) and expose the full sentence via `aria-label`. Masked variant: words rise `yPercent 110 → 0` through `overflow: hidden` word masks, trigger at ~82% viewport.
+- Progressive blur edge: stack 5–6 full-size layers with rising `backdrop-filter: blur(0.5px → 16px)` under staggered linear `mask` bands so blur deepens toward the edge; `pointer-events: none`, z-index above content but below modals, and real background behind it (backdrop-filter blurs what is behind).
+- Cursor spotlight reveal: two identically-composed stacked images, feathered radial `mask-image` on the overlay driven by CSS vars, raw pointer eased toward render position in one `requestAnimationFrame` loop (`~0.1` ease), radius collapsing to `0` on pointer exit — never leave a stale spotlight. Keep the native cursor unless the design demands otherwise.
 
 ## 10. Discrete transitions (`display`/`overlay`) — popover/dialog enter-exit
 

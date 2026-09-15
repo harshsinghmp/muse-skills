@@ -22,6 +22,9 @@ Profile kit (avatar, covers/banners per platform at exact dims), post templates 
 
 ## Quality gate
 
+- [ ] Exact dims per asset — IG post 1080×1080 / story-reel 1080×1920 / carousel 1080×1350;
+  FB post 1200×630; X post 1200×675; LinkedIn post 1200×627; Pinterest pin 1000×1500;
+  YT thumbnail 1280×720; Threads post 1080×1080.
 - [ ] Safe zones respected (text clear of platform UI overlays).
 - [ ] Text at or above platform legibility minimums.
 - [ ] Every template built from brand tokens — no one-offs.

@@ -60,7 +60,7 @@ per root cause listing every location it appears in:
 ### review (default)
 1. Resolve the target to a concrete file path (ports drift; paths don't).
 2. Squint test → identify primary/secondary/groups in order.
-3. Check the 11 heuristics + concentric radius + grouping ratio.
+3. Check the 11 heuristics + concentric radius + grouping ratio, holding hierarchy thresholds (≥1.5× size differentials between levels; exactly one emphasis zone; entry point = primary goal; bold sparing) and density/scan checks (F-pattern for lists/tables, Z-pattern for hero+CTA; every element earns its place — flag 10+-column tables and disclosure that hides primary actions).
 4. Emit the severity table with **no edits**. Offer modes: "want me to
    `improve` this, or `audit` it mechanically first?"
 
@@ -68,23 +68,29 @@ per root cause listing every location it appears in:
 1. Run `bun refactor-ui/scripts/audit-ui.ts <paths>` — paste output as receipt.
 2. Extract fg/bg pairs the surface actually renders; verify each with
    `bun refactor-ui/scripts/check-contrast.ts <fg> <bg>` (normal + large).
-3. Heuristic pass (11 heuristics + research additions) with proof gates.
+3. Heuristic pass (11 heuristics + research additions) with proof gates, holding type thresholds (scale-step ratio ≥1.25×; body ≥16px desktop / 14px mobile; ≤2 weights per screen; no orphaned one-off styles), color traps (link 4.5:1 even without underline; placeholder/disabled pairs; interactive vs static color distinct), and affordance checks (touch targets ≥44×44; no false/missing affordances; no hover-only actions; focus ring never removed without a replacement).
 4. Score: per-heuristic Pass / Partial / Fail; overall Block/Approve verdict.
 5. Write `.agents/artifacts/ui-audit-report-<ts>.md`; echo ≤5-line summary.
 
 ### improve
 Execute the 5-step procedure in SKILL.md (Triage → Structure → Polish →
-Contrast Oracle → 5-State Gate). After the Contrast Oracle, also apply:
+Contrast Oracle → 5-State Gate). Work with the existing stack — improve
+what's there, never rewrite from scratch. Fix in impact order: font swap →
+color cleanup → hover/active states → layout/spacing → generic-component
+replacement → missing states → type-scale polish. After the Contrast Oracle,
+also apply:
 concentric radius (`inner = outer − padding`), grouping ratio (inter ≥ 2×
 intra), named z-scale (no raw 9999), theme parity (verify in light AND dark).
+Tokenize in three tiers (global raw values → semantic aliases → component tokens; no raw values in components). Feedback timing: acknowledge input ≤100ms, indicator for 400ms–3s, determinate progress beyond; never flash a spinner under ~400ms. Error messages state what happened, why, and the exact fix — and preserve user input.
 
 ### sweep
 1. Inventory: enumerate routes/views touching the surface family.
 2. Extract the token set actually in use; flag literals.
 3. Consistency matrix: rows = components, columns = heuristics; mark drift.
-4. Fix per heuristic across all pages (batch by heuristic, not by page —
+4. Present the matrix-derived fix plan grouped by heuristic and apply only approved groups — never smuggle a redesign into a batch.
+5. Fix per heuristic across all pages (batch by heuristic, not by page —
    one decision applied everywhere beats N local decisions).
-5. Re-run matrix; unresolved cells become tracked rows in the report.
+6. Re-run matrix; unresolved cells become tracked rows in the report.
 
 ### tokens
 1. Inventory every literal color/spacing/radius/font-size in scope.
@@ -114,4 +120,4 @@ intra), named z-scale (no raw 9999), theme parity (verify in light AND dark).
 | Hardening the refactored surface (security headers, viewports) | `gauntlet-loop` |
 | Interaction-correctness defects (not visual) | `code-review` |
 | Failed/parked refactor work | `dead-letter` |
-| Visual regeneration or brand exploration | Out of scope — say so |
+| Visual regeneration, new brand exploration, or full redesign | `design` (`ui`/`branding` modes) — never smuggle a redesign into improve/polish |

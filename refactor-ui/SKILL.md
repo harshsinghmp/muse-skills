@@ -72,6 +72,31 @@ agent loads only what the task needs.
 | **tokens** | Styling layer | Token defs + call sites | Zero literals remain |
 | **polish** | Whole path, all states | Narrow fixes | Zero P1 drift |
 
+## Verification
+
+Run before reporting completion:
+- [ ] Target file/component path verified — source exists
+- [ ] No secrets in output artifacts (scan `sk-*`, `ghp_*`)
+- [ ] After `audit` mode: `.agents/artifacts/ui-audit-report-*.md` produced with scored findings
+- [ ] Anti-patterns from audit report addressed in `improve` or `sweep` run
+- [ ] WCAG 2.2 AA contrast verified for any color or typography change
+- [ ] After `tokens` run: zero hardcoded pixel values remain in styling layer
+- [ ] After `polish` run: zero P1 drift items remain open
+- [ ] If refactoring shipped code: `bun test` green, no behavior regressions
+
+For fullArtifact audit (scored UI report): `audit` mode (default tier: Standard).
+
+Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
+
+### Audit routing
+
+refactor-ui has a built-in `audit` mode (scripted anti-pattern + WCAG 2.2 AA scan). Route deeper audits to:
+- **Content-quality audit** → `content` audit mode (anti-slop scan, fact verification)
+- **Code-quality audit** → `code-review` audit mode (cross-file invariants)
+- **UI accessibility deep-pass** → `refactor-ui` `polish` mode (launch-readiness triage)
+
+Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + routing.
+
 ### The Atomic Heuristics
 
 | # | Heuristic Domain | Core Problem Solved | Primary Tool / Technique |

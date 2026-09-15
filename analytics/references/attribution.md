@@ -23,6 +23,8 @@ An attribution analysis: channel/touchpoint contribution under the chosen model(
 7. Recommend an action (shift budget, fix a leaking channel), not just a chart.
 8. Set lookback at 1.5-2x the sales cycle with separate click and view windows; re-evaluate quarterly.
 9. Validate causal impact with an incrementality holdout before locking budget shifts.
+10. Triangulate with self-reported attribution ("How did you hear about us?" at conversion) — the out-of-model check for dark social and word-of-mouth tracking cannot see.
+11. Fix one system as the conversion count of record (usually CRM/backend); never sum platform-reported numbers — de-dupe claimants against the record. Split branded vs non-branded search before judging top-of-funnel.
 
 ## Quality gate
 
@@ -33,6 +35,11 @@ An attribution analysis: channel/touchpoint contribution under the chosen model(
 - [ ] Recommendation is actionable.
 - [ ] Lookback at 1.5-2x cycle (click/view separate), re-evaluated quarterly.
 - [ ] Causal claim backed by holdout, not model output alone.
+- [ ] Self-reported input collected at conversion; one count-of-record fixed, platforms de-duped against it; branded/non-branded split.
+
+## Routing
+
+- Event-definition or UTM/tagging fixes → tracking mode; spend shifts → paidads audit mode.
 
 ## Sources
 

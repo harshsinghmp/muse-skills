@@ -20,6 +20,7 @@ A hardening plan applied: least-privilege roles, security headers (CSP, HSTS, et
 5. Patch dependencies; enable automated vulnerability scanning (routes to `code-review`).
 6. Restrict network access (firewalls, private subnets, WAF where needed).
 7. Enable audit logging and alerting on suspicious access.
+8. For AI-exposing systems: identify the operator's role (provider vs deployer — duties differ), review read-only against official sources with exact citations, and report issue-spotting only — never a compliance verdict, score, or legal conclusion.
 
 ## Quality gate
 
@@ -29,6 +30,11 @@ A hardening plan applied: least-privilege roles, security headers (CSP, HSTS, et
 - [ ] Secrets in a manager; exposed ones rotated.
 - [ ] Dependencies patched + scanned.
 - [ ] Audit logging enabled.
+
+## Routing
+
+- Outbound URLs: https-only, allowlisted host, resolve-all-DNS rejecting non-unicast (incl. cloud metadata 169.254.169.254), no silent redirects; note the check-then-fetch TOCTOU — pin the IP or filter egress on high-risk surfaces. Rate limits count in a shared store past one process (in-memory × instances).
+- Destructive paths: target must resolve under an allowlisted root (post-symlink), below the root, with ownership evidence read before teardown; on refusal log-and-stop, never fall back broader. Dependency triage: reachable + critical/high = fix now, else backlog with a review date; never blind `--force` remediation. Control-level detail routes to `code-review` security mode.
 
 ## Sources
 

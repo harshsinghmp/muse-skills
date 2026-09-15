@@ -26,6 +26,7 @@ import { join } from "node:path";
 const ROOT = join(import.meta.dir, "..");
 const REG_PATH = join(ROOT, "skills.json");
 
+// biome-ignore lint/suspicious/noExplicitAny: skills.json is untyped JSON registry
 function load(): any {
   if (!existsSync(REG_PATH)) fail(`registry not found: ${REG_PATH}`);
   return JSON.parse(readFileSync(REG_PATH, "utf8"));
@@ -44,7 +45,11 @@ function resolveSelection(reg: any, sel: string): string[] {
     const [kind, arg] = [rule.slice(0, rule.indexOf(":")), rule.slice(rule.indexOf(":") + 1)];
     if (kind === "scope") return skills.filter((s) => s.scope === arg).map((s) => s.name);
     if (kind === "category") return skills.filter((s) => s.category === arg).map((s) => s.name);
-    if (kind === "names") return arg.split(",").map((n) => n.trim()).filter(Boolean);
+    if (kind === "names")
+      return arg
+        .split(",")
+        .map((n) => n.trim())
+        .filter(Boolean);
     fail(`selection "${sel}" has unknown resolve rule: ${rule}`);
   }
   if (sel === "all") return skills.map((s) => s.name);

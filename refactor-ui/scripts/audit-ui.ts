@@ -8,8 +8,8 @@
  * Scans .tsx/.jsx/.ts/.js/.vue/.svelte/.html/.css files (recursively for dirs).
  * Exit 0 = clean, 2 = findings.
  */
-import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
-import { join, extname } from "node:path";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { extname, join } from "node:path";
 
 interface Pattern {
   id: string;
@@ -23,8 +23,7 @@ const PATTERNS: Pattern[] = [
     id: "ARBITRARY_PIXELS",
     regex: /(?:p|m|gap|w|h|text)-\[(\d+)px\]/i,
     severity: "WARNING",
-    message:
-      "Arbitrary pixel value. Use 4px/8px scale tokens instead (p-4, text-sm, gap-6).",
+    message: "Arbitrary pixel value. Use 4px/8px scale tokens instead (p-4, text-sm, gap-6).",
   },
   {
     id: "INACCESSIBLE_GRAY_TEXT",
@@ -37,22 +36,19 @@ const PATTERNS: Pattern[] = [
     id: "PURE_BLACK_TEXT",
     regex: /(?:color:\s*#000000|color:\s*#000\b|\btext-black\b)/i,
     severity: "SUGGESTION",
-    message:
-      "Pure black text. Prefer deep tinted neutrals (#0f172a / zinc-900) to avoid optical vibration.",
+    message: "Pure black text. Prefer deep tinted neutrals (#0f172a / zinc-900) to avoid optical vibration.",
   },
   {
     id: "SYMMETRICAL_SHADOW",
     regex: /(?:box-shadow|boxShadow):\s*["']?\s*0\s+0\s+\d+px/i,
     severity: "WARNING",
-    message:
-      "Symmetrical shadow. Natural light comes from above; ensure vertical Y-offset > 0.",
+    message: "Symmetrical shadow. Natural light comes from above; ensure vertical Y-offset > 0.",
   },
   {
     id: "ALL_CAPS_NO_TRACKING",
     regex: /\buppercase\b(?!.*\btracking-(?:wider|widest)\b)/i,
     severity: "SUGGESTION",
-    message:
-      "Uppercase text without wide letter-spacing. Add tracking-wider / tracking-widest.",
+    message: "Uppercase text without wide letter-spacing. Add tracking-wider / tracking-widest.",
   },
   {
     id: "RAW_Z_INDEX",
@@ -70,9 +66,7 @@ const PATTERNS: Pattern[] = [
   },
 ];
 
-const EXTENSIONS = new Set([
-  ".tsx", ".jsx", ".ts", ".js", ".vue", ".svelte", ".html", ".css",
-]);
+const EXTENSIONS = new Set([".tsx", ".jsx", ".ts", ".js", ".vue", ".svelte", ".html", ".css"]);
 const SKIP_DIRS = new Set(["node_modules", ".git", "dist", ".next", "build"]);
 
 function collectFiles(target: string, out: string[] = []): string[] {
@@ -122,8 +116,7 @@ function main() {
   }
 
   console.log(
-    `\naudit-ui: ${files.length} file(s) scanned, ${findings} finding(s)` +
-      (findings === 0 ? " — clean" : ""),
+    `\naudit-ui: ${files.length} file(s) scanned, ${findings} finding(s)` + (findings === 0 ? " — clean" : ""),
   );
   process.exit(findings > 0 ? 2 : 0);
 }

@@ -20,6 +20,8 @@ A proposal: problem/outcome framing, proposed approach, phased plan with deliver
 5. Offer clear pricing options with what each includes (and what it does not).
 6. Add proof: relevant case studies, results, references.
 7. End with explicit next steps and an expiry/validity window.
+8. Define in/out-of-scope boundaries and measurable success criteria; get stakeholder sign-off on both before work starts.
+9. Name the decision-maker and decision rights per phase (who decides when input conflicts); map rival approaches per key task as table-stakes vs differentiators and price the gap.
 
 ## Quality gate
 
@@ -29,6 +31,12 @@ A proposal: problem/outcome framing, proposed approach, phased plan with deliver
 - [ ] Pricing options explicit with inclusions/exclusions.
 - [ ] Relevant proof included.
 - [ ] Clear next steps and validity window.
+- [ ] Scope boundaries, success criteria, and decision rights stated; competitive gap priced.
+- [ ] Terms screened for seller-killers before legal: uncapped indemnity, MFN, perpetual license-back, missing DPA, NET-60+, broad non-solicit — flagged with severity, never auto-accepted.
+
+## Routing
+
+- Accepted proposal → `sow` for scope/terms; delivery tracking → `milestone`.
 
 ## Sources
 

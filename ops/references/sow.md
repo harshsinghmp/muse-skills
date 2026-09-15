@@ -29,6 +29,9 @@ A statement of work: scope in/out, deliverables with acceptance criteria, timeli
 - [ ] Payment terms tied to milestones.
 - [ ] Revision rounds capped.
 - [ ] Change-order process defined and signed.
+- [ ] Success predicate written as a verifiable end-state, plus named non-counting outcomes (near-misses that do not count as done).
+- [ ] Return condition set: handoff only when deliverables survive their acceptance checks, never best-effort summaries.
+- [ ] Cross-border terms name governing jurisdiction and attach a GDPR DPA wherever EU personal data is in scope.
 
 ## Sources
 

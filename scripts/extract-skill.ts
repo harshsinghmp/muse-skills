@@ -1,18 +1,19 @@
 #!/usr/bin/env bun
+
 /**
  * ⚡ Autonomous Skill Extraction Helper for Recurring Patterns
- * 
+ *
  * Packages verified problem-solving patterns into a standard, RFC-compliant Agent Skill.
  * Inspired by self-learning-skills and the Self-Improvement extraction workflow.
- * 
+ *
  * The 3 Extraction Gates:
  *   1. Recurrence Gate: Pattern observed across >=3 tasks/occurrences.
  *   2. Verification Gate: Solution verified by passing tests/code.
  *   3. Generalization Gate: Portable across codebases (no hardcoded environment paths or secrets).
- * 
+ *
  * Usage:
  *   bun scripts/extract-skill.ts --name <skill-name> --desc "<description>" [options]
- * 
+ *
  * Options:
  *   -n, --name <name>          Skill name in kebab-case (required)
  *   -d, --desc <desc>          Trigger-rich description (required)
@@ -31,13 +32,13 @@
  *   -h, --help                 Show help message
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
-import { resolve, join, relative, basename } from "node:path";
-import { parseArgs } from "node:util";
 import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { parseArgs } from "node:util";
 
 // Fail fast on unhandled rejections
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", (reason, _promise) => {
   console.error("Unhandled Rejection:", reason);
   process.exit(1);
 });
@@ -70,11 +71,7 @@ export interface GateResult {
 /**
  * Gate 1: Check pattern recurrence (must be observed >= 3 times).
  */
-export function checkRecurrenceGate(
-  evidence?: string,
-  occurrences?: number,
-  force = false
-): GateResult {
+export function checkRecurrenceGate(evidence?: string, occurrences?: number, force = false): GateResult {
   if (force) {
     return { ok: true, gate: "recurrence", message: "Recurrence gate bypassed via --force." };
   }
@@ -83,7 +80,7 @@ export function checkRecurrenceGate(
 
   if (evidence) {
     const num = parseInt(evidence, 10);
-    if (!isNaN(num)) {
+    if (!Number.isNaN(num)) {
       count = Math.max(count, num);
     } else if (existsSync(evidence)) {
       try {
@@ -108,22 +105,45 @@ export function checkRecurrenceGate(
   return { ok: true, gate: "recurrence", message: `Recurrence verified (${count} occurrences).` };
 }
 
+const ALLOWED_TEST_CMD_PREFIXES = [
+  "bun test",
+  "npm test",
+  "pnpm test",
+  "yarn test",
+  "pytest",
+  "cargo test",
+  "go test",
+  "vitest",
+  "jest",
+  "mocha",
+  "phpunit",
+  "python -m pytest",
+];
+
+function isAllowedTestCommand(cmd: string): boolean {
+  const trimmed = cmd.trim();
+  return ALLOWED_TEST_CMD_PREFIXES.some((prefix) => trimmed === prefix || trimmed.startsWith(prefix + " "));
+}
+
 /**
  * Gate 2: Check solution verification (must be verified via test command or explicit confirmation).
  */
-export function checkVerificationGate(
-  testCmd?: string,
-  verified = false,
-  force = false,
-  cwd?: string
-): GateResult {
+export function checkVerificationGate(testCmd?: string, verified = false, force = false, cwd?: string): GateResult {
   if (force) {
     return { ok: true, gate: "verification", message: "Verification gate bypassed via --force." };
   }
 
   if (testCmd) {
-    const res = spawnSync(testCmd, {
-      shell: true,
+    if (!isAllowedTestCommand(testCmd)) {
+      return {
+        ok: false,
+        gate: "verification",
+        message: `Blocked: --test-cmd "${testCmd}" matches no allowed test runner. Allowed: ${ALLOWED_TEST_CMD_PREFIXES.join(", ")}`,
+      };
+    }
+
+    const [cmd, ...args] = testCmd.trim().split(/\s+/);
+    const res = spawnSync(cmd, args, {
       cwd: cwd || process.cwd(),
       stdio: "pipe",
       encoding: "utf8",
@@ -144,7 +164,8 @@ export function checkVerificationGate(
     return {
       ok: false,
       gate: "verification",
-      message: "Solution is not verified. Provide --test-cmd '<command>' or pass --verified to confirm working code/tests.",
+      message:
+        "Solution is not verified. Provide --test-cmd '<command>' or pass --verified to confirm working code/tests.",
     };
   }
 
@@ -154,10 +175,7 @@ export function checkVerificationGate(
 /**
  * Gate 3: Check generalization (no hardcoded user paths, environment-specific tokens, or secrets).
  */
-export function checkGeneralizationGate(
-  texts: string[],
-  force = false
-): GateResult {
+export function checkGeneralizationGate(texts: string[], force = false): GateResult {
   if (force) {
     return { ok: true, gate: "generalization", message: "Generalization gate bypassed via --force." };
   }
@@ -210,7 +228,8 @@ export function generateSkillMd(opts: {
   const category = opts.category || "core-engine";
   const priority = opts.priority || 20;
   const tags = opts.tags && opts.tags.length > 0 ? opts.tags : ["automation", "workflow", "self-learning"];
-  const tools = opts.tools && opts.tools.length > 0 ? opts.tools : ["bash", "view_file", "write_to_file", "run_command"];
+  const tools =
+    opts.tools && opts.tools.length > 0 ? opts.tools : ["bash", "view_file", "write_to_file", "run_command"];
   const title = opts.name
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -353,7 +372,8 @@ bun test
  * Generate companion agents/openai.yaml content.
  */
 export function generateOpenAiYaml(opts: { name: string; description: string; tools?: string[] }): string {
-  const tools = opts.tools && opts.tools.length > 0 ? opts.tools : ["bash", "view_file", "write_to_file", "run_command"];
+  const tools =
+    opts.tools && opts.tools.length > 0 ? opts.tools : ["bash", "view_file", "write_to_file", "run_command"];
   const toolList = tools.map((t) => `  - type: function\n    function:\n      name: ${t}`).join("\n");
 
   return `name: ${opts.name}
@@ -417,7 +437,7 @@ export function extractSkill(options: ExtractionOptions): {
   // Gate 3: Generalization
   const generalization = checkGeneralizationGate(
     [options.name, options.desc, options.evidence || "", options.testCmd || ""],
-    options.force
+    options.force,
   );
   if (!generalization.ok) {
     return {

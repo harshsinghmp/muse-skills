@@ -44,6 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **attribution** | "attribution", "which channel converts", "marketing mix", "hero channel" | Multi-touch attribution and channel contribution analysis | [references/attribution.md](references/attribution.md) |
 | **reporting** | "marketing report", "monthly report", "performance report", "client report" | Recurring performance reports that end in decisions | [references/reporting.md](references/reporting.md) |
 | **cro** | "increase conversions", "cro", "a/b test", "funnel audit", "conversion audit" | Funnel audit and conversion experiments | [references/cro.md](references/cro.md) |
+| **audit** | "audit analytics", "data audit", "event audit", "definition drift" | Data audit (events firing, definitions match implementation) + reporting audit (dashboards accurate) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

@@ -50,6 +50,7 @@ Every invocation resolves to one of five modes. Route on the *verb*, not the nou
 | **review** | "review the animation", "critique the motion in this diff" | Flag-by-default diff review → findings table + Block/Approve verdict | [review-checklist.md](references/review-checklist.md) |
 | **improve** | "improve the animations", "make this app feel better" | Read-only recon → audit → prioritized plan (does **not** edit source) | [review-checklist.md](references/review-checklist.md) |
 | **audit** | "audit the motion", "animation audit" | Same as **improve**: severity-ordered findings + self-contained remediation plans | [review-checklist.md](references/review-checklist.md) |
+| **audit-deep** | "deep audit", "accessibility audit", "performance audit" | Reduced-motion check, vestibular triggers, performance budget, jank detection | [references/audit.md](references/audit.md) |
 | **find** | "what could animate here?", "make this more alive" | Gate-driven hunt; rejects most candidates, proposes only high-leverage motion | [review-checklist.md](references/review-checklist.md) |
 
 In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. Only **build** edits code.

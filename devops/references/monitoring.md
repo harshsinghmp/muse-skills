@@ -29,6 +29,11 @@ An observability setup: SLIs/SLOs, metrics, structured logs, traces where useful
 - [ ] Each alert links a runbook and routes to an owner.
 - [ ] Alerting tested end to end.
 
+## Routing
+
+- Instrument from 2–4 on-call questions per feature; metrics = that (RED per endpoint, USE per resource; histograms p50/p95/p99 never averages; labels from fixed sets only — never user IDs/URLs), traces = where, logs = why (structured events + correlation + entry-point IDs, never secrets).
+- Two severities only — page (user hurt, act now) vs ticket (act this week); every alert links a ≥3-line runbook (means / first query / escalate), updated after each incident that used it; live-incident handling routes to `devops` incident.
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

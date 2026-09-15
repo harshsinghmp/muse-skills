@@ -91,3 +91,11 @@ never the only feedback channel. refactor-ui owns this rule and static press
 feedback (`scale(0.96)` on `:active`); all easing curves, entrance/exit
 choreography, and stagger decisions belong to the `animate` skill. Route,
 don't improvise.
+
+## 9. Card & micro-UI restraint
+
+- A card must earn its container: background color **or** border **or**
+  spacing — not all three at once. No cards inside cards inside cards.
+- Strip micro-chrome that carries no decision: pill tags, stub badges,
+  system-marker labels. If removing it changes nothing the user can act
+  on, it ships removed.

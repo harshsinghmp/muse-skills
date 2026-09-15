@@ -21,6 +21,10 @@ A funnel map: stages with volumes/rates, the biggest leak, prioritized improveme
 6. Define the offer/lead-magnet per stage where needed.
 7. Set a review cadence; fix one stage at a time to attribute impact.
 8. Quantify leaks in order: multi-model comparison first, then assisted-conversion ratios, then path-length and time-to-convert distributions.
+9. Split retention work: voluntary churn (typically 50-70%) gets save flows, involuntary (30-50%, failed payments) gets dunning — fix the latter first, it is easier. Offer pause (1-3 months max; 60-80% of pausers return) before cancel; save discounts at 20-30% for 2-3 months, never 50%+ (trains cancel-for-deals).
+10. Engineer the referral stage: default double-sided rewards, lead with the larger-feeling number ($10 off beats 40% off on low-ticket), reward at the aha moment or milestone — not signup — with one-click share.
+11. Endow progress in activation: pre-complete the first checklist step so users start at ~20%, not 0%.
+12. Rank acquisition triggers by purchase correlation before sequencing: former users/champions first (immediate), new leadership in days 14-45, high-intent behavior within 24-48h, tech-stack change 1-2 weeks out; time win-backs (ghosted 30-60 days, competitor renewal 90 days before) — execution routes to content email mode.
 
 ## Quality gate
 
@@ -29,8 +33,15 @@ A funnel map: stages with volumes/rates, the biggest leak, prioritized improveme
 - [ ] Causes diagnosed, not guessed.
 - [ ] Prioritized improvements with metrics.
 - [ ] Measurement plan defined.
+- [ ] Each fix ships as a falsifiable hypothesis (If/Then/Because): one variable, pre-set sample size or duration, no peeking, guardrail metrics watched.
 - [ ] Leak quantified via model comparison, then assisted ratios, then path/time distributions.
 - [ ] No channel execution here — routed to the relevant tool.
+- [ ] Retention split voluntary/involuntary with pause-before-cancel and capped save offers; referral engineered double-sided at the aha moment; activation endowed.
+- [ ] Acquisition triggers ranked with timing; execution routed to content email mode.
+
+## Routing
+
+- Sequence copy execution → content email mode; paid-stage fixes → paidads audit mode.
 
 ## Sources
 

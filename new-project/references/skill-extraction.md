@@ -93,3 +93,9 @@ bun scripts/extract-skill.ts \
 | `-r, --register` | none | Automatically updates `skills.json`, `llms.txt`, and `README.md`. |
 | `--dry-run` | none | Preview gate results and file scaffolding without disk writes. |
 | `-f, --force` | none | Bypass gate checks or overwrite existing target directory. |
+
+---
+
+## 5. Progressive Disclosure & Trigger Wording
+
+Keep `SKILL.md` under ~500 lines: metadata (name + trigger-rich description) always in context, body on trigger, heavy docs/scripts in `references/` + `scripts/` loaded as needed. Write descriptions slightly pushy — name the user phrases and contexts that should trigger the skill, since undertriggering (skill present but unused) is the common failure.

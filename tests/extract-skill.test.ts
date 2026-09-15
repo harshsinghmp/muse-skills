@@ -1,13 +1,13 @@
-import { describe, test, expect, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import fs from "node:fs";
-import path from "node:path";
 import os from "node:os";
+import path from "node:path";
 import {
-  validateSkillName,
+  checkGeneralizationGate,
   checkRecurrenceGate,
   checkVerificationGate,
-  checkGeneralizationGate,
   extractSkill,
+  validateSkillName,
 } from "../scripts/extract-skill";
 
 describe("Skill Extraction Helper (extract-skill)", () => {
@@ -53,7 +53,7 @@ describe("Skill Extraction Helper (extract-skill)", () => {
     const evidenceFile = path.join(tmpDir, "LEARNINGS.md");
     fs.writeFileSync(
       evidenceFile,
-      "- [x] Occurrence 1: Observed in API auth\n- [x] Occurrence 2: Observed in worker\n- [x] Occurrence 3: Observed in cron\n"
+      "- [x] Occurrence 1: Observed in API auth\n- [x] Occurrence 2: Observed in worker\n- [x] Occurrence 3: Observed in cron\n",
     );
     const fileRes = checkRecurrenceGate(evidenceFile, undefined, false);
     expect(fileRes.ok).toBe(true);
@@ -69,14 +69,28 @@ describe("Skill Extraction Helper (extract-skill)", () => {
     const passRes = checkVerificationGate(undefined, true, false);
     expect(passRes.ok).toBe(true);
 
-    // Passing command succeeds
-    const cmdPass = checkVerificationGate("true", false, false, tmpDir);
+    // Passing command succeeds (create a passing fixture test)
+    const passFixture = path.join(tmpDir, "fixtures", "pass.test.ts");
+    fs.mkdirSync(path.join(tmpDir, "fixtures"), { recursive: true });
+    fs.writeFileSync(passFixture, "test('ok', () => { expect(true).toBe(true); });\n");
+    const cmdPass = checkVerificationGate("bun test", false, false, tmpDir);
     expect(cmdPass.ok).toBe(true);
 
-    // Failing command fails
-    const cmdFail = checkVerificationGate("false", false, false, tmpDir);
+    // Failing command fails (replace fixture with a failing test)
+    fs.writeFileSync(passFixture, "test('fails', () => { expect(true).toBe(false); });\n");
+    const cmdFail = checkVerificationGate("bun test", false, false, tmpDir);
     expect(cmdFail.ok).toBe(false);
     expect(cmdFail.message).toContain("Verification command failed");
+
+    // Command injection attempt blocked
+    const injectRes = checkVerificationGate("bun test; rm -rf /", false, false, tmpDir);
+    expect(injectRes.ok).toBe(false);
+    expect(injectRes.message).toContain("matches no allowed test runner");
+
+    // Unknown command blocked
+    const unknownRes = checkVerificationGate("evil-cmd --flag", false, false, tmpDir);
+    expect(unknownRes.ok).toBe(false);
+    expect(unknownRes.message).toContain("matches no allowed test runner");
 
     // Force bypass
     const forceRes = checkVerificationGate(undefined, false, true);
@@ -95,10 +109,7 @@ describe("Skill Extraction Helper (extract-skill)", () => {
     expect(secretFail.message).toContain("Potential credential/secret detected");
 
     // Clean inputs pass
-    const cleanPass = checkGeneralizationGate([
-      "extract-skill",
-      "Universal pattern extractor for automated workflows",
-    ]);
+    const cleanPass = checkGeneralizationGate(["extract-skill", "Universal pattern extractor for automated workflows"]);
     expect(cleanPass.ok).toBe(true);
 
     // Force bypass
@@ -179,10 +190,7 @@ describe("Skill Extraction Helper (extract-skill)", () => {
 
     fs.writeFileSync(skillsJsonPath, JSON.stringify({ skills: [] }, null, 2));
     fs.writeFileSync(llmsTxtPath, "# LLMS\n\n## Skills\n");
-    fs.writeFileSync(
-      readmePath,
-      "# Catalog\n\n| Skill | Description |\n|:---|:---|\n"
-    );
+    fs.writeFileSync(readmePath, "# Catalog\n\n| Skill | Description |\n|:---|:---|\n");
 
     const result = extractSkill({
       name: "registered-pattern",

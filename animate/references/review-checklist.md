@@ -78,6 +78,7 @@ The default-to-boring signals to kill:
 - **No exits** — enter animated, exit instant (or keyframe restart that teleports). Fix: symmetric `@starting-style`/transition exit path; transitions not keyframes.
 - **Everything-at-once** — group entrances and exits in a single beat with no stagger. Fix: 30–80ms stagger.
 - **Decorative motion on functional UI** — mouse-tracking, parallax, or animated charts on data the user reads. Fix: delete; decoration only on marketing/rare surfaces.
+- **Passive slop judgment** — slop is a choice made by reflex, not a color, font, or effect. Flag a choice when it could paste unchanged into an unrelated product, repeats a familiar generated pattern, conflicts with the local system, or communicates nothing. Judge the visible result — never guess whether AI made it, never assign a numeric score; cite one concrete location per finding.
 
 ## Output format
 

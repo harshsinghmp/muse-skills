@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **milestone** | "track milestones", "scope creep", "project tracking", "delivery status" | Milestone and scope tracking with change control | [references/milestone.md](references/milestone.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
+| **audit** | "audit ops", "process audit", "documentation audit", "milestone audit" | Process audit (proposals, SOWs, milestones) + documentation audit (cross-refs resolve) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

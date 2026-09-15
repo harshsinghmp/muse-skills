@@ -33,13 +33,9 @@ function extractScriptDeclaredCms(source: string): string[] {
 /** Values listed in a doc's `-c, --cms <cms>` flag table row. */
 function extractDocCmsValues(docSource: string): string[] {
   // Capture the whole row (cell content contains escaped pipes `\|`).
-  const flagRowMatch = docSource.match(
-    /^\|\s*`-c,\s*--cms <cms>`\s*\|\s*String\s*\|(.+)\|\s*$/m,
-  );
+  const flagRowMatch = docSource.match(/^\|\s*`-c,\s*--cms <cms>`\s*\|\s*String\s*\|(.+)\|\s*$/m);
   if (!flagRowMatch) return [];
-  return [...flagRowMatch[1].matchAll(/`([a-z-]+)`/g)]
-    .map((m) => m[1])
-    .sort();
+  return [...flagRowMatch[1].matchAll(/`([a-z-]+)`/g)].map((m) => m[1]).sort();
 }
 
 function diff(a: string[], b: string[]): string[] {
@@ -71,20 +67,12 @@ describe("📄 Doc-Sync Parity — new-project CMS flag list", () => {
   });
 
   it("every declared CMS value is honored by the script (wired branch or official-setup notice)", () => {
-    const wired = new Set(
-      [...scriptSource.matchAll(/config\.cms === "([a-z-]+)"/g)].map((m) => m[1]),
-    );
-    const officialSetup = scriptSource.match(
-      /const OFFICIAL_SETUP_CMS[^=]*=\s*\{([\s\S]*?)\}/,
-    );
+    const wired = new Set([...scriptSource.matchAll(/config\.cms === "([a-z-]+)"/g)].map((m) => m[1]));
+    const officialSetup = scriptSource.match(/const OFFICIAL_SETUP_CMS[^=]*=\s*\{([\s\S]*?)\}/);
     const officialKeys = new Set(
-      officialSetup
-        ? [...officialSetup[1].matchAll(/^\s*([a-z-]+):/gm)].map((m) => m[1])
-        : [],
+      officialSetup ? [...officialSetup[1].matchAll(/^\s*([a-z-]+):/gm)].map((m) => m[1]) : [],
     );
-    const unhandled = declared.filter(
-      (v) => !wired.has(v) && !officialKeys.has(v) && v !== "custom" && v !== "none",
-    );
+    const unhandled = declared.filter((v) => !wired.has(v) && !officialKeys.has(v) && v !== "custom" && v !== "none");
     expect(unhandled).toEqual([]);
   });
 

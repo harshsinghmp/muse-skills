@@ -21,6 +21,8 @@ Ready-to-publish post(s): a platform-native hook, body/caption, CTA, hashtags or
 5. Add native tags/hashtags, not a wall of them.
 6. Give visual direction (hook text on image, first-frame action, carousel slide plan).
 7. Produce 2–3 hook variants for A/B testing on high-intent topics.
+8. LinkedIn text posts: open with a two-line hook (≤40 chars/line — opener plus contrast twist, digits over words, no opening question); cap at 20 lines / 200–250 words, blank line between lines, close with a repost CTA.
+9. Ideation grid: cross 3–5 content pillars against 8 formats (actionable, motivational, analytical, contrarian, observation, X-vs-Y, present-vs-future, listicle) — one specific headline per cell, never reused across pillars.
 
 ## Quality gate
 
@@ -29,6 +31,12 @@ Ready-to-publish post(s): a platform-native hook, body/caption, CTA, hashtags or
 - [ ] One idea per post; CTA matches the objective.
 - [ ] Tags/hashtags are on-platform norms, not spam.
 - [ ] Visual direction or slide plan included.
+- [ ] LinkedIn drafts pass pre-ship lint: under the 3,000-char cap, first ~140 chars complete a sentence, no engagement bait, no Unicode pseudo-bold.
+
+## Routing
+
+- LinkedIn long-form or newsletter drafts in house voice → content email mode for the sequence structure.
+- Post performance data and iteration → smm analytics mode.
 
 ## Sources
 

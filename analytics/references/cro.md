@@ -23,6 +23,7 @@ A CRO plan: a funnel audit with drop-off by step, prioritized hypotheses (impact
 7. Ship winners, document losers, and feed learning into the next hypothesis.
 8. Score hypotheses Impact-Confidence-Ease; write each as "If we change X, metric Y moves because rationale Z".
 9. Size samples for 80% power at 95% significance with a minimum duration set before launch; no early stops.
+10. Falsify before launching: write what result would make you NOT ship — if nothing would, skip the test and just ship. One primary metric plus 3-5 guardrails; pre-register segments up front, post-hoc slices are noise-mining.
 
 ## Quality gate
 
@@ -33,6 +34,7 @@ A CRO plan: a funnel audit with drop-off by step, prioritized hypotheses (impact
 - [ ] Hypotheses ICE-scored and written If-change-then-metric-because-rationale.
 - [ ] Sample sized at 80% power / 95% significance with minimum duration enforced.
 - [ ] Results read against a pre-registered metric.
+- [ ] Falsifiability written pre-launch; segments pre-registered (no post-hoc slicing); guardrails checked before any ship call.
 - [ ] Learning documented for the next cycle.
 
 ## Sources

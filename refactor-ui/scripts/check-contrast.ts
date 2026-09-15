@@ -24,11 +24,7 @@ function parseHex(hexStr: string): [number, number, number] {
   if (full.length !== 6 || /[^0-9a-fA-F]/.test(full)) {
     throw new Error(`Invalid hex color format: #${h}`);
   }
-  return [
-    parseInt(full.slice(0, 2), 16),
-    parseInt(full.slice(2, 4), 16),
-    parseInt(full.slice(4, 6), 16),
-  ];
+  return [parseInt(full.slice(0, 2), 16), parseInt(full.slice(2, 4), 16), parseInt(full.slice(4, 6), 16)];
 }
 
 function srgbToLinear(channel: number): number {
@@ -73,9 +69,7 @@ function main() {
   }
 
   const aaa = flags.has("--aaa");
-  const threshold = aaa
-    ? flags.has("--large") ? 4.5 : 7
-    : flags.has("--large") || flags.has("--ui") ? 3 : 4.5;
+  const threshold = aaa ? (flags.has("--large") ? 4.5 : 7) : flags.has("--large") || flags.has("--ui") ? 3 : 4.5;
   const level = aaa ? "AAA" : flags.has("--large") || flags.has("--ui") ? "AA (large/UI)" : "AA (normal)";
 
   const pass = ratio >= threshold;

@@ -31,6 +31,10 @@ A social strategy: chosen platforms with rationale, a positioning/mission line (
 - [ ] Cadence is sustainable for the stated team.
 - [ ] Localization QA passed in order; quality-score gate met.
 - [ ] Voice and boundaries documented.
+- [ ] Voice drafts grounded in the client's own recent posts; quoted-source text kept out of the voice sample (keeper: mengto/write-like-meng-on-x).
+- [ ] Draft options materially different in angle/structure, never surface paraphrases; no invented metrics or usage claims (keeper: mengto/write-like-meng-on-x).
+- [ ] Bookmark-sourced quote posts state sample size and date range; thin history reported, not padded (keeper: mengto/x-bookmark-quote-posts).
+- [ ] Profile shell audited per active platform: value-prop first line, specific niche, one proof element, CTA/link present, no hashtag stuffing in bios.
 
 ## Sources
 

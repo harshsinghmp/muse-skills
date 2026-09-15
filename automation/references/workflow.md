@@ -21,6 +21,7 @@ A working automation: a trigger, the ordered steps (with mappings), failure/retr
 5. Handle failures: retries, alerts to the owner, and dead-letter for poison inputs.
 6. Make side-effecting steps idempotent (no duplicate emails/records).
 7. Set an owner, an off-switch, and a runbook; test the happy and failure paths.
+8. Diagnose broken runs by error class first (expression/mapping, credential/auth, HTTP/API, logic/flow, platform config): state root cause, why it happened, and where to look — then fix, re-test, and log one prevention note.
 
 ## Quality gate
 
@@ -29,6 +30,11 @@ A working automation: a trigger, the ordered steps (with mappings), failure/retr
 - [ ] Failure handling and retries present.
 - [ ] Side effects idempotent.
 - [ ] Happy and failure paths tested.
+- [ ] Failures diagnosed by error class with a prevention note logged.
+
+## Routing
+
+- Prompt-only failures (no workflow change needed) → automation prompt mode; poison-input patterns → dead-letter mode.
 
 ## Sources
 

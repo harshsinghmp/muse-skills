@@ -22,6 +22,7 @@ Local plan: GBP optimization spec (categories, services, description, photos, po
 6. GBP posts cadence: offers/events/updates weekly; Q&A seeded with real FAQs.
 7. Track maps rankings separately from organic (different SERP, different levers).
 8. Score visibility 0-100: NAP exact-match audit, citation triage, per-section completeness; emit top-5 quick wins and a 90-day plan.
+9. Review vigilance + cross-platform NAP: flag any 3-week review gap as ranking risk, treat 2+ fake-pattern matches (same-day bursts, single-review accounts, geo inconsistencies, copy-paste text, unmotivated volume spikes) as suspect, and verify NAP on Maps/SERP plus Bing/Apple/OSM listings — not just the top citation set.
 
 ## Quality gate
 

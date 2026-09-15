@@ -1,8 +1,8 @@
 ---
 name: git
 aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
-description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
-argument-hint: "[triage|branch|pr|release|cleanup|resolve|history]"
+description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
+argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history]"
 user-invocable: true
 version: 1.0.1
 author: Harsh Singh
@@ -81,13 +81,36 @@ Do **NOT** use this skill for:
 | :--- | :--- | :--- |
 | `triage` | Issue intake + triage + thread read + dup sweep | `anti-slop-triage.md` + `issue-to-pr-discipline.md` |
 | `branch` | Branch creation + worktree lanes | `branching-and-release-matrix.md` + `worktree-parallel-lanes.md` |
-| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
-| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
+|| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
+|| `pr-check` | Inspect CI checks on open PR, pull failure logs, extract failure snippet, `--json` machine-readable output | `pr-checks.md` |
+|| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
 | `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
+| `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit" | History audit (branch hygiene, commit-message compliance, merge-state, doc-sync) | `audit.md` |
 
 Token rule: in a mode, load only the references in its row — never the full set.
+
+## Verification
+
+Run before reporting completion:
+- [ ] Target branch exists (or was created) from `dev`
+- [ ] Current branch ≠ `master` (commits to master forbidden)
+- [ ] `bun test` passes with ≥1 updated test file
+- [ ] No secrets in staged files (scan `sk-*`, `ghp_*`)
+- [ ] Commit message follows Conventional Commits `<type>(<scope>): <subject>`
+- [ ] PR description includes test-evidence refs and deploy notes
+- [ ] Changelog entry added (not under `### Unreleased` alone)
+- [ ] `.agents/artifacts/WORKTREE-LEASE.md` released (if held)
+
+For shared-worktree safety: `audit-lease` checks `WORKTREE-LEASE.md` before git mutations.
+
+Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
+
+### Review-mode substeps (invoked from `pr` after the PR is open)
+
+- **code-review-comments** — review comments arrived on the PR: fetch → number + summarize each → apply selected fixes. Delegates to `code-review` (receive mode) for the actual feedback triage. Use when a review round lands and you need to triage, acknowledge, and clear comments before merging.
+- **pr-check** — CI checks failed on the open PR: inspect → pull failure logs → extract the failure snippet → `--json` machine-readable output + human-readable fix plan. Use before merging when CI is red; does not implement fixes, only diagnoses.
 
 ### 9-Tier Anti-Slop Classification Matrix
 
@@ -264,6 +287,10 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    EOF
    )"
    ```
+
+3. After the PR is open and CI runs, use review-mode substeps as needed:
+   - **pr-check** — if CI is red: inspect failing checks, pull the failure logs, extract the failure snippet, produce `--json` machine-readable output + a human-readable fix plan. Does not implement fixes; diagnoses so the right mode (or a human) can.
+   - **code-review-comments** — if review comments arrive: fetch → number + summarize each comment → apply selected fixes (delegates to `code-review` receive mode for the actual triage).
 
 ### Phase 7: Staging Integration & Conflict Resolution Playbook (`dev`)
 1. Verify CI workflow passes:

@@ -33,6 +33,7 @@ A dated editorial calendar: per-day platform, pillar, format, hook direction, CT
 - [ ] Production dates precede publish dates.
 - [ ] Slots sit in history-ranked windows; weekly slack slot reserved.
 - [ ] Reactive slack exists.
+- [ ] Engagement pulled 24–48h after publish; next week adjusted from it (keeper: wshobson/social-publishing).
 
 ## Sources
 

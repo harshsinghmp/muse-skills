@@ -6,6 +6,34 @@ All notable changes to this project are documented in this file.
 
 _(nothing)_
 
+## [4.1.0] - 2026-09-16
+
+### Added
+
+- **Audit Mode (13 skills)**: database, git, smm, ops, gtm, animate, analytics, seo, qa-launch, content, pua, growth, mobile — each with `references/audit.md` + modes-table row; 5 companion skills got audit routing sections
+- **Automation Infrastructure**: 14 shell hooks (`scripts/hooks/`) — session-close report archive, secret-scan pre-commit, worktree-lease check, registry sync, stale-frontmatter check, pre-push test gate, session-resume probe, dead-letter sweep, cache-pressure check, gauntlet closeout, context-switch snapshot, evidence-decision sync, audit-quick check
+- **Lint + Type-Check**: biome (JS/TS), ruff (Python), tsc (TypeScript) — wired into CI as separate jobs
+- **CI/CD Pipeline**: release workflow (`.github/workflows/release.yml`) — tag push → bun test → npm publish → GitHub release
+- **Security**: command-injection fix in extract-skill.ts (removed `shell:true`, added allowlist validator); gitleaks secret scan in CI
+- **Evidence Ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking with 4-tier confidence taxonomy
+- **Session Report Archive**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
+
+### Fixed
+
+- Command injection in `scripts/extract-skill.ts` — `spawnSync(shell:true)` → `spawnSync(cmd, args)` + `ALLOWED_TEST_CMD_PREFIXES` validator
+- Secret scan stderr suppression — `2>/dev/null` → surfaced as `[hooks] SCAN ERROR` (fail-closed)
+- Hardcoded paths in `sync_registry.py` and `gen-repo-report.py` — `ROOT` now resolves from `__file__`
+- `isNaN` → `Number.isNaN` in extract-skill.ts
+- Unused variable in extract-skill.ts (`promise` → `_promise`)
+- README: version badge 3.1.0 → 4.0.0, "forty-one" → "40", fixed duplicate telegram row + #38/#39 numbering
+
+### Infrastructure
+
+- `biome.json`, `ruff.toml`, `tsconfig.json` added for lint/type-check
+- `package.json` scripts: `lint`, `type-check` added
+- `bun-types` installed for TypeScript checking
+- GitHub Actions: lint + type-check + test + secret-scan jobs
+
 ## [4.0.1] - 2026-09-14
 
 ### Fixed

@@ -20,7 +20,8 @@ A working integration: authenticated API calls or webhook handlers, field mappin
 4. Implement auth securely (OAuth token refresh; keys in a secret store).
 5. Handle rate limits (backoff), errors (retry + alert), and duplicates (idempotency keys).
 6. Verify webhook signatures; validate and sanitize inbound payloads.
-7. Log sync results and provide a re-sync path for failures.
+7. Verify HMAC against the raw request bytes (never re-serialized JSON); acknowledge 2xx after durable accept and process async.
+8. Log sync results and provide a re-sync path for failures.
 
 ## Quality gate
 
@@ -34,3 +35,7 @@ A working integration: authenticated API calls or webhook handlers, field mappin
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+
+## Routing
+
+- When exposing tools to agents (MCP/custom): consistent prefixed action names, concise descriptions, paginated/filtered returns, errors that name the fix — comprehensive endpoint coverage beats bespoke workflow tools when unsure.

@@ -44,6 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **pricing** | "pricing", "pricing strategy", "how much to charge", "pricing tiers" | Pricing structure from value, willingness, and positioning | [references/pricing.md](references/pricing.md) |
 | **launch** | "launch plan", "go to market", "gtm", "product launch" | Go-to-market launch plan with sequencing and metrics | [references/launch.md](references/launch.md) |
 | **competitor** | "competitor analysis", "competitive landscape", "market analysis", "who else does this" | Competitor and market analysis with actionable gaps | [references/competitor.md](references/competitor.md) |
+| **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

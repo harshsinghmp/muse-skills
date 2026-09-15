@@ -1,0 +1,42 @@
+# research — Account and lead research with spine-always depth.
+
+## Intake
+
+- Ideal customer profile (industry, size, geography, titles) — default: infer from the offer and state it inline, proceed.
+- Target account or lead list, or permission to build one from the ICP.
+- Offer and the outbound goal (meetings, replies, pipeline).
+- Default stack: Twenty CRM records for account notes where available, else a markdown brief per account.
+
+## Deliverable
+
+Sourced account and lead briefs: firmographics, key people, trigger events, fit notes, and open questions — every claim dated.
+
+## Procedure
+
+1. Lock the ICP in one paragraph; record it as an assumption if inferred.
+2. Research each account spine-first: firmographics, tech context, recent trigger events, decision-makers with titles.
+3. Score fit per account against the ICP before writing a word of outreach.
+4. Mark every unverified field as an assumption with a verification path.
+5. File briefs where sales expects them (Twenty CRM records, else markdown).
+6. Frame net-new searches as Trait–Activity–Qualifier (company kind, current motion as timing layer, must-haves); reuse existing coverage on a query-plus-ICP close match instead of redeploying.
+7. In enterprises, attribute each signal to the owning team (e.g. hiring-post team names), not just the account.
+
+## Quality gate
+
+- [ ] ICP stated before any account touched.
+- [ ] Every claim sourced and dated; gaps marked as assumptions.
+- [ ] Decision-makers named with titles.
+- [ ] Fit note per account against the ICP.
+- [ ] Market sized by triangulation (top-down AND bottoms-up with the delta reconciled) — never a single unsourced number; surveys funded to per-segment minimums.
+- [ ] Prospect site crawled across 3–5 key pages (About, Services, Contact, Reviews, Blog); pages checked named, failures flagged with data_confidence=LOW (keeper: 99rebels/web-design-lead-qualifier).
+- [ ] Key claims carry confidence levels (HIGH = prospect's own site, MEDIUM = third-party, LOW = inferred) with a mandatory Unverified section, never omitted (keeper: 99rebels/web-design-lead-qualifier).
+
+## Routing
+
+- Positioning or launch strategy questions → `growth`.
+- Wording and copy craft → `content`.
+- Status tracking and milestones → `ops`; results measurement → `analytics`.
+
+## Sources
+
+Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

@@ -119,7 +119,7 @@ Each breakpoint gets its own `context` — GSAP auto-reverts it when the query s
 
 ## 6. Lenis smooth scroll (companion — explicit)
 
-Lenis replaces native wheel scrolling with inertial, smoothed scroll page-wide, so `scrub`/`pin` timelines glide instead of stepping scrollbar-to-scrollbar. Premium-tier polish — keep it **explicit/gated**: only reach for it on an award-tier scroll experience, never by default.
+Lenis replaces native wheel scrolling with inertial, smoothed scroll page-wide, so `scrub`/`pin` timelines glide instead of stepping scrollbar-to-scrollbar. Premium-tier polish — keep it **explicit/gated**: only reach for it on an award-tier scroll experience, never by default. One smooth-scroll engine per page, with full cleanup on teardown (kill triggers/tickers/listeners — leaked scroll loops are the classic SPA jank source).
 
 ```bash
 npm i lenis
@@ -205,6 +205,7 @@ gsap.from(st.chars, { opacity: 0, yPercent: 120, stagger: 0.02 });
 ```
 
 - Wrap each `.line`/`.word` in `overflow: hidden` so translate-based reveals don't bleed.
+- Split-text accessibility: staggered reveals keep the unsplit text as the accessible name (animate the split units visually, expose the whole); never split links or interactive text — screen readers must hear one coherent label. Reduced-motion renders final states immediately (no reveal delay).
 - Re-split on resize/font-load (line breaks change); `split.revert()` / `st.revert()` then re-create, or avoid line splits on responsive layouts.
 - `yPercent`/`mask`-based reveal reads cleaner than `clip-path` for chars — see anti-slop.
 

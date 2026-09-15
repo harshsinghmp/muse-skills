@@ -29,6 +29,11 @@ Migration plan: full inventory, URL/redirect map, execution stages with go/no-go
 - [ ] 301s live and verified at cutover.
 - [ ] Post-cutover crawl clean.
 
+## Routing
+
+- Schema: expand→migrate→contract — additive first, dual-write + batched backfill off the hot path, switch reads, destructive drops alone in a later deploy with a tested down path; large indexes without blocking writes.
+- Code: strangler (parallel run, shift traffic 0→canary→50→100→remove) or adapter (old interface, new impl), flag-decoupled when risky; the owner migrates users (churn rule); zombie code gets an owner or a deprecation plan — never limbo.
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

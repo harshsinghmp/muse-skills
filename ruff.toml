@@ -1,0 +1,9 @@
+target-version = "py311"
+line-length = 100
+
+[lint]
+select = ["E", "F", "W", "I", "UP"]
+
+[lint.per-file-ignores]
+"scripts/sync-skill-versions.py" = ["E501"]
+"scripts/sync_registry.py" = ["E501"]

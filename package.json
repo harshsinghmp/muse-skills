@@ -61,8 +61,13 @@
   "scripts": {
     "extract-skill": "bun scripts/extract-skill.ts",
     "test": "bun test",
-    "validate": "bash updateagents/scripts/validate-memory-file.sh"
+    "validate": "bash updateagents/scripts/validate-memory-file.sh",
+    "lint": "biome check . && ruff check scripts/",
+    "type-check": "tsc --noEmit"
   },
   "type": "module",
-  "version": "4.0.1"
+  "version": "4.1.0",
+  "devDependencies": {
+    "bun-types": "^1.4.2"
+  }
 }

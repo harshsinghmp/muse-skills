@@ -237,6 +237,15 @@ Don't close with "anything else?". Proactively suggest the logical next step.
 
 ---
 
+## Audit routing
+
+designscope produces design systems (tokens, components, palettes). For deeper audits of the output:
+- **UI/component audit** → `refactor-ui` audit mode (scored UI report, WCAG 2.2 contrast)
+- **Design-token audit** → `refactor-ui` `tokens` mode (extract-and-centralize)
+- **Content-quality audit** → `content` audit mode (anti-slop scan, fact verification)
+
+Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + routing.
+
 ## Verification
 
 Before declaring the task complete:

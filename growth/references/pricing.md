@@ -21,6 +21,7 @@ A pricing recommendation: packaging/tiers, price points with rationale, the valu
 6. Handle the top objections (too expensive, free alternative, will churn) with value evidence.
 7. Plan a test (new-cohort pricing, willingness surveys) and a review point.
 8. Design pricing tests with 3-8 points per segment: map per-segment willingness-to-pay, plot revenue-max vs optimal spread, and anchor against competitive mapping.
+9. Diagnose weak conversion with the value equation first — Value = (Dream Outcome × Perceived Likelihood) / (Time Delay × Effort & Sacrifice); most "lower the price" asks are raise-the-numerator/lower-the-denominator asks, since price is the comparison, not the value. Complete the offer anatomy (core deliverable + bonus stack + guarantee/risk-reversal) before cutting price.
 
 ## Quality gate
 
@@ -31,6 +32,12 @@ A pricing recommendation: packaging/tiers, price points with rationale, the valu
 - [ ] Tiers fenced without cannibalization.
 - [ ] Objection handling + test plan present.
 - [ ] Test covers 3-8 points per segment with WTP map, revenue-max/optimal spread, and competitive anchor.
+- [ ] Value equation diagnosed before any price cut; offer anatomy (core + bonus + guarantee) complete.
+- [ ] Page expression complete: monthly/annual toggle with savings callout, consistent per-plan CTA verbs, comparison matrix, FAQ + proof near decision points, procurement section if B2B (keeper: mengto/pricing-page).
+
+## Routing
+
+- Offer page/messaging expression → content copy mode; willingness evidence from interviews → positioning mode.
 
 ## Sources
 

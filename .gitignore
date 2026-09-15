@@ -45,6 +45,7 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+.venv-report/
 
 # Test coverage
 coverage/

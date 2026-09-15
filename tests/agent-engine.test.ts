@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from "bun:test";
-import { existsSync, readdirSync, readFileSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const AI_READY_TEMPLATES = join(REPO_ROOT, "ai-ready/templates");
@@ -74,7 +74,9 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       });
 
       expect(res.status).toBe(0);
-      expect(res.stdout).toContain("Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)");
+      expect(res.stdout).toContain(
+        "Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)",
+      );
       expect(res.stdout).toContain("Archetype:          WORDPRESS");
       expect(res.stdout).toContain("Synced: ./.agents/standards/ (13 standards, including WordPress)");
     });
@@ -82,9 +84,13 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile, atomic-payload)", () => {
       // 1. Powerhouse preset
       const targetPower = join(TEST_SANDBOX, "power-test");
-      const resPower = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resPower = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resPower.status).toBe(0);
       expect(resPower.stdout).toContain("Framework:         `NEXTJS`");
       expect(resPower.stdout).toContain("Styling:           `HYBRID`");
@@ -93,9 +99,13 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       // 2. Visual preset (Aria Builder)
       const targetVisual = join(TEST_SANDBOX, "visual-test");
-      const resVisual = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetVisual, "--non-interactive", "--preset=visual", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resVisual = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetVisual, "--non-interactive", "--preset=visual", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resVisual.status).toBe(0);
       expect(resVisual.stdout).toContain("Framework:         `ASTRO`");
       expect(resVisual.stdout).toContain("CMS:               `ARIABUILDER`");
@@ -103,27 +113,39 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       // 3. Instatic preset
       const targetInstatic = join(TEST_SANDBOX, "instatic-test");
-      const resInstatic = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resInstatic = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resInstatic.status).toBe(0);
       expect(resInstatic.stdout).toContain("Framework:         `INSTATIC`");
       expect(resInstatic.stdout).toContain("Styling:           `BEM`");
 
       // 4. Mobile preset (Expo)
       const targetMobile = join(TEST_SANDBOX, "mobile-test");
-      const resMobile = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resMobile = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resMobile.status).toBe(0);
       expect(resMobile.stdout).toContain("Framework:         `EXPO`");
       expect(resMobile.stdout).toContain("Mobile:            `EXPO`");
 
       // 5. Astro Mobile preset (Astro + Ionic Capacitor + NanoStores)
       const targetAstroMobile = join(TEST_SANDBOX, "astro-mobile-test");
-      const resAstroMobile = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resAstroMobile = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resAstroMobile.status).toBe(0);
       expect(resAstroMobile.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroMobile.stdout).toContain("State:             `NANOSTORES`");
@@ -131,9 +153,13 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       // 6. Astro Commerce preset (Astro + Aria Builder + Medusa v2)
       const targetAstroComm = join(TEST_SANDBOX, "astro-comm-test");
-      const resAstroComm = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resAstroComm = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resAstroComm.status).toBe(0);
       expect(resAstroComm.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroComm.stdout).toContain("CMS:               `ARIABUILDER`");
@@ -141,36 +167,52 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       // 7. Astro Blog preset (Astro + StudioCMS)
       const targetAstroBlog = join(TEST_SANDBOX, "astro-blog-test");
-      const resAstroBlog = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resAstroBlog = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resAstroBlog.status).toBe(0);
       expect(resAstroBlog.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroBlog.stdout).toContain("CMS:               `STUDIOCMS`");
 
       // 8. Astro Emdash preset (Astro + Emdash CMS)
       const targetAstroEmdash = join(TEST_SANDBOX, "astro-emdash-test");
-      const resAstroEmdash = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resAstroEmdash = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resAstroEmdash.status).toBe(0);
       expect(resAstroEmdash.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroEmdash.stdout).toContain("CMS:               `EMDASH`");
 
       // 9. Pure HTML preset
       const targetPureHtml = join(TEST_SANDBOX, "pure-html-test");
-      const resPureHtml = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resPureHtml = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resPureHtml.status).toBe(0);
       expect(resPureHtml.stdout).toContain("Framework:         `HTML`");
       expect(resPureHtml.stdout).toContain("Styling:           `BEM`");
 
       // 10. Next Commerce preset
       const targetNextComm = join(TEST_SANDBOX, "next-comm-test");
-      const resNextComm = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resNextComm = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resNextComm.status).toBe(0);
       expect(resNextComm.stdout).toContain("Framework:         `NEXTJS`");
       expect(resNextComm.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
@@ -178,9 +220,13 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       // 11. Atomic Payload preset (isolated official website-builder scaffold)
       const targetAtomic = join(TEST_SANDBOX, "atomic-preset-test");
-      const resAtomic = spawnSync("bun", [NEW_PROJECT_SCRIPT, targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"], {
-        encoding: "utf8",
-      });
+      const resAtomic = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"],
+        {
+          encoding: "utf8",
+        },
+      );
       expect(resAtomic.status).toBe(0);
       expect(resAtomic.stdout).toContain("Framework:         `NEXTJS`");
       expect(resAtomic.stdout).toContain("CMS:               `ATOMIC-PAYLOAD`");
@@ -189,23 +235,27 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
     it("supports granular intent-first companion composition including NanoStores and Capacitor", () => {
       const targetCustom = join(TEST_SANDBOX, "custom-ecommerce");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetCustom,
-        "--non-interactive",
-        "--intent=ecommerce",
-        "--type=nextjs",
-        "--styling=hybrid",
-        "--animation=motion",
-        "--state=nanostores",
-        "--mobile=capacitor",
-        "--cms=payload",
-        "--puck",
-        "--ecommerce=medusa",
-        "--db=postgres",
-        "--auth=better-auth",
-        "--dry-run"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetCustom,
+          "--non-interactive",
+          "--intent=ecommerce",
+          "--type=nextjs",
+          "--styling=hybrid",
+          "--animation=motion",
+          "--state=nanostores",
+          "--mobile=capacitor",
+          "--cms=payload",
+          "--puck",
+          "--ecommerce=medusa",
+          "--db=postgres",
+          "--auth=better-auth",
+          "--dry-run",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
       expect(res.stdout).toContain("Intent:            `ECOMMERCE`");
@@ -254,12 +304,14 @@ Custom billing engine for healthcare providers.
 - Mandatory HIPAA compliance audit.
 - No direct SQL queries.
 `,
-        "utf8"
+        "utf8",
       );
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
       expect(res.status).toBe(0);
-      expect(res.stdout).toContain("Step 4B: Custom agent files detected — Extracting and intelligently placing context");
+      expect(res.stdout).toContain(
+        "Step 4B: Custom agent files detected — Extracting and intelligently placing context",
+      );
       expect(res.stdout).toContain("Merged custom content into ./.agents/context/product.md");
       expect(res.stdout).toContain("Merged custom content into ./.agents/context/architecture.md");
       expect(res.stdout).toContain("Merged custom content into ./.agents/context/decisions.md");
@@ -304,26 +356,30 @@ Custom billing engine for healthcare providers.
   describe("Part E: Interactive Onboarding & Clean Template Invariants", () => {
     it("new-project dynamically injects onboarding parameters into DOX files and brand tokens", () => {
       const target = join(TEST_SANDBOX, "acme-health");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        target,
-        "--non-interactive",
-        "--name=Acme Health",
-        "--author=Acme Corp",
-        "--tagline=HIPAA-compliant patient intake portal",
-        "--audience=Hospitals and regional clinics",
-        "--problem=Manual paper intake bottlenecks",
-        "--features=Intake Automation, EHR Sync, Secure Chat",
-        "--tone=Medical-Grade, Authoritative, Empathetic",
-        "--palette=emerald",
-        "--first-milestone=Implement EHR webhook listener",
-        "--planned-milestones=Patient onboarding flow, HIPAA audit log",
-        "--agent-name=Sentinel",
-        "--agent-role=Lead Healthcare Architect",
-        "--constraint=Zero client-side PHI storage",
-        "--intent=app",
-        "--type=none"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          target,
+          "--non-interactive",
+          "--name=Acme Health",
+          "--author=Acme Corp",
+          "--tagline=HIPAA-compliant patient intake portal",
+          "--audience=Hospitals and regional clinics",
+          "--problem=Manual paper intake bottlenecks",
+          "--features=Intake Automation, EHR Sync, Secure Chat",
+          "--tone=Medical-Grade, Authoritative, Empathetic",
+          "--palette=emerald",
+          "--first-milestone=Implement EHR webhook listener",
+          "--planned-milestones=Patient onboarding flow, HIPAA audit log",
+          "--agent-name=Sentinel",
+          "--agent-role=Lead Healthcare Architect",
+          "--constraint=Zero client-side PHI storage",
+          "--intent=app",
+          "--type=none",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
 
@@ -370,23 +426,27 @@ Custom billing engine for healthcare providers.
 
     it("provisions Client-Intake brief, fluid tokens, and BEM semantic classes", () => {
       const target = join(TEST_SANDBOX, "ecommerce-showcase");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        target,
-        "--non-interactive",
-        "--name=Sovereign Store",
-        "--author=Acme Retail",
-        "--intent=ecommerce",
-        "--type=none",
-        "--styling=hybrid",
-        "--animation=css",
-        "--state=nanostores",
-        "--ecommerce=medusa",
-        "--palette=indigo",
-        "--first-milestone=Setup Medusa v2 SDK",
-        "--industry=Direct to Consumer Apparel",
-        "--offerings=Signature Denim, Classic Hoodies, Oxford Shirts"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          target,
+          "--non-interactive",
+          "--name=Sovereign Store",
+          "--author=Acme Retail",
+          "--intent=ecommerce",
+          "--type=none",
+          "--styling=hybrid",
+          "--animation=css",
+          "--state=nanostores",
+          "--ecommerce=medusa",
+          "--palette=indigo",
+          "--first-milestone=Setup Medusa v2 SDK",
+          "--industry=Direct to Consumer Apparel",
+          "--offerings=Signature Denim, Classic Hoodies, Oxford Shirts",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
 
@@ -461,22 +521,26 @@ Custom billing engine for healthcare providers.
 
     it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
       const target = join(TEST_SANDBOX, "fullbaked-showcase");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        target,
-        "--non-interactive",
-        "--name=Fullstack Powerhouse",
-        "--author=Enterprise Systems",
-        "--intent=app",
-        "--type=none",
-        "--styling=hybrid",
-        "--db=postgres",
-        "--auth=better-auth",
-        "--ecommerce=stripe",
-        "--cms=payload",
-        "--puck",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          target,
+          "--non-interactive",
+          "--name=Fullstack Powerhouse",
+          "--author=Enterprise Systems",
+          "--intent=app",
+          "--type=none",
+          "--styling=hybrid",
+          "--db=postgres",
+          "--auth=better-auth",
+          "--ecommerce=stripe",
+          "--cms=payload",
+          "--puck",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
 
@@ -536,20 +600,24 @@ Custom billing engine for healthcare providers.
 
     it("provisions starter dashboard, deployment artifacts, test suite, pre-commit hook, and dynamic ADRs", () => {
       const target = join(TEST_SANDBOX, "production-showcase");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        target,
-        "--non-interactive",
-        "--name=Nebula Cloud",
-        "--author=Nebula Inc",
-        "--intent=webapp",
-        "--type=nextjs",
-        "--styling=hybrid",
-        "--deploy=docker",
-        "--db=neon",
-        "--auth=better-auth",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          target,
+          "--non-interactive",
+          "--name=Nebula Cloud",
+          "--author=Nebula Inc",
+          "--intent=webapp",
+          "--type=nextjs",
+          "--styling=hybrid",
+          "--deploy=docker",
+          "--db=neon",
+          "--auth=better-auth",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
 
@@ -605,17 +673,21 @@ Custom billing engine for healthcare providers.
     it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
       // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
       const targetAria = join(TEST_SANDBOX, "aria-showcase");
-      const resAria = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetAria,
-        "--non-interactive",
-        "--intent=ecommerce",
-        "--type=none",
-        "--cms=ariabuilder",
-        "--ecommerce=medusa",
-        "--styling=hybrid",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resAria = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetAria,
+          "--non-interactive",
+          "--intent=ecommerce",
+          "--type=none",
+          "--cms=ariabuilder",
+          "--ecommerce=medusa",
+          "--styling=hybrid",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resAria.status).toBe(0);
       expect(resAria.stdout).toContain("admin/setup");
       // Official upstream markers (present via clone and offline fallback).
@@ -637,17 +709,21 @@ Custom billing engine for healthcare providers.
 
       // 1b. Atomic Payload (isolated official website-builder scaffold — extras skipped even when requested)
       const targetAtomic = join(TEST_SANDBOX, "atomic-showcase");
-      const resAtomic = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetAtomic,
-        "--non-interactive",
-        "--intent=content",
-        "--type=nextjs",
-        "--cms=atomic-payload",
-        "--db=postgres",
-        "--styling=hybrid",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resAtomic = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetAtomic,
+          "--non-interactive",
+          "--intent=content",
+          "--type=nextjs",
+          "--cms=atomic-payload",
+          "--db=postgres",
+          "--styling=hybrid",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resAtomic.status).toBe(0);
       expect(resAtomic.stdout).toContain("localhost:42100/admin");
       expect(resAtomic.stdout).toContain("Atomic Payload is fully isolated");
@@ -674,16 +750,20 @@ Custom billing engine for healthcare providers.
 
       // 2. Astro + StudioCMS
       const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
-      const resStudio = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetStudio,
-        "--non-interactive",
-        "--intent=content",
-        "--type=astro",
-        "--cms=studiocms",
-        "--styling=hybrid",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resStudio = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetStudio,
+          "--non-interactive",
+          "--intent=content",
+          "--type=astro",
+          "--cms=studiocms",
+          "--styling=hybrid",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resStudio.status).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
       const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
@@ -701,16 +781,20 @@ Custom billing engine for healthcare providers.
 
       // 3. Astro + Emdash CMS
       const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
-      const resEmdash = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetEmdash,
-        "--non-interactive",
-        "--intent=content",
-        "--type=astro",
-        "--cms=emdash",
-        "--styling=hybrid",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resEmdash = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetEmdash,
+          "--non-interactive",
+          "--intent=content",
+          "--type=astro",
+          "--cms=emdash",
+          "--styling=hybrid",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resEmdash.status).toBe(0);
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "emdash-env.d.ts"))).toBe(true);
@@ -727,17 +811,21 @@ Custom billing engine for healthcare providers.
 
       // 4. Next.js + Payload E-Commerce + Puck
       const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
-      const resPayloadEcom = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetPayloadEcom,
-        "--non-interactive",
-        "--intent=ecommerce",
-        "--type=nextjs",
-        "--cms=payload",
-        "--ecommerce=payload",
-        "--puck",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resPayloadEcom = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetPayloadEcom,
+          "--non-interactive",
+          "--intent=ecommerce",
+          "--type=nextjs",
+          "--cms=payload",
+          "--ecommerce=payload",
+          "--puck",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resPayloadEcom.status).toBe(0);
       expect(existsSync(join(targetPayloadEcom, "src/payload.config.ts"))).toBe(true);
       const payloadCfg = readFileSync(join(targetPayloadEcom, "src/payload.config.ts"), "utf8");
@@ -755,13 +843,11 @@ Custom billing engine for healthcare providers.
 
       // 5. Pure HTML / CSS
       const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
-      const resHtml = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetHtml,
-        "--non-interactive",
-        "--preset=pure-html",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resHtml = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
+        { encoding: "utf8" },
+      );
       expect(resHtml.status).toBe(0);
       expect(existsSync(join(targetHtml, "index.html"))).toBe(true);
       const htmlDoc = readFileSync(join(targetHtml, "index.html"), "utf8");
@@ -774,25 +860,29 @@ Custom billing engine for healthcare providers.
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
       const targetNoCache = join(TEST_SANDBOX, "brand-guardian-showcase");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetNoCache,
-        "--non-interactive",
-        "--intent=content",
-        "--type=none",
-        "--no-cache",
-        "--name=Aura Luxury Retail",
-        "--desc=High-end sustainable apparel and luxury lifestyle collection",
-        "--author=Aura Collective",
-        "--audience=Discerning high-net-worth consumers seeking ethical luxury",
-        "--problem=Mass-produced fast fashion lacks soul, longevity, and sustainability",
-        "--features=Curated drops, Digital provenance certificates, Bespoke tailoring",
-        "--industry=Luxury Fashion & Sustainable Lifestyle",
-        "--offerings=Signature Silk Coats, Artisanal Linen Suits, Lifetime Care Membership",
-        "--tone=Understated, sophisticated, sensory, and discerning",
-        "--palette=amber",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetNoCache,
+          "--non-interactive",
+          "--intent=content",
+          "--type=none",
+          "--no-cache",
+          "--name=Aura Luxury Retail",
+          "--desc=High-end sustainable apparel and luxury lifestyle collection",
+          "--author=Aura Collective",
+          "--audience=Discerning high-net-worth consumers seeking ethical luxury",
+          "--problem=Mass-produced fast fashion lacks soul, longevity, and sustainability",
+          "--features=Curated drops, Digital provenance certificates, Bespoke tailoring",
+          "--industry=Luxury Fashion & Sustainable Lifestyle",
+          "--offerings=Signature Silk Coats, Artisanal Linen Suits, Lifetime Care Membership",
+          "--tone=Understated, sophisticated, sensory, and discerning",
+          "--palette=amber",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
 
       expect(res.status).toBe(0);
 
@@ -819,14 +909,7 @@ Custom billing engine for healthcare providers.
     }, 15000);
 
     it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
-      const prohibited = [
-        "Harsh",
-        "harshsinghmp",
-        "Agency Council",
-        "Kameli",
-        "/home/harsh",
-        "~/.config/LIFEOS"
-      ];
+      const prohibited = ["Harsh", "harshsinghmp", "Agency Council", "Kameli", "/home/harsh", "~/.config/LIFEOS"];
 
       function scanDir(dir: string) {
         const entries = readdirSync(dir, { withFileTypes: true });
@@ -837,9 +920,7 @@ Custom billing engine for healthcare providers.
           } else if (entry.isFile()) {
             const content = readFileSync(fullPath, "utf8");
             for (const word of prohibited) {
-              expect(content.includes(word)).toBe(
-                false
-              );
+              expect(content.includes(word)).toBe(false);
             }
           }
         }
@@ -857,14 +938,18 @@ Custom billing engine for healthcare providers.
       // Test sunset-vibes curated theme (plain-astro keeps engine token injection;
       // Aria presets are isolated official clones without engine tokens)
       const targetSunset = join(TEST_SANDBOX, "sunset-vibes-showcase");
-      const resSunset = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetSunset,
-        "--non-interactive",
-        "--preset=plain-astro",
-        "--palette=sunset-vibes",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resSunset = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetSunset,
+          "--non-interactive",
+          "--preset=plain-astro",
+          "--palette=sunset-vibes",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resSunset.status).toBe(0);
       expect(existsSync(join(targetSunset, "src/styles/tokens.css"))).toBe(true);
       const tokensCss = readFileSync(join(targetSunset, "src/styles/tokens.css"), "utf8");
@@ -878,14 +963,18 @@ Custom billing engine for healthcare providers.
 
       // Test deep-sea curated theme (same: plain-astro keeps engine tokens)
       const targetDeepSea = join(TEST_SANDBOX, "deep-sea-showcase");
-      const resDeepSea = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetDeepSea,
-        "--non-interactive",
-        "--preset=plain-astro",
-        "--palette=deep-sea",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resDeepSea = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetDeepSea,
+          "--non-interactive",
+          "--preset=plain-astro",
+          "--palette=deep-sea",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resDeepSea.status).toBe(0);
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
@@ -894,14 +983,18 @@ Custom billing engine for healthcare providers.
 
     it("provisions project-scoped oklch-skill strictly inside target project with zero global pollution", () => {
       const targetProject = join(TEST_SANDBOX, "oklch-skill-showcase");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetProject,
-        "--non-interactive",
-        "--preset=instatic",
-        "--palette=ocean-breeze",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetProject,
+          "--non-interactive",
+          "--preset=instatic",
+          "--palette=ocean-breeze",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(res.status).toBe(0);
 
       const skillDir = join(targetProject, ".agents/skills/oklch-skill");
@@ -924,14 +1017,18 @@ Custom billing engine for healthcare providers.
     it("simplifies Astro setup to Plain Astro (zero React) vs Aria Builder vs Plain Astro + CMS (Emdash / Git-based)", () => {
       // 1. Plain Astro (zero React)
       const targetPlainAstro = join(TEST_SANDBOX, "plain-astro-showcase");
-      const resPlain = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetPlainAstro,
-        "--non-interactive",
-        "--framework=astro",
-        "--cms=none",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resPlain = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetPlainAstro,
+          "--non-interactive",
+          "--framework=astro",
+          "--cms=none",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(resPlain.status).toBe(0);
       const plainPkg = JSON.parse(readFileSync(join(targetPlainAstro, "package.json"), "utf8"));
       expect(plainPkg.dependencies).not.toHaveProperty("react");
@@ -942,14 +1039,11 @@ Custom billing engine for healthcare providers.
 
       // 2. Astro + Git-based CMS
       const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
-      const resGit = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetGitCms,
-        "--non-interactive",
-        "--framework=astro",
-        "--cms=git",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resGit = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
+        { encoding: "utf8" },
+      );
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGitCms, "src/content/config.ts"))).toBe(true);
       expect(existsSync(join(targetGitCms, "src/content/blog/first-post.md"))).toBe(true);
@@ -958,14 +1052,18 @@ Custom billing engine for healthcare providers.
 
     it("simplifies HTML setup to Plain HTML vs Instatic Builder and establishes AI-Ready harness first", () => {
       const targetHtml = join(TEST_SANDBOX, "html-harness-first");
-      const res = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetHtml,
-        "--non-interactive",
-        "--preset=pure-html",
-        "--palette=forest",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const res = spawnSync(
+        "bun",
+        [
+          NEW_PROJECT_SCRIPT,
+          targetHtml,
+          "--non-interactive",
+          "--preset=pure-html",
+          "--palette=forest",
+          "--skip-install",
+        ],
+        { encoding: "utf8" },
+      );
       expect(res.status).toBe(0);
 
       // AI-ready DOX harness first
@@ -982,29 +1080,24 @@ Custom billing engine for healthcare providers.
 
     it("supports simplified presets plain-astro and git-cms", () => {
       const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
-      const resPlain = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetPlain,
-        "--non-interactive",
-        "--preset=plain-astro",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resPlain = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
+        { encoding: "utf8" },
+      );
       expect(resPlain.status).toBe(0);
       const pkg = JSON.parse(readFileSync(join(targetPlain, "package.json"), "utf8"));
       expect(pkg.dependencies).not.toHaveProperty("react");
       expect(pkg.dependencies).not.toHaveProperty("@astrojs/react");
 
       const targetGit = join(TEST_SANDBOX, "preset-git-cms");
-      const resGit = spawnSync("bun", [
-        NEW_PROJECT_SCRIPT,
-        targetGit,
-        "--non-interactive",
-        "--preset=git-cms",
-        "--skip-install"
-      ], { encoding: "utf8" });
+      const resGit = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
+        { encoding: "utf8" },
+      );
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
     }, 30000);
   });
 });
-

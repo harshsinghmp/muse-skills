@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of thirty-six portable agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, and client communication.**
+**A curated suite of 40 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, client communication, unified database operations, and Telegram messaging.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-3.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-36%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-40%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete thirty-six-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete forty-one-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -64,6 +64,9 @@ Agent work often loses momentum in predictable ways: a project starts without du
 | #34 Set strategy and scale | [`growth`](growth/README.md) | Positioning, funnels, pricing, launch, and competitor modes |
 | #35 Gate the launch | [`qa-launch`](qa-launch/README.md) | Matrix, functional verification, release gate, and regression |
 | #36 Talk to clients | [`client-comms`](client-comms/README.md) | Status, change-request, handover, and feedback modes |
+| #37 Build outbound pipeline | [`gtm`](gtm/README.md) | Research, score, outreach, list, and handover modes |
+|| #38 Tune Postgres performance | [`database`](database/README.md) | Query, diagnose, index, guard, and operate modes |
+| #39 Command live incidents | [`incident-response`](incident-response/README.md) | Triage, mitigate, communicate, and retro modes |
 
 ### Explore the repository
 
@@ -72,6 +75,43 @@ Agent work often loses momentum in predictable ways: a project starts without du
 - [Understand the workflow](#-how-muse-skills-work)
 - [Check runtime compatibility](#-runtime-compatibility)
 - [Read contribution guidance](#-contributing)
+
+## 🔧 Automation Infrastructure
+
+### Hooks (14 shell hooks)
+
+Installed via `bash scripts/hooks/install-hooks.sh`. Detects your agent runtime (Git, Claude Code, Codex, OpenCode, Cursor, Windsurf, Aider, Cline, Trae, Continue, Omo, Crush, Antigravity) and installs into existing directories only — never creates new ones.
+
+| Hook | Trigger | Behavior |
+|:---|:---|:---|
+| `gen-repo-report-on-close.sh` | session end | Archives session HTML into `.agents/archive/reports/` |
+| `secret-scan-pre-commit.sh` | git pre-commit | Scans staged files for credentials (advisory) |
+| `worktree-lease-check.sh` | git branch ops | Probes worktree lease before mutations |
+| `audit-quick-on-skill-use.sh` | post-skill execution | Checks skill has Verification section |
+| `sync-registry-on-skill-add.sh` | post-skill-install | Syncs skills.json + llms.txt |
+| `stale-frontmatter-check.sh` | post-merge/commit | Detects frontmatter drift |
+| `pre-push-test-gate.sh` | git pre-push | Warns if bun test not green |
+| `session-resume-probe.sh` | session start | Probes HANDOFF.md + auto-archives stale reports |
+| `context-switch-snapshot.sh` | context-anchor switch | Reminds anchor update |
+| `evidence-decision-sync.sh` | evidence-ledger decide | Recommends doc sync |
+| `gauntlet-closeout.sh` | gauntlet termination | Checks acceptance packet |
+| `dead-letter-nightly.sh` | cron / manual | Counts open dead-letter records |
+| `cache-pressure-check.sh` | cron / pre-build | Warns when disk < 10GB |
+| `install-hooks.sh` | manual | Detects runtimes, installs hooks |
+
+### CI/CD
+
+| Pipeline | Trigger | Jobs |
+|:---|:---|:---|
+| CI | push/PR to dev/main | bun test + gitleaks secret scan |
+| Release | tag push (vX.Y.Z) | bun test → npm publish → GitHub release |
+
+### Security
+
+- Zero npm vulnerabilities (0 runtime deps)
+- No committed secrets (gitleaks clean)
+- Command-injection fix in extract-skill.ts (allowlist + no shell:true)
+- All hooks fail-closed (never block the agent)
 
 ---
 
@@ -118,7 +158,7 @@ npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
-# Agency Delivery (#23–#36)
+# Agency Delivery (#23–#39)
 npx skills add harshsinghmp/muse-skills --skill design
 npx skills add harshsinghmp/muse-skills --skill paidads
 npx skills add harshsinghmp/muse-skills --skill seo
@@ -133,6 +173,9 @@ npx skills add harshsinghmp/muse-skills --skill ops
 npx skills add harshsinghmp/muse-skills --skill growth
 npx skills add harshsinghmp/muse-skills --skill qa-launch
 npx skills add harshsinghmp/muse-skills --skill client-comms
+npx skills add harshsinghmp/muse-skills --skill gtm
+npx skills add harshsinghmp/muse-skills --skill database
+npx skills add harshsinghmp/muse-skills --skill incident-response
 ```
 
 ### 3. Install a named selection
@@ -167,7 +210,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all thirty-six skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, and full-service creative web marketing agency toolkit:
+Install all forty-one skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, unified database operations, Telegram messaging, and full-service creative web marketing agency toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -288,13 +331,17 @@ flowchart TD
 | **#34** | [**`growth`**](growth/README.md) | **Agency Delivery** | `positioning`, `funnel strategy`, `pricing strategy`, `product launch`, `competitor analysis` | `analytics`, `content`, `paidads`, `seo` | Strategy and scaling department head with five modes: positioning, funnels, pricing, launch, and competitor — choose the playing field, then make the bets measurable. |
 | **#35** | [**`qa-launch`**](qa-launch/README.md) | **Agency Delivery** | `QA before launch`, `release gate`, `browser coverage`, `regression check` | `webdev`, `mobile`, `refactor-ui`, `devops` | Pre-launch quality gate with four modes: matrix, functional, gate, and regression — Block-or-Ship verdict before every launch. |
 | **#36** | [**`client-comms`**](client-comms/README.md) | **Agency Delivery** | `client status update`, `change request`, `project handover`, `client feedback` | `ops`, `growth`, `analytics` | Client-facing communication with four modes: status, change, handover, and feedback — outward voice, internal machinery routed to ops. |
+| **#37** | [**`gtm`**](gtm/README.md) | **Agency Delivery** | `research accounts`, `score leads`, `cold email sequence`, `prospect list`, `sales handover` | `growth`, `content`, `ops`, `analytics` | Outbound GTM department head with five modes: research, score, outreach, list, and handover — build the pipeline, then hand sales a close-ready packet. |
+| **#38** | [**`incident-response`**](incident-response/README.md) | **Agency Delivery** | `production is down`, `stop the bleeding`, `status page update`, `postmortem` | `ops`, `qa-launch`, `client-comms`, `devops` | Live incident command with four modes: triage, mitigate, communicate, and retro — classify, stabilize, narrate, then learn without blame. |
+| **#39** | [**`database`**](database/README.md) | **Agency Delivery** | `run a query`, `slow query`, `design an index`, `RLS policy`, `connection pooling`, `vacuum tuning` | `webdev`, `devops`, `qa-launch` | Unified database department with five modes — query, diagnose, index, guard, and operate — across Postgres, MySQL, MSSQL, and SQLite: read-only execution with defense-in-depth safety, slow-query triage, index design, RLS verification, and production operations. The former postgres-perf-tuner modes are folded into this single database department. |
+| **#40** | [**`telegram`**](telegram/README.md) | **Agency Delivery** | `notify telegram`, `approval button`, `claude code hooks`, `event routing`, `bot setup` | `automation`, `coupling-router`, `sentry`, `user-onboarding` | Telegram messaging department with five modes — notify, approve, hook, route, and setup — pure-bash bot alerts, approval boards, Claude Code hooks, and Kafka-event routing via curl + jq. Zero pip installs. Config-file token management with mode-600 protection, multi-bot/multi-target routing, inline-button approval pauses, session-based hook registration. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 36 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 39 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -661,7 +708,7 @@ npx skills add harshsinghmp/muse-skills --skill animate
 
 [Read full documentation →](animate/README.md)
 
-### 🏢 Agency Delivery Department Heads (Priorities #23–#36)
+### 🏢 Agency Delivery Department Heads (Priorities #23–#39)
 
 The suite ships a full-service creative web marketing agency layer: one head skill
 per department, each a mode router (Quick Reference table → per-mode `references/<mode>.md`
@@ -682,6 +729,9 @@ loaded only for the resolved mode). Add `--skill <name>` to any of the commands 
 - **`growth`** (#34) — five modes: `positioning`, `funnels`, `pricing`, `launch`, `competitor`. Choose the playing field, then make every bet measurable.
 - **`qa-launch`** (#35) — four modes: `matrix`, `functional`, `gate`, `regression`. Plan the coverage, walk the critical paths, gate the release, re-verify the fixes.
 - **`client-comms`** (#36) — four modes: `status`, `change`, `handover`, `feedback`. Client language outward, routed machinery inward.
+- **`database`** (#39) — five modes: `query`, `diagnose`, `index`, `guard`, `operate`. Run a read-only query, explore a schema, triage a slow query, design an index, author an RLS policy, or tune production — across Postgres, MySQL, MSSQL, and SQLite.
+- **`incident-response`** (#39) — four modes: `triage`, `mitigate`, `communicate`, `retro`. Classify the severity, stop the bleeding, narrate on cadence, learn without blame.
+- **`gtm`** (#37) — five modes: `research`, `score`, `outreach`, `list`, `handover`. Research accounts, score leads, sequence outreach, clean the list, hand sales the packet.
 
 Each head skill ships a `README.md`, an `agents/openai.yaml` tool definition, and one `references/<mode>.md` per mode so only the resolved mode's detail is loaded on any run.
 
@@ -1037,6 +1087,24 @@ muse-skills/
 │   └── SKILL.md
 │
 ├── client-comms/                   # Client communication head (4 modes: status, change, handover, feedback)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── database/            # Unified database department head (5 modes: query, diagnose, index, guard, operate)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── incident-response/              # Live incident command (4 modes: triage, mitigate, communicate, retro)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── gtm/                            # Outbound GTM department head (5 modes: research, score, outreach, list, handover)
 │   ├── agents/openai.yaml
 │   ├── references/                 # one playbook per mode
 │   ├── README.md

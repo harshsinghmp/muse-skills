@@ -29,6 +29,8 @@ A retrospective: what went well, what didn't, root causes, and a small set of tr
 - [ ] Root causes found for misses.
 - [ ] 2–3 tracked actions with owners and dates.
 - [ ] Lessons fed back into templates/playbook.
+- [ ] Each miss fixed at the right level (template/playbook vs workflow vs resourcing), not all patched as one-off reminders.
+- [ ] Degeneracy check: no vanity-metric actions that improve the retro score without changing the next outcome.
 
 ## Sources
 

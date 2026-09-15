@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **video** | "video script", "youtube script", "explainer video", "reel script" | Video scripts: hooks, structure, and shot direction | [references/video.md](references/video.md) |
 | **case-study** | "case study", "success story", "customer story" | Customer case study: outcome, proof, and narrative | [references/case-study.md](references/case-study.md) |
 | **humanize** | "humanize this", "remove AI writing", "make it sound natural", "de-slop" | Editorial pass removing AI-sounding prose without changing facts or voice | [references/humanize.md](references/humanize.md) |
+| **audit** | "audit content", "content audit", "fact check", "slop audit", "style guide audit" | Content-quality audit (anti-slop scan, fact verification, brand voice, readability) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

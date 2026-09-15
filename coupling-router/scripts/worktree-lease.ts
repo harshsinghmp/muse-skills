@@ -17,7 +17,7 @@
  *             1 = DEFER (fresh foreign lease — do not mutate shared state),
  *             2 = usage/parse error.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const LEASE_PATH = join(".agents", "artifacts", "WORKTREE-LEASE.md");
@@ -103,7 +103,11 @@ function takeover(l: LeaseInfo, owner: string, scope: string): void {
 
 function execGit(args: string): string | null {
   try {
-    return Bun.spawnSync(["git", ...args.split(" ")], { stdout: "pipe" }).stdout.toString().trim() || null;
+    return (
+      Bun.spawnSync(["git", ...args.split(" ")], { stdout: "pipe" })
+        .stdout.toString()
+        .trim() || null
+    );
   } catch {
     return null;
   }
@@ -141,18 +145,24 @@ if (!lease) {
   }
   acquire(owner, scope);
   console.log(`[worktree-lease] ACQUIRED — owner=${owner}, scope=${scope || "unspecified"}`);
-  console.log("[worktree-lease] You are clear to mutate git state. Refresh with `hold` at milestones; `release` at close.");
+  console.log(
+    "[worktree-lease] You are clear to mutate git state. Refresh with `hold` at milestones; `release` at close.",
+  );
   process.exit(0);
 }
 
 const age = ageMinutes(lease);
 if (age <= WINDOW_MIN) {
   console.log(`[worktree-lease] DEFER — held by ${lease.owner} (heartbeat ${Math.round(age)}m old ≤ ${WINDOW_MIN}m).`);
-  console.log("[worktree-lease] Take a separate `git worktree add`, stay read-only, or wait. Do NOT switch branches, touch stashes, or stage shared files.");
+  console.log(
+    "[worktree-lease] Take a separate `git worktree add`, stay read-only, or wait. Do NOT switch branches, touch stashes, or stage shared files.",
+  );
   process.exit(1);
 }
 
-console.log(`[worktree-lease] TAKEOVER — ${lease.owner}'s heartbeat is ${Math.round(age)}m old (> ${WINDOW_MIN}m, presumed dead).`);
+console.log(
+  `[worktree-lease] TAKEOVER — ${lease.owner}'s heartbeat is ${Math.round(age)}m old (> ${WINDOW_MIN}m, presumed dead).`,
+);
 if (process.argv.includes("--dry-run")) process.exit(0);
 takeover(lease, owner, scope);
 console.log(`[worktree-lease] Lease taken over by ${owner}. Preserve any WIP recorded in the previous lease's notes.`);

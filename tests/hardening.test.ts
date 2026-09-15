@@ -125,12 +125,12 @@ describe("Worktree lease gate (coupling-router/scripts/worktree-lease.ts)", () =
   });
 
   test("selection system: scope + categories + named selections resolve correctly", () => {
-    const run = (args: string[]) =>
-      Bun.spawnSync(["bun", "scripts/select-skills.ts", ...args], { cwd: ROOT });
+    const run = (args: string[]) => Bun.spawnSync(["bun", "scripts/select-skills.ts", ...args], { cwd: ROOT });
     const globalSet = run(["global"]).stdout.toString().trim().split("\n");
     const localSet = run(["local"]).stdout.toString().trim().split("\n");
     const all = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8")).skills.map(
-      (s: any) => s.name
+      // biome-ignore lint/suspicious/noExplicitAny: skills.json is untyped JSON registry
+      (s: any) => s.name,
     );
     expect(globalSet.length).toBeGreaterThan(0);
     expect(localSet.length).toBeGreaterThan(0);

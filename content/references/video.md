@@ -23,6 +23,9 @@ A shooting-ready script: a first-3-second hook, beats with visuals/shot directio
 7. Keep to the platform's length norms; cut anything that delays the payoff.
 8. Pair title and thumbnail with zero word overlap; deliver 3 angle pairs to test.
 9. Provide 2 hook variants for testing; add captions on delivery.
+10. For reference-video rebuilds, tear down in layers before scripting: story arc, layout/framing, motion mechanisms named exactly (pinned, scrubbed, parallax, mask), visual tokens, technical rebuild mapping, mobile + reduced-motion behavior — concrete mechanisms, never "similar animation" (keeper: mengto/video-to-superprompt).
+11. For screen-record demos, choreograph sparse purposeful cursor paths (pause-click-move, no wandering), verify output with ffprobe/thumbnail checks, and confirm captures are non-empty and representative (keeper: mengto/browser-video-recording).
+12. For VO/narration, route voice identity through local profiles only; never print secrets or mutate saved account settings per request (keeper: mengto/elevenlabs-tts).
 
 ## Quality gate
 

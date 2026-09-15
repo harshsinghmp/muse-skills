@@ -24,6 +24,13 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 8. Map the narrative arc across the sequence plus branching logic: one action per send, conditional paths with exits for converted/unengaged readers.
 9. Pass the bulk-sender deliverability gate: authentication set, one-click unsubscribe present, complaint rate under ceiling, list hygiene current.
 10. Humanize pass; verify every claim and link.
+11. For cold outbound (separate send on a separate domain — never mixed with lifecycle mail): personalization must connect to the problem (if the opening line is removable, it fails); interest-based CTAs ("worth exploring?") beat meeting asks; 3-5 touches with widening gaps, each adding new value, ending in a breakup email that honors the no.
+12. Tier cold opens by seniority: executives get 2-3 strategic sentences (revenue, risk, competitive edge) — operational detail gets delegated; managers/ICs get tactical workflow pain and time savings.
+13. Match hook effort to deal size: verbatim strong hooks (their exact words tied to relevance) for enterprise/competitive displacement; lite conceptual hooks for volume plays.
+14. Audit every cold send against a quantified scorecard: score 1–10 per dimension (relevance, brevity, proof, CTA fit), deduct for killers (generic flattery, rhetorical questions, "I"-opener, premature meeting ask, em-dash/formulaic polish); first touch must pass the 15-second read-aloud at 75–100 words.
+15. Judge outbound performance by reply rate first and positive-reply/meeting rate second; open and click rates are red herrings — never optimize for them.
+16. Classify every reply before answering (positive, objection, deferral, referral, unsubscribe) and match the strategy: positives get a frictionless next step, objections get one proof point, deferrals get a timed trigger, unsubscribes get honored instantly with no counter.
+17. Newsletter issues: open with a specific result plus one-line credibility plus the value promise; section flow problem → framework → steps → examples → forward-looking close; tune every field to the author's voice profile before drafting.
 
 ## Quality gate
 
@@ -35,6 +42,15 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 - [ ] Branching paths with exits defined; arc holds across the sequence.
 - [ ] Deliverability gate passed (auth, unsubscribe, complaint ceiling, hygiene).
 - [ ] Humanize pass run.
+- [ ] Cold outbound isolated on its own domain; personalization passes the removable-opening test; sequence ends in a breakup.
+- [ ] Cold opens tiered by seniority (strategic-brief for execs, tactical for users); hook strength matched to deal size.
+- [ ] Cold copy scored with deductions logged; reply-rate-first verdict; every reply classified with a matched next step.
+
+## Routing
+
+- List/prospect sourcing questions → growth funnels mode (acquisition stage); warm nurture stays in this mode.
+- Copy audit-only requests (scorecard + rewrite, no new send) stay in this mode; page-copy CTA work → content copy mode.
+- Newsletter ideation (pillar × format grids) → smm content mode for the matrix.
 
 ## Sources
 

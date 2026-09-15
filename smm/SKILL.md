@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **influencer** | "influencer", "creator collab", "sponsored post" | Creator selection, briefs, contracts, disclosure, measurement | [references/influencer.md](references/influencer.md) |
 | **ugc** | "ugc", "user generated content", "creator content pipeline" | UGC sourcing, rights, and paid/organic reuse pipeline | [references/ugc.md](references/ugc.md) |
 | **analytics** | "social analytics", "social report", "engagement metrics" | Performance reporting, metric definitions, iteration loop | [references/analytics.md](references/analytics.md) |
+| **audit** | "audit social", "content audit", "channel audit", "engagement audit" | Content audit (style guide, authenticity) + channel audit (cross-platform consistency, cadence) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

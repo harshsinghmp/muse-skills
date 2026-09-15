@@ -1,25 +1,26 @@
 #!/usr/bin/env bun
+
 /**
  * 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
- * 
+ *
  * Capabilities:
  *   --audit     (default) Audits 13 tracked assets with sub-100ms Stage-0 Fast-Skip gate.
  *   --scaffold  Directly provisions the complete Agent Engine DOX container from templates.
  *   --fail-under N  Exit 1 when the audit score falls below N (CI gate).
- * 
+ *
  * Rules:
  *   - Sub-100ms Fast-Skip on fully compliant repositories (zero token burn).
  *   - HARD BOUNDARY: Never read, write, modify, or validate .memory/**.
  *   - Single Source of Truth: Scaffolds from ai-ready/templates/.
- * 
+ *
  * Usage:
  *   bun ai-ready/scripts/ai-ready.ts [targetPath] [options]
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync } from "node:fs";
-import { resolve, join, basename, relative } from "node:path";
-import { parseArgs } from "node:util";
 import { spawnSync } from "node:child_process";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { parseArgs } from "node:util";
 
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
@@ -122,7 +123,14 @@ export function scanForSyntheticArtifacts(target: string): { file: string; count
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
         const fullPath = join(dir, entry.name);
         if (entry.isDirectory()) {
-          if (entry.name === ".git" || entry.name === "node_modules" || entry.name === "dist" || entry.name === ".worktrees" || entry.name === ".memory") continue;
+          if (
+            entry.name === ".git" ||
+            entry.name === "node_modules" ||
+            entry.name === "dist" ||
+            entry.name === ".worktrees" ||
+            entry.name === ".memory"
+          )
+            continue;
           walk(fullPath);
         } else if (entry.isFile() && /\.(md|markdown|txt|json|yaml|yml|ts|js|tsx|jsx|sh)$/i.test(entry.name)) {
           try {
@@ -142,7 +150,21 @@ export function scanForSyntheticArtifacts(target: string): { file: string; count
 }
 
 export function checkModernToolsAvailability(): { installed: string[]; missing: string[] } {
-  const coreTools = ["fd", "rg", "bat", "eza", "sd", "choose", "procs", "zoxide", "delta", "btop", "ncdu", "gojq", "zstd"];
+  const coreTools = [
+    "fd",
+    "rg",
+    "bat",
+    "eza",
+    "sd",
+    "choose",
+    "procs",
+    "zoxide",
+    "delta",
+    "btop",
+    "ncdu",
+    "gojq",
+    "zstd",
+  ];
   const installed: string[] = [];
   const missing: string[] = [];
 
@@ -157,7 +179,6 @@ export function checkModernToolsAvailability(): { installed: string[]; missing: 
 
   return { installed, missing };
 }
-
 
 const rawTarget = positionals[0] || ".";
 const workspaceDir = resolve(process.cwd(), rawTarget);
@@ -201,15 +222,16 @@ export function auditWorkspace(target: string): AssetCheck[] {
     existsSync(join(target, ".gemini")) ||
     existsSync(join(target, ".claude")) ||
     existsSync(join(target, ".cursor"));
-  const toolConfigDetail = toolConfigOk ? "Authorized agent tool configuration detected" : "Missing agent tool configuration";
+  const toolConfigDetail = toolConfigOk
+    ? "Authorized agent tool configuration detected"
+    : "Missing agent tool configuration";
 
   // Asset 12: .gitignore guard AND .env.example template (per twelve-asset-matrix.md).
   const envExampleOk = existsSync(join(target, ".env.example"));
 
   // Asset 13: working-artifacts container with its contract stub (artifacts rule).
   const artifactsOk =
-    existsSync(join(target, ".agents/artifacts")) &&
-    existsSync(join(target, ".agents/artifacts/README.md"));
+    existsSync(join(target, ".agents/artifacts")) && existsSync(join(target, ".agents/artifacts/README.md"));
 
   const checks: AssetCheck[] = [
     {
@@ -218,7 +240,9 @@ export function auditWorkspace(target: string): AssetCheck[] {
       category: "AI Context",
       path: "AGENTS.md",
       passed: existsSync(agentsMdPath) && agentsMdOk,
-      details: existsSync(agentsMdPath) ? `Exists (<${AGENTS_MD_MAX_LINES + 1} lines DOX router)` : `Missing or exceeds ${AGENTS_MD_MAX_LINES} lines`,
+      details: existsSync(agentsMdPath)
+        ? `Exists (<${AGENTS_MD_MAX_LINES + 1} lines DOX router)`
+        : `Missing or exceeds ${AGENTS_MD_MAX_LINES} lines`,
     },
     {
       id: 2,
@@ -265,7 +289,9 @@ export function auditWorkspace(target: string): AssetCheck[] {
       name: "PR Review Template",
       category: "Dev Workflow",
       path: ".github/pull_request_template.md",
-      passed: existsSync(join(target, ".github/pull_request_template.md")) || existsSync(join(target, ".github/PULL_REQUEST_TEMPLATE.md")),
+      passed:
+        existsSync(join(target, ".github/pull_request_template.md")) ||
+        existsSync(join(target, ".github/PULL_REQUEST_TEMPLATE.md")),
       details: "Anti-slop PR verification checklist",
     },
     {
@@ -325,7 +351,10 @@ export function auditWorkspace(target: string): AssetCheck[] {
   return checks;
 }
 
-export function scaffoldAgentEngine(target: string, options: { dryRun?: boolean; force?: boolean } = {}): { created: string[]; skipped: string[] } {
+export function scaffoldAgentEngine(
+  target: string,
+  options: { dryRun?: boolean; force?: boolean } = {},
+): { created: string[]; skipped: string[] } {
   const created: string[] = [];
   const skipped: string[] = [];
   const dry = options.dryRun || false;
@@ -602,9 +631,13 @@ const scaffoldable = new Set([1, 2, 3, 4, 6, 7, 8, 12]);
 const humanOnly = failedIds.filter((id) => !scaffoldable.has(id));
 
 if (score < 12) {
-  console.log(`💡 Tip: Run 'bun ai-ready.ts --scaffold' to auto-provision scaffolding-owned assets (1 AGENTS.md, 2 DOX container, 3 tool config, 4 llms.txt, 6 issue templates, 7 PR template, 8 dependabot, 12 .env.example, 13 artifacts stub).`);
+  console.log(
+    `💡 Tip: Run 'bun ai-ready.ts --scaffold' to auto-provision scaffolding-owned assets (1 AGENTS.md, 2 DOX container, 3 tool config, 4 llms.txt, 6 issue templates, 7 PR template, 8 dependabot, 12 .env.example, 13 artifacts stub).`,
+  );
   if (humanOnly.length > 0) {
-    console.log(`   Remaining assets (${humanOnly.join(", ")}) are repository-specific and must be authored by the team: 5 CI pipeline, 9 changelog, 10 contributing, 11 durable docs.\n`);
+    console.log(
+      `   Remaining assets (${humanOnly.join(", ")}) are repository-specific and must be authored by the team: 5 CI pipeline, 9 changelog, 10 contributing, 11 durable docs.\n`,
+    );
   } else {
     console.log("");
   }
@@ -614,4 +647,3 @@ if (failUnder !== null && !Number.isNaN(failUnder) && score < failUnder) {
   console.log(`❌ Fail-under gate: score ${score} < ${failUnder}.`);
   process.exit(1);
 }
-

@@ -29,16 +29,18 @@
       ],
       "suggested_skills": [
         "updateagents",
+        "new-project",
         "git",
-        "ai-ready",
-        "audit"
+        "code-review"
       ],
       "aliases": [
-        "sync-docs",
+        "docs-sync",
         "doc-sync",
-        "docs-audit"
+        "documentation-sync",
+        "doc-update",
+        "docs-update"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "updateagents",
@@ -51,60 +53,71 @@
         "bash",
         "view_file",
         "write_to_file",
-        "grep_search"
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "memory",
-        "documentation",
-        "context",
-        "agents",
-        "workspace",
-        "synchronization",
-        "dox"
+        "agent-sync",
+        "context-sync",
+        "dox",
+        "progressive-disclosure",
+        "workspace-state",
+        "agent-instructions",
+        "memory-isolation",
+        "template-sync",
+        "standards-sync"
       ],
       "suggested_skills": [
         "updatedocs",
         "new-project",
-        "relay",
-        "context-anchor"
+        "relay"
       ],
       "aliases": [
+        "agent-sync",
         "sync-agents",
-        "update-memory",
-        "agent-sync"
+        "sync-agent-instructions",
+        "workspace-sync",
+        "context-update"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "git",
-      "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'.",
+      "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'.",
       "path": "git/SKILL.md",
       "version": "1.0.1",
       "category": "core-engine",
       "priority": 3,
       "tools": [
         "bash",
-        "run_command",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
         "git",
         "github",
         "release",
-        "pr",
-        "triage",
         "branching",
+        "triage",
+        "pr",
         "semver",
-        "workflow",
-        "devops",
-        "seo"
+        "ci",
+        "seo",
+        "open-graph",
+        "branch-cleanup",
+        "anti-slop",
+        "release-lifecycle"
       ],
       "suggested_skills": [
         "code-review",
         "updatedocs",
-        "ai-ready",
-        "gauntlet-loop"
+        "devops",
+        "qa-launch"
       ],
       "aliases": [
         "git-flow",
@@ -125,31 +138,39 @@
       "tools": [
         "bash",
         "view_file",
-        "grep",
-        "edit_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
         "code-review",
-        "reviewer-method",
-        "torvalds",
+        "linus-torvalds",
         "correctness",
-        "data-structures",
-        "concurrency",
+        "evidence",
+        "special-cases",
+        "diff",
+        "pr-review",
+        "security-review",
+        "owasp",
+        "edge-cases",
+        "testing",
         "api-stability",
-        "karpathy-doctrine",
-        "minimal-diff",
-        "test-spec-immutability"
+        "memory-safety",
+        "concurrency"
       ],
       "suggested_skills": [
         "git",
-        "gauntlet-loop",
-        "refactor-ui",
+        "webdev",
+        "audit",
         "pua"
       ],
       "aliases": [
-        "code-review-linus-torvalds-style",
-        "linus-review",
-        "rigorous-review"
+        "review",
+        "code-review-skill",
+        "linus-style-review",
+        "rigorous-review",
+        "torvalds-review"
       ],
       "scope": "local"
     },
@@ -163,33 +184,53 @@
       "tools": [
         "bash",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "scaffolding",
-        "governance",
-        "project-os",
-        "architecture",
+        "new-project",
+        "project-creation",
+        "scaffold",
+        "agent-engine",
+        "dox-engine",
+        "dox",
+        "progressive-disclosure",
         "nextjs",
         "astro",
-        "vite",
-        "dox",
-        "agent-engine",
-        "dox-engine"
+        "expo",
+        "unoCSS",
+        "bem",
+        "okLCH",
+        "nanoStores",
+        "payload",
+        "medusa",
+        "stripe",
+        "razorpay",
+        "drizzle",
+        "neon",
+        "supabase",
+        "sqlite",
+        "capacitor",
+        "project-os",
+        "agents-first"
       ],
       "suggested_skills": [
-        "ai-ready",
-        "updateagents",
-        "updatedocs",
-        "git"
+        "webdev",
+        "design",
+        "devops",
+        "updatedocs"
       ],
       "aliases": [
-        "Agent Engine",
-        "DOX Engine",
+        "project-scaffold",
+        "scaffold",
+        "create-project",
+        "init-project",
         "agent-engine",
         "dox-engine"
       ],
-      "scope": "global"
+      "scope": "local"
     },
     {
       "name": "relay",
@@ -201,26 +242,35 @@
       "tools": [
         "bash",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "subagents",
+        "relay",
         "handoff",
-        "orchestration",
-        "context",
-        "governance",
-        "reliability"
+        "session-resumption",
+        "context-packet",
+        "handoff-md",
+        "handoff",
+        "worktree-lease",
+        "subagent-dispatch",
+        "ambient-continuity",
+        "cross-session",
+        "state-source-ladder"
       ],
       "suggested_skills": [
+        "secretary",
         "context-anchor",
-        "dead-letter",
-        "coupling-router",
-        "updateagents"
+        "coupling-router"
       ],
       "aliases": [
+        "handoff",
+        "session-handoff",
+        "context-handoff",
         "agent-handoff",
-        "subagent-handoff",
-        "context-packet"
+        "resume-session"
       ],
       "scope": "global"
     },
@@ -235,32 +285,41 @@
         "bash",
         "view_file",
         "write_to_file",
-        "run_command",
-        "grep_search"
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "audit",
-        "readiness",
+        "ai-ready",
+        "ai-readiness",
+        "ai-auditor",
+        "repository-audit",
+        "ai-context",
+        "dev-workflow",
+        "onboarding",
         "governance",
+        "fast-skip-gate",
+        "mcp",
+        "llms-txt",
+        "llms",
         "dox",
-        "agents",
-        "pr-mining",
-        "ci",
-        "workflow",
-        "onboarding"
+        "agENTS-md",
+        "artifacts-contract",
+        "team-conventions",
+        "fail-under"
       ],
       "suggested_skills": [
         "new-project",
         "updateagents",
-        "git",
         "updatedocs"
       ],
       "aliases": [
-        "repo-ai-ready",
-        "audit-ai-ready",
-        "ai-audit"
+        "ai_readiness",
+        "readiness",
+        "ai_gating",
+        "repository_ai"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "context-anchor",
@@ -270,27 +329,33 @@
       "category": "context-orchestration",
       "priority": 8,
       "tools": [
+        "bash",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search"
       ],
       "tags": [
-        "context",
-        "memory",
-        "state",
-        "session",
-        "focus",
+        "context-anchor",
         "anchor",
-        "reliability"
+        "focus",
+        "drift-prevention",
+        "park",
+        "workstream-parking",
+        "switching",
+        "context-drift",
+        "named-anchors"
       ],
       "suggested_skills": [
         "relay",
-        "updateagents",
-        "dead-letter"
+        "secretary",
+        "coupling-router"
       ],
       "aliases": [
         "anchor",
-        "session-anchor",
-        "working-reference"
+        "focus-anchor",
+        "park-workstream",
+        "context-park"
       ],
       "scope": "global"
     },
@@ -306,33 +371,37 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command"
+        "grep_search"
       ],
       "tags": [
+        "gauntlet-loop",
         "gauntlet",
         "quality-loop",
         "multi-agent",
-        "verification",
-        "benchmarking",
-        "orchestration",
-        "governance",
+        "builder",
+        "critic",
+        "automated-gate",
         "security-headers",
-        "visual-regression",
-        "owasp",
-        "responsive-testing"
+        "breakpoint-audit",
+        "iteration-ledger",
+        "acceptance-packet",
+        "stop-conditions",
+        "score-plateau",
+        "regression"
       ],
       "suggested_skills": [
         "code-review",
-        "refactor-ui",
-        "secretary",
-        "git"
+        "webdev",
+        "coupling-router",
+        "dead-letter"
       ],
       "aliases": [
         "gauntlet",
-        "quality-loop",
-        "verification-loop"
+        "quality-gauntlet",
+        "improvement-loop",
+        "agent-loop"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "refactor-ui",
@@ -342,32 +411,42 @@
       "category": "design-interface",
       "priority": 10,
       "tools": [
+        "bash",
         "view_file",
-        "replace_file_content",
         "write_to_file",
+        "replace_file_content",
+        "grep_search",
         "run_command"
       ],
       "tags": [
-        "ui-design",
+        "refactor-ui",
         "refactoring-ui",
-        "tailwind",
+        "ui-refactor",
+        "design-heuristics",
+        "atomic-design",
+        "container-query",
         "typography",
-        "color-palette",
-        "visual-hierarchy",
-        "accessibility",
-        "frontend",
-        "design-systems",
-        "5-state-gate"
+        "theming",
+        "wcag",
+        "contrast",
+        "audit",
+        "polish",
+        "design-tokens",
+        "bun-scripts",
+        "anti-pattern",
+        "consistency-matrix"
       ],
       "suggested_skills": [
+        "design",
         "designscope",
-        "gauntlet-loop",
+        "animate",
         "code-review"
       ],
       "aliases": [
-        "refactoring-ui",
-        "ui-polish",
-        "ui-audit"
+        "refactor_ui",
+        "ui_refactor",
+        "refactorui",
+        "ui-refactoring"
       ],
       "scope": "local"
     },
@@ -382,30 +461,38 @@
         "bash",
         "view_file",
         "write_to_file",
+        "replace_file_content",
+        "grep_search",
         "web_fetch"
       ],
       "tags": [
-        "design",
-        "design-systems",
-        "tokens",
-        "dtcg",
-        "ui",
-        "figma",
-        "wcag",
+        "designscope",
+        "design-scope",
+        "design-system",
+        "extract-design-system",
+        "visual-analysis",
+        "design-tokens",
         "layout-tree",
-        "flexbox",
         "css-grid",
-        "website-recreation"
+        "flexbox",
+        "dtcg",
+        "figma",
+        "screenshot-to-design",
+        "design-brief",
+        "wcag-contrast",
+        "element-copy",
+        "generative-prompt"
       ],
       "suggested_skills": [
+        "design",
         "refactor-ui",
-        "new-project",
-        "code-review"
+        "animate"
       ],
       "aliases": [
-        "extract-design",
-        "design-tokens",
-        "layout-tree"
+        "design_scope",
+        "designscope",
+        "extract_design",
+        "visual_design_analysis"
       ],
       "scope": "local"
     },
@@ -419,32 +506,40 @@
       "tools": [
         "bash",
         "view_file",
-        "grep",
-        "glob"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
+        "coupling-router",
         "coupling",
-        "task-routing",
-        "subagents",
-        "orchestration",
+        "router",
+        "delegation",
         "multi-agent",
-        "architecture",
-        "concurrency",
-        "skill-compatibility",
-        "token-optimization",
-        "plan-evaluation",
-        "verification-receipts"
+        "pre-execution-gate",
+        "dag",
+        "dependency-graph",
+        "shared-state",
+        "type-definitions",
+        "skill-auditing",
+        "redundant-instructions",
+        "prompt-contradictions",
+        "token-bloat",
+        "verification-receipts",
+        "worktree-lease"
       ],
       "suggested_skills": [
         "relay",
         "secretary",
-        "gauntlet-loop",
-        "updateagents"
+        "dead-letter",
+        "pua"
       ],
       "aliases": [
-        "task-router",
-        "skill-router",
-        "coupling-analysis"
+        "coupling_router",
+        "couplingrouter",
+        "dependency-router",
+        "task-router"
       ],
       "scope": "global"
     },
@@ -459,34 +554,41 @@
         "bash",
         "view_file",
         "write_to_file",
-        "replace_file_content"
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
+        "secretary",
         "staff-work",
-        "executive-brief",
         "approval-gate",
-        "governance",
-        "decision-memo",
-        "evidence",
-        "hash-approval",
-        "socratic-lens",
-        "adversarial-review",
+        "evidence-grounded",
+        "judgment-over-authority",
+        "devil-advocate",
         "dissent-preservation",
+        "evidence-snapshots",
+        "sha256-approval",
+        "delegation-control",
         "teachback",
         "two-stage-review",
-        "replan",
-        "handover"
+        "dag-wave",
+        "wip-limits",
+        "blast-radius",
+        "orientation-brief",
+        "task-ledger",
+        "session-handover"
       ],
       "suggested_skills": [
         "evidence-ledger",
         "coupling-router",
-        "gauntlet-loop",
-        "code-review"
+        "relay",
+        "dead-letter"
       ],
       "aliases": [
-        "secretary-controller",
-        "staff-controller",
-        "approval-gate"
+        "staff-work",
+        "approval-gate",
+        "executive-brief",
+        "delegation-controller"
       ],
       "scope": "global"
     },
@@ -500,52 +602,41 @@
       "tools": [
         "bash",
         "view_file",
-        "grep",
         "write_to_file",
         "replace_file_content",
-        "list_dir"
+        "grep_search",
+        "web_search"
       ],
       "tags": [
+        "evidence-ledger",
         "evidence",
-        "verification",
-        "citation",
-        "fact-checking",
-        "claims",
-        "research-gate",
-        "provenance",
-        "academic-research",
-        "citation-synthesis",
-        "receipt-audit",
-        "doi",
-        "empirical-verification",
-        "project-tracking",
-        "decisions",
-        "commitments",
-        "agency-workflow",
-        "context-switch",
-        "evidence-dashboard",
-        "staleness-detection"
+        "claim-verification",
+        "source-citation",
+        "confidence-taxonomy",
+        "decision-tracking",
+        "client-commitments",
+        "delivery-proof",
+        "status-facts",
+        "blocker-tracking",
+        "raw-fetch-search-infer",
+        "doi-receipts",
+        "empirical-vs-speculative",
+        "staleness-detection",
+        "append-only",
+        "multi-client"
       ],
       "suggested_skills": [
         "secretary",
-        "updatedocs",
-        "audit",
         "coupling-router",
-        "context-anchor",
-        "relay",
-        "dead-letter",
-        "updateagents",
-        "coach",
-        "periodic-retreat"
+        "updatedocs"
       ],
       "aliases": [
-        "claim-ledger",
-        "verification-ledger",
-        "citation-gate",
-        "project-evidence",
-        "evidence-tracker"
+        "evidence",
+        "claim-tracking",
+        "source-tracking",
+        "confidence-ledger"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "dead-letter",
@@ -557,29 +648,39 @@
       "tools": [
         "bash",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "triage",
-        "error-handling",
-        "debugging",
-        "subagents",
-        "escalation",
-        "reliability",
-        "retry-gate",
+        "dead-letter",
+        "failure-capture",
+        "failure-mode",
+        "transient-vs-permanent",
         "state-verification",
-        "orphan-cleanup"
+        "partial-work",
+        "orphaned-resources",
+        "retry-packet",
+        "escalation",
+        "baseline-regression",
+        "repro-test-pack",
+        "dev-qa-handoff",
+        "root-cause-clustering",
+        "findings-ledger",
+        "convergence"
       ],
       "suggested_skills": [
-        "relay",
         "pua",
-        "context-anchor",
-        "secretary"
+        "coupling-router",
+        "secretary",
+        "evidence-ledger"
       ],
       "aliases": [
-        "failure-triage",
+        "dead_letter",
+        "failure_capture",
         "blocked-task",
-        "dead-letter-queue"
+        "retry-handler"
       ],
       "scope": "global"
     },
@@ -593,24 +694,37 @@
       "tools": [
         "bash",
         "view_file",
-        "edit_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "web_search",
+        "run_command"
       ],
       "tags": [
+        "pua",
+        "pip",
+        "performance-improvement",
+        "exhaustive-problem-solving",
+        "structured-debugging",
+        "western-big-tech",
+        "performance-culture",
         "debugging",
-        "performance",
-        "reliability",
-        "problem-solving",
-        "triage",
-        "big-tech"
+        "env-issues",
+        "config-failures",
+        "deployment-failures",
+        "frustration-response",
+        "try-harder",
+        "figure-it-out"
       ],
       "suggested_skills": [
         "dead-letter",
-        "code-review",
-        "gauntlet-loop"
+        "coupling-router",
+        "code-review"
       ],
       "aliases": [
         "pip",
-        "ai-pip",
+        "performance-improvement-plan",
+        "exhaustive-debugging",
         "performance-plan"
       ],
       "scope": "global"
@@ -626,26 +740,33 @@
         "bash",
         "view_file",
         "write_to_file",
-        "replace_file_content"
+        "replace_file_content",
+        "grep_search"
       ],
       "tags": [
-        "standup",
-        "daily-review",
+        "coach",
+        "daily-checkin",
         "effort-scorecard",
-        "reflection",
-        "developer-productivity",
-        "habits",
-        "lifeos"
+        "reflective",
+        "standup",
+        "daily-standup",
+        "controllable-inputs",
+        "effort-rubric",
+        "tests-written",
+        "minimal-diffs",
+        "invariants",
+        "secrets-scrubbed"
       ],
       "suggested_skills": [
-        "audit",
         "periodic-retreat",
-        "context-anchor"
+        "dead-letter",
+        "evidence-ledger"
       ],
       "aliases": [
-        "daily-standup-coach",
-        "standup-coach",
-        "daily-standup"
+        "daily-coach",
+        "standup",
+        "effort-check",
+        "reflective-checkin"
       ],
       "scope": "global"
     },
@@ -654,37 +775,44 @@
       "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md.",
       "path": "audit/SKILL.md",
       "version": "1.1.1",
-      "category": "reflection-maintenance",
+      "category": "quality-review",
       "priority": 18,
       "tools": [
         "bash",
         "view_file",
-        "grep",
-        "glob",
         "write_to_file",
-        "replace_file_content"
+        "replace_file_content",
+        "grep_search",
+        "find_by_name"
       ],
       "tags": [
-        "knowledge-audit",
-        "memory-hygiene",
-        "link-integrity",
-        "docs-validation",
+        "audit",
+        "knowledge-hygiene",
+        "referential-integrity",
+        "memory-audit",
+        "documentation-audit",
         "dead-links",
-        "secret-scan",
-        "ref-integrity"
+        "broken-references",
+        "orphaned-notes",
+        "leaked-credentials",
+        "stale-contradictions",
+        "repair-loop",
+        "severity-routing",
+        "companion-skill-routing",
+        "brain-audit-report"
       ],
       "suggested_skills": [
         "updatedocs",
         "evidence-ledger",
-        "coach",
-        "periodic-retreat"
+        "coach"
       ],
       "aliases": [
-        "brain-audit",
+        "knowledge-audit",
         "memory-audit",
-        "knowledge-audit"
+        "doc-audit",
+        "integrity-audit"
       ],
-      "scope": "local"
+      "scope": "global"
     },
     {
       "name": "periodic-retreat",
@@ -697,27 +825,31 @@
         "bash",
         "view_file",
         "write_to_file",
-        "replace_file_content"
+        "replace_file_content",
+        "grep_search"
       ],
       "tags": [
-        "retreat",
-        "strategic-planning",
-        "quarterly-review",
-        "lifeos",
+        "periodic-retreat",
+        "quarterly-retreat",
+        "strategic-retreat",
+        "project-health",
         "architecture-debt",
-        "okrs",
-        "telos"
+        "deprecated-purge",
+        "wheel-of-life",
+        "okr-handoff",
+        "lifeos",
+        "next-quarter"
       ],
       "suggested_skills": [
         "coach",
         "audit",
-        "updateagents",
         "updatedocs"
       ],
       "aliases": [
+        "quarterly",
         "retreat",
-        "quarterly-retreat",
-        "strategic-retreat"
+        "strategic-retreat",
+        "quarterly-review"
       ],
       "scope": "global"
     },
@@ -730,46 +862,68 @@
       "priority": 20,
       "tools": [
         "bash",
-        "run_command",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
       ],
       "tags": [
-        "cache",
-        "cleanup",
-        "disk-space",
-        "maintenance",
-        "devtools",
-        "designer-tools",
-        "browser",
-        "chrome",
-        "firefox",
-        "zen",
-        "brave",
-        "edge",
-        "safari",
-        "xcode",
-        "docker",
-        "adobe",
-        "figma",
-        "blender",
+        "clean-system-cache",
+        "cache-cleaner",
+        "cross-platform",
         "windows",
         "linux",
         "macos",
-        "bash",
-        "cmd"
+        "package-managers",
+        "uv",
+        "npm",
+        "bun",
+        "pip",
+        "pnpm",
+        "yarn",
+        "cargo",
+        "go",
+        "dotnet",
+        "composer",
+        "gradle",
+        "brew",
+        "ide-cache",
+        "xcode",
+        "android",
+        "vscode",
+        "cursor",
+        "cypress",
+        "containers",
+        "docker",
+        "podman",
+        "creative-suite",
+        "adobe",
+        "photoshop",
+        "figma",
+        "blender",
+        "electron",
+        "browser-cache",
+        "chrome",
+        "chromium",
+        "brave",
+        "edge",
+        "firefox",
+        "zen",
+        "vivaldi",
+        "safari",
+        "session-protection",
+        "cache-only"
       ],
       "suggested_skills": [
-        "audit",
-        "periodic-retreat",
-        "code-review",
-        "gauntlet-loop"
+        "coach",
+        "periodic-retreat"
       ],
       "aliases": [
         "clean-cache",
-        "purge-cache",
         "cache-cleaner",
-        "disk-cleanup"
+        "system-cache",
+        "purge-cache"
       ],
       "scope": "global"
     },
@@ -785,33 +939,34 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "grep_search",
-        "find_by_name"
+        "grep_search"
       ],
       "tags": [
         "humanize",
-        "prose",
-        "editorial",
-        "copyediting",
+        "prose-humanization",
+        "ai-writing-removal",
+        "de-ai",
+        "editorial-review",
         "anti-slop",
-        "natural-language",
-        "technical-writing",
-        "style-guide",
-        "voice-preservation",
-        "writing-quality"
+        "writing-artifacts",
+        "formulaic-patterns",
+        "significance-inflation",
+        "robotic-cadence",
+        "authentic-voice",
+        "copy-editing",
+        "prose-polishing",
+        "chatbot-slop"
       ],
       "suggested_skills": [
+        "content",
         "code-review",
-        "updatedocs",
-        "evidence-ledger",
-        "secretary"
+        "updatedocs"
       ],
       "aliases": [
-        "anti-ai",
-        "de-ai",
-        "human-writer",
-        "prose-polish",
-        "voice-editor"
+        "humanize_text",
+        "de_ai",
+        "remove_ai_writing",
+        "prose_humanizer"
       ],
       "scope": "global"
     },
@@ -825,37 +980,49 @@
       "tools": [
         "bash",
         "view_file",
-        "write_to_file"
+        "write_to_file",
+        "replace_file_content",
+        "grep_search",
+        "web_fetch"
       ],
       "tags": [
+        "animate",
         "animation",
         "motion",
         "framer-motion",
-        "motion-dev",
-        "css",
-        "transitions",
+        "motion.dev",
+        "css-animation",
         "easing",
-        "gsap",
-        "scroll",
+        "timing",
+        "entrances",
+        "exits",
         "micro-interactions",
-        "ui-design",
-        "springs",
-        "reduced-motion",
-        "accessibility"
+        "scroll-animation",
+        "page-transitions",
+        "hover-states",
+        "press-states",
+        "layout-shifts",
+        "gsap",
+        "webgl",
+        "reanimated",
+        "swiftui",
+        "compose",
+        "flutter",
+        "native-mobile",
+        "react"
       ],
       "suggested_skills": [
+        "design",
         "refactor-ui",
         "designscope",
-        "code-review",
-        "gauntlet-loop"
+        "code-review"
       ],
       "aliases": [
-        "motion",
         "animation",
-        "ui-animation",
-        "framer-motion",
         "motion-design",
-        "transitions"
+        "ui-animation",
+        "add-motion",
+        "animate_this"
       ],
       "scope": "local"
     },
@@ -871,24 +1038,26 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
+        "web_fetch",
         "grep_search",
-        "find_by_name"
+        "run_command"
       ],
       "tags": [
         "design",
-        "ui",
-        "ux",
+        "website-design",
+        "ui-design",
+        "ux-design",
         "wireframe",
+        "mockup",
         "logo",
-        "branding",
         "brand-identity",
-        "social-media-design",
-        "graphics",
+        "social-templates",
+        "graphic-design",
         "visual-design",
-        "design-tokens",
-        "typography",
-        "color",
-        "layout"
+        "ux-flows",
+        "design-brief",
+        "brand-kit",
+        "social-media-design"
       ],
       "suggested_skills": [
         "refactor-ui",
@@ -897,13 +1066,11 @@
         "new-project"
       ],
       "aliases": [
-        "design-department",
+        "web-design",
         "ui-design",
-        "visual-design",
+        "ux-design",
         "graphic-design",
-        "branding",
-        "wireframe",
-        "logo-design"
+        "brand-design"
       ],
       "scope": "local"
     },
@@ -919,12 +1086,14 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "grep_search",
+        "web_search",
         "web_fetch",
-        "run_command"
+        "grep_search"
       ],
       "tags": [
-        "paid-advertising",
+        "paidads",
+        "paid-ads",
+        "advertising",
         "google-ads",
         "meta-ads",
         "facebook-ads",
@@ -934,16 +1103,14 @@
         "tiktok-ads",
         "snapchat-ads",
         "youtube-ads",
-        "ppc",
-        "sem",
         "programmatic",
         "retargeting",
-        "remarketing",
-        "budget",
-        "bidding",
+        "budget-pacing",
+        "ad-audit",
         "ad-copy",
-        "conversion-tracking",
-        "audiences"
+        "conversion-events",
+        "tracking-pixels",
+        "ad-campaigns"
       ],
       "suggested_skills": [
         "analytics",
@@ -953,14 +1120,10 @@
       ],
       "aliases": [
         "paid-ads",
-        "ads",
         "advertising",
-        "ppc",
-        "sem",
         "google-ads",
         "meta-ads",
-        "paid-media",
-        "media-buying"
+        "ad-campaigns"
       ],
       "scope": "local"
     },
@@ -976,30 +1139,30 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "grep_search",
-        "web_fetch"
+        "web_search",
+        "web_fetch",
+        "grep_search"
       ],
       "tags": [
         "seo",
+        "search-engine-optimization",
+        "technical-seo",
+        "onpage-seo",
+        "content-strategy",
+        "local-seo",
+        "link-building",
         "aeo",
         "geo",
         "answer-engine-optimization",
-        "organic-search",
-        "technical-seo",
-        "on-page",
-        "local-seo",
-        "link-building",
-        "backlinks",
+        "generative-engine-optimization",
+        "ai-search",
+        "chatgpt-cite",
+        "perplexity-cite",
+        "ai-overviews",
         "crawlability",
         "indexing",
-        "sitemap",
-        "robots",
-        "structured-data",
-        "schema-org",
-        "ai-search",
-        "llm-citations",
-        "e-e-a-t",
-        "serp"
+        "seo-audit",
+        "keyword-strategy"
       ],
       "suggested_skills": [
         "content",
@@ -1009,12 +1172,10 @@
       ],
       "aliases": [
         "search-engine-optimization",
-        "seo-department",
-        "aeo",
-        "geo",
-        "organic-search",
-        "link-building",
-        "local-seo"
+        "seo-audit",
+        "technical-seo",
+        "local-seo",
+        "aeo"
       ],
       "scope": "local"
     },
@@ -1030,32 +1191,31 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
+        "web_fetch",
         "grep_search",
-        "find_by_name",
         "run_command"
       ],
       "tags": [
+        "webdev",
         "web-development",
         "frontend",
         "backend",
         "fullstack",
-        "api",
-        "rest",
-        "graphql",
-        "database",
-        "orm",
         "ecommerce",
         "cms",
-        "performance",
-        "core-web-vitals",
+        "web-performance",
         "accessibility",
-        "wcag",
         "migrations",
-        "nextjs",
-        "react",
-        "astro",
-        "nodejs",
-        "typescript"
+        "api-design",
+        "data-models",
+        "stripe",
+        "razorpay",
+        "payload",
+        "keystatic",
+        "medusa",
+        "shopify",
+        "ecommerce-platforms",
+        "cms-platforms"
       ],
       "suggested_skills": [
         "new-project",
@@ -1065,12 +1225,10 @@
       ],
       "aliases": [
         "web-development",
-        "web-engineering",
-        "frontend",
-        "backend",
-        "fullstack",
-        "ecommerce",
-        "cms"
+        "frontend-dev",
+        "backend-dev",
+        "fullstack-dev",
+        "web-engineering"
       ],
       "scope": "local"
     },
@@ -1086,25 +1244,31 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
+        "web_fetch",
         "grep_search"
       ],
       "tags": [
         "mobile",
+        "mobile-app",
         "ios",
-        "android",
         "swiftui",
+        "android",
         "compose",
         "react-native",
         "expo",
         "flutter",
-        "capacitor",
+        "cross-platform",
         "pwa",
+        "progressive-web-app",
+        "app-store-optimization",
         "aso",
-        "app-store",
-        "play-store",
+        "native-features",
+        "camera",
         "push-notifications",
-        "offline-first"
+        "offline",
+        "app-store",
+        "ios-app",
+        "android-app"
       ],
       "suggested_skills": [
         "new-project",
@@ -1114,11 +1278,9 @@
       ],
       "aliases": [
         "mobile-apps",
-        "app-development",
-        "ios-development",
-        "android-development",
+        "ios",
+        "android",
         "react-native",
-        "expo",
         "flutter"
       ],
       "scope": "local"
@@ -1135,24 +1297,33 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
+        "web_search",
+        "web_fetch",
         "grep_search"
       ],
       "tags": [
-        "social-media",
+        "smm",
+        "social-media-marketing",
         "organic-social",
-        "strategy",
-        "calendar",
-        "content",
-        "community",
-        "influencer",
+        "platform-strategy",
+        "content-calendar",
+        "social-posts",
+        "captions",
+        "community-management",
+        "influencer-marketing",
         "ugc",
+        "user-generated-content",
+        "social-analytics",
         "instagram",
-        "tiktok",
+        "twitter",
         "linkedin",
+        "tiktok",
+        "facebook",
         "youtube",
-        "engagement",
-        "social-analytics"
+        "pinterest",
+        "social-presence",
+        "posting-calendar",
+        "community-engagement"
       ],
       "suggested_skills": [
         "content",
@@ -1161,12 +1332,10 @@
         "paidads"
       ],
       "aliases": [
-        "organic-social",
         "social-media",
-        "social-media-marketing",
-        "community-management",
-        "influencer-marketing",
-        "ugc"
+        "organic-social",
+        "social-marketing",
+        "social-strategy"
       ],
       "scope": "local"
     },
@@ -1182,22 +1351,28 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
+        "web_search",
+        "web_fetch",
         "grep_search"
       ],
       "tags": [
         "content",
-        "blog",
+        "content-studio",
+        "blog-posts",
+        "seo-content",
+        "conversion-copy",
+        "brand-copy",
+        "email-campaigns",
+        "video-scripts",
+        "case-studies",
+        "customer-stories",
+        "prose-humanization",
         "copywriting",
-        "email",
-        "video",
-        "case-study",
-        "humanize",
-        "seo-writing",
-        "landing-page",
-        "newsletter",
-        "editorial",
-        "prose"
+        "landing-page-copy",
+        "email-sequences",
+        "video-scripting",
+        "content-writing",
+        "ai-slop-removal"
       ],
       "suggested_skills": [
         "seo",
@@ -1208,10 +1383,9 @@
       "aliases": [
         "content-studio",
         "copywriting",
-        "blogging",
-        "email-marketing",
-        "video-scripting",
-        "editorial"
+        "content-creation",
+        "blog-writing",
+        "content-marketing"
       ],
       "scope": "local"
     },
@@ -1227,23 +1401,27 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
+        "web_fetch",
         "grep_search"
       ],
       "tags": [
         "analytics",
+        "data-analytics",
+        "measurement",
         "tracking",
-        "ga4",
-        "events",
         "dashboards",
-        "kpis",
+        "kpi-dashboard",
         "attribution",
-        "reporting",
+        "marketing-attribution",
+        "performance-reporting",
+        "conversion-rate-optimization",
         "cro",
-        "experimentation",
-        "ab-testing",
-        "funnels",
-        "conversion"
+        "cro-audit",
+        "cro-experiment",
+        "channel-analysis",
+        "analytics-setup",
+        "event-tracking",
+        "marketing-performance"
       ],
       "suggested_skills": [
         "seo",
@@ -1252,13 +1430,11 @@
         "growth"
       ],
       "aliases": [
+        "analytics",
         "data-analytics",
         "measurement",
-        "tracking",
         "dashboards",
-        "attribution",
-        "cro",
-        "reporting"
+        "kpi"
       ],
       "scope": "local"
     },
@@ -1274,23 +1450,29 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
-        "grep_search"
+        "web_fetch",
+        "grep_search",
+        "run_command"
       ],
       "tags": [
         "automation",
-        "workflow",
-        "chatbot",
+        "workflow-automation",
+        "chatbots",
         "ai-agents",
         "rag",
-        "llm",
+        "retrieval-augmented-generation",
         "integrations",
+        "api-integration",
         "webhooks",
-        "api",
         "prompt-engineering",
-        "evals",
-        "n8n",
-        "zapier"
+        "ai-services",
+        "ai-assistant",
+        "ai-agent",
+        "workflow",
+        "automate",
+        "connect-systems",
+        "third-party-integrations",
+        "prompt-design"
       ],
       "suggested_skills": [
         "webdev",
@@ -1299,13 +1481,11 @@
         "new-project"
       ],
       "aliases": [
-        "ai-services",
-        "ai-automation",
+        "automation",
         "workflow-automation",
-        "chatbots",
-        "agents",
-        "rag",
-        "prompt-engineering"
+        "ai-agents",
+        "chatbot",
+        "rag-pipeline"
       ],
       "scope": "local"
     },
@@ -1326,18 +1506,23 @@
       ],
       "tags": [
         "devops",
+        "infrastructure",
+        "reliability",
         "hosting",
         "deployment",
-        "cicd",
-        "github-actions",
+        "ci-cd",
+        "pipeline",
         "domains",
         "dns",
-        "security",
+        "security-hardening",
         "monitoring",
         "alerting",
         "incident-response",
-        "uptime",
-        "infrastructure-as-code"
+        "outage-response",
+        "cloud",
+        "infrastructure-as-code",
+        "reproducible",
+        "reversible"
       ],
       "suggested_skills": [
         "git",
@@ -1347,12 +1532,10 @@
       ],
       "aliases": [
         "infrastructure",
-        "reliability",
-        "sre",
         "deployment",
+        "ci-cd",
         "hosting",
-        "cicd",
-        "platform"
+        "security-hardening"
       ],
       "scope": "local"
     },
@@ -1368,21 +1551,23 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
         "grep_search"
       ],
       "tags": [
+        "ops",
         "operations",
         "agency-ops",
-        "onboarding",
-        "proposal",
+        "client-onboarding",
+        "proposals",
         "sow",
-        "scope",
-        "milestones",
-        "retrospective",
+        "statement-of-work",
+        "milestone-tracking",
+        "project-retrospectives",
         "multi-client",
-        "project-management",
-        "account-management"
+        "portfolio-management",
+        "scope-management",
+        "change-control",
+        "client-engagement"
       ],
       "suggested_skills": [
         "relay",
@@ -1393,11 +1578,10 @@
       ],
       "aliases": [
         "agency-ops",
-        "client-operations",
-        "project-management",
-        "proposals",
-        "sow",
-        "account-management"
+        "client-ops",
+        "project-ops",
+        "client-onboarding",
+        "sow"
       ],
       "scope": "local"
     },
@@ -1413,22 +1597,26 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
+        "web_search",
+        "web_fetch",
         "grep_search"
       ],
       "tags": [
         "growth",
         "strategy",
-        "positioning",
-        "messaging",
-        "funnels",
-        "pricing",
-        "launch",
-        "go-to-market",
-        "competitor-analysis",
-        "market",
         "scaling",
-        "value-proposition"
+        "positioning",
+        "value-proposition",
+        "marketing-funnels",
+        "acquisition-funnel",
+        "conversion-funnel",
+        "pricing",
+        "pricing-strategy",
+        "product-launch",
+        "competitor-analysis",
+        "market-analysis",
+        "growth-strategy",
+        "scaling-strategy"
       ],
       "suggested_skills": [
         "analytics",
@@ -1437,13 +1625,11 @@
         "seo"
       ],
       "aliases": [
-        "strategy",
+        "growth-strategy",
         "scaling",
         "positioning",
-        "go-to-market",
-        "gtm",
         "pricing-strategy",
-        "competitive-analysis"
+        "product-launch"
       ],
       "scope": "local"
     },
@@ -1459,35 +1645,38 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
         "grep_search"
       ],
       "tags": [
+        "qa-launch",
         "qa",
-        "launch-qa",
-        "quality-gate",
+        "quality-assurance",
+        "pre-launch",
+        "launch-gate",
         "cross-browser",
         "device-matrix",
-        "functional-testing",
+        "functional-verification",
         "release-gate",
+        "block-or-ship",
         "regression",
-        "verification",
-        "block-or-ship"
+        "browser-coverage",
+        "device-coverage",
+        "critical-path",
+        "release-candidate",
+        "post-fix"
       ],
       "suggested_skills": [
         "webdev",
         "mobile",
         "refactor-ui",
-        "devops",
-        "code-review"
+        "devops"
       ],
       "aliases": [
+        "qa",
+        "quality-assurance",
         "launch-qa",
         "pre-launch-qa",
-        "release-qa",
-        "qa-gate",
-        "browser-matrix",
-        "regression-check"
+        "release-gate"
       ],
       "scope": "local"
     },
@@ -1503,19 +1692,22 @@
         "view_file",
         "write_to_file",
         "replace_file_content",
-        "run_command",
         "grep_search"
       ],
       "tags": [
+        "client-comms",
         "client-communication",
-        "status-report",
-        "change-request",
-        "scope-triage",
-        "handover",
+        "client-facing",
+        "status-reporting",
+        "change-requests",
+        "scope-change",
+        "scoping",
+        "approval",
+        "project-handover",
+        "handover-docs",
         "training",
-        "feedback",
-        "account-management",
-        "client-facing"
+        "client-feedback",
+        "feedback-intake"
       ],
       "suggested_skills": [
         "ops",
@@ -1524,11 +1716,204 @@
       ],
       "aliases": [
         "client-communication",
-        "status-update",
-        "change-request",
-        "project-handover",
-        "client-feedback",
-        "handover-docs"
+        "client-status",
+        "client-handover",
+        "client-feedback"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "gtm",
+      "description": "Outbound GTM department: account and lead research, lead scoring with TAM and SAM sizing, cold email sequencing with deliverability, list building with hygiene and enrichment, and sales handover with context packets, routed through five modes. Use when asked to research target accounts, score leads, build a prospect list, run a cold outbound sequence, or hand off qualified pipeline to sales. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics).",
+      "path": "gtm/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 37,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "web_search",
+        "web_fetch",
+        "grep_search"
+      ],
+      "tags": [
+        "gtm",
+        "go-to-market",
+        "outbound",
+        "account-research",
+        "lead-research",
+        "lead-scoring",
+        "tam",
+        "sam",
+        "total-addressable-market",
+        "serviceable-addressable-market",
+        "cold-email",
+        "email-sequencing",
+        "deliverability",
+        "list-building",
+        "list-hygiene",
+        "enrichment",
+        "sales-handover",
+        "context-packets",
+        "prospect-list",
+        "qualified-pipeline"
+      ],
+      "suggested_skills": [
+        "growth",
+        "content",
+        "ops",
+        "analytics"
+      ],
+      "aliases": [
+        "go-to-market",
+        "outbound-gtm",
+        "lead-generation",
+        "cold-outreach"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "incident-response",
+      "description": "Live incident command: severity triage with first-15-minutes checklist, stop-the-bleeding mitigation playbooks for outage breach data-loss and perf-collapse, severity-linked status-page and client communication, and blameless postmortem with tracked actions, routed through four modes. Use when production is down, breached, losing data, or collapsing in performance. Not for planned QA (qa-launch), security audits (audit/code-review), routine client status (client-comms), or infra builds (devops).",
+      "path": "incident-response/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 38,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "incident-response",
+        "incident-command",
+        "severity-triage",
+        "first-15-minutes",
+        "mitigation",
+        "stop-the-bleeding",
+        "status-page",
+        "client-communication",
+        "postmortem",
+        "blameless",
+        "outage",
+        "breach",
+        "data-loss",
+        "perf-collapse"
+      ],
+      "suggested_skills": [
+        "devops",
+        "webdev",
+        "mobile",
+        "client-comms",
+        "qa-launch"
+      ],
+      "aliases": [
+        "incident",
+        "incident-command",
+        "oncall",
+        "severity-triage",
+        "postmortem",
+        "incident-management"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "database",
+      "description": "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, and production operations with pooling partitioning and monitoring \u2014 handles Postgres, MySQL, MSSQL, and SQLite through five modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations.",
+      "path": "database/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 39,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content",
+        "run_command",
+        "grep_search"
+      ],
+      "tags": [
+        "database",
+        "sql",
+        "postgres",
+        "mysql",
+        "mssql",
+        "sqlite",
+        "performance",
+        "slow-query",
+        "explain-analyze",
+        "pg-stat-statements",
+        "indexing",
+        "covering-index",
+        "rls",
+        "security-invoker",
+        "connection-pooling",
+        "partitioning",
+        "pgvector",
+        "vacuum",
+        "lock-triage",
+        "monitoring",
+        "read-only",
+        "query-execution"
+      ],
+      "suggested_skills": [
+        "webdev",
+        "devops",
+        "qa-launch"
+      ],
+      "aliases": [
+        "db",
+        "database-skill",
+        "sql-query",
+        "db-performance",
+        "db-tuning"
+      ],
+      "scope": "local"
+    },
+    {
+      "name": "telegram",
+      "description": "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert \u2192 ack \u2192 dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, or stand up a bot with a config-file token. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only).",
+      "path": "telegram/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 40,
+      "tools": [
+        "bash",
+        "view_file",
+        "write_to_file",
+        "replace_file_content"
+      ],
+      "tags": [
+        "telegram",
+        "bot",
+        "notification",
+        "alert",
+        "approval",
+        "curl",
+        "jq",
+        "config-file",
+        "mode-600",
+        "multi-bot",
+        "kafka-event",
+        "claude-code-hook",
+        "bash"
+      ],
+      "suggested_skills": [
+        "automation",
+        "coupling-router",
+        "sentry",
+        "user-onboarding"
+      ],
+      "aliases": [
+        "tg",
+        "telegram-bot",
+        "telegram-skill",
+        "telegram-notify"
       ],
       "scope": "local"
     }
@@ -1562,7 +1947,7 @@
     {
       "id": "agency-delivery",
       "label": "Agency Delivery",
-      "description": "Full-service creative web marketing agency departments: design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency ops, growth strategy, launch QA, and client communication."
+      "description": "Full-service creative web marketing agency departments: design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency ops, growth strategy, launch QA, client communication, database operations, and Telegram messaging."
     }
   ],
   "selections": {

@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **functional** | "QA this site", "verify the release candidate", "walk the critical paths" | Critical-path functional verification with pass/fail evidence | [references/functional.md](references/functional.md) |
 | **gate** | "ready to ship?", "release gate", "block or ship", "launch checklist" | Release-gate checklist ending in a Block-or-Ship verdict | [references/gate.md](references/gate.md) |
 | **regression** | "re-verify after fixes", "regression check", "did the fix break anything" | Post-fix regression: fixed issues plus adjacent blast radius | [references/regression.md](references/regression.md) |
+| **audit** | "audit qa", "quality gate audit", "launch audit", "pre-launch check" | Quality-gate audit (functional + regression + UAT sign-off) + launch-gate audit (rollback plan, perf budget, docs) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

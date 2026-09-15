@@ -18,6 +18,7 @@ Implemented, tested components/pages following repo conventions, with states (lo
 3. Build bottom-up: leaf components → composed sections → page.
 4. Wire data with the project's data-fetching convention (server components, SWR, etc.).
 5. Implement all states: loading, empty, error, success — no happy-path-only UI.
+- Static first frame: the hero/first viewport must read complete with JS, media, and WebGL all disabled — content, hierarchy, and CTA intact (motion and canvas enhance, never carry meaning). Decorative canvases are subordinate: one responsibility each, with a static poster fallback and full teardown on unmount. Full motion/canvas discipline routes to `animate`.
 6. Responsive container-first: components respond to their container (container queries); breakpoints where content breaks, not device presets; logical properties for RTL; safe-area insets.
 7. Design judgments (palette, scale, hierarchy) are not decided here — route to `design`/`refactor-ui`.
 8. Run the verification gate; fix everything it reports.
@@ -31,6 +32,12 @@ Implemented, tested components/pages following repo conventions, with states (lo
 - [ ] Extremes-first tested: narrowest container, 200% zoom, RTL.
 - [ ] Verification gate green.
 - [ ] Markup semantic (landmarks, headings, labels) — not div soup.
+
+## Routing
+
+- State ladder: local → lifted (2–3 siblings) → URL (filters/pagination) → server cache → global store; never drill props past 3 levels; split data containers from presentational renders; composition over config props.
+- Perceived quality: skeletons over spinners for content, optimistic updates with a rollback path, realistic content over lorem; native focusables over div-clicks, move/trap focus on content change, label icon-only controls.
+- Design judgments route to `design`/`refactor-ui`; motion/canvas discipline routes to `animate`.
 
 ## Sources
 

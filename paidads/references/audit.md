@@ -25,6 +25,7 @@ Audit report: structure review (campaign/object mapping), tracking verification 
 9. Hold back 10–15% contingency; deploy only on pre-defined triggers (winner needs scale, seasonal spike, emergency cover) — never to plug leaks.
 6. Correlate with business changes (offer/site/pricing changes explain many 'account problems').
 7. Rank findings by spend impact; write the 30-day plan with owners and expected effect.
+8. Judge scale calls on LTV-horizon ROAS, not 7-day platform-reported ROAS; discount view-through credit before moving budget — platform self-attribution over-claims by design.
 
 ## Quality gate
 
@@ -33,6 +34,7 @@ Audit report: structure review (campaign/object mapping), tracking verification 
 - [ ] Divergence point identified, not just 'it got worse'.
 - [ ] Findings ranked by spend impact.
 - [ ] Action plan has owners and dates.
+- [ ] Scale decisions use LTV-horizon ROAS with view-through discounted, not raw platform ROAS.
 
 ## Sources
 

@@ -292,3 +292,14 @@ Before finalizing a code review, verify that:
 8. **Goal-Driven Verification**: Confirmed that all changes are backed by executable oracle tests and terminal receipts.
 9. **Test-Spec Integrity**: Confirmed that test, spec, and snapshot diffs preserve expected behavior — changes there carry an explicit spec-change rationale, never a silent accommodation of broken implementation.
 10. **Mode Discipline Honored**: Only the resolved mode's references were loaded; findings cite trigger IDs (or SEC control IDs in security mode); report-only unless fixes were explicitly authorized.
+
+## Audit routing
+
+code-review has a built-in `audit` mode (cross-file invariants + data-structure focus). Route deeper audits to:
+- **UI/component audit** → `refactor-ui` audit mode (scored UI report, WCAG 2.2)
+- **Security control pass** → `code-review` `security` mode (SEC-01..10 numbered controls)
+- **Analytics audit** → `analytics` audit mode (events firing, definitions match)
+- **Content-quality audit** → `content` audit mode (anti-slop scan, fact verification)
+- **Database audit** → `database` audit mode (query + performance)
+
+Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + routing.

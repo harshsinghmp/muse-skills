@@ -34,3 +34,7 @@ An agent design: a clear task contract, a minimal tool set with scoped permissio
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+
+## Routing
+
+- Start simple: single call → workflow → agent; reach for model-driven tool use only when the task is genuinely open-ended — most needs die at tier 1–2.

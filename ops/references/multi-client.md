@@ -31,6 +31,8 @@ A portfolio view: per-client status (health, next milestone, margin signal), a c
 - [ ] Deadlines/renewals tracked.
 - [ ] Risk register maintained with owners.
 - [ ] Context switched cleanly between clients.
+- [ ] Parallel work split by topology: one owner per engagement with isolated context; shared specialists pulled in per-task, never all-engagements-in-one-thread.
+- [ ] Every client switch leaves a five-line log: intent, files touched, decisions, risks, next steps.
 
 ## Sources
 

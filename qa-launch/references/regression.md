@@ -22,10 +22,15 @@ Regression report: each fix Verified or Reopened, adjacent surfaces checked, con
 - [ ] Every fix re-tested on its original failing step.
 - [ ] Adjacent surfaces smoke-passed.
 - [ ] Convergence or escalation stated, never a silent third loop.
+- [ ] Dependency upgrades staged: pin target → align deps with the vendor fixer → run diagnostics → clear caches + reinstall → walk the vendor breaking-changes checklist (removed APIs, moved imports, media/nav/auth surfaces).
+- [ ] Post-patch proof (keeper: trailofbits/post-patch-validation): original failure re-run on the patched build, root-cause variants checked (same bug elsewhere), legitimate behavior preserved, no new failures introduced.
+- [ ] Refinement preserves incumbent identity — concept-level drift returned as redesign, never polished in place (keeper: pbakaus/impeccable).
+- [ ] Post-edit contracts resolve: every renamed/moved field, path, and cross-ref still resolves; moved content has a named home, never silent deletion (keeper: 99rebels/skill-polisher).
 
 ## Routing
 
 - Reopened code issues → `webdev`/`mobile`; new visual drift → `refactor-ui`.
+- Every fix lands with a failing-first regression test (fails without the fix, passes with it) so the same bug cannot recur silently.
 
 ## Sources
 

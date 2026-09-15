@@ -30,6 +30,11 @@ A pipeline config: stages (install → lint → test → build → deploy) with 
 - [ ] Rollback is one step.
 - [ ] Failures notify the owner.
 
+## Routing
+
+- Failure loop: paste the CI error to the fixer, verify locally, repush; never skip a red gate (no rule-disable, no test-skip); a build-cop owns green main — fix or revert, never accumulate breakage.
+- Speed + safety: cache deps → parallel jobs → path filters → matrix sharding → trim the critical path; every PR gets a preview deploy; flags live create→canary→rollout→remove with an owner and cleanup date.
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

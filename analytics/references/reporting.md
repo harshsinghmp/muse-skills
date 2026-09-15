@@ -24,6 +24,9 @@ A performance report: headline result vs target, KPI scorecard with trend, wins 
 8. Triage anomalies by sensitivity tier (watch/alert/act); pass only severity-gated items to action.
 9. Read retention as a cohort matrix — floor rate, stabilization point, payback period, LTV — not a single-period average.
 10. Score churn risk on a 4-tier signal scorecard weighted by LTV-at-risk; model 2-3 budget-reallocation shifts, flag declining returns, and check CPA against LTV before moving spend.
+11. Define every KPI as name/definition/method/source/target/frequency/owner; hold 3–5 primary metrics balancing behavioral (completion, error rate, adoption) with attitudinal (SUS/NPS/CSAT); set baselines before measuring change.
+12. Before hypothesizing from a surprising number, rule out artefacts: event definition vs label, denominator shift, unenforced funnel order, deploy/holiday/campaign overlap, hidden platform split.
+13. When data and interviews conflict, route each question to its source (what/how-many/where → data; why/intent → research); pre-register what result would kill each account; never average both into a compromise.
 
 ## Quality gate
 
@@ -35,6 +38,11 @@ A performance report: headline result vs target, KPI scorecard with trend, wins 
 - [ ] Anomalies triaged by tier; only severity-gated items actioned.
 - [ ] Retention read as cohort matrix with floor/stabilization; churn scored 4-tier by LTV-at-risk.
 - [ ] Reallocation scenarios (2-3) checked for declining returns and CPA-vs-LTV.
+- [ ] KPIs carry full definitions with baselines; artefacts ruled out before hypotheses; data/research conflicts resolved by source, not averaged.
+
+## Routing
+
+- Deep instrumentation or event-definition work → tracking mode.
 
 ## Sources
 

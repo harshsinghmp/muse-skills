@@ -6,6 +6,7 @@
 - Data model impact
 - UI expectations (spec or wireframe)
 - Rollout constraints (feature flag? gradual?)
+- Requirement anchor: who uses this, ≤5 core stories, actual (not projected) scale, maintaining team size — if unanswerable, that is itself a finding.
 
 ## Deliverable
 
@@ -13,7 +14,7 @@ A working end-to-end feature: schema, API, UI, states, and tests; verification g
 
 ## Procedure
 
-1. Split the feature into data → API → UI slices; build in that order.
+1. Split the feature into data → API → UI slices; build in that order. Surface unwritten assumptions first (load, team capability, direction) and justify every abstraction with the deletion test — if nobody would notice its removal, it ships deleted; one implementation behind an interface is indirection, not abstraction.
 2. Data first (backend mode procedure), then API, then UI (frontend mode procedure).
 3. Add the state matrix: every screen × loading/empty/error/success.
 4. Write the acceptance criteria as tests before polish.

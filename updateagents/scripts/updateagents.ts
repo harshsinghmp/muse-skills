@@ -1,9 +1,10 @@
 #!/usr/bin/env bun
+
 /**
  * 🧠 updateagents — Project Agent Context Synchronization Engine
- * 
+ *
  * Synchronizes AI-agent instructions and project context with the actual current state of the workspace.
- * 
+ *
  * Logic:
  *   1. Check if any agent engine files exist (AGENTS.md, CLAUDE.md, .cursorrules, .agents/, etc.).
  *   2. If NONE found: Scaffolds fresh Agent Engine DOX architecture from ai-ready/templates/.
@@ -11,21 +12,21 @@
  *      .agents/context/{product,architecture,decisions,current}.md files without clobbering,
  *      deploys the lean root AGENTS.md DOX rail, archives legacy files, and synchronizes 13 standards.
  *   4. Generates a comprehensive change report for the user detailing what was modified, merged, and preserved.
- * 
+ *
  * Invariants:
  *   - Current workspace boundary only (never traverse above cwd).
  *   - HARD BOUNDARY: Never read, write, modify, delete, or validate .memory/**.
  *   - Single Source of Truth: Pulls standards and DOX blueprints from ai-ready/templates/.
  *   - Size & Noise Control: Keeps instruction files compact (<5KB preferred, <10KB max).
- * 
+ *
  * Usage:
  *   bun path/to/updateagents.ts [options] [targetPath]
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync, renameSync } from "node:fs";
-import { resolve, join, basename, relative } from "node:path";
-import { parseArgs } from "node:util";
 import { spawnSync } from "node:child_process";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { parseArgs } from "node:util";
 
 // Template source of truth located in ai-ready/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
@@ -141,7 +142,9 @@ const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir;
 if (!hasAnyAgentFiles) {
   console.log("  ℹ️  No existing agent files or .agents/ container found.");
 } else {
-  console.log(`  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"}`);
+  console.log(
+    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"}`,
+  );
 }
 
 // Step 3: Inspect Project Environment
@@ -176,7 +179,10 @@ if (existsSync(composerJsonPath)) {
   try {
     const comp = JSON.parse(readFileSync(composerJsonPath, "utf8"));
     if (comp.name && projectName === basename(workspaceDir)) projectName = comp.name;
-    if (comp.require && (comp.require["roots/bedrock"] || comp.require["roots/wordpress"] || comp.require["johnpbloch/wordpress"])) {
+    if (
+      comp.require &&
+      (comp.require["roots/bedrock"] || comp.require["roots/wordpress"] || comp.require["johnpbloch/wordpress"])
+    ) {
       frameworkDetected = "wordpress";
     }
     console.log(`  ✅ Parsed composer.json: Framework="${frameworkDetected}"`);
@@ -185,7 +191,11 @@ if (existsSync(composerJsonPath)) {
 
 // Check for WordPress markers if not yet detected
 if (frameworkDetected === "generic") {
-  if (existsSync(join(workspaceDir, "wp-config.php")) || existsSync(join(workspaceDir, "web/wp-config.php")) || existsSync(join(workspaceDir, "wp-content"))) {
+  if (
+    existsSync(join(workspaceDir, "wp-config.php")) ||
+    existsSync(join(workspaceDir, "web/wp-config.php")) ||
+    existsSync(join(workspaceDir, "wp-content"))
+  ) {
     frameworkDetected = "wordpress";
     console.log(`  ✅ Detected WordPress file hierarchy`);
   }
@@ -298,11 +308,11 @@ if (hasAnyAgentFiles) {
   console.log("\n🔄 Step 4B: Custom agent files detected — Extracting and intelligently placing context...");
 
   // Collect all text from discovered legacy files
-  let aggregatedCustomRules: string[] = [];
+  const aggregatedCustomRules: string[] = [];
   let extractedProjectPurpose = "";
-  let extractedArchCommands: string[] = [];
-  let extractedDecisions: string[] = [];
-  let extractedCurrentNotes: string[] = [];
+  const extractedArchCommands: string[] = [];
+  const extractedDecisions: string[] = [];
+  const extractedCurrentNotes: string[] = [];
 
   for (const item of discoveredFiles) {
     const sections = extractSections(item.content);
@@ -310,13 +320,35 @@ if (hasAnyAgentFiles) {
     for (const [title, content] of Object.entries(sections)) {
       if (!content.trim()) continue;
 
-      if (title.includes("overview") || title.includes("purpose") || title.includes("about") || title.includes("scope")) {
+      if (
+        title.includes("overview") ||
+        title.includes("purpose") ||
+        title.includes("about") ||
+        title.includes("scope")
+      ) {
         extractedProjectPurpose += `\n### From ${item.relPath} (${title})\n${content}\n`;
-      } else if (title.includes("command") || title.includes("script") || title.includes("build") || title.includes("stack") || title.includes("run")) {
+      } else if (
+        title.includes("command") ||
+        title.includes("script") ||
+        title.includes("build") ||
+        title.includes("stack") ||
+        title.includes("run")
+      ) {
         extractedArchCommands.push(`### From ${item.relPath} (${title})\n${content}`);
-      } else if (title.includes("decision") || title.includes("adr") || title.includes("principle") || title.includes("rule")) {
+      } else if (
+        title.includes("decision") ||
+        title.includes("adr") ||
+        title.includes("principle") ||
+        title.includes("rule")
+      ) {
         extractedDecisions.push(`### From ${item.relPath} (${title})\n${content}`);
-      } else if (title.includes("task") || title.includes("todo") || title.includes("current") || title.includes("progress") || title.includes("status")) {
+      } else if (
+        title.includes("task") ||
+        title.includes("todo") ||
+        title.includes("current") ||
+        title.includes("progress") ||
+        title.includes("status")
+      ) {
         extractedCurrentNotes.push(`### From ${item.relPath} (${title})\n${content}`);
       } else {
         aggregatedCustomRules.push(`### From ${item.relPath} (${title})\n${content}`);
@@ -371,7 +403,10 @@ if (hasAnyAgentFiles) {
 
   if (existsSync(rootAgentsPath)) {
     const rootContent = readFileSync(rootAgentsPath, "utf8");
-    const isLeanRail = rootContent.includes("DOX Rail:") || rootContent.includes("Core Turn Invariants") || rootContent.split("\n").length <= 60;
+    const isLeanRail =
+      rootContent.includes("DOX Rail:") ||
+      rootContent.includes("Core Turn Invariants") ||
+      rootContent.split("\n").length <= 60;
 
     if (!isLeanRail && !isDryRun) {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
