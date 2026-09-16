@@ -205,10 +205,123 @@ OPENCLAW_YAML
   fi
 fi
 
+# ─── OpenCode hooks config (YAML) ──────────────────────────────────────────
+OPENCODE_CONFIG="$REPO_ROOT/.opencode/hooks.yaml"
+if [ -d "$REPO_ROOT/.opencode" ] && [ ! -f "$OPENCODE_CONFIG" ]; then
+  cat > "$OPENCODE_CONFIG" <<'OPENCODE_YAML'
+# OpenCode hooks configuration
+# Handler values map to scripts/hooks/<handler>.sh
+
+hooks:
+  events:
+    - name: gen-repo-report-on-close
+      handler: gen-repo-report-on-close
+      events: ["session.end"]
+    - name: pre-push-test-gate
+      handler: pre-push-test-gate
+      events: ["git.pre-push"]
+    - name: secret-scan-pre-commit
+      handler: secret-scan-pre-commit
+      events: ["git.pre-commit"]
+    - name: session-resume-probe
+      handler: session-resume-probe
+      events: ["session.start"]
+    - name: sync-registry-on-skill-add
+      handler: sync-registry-on-skill-add
+      events: ["skill.installed"]
+    - name: stale-frontmatter-check
+      handler: stale-frontmatter-check
+      events: ["git.post-merge"]
+    - name: dead-letter-nightly
+      handler: dead-letter-nightly
+      events: ["cron.nightly"]
+    - name: cache-pressure-check
+      handler: cache-pressure-check
+      events: ["cron.weekly"]
+OPENCODE_YAML
+  echo "[hooks] opencode: created hooks config at .opencode/hooks.yaml"
+  INSTALLED=$((INSTALLED + 1))
+fi
+
+# ─── Gemini CLI hooks config (YAML) ────────────────────────────────────────
+GEMINI_CONFIG="$REPO_ROOT/.gemini/hooks.yaml"
+if [ -d "$REPO_ROOT/.gemini" ] && [ ! -f "$GEMINI_CONFIG" ]; then
+  [ -f "$OPENCODE_CONFIG" ] && cp -f "$OPENCODE_CONFIG" "$GEMINI_CONFIG" || cat > "$GEMINI_CONFIG" <<'GEMINI_YAML'
+# Gemini CLI hooks configuration
+# Handler values map to scripts/hooks/<handler>.sh
+
+hooks:
+  events:
+    - name: gen-repo-report-on-close
+      handler: gen-repo-report-on-close
+      events: ["session.end"]
+    - name: pre-push-test-gate
+      handler: pre-push-test-gate
+      events: ["git.pre-push"]
+    - name: secret-scan-pre-commit
+      handler: secret-scan-pre-commit
+      events: ["git.pre-commit"]
+    - name: session-resume-probe
+      handler: session-resume-probe
+      events: ["session.start"]
+    - name: sync-registry-on-skill-add
+      handler: sync-registry-on-skill-add
+      events: ["skill.installed"]
+    - name: stale-frontmatter-check
+      handler: stale-frontmatter-check
+      events: ["git.post-merge"]
+    - name: dead-letter-nightly
+      handler: dead-letter-nightly
+      events: ["cron.nightly"]
+    - name: cache-pressure-check
+      handler: cache-pressure-check
+      events: ["cron.weekly"]
+GEMINI_YAML
+  echo "[hooks] gemini: created hooks config at .gemini/hooks.yaml"
+  INSTALLED=$((INSTALLED + 1))
+fi
+
+# ─── Continue hooks config (JSON) ──────────────────────────────────────────
+CONTINUE_CONFIG="$REPO_ROOT/.continue/settings.json"
+if [ -d "$REPO_ROOT/.continue" ] && [ ! -f "$CONTINUE_CONFIG" ]; then
+  cat > "$CONTINUE_CONFIG" <<'CONTINUE_JSON'
+{
+  "hooks": {
+    "events": [
+      {
+        "name": "session-close",
+        "matcher": "session.end",
+        "command": "bash scripts/hooks/gen-repo-report-on-close.sh",
+        "timeout": 10
+      },
+      {
+        "name": "pre-push-gate",
+        "matcher": "git.pre-push",
+        "command": "bash scripts/hooks/pre-push-test-gate.sh",
+        "timeout": 30
+      },
+      {
+        "name": "secret-scan",
+        "matcher": "git.pre-commit",
+        "command": "bash scripts/hooks/secret-scan-pre-commit.sh",
+        "timeout": 5
+      }
+    ]
+  }
+}
+CONTINUE_JSON
+  echo "[hooks] continue: created hooks config at .continue/settings.json"
+  INSTALLED=$((INSTALLED + 1))
+fi
+
 # Informational for harnesses where bash hooks alone may not be sufficient
+# (only print if no auto-config exists for the harness)
 for harness in "${!HOOK_CONFIG[@]}"; do
   [ "${HOOK_CONFIG[$harness]}" = "native" ] && continue
   [ "${HOOK_CONFIG[$harness]}" = "yaml" ] && continue
+  # Skip json configs we auto-create (claude, continue)
+  [ "$harness" = ".claude" ] && [ ! -f "$REPO_ROOT/.claude/settings.json" ] && continue
+  [ "$harness" = ".continue" ] && [ ! -f "$REPO_ROOT/.continue/settings.json" ] && continue
   echo "[hooks] $harness: bash hooks installed — check your harness docs for hook registration"
 done
 

@@ -140,9 +140,66 @@ Handler values map to `scripts/hooks/<handler>.sh`.
 
 These harnesses detect hooks by their presence in the hooks directory. Bash hooks install and self-register. No configuration file needed.
 
-### OpenCode / Gemini CLI — YAML config
+### Continue — `.claude/settings.json` or Continue config
 
-For harnesses using YAML-based hook configs, add entries matching the OpenClaw format above.
+```json
+{
+  "hooks": {
+    "events": [
+      {
+        "name": "session-close",
+        "matcher": "session.end",
+        "command": "bash scripts/hooks/gen-repo-report-on-close.sh",
+        "timeout": 10
+      },
+      {
+        "name": "pre-push-gate",
+        "matcher": "git.pre-push",
+        "command": "bash scripts/hooks/pre-push-test-gate.sh",
+        "timeout": 30
+      },
+      {
+        "name": "secret-scan",
+        "matcher": "git.pre-commit",
+        "command": "bash scripts/hooks/secret-scan-pre-commit.sh",
+        "timeout": 5
+      }
+    ]
+  }
+}
+```
+
+### OpenCode — `.opencode/hooks.yaml` (or config file)
+
+```yaml
+hooks:
+  events:
+    - name: session-close
+      handler: gen-repo-report-on-close
+      events: ["session.end"]
+    - name: pre-push-gate
+      handler: pre-push-test-gate
+      events: ["git.pre-push"]
+    - name: secret-scan
+      handler: secret-scan-pre-commit
+      events: ["git.pre-commit"]
+    - name: session-resume
+      handler: session-resume-probe
+      events: ["session.start"]
+    - name: dead-letter-nightly
+      handler: dead-letter-nightly
+      events: ["cron.nightly"]
+    - name: cache-pressure-check
+      handler: cache-pressure-check
+      events: ["cron.weekly"]
+
+Handler values map to `scripts/hooks/<handler>.sh`.
+
+### Gemini CLI — `.gemini/hooks.yaml` (or config file)
+
+Same format as OpenCode above. Gemini CLI detects hooks via YAML config with handler → script mapping.
+
+Handler values map to `scripts/hooks/<handler>.sh`.
 
 ### Cron-based hooks (all harnesses)
 
