@@ -29,50 +29,18 @@ DETECTED=""
 declare -A HOOK_SUBDIR
 declare -A HOOK_CONFIG
 
-# Git — native, always present, no config needed
-HOOK_SUBDIR[".git"]="hooks"
-HOOK_CONFIG[".git"]="native"
-
-# Listed in ai-ready gitignore + compatibility lists; this table is the
-# full auto-detection set. Add new harnesses here for expansion.
-HOOK_SUBDIR[".claude"]="hooks"
-HOOK_CONFIG[".claude"]="json"
-
-HOOK_SUBDIR[".codex"]="hooks"
-HOOK_CONFIG[".codex"]="native"
-
-HOOK_SUBDIR[".opencode"]="hooks"
-HOOK_CONFIG[".opencode"]="yaml"
-
-HOOK_SUBDIR[".gemini"]="hooks"
-HOOK_CONFIG[".gemini"]="yaml"
-
-HOOK_SUBDIR[".cursor"]="hooks"
-HOOK_CONFIG[".cursor"]="native"
-
-HOOK_SUBDIR[".windsurf"]="hooks"
-HOOK_CONFIG[".windsurf"]="native"
-
-HOOK_SUBDIR[".aider"]="hooks"
-HOOK_CONFIG[".aider"]="native"
-
-HOOK_SUBDIR[".cline"]="hooks"
-HOOK_CONFIG[".cline"]="native"
-
-HOOK_SUBDIR[".trae"]="hooks"
-HOOK_CONFIG[".trae"]="native"
-
-HOOK_SUBDIR[".continue"]="hooks"
-HOOK_CONFIG[".continue"]="json"
-
-HOOK_SUBDIR[".omo"]="hooks"
-HOOK_CONFIG[".omo"]="native"
-
-HOOK_SUBDIR[".crush"]="hooks"
-HOOK_CONFIG[".crush"]="native"
-
-HOOK_SUBDIR[".antigravity"]="hooks"
-HOOK_CONFIG[".antigravity"]="native"
+# Read harness detection table from agent-dirs.conf (kept external so hook
+# logic never hardcodes harness directory names — see SECURITY.md).
+CONF="$HOOKS_DIR/agent-dirs.conf"
+if [ -f "$CONF" ]; then
+  while IFS=':' read -r dir subdir fmt; do
+    [ -z "$dir" ] && continue
+    HOOK_SUBDIR["$dir"]="$subdir"
+    HOOK_CONFIG["$dir"]="$fmt"
+  done < "$CONF"
+else
+  echo "[hooks] MISSING agent-dirs.conf — hooks install may be incomplete"
+fi
 
 # Hermes uses ~/.hermes/config.yaml — detected separately
 HERMES_CONFIG="$HOME/.hermes/config.yaml"
@@ -90,9 +58,10 @@ for harness in "${!HOOK_SUBDIR[@]}"; do
   hook_dest="$harness_path/${HOOK_SUBDIR[$harness]}"
   mkdir -p "$hook_dest"
 
-  for h in "$HOOKS_DIR"/*.sh; do
-    name=$(basename "$h")
-    cp -f "$h" "$hook_dest/$name"
+  for f in "$HOOKS_DIR"/*.sh "$HOOKS_DIR"/agent-dirs.conf; do
+    name=$(basename "$f")
+    test -f "$f" || continue
+    cp -f "$f" "$hook_dest/$name"
     chmod +x "$hook_dest/$name"
   done
 
