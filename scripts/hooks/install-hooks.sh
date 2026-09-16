@@ -102,6 +102,35 @@ for harness in "${!HOOK_SUBDIR[@]}"; do
   INSTALLED=$((INSTALLED + 1))
 done
 
+# ─── Cron hook registration ────────────────────────────────────────────────
+# Cron hooks (dead-letter-nightly, cache-pressure-check) have no event to hook
+# into — they need a scheduler. Register them with crontab if available.
+CRON_HOOKS=(
+  "0 22 * * * cd $HOOKS_DIR/../.. && bash scripts/hooks/dead-letter-nightly.sh"
+  "0 3 * * 0 cd $HOOKS_DIR/../.. && bash scripts/hooks/cache-pressure-check.sh"
+)
+
+if command -v crontab >/dev/null 2>&1; then
+  INSTALLED_CRON=0
+  for entry in "${CRON_HOOKS[@]}"; do
+    if ! crontab -l 2>/dev/null | grep -qF "$entry"; then
+      (crontab -l 2>/dev/null; echo "$entry") | crontab - 2>/dev/null && INSTALLED_CRON=$((INSTALLED_CRON + 1))
+    fi
+  done
+  if [ "$INSTALLED_CRON" -gt 0 ]; then
+    echo "[hooks] cron: registered $INSTALLED_CRON cron hook(s) (dead-letter-nightly, cache-pressure-check)"
+    echo "[hooks] cron: verify with: crontab -l"
+  else
+    echo "[hooks] cron: hooks already registered (verify: crontab -l)"
+  fi
+else
+  echo "[hooks] cron: crontab not available — cron hooks not auto-registered"
+  echo "[hooks] cron: add manually: crontab -e"
+  for entry in "${CRON_HOOKS[@]}"; do
+    echo "[hooks] cron:   $entry"
+  done
+fi
+
 # ─── Manual registration instructions for config-based harnesses ───────────
 echo ""
 echo "─── Manual registration required for config-based harnesses ───"
@@ -132,26 +161,48 @@ HERMES_DOCS
   echo ""
 fi
 
-if echo "$DETECTED" | grep -q "openclaw"; then
-  cat <<'OPENCLAW_DOCS'
-OpenClaw (.openclaw or skill-level YAML hooks block)
-Add to your agent config YAML:
+# ─── OpenClaw hooks config (YAML) ──────────────────────────────────────────
+OPENCLAW_DIR="$REPO_ROOT/.openclaw"
+if [ -d "$OPENCLAW_DIR" ]; then
+  OPENCLAW_CONFIG="$OPENCLAW_DIR/hooks.yaml"
+  if [ ! -f "$OPENCLAW_CONFIG" ]; then
+    cat > "$OPENCLAW_CONFIG" <<'OPENCLAW_YAML'
+# OpenClaw hooks configuration
+# Handler values map to scripts/hooks/<handler>.sh
+# Each script reads its skill reference and executes.
 
-  hooks:
-    events:
-      - name: session-close
-        handler: gen-repo-report-on-close
-        events: ["session.end"]
-      - name: pre-push-gate
-        handler: pre-push-test-gate
-        events: ["git.pre-push"]
-      - name: secret-scan
-        handler: secret-scan-pre-commit
-        events: ["git.pre-commit"]
-
-Handler values map to scripts/hooks/<handler>.sh.
-OPENCLAW_DOCS
-  echo ""
+hooks:
+  events:
+    - name: gen-repo-report-on-close
+      handler: gen-repo-report-on-close
+      events: ["session.end"]
+    - name: pre-push-test-gate
+      handler: pre-push-test-gate
+      events: ["git.pre-push"]
+    - name: secret-scan-pre-commit
+      handler: secret-scan-pre-commit
+      events: ["git.pre-commit"]
+    - name: session-resume-probe
+      handler: session-resume-probe
+      events: ["session.start"]
+    - name: sync-registry-on-skill-add
+      handler: sync-registry-on-skill-add
+      events: ["skill.installed"]
+    - name: stale-frontmatter-check
+      handler: stale-frontmatter-check
+      events: ["git.post-merge"]
+    - name: dead-letter-nightly
+      handler: dead-letter-nightly
+      events: ["cron.nightly"]
+    - name: cache-pressure-check
+      handler: cache-pressure-check
+      events: ["cron.weekly"]
+OPENCLAW_YAML
+    echo "[hooks] openclaw: created hooks config at .openclaw/hooks.yaml"
+    INSTALLED=$((INSTALLED + 1))
+  else
+    echo "[hooks] openclaw: hooks config already exists at .openclaw/hooks.yaml"
+  fi
 fi
 
 # Informational for harnesses where bash hooks alone may not be sufficient
