@@ -13,7 +13,7 @@ _(nothing)_
 - **Audit Mode (13 skills)**: database, git, smm, ops, gtm, animate, analytics, seo, qa-launch, content, pua, growth, mobile — each with `references/audit.md` + modes-table row; 5 companion skills got audit routing sections
 - **Automation Infrastructure**: 14 shell hooks (`scripts/hooks/`) — session-close report archive, secret-scan pre-commit, worktree-lease check, registry sync, stale-frontmatter check, pre-push test gate, session-resume probe, dead-letter sweep, cache-pressure check, gauntlet closeout, context-switch snapshot, evidence-decision sync, audit-quick check
 - **Lint + Type-Check**: biome (JS/TS), ruff (Python), tsc (TypeScript) — wired into CI as separate jobs
-- **CI/CD Pipeline**: release workflow (`.github/workflows/release.yml`) — tag push → bun test → npm publish → GitHub release
+- **CI/CD Pipeline**: release workflow (`.github/workflows/release.yml`) — tag push → bun test → GitHub release (npm publish removed; npx skills add fetches from GitHub)
 - **Security**: command-injection fix in extract-skill.ts (removed `shell:true`, added allowlist validator); gitleaks secret scan in CI
 - **Evidence Ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking with 4-tier confidence taxonomy
 - **Session Report Archive**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net

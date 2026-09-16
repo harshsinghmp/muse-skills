@@ -104,7 +104,7 @@ Installed via `bash scripts/hooks/install-hooks.sh`. Detects your agent runtime 
 | Pipeline | Trigger | Jobs |
 |:---|:---|:---|
 | CI | push/PR to dev/main | bun test + gitleaks secret scan |
-| Release | tag push (vX.Y.Z) | bun test → npm publish → GitHub release |
+| Release | tag push (vX.Y.Z) | bun test → GitHub release (npx skills add fetches from GitHub) |
 
 ### Security
 

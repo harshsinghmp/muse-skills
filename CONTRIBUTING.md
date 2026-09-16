@@ -91,7 +91,7 @@ Invariants:
 
 - Sync `package.json` `"version"` with the `vX.Y.Z` tag in the release commit.
 - Stage on `release/vX.Y.Z` from `dev` → merge to `main` → back-merge to `dev`.
-- CI publishes on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). Never `npm publish` manually.
+- CI creates GitHub release on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). No npm publish — `npx skills add` fetches from GitHub.
 
 ---
 
