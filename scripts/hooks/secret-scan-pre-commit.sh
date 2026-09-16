@@ -21,7 +21,7 @@ done < <(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
 
 if [ "$FOUND" -eq 1 ]; then
   echo "[hooks] Review staged files above before committing."
-  echo "[hooks] To bypass: git commit --no-verify"
+  echo "[hooks] To bypass: git commit --no-skip-hooks"
 fi
 
 exit 0
