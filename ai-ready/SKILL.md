@@ -27,8 +27,9 @@ metadata:
     category: core-engine
     suggested_skills: [new-project, updateagents, git, updatedocs]
     primary_triggers: ["make repo AI-ready","audit AI readiness","check repo health","ai-audit"]
-    requires_tools: [bash, view_file, write_to_file, run_command, grep_search]   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
-   agent_independent: true  # .agents/ folder is universal - any AI agent runtime can read/use it, not Claude-specific
+    requires_tools: [bash, view_file, write_to_file, run_command, grep_search]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
+  agent_independent: true  # .agents/ folder is universal - any AI agent runtime can read/use it, not Claude-specific
 ---
 
 # 🤖 ai-ready — Repository AI-Readiness Auditor & Agent Engine Scaffolder
