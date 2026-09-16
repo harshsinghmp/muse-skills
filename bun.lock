@@ -6,6 +6,7 @@
       "name": "@harshsinghmp/muse-skills",
       "devDependencies": {
         "bun-types": "^1.4.2",
+        "ruff": "^1.5.4",
       },
     },
   },
@@ -13,6 +14,10 @@
     "@types/node": ["@types/node@22.20.3", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-DZmzkmwHzXrLPAXPyKNDzlIwMMUZCVacoD25ywdy5YTKGbOx/2ld+Q38Im2zJ0vBuZP5Prd3VZutKZyXwkOS8A=="],
 
     "bun-types": ["bun-types@1.4.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-bxV1FgK7yBIzjRe5zBozIM4Bem11ZJcCXSrjWRG3YWLt8yFDePu4cLjpebO8OvPeIE9trbyPF4fuj3Cia4Fj3w=="],
+
+    "emitify": ["emitify@3.1.0", "", {}, "sha512-pucUCyaeC8TJoRXniRiNb81Odoqlf2lMaFARA8tci2PaORFIeXBoIQHEzuA3dxPsU1l7AVb7xmFra4iJwVU8wg=="],
+
+    "ruff": ["ruff@1.5.4", "", { "dependencies": { "emitify": "^3.0.1" } }, "sha512-42kBjp78DFDAgZw8ywPpB3bo0oZrSifukCRMB49dnFeGPbg1s4jdtXZug06mkxue1JrD3dP/ng2mxPYg7gx3Jw=="],
 
     "undici-types": ["undici-types@6.21.0", "", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
   }

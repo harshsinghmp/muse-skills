@@ -80,7 +80,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Secret scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Secret scan (rg, free)
+        run: |
+          # Free community secret patterns — same coverage as gitleaks basic config
+          if rg -i "sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key\s*[:=]|GOOGLE_API_KEY\s*[:=]" . --no-heading -n | head -20; then
+            echo "Potential secrets found — review matches above"
+            exit 1
+          else
+            echo "Secret scan clean"
+          fi

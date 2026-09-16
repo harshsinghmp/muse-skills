@@ -42,6 +42,19 @@ when docs drift.
 
 The Bun test suite (`bun test`) is the pre-merge contract.
 
+### Lint + type-check (local runs)
+- `bun run lint` → `biome check .` + `ruff check scripts/`
+- `bun run type-check` → `tsc --noEmit`
+- CI runs lint, type-check, test, and secret-scan as separate jobs
+
+## Infrastructure
+
+- **Hooks** (14 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
+- **CI/CD**: push/PR → `bun test` + gitleaks; tag push → npm publish + GitHub release
+- **Audit modes**: 13 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
+- **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking
+- **Session reports**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
+
 ## Skill Conventions Checklist (enforced by bun test)
 - Valid frontmatter (name + trigger-rich description + argument-hint + user-invocable)
 - Description/version byte-parity across SKILL.md/skills.json/llms.txt
