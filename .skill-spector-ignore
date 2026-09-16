@@ -1,0 +1,30 @@
+# .skill-spector-ignore
+# Mutual-review suppressions for SkillSpector / static pattern scanners.
+# Every entry is a deliberate, documented architectural decision — see
+# SECURITY.md for the full false-positive analysis.
+
+paths:
+  - scripts/hooks/agent-dirs.conf
+  - scripts/hooks/install-hooks.sh
+
+justifications:
+  scripts/hooks/agent-dirs.conf:
+    - reason: Harness detection table may list agent directory names (.claude/, .codex/, etc.)
+      type: agent-directory-listing
+      note: install-hooks.sh only tests directory existence ([ -d ]) and copies hook
+            files in — it never reads, copies, or transmits credential contents.
+  scripts/hooks/install-hooks.sh:
+    - reason: References agent directory names for detection + hook placement
+      type: agent-directory-listing
+      note: Installation-time behavior only. Hooks are advisory (log + continue),
+            make zero network calls, and never modify their own code at runtime.
+  scripts/hooks/secret-scan-pre-commit.sh:
+    - reason: Contains credential regex patterns (sk-*, ghp_*, glpat-*, private keys)
+      type: credential-pattern-scan
+      note: Scans STAGED files to warn developers before committing secrets. Never
+            reads real credential files (.env, key files); output is advisory only.
+  devops/references/security.md:
+    - reason: Mentions cloud metadata IP 169.254.169.254
+      type: ssrf-guidance
+      note: Defensive guidance instructing readers to BLOCK this endpoint, not a
+            call to it. No hook or script accesses cloud metadata.

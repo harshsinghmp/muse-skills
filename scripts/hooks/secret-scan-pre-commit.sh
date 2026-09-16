@@ -21,6 +21,7 @@ done < <(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
 
 if [ "$FOUND" -eq 1 ]; then
   echo "[hooks] Review staged files above before committing."
+  # skill-spector-ignore: advisory-only hook; --no-verify is the real git escape hatch, never used by this script
   echo "[hooks] To bypass: git commit --no-verify"
 fi
 
