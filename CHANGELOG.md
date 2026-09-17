@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 _(nothing)_
 
+## [4.2.0] - 2026-09-17
+
+### Added
+
+- **60 tool-independent upgrade mechanisms** folded from skills-hub research into `code-review` (delegate, intended-vs-implemented, multi-reviewer, security-process, simplify, skill-bundle-scan, fixing-findings, receiving-feedback, security-controls, themes), `gauntlet-loop`, `qa-launch` (functional.md), `relay`, and `ai-ready` (advanced-audit-passes) reference passes
+
+### Fixed
+
+- `scripts/evidence-graph-builder.mjs` lint cleanups
+- `skills.json` formatter sync
+- `.gitignore` ruff cache entry
+
 ## [4.1.0] - 2026-09-16
 
 ### Added
