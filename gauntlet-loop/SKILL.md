@@ -116,17 +116,21 @@ When evaluating web endpoints or frontend components:
 ```
 Round N (N = 1..max_rounds):
   1. BUILD: Builder produces candidate patch based strictly on previous round critic feedback.
+     - **Evidence baseline pre-step (#35)**: before producing a fix, run the target test/command to capture its RED (failing) state. A fix may not enter the loop without this baseline on record — the loop later proves the fix turned it green.
+     - **High-certainty sweep gate (#34)**: when working from an issue/finding list, deep-review each candidate first, then touch ONLY small, high-certainty bugs with a clear root cause. Refuse large or uncertain changes as out of scope — note them in the ledger and return, don't burn the round on guesswork.
   2. AUDIT (Blind A/B): Spawn isolated Fresh Critic subagent with NO memory of builder reasoning.
      - Strip labels from candidate and bar.
      - Put candidate next to the bar blind; judge which is better and name the single biggest remaining gap.
      - Score 0.0–10.0 across: Correctness (40%), Minimal Diff (25%), Edge Cases (20%), Architecture (15%).
   3. GATE: Run automated proof suite AND integrity checks AND Web App Security & Visual Gate:
+     - **Test-bloat gate (#33)**: every generated or altered test must be non-vacuous and independently valuable — it must be capable of failing on the defect class it guards and must assert something the other tests don't. Strip assertions that can never fire and near-duplicate asserts added to inflate coverage; a screen of smoke asserts inflates line-and-assert counts, not proof.
      - Check 5 mandatory security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
      - Check 3 responsive viewports (375px, 768px, 1280px) for zero horizontal overflow.
      - **Quality-bar regression check**: scan the round's diff for a lowered bar — new suppression directives, skipped or deleted tests, weakened assertions, thresholds edited down. Any of these zeroes the round score (0.0): a build that passes because the bar was lowered is a regression, not a pass.
      - **Fail-closed eval check**: confirm the proof suite contains at least one test that CAN fail on the defect class the round claims to fix. If nothing in the suite could have caught the defect, a green run proves nothing — the round does not pass until a capable test exists (write it, watch it fail on the pre-fix state).
      - Any test failure, missing critical security header, visual overflow, quality-bar regression, or failed fail-closed check zeroes the round score (0.0).
-  4. RECORD: Append round metrics, header receipts, viewport outcomes, and finding counts (new findings vs fixed findings this round) to ITERATION_LEDGER.md — the ledger is the convergence instrument: when new findings outnumber fixed findings two rounds running, the loop is diverging, not converging — stop and escalate instead of burning the remaining budget.
+  4. RECORD: Append round metrics, header receipts, viewport outcomes, and finding counts (new findings vs fixed findings this round) to ITERATION_LEDGER.md — the ledger is the convergence instrument: when new findings outnumber fixed findings two rounds running, the loop is diverging, not converging — stop and escalate instead of burning the remaining budget. **Deduplicate by root cause before counting**: if a finding from a previous round reappears (even under new phrasing), it is NOT a new finding — it is an unfinished one and counts against convergence, not for it.
+     - **Tech-debt roadmap (#32)**: after each bounded loop, write the fixed/refused findings into a durable TECHNICAL_DEBT.md (workspace `.agents/artifacts/`) — root cause, file, ref and one-line fix — so improvement stays stateful across sessions and checkpoints survive the loop ending. This roadmap is the persistent backlog, distinct from the per-run convergence ledger.
   5. DECIDE: Evaluate Stop Conditions Matrix.
 ```
 

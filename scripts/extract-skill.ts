@@ -17,7 +17,7 @@
  * Options:
  *   -n, --name <name>          Skill name in kebab-case (required)
  *   -d, --desc <desc>          Trigger-rich description (required)
- *   -o, --occurrences <count>  Observed recurrence count (must be >= 3)
+ *   -o, --occurrences <count>  Observed recurrence count (must be >= 4)
  *   -e, --evidence <file|num>  Evidence log file path or recurrence count
  *   -t, --test-cmd <cmd>       Verification test command to validate solution
  *       --verified             Flag confirming solution is already tested and verified
@@ -69,7 +69,7 @@ export interface GateResult {
 }
 
 /**
- * Gate 1: Check pattern recurrence (must be observed >= 3 times).
+ * Gate 1: Check pattern recurrence (must be observed >= 4 times).
  */
 export function checkRecurrenceGate(evidence?: string, occurrences?: number, force = false): GateResult {
   if (force) {
@@ -94,11 +94,11 @@ export function checkRecurrenceGate(evidence?: string, occurrences?: number, for
     }
   }
 
-  if (count < 3) {
+  if (count < 4) {
     return {
       ok: false,
       gate: "recurrence",
-      message: `Pattern recurrence count (${count}) < 3. Only extract skills for proven patterns observed across at least 3 distinct tasks/sessions. Use --occurrences 3 or --force to override.`,
+      message: `Pattern recurrence count (${count}) < 4. Only extract skills for proven patterns observed across at least 4 distinct tasks/sessions. Use --occurrences 4 or --force to override.`,
     };
   }
 
@@ -658,7 +658,7 @@ Required Options:
   -d, --desc <desc>          Trigger-rich description naming user intents
 
 Gate Validation Options:
-  -o, --occurrences <count>  Observed recurrence count (must be >= 3)
+  -o, --occurrences <count>  Observed recurrence count (must be >= 4)
   -e, --evidence <file|num>  Evidence log file path or recurrence count
   -t, --test-cmd <cmd>       Verification command to test solution
       --verified             Flag asserting solution is verified by existing tests

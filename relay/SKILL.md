@@ -164,6 +164,13 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
 3. **Lease hand-off to workers** (shared checkouts): if the packet's Target Scope includes git mutations (branch switches, stashes, commits to shared surfaces), embed the worktree-lease instruction in the dispatch prompt — the worker probes `.agents/artifacts/WORKTREE-LEASE.md` before its first git mutation and inherits or acquires per the lease protocol (`coupling-router` Step 0). Never dispatch two workers whose scopes overlap on one checkout.
 4. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
 5. **Refresh the live file**: update HANDOFF.md to point at the dispatched task so an interrupting conversation still lands correctly.
+6. **Close the loop (#51)**: when the dispatched task returns and you are authorized, perform the delivery action programmatically via the available tools — commit + PR, merge, or issue/checklist update — rather than only describing it. Update the ticket/checklist to the real resulting state so the loop is closed, not narrated. Only describe-and-defer when the action itself requires a human (approval, merge to protected branch, secrets); leave ONE explicit ready-to-run command for that step.
+
+### 🧭 Route: multi-mode batching & config (#52)
+
+Before dispatching, map the incoming task to the **combination of existing modes/references** — not a single one — that should act on it in parallel. Decide per sub-task which of relay's own modes (Resume/Dispatch/Ambient) plus which other skills' references each worker runs, and whether the outputs are independent (parallel) or ordered (sequential pipeline). Record the mapping in the packet's Target Scope so workers never re-derive it.
+
+Optional auto-trigger config: where the runtime supports it, document a project-level config (e.g. `.agents/relay-config.yaml`) that maps trigger keywords → the resolved mode/reference combination, so the same choreography fires without re-deciding each time. Tool-independent — it's a contract, not a tool. Skip the config unless a project runs the same handoff pattern frequently.
 
 ### 🌊 Mode C: Ambient Continuity Procedure
 

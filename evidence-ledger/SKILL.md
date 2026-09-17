@@ -113,6 +113,23 @@ Do NOT use this skill when:
 - **`[EMPIRICAL]`**: Grounded in reproducible measurement (`[RAW]`) or primary literature (`[FETCH]`). Stated as factual observation.
 - **`[SPECULATIVE]`**: Grounded in deduction, extrapolation, or forward projections (`[INFER]`). Must explicitly state hypotheses and premises.
 
+### Source Trust Dimension (provenance — WHOSE source, distinct from HOW obtained)
+
+Alongside the confidence tier, tag *who vouches for the source*. This is
+orthogonal: a `[FETCH]` can come from a signed or an unsigned artifact. Use when
+importing third-party material (skills, patches, research, vendor claims) where
+supply-chain provenance matters, not just factual correctness.
+
+| Tag | Meaning | Handling |
+| :--- | :--- | :--- |
+| `[SIGNED]` | Distributor/publisher-signed (e.g. SLSA L2). Content verified to match what the publisher shipped. | Lower provenance risk. Still review behavior before adoption — signing is not a warranty of correctness. |
+| `[UNVERIFIED]` | No signature or unknown chain of custody. Contents may not match the publisher's intent. | Treat as untrusted until raw-source review. Do not ship into a deliverable without provenance note. |
+| `[ADAPTED]` | Third-party method/mechanism folded into a muse skill as a tool-independent idea (not copied wholesale). | Record the source URL + the adaptation decision in the entry's Evidence field. |
+
+Record the tag in the entry's Confidence line (e.g. `[FETCH] / [UNVERIFIED]`) so
+provenance is auditable alongside factuality. This is what makes external skill
+adoption recoverable: a folded pattern keeps its original source citation.
+
 ---
 
 ## Skill Orchestration

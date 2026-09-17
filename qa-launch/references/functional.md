@@ -27,6 +27,17 @@ Pass/fail table per path: Path / Step / Expected / Observed / Evidence / Verdict
 - [ ] Spec compliance sampled (keeper: trailofbits/spec-to-code-compliance): each client-approved requirement verdict — implemented / partial / contradicted / absent; partial (passes tested paths, fails untested ones) treated as HIGH.
 - [ ] Hardening pass: extreme inputs (long/empty/RTL/emoji text, huge lists), API/network failure states, i18n expansion covered (keeper: pbakaus/impeccable).
 
+## Static-API testability audit (source-level, tool-independent)
+
+When QA must vouch that a defect is *fixable and re-verifiable*, run a static scan of the product code for coupling to ambient static APIs — not just run the built site. Language-agnostic, no tool mandated.
+
+- Flag direct, unmocked couplings to ambient statics: wall-clock time (`Date.now`/`System.currentTimeMillis`, unseeded RNG), filesystem (`fs`/`FileIO`), environment (`process.env`/`os.LookupEnv`, secrets), network (fetch/HTTP/db clients), console/logger, and process (`exit`/`syscall`s).
+- Rank by raw frequency (grep count per API class); exclude any that already route through an injected seam (constructor/param/DI wrapper, clock or IO interface) — those are testable and need no flag.
+- For each ranked class, name the idiomatic, framework-free test double (fake clock / seeded RNG, temp-dir fixture, config injection, stub transport, captured logger/stdout) and where the seam should sit.
+- Verdict: which critical paths are *blocking on testability* (they cannot be verified without first injecting a seam) vs merely coupled — gate those Block with the needed seam listed, route the seam to `webdev`.
+
+Keeping coupling flags honest: flag the *residual ambient call sites*, never already-injected seams.
+
 ## Routing
 
 - Visual/aesthetic fails → `refactor-ui`; copy fails → `content`; code fixes → `webdev`/`mobile`; re-verify via `regression`.
