@@ -10,6 +10,9 @@ build/
 .env.local
 .env.*.local
 
+# Python
+.ruff_cache/
+
 # Agents
 .claude/
 .opencode/

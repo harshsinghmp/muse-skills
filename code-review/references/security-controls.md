@@ -39,3 +39,42 @@ Findings: 2
 [SEC-07] src/lib/logger.ts:18 — authorization header logged verbatim.
   Remediation: redact credential headers before emit.
 ```
+
+## Appendix A — constant-time crypto checklist (#47)
+
+When SEC-05 touches anything operating on secrets (MACs, comparisons, hashing,
+crypto endpoints), check these timing side-channels — tool-independent:
+
+- **Secret-dependent branches** — `if (secret[i] == input[i])` style compares;
+  a non-constant-time compare leaks byte position. Use a constant-time compare
+  (`crypto.timingSafeEqual` / constant-time library / `memcmp`-style).
+- **Variable-time division / modulo** — `%`/integer division on secret
+  operands can be data-dependent on some hardware; avoid on secret scalars in
+  signatures/ECDH.
+- **Non-secret-independent lookups** — table lookups indexed by secret bytes
+  (S-box/permutation results) leak through cache timing; use fixed access or
+  constant-time alternatives.
+- **Cache-line leakage** — secret-controlled code or data layout that varies
+  with secret values; keep secret data out of branch and index paths.
+
+## Appendix B — dependency + insecure-defaults pass (#48, two explicit passes)
+
+Run as two distinct passes after (or folding into) SEC-10:
+
+**Pass 1 — Dependency CVE cross-check.** Resolve the lockfile/manifest to
+actual resolved versions and cross-check against a CVE source
+(`npm audit`, `cargo audit`, OSVDB/OSV, GitHub advisory feed). Verify pinning
+(lockfile committed) and that post-install scripts are from vetted publishers.
+A vuln is only closed by an upgraded resolved version, never by a stale
+advisory alert or a `--force`.
+
+**Pass 2 — Insecure-defaults config scan.** Review shipped/example config for
+unsafe defaults that run in production unchanged: auth disabled by default,
+missing CSRF, overly permissive CORS (`*` with credentials), default/blank
+admin creds, debug/verbose modes on, permissive cookie/`SameSite`/secure
+flags, and framework defaults that differ from the security posture the
+service needs. Each default is a finding if a single misconfiguration step
+will ship it.
+
+The `skillscan` mode (`skill-bundle-scan.md`) is the trust gate for agent-skill
+bundles specifically; SEC-10 + this appendix cover application dependencies.

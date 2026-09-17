@@ -18,10 +18,38 @@ implementing feedback because it arrived, not because it is correct.
      of the feedback.
 3. **Risk-gate before applying.** Feedback touching authentication, payments,
    migrations, or public contracts gets investigation before application — never a
-   blind edit, however senior the source.
-4. **Close the loop.** After applying, re-verify the original concern is actually
+   blind edit, however senior the source. Blocking feedback that you decline needs a
+   stated reason and, where the call is not yours to make, a named authority to
+   override — you are the executor, not the approver, on blockers.
+4. **Answer every comment.** Every piece of feedback is either fixed and verified or
+   answered with a reasoned why-not (with evidence), before the thread closes. No
+   silent partial application.
+5. **Close the loop.** After applying, re-verify the original concern is actually
    addressed (not just the literal suggestion implemented) and report what was done
    per item.
+
+## Default to Fix — don't churn
+
+Default to fixing the feedback. Most review comments — nitpicks included — are
+correct and worth fixing, so the baseline is compliance, not scrutiny. Diverge only
+for a concrete, stated reason:
+
+- The fix changes deliberately-chosen behavior (a documented decision, an intended
+  trade-off).
+- The fix is outside this change's scope (orthogonal work logged separately).
+- The comment is factually wrong — read the actual code to confirm before rebutting.
+
+Read the code to decide; do not churn pointlessly, but treat "I'll just recheck every
+nit rather than fix it" as the default to reject.
+
+## Convergence trajectory — one flag over a pile of nit-fixes
+
+If the same root cause keeps being re-raised across review rounds (rounds ≥ 2 raised the
+same underlying issue) and no escalation has been answered, stop fixing nit-by-nit.
+Recurrence of the same root cause is the trigger — not a score plateau. Emit **one**
+approach-level flag instead: the point of disagreement needs a human decision (product,
+scope, or design call), and no amount of per-item fixes will resolve it. Escalate once,
+clearly, and hold there until someone answers.
 
 ## Anti-patterns
 

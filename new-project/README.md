@@ -138,13 +138,13 @@ All gathered answers dynamically populate:
 
 ## ⚡ Continuous Self-Improvement (Skill Extraction)
 
-When an agent repeatedly solves recurring problems across multiple tasks ($\ge 3$ occurrences), package the pattern directly into a new RFC-compliant skill:
+When an agent repeatedly solves recurring problems across multiple tasks ($\ge 4$ occurrences), package the pattern directly into a new RFC-compliant skill:
 
 ```bash
 bun scripts/extract-skill.ts \
   --name "custom-pattern" \
   --desc "Extract and execute deterministic pattern solution" \
-  --occurrences 3 \
+  --occurrences 4 \
   --verified
 ```
 
