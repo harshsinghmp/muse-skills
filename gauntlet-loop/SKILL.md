@@ -91,6 +91,18 @@ The loop only produces quality if the thing it compares against is **real**:
 | **⏳ Budget Exhaustion** | Reaches `max_iterations` (default: 3 rounds, hard max: 5) | **TERMINATE (BUDGET)** → Deliver current best checkpoint |
 | **👤 Human Override** | Explicit user halt or steering directive | **HALT** immediately |
 
+### Right-sized change verification (tiers — do not over/under-check)
+
+Match the check depth to the change's blast radius before committing, so small edits don't burn tokens and risky ones don't slip (keeper: 99rebels/regression-guard):
+
+| Tier | When | Minimum check |
+| :--- | :--- | :--- |
+| 🟢 Tier 1 (light, ~200-300 tokens) | 1 file, <10 lines, no signature changes | signature scan + import integrity |
+| 🟡 Tier 2 (standard, ~1-2k tokens) | 2-3 files, 10-50 lines, or a shared utility touched | caller trace + test suite + orphan check |
+| 🔴 Tier 3 (deep, ~3-5k tokens) | >3 files, >50 lines, or signature/API changes | transitive trace + behavioral contract + alignment + test generation |
+
+This is a **checkpoint, not a controller** — it surfaces findings for the agent/user to decide, and it runs *after* the change *before* the full test suite. Most changes are Tier 1 (80%+).
+
 ### Web Application Automated Gate Checklist
 
 When evaluating web endpoints or frontend components:
