@@ -34,6 +34,9 @@ A pipeline config: stages (install → lint → test → build → deploy) with 
 
 - Failure loop: paste the CI error to the fixer, verify locally, repush; never skip a red gate (no rule-disable, no test-skip); a build-cop owns green main — fix or revert, never accumulate breakage.
 - Speed + safety: cache deps → parallel jobs → path filters → matrix sharding → trim the critical path; every PR gets a preview deploy; flags live create→canary→rollout→remove with an owner and cleanup date.
+- Pipeline troubleshooting: Argo Rollouts `inconclusiveLimit` (never hang on no-data metric), deep-readiness probes over `/ping`, additive-only migrations + versioned undo; env-protection reviewer gate, Docker manifest-first layer order. Source: `wshobson/agents` (`deployment-pipeline-design`).
+- Shell discipline (CI/deploy scripts): `set -Eeuo pipefail`, quote-all, `[[`, trap+mktemp cleanup, dry-run flag, idempotent steps. Source: `wshobson/agents` (`bash-defensive-patterns`; near-miss fold into cicd/hosting).
+- Gates + evidence: environment approval-gate snippet + Trivy/SARIF upload so scans block prod and findings stay queryable. Source: `wshobson/agents` (`github-actions-templates`; near-miss fold).
 
 ## Sources
 

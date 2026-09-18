@@ -92,6 +92,31 @@ Score each of the 5 pillars (0–2 points each, summing to 10 points total):
 - **Focus Allocation (0–2)**: Was primary energy dedicated to the highest-priority goal?
 - **Blocker Triage (0–2)**: Were blockers captured cleanly rather than silently abandoned?
 
+#### TDD Seam Gate (applies when scoring TDD Rigor)
+
+Source: `mattpocock/skills` `tdd`, full-raw per lane-d-abubakar.md #3;
+enrich-only, no new skill. Coach scores compliance — never authors loop.
+
+- **No test at unconfirmed seam.** Seam = public boundary where behavior
+  observed without reaching inside. Before any test: write down seams under
+  test, confirm with user. Unconfirmed seam = 0 pts for cycle regardless of
+  coverage count. Interface shape itself in question = design question first,
+  tests after.
+- **Vertical tracer slices.** One seam → one test → one minimal
+  implementation per cycle, each test responding to what last cycle taught.
+  Horizontal bulk (all tests first, then all impl) tests imagined behavior —
+  cap TDD Rigor at 1 pt when detected.
+- **Anti-pattern downgrades** (any one present = max 1 pt; two+ = 0 pts):
+  1. *Implementation-coupled* — mocks internals, tests privates, verifies
+     via side channel; breaks on refactor with behavior unchanged.
+  2. *Tautological* — assertion recomputes expected value same way as code
+     (or hand-derived snapshot); passes by construction. Expected values
+     must come from independent source of truth (literal, worked example, spec).
+  3. *Horizontal slicing* — bulk tests before any implementation (see above).
+- **Red before green still rules.** Failing test watched to fail, only enough
+  code to pass, no speculative features. Refactoring belongs to review stage,
+  not red→green cycle.
+
 ### Step 3 — Plan the Next 24 Hours
 1. Select the **Single Most Important Task (MIT)** for tomorrow.
 2. Identify dependencies or missing credentials beforehand.

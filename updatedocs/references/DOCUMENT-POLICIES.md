@@ -110,3 +110,25 @@ Targeted at operators maintaining live systems.
 - **Actionable & Sequential**: Write imperative steps for triage, scaling, restarting, backup restoration, and disaster recovery.
 - **Exact Thresholds & Alerts**: Include metric triggers, alert names, log filter queries, and expected nominal health values.
 - **Rollback First**: Every deployment or operational runbook must include verified rollback steps.
+
+## 9. Prose & Sample Hygiene (source: `vercel-labs/writing-guidelines`, `command.md`)
+
+Applies when `updatedocs` touches prose or samples during a sync — never
+as an excuse for stylistic rewrites of correct docs (SKILL.md Core
+Principle 3 still governs).
+
+### Invariants:
+- **Banned words**: flag `easy` / `simple` / `quick` describing reader
+  actions (replace with the concrete fact) and filler (`very`, `just`,
+  `really`); active voice, direct `you` address, imperative steps.
+- **Structure**: page headings in sentence case with descriptive
+  subheadings; acronyms spelled out on first use; terms defined on first
+  use; paragraphs one line in source (no hard-wrap), no `---` rules
+  between sections, one blank line around headings and code blocks.
+- **Samples**: language tag on every code block; ≤80 columns, ≤25 lines
+  per snippet (split with prose); prose explains each block; descriptive
+  `snake_case` text placeholders (`your_access_token_here`); units read
+  `64 KB` / `200 ms` (bare `30s`); anchor text names the destination.
+- **AI disclosure**: when agent assistance materially shaped a doc
+  change, the report/PR notes the model used — accountability stays with
+  the author, never the model.

@@ -131,6 +131,9 @@ Read-only by default; writes only on explicit request.
 ### Task Ledger (persistent delegation state)
 Delegation state lives in files, not conversation. Maintain `.agents/secretary-tasks.json` — one entry per delegated item: `id`, `status` (`PLANNING` → `IN_PROGRESS` → `REVIEW` → `DONE`/`FAILED`/`SKIP`), `assignee` (agent id from teachback), `dependencies`, `result` (verification receipt). Operations are idempotent: `next` (first actionable item), `set-status`, `verify` (receipt required before `DONE`). One foreground task at a time, each with explicit completion criteria. On any context reset, reconstruct state from the ledger + `HANDOFF.md` + git history — never from memory of the conversation; premature "completion" without a ledger receipt is the #1 recovery failure.
 
+Ticket shape — tracer-bullet tickets (source: lane D #7 — pocock to-tickets): each ticket is a vertical demoable slice carrying explicit blocking edges; execute at the frontier (unblocked tickets first).
+Wide refactors use expand–contract: expand (support old + new) → migrate in batches → contract (remove old), CI green throughout.
+
 ### Handoff Harvest (three tiers)
 Processing received handoffs/HANDOFF.md files is a harvest with three modes, chosen by situation:
 

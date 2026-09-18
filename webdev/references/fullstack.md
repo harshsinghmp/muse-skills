@@ -29,6 +29,12 @@ A working end-to-end feature: schema, API, UI, states, and tests; verification g
 - [ ] Verification gate green.
 - [ ] `code-review` run on the diff.
 
+## Routing
+
+- Test-authoring (e2e): pyramid (few E2E on critical paths only), `data-testid`/role selectors over CSS, page-objects, `test.step` reporting, headed/debug/trace triage, no fixed-timeout waits. Source: `wshobson/agents` (`e2e-testing-patterns`).
+- Test-authoring (pytest): AAA shape, `test_<unit>_<input>_<expect>` names, retry-behavior via mock side_effect (transient-retry / permanent-no-retry), freezegun time-travel, markers (slow/integration/skipif/xfail), `--cov-fail-under` floor. Source: `wshobson/agents` (`python-testing-patterns`).
+- Temporal workflow tests + bats shell-test leg gated — adopt only if the project uses Temporal / shell-hook testing needs it; else skip (roadmap §4).
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

@@ -116,7 +116,8 @@ When evaluating web endpoints or frontend components:
 ### Option A: Autonomous Multi-Role Execution Loop
 
 #### Step 1 — Set the Real Bar & Freeze the Job Contract (`GAUNTLET_JOB_CONTRACT.md`)
-1. **Name the Bar**: If the user supplied a reference, use it. If not, offer **2 or 3 candidate bars** (one line each) and wait for their pick.
+1. **Intake triage ratchet (superpowers/brainstorming S1)**: classify the job aloud as **spike** (throwaway probe), **bounded** (fixed-scope fix), or **architectural** (structural change). Complexity upgrades the path, never downgrades it. **Human-approval gate before ANY code** on every path — freeze the contract first, build never.
+2. **Name the Bar**: If the user supplied a reference, use it. If not, offer **2 or 3 candidate bars** (one line each) and wait for their pick.
 2. **Lock Contract**: Record in workspace root:
    - **Goal**: Precise, measurable objective statement.
    - **Concrete Bar**: Named fetchable reference artifact.
@@ -128,21 +129,28 @@ When evaluating web endpoints or frontend components:
 ```
 Round N (N = 1..max_rounds):
   1. BUILD: Builder produces candidate patch based strictly on previous round critic feedback.
-     - **Evidence baseline pre-step (#35)**: before producing a fix, run the target test/command to capture its RED (failing) state. A fix may not enter the loop without this baseline on record — the loop later proves the fix turned it green.
-     - **High-certainty sweep gate (#34)**: when working from an issue/finding list, deep-review each candidate first, then touch ONLY small, high-certainty bugs with a clear root cause. Refuse large or uncertain changes as out of scope — note them in the ledger and return, don't burn the round on guesswork.
+      - **Fresh worker per task (superpowers/subagent-driven-development S3)**: spawn a fresh worker per round/task with the brief file as the single source — never paste prior-round history. Per-task review against spec + quality.
+      - **Fix-loop cap with escalation (S3)**: hard cap 5 rounds; rounds 4–5 escalate (stronger model / narrower scope) and any further failure escalates to human with ledger receipt. **Ledger over memory**: `ITERATION_LEDGER.md` is the source of truth (compaction-proof) — rulings recorded there, not carried in context.
+      - **Evidence baseline pre-step (#35)**: before producing a fix, run the target test/command to capture its RED (failing) state. A fix may not enter the loop without this baseline on record — the loop later proves the fix turned it green.
+      - **High-certainty sweep gate (#34)**: when working from an issue/finding list, deep-review each candidate first, then touch ONLY small, high-certainty bugs with a clear root cause. Refuse large or uncertain changes as out of scope — note them in the ledger and return, don't burn the round on guesswork.
+      - **Sweep autonomy ladder (lane A #7 brooks-sweep)**: safe changes (typos, formatting, isolated renames, pinned-dependency bumps with green gate) auto-apply; risky changes (API/signature, migrations, security headers, cross-file refactors) require explicit confirm-first. Read-only audit stays excluded from auto-apply.
   2. AUDIT (Blind A/B): Spawn isolated Fresh Critic subagent with NO memory of builder reasoning.
-     - Strip labels from candidate and bar.
-     - Put candidate next to the bar blind; judge which is better and name the single biggest remaining gap.
-     - Score 0.0–10.0 across: Correctness (40%), Minimal Diff (25%), Edge Cases (20%), Architecture (15%).
+      - Strip labels from candidate and bar.
+      - Put candidate next to the bar blind; judge which is better and name the single biggest remaining gap.
+      - **Root-cause-before-fix (superpowers/systematic-debugging S5)**: no fix scores above 5 on Correctness without a named root cause (Symptom→Source chain); symptom-only patches are rejected feedback, not progress. **3 failed fixes → question architecture**: three rounds failing on the same root cause stops the fix loop — escalate to an architecture question instead of burning rounds 4–5 on the same shape.
+      - **Second-model review gate + refusal routing (lane A #12 gbrain-cross-modal-review)**: on high-stakes rounds, route the blind critique to a second model; on critic refusal, silently switch reviewer (log the switch in the ledger) rather than stalling the loop.
+      - Score 0.0–10.0 across: Correctness (40%), Minimal Diff (25%), Edge Cases (20%), Architecture (15%).
   3. GATE: Run automated proof suite AND integrity checks AND Web App Security & Visual Gate:
-     - **Test-bloat gate (#33)**: every generated or altered test must be non-vacuous and independently valuable — it must be capable of failing on the defect class it guards and must assert something the other tests don't. Strip assertions that can never fire and near-duplicate asserts added to inflate coverage; a screen of smoke asserts inflates line-and-assert counts, not proof.
+      - **TDD iron law — Automated Gate clause (superpowers/tdd S4)**: watch the test FAIL first or it proves nothing; code written before its failing test is deleted and the round restarts. Evidence (RED receipt) before claim, every round.
+      - **Test-bloat gate (#33)**: every generated or altered test must be non-vacuous and independently valuable — it must be capable of failing on the defect class it guards and must assert something the other tests don't. Strip assertions that can never fire and near-duplicate asserts added to inflate coverage; a screen of smoke asserts inflates line-and-assert counts, not proof.
      - Check 5 mandatory security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
      - Check 3 responsive viewports (375px, 768px, 1280px) for zero horizontal overflow.
      - **Quality-bar regression check**: scan the round's diff for a lowered bar — new suppression directives, skipped or deleted tests, weakened assertions, thresholds edited down. Any of these zeroes the round score (0.0): a build that passes because the bar was lowered is a regression, not a pass.
      - **Fail-closed eval check**: confirm the proof suite contains at least one test that CAN fail on the defect class the round claims to fix. If nothing in the suite could have caught the defect, a green run proves nothing — the round does not pass until a capable test exists (write it, watch it fail on the pre-fix state).
      - Any test failure, missing critical security header, visual overflow, quality-bar regression, or failed fail-closed check zeroes the round score (0.0).
   4. RECORD: Append round metrics, header receipts, viewport outcomes, and finding counts (new findings vs fixed findings this round) to ITERATION_LEDGER.md — the ledger is the convergence instrument: when new findings outnumber fixed findings two rounds running, the loop is diverging, not converging — stop and escalate instead of burning the remaining budget. **Deduplicate by root cause before counting**: if a finding from a previous round reappears (even under new phrasing), it is NOT a new finding — it is an unfinished one and counts against convergence, not for it.
-     - **Tech-debt roadmap (#32)**: after each bounded loop, write the fixed/refused findings into a durable TECHNICAL_DEBT.md (workspace `.agents/artifacts/`) — root cause, file, ref and one-line fix — so improvement stays stateful across sessions and checkpoints survive the loop ending. This roadmap is the persistent backlog, distinct from the per-run convergence ledger.
+      - **Tech-debt roadmap (#32)**: after each bounded loop, write the fixed/refused findings into a durable TECHNICAL_DEBT.md (workspace `.agents/artifacts/`) — root cause, file, ref and one-line fix — so improvement stays stateful across sessions and checkpoints survive the loop ending. This roadmap is the persistent backlog, distinct from the per-run convergence ledger.
+      - **Tech-debt sprint mode (lane A #8 tech-debt-sprint)**: when the contract scopes a debt sprint, run inventory taxonomy first (TODOs, outdated deps, missing tests, god objects) → fix smells → remove dead code → harden review pass. Each phase logs into the ledger; refused items land in TECHNICAL_DEBT.md.
   5. DECIDE: Evaluate Stop Conditions Matrix.
 ```
 

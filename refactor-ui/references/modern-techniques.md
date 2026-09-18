@@ -99,3 +99,71 @@ don't improvise.
 - Strip micro-chrome that carries no decision: pill tags, stub badges,
   system-marker labels. If removing it changes nothing the user can act
   on, it ships removed.
+
+## 10. Interaction & platform gap-fill (review oracle)
+
+Checklist items the 11 heuristics don't cover. Flag in `audit`/`review`
+with the same Contract + Runtime + Correction proof gate — no new modes,
+no new scripts.
+
+- **Forms**: inputs carry `autocomplete` + meaningful `name`; correct
+  `type` (`email`, `tel`, `url`, `number`) and `inputmode`; never block
+  paste (`onPaste` + `preventDefault`); labels clickable (`htmlFor` or
+  wrapping); `spellCheck={false}` on emails, codes, usernames; checkbox /
+  radio label + control share one hit target (no dead zones); submit
+  stays enabled until the request starts with a spinner during it;
+  errors inline next to fields with focus moved to the first error on
+  submit; placeholders end with `…` and show an example pattern;
+  `autocomplete="off"` on non-auth fields; warn before navigation with
+  unsaved changes (`beforeunload` or router guard).
+- **Touch**: `touch-action: manipulation`; `-webkit-tap-highlight-color`
+  set intentionally; `overscroll-behavior: contain` in modals / drawers /
+  sheets; during drag disable text selection and set `inert` on dragged
+  elements; every drag / swipe / pinch / path gesture ships a tap-or-click
+  plus keyboard alternative unless the gesture is essential; `autoFocus`
+  sparingly — desktop only, single primary input, never on mobile.
+- **Navigation & state**: URL reflects state (filters, tabs, pagination,
+  expanded panels in query params); stateful UI is deep-linkable (a
+  `useState` that matters syncs to URL via nuqs or similar); destructive
+  actions need a confirmation modal or an undo window — never immediate.
+- **Locale & i18n**: dates via `Intl.DateTimeFormat`, numbers / currency
+  via `Intl.NumberFormat` — never hardcoded formats; language from
+  `Accept-Language` / `navigator.languages`, not IP; brand names, code
+  tokens, identifiers wrapped with `translate="no"`.
+- **Hydration safety**: inputs with `value` need `onChange` (else
+  `defaultValue`); date / time rendering guards server-vs-client
+  mismatch; `suppressHydrationWarning` only where truly needed.
+- **Images**: explicit `width` + `height` (no CLS); below-fold
+  `loading="lazy"`; above-fold critical images `priority` /
+  `fetchpriority="high"`.
+- **Dark-mode concrete checks**: `color-scheme: dark` on `<html>` for
+  dark themes; `<meta name="theme-color">` matching page background;
+  native `<select>` gets explicit `background-color` + `color`.
+- **Focus extras**: `:focus-visible` over `:focus`; `:focus-within` for
+  compound-control groups; sticky headers / footers / overlays must not
+  cover the focused element.
+- **Typography extras**: non-breaking spaces in `10&nbsp;MB`,
+  `⌘&nbsp;K`, brand names; loading states end with `…` (`Loading…`).
+- **Copy specifics**: numerals for counts (`8 deployments`); button
+  labels name the action (`Save API Key`, not `Continue`); second
+  person, `&` only where space-constrained.
+- **Blocking bans**: never `user-scalable=no` / `maximum-scale=1`
+  (kills zoom); never `transition: all` (list properties); never
+  `<div>` / `<span>` with click handlers (use `<button>`); never inline
+  `onClick` navigation without `<a>` / `<Link>`.
+- **Perf flags (route the fix to `webdev`)**: lists >50 items
+  virtualized (`virtua`, `content-visibility: auto`); no layout reads
+  (`getBoundingClientRect`, `offsetHeight`, `scrollTop`) in render —
+  batch reads / writes; `<link rel="preconnect">` for CDN domains,
+  critical fonts preloaded with `font-display: swap`; compressed video
+  over animated GIF with a still alternative.
+
+## Sources
+
+- `vercel-labs/agent-skills` (`skills/web-design-guidelines/SKILL.md` →
+  `vercel-labs/web-interface-guidelines`, `command.md`) — 100+ rule
+  review oracle, 11 categories. Imported above are the checklist items
+  the buyer baseline (11 heuristics + §§1–9 + scripted audit + WCAG
+  blocking gate) does not already cover; hierarchy, spacing, buttons,
+  clutter, empty / overflow states, shadows, contrast, grouping, theme
+  parity, safe areas, truncation, and animation routing stay as-is.

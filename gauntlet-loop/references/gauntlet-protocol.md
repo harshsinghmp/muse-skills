@@ -22,6 +22,11 @@ $$S_{\text{total}} = 0.40 \cdot S_{\text{correctness}} + 0.25 \cdot S_{\text{min
    - 0: Only happy path handled.
 
 4. **Architectural Cleanliness (15%)**:
-   - 10: Follows existing repo idioms and patterns.
-   - 5: Introduces slightly redundant helper.
-   - 0: Violates project structure or adds unnecessary framework dependency.
+    - 10: Follows existing repo idioms and patterns.
+    - 5: Introduces slightly redundant helper.
+    - 0: Violates project structure or adds unnecessary framework dependency.
+
+## Critic Rules (superpowers/systematic-debugging S5)
+
+- **Root-cause-before-fix**: no fix scores above 5 on Correctness without a named root cause (Symptom→Source chain). Symptom-only patches are rejected feedback, not progress.
+- **3-failed-fixes → question architecture**: three rounds failing on the same root cause stops the fix loop — the critic escalates to an architecture question instead of requesting another same-shape fix. Record the escalation in `ITERATION_LEDGER.md`.

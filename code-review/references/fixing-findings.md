@@ -34,6 +34,11 @@ list) exists and the findings need to become fixes.
    review that raised them; the loop converges when the re-review reports no open
    findings from the ledger. If fixes stop converging (new findings outnumber fixed
    two rounds running), stop and escalate rather than polish forever.
+   **3-failed-fixes rule** (source: `obra/superpowers` systematic-debugging): three
+   failed fix attempts on the same finding → stop fixing, question the architecture
+   (wrong layer, wrong representation, wrong assumption). No further same-level
+   attempts until the architectural question is answered — the bug is no longer in
+   the code, it is in the design the code assumes.
 
 ## Unapplied review findings checklist
 

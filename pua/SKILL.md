@@ -153,6 +153,55 @@ When L3 or above is triggered, complete and report each item:
 
 ---
 
+### 5. Debug Discipline: Red-Capable Loop + Falsifiable Hypotheses
+
+When L2+ debugging stalls, procedure above is not enough — add this
+discipline block (source: `mattpocock/skills` `diagnosing-bugs`, full-raw
+per lane-d-abubakar.md #1–2; enrich-only, no new skill).
+
+#### 5a. Red-capable loop ladder (loop first, hypothesise second)
+
+Everything else is mechanical: with a tight pass/fail signal that goes red
+on *this* bug, cause follows; without one, staring at code fails. Build the
+loop before any theory. Ladder, roughly cheapest first:
+
+1. **Failing test** at whatever seam reaches the bug (unit/integration/e2e).
+2. **Curl/HTTP script** against running dev server.
+3. **CLI invocation** with fixture input, diffing stdout vs known-good snapshot.
+4. **Headless browser script** (Playwright/Puppeteer) asserting DOM/console/network.
+5. **Replayed captured trace** (real request/payload/event log saved to disk, replayed in isolation).
+6. **Throwaway harness** (minimal subset, mocked deps, single function call).
+7. **Property/fuzz loop** (1000 random inputs when bug is "sometimes wrong output").
+8. **Bisection harness** (`git bisect run`-able boot-at-X-check-repeat).
+9. **Differential loop** (same input through old vs new version/config, diff outputs).
+10. **HITL bash script** (last resort; human driven by script so loop stays structured).
+
+Tighten loop once it exists: faster (seconds, not minutes), sharper (assert
+exact symptom, not "didn't crash"), deterministic (pin time, seed RNG,
+isolate FS/network). Flakes: raise reproduction rate (loop 100×,
+parallelise, stress) until debuggable.
+
+**No-loop-no-hypothesise gate:** no red-capable command run at least once =
+no Phase hypothesise. Catching yourself theorising before command exists =
+stop, build loop. Genuinely no loop possible = say so, list tried options,
+ask user for repro env / redacted artifact / prod-instrumentation permission.
+
+#### 5b. Falsifiable hypotheses + tagged probes + seam-checked regression
+
+- **3–5 ranked hypotheses before testing any.** Each falsifiable:
+  `If <X> is cause, then <changing Y> makes bug disappear / <changing Z>
+  makes it worse.` No prediction = vibe, discard. Show ranked list to user
+  before testing (cheap checkpoint, re-ranks fast).
+- **One variable per probe.** Debugger/REPL first, then targeted logs at
+  hypothesis-distinguishing boundaries — never log-everything-and-grep. Tag
+  every debug log `[DEBUG-xxxx]`; cleanup = single grep. Perf regressions:
+  baseline measurement + bisect, not logs.
+- **Regression test before fix, only at correct seam.** Seam must exercise
+  real bug pattern as it occurs at call site. No correct seam = finding
+  itself: architecture prevents locking bug down, flag it, document absence.
+
+---
+
 ## Pitfalls & Anti-Rationalization Table
 
 | Your Excuse | Counter-Attack | Escalation |

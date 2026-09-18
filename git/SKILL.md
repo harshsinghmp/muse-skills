@@ -288,8 +288,26 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    )"
    ```
 
-3. After the PR is open and CI runs, use review-mode substeps as needed:
-   - **pr-check** — if CI is red: inspect failing checks, pull the failure logs, extract the failure snippet, produce `--json` machine-readable output + a human-readable fix plan. Does not implement fixes; diagnoses so the right mode (or a human) can.
+2b. **Clean-PR branch (GSD scaffolding filter, micro).** When the branch carries
+GSD planning commits (`.planning/` artifacts: PLAN.md, SUMMARY.md, STATE.md),
+mint a reviewer-facing branch with only code commits so the PR diff stays clean.
+
+   Source: `tomascortereal/claude-code-setup` `gsd-pr-branch` (same shape in
+   `open-gsd/gsd-core`), raw SKILL.md fetched per lane-a-skillshub-remainder.md
+   #11; enrich-only, no new skill or mode.
+   ```bash
+   git checkout -b feat/<issue-id>-<slug>-pr <base>
+   git log --reverse --format=%H <base>..feat/<issue-id>-<slug> | while read c; do
+     git cherry-pick -n "$c"                                   # stage each commit
+     git reset -q HEAD -- '.planning/*' 2>/dev/null || true   # drop scaffolding
+     git checkout -q -- '.planning' 2>/dev/null || true
+     git commit -C "$c" --allow-empty --allow-empty-message 2>/dev/null || git cherry-pick --skip
+   done
+   ```
+   Open (or retarget) the PR from the `-pr` branch; keep the full branch as the
+   build record. Skip entirely when no `.planning/` commits exist.
+
+3. After the PR is open and CI runs, use review-mode substeps as needed:   - **pr-check** — if CI is red: inspect failing checks, pull the failure logs, extract the failure snippet, produce `--json` machine-readable output + a human-readable fix plan. Does not implement fixes; diagnoses so the right mode (or a human) can.
    - **code-review-comments** — if review comments arrive: fetch → number + summarize each comment → apply selected fixes (delegates to `code-review` receive mode for the actual triage).
 
 ### Phase 7: Staging Integration & Conflict Resolution Playbook (`dev`)

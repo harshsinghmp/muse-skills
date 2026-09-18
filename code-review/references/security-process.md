@@ -18,6 +18,43 @@ the pass to what actually matters and kills checklist-theatre. Cover:
 - **Abuse paths** — the concrete ways a capability could reach an asset
   (SSRF to secret store, IDOR on tenant data, prompt injection to exfil).
 
+### Threat-model chain (sources: `wshobson/agents` stride-analysis-patterns, attack-tree-construction, security-requirement-extraction, threat-mitigation-mapping)
+
+Run the four legs in order; each leg feeds the next. A chain with a skipped leg
+is checklist-theatre.
+
+**Leg 1 — STRIDE matrix.** One row per category; each row names the question and
+the control family it points at:
+
+| Category | Question | Control family |
+| :--- | :--- | :--- |
+| **S**poofing | Can an actor pose as someone/something else? | Authentication |
+| **T**ampering | Can data or code be modified in transit/at rest? | Integrity controls |
+| **R**epudiation | Can an actor deny the action afterwards? | Logging / audit trail |
+| **I**nformation disclosure | Can data leak to an unauthorized party? | Encryption / access scoping |
+| **D**enial of service | Can the path be exhausted or flooded? | Rate limiting / quotas |
+| **E**levation of privilege | Can a low-privilege actor gain higher rights? | Authorization |
+
+**Leg 2 — Attack tree.** Decompose each abuse path into OR/AND/leaf nodes: OR
+= any child suffices, AND = all children required, leaf = atomic attacker step.
+Tag every leaf with cost, time, skill, and detectability attributes. Apply the
+two rules: model the insider threat explicitly (a legitimate-access actor is
+always one branch), and honor AND-dependencies (a finding that breaks one leg of
+an AND-node downgrades the whole node — say so, don't re-flag each leg).
+
+**Leg 3 — Requirement trace.** Bind each leaf to a Business → Security → Control
+chain: the business requirement at risk, the security requirement it implies
+(typed functional / non-functional / constraint), and the control that enforces
+it. Every security requirement is testable with an acceptance criterion — an
+untestable requirement is a note, not a requirement.
+
+**Leg 4 — Mitigation map.** Place each control on the Preventive / Detective /
+Corrective × Network / App / Data / Endpoint / Process grid. Prefer
+defense-in-depth (two grid cells covering the same leaf beat one), and enforce
+the no-threat-unmapped rule: every STRIDE row and every attack-tree leaf maps to
+at least one control, or is recorded as an explicit accepted risk — never left
+silent.
+
 Then run the vuln pass against those paths. A finding that doesn't sit on a
 named abuse path is re-examined; an abuse path with no control check is a gap.
 
