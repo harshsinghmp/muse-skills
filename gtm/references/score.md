@@ -20,7 +20,8 @@ A ranked lead list with scores, the scoring rubric, TAM/SAM sizing, and signal l
 5. Cut the list: A-tier goes to outreach now, B-tier to nurture, C-tier parked with a revisit date.
 6. Score through one pain lens: ask what pain the offer solves and read all signals through it; signals are evidence, not customer-facing knobs.
 7. Surface the coverage gap (key accounts with no signal data) as an import shortlist, and rescore tiers as new signals land.
-8. Size TAM/SAM/SOM both directions and reconcile: top-down (addressable × ICP reach) AND bottoms-up (segment counts × average deal value × capture rate); a single un-sourced number is a claim, not a size. State the arithmetic and populations behind each direction and flag where they diverge before committing a number.
+8. Close the loop with win/loss: for every lost or stalled deal, capture the reason in the buyer's words (price, timing, competitor, no-fit, ghosting) and feed it back to scoring weights, messaging, and pricing — a pipeline that never learns why deals die keeps scoring the same wrong profile.
+9. Size TAM/SAM/SOM both directions and reconcile: top-down (addressable × ICP reach) AND bottoms-up (segment counts × average deal value × capture rate); a single un-sourced number is a claim, not a size. State the arithmetic and populations behind each direction and flag where they diverge before committing a number.
 
 ## Quality gate
 

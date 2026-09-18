@@ -20,7 +20,8 @@ A hardening plan applied: least-privilege roles, security headers (CSP, HSTS, et
 5. Patch dependencies; enable automated vulnerability scanning (routes to `code-review`).
 6. Restrict network access (firewalls, private subnets, WAF where needed).
 7. Enable audit logging and alerting on suspicious access.
-8. For AI-exposing systems: identify the operator's role (provider vs deployer — duties differ), review read-only against official sources with exact citations, and report issue-spotting only — never a compliance verdict, score, or legal conclusion.
+8. Run a static analysis (SAST) pass plus dependency SCA and a secret-scan sweep as a client-ready audit deliverable (severity-ordered findings + evidence, never a compliance verdict); emit it as a dated report the client can act on directly.
+9. For AI-exposing systems: identify the operator's role (provider vs deployer — duties differ), review read-only against official sources with exact citations, and report issue-spotting only — never a compliance verdict, score, or legal conclusion.
 
 ## Quality gate
 

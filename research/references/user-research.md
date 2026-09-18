@@ -18,6 +18,10 @@ Match the method to the goal — never default to interviews:
 | Validation ("did the change help") | Survey, A/B readout (route to analytics for the A/B harness) |
 | Segmentation ("who are the clusters") | JTBD-interviews + clustering |
 
+For JTBD, decompose progress, not features: for each job capture the before→after state, separate functional / emotional / social layers, the hiring trigger, the competing alternatives (including status quo and workarounds), and success criteria in the customer's words — the job's urgency, not the feature list, drives priority.
+
+When you hold bulk raw material (interview/sales-call transcripts, support tickets, reviews, surveys) rather than moderation notes, run a raw-corpus synthesis pass first: extract pains, triggers, desired outcomes, customer language, objections, and alternatives considered, then cluster across the corpus before designing the method — insights from one transcript are anecdotes until they recur.
+
 State your sample and saturation plan up front. Use the shared `sample-size` script (scripts/sample-size.ts) for quantitative power/sample sizing; for qualitative, target saturation (code until new interviews stop adding themes), and say your stopping rule.
 
 ## Gather
