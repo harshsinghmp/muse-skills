@@ -16,7 +16,8 @@ Gate report: checklist with pass/block per item, severity-ordered findings, and 
 - Validation sweep (award-bar integrity): no placeholder/lorem content; no copied brand identity (logos, names, claims) left from templates; no unsupported claims (fake stats, testimonials, partnerships); all media credited with provenance; split/staggered text exposes one coherent accessible name and never splits links; first frame reads complete with JS/media/WebGL disabled.
 2. Any HIGH open finding = Block. Mediums ship only with a dated owner and ticket.
 3. State the verdict in one line plus the narrowest unblock condition; file the report in `.agents/artifacts/qa-gate-<ts>.md`.
-4. Solo: rollback owner is you — confirm you can actually execute the rollback alone before a Ship verdict.
+4. For a launch expected to see concurrency/scalability load, run a load gate first: script realistic VU scenarios (not a single script hammer), assert threshold pass/fail against agreed budgets (latency percentiles, error rate, throughput), and record the result in the gate — functional-only QA does not prove it scales.
+5. Solo: rollback owner is you — confirm you can actually execute the rollback alone before a Ship verdict.
 
 ## Quality gate
 

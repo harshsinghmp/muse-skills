@@ -68,7 +68,7 @@ per root cause listing every location it appears in:
 1. Run `bun refactor-ui/scripts/audit-ui.ts <paths>` — paste output as receipt.
 2. Extract fg/bg pairs the surface actually renders; verify each with
    `bun refactor-ui/scripts/check-contrast.ts <fg> <bg>` (normal + large).
-3. Heuristic pass (11 heuristics + research additions) with proof gates, holding type thresholds (scale-step ratio ≥1.25×; body ≥16px desktop / 14px mobile; ≤2 weights per screen; no orphaned one-off styles), color traps (link 4.5:1 even without underline; placeholder/disabled pairs; interactive vs static color distinct), and affordance checks (touch targets ≥44×44; no false/missing affordances; no hover-only actions; focus ring never removed without a replacement).
+3. Heuristic pass (11 heuristics + research additions incl. `modern-techniques.md` §10 interaction/platform checklist) with proof gates, holding type thresholds (scale-step ratio ≥1.25×; body ≥16px desktop / 14px mobile; ≤2 weights per screen; no orphaned one-off styles), color traps (link 4.5:1 even without underline; placeholder/disabled pairs; interactive vs static color distinct), and affordance checks (touch targets ≥44×44; no false/missing affordances; no hover-only actions; focus ring never removed without a replacement).
 4. Score: per-heuristic Pass / Partial / Fail; overall Block/Approve verdict.
 5. Write `.agents/artifacts/ui-audit-report-<ts>.md`; echo ≤5-line summary.
 

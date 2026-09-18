@@ -403,17 +403,24 @@ if (hasAnyAgentFiles) {
 
   if (existsSync(rootAgentsPath)) {
     const rootContent = readFileSync(rootAgentsPath, "utf8");
-    const isLeanRail =
+    // A curated/curated-rail AGENTS.md already wired into the DOX architecture is managed —
+    // preserve it. Only a genuine pre-DOX monolithic legacy file (no .agents/ wiring, no rail
+    // markers, oversized) gets archived and replaced with the lean rail. This stops a delivered
+    // AGENTS.md from being clobbered by an unfilled template rail ({{PROJECT_NAME}} foot-gun).
+    const isManagedRail =
       rootContent.includes("DOX Rail:") ||
       rootContent.includes("Core Turn Invariants") ||
+      rootContent.includes(".agents/context") ||
+      rootContent.includes(".agents/standards") ||
       rootContent.split("\n").length <= 60;
+    const isUnfilledTemplate = rootContent.includes("{{PROJECT_NAME}}") || rootContent.includes("{{AGENT_NAME}}");
 
-    if (!isLeanRail && !isDryRun) {
+    if ((!isManagedRail || isUnfilledTemplate) && !isDryRun) {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
       const archivePath = join(agentsDir, "archive", `AGENTS.legacy-${timestamp}.md`);
       renameSync(rootAgentsPath, archivePath);
       report.archived.push(`AGENTS.md ➔ .agents/archive/AGENTS.legacy-${timestamp}.md`);
-      console.log(`  📦 Archived monolithic AGENTS.md ➔ .agents/archive/AGENTS.legacy-${timestamp}.md`);
+      console.log(`  📦 Archived AGENTS.md ➔ .agents/archive/AGENTS.legacy-${timestamp}.md`);
 
       // Deploy lean router
       const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
@@ -422,6 +429,9 @@ if (hasAnyAgentFiles) {
         report.scaffolded.push("AGENTS.md (Lean DOX Rail)");
         console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<50 lines)");
       }
+    } else {
+      report.preserved.push("AGENTS.md");
+      console.log("  ✅ Preserved existing AGENTS.md (managed DOX rail / curated content)");
     }
   } else {
     // Deploy lean router if missing

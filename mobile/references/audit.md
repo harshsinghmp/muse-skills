@@ -4,6 +4,18 @@
 
 - **Store audit**: Verify app listing, keywords, screenshots, ratings, and store compliance are current
 - **Launch audit**: Check iOS/Android launch readiness (store accounts, certificates, preview video, build submitted)
+- **Accessibility audit**: Check mobile a11y per the checklist below (RN/Expo/SwiftUI/UIKit/Compose)
+
+## Accessibility checklist
+
+Source: `Community-Access/accessibility-agents` `mobile-accessibility`, raw SKILL.md fetched per lane-a-skillshub-remainder.md #10; enrich-only, no new skill or mode.
+
+- [ ] Every interactive element and image carries `accessibilityLabel` (RN) / `contentDescription` (Compose) / `.accessibilityLabel` (SwiftUI); decorative elements explicitly hidden (`importantForAccessibility="no"` / `accessible={false}` / `.accessibilityHidden(true)`).
+- [ ] Every interactive element declares a role (`accessibilityRole` / `Role.Button` etc. / traits); state-bearing elements expose state (`accessibilityState`, `stateDescription`); non-obvious actions carry a hint (`accessibilityHint`).
+- [ ] Touch targets meet platform minimums: iOS 44×44pt (HIG), Android 48×48dp (Material), mobile web 44×44 CSS px (WCAG 2.5.5; 24×24 floor under 2.2 AA).
+- [ ] Screen-reader flow verified: modals trap focus (`accessibilityViewIsModal` / `Modal`), dynamic content announces via live regions, reading order sane.
+- [ ] Per-platform semantics used, not RN-only props pasted everywhere (SwiftUI modifiers, UIKit `UIAccessibility` traits, Compose `semantics` incl. `mergeDescendants`).
+- [ ] Automated cover where cheap: `@testing-library/react-native` role/state assertions (`getByRole`, `toHaveAccessibilityState`); E2E label assertions (Maestro `assertVisible` on labels).
 
 ## Checklist
 

@@ -48,6 +48,10 @@ Reuse: step 7 asks whether content is JS-gated for crawlers; a real-browser goto
 - [ ] In snapshot but missing JS-off = JS-gated → fix or SSR/SSG per step 7.
 - [ ] Re-snapshot after every navigation (refs reset); record headless vs headed profile.
 
+## Routing
+
+- Flagged cost/perf routes (platform bill, function invocations, failing CWV templates beyond quick wins) route to `webdev` performance mode for the metrics-first audit and ranked cost+perf report; `seo` technical mode verifies the result. Source: `vercel-labs/agent-skills` (`skills/vercel-optimize/SKILL.md`).
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

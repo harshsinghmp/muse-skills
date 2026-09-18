@@ -51,3 +51,17 @@ open question instead.
 ## Open questions (intent claims found but no code path to bind)
 ## Verdict
 ```
+
+## Design-soundness pass (source: `inkeep-open-knowledge-review-a-design`)
+
+The `design` mode runs this instead of intent-tracing: it judges the design
+itself, before any implementation exists (or against goals/constraints when
+implementation is out of scope).
+
+- **Right-problem check**: is the design solving the right problem — derived
+  from the stated goals and constraints? A correct implementation of the wrong
+  design still fails. No documented goals/constraints → open question, not a finding.
+- **Findings-not-edits**: the critic emits findings only, never a rewritten design.
+- **Author-vs-critic routing**: redesigning is a separate authoring job. Route it
+  to the author (or a fresh authoring pass); the reviewer never rewrites the
+  design inside the review.

@@ -27,6 +27,9 @@ Content plan: keyword universe with intent and difficulty, topic clusters mapped
 11. Programmatic pages must pass quality gates before scale: unique data source, template-variation minimums, standalone-value test per page, scaled-content-abuse guard; roll out in limited batches.
 12. Comparison intent gets its own archetypes: X-vs-Y, alternatives-to-X, and best-category roundups with a feature matrix, ItemList/SoftwareApplication schema where fitting, and fairness-checked claims (accurate, dated, no invented weaknesses).
 13. Brief every landing-intent piece with the one primary action, the offer, top-3 objections, and the proof inventory (logos, numbers, demo assets) before drafting (keeper: mengto/landing-page).
+14. Prose rules for every brief and reviewed draft: ban `easy` / `simple` / `quick` (replace with the concrete fact: "one command", "default settings") and cut filler (`very`, `just`, `really`); page headings in sentence case with descriptive subheadings (reader guesses section content from the heading alone); every page opens with a one-paragraph TL;DR and every major section with a summary sentence; keep paragraphs to 2–4 sentences on one idea.
+15. Numbers over adjectives: replace weasel words (`significantly`, `many`, `often`, `typically`) with a specific cited figure; no vague quantifiers (`near-zero`, `sub-second`, `most requests`) without the figure and its source — quotable stat-blocks are what AI engines cite.
+16. First-use definitions: spell out every acronym on first use and define every term the first time it appears (link to its conceptual page); active voice with direct `you` address; imperative for steps.
 
 ## Quality gate
 
@@ -40,6 +43,9 @@ Content plan: keyword universe with intent and difficulty, topic clusters mapped
 - [ ] Programmatic batch passes quality gates (unique data, variation minimums, standalone value, abuse guard) with batch rollout limits.
 - [ ] Every brief names its information gain (angle/datum/example beyond SERP consensus).
 - [ ] Drafts scored 1–10 on depth, E-E-A-T, readability, and keyword fit with fixes listed (keeper: wshobson/seo-content-creation).
+- [ ] No banned words (`easy` / `simple` / `quick`) or filler (`very` / `just` / `really`) in briefs or reviewed drafts.
+- [ ] Headings sentence case and descriptive; page opens with a TL;DR, sections with summary sentences.
+- [ ] Every quantitative claim carries a specific cited figure, not a weasel word or vague quantifier.
 
 ## Routing
 
@@ -47,4 +53,10 @@ Content plan: keyword universe with intent and difficulty, topic clusters mapped
 
 ## Sources
 
-Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+- `vercel-labs/agent-skills` (`skills/writing-guidelines/SKILL.md` →
+  `vercel-labs/writing-guidelines`, `command.md`) — 80+ prose rules;
+  voice/structure rules above (banned words, sentence case, TL;DR open,
+  concision-with-figures, first-use definitions). Code-sample limits,
+  placeholder/unit formats, and AI-workflow disclosure from the same
+  source enrich `updatedocs` instead (sample hygiene + audit checklist).
+- Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

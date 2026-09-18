@@ -152,14 +152,17 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
 
 ### 📦 Mode B: Outbound Subagent Dispatch Procedure
 
+0. **Triage + approval gate** (source: `obra/superpowers`, `skills/brainstorming/SKILL.md`): map the task to one path — spike (throwaway probe), bounded (fixed scope), or architectural (multi-session design) — announce it aloud, then ratchet one way only (spike → bounded → architectural; never downgrade). On every path, get explicit human approval before ANY code is written or dispatched; a dispatch prompt without that approval is a procedure failure.
 1. **Extract Operational Facts**:
    - **Objective**: Exact 1-sentence goal starting with an imperative verb.
    - **Decisions Made**: Irreversible choices not to be re-litigated.
    - **Ruled-Out Paths**: Approaches tried and eliminated with failure reasons.
    - **Target Scope**: Exact files to touch.
    - **Hard Constraints**: Forbidden files, libraries, or credentials (`MUST NOT`).
-   - **Deterministic Verification**: Exact test or build command.
-   - **If Blocked**: Escalation fallback.
+    - **Deterministic Verification**: Exact test or build command.
+    - **Interfaces** (source: `obra/superpowers`, `skills/writing-plans/SKILL.md`): every file in Target Scope gets a consumes/produces line — what it reads, what it returns or changes. Unlisted coupling is out of scope.
+    - **No placeholders** (same source): `TBD`, "appropriate handling", and "etc." fail the packet — every section carries exact paths, verbatim code, or a concrete command.
+    - **If Blocked**: Escalation fallback.
 2. **Write Handoff Packet** to `.agents/artifacts/handoff-<timestamp>.md` (structure in [README](README.md#-packet-structure) and worked example in [examples/sample-handoff.md](examples/sample-handoff.md)).
 3. **Lease hand-off to workers** (shared checkouts): if the packet's Target Scope includes git mutations (branch switches, stashes, commits to shared surfaces), embed the worktree-lease instruction in the dispatch prompt — the worker probes `.agents/artifacts/WORKTREE-LEASE.md` before its first git mutation and inherits or acquires per the lease protocol (`coupling-router` Step 0). Never dispatch two workers whose scopes overlap on one checkout.
 4. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
@@ -171,6 +174,10 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
 Before dispatching, map the incoming task to the **combination of existing modes/references** — not a single one — that should act on it in parallel. Decide per sub-task which of relay's own modes (Resume/Dispatch/Ambient) plus which other skills' references each worker runs, and whether the outputs are independent (parallel) or ordered (sequential pipeline). Record the mapping in the packet's Target Scope so workers never re-derive it.
 
 Optional auto-trigger config: where the runtime supports it, document a project-level config (e.g. `.agents/relay-config.yaml`) that maps trigger keywords → the resolved mode/reference combination, so the same choreography fires without re-deciding each time. Tool-independent — it's a contract, not a tool. Skip the config unless a project runs the same handoff pattern frequently.
+
+### 🗺️ Decision map: multi-session handoff artifact
+
+For work spanning sessions, attach a wayfinder map to the timestamped packet (source: `mattpocock/skills`, `skills/wayfinder/SKILL.md` via abubakar collection) — five lines, refreshed per session: Destination (one-line goal) · Notes (live context) · Decisions (made, not re-litigated) · Not-yet-specified (fog) · Out-of-scope (never touch). Fog-of-war graduation rule: ticket the sharp edges only (research / prototype / task, each marked HITL vs AFK), leave fog as fog — never ticket what is not yet specified. One ticket per session; refer to decisions by name.
 
 ### 🌊 Mode C: Ambient Continuity Procedure
 
@@ -220,6 +227,7 @@ Handoff integrates with whatever memory system the runtime provides (e.g. museme
 - **Journal Bloat**: HANDOFF.md is a pointer, not a diary. If it exceeds ~30 lines it has become a session log — prune or demote detail to a timestamped packet.
 - **Ladder Skipping**: Do not run deep analysis before the entry probe; the cheapest rung that yields state wins.
 - **Silent Cold Starts**: Never invent prior context when the ladder returns nothing — say "cold start" and move.
+- **Ticketing Fog**: Never write a ticket against a Not-yet-specified map item — fog graduates to tickets, never starts as one.
 
 ---
 
@@ -233,6 +241,9 @@ Handoff integrates with whatever memory system the runtime provides (e.g. museme
 - [ ] Resumption output stayed within the ≤5-line budget before the first productive action.
 - [ ] Memory integration used the runtime's tool API (or reported the durable fact) — `.memory/**` never touched by hand.
 - [ ] All 7 outbound packet sections are populated with zero placeholder text.
+- [ ] Mode B dispatch announced its triage path (spike / bounded / architectural) and carried explicit human approval before any code.
+- [ ] Outbound packet carries an Interfaces consumes/produces block covering every file in scope.
+- [ ] Multi-session work attached a decision map; fog items carry no tickets.
 - [ ] In shared checkouts, dispatched workers carry the worktree-lease instruction, and entry respected any active lease before mutating.
 
 ---

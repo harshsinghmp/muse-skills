@@ -1,8 +1,8 @@
 ---
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis"]
-description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, and competitor analysis — routed through five modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, or analyze competitors and the market. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor]"
+description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, and churn prevention — routed through seven modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, or reduce churn and drive renewals. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -44,6 +44,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **pricing** | "pricing", "pricing strategy", "how much to charge", "pricing tiers" | Pricing structure from value, willingness, and positioning | [references/pricing.md](references/pricing.md) |
 | **launch** | "launch plan", "go to market", "gtm", "product launch" | Go-to-market launch plan with sequencing and metrics | [references/launch.md](references/launch.md) |
 | **competitor** | "competitor analysis", "competitive landscape", "market analysis", "who else does this" | Competitor and market analysis with actionable gaps | [references/competitor.md](references/competitor.md) |
+| **referral** | "referral program", "affiliate program", "co-marketing", "refer a friend" | Referral/affiliate/co-marketing program design and partner-fit analysis | [references/referral.md](references/referral.md) |
+| **retention** | "churn", "reduce churn", "retention", "win back", "cancel flow", "dunning" | Churn prevention and renewal strategy (voluntary vs involuntary) | [references/retention.md](references/retention.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -78,8 +80,10 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 | 'What should we charge, and how?' | pricing |
 | 'How do we take this to market?' | launch |
 | 'What is everyone else doing?' | competitor |
+| 'How do we grow via referrals/partners?' | referral |
+| 'How do we keep what we won?' | retention |
 
-Order: competitor → positioning → funnels → pricing → launch. Know the landscape, choose the position, then build the path.
+Order: competitor → positioning → funnels → pricing → launch → referral → retention. Know the landscape, choose the position, build the path, then protect what you earn.
 
 ### Verification gate (every mode)
 

@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of 40 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, client communication, unified database operations, and Telegram messaging.**
+**A curated suite of 42 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, and Telegram messaging.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-40%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-42%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -158,7 +158,7 @@ npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
-# Agency Delivery (#23–#39)
+# Agency Delivery (#23–#42)
 npx skills add harshsinghmp/muse-skills --skill design
 npx skills add harshsinghmp/muse-skills --skill paidads
 npx skills add harshsinghmp/muse-skills --skill seo
@@ -328,13 +328,15 @@ flowchart TD
 | **#31** | [**`automation`**](automation/README.md) | **Agency Delivery** | `automate this process`, `build a chatbot`, `ai agent`, `rag`, `connect two apps` | `webdev`, `analytics`, `devops`, `new-project` | Automation and AI services department head with six modes: workflow, chatbot, agents, RAG, integrations, and prompt — least autonomy that solves the problem. |
 | **#32** | [**`devops`**](devops/README.md) | **Agency Delivery** | `deploy this`, `ci/cd pipeline`, `configure domain`, `harden security`, `monitoring`, `incident` | `git`, `webdev`, `automation`, `code-review` | Infrastructure and reliability department head with six modes: hosting, CI/CD, domains, security, monitoring, and incident response — reproducible, reversible changes. |
 | **#33** | [**`ops`**](ops/README.md) | **Agency Delivery** | `onboard a client`, `write a proposal`, `statement of work`, `track milestones`, `project retro` | `relay`, `context-anchor`, `secretary`, `evidence-ledger`, `git` | Agency operations department head with six modes: onboarding, proposal, SOW, milestone, retro, and multi-client — scope written, tracked, and change-controlled. |
-| **#34** | [**`growth`**](growth/README.md) | **Agency Delivery** | `positioning`, `funnel strategy`, `pricing strategy`, `product launch`, `competitor analysis` | `analytics`, `content`, `paidads`, `seo` | Strategy and scaling department head with five modes: positioning, funnels, pricing, launch, and competitor — choose the playing field, then make the bets measurable. |
+| **#34** | [**`growth`**](growth/README.md) | **Agency Delivery** | `positioning`, `funnel strategy`, `pricing strategy`, `product launch`, `competitor analysis`, `referral program`, `reduce churn` | `analytics`, `content`, `paidads`, `seo` | Strategy and scaling department head with seven modes: positioning, funnels, pricing, launch, competitor, referral, and retention — choose the playing field, make the bets measurable, then protect what you earn. |
 | **#35** | [**`qa-launch`**](qa-launch/README.md) | **Agency Delivery** | `QA before launch`, `release gate`, `browser coverage`, `regression check` | `webdev`, `mobile`, `refactor-ui`, `devops` | Pre-launch quality gate with four modes: matrix, functional, gate, and regression — Block-or-Ship verdict before every launch. |
 | **#36** | [**`client-comms`**](client-comms/README.md) | **Agency Delivery** | `client status update`, `change request`, `project handover`, `client feedback` | `ops`, `growth`, `analytics` | Client-facing communication with four modes: status, change, handover, and feedback — outward voice, internal machinery routed to ops. |
 | **#37** | [**`gtm`**](gtm/README.md) | **Agency Delivery** | `research accounts`, `score leads`, `cold email sequence`, `prospect list`, `sales handover` | `growth`, `content`, `ops`, `analytics` | Outbound GTM department head with five modes: research, score, outreach, list, and handover — build the pipeline, then hand sales a close-ready packet. |
 | **#38** | [**`incident-response`**](incident-response/README.md) | **Agency Delivery** | `production is down`, `stop the bleeding`, `status page update`, `postmortem` | `ops`, `qa-launch`, `client-comms`, `devops` | Live incident command with four modes: triage, mitigate, communicate, and retro — classify, stabilize, narrate, then learn without blame. |
 | **#39** | [**`database`**](database/README.md) | **Agency Delivery** | `run a query`, `slow query`, `design an index`, `RLS policy`, `connection pooling`, `vacuum tuning` | `webdev`, `devops`, `qa-launch` | Unified database department with five modes — query, diagnose, index, guard, and operate — across Postgres, MySQL, MSSQL, and SQLite: read-only execution with defense-in-depth safety, slow-query triage, index design, RLS verification, and production operations. The former postgres-perf-tuner modes are folded into this single database department. |
 | **#40** | [**`telegram`**](telegram/README.md) | **Agency Delivery** | `notify telegram`, `approval button`, `claude code hooks`, `event routing`, `bot setup` | `automation`, `coupling-router`, `sentry`, `user-onboarding` | Telegram messaging department with five modes — notify, approve, hook, route, and setup — pure-bash bot alerts, approval boards, Claude Code hooks, and Kafka-event routing via curl + jq. Zero pip installs. Config-file token management with mode-600 protection, multi-bot/multi-target routing, inline-button approval pauses, session-based hook registration. |
+| **#41** | [**`research`**](research/README.md) | **Agency Delivery** | `user research`, `interview users`, `market pulse`, `due diligence`, `competitor teardown` | `evidence-ledger`, `content`, `growth`, `analytics`, `client-comms` | Client research department head with three modes: user-research, market-pulse, and entity-dossier — method-matched user research, recency-windowed market briefing, and hypothesis-forced due-diligence dossiers, all cited and decision-ready. |
+| **#42** | [**`sales-enablement`**](sales-enablement/README.md) | **Agency Delivery** | `demo script`, `objection handling`, `sales playbook`, `one pager`, `sale enablement` | `growth`, `ops`, `gtm`, `content`, `client-comms` | Pre-sale sales enablement department head with four modes: demo, objection, one-pager, and playbook — the assets a client's sales team needs to win deals, grounded in real buyer objections. |
 
 ---
 
@@ -725,8 +727,8 @@ loaded only for the resolved mode). Add `--skill <name>` to any of the commands 
 - **`analytics`** (#30) — five modes: `tracking`, `dashboards`, `attribution`, `reporting`, `cro`. Decide the question, instrument cleanly, then optimize on evidence.
 - **`automation`** (#31) — six modes: `workflow`, `chatbot`, `agents`, `rag`, `integrations`, `prompt`. Deterministic where possible, AI where it earns its place.
 - **`devops`** (#32) — six modes: `hosting`, `cicd`, `domains`, `security`, `monitoring`, `incident`. Reproducible, reversible, observable changes; release workflows route to `git`.
-- **`ops`** (#33) — six modes: `onboarding`, `proposal`, `sow`, `milestone`, `retro`, `multi-client`. Scope written, tracked, and change-controlled; composes on `handoff`, `context-anchor`, `secretary`, and `evidence-ledger`.
-- **`growth`** (#34) — five modes: `positioning`, `funnels`, `pricing`, `launch`, `competitor`. Choose the playing field, then make every bet measurable.
+- **`ops`** (#33) — seven modes: `onboarding`, `proposal`, `sow`, `milestone`, `retro`, `multi-client`, `vendor`. Scope written, tracked, change-controlled, and vendor-aware; composes on `handoff`, `context-anchor`, `secretary`, and `evidence-ledger`.
+- **`growth`** (#34) — seven modes: `positioning`, `funnels`, `pricing`, `launch`, `competitor`, `referral`, `retention`. Choose the playing field, make every bet measurable, then protect what you earn.
 - **`qa-launch`** (#35) — four modes: `matrix`, `functional`, `gate`, `regression`. Plan the coverage, walk the critical paths, gate the release, re-verify the fixes.
 - **`client-comms`** (#36) — four modes: `status`, `change`, `handover`, `feedback`. Client language outward, routed machinery inward.
 - **`database`** (#39) — five modes: `query`, `diagnose`, `index`, `guard`, `operate`. Run a read-only query, explore a schema, triage a slow query, design an index, author an RLS policy, or tune production — across Postgres, MySQL, MSSQL, and SQLite.
@@ -1105,6 +1107,19 @@ muse-skills/
 │   └── SKILL.md
 │
 ├── gtm/                            # Outbound GTM department head (5 modes: research, score, outreach, list, handover)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── research/                       # Client research department head (3 modes: user-research, market-pulse, entity-dossier)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   ├── scripts/sample-size.ts      # sample-size / saturation helpers (pure math)
+│   └── SKILL.md
+│
+├── sales-enablement/               # Pre-sale sales enablement department head (4 modes: demo, objection, one-pager, playbook)
 │   ├── agents/openai.yaml
 │   ├── references/                 # one playbook per mode
 │   ├── README.md

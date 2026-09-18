@@ -109,6 +109,22 @@ html:active-view-transition { pointer-events: none; } /* block clicks mid-transi
 
 Cross-document (MPA): `@view-transition { navigation: auto; }` on BOTH pages; `window.addEventListener("pageswap"|"pagereveal", e => e.viewTransition?.types.add("forward"))` adjusts types on source/destination. Anti-pattern: giving `view-transition-name` to a large container captures it as a snapshot copied every frame — name small leaf elements only.
 
+### React declarative layer (`<ViewTransition>`, React 19 / Next.js App Router)
+
+Declare *what* with `<ViewTransition>`, trigger *when* with `startTransition` / `useDeferredValue` / `Suspense`, style *how* with CSS classes. Never call `document.startViewTransition` yourself; copy/adapt the CSS recipes, never author curves from memory. Source: `vercel-labs/agent-skills` (`skills/react-view-transitions/SKILL.md`).
+
+```jsx
+import { ViewTransition } from 'react';
+{show && (<ViewTransition enter="fade-in" exit="fade-out"><Panel /></ViewTransition>)}
+{items.map(item => (<ViewTransition key={item.id}><ItemCard item={item} /></ViewTransition>))}
+<ViewTransition name={`photo-${id}`} share="morph"><img src={thumb} /></ViewTransition>
+```
+
+- Implement every applicable pattern, in this order: **shared element** (`name`, "same thing — going deeper") → **Suspense reveal** → **list identity** (per-item `key`) → **enter/exit** → **route change**. Skip a pattern only if the app has no use case for it.
+- Triggers only: plain `setState` does not animate. `<ViewTransition>` must appear **before any DOM nodes** — a wrapping `<div>` suppresses enter/exit. One mounted VT per `name` (unique names like `photo-${id}`); `share` beats `enter`/`exit`, so plan the fallback path where no pair forms.
+- Directional slides (`nav-forward`/`nav-back` via `addTransitionType` or `transitionTypes` on `next/link`) are for hierarchical/ordered navigation only — lateral tab-to-tab stays a bare fade or `default="none"`.
+- Reduced-motion gate: `default="none"` on named/type-keyed VTs (bare VTs for list-identity/displaced siblings keep `update`), plus the global reduced-motion CSS in `accessibility.md` — ships with the animation, never as follow-up.
+
 ### Cover/overlay page transition (awwwards curtain)
 
 A full-screen overlay that scales up/down as a curtain between routes — no JS beyond flipping a `data-active` attribute:

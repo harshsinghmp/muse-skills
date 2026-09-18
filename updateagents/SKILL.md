@@ -172,6 +172,10 @@ Update the smallest correct scope (root instructions vs package instructions). D
 ### Step 7 — Preserve Existing Knowledge
 Preserve valid human-authored content, architectural decisions, project-specific constraints, and meaningful warnings. Remove obsolete guidance only when obsolescence is confirmed.
 
+Glossary sparring (source: lane D #5 — pocock grill-with-docs/domain-modeling): challenge fuzzy terms inline while syncing — sharpen vague language, cross-reference each term to code, update CONTEXT.md as-you-go.
+ADR offer filter — propose an ADR only when all three hold (hard-to-reverse + surprising + real-tradeoff), else skip.
+Lazy file creation: never scaffold context files speculatively; create only on confirmed agent need.
+
 ### Step 8 — Check Existing Agent Files & Scaffolding Gate
 1. Check if any agent engine files exist (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.agents/`, etc.).
 2. **If NONE Found**:
