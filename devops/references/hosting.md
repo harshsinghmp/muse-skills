@@ -20,6 +20,7 @@ A deployed app: chosen host with rationale, build/deploy configuration as code, 
 5. Enable TLS and a CDN where appropriate.
 6. Verify the live deployment (load the URL, check logs, run a smoke test).
 7. Document the rollback command and test it once.
+8. Provision the hosting itself as infrastructure-as-code (Terraform/CDK/CloudFormation) rather than one-off console clicks wherever the target supports it — the infra, not just the app, must be reproducible so another engineer can rebuild the environment from a PR, not a person's memory.
 
 ## Quality gate
 

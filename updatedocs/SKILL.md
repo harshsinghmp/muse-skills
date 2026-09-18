@@ -817,6 +817,7 @@ For renames, removals, migrations, or deprecations, search for old filenames, ol
 ### Step 14 — Verify Examples and Commands
 - **Commands**: Check against package scripts, CLI definitions, Makefiles, CI commands.
 - **Code examples**: Check imports, paths, symbols, APIs, framework conventions.
+- **Sample hygiene** (source: `vercel-labs/writing-guidelines`, `command.md`): every code block carries a language tag; snippets stay ≤80 columns and ≤25 lines (split longer blocks with prose); explain what each block does in prose — never drop-and-run, never close a guide with "see full `train.py`"; text placeholders use descriptive `snake_case` (`your_access_token_here`, never `<TOKEN>` / `xxx`); data sizes read `64 KB` / `200 ms` (bare `30s` for seconds); anchor text names the destination, never `here` or a bare URL.
 - **API examples**: Check against schemas, routes, response definitions.
 - **Config examples**: Check against loaders, schemas, defaults.
 - Never claim a command was executed unless actually run. Never claim an example was tested unless actually tested.

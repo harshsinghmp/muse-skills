@@ -21,6 +21,24 @@ Performance report: measured baselines, bottleneck diagnosis with evidence, fixe
 5. Watch field data over 28 days for the real verdict.
 6. Document the budget going forward (weight/size thresholds per template).
 
+## Rule oracle + metrics-first audit
+
+- Prefixed rule oracle (React/Next.js): 70 rules across 8 impact-ranked categories — apply critical first, never cherry-pick low-impact micro-optimizations while a waterfall or bundle problem is unmeasured. Source: `vercel-labs/agent-skills` (`skills/react-best-practices/SKILL.md`; full compiled guide in its `AGENTS.md`; each `rules/<prefix>-<name>.md` carries why + bad + good).
+
+| Priority | Category | Impact | Prefix |
+|:---|:---|:---|:---|
+| 1 | Eliminating waterfalls | CRITICAL | `async-` |
+| 2 | Bundle size optimization | CRITICAL | `bundle-` |
+| 3 | Server-side performance | HIGH | `server-` |
+| 4 | Client-side data fetching | MEDIUM-HIGH | `client-` |
+| 5 | Re-render optimization | MEDIUM | `rerender-` |
+| 6 | Rendering performance | MEDIUM | `rendering-` |
+| 7 | JavaScript micro-optimizations | LOW-MEDIUM | `js-` |
+| 8 | Advanced patterns | LOW | `advanced-` |
+
+- Headline rules to check first: `async-` parallelize independent work (`Promise.all`), defer `await` into branches, stream with Suspense boundaries; `bundle-` import directly (no barrels), `next/dynamic` heavy components, defer third-party past hydration; `server-` dedupe per-request (`React.cache`), hoist static I/O, minimize client-bound serialization.
+- Metrics-first audit (platform/hosting cost + perf): collect platform metrics FIRST (usage, route-level timings, cache-hit, function invocations — or CrUX/RUM equivalent where the platform exposes none), then investigate ONLY the flagged routes/files the metrics point to — never repo-wide grep. Deliver a ranked cost+perf report grounded in observed numbers and verified files, naming a specific cache policy per caching recommendation; keep unsafe responses dynamic unless evidence proves them cache-safe. Source: `vercel-labs/agent-skills` (`skills/vercel-optimize/SKILL.md`).
+
 ## Quality gate
 
 - [ ] Baseline existed before fixes, including the slowest supported device/network extreme.

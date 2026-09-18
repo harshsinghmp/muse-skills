@@ -1029,7 +1029,7 @@
     },
     {
       "name": "ops",
-      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, and multi-client portfolio management \u2014 routed through six modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, or manage across multiple client engagements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, and vendor management \u2014 routed through seven modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, or manage vendors and subcontractors. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
       "path": "ops/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1057,7 +1057,7 @@
     },
     {
       "name": "growth",
-      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, and competitor analysis \u2014 routed through five modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, or analyze competitors and the market. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
+      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, and churn prevention \u2014 routed through seven modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, or reduce churn and drive renewals. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
       "path": "growth/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1265,6 +1265,36 @@
       "suggested_skills": ["automation", "coupling-router", "sentry", "user-onboarding"],
       "aliases": ["tg", "telegram-bot", "telegram-skill", "telegram-notify"],
       "scope": "local"
+    },
+    {
+      "name": "research",
+      "description": "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers \u2014 routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics).",
+      "path": "research/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 41,
+      "scope": "local",
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": [
+        "research",
+        "user-research",
+        "market-pulse",
+        "entity-dossier",
+        "market-sizing",
+        "competitive-intel",
+        "due-diligence"
+      ]
+    },
+    {
+      "name": "sales-enablement",
+      "description": "Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks \u2014 routed through four modes. Use when asked to write a sales demo script, draft objection-handling answers, build a one-pager or leave-behind, or assemble a sales playbook for a client's sales team. Not for proposals or deal terms (ops), outbound pipeline (gtm), or marketing content (content).",
+      "path": "sales-enablement/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 42,
+      "scope": "local",
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": ["sales", "sales-enablement", "demo", "objection-handling", "one-pager", "playbook", "pitch", "closing"]
     }
   ],
   "categories": [

@@ -36,6 +36,8 @@ Implemented, tested components/pages following repo conventions, with states (lo
 ## Routing
 
 - State ladder: local → lifted (2–3 siblings) → URL (filters/pagination) → server cache → global store; never drill props past 3 levels; split data containers from presentational renders; composition over config props.
+- Composition patterns (boolean-prop ban): a third boolean prop on one component is the signal to refactor, not to add a fourth — use compound components (shared context, consumers compose exactly the pieces they need), lift shared state into a provider so siblings access it without prop drilling (never sync up via `useEffect`, never read state out of a ref on submit), create explicit variant components instead of boolean modes, and prefer `children` over `renderX` props. Source: `vercel-labs/agent-skills` (`skills/composition-patterns/SKILL.md`, `rules/architecture-compound-components.md`, `rules/state-lift-state.md`, `rules/patterns-explicit-variants.md`).
+- React 19 delta (19+ ONLY — skip on 18 or earlier): `ref` is a regular prop (no `forwardRef` wrapper), `use()` replaces `useContext()` and may be called conditionally. Source: `vercel-labs/agent-skills` (`skills/composition-patterns/rules/react19-no-forwardref.md`).
 - Perceived quality: skeletons over spinners for content, optimistic updates with a rollback path, realistic content over lorem; native focusables over div-clicks, move/trap focus on content change, label icon-only controls.
 - Design judgments route to `design`/`refactor-ui`; motion/canvas discipline routes to `animate`.
 

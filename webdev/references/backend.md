@@ -30,6 +30,9 @@ Working API endpoints / schema changes with validation at boundaries, auth enfor
 
 ## Routing
 
+- Python path (uv default-stack): `uv init/add/sync/lock/run`, `uv python pin/install`, venv-per-project, `uv run` with no manual activate; Docker layer-cache friendly. Dist via src-layout (`src/` + `[tool.setuptools.packages.find] where=["src"]`), PEP 517/518/621/660, backend choice (setuptools/hatchling/flit); TestPyPI before PyPI. Source: `wshobson/agents` (`uv-package-manager`, `python-packaging`).
+- Async gate + pitfalls: stay fully sync-or-async per call path (sync-vs-async table: asyncio vs multiprocessing vs `to_thread`); `gather(return_exceptions=True)` + filter, `wait_for` timeout, never `time.sleep` in loop, re-raise CancelledError. Source: `wshobson/agents` (`async-python-patterns`).
+- Python perf ladder: profile-before-optimize (cProfile/py-spy/timeit), hot-path focus, `lru_cache`, generators for large sets, builtin-C preference. Source: `wshobson/agents` (`python-performance-optimization`).
 - Bounded reads: paginate every list endpoint (page/pageSize + totals); join/include instead of N+1 loops; treat third-party responses as untrusted and validate at the boundary.
 - Idempotency: key from client/intent (never a per-attempt UUID/timestamp); claim via unique constraint (check-then-act is a race); reject same-key-different-payload loudly; record intent before side effects (timeout = unknown, not failure); retention outlives the longest retry chain including DLQ replays.
 - Types: discriminated unions for variants, branded IDs, separate input/output shapes; extend by addition (optional fields) never modification; breaking changes route to `webdev` migrations (expand→contract).

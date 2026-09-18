@@ -152,6 +152,8 @@ Before any dispatch, evaluate the routing plan itself against five checks. A pla
 
 The primary verdict is spec alignment: a plan missing spec alignment is rejected as primary, before the other checks are even consulted.
 
+**Sizing + checkpoint gate** (source: `addyosmani/agent-skills` `planning-and-task-breakdown`): size every task XS (1 file) / S (1–2) / M (3–5) / L (5–8) / XL (8+ = split further); split on "and" in title or >3 acceptance criteria; dependency-graph-first ordering (foundations first); checkpoint every 2–3 tasks (tests pass, build clean, review before proceeding).
+
 **Multi-perspective review (plans with ≥5 tasks):** a large plan is reviewed through more than one lens before dispatch — at minimum three, in sequence: (1) **spec/devil's-advocate lens** — does each task trace to the spec, and what premise could invalidate it; (2) **coupling lens** — write-overlap matrix, interface locks, wave structure (the checks of Steps 3–4); (3) **failure lens** — for each wave, what happens when it fails: recovery owner, dead-letter route, dependent-skip policy. Findings from each lens are recorded against the plan; unresolved findings reject the plan. Single-lens review is acceptable only below 5 tasks.
 
 ### Step 3 — Dependency & Artifact Overlap Audit

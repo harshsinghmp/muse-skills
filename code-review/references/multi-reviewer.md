@@ -50,6 +50,16 @@ The same root cause reported by N passes is ONE finding, not N.
 Single verdict + ordered findings (calibrated severity) + dedup count.
 Call out where independent passes disagreed and how the disagreement resolved.
 
+### 5. Noise gate + weighed verdict → one `gh` review (source: `tech-leads-club-the-judge`)
+- **Noise gate first**: drop findings with no demonstrating execution and
+  low-confidence nits naming no defect — deterministically, before calibration.
+- **Weighed verdict**: weigh the calibrated findings into one verdict —
+  any Reject / Request-Changes → `REQUEST_CHANGES`; clean (3+ satisfied
+  principles named) → `APPROVE`; discussion-only → `COMMENT`.
+- **One consolidated post**: emit the report as a single
+  `gh pr review <pr> --{approve|comment|request-changes}` with inline comments —
+  never N separate reviews, one per pass.
+
 ## Output shape
 ```
 # Consolidated review (N passes → 1 report)

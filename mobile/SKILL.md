@@ -44,7 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **cross** | "react native", "expo app", "flutter app", "cross-platform mobile" | Expo (React Native) or Flutter cross-platform build | [references/cross.md](references/cross.md) |
 | **pwa** | "pwa", "make it installable", "offline web app" | Installable, offline-capable progressive web app | [references/pwa.md](references/pwa.md) |
 | **aso** | "app store optimization", "aso", "store ranking", "more app installs" | App Store Optimization: keywords, listing, ratings loop, review responses | [references/aso.md](references/aso.md) |
-| **audit** | "audit the app", "store audit", "launch audit", "compliance audit" | App Store audit (keywords, listing, ratings, screenshots, compliance check) | [references/audit.md](references/audit.md) |
+| **audit** | "audit the app", "store audit", "launch audit", "compliance audit", "accessibility audit" | App Store audit (keywords, listing, ratings, screenshots, compliance check) + mobile a11y audit (labels/roles/hints, touch targets, screen-reader flow) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

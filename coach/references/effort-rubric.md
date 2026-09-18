@@ -6,6 +6,10 @@
    - 2 pts: Every feature and bugfix started with a failing test; watched fail before green.
    - 1 pt: Tests written after implementation or some edge cases untested.
    - 0 pts: Shipped unverified code without automated tests.
+   - Seam-gate overrides (source: `mattpocock/skills` `tdd`, lane-d-abubakar.md #3):
+     unconfirmed seam = 0 pts for cycle; horizontal bulk = max 1 pt;
+     any anti-pattern (implementation-coupled, tautological, horizontal slicing) = max 1 pt, two+ = 0 pts.
+   - Full gate + vertical-slice rule: SKILL.md Step 2 TDD Seam Gate.
 
 2. **Diff Discipline (0–2 pts)**:
    - 2 pts: Diffs strictly atomic; no scope creep or gratuitous refactoring.

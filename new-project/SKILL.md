@@ -130,6 +130,8 @@ The provisioner never guesses the project domain from ambient files. It prompts:
 ```
 Gathers project name, tagline, author/organization, target audience, core problem, features, industry vertical, and catalog offerings.
 
+**Stage 1 interview discipline** (source: `addyosmani/agent-skills` `interview-me`): ask one question at a time in `Q:` / `GUESS:` format (guess attaches hypothesis + reasoning, wait for reaction before next question); gate on explicit-yes only — "whatever you think" / "sounds good" ≠ yes, re-ask with two concrete options; stop test — stop when you can predict user's reaction to next 3 questions, restate Outcome/User/Why-now/Success/Constraint/Out-of-scope + get explicit yes before Stage 2.
+
 ### Stage 2: Hierarchical Decision Tree & Interactive Tradeoff Engine
 Each selection prunes irrelevant downstream choices while explicitly surfacing architectural tradeoffs (Lightweight vs. Full-Stack, Serverless vs. Local Container, Git-based vs. Embedded DB) so the user is in full control without opaque defaults or mystery breaks:
 - **Branch A (Static Website / Landing Page)**: Pure HTML/CSS (Zero build step, semantic BEM, OKLCH fluid design tokens) vs Instatic SSG vs Astro v7 vs Next.js SSG ➔ Hybrid UnoCSS Wind 4 vs Semantic BEM ➔ Hardware CSS animations vs Motion.dev. (Aria Builder is not an Astro add-on — selecting it provisions the isolated official scaffold instead of this branch's companions.)

@@ -2,9 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [4.3.0] - 2026-09-18
 
-_(nothing)_
+### Added
+
+- **Cross-supplier enrichments (vercel-labs, obra/superpowers, wshobson, mattpocock, addyosmani)** folded as enrich-only upgrades, zero new skills: `webdev` (prefixed rule oracle, composition patterns, metrics-first audit, python uv/packaging/async/perf path, test-authoring), `code-review` (TDD iron-law gate, root-cause rule, noise gate + weighed verdict, decay lens, design-soundness pass, finding shape, STRIDE→attack-tree→requirements→mitigation chain, Fowler smell fallback), `gauntlet-loop` (triage ratchet, fresh-worker + 5-round cap, sweep ladder, tech-debt sprint, second-model gate), `relay` (approval gate, packet schema, wayfinder decision map), `animate` (declarative layer + reduced-motion gate), `refactor-ui` (oracle gap-fill), `seo` (prose rules), `updatedocs` (sample hygiene), `pua` (red-capable debug discipline), `coach` (TDD seam gate), `updateagents` (glossary sparring + ADR 3-gate), `secretary` (tracer tickets + expand-contract), `devops` (SAST/FP-tuning, pipeline troubleshooting, burn-rate alerts), `ai-ready` (onboarding tour + layering pass), `mobile` (a11y checklist), `git` (clean-PR micro-step), `gtm` (metrics loop), `new-project` (interview discipline), `coupling-router` (sizing + checkpoints)
 
 ## [4.2.0] - 2026-09-17
 

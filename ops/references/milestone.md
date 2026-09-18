@@ -19,7 +19,8 @@ A milestone tracker: status per deliverable (owner, due date, state), a blocker 
 4. Route any out-of-scope request through a written change order (impact on time/cost).
 5. Keep a client-facing status summary current and honest.
 6. Archive completed milestones with evidence of acceptance.
-7. For public-release packaging, audit before publishing: block on secrets, private data, absolute local paths, and unlicensed assets; confirm visibility explicitly and read back post-push/post-deploy (keeper: mengto/publish-project-to-github).
+7. Forecast delivery like a date, not a hope: estimate remaining work in story points or equivalent effort, use rolling throughput (points completed per sprint/past N weeks), and give the client a range — best/expected/worst — not a single promise. Update the range each cadence as real velocity replaces the initial guess.
+8. For public-release packaging, audit before publishing: block on secrets, private data, absolute local paths, and unlicensed assets; confirm visibility explicitly and read back post-push/post-deploy (keeper: mengto/publish-project-to-github).
 
 ## Quality gate
 

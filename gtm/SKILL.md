@@ -83,6 +83,18 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 Order: research → score → list → outreach → handover. Know the accounts, rank them, clean the list, sequence, then hand over.
 
+### Metrics loop (post-handover measurement)
+
+Source: `tech-leads-club/agent-skills` `gtm-metrics` (orig `chadboyda/agent-gtm-skills`), raw SKILL.md fetched per lane-a-skillshub-remainder.md #13; enrich-only, no new skill or mode.
+
+Run this loop on the outbound the modes above produce; deep analysis stays in `analytics`.
+
+1. **Select 5–7 metrics max**: pipeline coverage (3–4x sales-led, 2–3x PLG), CAC payback (<8 mo), Magic Number (>0.75 efficient, >1.0 excellent, <0.5 red flag), NRR (>106% median, >120% best-in-class), TTFV (<15 min self-serve, <1 day sales-led), slippage (<15% weekly), speed-to-lead (<5 min).
+2. **Dashboard in three tiers**: board (5–7 metrics, monthly) → executive (10–12, weekly) → operator (15–25, daily). Every metric from system-of-record APIs — no hand-edited slides; every metric carries benchmark, target, or trend line.
+3. **Attribution**: match lookback to cycle (90d SMB, 180d mid-market, 365d enterprise); pre-revenue start first-touch, $1–5M U-shaped, $5–20M W-shaped; tag AI-SDR touches with `source=AI-SDR` so agent-led pipeline stays visible.
+4. **Weekly cadence (30–45 min)**: scorecard → pipeline movements → leading indicators → deals at risk → 2–3 owned actions → one rotating deep-dive. Maintain ~60% leading / 40% lagging indicators.
+5. **Data health gate**: score CRM completeness/accuracy/recency/consistency before trusting pipeline reports; below 70% = stop trusting reports, clean first (data decays ~2.1%/mo).
+
 ### Verification gate (every mode)
 
 - The ideal customer profile is stated before any account or lead is touched.
@@ -116,6 +128,7 @@ Order: research → score → list → outreach → handover. Know the accounts,
 - Dirty lists: duplicates, role-based addresses, and unverified emails.
 - Handover without context — sales re-researches everything, momentum dies.
 - Confusing sequencing (gtm) with copy craft (`content`) — fix timing first, words second.
+- Dashboard without trust — 50-metric screens, vanity metrics with no benchmark, or reports built on sub-70% data health.
 
 ---
 
@@ -127,3 +140,4 @@ Order: research → score → list → outreach → handover. Know the accounts,
 - [ ] Sequence states volumes, caps, spacing, and a breakup step.
 - [ ] List is deduplicated, verified, and enrichment-checked.
 - [ ] Handover packet carries context, history, and suggested next step.
+- [ ] Metrics loop closed: 5–7 metrics selected with targets, dashboard tiered from system-of-record data, attribution lookback stated, weekly review scheduled.
