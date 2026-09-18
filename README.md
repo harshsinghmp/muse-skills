@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of 40 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, client communication, unified database operations, and Telegram messaging.**
+**A curated suite of 41 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, launch QA, client communication, research, unified database operations, and Telegram messaging.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-40%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-41%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -158,7 +158,7 @@ npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
-# Agency Delivery (#23–#39)
+# Agency Delivery (#23–#41)
 npx skills add harshsinghmp/muse-skills --skill design
 npx skills add harshsinghmp/muse-skills --skill paidads
 npx skills add harshsinghmp/muse-skills --skill seo
@@ -335,6 +335,7 @@ flowchart TD
 | **#38** | [**`incident-response`**](incident-response/README.md) | **Agency Delivery** | `production is down`, `stop the bleeding`, `status page update`, `postmortem` | `ops`, `qa-launch`, `client-comms`, `devops` | Live incident command with four modes: triage, mitigate, communicate, and retro — classify, stabilize, narrate, then learn without blame. |
 | **#39** | [**`database`**](database/README.md) | **Agency Delivery** | `run a query`, `slow query`, `design an index`, `RLS policy`, `connection pooling`, `vacuum tuning` | `webdev`, `devops`, `qa-launch` | Unified database department with five modes — query, diagnose, index, guard, and operate — across Postgres, MySQL, MSSQL, and SQLite: read-only execution with defense-in-depth safety, slow-query triage, index design, RLS verification, and production operations. The former postgres-perf-tuner modes are folded into this single database department. |
 | **#40** | [**`telegram`**](telegram/README.md) | **Agency Delivery** | `notify telegram`, `approval button`, `claude code hooks`, `event routing`, `bot setup` | `automation`, `coupling-router`, `sentry`, `user-onboarding` | Telegram messaging department with five modes — notify, approve, hook, route, and setup — pure-bash bot alerts, approval boards, Claude Code hooks, and Kafka-event routing via curl + jq. Zero pip installs. Config-file token management with mode-600 protection, multi-bot/multi-target routing, inline-button approval pauses, session-based hook registration. |
+| **#41** | [**`research`**](research/README.md) | **Agency Delivery** | `user research`, `interview users`, `market pulse`, `due diligence`, `competitor teardown` | `evidence-ledger`, `content`, `growth`, `analytics`, `client-comms` | Client research department head with three modes: user-research, market-pulse, and entity-dossier — method-matched user research, recency-windowed market briefing, and hypothesis-forced due-diligence dossiers, all cited and decision-ready. |
 
 ---
 
@@ -1108,6 +1109,13 @@ muse-skills/
 │   ├── agents/openai.yaml
 │   ├── references/                 # one playbook per mode
 │   ├── README.md
+│   └── SKILL.md
+│
+├── research/                       # Client research department head (3 modes: user-research, market-pulse, entity-dossier)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   ├── scripts/sample-size.ts      # sample-size / saturation helpers (pure math)
 │   └── SKILL.md
 │
 ├── .agents/

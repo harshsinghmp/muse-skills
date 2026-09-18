@@ -1,8 +1,8 @@
 ---
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management"]
-description: "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, and multi-client portfolio management — routed through six modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, or manage across multiple client engagements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
-argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client]"
+description: "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, and vendor management — routed through seven modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, or manage vendors and subcontractors. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **milestone** | "track milestones", "scope creep", "project tracking", "delivery status" | Milestone and scope tracking with change control | [references/milestone.md](references/milestone.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
+| **vendor** | "vendor", "subcontractor", "freelancer management", "procurement", "tooling spend", "manage vendors" | Vendor/subcontractor scorecard, spend control, and tooling consolidation | [references/vendor.md](references/vendor.md) |
 | **audit** | "audit ops", "process audit", "documentation audit", "milestone audit" | Process audit (proposals, SOWs, milestones) + documentation audit (cross-refs resolve) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

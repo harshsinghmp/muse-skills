@@ -1029,7 +1029,7 @@
     },
     {
       "name": "ops",
-      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, and multi-client portfolio management \u2014 routed through six modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, or manage across multiple client engagements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, and vendor management \u2014 routed through seven modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, or manage vendors and subcontractors. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
       "path": "ops/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1265,6 +1265,25 @@
       "suggested_skills": ["automation", "coupling-router", "sentry", "user-onboarding"],
       "aliases": ["tg", "telegram-bot", "telegram-skill", "telegram-notify"],
       "scope": "local"
+    },
+    {
+      "name": "research",
+      "description": "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers \u2014 routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics).",
+      "path": "research/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 41,
+      "scope": "local",
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": [
+        "research",
+        "user-research",
+        "market-pulse",
+        "entity-dossier",
+        "market-sizing",
+        "competitive-intel",
+        "due-diligence"
+      ]
     }
   ],
   "categories": [

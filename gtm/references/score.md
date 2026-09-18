@@ -20,10 +20,12 @@ A ranked lead list with scores, the scoring rubric, TAM/SAM sizing, and signal l
 5. Cut the list: A-tier goes to outreach now, B-tier to nurture, C-tier parked with a revisit date.
 6. Score through one pain lens: ask what pain the offer solves and read all signals through it; signals are evidence, not customer-facing knobs.
 7. Surface the coverage gap (key accounts with no signal data) as an import shortlist, and rescore tiers as new signals land.
+8. Size TAM/SAM/SOM both directions and reconcile: top-down (addressable × ICP reach) AND bottoms-up (segment counts × average deal value × capture rate); a single un-sourced number is a claim, not a size. State the arithmetic and populations behind each direction and flag where they diverge before committing a number.
 
 ## Quality gate
 
 - [ ] TAM/SAM sized and dated before scoring.
+- [ ] Market size triangulated top-down AND bottoms-up, arithmetic stated, divergence flagged.
 - [ ] Rubric stated with fit plus intent weights.
 - [ ] Every score traces to signals, none to gut.
 - [ ] Tiers mapped to a next action with owners.
