@@ -26,6 +26,9 @@ A positioning statement: target segment, category frame, key differentiator, and
 11. Write proof points with observed numbers only — never invent metrics, savings, or percentages; ban hype adjectives (seamless, robust, cutting-edge, world-class) in favor of plain words.
 12. Capture customer language before drafting: short interview (who they are, offer, proof) plus 3–5 of their own writing samples — positioning in their words, not yours.
 13. Elicit before drafting: ask clarifying questions one at a time — purpose, constraints, success criteria — and stop at the answers that matter; no draft line until the segment's success metric is named.
+14. Research in 3 modes before writing (source: marketingskills `customer-research` SKILL.md): analyze assets → mine signal (watering-hole sources with per-source extract targets) → go-ask; synthesize themes ranked by frequency × intensity; use the no-review persona fallback when reviews are thin; ship personas with anti-patterns checked and deliverables in the format the decision needs.
+15. Borrow pressure-tested psychology deliberately (source: marketingskills `marketing-psychology` SKILL.md, 60+ models in 6 groups, each with an ethical note): route the challenge to the model — low conversion → Hick/Fogg/friction; price resistance → anchoring/framing; urgency → scarcity/Zeigarnik; retention → endowment/switching-costs; onboarding → goal-gradient/IKEA/commitment — and state the ethical line for each use.
+16. Hold shared context in one versioned doc (source: marketingskills `product-marketing` SKILL.md; SEAM-3 closure candidate): 12-section capture (JTBD four-forces, verbatim customer language, anti-persona), auto-draftable from the codebase, version bump + changelog entry per substantive edit — every downstream mode reads it before drafting.
 
 ## Quality gate
 
@@ -36,7 +39,8 @@ A positioning statement: target segment, category frame, key differentiator, and
 - [ ] Validation test and metric defined.
 - [ ] PMF bar cleared (≥40% very-disappointed) before messaging refinement.
 - [ ] Top-2 personas narrowness-tested; 3 differentiated angles per persona with a starter pick.
-- [ ] Proof points carry observed numbers; no hype adjectives.
+ - [ ] Proof points carry observed numbers; no hype adjectives.
+ - [ ] Research run in 3 modes with frequency×intensity synthesis; psych models routed by challenge with ethical lines; shared context doc versioned and read before drafting.
 - [ ] Success metric named before any draft line written.
 
 ## Routing

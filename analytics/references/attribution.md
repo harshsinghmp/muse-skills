@@ -25,6 +25,7 @@ An attribution analysis: channel/touchpoint contribution under the chosen model(
 9. Validate causal impact with an incrementality holdout before locking budget shifts.
 10. Triangulate with self-reported attribution ("How did you hear about us?" at conversion) — the out-of-model check for dark social and word-of-mouth tracking cannot see.
 11. Fix one system as the conversion count of record (usually CRM/backend); never sum platform-reported numbers — de-dupe claimants against the record. Split branded vs non-branded search before judging top-of-funnel.
+12. Harden the first-party build track (source: marketingskills `attribution` Pillar B SKILL.md; Pillar A models/MTA/MMM/incrementality already covered above): audit the identify() gap first; stitch third-party-domain journeys with a capture-phase link decorator that smuggles the anon distinct_id via metadata passthrough, then fires a $identify merge plus the conversion event on webhook; fail closed on anonymity (reject @-style IDs); hold a referrer-exclusion list (OAuth/checkout/self/localhost); keep one single-project cookie across subdomains; write source + confidence + basis back to the CRM with Paid-vs-Organic split and account roll-up.
 
 ## Quality gate
 
@@ -35,7 +36,8 @@ An attribution analysis: channel/touchpoint contribution under the chosen model(
 - [ ] Recommendation is actionable.
 - [ ] Lookback at 1.5-2x cycle (click/view separate), re-evaluated quarterly.
 - [ ] Causal claim backed by holdout, not model output alone.
-- [ ] Self-reported input collected at conversion; one count-of-record fixed, platforms de-duped against it; branded/non-branded split.
+ - [ ] Self-reported input collected at conversion; one count-of-record fixed, platforms de-duped against it; branded/non-branded split.
+ - [ ] First-party track hardened (identify-gap audited, cross-domain stitch via decorator+$identify merge, anonymity fail-closed, exclusions + single cookie, CRM write-back with confidence).
 
 ## Routing
 

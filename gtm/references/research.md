@@ -13,13 +13,14 @@ Sourced account and lead briefs: firmographics, key people, trigger events, fit 
 
 ## Procedure
 
-1. Lock the ICP in one paragraph; record it as an assumption if inferred.
-2. Research each account spine-first: firmographics, tech context, recent trigger events, decision-makers with titles.
-3. Score fit per account against the ICP before writing a word of outreach.
-4. Mark every unverified field as an assumption with a verification path.
-5. File briefs where sales expects them (Twenty CRM records, else markdown).
-6. Frame net-new searches as Trait–Activity–Qualifier (company kind, current motion as timing layer, must-haves); reuse existing coverage on a query-plus-ICP close match instead of redeploying.
-7. In enterprises, attribute each signal to the owning team (e.g. hiring-post team names), not just the account.
+1. Lock the ICP in one paragraph; record it as an assumption if inferred. Check `ops/references/product-marketing-template.md` (local copy at `.agents/product-marketing.md`) §§2–5 first — never re-ask captured ICP/JTBD/verbatim (seam-3 shared context).
+2. Fork intake by segment (source: `coreyhaines31/marketingskills` `prospecting`, G3 #4): SaaS / B2B / Local SMB / Demand-signal. All four run 5 shared phases (ICP → 2–3× oversource → evidence-backed qualify → Hot/Warm/Cold/Skip rubric → lead sheet + top-5 targets); the demand-signal branch ships an evidence report, not a list.
+3. Research each account spine-first: firmographics, tech context, recent trigger events, decision-makers with titles.
+4. Score fit per account against the ICP before writing a word of outreach.
+5. Mark every unverified field as an assumption with a verification path.
+6. File briefs where sales expects them (Twenty CRM records, else markdown).
+7. Frame net-new searches as Trait–Activity–Qualifier (company kind, current motion as timing layer, must-haves); reuse existing coverage on a query-plus-ICP close match instead of redeploying.
+8. In enterprises, attribute each signal to the owning team (e.g. hiring-post team names), not just the account.
 
 ## Quality gate
 

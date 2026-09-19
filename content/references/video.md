@@ -26,6 +26,9 @@ A shooting-ready script: a first-3-second hook, beats with visuals/shot directio
 10. For reference-video rebuilds, tear down in layers before scripting: story arc, layout/framing, motion mechanisms named exactly (pinned, scrubbed, parallax, mask), visual tokens, technical rebuild mapping, mobile + reduced-motion behavior — concrete mechanisms, never "similar animation" (keeper: mengto/video-to-superprompt).
 11. For screen-record demos, choreograph sparse purposeful cursor paths (pause-click-move, no wandering), verify output with ffprobe/thumbnail checks, and confirm captures are non-empty and representative (keeper: mengto/browser-video-recording).
 12. For VO/narration, route voice identity through local profiles only; never print secrets or mutate saved account settings per request (keeper: mengto/elevenlabs-tts).
+13. For production beyond scripting, pick the pipeline from the job (source: marketingskills `video` SKILL.md): Hyperframes-style HTML rendering for programmatic/templated output vs Remotion-style React rendering for code-composed motion — decide on templating needs and team stack, not hype. When using AI generation, slot the model to the shot (Veo/Sora/Runway/Kling/Seedance/Hailuo/Pika/open-weights each carry different cost/quality slots) and record which model made which shot for re-runs.
+14. Reverse-engineer reference edits with an edit anatomy before rebuilding: cut cadence, transition grammar, text-on-screen system, sound-design layering, pacing curve — named mechanisms per beat, never "similar vibe".
+15. Production-family checklist (paraphrased: generative-media-skills production families, MIT — providers overlap vendor skills, delta only): lock content-format per surface; assemble at runtime from named parts (script/voice/timeline/captions); clear rights/provenance/consent before shipping (credit kept, consent on file); hold one creative-direction pass; finish with post-production (grade/mix/captions/export).
 
 ## Quality gate
 
@@ -36,7 +39,8 @@ A shooting-ready script: a first-3-second hook, beats with visuals/shot directio
 - [ ] Shot/visual direction per beat.
 - [ ] Length matches platform norms.
 - [ ] Title-thumbnail pair has zero word overlap; 3 angle pairs delivered.
-- [ ] Hook variants + captions included.
+ - [ ] Hook variants + captions included.
+ - [ ] Production pipeline picked by job (programmatic vs code-composed); AI-model choice per shot recorded; reference rebuilds carry a named edit anatomy.
 
 ## Sources
 

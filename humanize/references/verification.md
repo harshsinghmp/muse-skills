@@ -92,6 +92,18 @@ Do not use a universal numeric threshold as proof that a text is AI-written.
 
 If a repository provides a deterministic linter, treat its results as review signals. The human/editorial pass remains authoritative.
 
+### Deterministic scorer shape (diagnostic aid, not verdict)
+
+(source: `conorbronsdon/avoid-ai-writing` detector engine, MIT — mechanism only; no pass/fail gate imported, per buyer philosophy above)
+
+When a zero-dependency scorer exists in the repo (or is added by the team), the
+useful output shape is: numeric style-signal score + categorical labels +
+`issues[]` (each with span, pattern, and suggested fix) + run stats. A CI hook
+on such a scorer gates on issues-count as a *triage signal* (route the file to
+an editorial pass), never as proof of authorship and never as a pass/fail
+quality verdict. Detector-evasion tuning stays prohibited (`SKILL.md` Hard
+Prohibitions).
+
 ## Detector-facing work
 
 Never promise:
@@ -117,6 +129,23 @@ For prose files:
 - avoid touching non-prose regions
 
 When Git is available, make the rewrite reviewable as a diff.
+
+### Preservation checklist (mechanical pre-pass)
+
+(source: `conorbronsdon/avoid-ai-writing` validator leg, MIT — checks only, folded into the editorial pass)
+
+Before judging prose, run (by hand or script) these preservation checks and fail
+the file back to the author when one fires — a broken fence is a defect, not a
+style choice:
+
+- fenced code blocks open/close balanced, language tags intact
+- YAML frontmatter parses, keys unchanged
+- blockquotes, tables, inline code, headings structurally intact
+- URLs and link targets byte-identical unless explicitly editing them
+- no residual growth: the edit adds no new unsupported claims while fixing style
+
+Apply context profiles lightly (docs vs blog vs email vs casual): strictness on
+formatting rules follows the venue; claim-preservation above never relaxes.
 
 ## Repo audit verification
 

@@ -26,6 +26,19 @@
    behavior-preserving. If you cannot produce one, hold the suggestion as a
    Discussion item rather than a forced rewrite.
 
+## Lazy ladder (candidate order)
+
+(source: `DietrichGebert/ponytail`, MIT — ladder only; buyer scope discipline above still bounds every rung)
+
+When several simpler shapes exist, prefer the laziest sufficient one, in order:
+YAGNI (delete it) → reuse (existing helper/util/type in this repo) → stdlib →
+native platform feature (CSS over JS, input types, DB constraints) →
+already-installed dependency → one line → minimum code that works.
+
+**Never-cut list** (no rung overrides these): input validation at trust
+boundaries, error handling that prevents data loss, security measures,
+accessibility basics, anything explicitly requested.
+
 ## Output
 
 ```
@@ -33,3 +46,11 @@ SIMPLIFY — <scope>
 Per item: location / current complexity / proposed simpler shape (behavior-preserving)
 Scope: restricted to <changed files> — stable code untouched
 ```
+
+Tag each item with the rung that produced it (`delete` / `stdlib` / `native` /
+`yagni` / `shrink`). When a simplification is deliberately deferred (out of
+scope, needs a decision, would balloon the diff), mark it with a `ponytail:`
+ceiling comment naming the ceiling and the upgrade path (e.g. `// ponytail:
+O(n²) scan, index it if callers grow`) and harvest deferred items into the
+change's debt ledger — a tracked item with a promotion trigger, never a bare
+TODO.

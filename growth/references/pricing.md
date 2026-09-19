@@ -22,6 +22,9 @@ A pricing recommendation: packaging/tiers, price points with rationale, the valu
 7. Plan a test (new-cohort pricing, willingness surveys) and a review point.
 8. Design pricing tests with 3-8 points per segment: map per-segment willingness-to-pay, plot revenue-max vs optimal spread, and anchor against competitive mapping.
 9. Diagnose weak conversion with the value equation first — Value = (Dream Outcome × Perceived Likelihood) / (Time Delay × Effort & Sacrifice); most "lower the price" asks are raise-the-numerator/lower-the-denominator asks, since price is the comparison, not the value. Complete the offer anatomy (core deliverable + bonus stack + guarantee/risk-reversal) before cutting price.
+10. Run the offer diagnostic loop (source: marketingskills `offers` SKILL.md): score the 4 value-equation levers 1–10, fix the lowest first, one lever per iteration, project honest 10–40% lifts only. Route self-serve SaaS/marketplace packaging questions to this mode's structure; skim only. Heed the SaaS discount trap: discount-askers churn ~2× (DIRECTIONAL) — fix value before cutting price.
+11. Trigger paywalls in-product, not in onboarding (source: marketingskills `paywalls` SKILL.md): feature-gate, usage-limit, trial-expiry warnings at 7/3/1 days, time-based — always after the aha moment. Build the screen from 7 components (headline-get, value demo, comparison, pricing, proof, value CTA, escape hatch) using the lock / limit / expiry wireframe that matches the trigger; anti-dark-pattern list enforced (no forced continuity, no hidden cancel, no fake urgency).
+12. Roll out price increases in waves (source: marketingskills `pricing` SKILL.md): test on new customers first, show grandfather-as-transition math (e.g. $50→$250 = $2,400/yr gap), move in 5–10% staggered waves, communicate the why months ahead with a generous transition offer — and expect worst-fit accounts to churn.
 
 ## Quality gate
 
@@ -32,7 +35,8 @@ A pricing recommendation: packaging/tiers, price points with rationale, the valu
 - [ ] Tiers fenced without cannibalization.
 - [ ] Objection handling + test plan present.
 - [ ] Test covers 3-8 points per segment with WTP map, revenue-max/optimal spread, and competitive anchor.
-- [ ] Value equation diagnosed before any price cut; offer anatomy (core + bonus + guarantee) complete.
+ - [ ] Value equation diagnosed before any price cut; offer anatomy (core + bonus + guarantee) complete.
+ - [ ] Offer loop run (lowest lever first, one/iteration, honest lifts); paywalls triggered post-aha with matching wireframe and no dark patterns; increases waved with grandfather math and early why-communication.
 - [ ] Page expression complete: monthly/annual toggle with savings callout, consistent per-plan CTA verbs, comparison matrix, FAQ + proof near decision points, procurement section if B2B (keeper: mengto/pricing-page).
 
 ## Routing

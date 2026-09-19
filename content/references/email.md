@@ -31,6 +31,7 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 15. Judge outbound performance by reply rate first and positive-reply/meeting rate second; open and click rates are red herrings — never optimize for them.
 16. Classify every reply before answering (positive, objection, deferral, referral, unsubscribe) and match the strategy: positives get a frictionless next step, objections get one proof point, deferrals get a timed trigger, unsubscribes get honored instantly with no counter.
 17. Newsletter issues: open with a specific result plus one-line credibility plus the value promise; section flow problem → framework → steps → examples → forward-looking close; tune every field to the author's voice profile before drafting.
+18. Size lifecycle sequences to the system (source: marketingskills `emails` SKILL.md): welcome 5–7 sends over 12–14 days, nurture 6–8, re-engagement 3–4 ending in a list-clean exit for the unengaged, onboarding 5–7 tied to activation milestones. Subject lines 40–60 characters; preview text 90–140 characters that extends the subject, never repeats it.
 
 ## Quality gate
 
@@ -44,7 +45,8 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 - [ ] Humanize pass run.
 - [ ] Cold outbound isolated on its own domain; personalization passes the removable-opening test; sequence ends in a breakup.
 - [ ] Cold opens tiered by seniority (strategic-brief for execs, tactical for users); hook strength matched to deal size.
-- [ ] Cold copy scored with deductions logged; reply-rate-first verdict; every reply classified with a matched next step.
+ - [ ] Cold copy scored with deductions logged; reply-rate-first verdict; every reply classified with a matched next step.
+ - [ ] Lifecycle lengths match the system (welcome/nurture/re-engagement+exit/onboarding); subjects 40–60 chars, previews 90–140 chars extending the subject.
 
 ## Routing
 

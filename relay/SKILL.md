@@ -163,6 +163,7 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
     - **Interfaces** (source: `obra/superpowers`, `skills/writing-plans/SKILL.md`): every file in Target Scope gets a consumes/produces line — what it reads, what it returns or changes. Unlisted coupling is out of scope.
     - **No placeholders** (same source): `TBD`, "appropriate handling", and "etc." fail the packet — every section carries exact paths, verbatim code, or a concrete command.
     - **If Blocked**: Escalation fallback.
+    - **Assumptions-first + spec template** (source: `addyosmani/agent-skills` `spec-driven-development`): every packet opens with an assumptions block (each assumption evidence-backed or flagged for the human gate), then fills the 6-area spec template — Objective / Commands / Structure / Style / Testing / 3-tier Boundaries. Human gate per phase: SPECIFY → PLAN → TASKS → IMPLEMENT never advances on an unapproved phase.
 2. **Write Handoff Packet** to `.agents/artifacts/handoff-<timestamp>.md` (structure in [README](README.md#-packet-structure) and worked example in [examples/sample-handoff.md](examples/sample-handoff.md)).
 3. **Lease hand-off to workers** (shared checkouts): if the packet's Target Scope includes git mutations (branch switches, stashes, commits to shared surfaces), embed the worktree-lease instruction in the dispatch prompt — the worker probes `.agents/artifacts/WORKTREE-LEASE.md` before its first git mutation and inherits or acquires per the lease protocol (`coupling-router` Step 0). Never dispatch two workers whose scopes overlap on one checkout.
 4. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
@@ -243,6 +244,7 @@ Handoff integrates with whatever memory system the runtime provides (e.g. museme
 - [ ] All 7 outbound packet sections are populated with zero placeholder text.
 - [ ] Mode B dispatch announced its triage path (spike / bounded / architectural) and carried explicit human approval before any code.
 - [ ] Outbound packet carries an Interfaces consumes/produces block covering every file in scope.
+- [ ] Outbound packet opens with an assumptions block and fills the 6-area spec template; no phase advanced without human approval.
 - [ ] Multi-session work attached a decision map; fog items carry no tickets.
 - [ ] In shared checkouts, dispatched workers carry the worktree-lease instruction, and entry respected any active lease before mutating.
 

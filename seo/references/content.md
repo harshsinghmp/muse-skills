@@ -27,9 +27,11 @@ Content plan: keyword universe with intent and difficulty, topic clusters mapped
 11. Programmatic pages must pass quality gates before scale: unique data source, template-variation minimums, standalone-value test per page, scaled-content-abuse guard; roll out in limited batches.
 12. Comparison intent gets its own archetypes: X-vs-Y, alternatives-to-X, and best-category roundups with a feature matrix, ItemList/SoftwareApplication schema where fitting, and fairness-checked claims (accurate, dated, no invented weaknesses).
 13. Brief every landing-intent piece with the one primary action, the offer, top-3 objections, and the proof inventory (logos, numbers, demo assets) before drafting (keeper: mengto/landing-page).
-14. Prose rules for every brief and reviewed draft: ban `easy` / `simple` / `quick` (replace with the concrete fact: "one command", "default settings") and cut filler (`very`, `just`, `really`); page headings in sentence case with descriptive subheadings (reader guesses section content from the heading alone); every page opens with a one-paragraph TL;DR and every major section with a summary sentence; keep paragraphs to 2–4 sentences on one idea.
-15. Numbers over adjectives: replace weasel words (`significantly`, `many`, `often`, `typically`) with a specific cited figure; no vague quantifiers (`near-zero`, `sub-second`, `most requests`) without the figure and its source — quotable stat-blocks are what AI engines cite.
-16. First-use definitions: spell out every acronym on first use and define every term the first time it appears (link to its conceptual page); active voice with direct `you` address; imperative for steps.
+14. Hold the calendar mix at roughly 60% compounding (clusters, hubs, refreshes) / 30% timely (news, trends, seasonal) / 10% experimental (new formats, new angles) — DIRECTIONAL ratio ex marketingskills `content-strategy` SKILL.md, tune to capacity.
+15. Pick programmatic plays from the 12-catalog, not from scratch (source: marketingskills `programmatic-seo` SKILL.md): templates, curation, conversions, comparisons, examples, locations, personas, integrations, glossary, translations, directory, profiles. Rank the data moat before building: proprietary > product-derived > UGC > licensed > public — thin plays on public data lose. Keep programmatic under subfolders, never subdomains.
+16. Prose rules for every brief and reviewed draft: ban `easy` / `simple` / `quick` (replace with the concrete fact: "one command", "default settings") and cut filler (`very`, `just`, `really`); page headings in sentence case with descriptive subheadings (reader guesses section content from the heading alone); every page opens with a one-paragraph TL;DR and every major section with a summary sentence; keep paragraphs to 2–4 sentences on one idea.
+17. Numbers over adjectives: replace weasel words (`significantly`, `many`, `often`, `typically`) with a specific cited figure; no vague quantifiers (`near-zero`, `sub-second`, `most requests`) without the figure and its source — quotable stat-blocks are what AI engines cite.
+18. First-use definitions: spell out every acronym on first use and define every term the first time it appears (link to its conceptual page); active voice with direct `you` address; imperative for steps.
 
 ## Quality gate
 
@@ -40,7 +42,8 @@ Content plan: keyword universe with intent and difficulty, topic clusters mapped
 - [ ] Refresh plan exists for existing decaying content.
 - [ ] Format follows the intent-to-format map.
 - [ ] No cannibalization: clusters split by SERP overlap, one page per cluster.
-- [ ] Programmatic batch passes quality gates (unique data, variation minimums, standalone value, abuse guard) with batch rollout limits.
+ - [ ] Programmatic batch passes quality gates (unique data, variation minimums, standalone value, abuse guard) with batch rollout limits.
+ - [ ] Calendar mix held near 60/30/10 (compounding/timely/experimental); programmatic play picked from the 12-catalog with the data moat ranked; subfolders, not subdomains.
 - [ ] Every brief names its information gain (angle/datum/example beyond SERP consensus).
 - [ ] Drafts scored 1–10 on depth, E-E-A-T, readability, and keyword fit with fixes listed (keeper: wshobson/seo-content-creation).
 - [ ] No banned words (`easy` / `simple` / `quick`) or filler (`very` / `just` / `really`) in briefs or reviewed drafts.

@@ -19,6 +19,11 @@ Profile kit (avatar, covers/banners per platform at exact dims), post templates 
 4. Build one template per content pillar × format; keep a shared grid.
 5. Define the grid rhythm: alternating emphasis so the profile reads as a system.
 6. Export spec: format, dims, safe zones for UI overlays, file naming.
+7. For CN-platform pairs, compose covers as sets (paraphrased: guizang-social-card-skill, AGPL — mechanism only): tall-carousel cover + inner pages as one system; wide + square covers drawn and checked together, never solo.
+
+## Capability scoping
+
+- Bucket each asset request before composing (paraphrased: guizang-social-card-skill, AGPL — mechanism only): strong end-to-end / text-only needing user images / outside-scope — push back honestly on the third.
 
 ## Quality gate
 

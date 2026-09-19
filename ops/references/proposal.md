@@ -18,6 +18,7 @@ A proposal: problem/outcome framing, proposed approach, phased plan with deliver
 3. Propose an approach tied to the outcome; keep it jargon-free.
 4. Define phased deliverables and a realistic timeline.
 5. Offer clear pricing options with what each includes (and what it does not).
+6. Deal-desk guard (source: `coreyhaines31/marketingskills` `revops`, G3 #3): discount approval tiers — 10–20% manager / 20–40% VP / 40%+ desk review; dashboard checks MQL bar (50–80pt), LTV:CAC (3–5:1), speed-to-lead (<5min) as directional benchmarks with source labels, never canon. Quarterly hygiene audit: stale stages, missing exit criteria, unrecycled rejects.
 6. Add proof: relevant case studies, results, references.
 7. End with explicit next steps and an expiry/validity window.
 8. Define in/out-of-scope boundaries and measurable success criteria; get stakeholder sign-off on both before work starts.

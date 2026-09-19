@@ -22,6 +22,7 @@ A social strategy: chosen platforms with rationale, a positioning/mission line (
 6. Map each pillar to an objective and a metric; name what success looks like in 90 days.
 7. Document the voice: tone, boundaries, and what the brand never posts.
 8. Run localization QA in order — triage, translate/transcreate, adapt, compliance, format — and gate release on a quality score.
+9. Triage listening signals with the intent rubric (source: marketingskills `social` SKILL.md): buying-intent and complaint signals get same-day response paths, category chatter gets weekly synthesis, noise gets muted — never treat all mentions equally. Seed the voice and pillars from a 500-post reverse-engineer of the niche's winners (hook + format + topic patterns tabled) before inventing net-new formats.
 
 ## Quality gate
 
@@ -30,7 +31,8 @@ A social strategy: chosen platforms with rationale, a positioning/mission line (
 - [ ] 3–5 pillars, each mapped to an objective and metric.
 - [ ] Cadence is sustainable for the stated team.
 - [ ] Localization QA passed in order; quality-score gate met.
-- [ ] Voice and boundaries documented.
+ - [ ] Voice and boundaries documented.
+ - [ ] Listening triaged by intent (buying/complaint fast lane, chatter synthesized, noise muted); pillars seeded from a 500-post winner reverse-engineer.
 - [ ] Voice drafts grounded in the client's own recent posts; quoted-source text kept out of the voice sample (keeper: mengto/write-like-meng-on-x).
 - [ ] Draft options materially different in angle/structure, never surface paraphrases; no invented metrics or usage claims (keeper: mengto/write-like-meng-on-x).
 - [ ] Bookmark-sourced quote posts state sample size and date range; thin history reported, not padded (keeper: mengto/x-bookmark-quote-posts).

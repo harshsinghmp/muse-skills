@@ -54,6 +54,7 @@ Every commit must follow this deterministic format:
 2. **Body**: Wrapped at ≤72 characters. State *why* the change exists and what was verified; never restate the obvious git diff.
 3. **No Pronouns or Meta-Phrasing**: Avoid "I fixed this" or "This commit updates".
 4. **Issue Linkage**: Link the GitHub issue at the bottom (e.g. `Closes #5`).
+5. **Sizing gate**: keep changes reviewable — ~100 lines ideal, ~300 acceptable, ~1000 split into stacked PRs required. Source: `addyosmani/agent-skills` (`git-workflow-and-versioning`; trunk-based default PARKED — conflicts with the 4-phase `dev`/`master` model above).
 
 ---
 

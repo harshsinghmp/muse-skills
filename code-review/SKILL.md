@@ -65,6 +65,10 @@ change* — review depth scales with blast radius. Load only the listed referenc
 `hotfix` and `contract` never load the theme catalog; `receive` and `fix` never load
 it either — they operate on existing findings, they do not produce new ones.
 
+**Rigor ladder** (source: `bjgreenberg/senior-engineering-partner` `references/engineering-workflow.md`, Apache-2.0): match review depth to tier — T0 spike (one-line spec, test-after acceptable, security floor still holds) · T1 MVP (short written spec, test-first on the critical path) · T2 production (written mini-spec + threat-model lines for auth/tenancy/ingestion/billing/secrets surfaces, iron-law TDD, regression test seen red before every fix). Spec-first gate: restate the understanding and get agreement before judging; the spec is the rubric the review checks against.
+
+**Per-language checklist pointers** (source: `awesome-skills/code-review-skill` `reference/`, MIT — checklists only, no process import): when the diff's language has a dedicated checklist in that catalog, consult it as a candidate generator; every candidate still enters through Steps 4–6 (forcing-violation proof, Torvalds severity). The supplier's 4-phase time-boxed process and 🔴🟡🟢 severities are NOT imported — buyer method and 5-tier calibration govern.
+
 ---
 
 ## When to Use
@@ -117,6 +121,15 @@ Execute this skill when any of the following occur:
 | **Simplicity First** | Minimum viable code to solve the exact issue; reject bloat | Speculative flexibility, premature configurability, single-use wrappers | **Reject** |
 | **Surgical Changes** | Touch only lines necessary for the fix; zero orthogonal churn | "Drive-by" refactoring, reformatting untouched lines, editing unrelated comments | **Reject** |
 | **Goal-Driven Execution** | Require reproducible test passes and verifiable oracle criteria | "Should work" claims without terminal proof or runnable test receipts | **Request Changes / Reject** |
+
+### The CONSTRAINTS Contract (quality-bar floor)
+
+(source: `addyosmani/agent-skills` `constraint-driven-development`; vocabulary ref only to its `code-review-and-quality` checklist — process NOT imported, Torvalds rigor governs)
+
+- **Written contract**: the change under review is judged against a `CONSTRAINTS.md`-style floor — no new suppressions, no stubs, no skipped/deleted tests, no thresholds edited down.
+- **Diff-watch**: a green suite that passes because the bar was lowered (suppression added, assertion weakened, threshold edited) is a regression, not a pass — flag as Reject.
+- **Measure-and-hold ratchet**: every accepted change holds the bar; the bar only moves by deliberate, separately reviewed contract change, never by a hunk inside a bug fix.
+- **Prove-It** (H12 test-engineer rule): already landed as test-first regression rule ([references/fixing-findings.md](references/fixing-findings.md) Step 2) — cited, not duplicated.
 
 ---
 
@@ -377,6 +390,7 @@ Run this before handing the review over:
 - [ ] Clean verdict (if any) names 3+ satisfied principles
 - [ ] No finding without a demonstrating execution (forcing-violation proof); no `low`-confident Reject
 - [ ] Anti-patterns checked as debugging leads: when a known anti-pattern (e.g. silent error swallow, spec-weakening) appears, use it as a *lead* to find the underlying defect, not as the finding itself
+- [ ] CONSTRAINTS floor held: no lowered-bar green (suppressions, weakened asserts, edited thresholds flagged as regression)
 
 ## Audit routing
 
