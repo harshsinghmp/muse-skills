@@ -17,6 +17,29 @@ Pass/fail table per path: Path / Step / Expected / Observed / Evidence / Verdict
 3. Proof-gate each finding: Contract (which requirement it breaks) + Runtime (reproducible on the matrix) + Correction (one deterministic fix). Candidates without all three are notes.
 4. Report at most the top failures first; unrun paths marked Not verified, never implied pass.
 
+## Security verification boundary (black-box only — enrich, adoption-safe)
+
+Source: `HoangNguyen/common-pentest-methodology` (+ `BagelHole/penetration-testing`
+ROE folded in, exploit commands parked — this skill never authors adversarial
+tests per lane-C #10; exploit work routes to specialists).
+
+- **Phases (verify, never exploit).** Scope (what is in/out, written) →
+  recon (enumerate surfaces from outside) → threat (map surfaces to the
+  platform matrix below) → analyze (which controls should hold) → report.
+  Exploit/post-exploit phases are out of scope — record as Routed, not run.
+- **Platform matrix (control checks, not payloads).** Backend: injection,
+  auth, authZ, SSRF, logic, crypto, config, deps, secrets, LLM. Frontend:
+  XSS, auth/session, config, deps, secrets. Mobile: storage, auth, transport,
+  build config. Each cell = control present + behaving (pass/fail), never a
+  bypass attempt.
+- **Rules.** No-Exploit-No-Report (a finding needs observed behavior, not
+  a payload theory); no prod testing (staging target only, written scope).
+- **Continuous + compliance.** Delta re-verify on changed surfaces + replay
+  of prior findings per release; map results to SOC2/ISO/PCI control refs
+  without giving a compliance verdict.
+- **Parked.** Bagel ROE shape + recon/scan/exploit command set parked here:
+  adopt only with a dedicated pentest engagement; until then this boundary holds.
+
 ## Quality gate
 
 - [ ] All P0 paths walked, none assumed.

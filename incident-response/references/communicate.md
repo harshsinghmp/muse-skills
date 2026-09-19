@@ -18,6 +18,16 @@ Live comms set: status-page post, client update, internal note — all timestamp
 3. Keep internal and external timelines identical — every external claim traceable to the incident log. Downgrade tone for clients (calm, no jargon), never the facts.
 4. On resolution: send the all-clear with duration, impact, and the retro date. Hand routine follow-up voice back to `client-comms`; this skill owns comms only while the incident is live.
 
+## Comms templates (enrich — source: `BagelHole/incident-response`)
+
+- **Internal.** SEV + commander + blast radius + actions in flight + next
+  update time. Facts only, jargon allowed.
+- **Stakeholder.** Impact (who, what, since when) → what we are doing →
+  next update time. Calm, no jargon, same facts as internal.
+- **Breach notice.** What happened + what data affected + what we did +
+  what recipients should do + contact. Never state cause before evidence;
+  legal review before sending where exposure exists.
+
 ## Quality gate
 
 - [ ] Cadence matched severity with no missed window.
