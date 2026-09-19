@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of 42 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, and Telegram messaging.**
+**A curated suite of 43 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, and post-delivery retention.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-42%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-43%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -16,7 +16,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete forty-one-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
+Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete forty-three-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -158,7 +158,7 @@ npx skills add harshsinghmp/muse-skills --skill audit
 npx skills add harshsinghmp/muse-skills --skill periodic-retreat
 npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 
-# Agency Delivery (#23–#42)
+# Agency Delivery (#23–#43)
 npx skills add harshsinghmp/muse-skills --skill design
 npx skills add harshsinghmp/muse-skills --skill paidads
 npx skills add harshsinghmp/muse-skills --skill seo
@@ -176,6 +176,7 @@ npx skills add harshsinghmp/muse-skills --skill client-comms
 npx skills add harshsinghmp/muse-skills --skill gtm
 npx skills add harshsinghmp/muse-skills --skill database
 npx skills add harshsinghmp/muse-skills --skill incident-response
+npx skills add harshsinghmp/muse-skills --skill retain
 ```
 
 ### 3. Install a named selection
@@ -210,7 +211,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all forty-one skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, unified database operations, Telegram messaging, and full-service creative web marketing agency toolkit:
+Install all forty-three skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, unified database operations, Telegram messaging, and full-service creative web marketing agency toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -337,13 +338,14 @@ flowchart TD
 | **#40** | [**`telegram`**](telegram/README.md) | **Agency Delivery** | `notify telegram`, `approval button`, `claude code hooks`, `event routing`, `bot setup` | `automation`, `coupling-router`, `sentry`, `user-onboarding` | Telegram messaging department with five modes — notify, approve, hook, route, and setup — pure-bash bot alerts, approval boards, Claude Code hooks, and Kafka-event routing via curl + jq. Zero pip installs. Config-file token management with mode-600 protection, multi-bot/multi-target routing, inline-button approval pauses, session-based hook registration. |
 | **#41** | [**`research`**](research/README.md) | **Agency Delivery** | `user research`, `interview users`, `market pulse`, `due diligence`, `competitor teardown` | `evidence-ledger`, `content`, `growth`, `analytics`, `client-comms` | Client research department head with three modes: user-research, market-pulse, and entity-dossier — method-matched user research, recency-windowed market briefing, and hypothesis-forced due-diligence dossiers, all cited and decision-ready. |
 | **#42** | [**`sales-enablement`**](sales-enablement/README.md) | **Agency Delivery** | `demo script`, `objection handling`, `sales playbook`, `one pager`, `sale enablement` | `growth`, `ops`, `gtm`, `content`, `client-comms` | Pre-sale sales enablement department head with four modes: demo, objection, one-pager, and playbook — the assets a client's sales team needs to win deals, grounded in real buyer objections. |
+| **#43** | [**`retain`**](retain/README.md) | **Agency Delivery** | `follow up after delivery`, `prove value`, `QBR`, `review ask`, `referral offer`, `churn risk` | `growth`, `client-comms`, `ops`, `analytics` | Post-delivery retention loop head with six modes: check-in, value-note, qbr, review-ask, referral-rebuy, and churn-watch — scheduled check-ins, monthly value notes, transcript-run QBRs, delight-peak review asks, referral and repurchase offers, and churn-signal triage routed to growth. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 39 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 40 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -1120,6 +1122,12 @@ muse-skills/
 │   └── SKILL.md
 │
 ├── sales-enablement/               # Pre-sale sales enablement department head (4 modes: demo, objection, one-pager, playbook)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── retain/                         # Post-delivery retention loop head (6 modes: check-in, value-note, qbr, review-ask, referral-rebuy, churn-watch)
 │   ├── agents/openai.yaml
 │   ├── references/                 # one playbook per mode
 │   ├── README.md
