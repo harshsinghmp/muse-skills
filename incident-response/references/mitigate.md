@@ -22,6 +22,23 @@ Mitigation report: class, actions taken in order with timestamps, service state 
 3. Verify restoration with a user-path check, not a green dashboard — dashboard lies, checkout flow does not.
 4. Hand off: root-cause fix → `webdev` / `devops`, proof the fix holds → `qa-launch` regression, stakeholder voice → `communicate`.
 
+## Breach forensics + quarantine + creds playbook (enrich — source: `BagelHole/incident-response`)
+
+- **6-phase order.** Detect → contain → eradicate → recover → lessons → harden.
+  Never skip contain for eradicate speed.
+- **Evidence kit (Linux).** Hash-chained collection script (sha256 manifest
+  per artifact), memory capture before disk, AWS snapshot + CloudTrail export.
+  Image first, inspect the copy.
+- **Quarantine.** Isolate host via quarantine security group (deny-all except
+  forensics collector), revoke sessions/keys at the edge. Confirm no active
+  exfil before restoring.
+- **Forensics command ref.** Disk (mount ro, image, hash), logs (auth/syslog/
+  app windowed to blast radius), net (established conns, listening ports,
+  DNS), malware (strings, hashes vs threat feeds).
+- **Compromised-credentials playbook.** Rotate all exposed creds → revoke
+  sessions/tokens → audit access logs for misuse window → re-issue with
+  least privilege → confirm rotation in the report with timestamps.
+
 ## Quality gate
 
 - [ ] Service state verified by a user-path check, timestamped.

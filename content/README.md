@@ -1,6 +1,6 @@
 # ✍️ content
 
-The content studio department head: one skill, six modes — blog, copy, email, video, case-study, humanize. Source-anchored writing, then an editorial pass that keeps it human.
+The content studio department head: one skill, seven modes — blog, copy, email, video, case-study, humanize, launch. Source-anchored writing, then an editorial pass that keeps it human.
 
 ## Install
 
@@ -30,6 +30,7 @@ Draft a 5-email onboarding sequence and a launch case study for our SaaS.
 | **video** | video script | Video: hook, structure, and shot direction for the target platform. |
 | **case-study** | customer case study | Case study: a before/after customer story with real numbers and a quote. |
 | **humanize** | prose humanization | Humanize: strip AI-sounding patterns while locking facts and voice. |
+| **launch** | product / feature launch | Launch: headline, offer, key messages, and channel-ready assets. |
 
 ## How it works
 

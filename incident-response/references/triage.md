@@ -13,7 +13,7 @@ Triage sheet: SEV level, blast radius, incident commander, escalation spine, fir
 
 ## Procedure
 
-1. Classify severity — SEV-1 (full outage / breach / data loss, all hands), SEV-2 (major degradation, core path broken), SEV-3 (partial, workaround exists), SEV-4 (cosmetic, track only). Default ambiguous → one level higher, state the assumption.
+1. Classify severity — SEV-1 (full outage / breach / data loss, all hands), SEV-2 (major degradation, core path broken), SEV-3 (partial, workaround exists), SEV-4 (cosmetic, track only). Default ambiguous → one level higher, state the assumption. Response-time spine (source: `BagelHole/incident-response` P1–P4): P1/SEV-1 respond 15 min → P2/SEV-2 30 min → P3/SEV-3 4h → P4/SEV-4 next business day.
 2. Name the incident commander (default: you) and the escalation spine: commander → tech lead → client stakeholder. Page SEV-1/2 immediately; SEV-3 async.
 3. Run the first-15-minutes checklist: confirm blast radius, freeze deploys, open the incident channel/log, snapshot logs and metrics, start the comms clock.
 4. Set the comms cadence now: SEV-1 every 15 min, SEV-2 every 30 min, SEV-3 hourly, SEV-4 async. Hand the clock to `communicate`.
