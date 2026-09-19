@@ -65,3 +65,14 @@ implementation is out of scope).
 - **Author-vs-critic routing**: redesigning is a separate authoring job. Route it
   to the author (or a fresh authoring pass); the reviewer never rewrites the
   design inside the review.
+
+## Story-level architecture axes (source: `tinh2/skills-hub-registry` `review/arch-review/SKILL.md` v12.1.0, mirror copy — distributor provenance only, not publisher-signed; axes reviewed before adoption)
+
+Runs before code (`design` mode) or after (`intended` mode). Story-scope axes —
+distinct from Theme 23 layer-boundary/dependency-edge (code-level drift):
+
+- **Component reuse**: new UI component sharing 50%+ with existing → extend variant (name component + props), not clone.
+- **Domain consistency**: design → domain-impact analysis; implementation → cross-layer trace (model↔DB/API/UI, state, nav) with file:line per break.
+- **Data privacy**: PII fields get public/private projection from start; mixed PII + publicly-readable model = Critical.
+- **Service architecture**: services split by domain (≤3 entities each); monolith handling multiple domains = Critical risk.
+- **Infra**: verify compose volume/config-path delivery, shell portability, path integrity; state explicitly when no infra changes.
