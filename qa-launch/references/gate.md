@@ -45,6 +45,7 @@ Gate report: checklist with pass/block per item, severity-ordered findings, and 
 
 - Deploy/rollback mechanics → `devops`; visual polish blocks → `refactor-ui`; post-fix proof → `regression`.
 - Rollout thresholds per stage: advance only if error rate within 10% of baseline, p95 within 20%, no new JS-error types, business metrics neutral; roll back on >2x errors, >50% p95, or any data-integrity/security issue.
+- Standing DoD bar: per-task (correctness+quality) / per-feature (+integration+docs) / per-release (full gate); tailor once then freeze — pointer to the `relay` packet's acceptance block (relay owned by Lane A, no edit there). Source: `addyosmani/agent-skills` (`definition-of-done`).
 - Error-budget gate: >20% remaining ships normally, 0–20% slow rollouts only, exhausted freezes features for reliability; first-hour post-launch: health 200, no new error types, no latency regression, manual critical-flow pass, rollback dry-run.
 
 ## Sources

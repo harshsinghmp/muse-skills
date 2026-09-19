@@ -37,6 +37,7 @@ A pipeline config: stages (install → lint → test → build → deploy) with 
 - Pipeline troubleshooting: Argo Rollouts `inconclusiveLimit` (never hang on no-data metric), deep-readiness probes over `/ping`, additive-only migrations + versioned undo; env-protection reviewer gate, Docker manifest-first layer order. Source: `wshobson/agents` (`deployment-pipeline-design`).
 - Shell discipline (CI/deploy scripts): `set -Eeuo pipefail`, quote-all, `[[`, trap+mktemp cleanup, dry-run flag, idempotent steps. Source: `wshobson/agents` (`bash-defensive-patterns`; near-miss fold into cicd/hosting).
 - Gates + evidence: environment approval-gate snippet + Trivy/SARIF upload so scans block prod and findings stay queryable. Source: `wshobson/agents` (`github-actions-templates`; near-miss fold).
+- Gate order + flag lifecycle: lint → type-check (tsc/doctest where the stack has them) → unit → build → integration → e2e → audit → bundlesize; flags carry owner + expiry, 2-week cleanup, test both states. Source: `addyosmani/agent-skills` (`ci-cd-and-automation`).
 
 ## Sources
 

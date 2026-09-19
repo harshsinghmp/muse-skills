@@ -118,6 +118,15 @@ Execute this skill when any of the following occur:
 | **Surgical Changes** | Touch only lines necessary for the fix; zero orthogonal churn | "Drive-by" refactoring, reformatting untouched lines, editing unrelated comments | **Reject** |
 | **Goal-Driven Execution** | Require reproducible test passes and verifiable oracle criteria | "Should work" claims without terminal proof or runnable test receipts | **Request Changes / Reject** |
 
+### The CONSTRAINTS Contract (quality-bar floor)
+
+(source: `addyosmani/agent-skills` `constraint-driven-development`; vocabulary ref only to its `code-review-and-quality` checklist — process NOT imported, Torvalds rigor governs)
+
+- **Written contract**: the change under review is judged against a `CONSTRAINTS.md`-style floor — no new suppressions, no stubs, no skipped/deleted tests, no thresholds edited down.
+- **Diff-watch**: a green suite that passes because the bar was lowered (suppression added, assertion weakened, threshold edited) is a regression, not a pass — flag as Reject.
+- **Measure-and-hold ratchet**: every accepted change holds the bar; the bar only moves by deliberate, separately reviewed contract change, never by a hunk inside a bug fix.
+- **Prove-It** (H12 test-engineer rule): already landed as test-first regression rule ([references/fixing-findings.md](references/fixing-findings.md) Step 2) — cited, not duplicated.
+
 ---
 
 ## Procedure (diff mode — the full review)
@@ -377,6 +386,7 @@ Run this before handing the review over:
 - [ ] Clean verdict (if any) names 3+ satisfied principles
 - [ ] No finding without a demonstrating execution (forcing-violation proof); no `low`-confident Reject
 - [ ] Anti-patterns checked as debugging leads: when a known anti-pattern (e.g. silent error swallow, spec-weakening) appears, use it as a *lead* to find the underlying defect, not as the finding itself
+- [ ] CONSTRAINTS floor held: no lowered-bar green (suppressions, weakened asserts, edited thresholds flagged as regression)
 
 ## Audit routing
 

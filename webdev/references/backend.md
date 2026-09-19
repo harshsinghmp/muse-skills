@@ -36,6 +36,7 @@ Working API endpoints / schema changes with validation at boundaries, auth enfor
 - Bounded reads: paginate every list endpoint (page/pageSize + totals); join/include instead of N+1 loops; treat third-party responses as untrusted and validate at the boundary.
 - Idempotency: key from client/intent (never a per-attempt UUID/timestamp); claim via unique constraint (check-then-act is a race); reject same-key-different-payload loudly; record intent before side effects (timeout = unknown, not failure); retention outlives the longest retry chain including DLQ replays.
 - Types: discriminated unions for variants, branded IDs, separate input/output shapes; extend by addition (optional fields) never modification; breaking changes route to `webdev` migrations (expand→contract).
+- Hyrum's Law: every observable behavior is a de-facto contract — assume consumers depend on it; validate at boundaries only, never between typed internals. Source: `addyosmani/agent-skills` (`api-and-interface-design`).
 
 ## Sources
 
