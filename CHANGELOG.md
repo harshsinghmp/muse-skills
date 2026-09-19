@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [4.4.1] - 2026-09-18
+
+### Added
+
+- **code-review story-level arch axes (row 9)**: component reuse, domain consistency, data privacy, service architecture, infra delivery — appended to design-soundness pass. Lane-A shortlist fully resolved (12/13 already landed + this enrich).
+
 ## [4.4.0] - 2026-09-18
 
 ### Added
