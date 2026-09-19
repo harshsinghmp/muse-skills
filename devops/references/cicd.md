@@ -21,6 +21,13 @@ A pipeline config: stages (install → lint → test → build → deploy) with 
 6. Make the deploy idempotent and the rollback a single step.
 7. Fail the pipeline loudly; notify the owner on failure.
 
+## GitOps + Argo Rollouts (enrich — source: `wshobson/agents` (`argocd-gitops`, `argo-rollouts`))
+
+- **Install.** Argo CD via its official Helm chart, values committed; admin password + repo creds in the CI secret store, never in values.
+- **Sync policy.** `automated: { prune: true, selfHeal: true }` + `syncOptions: [CreateNamespace=true]`; production Application requires manual sync (`automated: null`) behind the environment approval gate.
+- **App-of-apps.** One root Application pointing at `apps/`; each env/app is a child Application YAML in git. Cluster state drifts → self-heal; intent changes → PR, never `kubectl` from a laptop.
+- **Rollouts.** Progressive delivery via Argo Rollout (`strategy: canary`, `steps: [setWeight: 10, pause: {duration: 5m}, setWeight: 50]`); `inconclusiveLimit` set so no-data metrics fail forward, never hang (see Routing troubleshooting).
+
 ## Quality gate
 
 - [ ] Stages ordered and cached.

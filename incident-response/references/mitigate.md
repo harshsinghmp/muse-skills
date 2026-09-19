@@ -39,6 +39,14 @@ Mitigation report: class, actions taken in order with timestamps, service state 
   sessions/tokens → audit access logs for misuse window → re-issue with
   least privilege → confirm rotation in the report with timestamps.
 
+## Runbook mechanics + SEV-3 buyer-4h-wins (enrich — source: `wshobson/agents` (`runbook-automation`))
+
+- **Structure.** Every runbook: symptom match (how you know this is the right page) → blast-radius check → fix steps (each with expected output) → verify (user-path check) → escalate (who, when). Attached to the alert that fires it, ≥3 lines, per the monitoring contract.
+- **Freshness.** Runbook carries `last-verified` date + owner; any incident that used it refreshes the date. Stale (> 90 days, unverified) = finding in the retro.
+- **Communicator.** First responder mitigates; second voice (or solo checklist line) owns comms in parallel — silence is the second outage.
+- **Dry-run.** Each runbook gets a quarterly dry-run (staging failover, restore rehearsal, synthetic alert); record pass/fail + date in the doc.
+- **SEV-3 buyer-4h-wins.** SEV-3 responds in 4h: acknowledge in-ticket within the window, workaround first (flag, rollback, static fallback), root fix as a tracked action — never let a workaround become the permanent fix without a dated follow-up.
+
 ## Quality gate
 
 - [ ] Service state verified by a user-path check, timestamped.

@@ -52,6 +52,15 @@ Extends the Routing SAST enrich (chooser, p/rulesets, pre-commit, baseline→inc
 - **Checkov custom check.** S3-encryption-required example checked in;
   new bucket policies extend it.
 
+## K8s security block (enrich — source: `wshobson/agents` (`kubernetes-security`))
+
+- **PSS.** Enforce `restricted` (`pod-security.kubernetes.io/enforce: restricted`) per namespace; `baseline` only with a recorded exception + expiry.
+- **Deny-all.** Default-deny `NetworkPolicy` (all ingress + egress) first, then allowlist per workload port-by-port. No policy = no traffic.
+- **RBAC.** Least-privilege `Role` + `RoleBinding` per workload service account; no `cluster-admin` bindings outside break-glass, each with expiry + audit note.
+- **Restricted context.** `runAsNonRoot: true`, `readOnlyRootFilesystem: true`, `allowPrivilegeEscalation: false`, `seccompProfile: {type: RuntimeDefault}`, drop `ALL` capabilities, add back only the named one the binary needs.
+- **Admission.** Gate deploys on image signature + known-bad scan verdict (policy engine allowlist); unsigned or critical-finding images never schedule.
+- **STRICT mTLS (thin).** Peer-authentication `STRICT` mode for in-mesh traffic; mesh install/operation itself stays parked (see scope note below) — this line only states the required posture.
+
 ## Quality gate
 
 - [ ] Threat model stated.
