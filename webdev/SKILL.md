@@ -1,8 +1,8 @@
 ---
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "ecommerce", "cms"]
-description: "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, and migrations — routed through eight modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, or migrate sites and stacks. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations]"
+description: "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, and migrations — routed through eleven modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, or migrate sites and stacks. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -47,8 +47,15 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **performance** | "site is slow", "core web vitals", "lighthouse", "lcp/cls/inp" | Measure-first optimization: profile → fix → verify in field data | [references/performance.md](references/performance.md) |
 | **accessibility** | "accessibility", "wcag", "screen reader", "keyboard nav", "a11y" | WCAG 2.2 AA audit and fixes: keyboard, contrast, semantics, forms | [references/accessibility.md](references/accessibility.md) |
 | **migrations** | "migrate the site", "platform migration", "react 18 to 19", "major version upgrade" | Planned migrations: audit → map → execute → verify with rollback | [references/migrations.md](references/migrations.md) |
+| **prototype** | "spike this", "is this approach feasible", "riskiest unknown first", "throwaway probe" | Riskiest-technical-unknown-first throwaway tracer → proven/disproven/needs-probe verdict; code never ships | [references/prototype.md](references/prototype.md) |
+| **spec** | "write the spec", "spec this feature", "ready-for-agent", "scope this build" | Build-ready spec packet (problem/solution/stories/seams-first/assumptions); human gate per phase | [references/spec.md](references/spec.md) |
+| **implement** | "implement the spec", "build from spec", "tracer slices", "ship this story" | Spec-to-shipped tracer slices (one test → one impl); Simplicity-First; review chain before done | [references/implement.md](references/implement.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
+
+### Chain order
+
+`prototype` → `spec` → `implement` → `qa-launch` gate. Prototype answers the riskiest technical unknown (throwaway); spec turns the verdict into a labeled packet; implement rebuilds slice by slice (prototype code never merges); `qa-launch` verifies the shipped result. Design-side (visual/clickable) prototyping lives in `design` prototype — referenced, never duplicated here.
 
 ---
 
