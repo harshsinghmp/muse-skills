@@ -54,3 +54,18 @@ ceiling comment naming the ceiling and the upgrade path (e.g. `// ponytail:
 O(n²) scan, index it if callers grow`) and harvest deferred items into the
 change's debt ledger — a tracked item with a promotion trigger, never a bare
 TODO.
+
+## Deletion-only finding format (enrich — source: `DietrichGebert/ponytail` `ponytail-review`, raw SKILL.md fetched 2026-09-19)
+
+When the pass runs deletion-only (correctness/security/performance
+explicitly out of scope — route those to a normal pass, never mix them in),
+one line per finding: `` L<line>: <tag> <what>. <replacement>. ``
+(`<file>:L<line>:` for multi-file diffs). Tags: `delete:` (dead code,
+unused flexibility, speculative feature — replacement: nothing) /
+`stdlib:` (hand-rolled stdlib — name the function) / `native:` (platform
+already does it — name the feature) / `yagni:` (one-implementation
+abstraction, unset config, one-caller layer) / `shrink:` (same logic,
+fewer lines — show the shorter form). End with the only metric:
+`` net: -<N> lines possible. `` Nothing to cut → `Lean already. Ship.`
+A single smoke test or `assert`-based self-check is the minimum, never
+bloat — never flag it for deletion. List only; never apply the fixes.

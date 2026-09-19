@@ -137,6 +137,14 @@ Full contract, takeover rules, and the collision repair ladder: `references/work
 5. **Enforce Token Budget Gate**:
    - Ensure the total active skill prompt footprint remains $\le 6,000$ tokens ($\le 3$ active skills per subagent context).
    - Prune auxiliary skills into staged sequential handoffs if the token budget is exceeded.
+6. **Co-Load + Disambiguate (family-agnostic orchestrator surface)** (source: `samber/cc-skills-golang` `golang-how-to`, MIT — generalized: intents below are placeholders, each skill family ships its own intent→primary+secondary table):
+   - For each task load the **primary skill plus all applicable secondaries together at start** — a task rarely belongs to one skill (e.g. build-API loads design + testing + error-handling; debug-panic loads troubleshooting + safety).
+   - When two candidate skills overlap, show the **boundary table first** (one owner per cluster: measure vs optimize vs root-cause; concepts vs tool-specific; internal-bug vs external-threat) and load the owner, not both.
+   - Optional always-load directive: must-always-apply skills get one line in the project agent-config so routing never forgets them.
+7. **Interactive Selection Surface** (source: `alirezarezvani/command-guide` v1.0.0, signed SLSA L2 — generalized cross-runtime; no `/plan`/`/tdd`/`/compact` names):
+   - Request-type → workflow flowchart: new feature → spec/plan → tests-first → implement → review; bug → reproducer test → fix → review; review request → reviewer skill; build/test failure → fixer → verify → review; context pressure → handover/compact at milestone boundary; docs → docs skill.
+   - Parallel-vs-sequential rule: independent review axes (quality, security, e2e) fan out; dependency chains (plan → implement → review) stay sequential.
+   - Auto-triggers (no user request needed): code written → review; build fails → fixer; auth/sensitive-data touched → security review; complex feature → planner.
 
 ### Step 2 — Plan-Evaluation Gate (pre-execution)
 

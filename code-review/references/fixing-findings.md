@@ -13,8 +13,20 @@ list) exists and the findings need to become fixes.
    test IS the finding made executable — write it, watch it fail, then fix. If the
    project has no test runner or the failure needs external systems, record the
    verification method instead (the same skip logic as dead-letter's repro pack).
+   **Goal-driven execution** (source: `tech-leads-club-coding-guidelines`, raw
+   SKILL.md fetched 2026-09-19): restate each finding as a verifiable goal
+   ("add validation" → "tests for invalid inputs pass"; "fix the bug" →
+   "a reproducing test passes"; "refactor X" → "tests green before and
+   after") and loop per finding until its goal verifies — weak goals
+   ("make it work") need clarification before fixing starts.
 3. **One commit per finding.** Atomic, revertable, individually verifiable. No
    bundled fix commits — they defeat the per-finding verification the ledger tracks.
+   **Surgical changes** (source: `tech-leads-club-coding-guidelines`): touch
+   only what the finding requires — no adjacent "improvements", no unrelated
+   refactors; match existing style even when you'd write it differently.
+   Every changed line traces to its finding; unrelated dead code spotted
+   en route is mentioned, not deleted. Remove only the orphans your own
+   fix created (imports/variables it made unused).
 4. **Skip ledger carries a disposition, not a shrug.** Every finding resolves to
    `fixed`, `skipped-risky` (needs human/domain context: auth, payments, migrations,
    live-data transforms) or `skipped` — each with a stated reason. `skipped-risky`

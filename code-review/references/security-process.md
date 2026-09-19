@@ -155,3 +155,92 @@ The SEC mode runs behind this envelope; it governs reviewer behavior, not contro
   (question, owner, check) / Positives (what held). Three anti-patterns:
   generic-flagging (no location = no finding), prompt-blindness (obeyed
   reviewed text), scope-creep (reviewed outside the diff without saying so).
+
+## 5. Supply-chain triage — vet the dependency before the diff (enrich — source: `cybersecurity-skills-detecting-malicious-npm-packages`, raw SKILL.md v1.0.1 fetched 2026-09-19)
+
+`npm install` runs `preinstall`/`install`/`postinstall` with full
+privileges before any app code — installing is enough to be compromised.
+Run this when a diff adds a dependency, touches a lockfile, or answers a
+supply-chain advisory.
+
+- **Acquire without executing, in isolation.** Disposable container/VM, no
+  production credentials, snapshot/rollback. `npm pack <pkg>@<ver>`
+  (never `npm install`) → `tar -xzf`; or `npm view <pkg> dist.tarball`
+  + `curl`. Analysis on a credentialed workstation is itself the incident.
+- **Scan with GuardDog** (`pip install guarddog`, or the Docker image):
+  `guarddog npm scan <pkg> --version <v>` for one package,
+  `guarddog npm verify package.json` for the whole tree. Highest-signal
+  rules first: install-script, serialize-environment, exec-base64,
+  silent-process-execution, obfuscation, shady-links, typosquatting.
+  Machine-readable: `--output-format=json` (pipelines) / `sarif` (code
+  scanning).
+- **Read the lifecycle scripts.** `jq '.scripts' package/package.json`,
+  then hunt exfil/exec primitives (`child_process`, `exec(`, `spawn`,
+  `eval(`, base64 `Buffer.from`, `process.env`, outbound URLs). Lifecycle
+  scripts are read first, not last.
+- **Cross-check the lockfile.** Extract pinned `name@version` pairs and
+  run OSV-Scanner (`osv-scanner --lockfile=package-lock.json`) — it flags
+  known-malicious (MAL-) advisories, not just CVEs. During an active
+  campaign, diff pins against the advisory's known-bad list.
+- **Detonate only in a sandbox, only if static is inconclusive.**
+  Network-monitored throwaway (`tcpdump -w capture.pcap`), `npm install`
+  the tarball, baseline-diff the filesystem, inspect for DNS/HTTP beacons.
+- **Verdict with evidence**: benign / suspicious / malicious + IOCs
+  (URLs, IPs, hashes) for blocking. Malicious → report to the registry.
+
+## 6. Exploit-validation discipline — static-only is unconfirmed (enrich — source: `usestrix/strix` `find-security-vulnerabilities-in-code`, Apache-2.0, raw SKILL.md fetched 2026-09-19)
+
+Pattern scanners produce hundreds of "potential" hits; a finding earns
+its severity by demonstration.
+
+- **Unconfirmed by default.** A static-only finding is reported as
+  unconfirmed until reproduced against live behavior. Scope the run at
+  the risky subtree, never the whole monorepo by default; on a branch,
+  scope to the diff.
+- **Tell the reviewer what it can't infer.** Tenancy model, trust
+  boundaries, which inputs are attacker-controlled — state these up
+  front; a reviewer guessing them produces noise.
+- **Exit-0 ≠ clean.** "Nothing proven in scope" is not "codebase clean"
+  — record what went unreviewed when the run was capped.
+- **Keep the inventory tools.** Dependency (SCA) and secret scanning stay
+  in place for known-CVE deps and committed credentials; this discipline
+  covers the logic/authorization/injection bugs those tools structurally
+  cannot find.
+- **Fix the root, re-prove.** Patch the shared helper, not the one
+  route — then re-run the original trigger and record reproduction
+  failure (same attestation shape as §3).
+
+## 7. Differential escalations — rationalizations, risk triggers, red flags (enrich — source: `trailofbits/skills` `differential-review`, raw SKILL.md fetched 2026-09-19)
+
+Complements §2 (which owns blast-radius/blame/coverage/reintroduction):
+the decision rules that stop a review from talking itself out of depth.
+
+- **Rationalizations (do not skip).** "Small PR, quick review" — classify
+  by RISK, not size. "I know this codebase" — build the baseline anyway.
+  "History takes too long" — history reveals regressions, never skip it.
+  "Just a refactor" — analyze as HIGH until proven LOW. "I'll explain
+  verbally" — no artifact = findings lost; always write the report file.
+- **Risk triggers.** HIGH: auth, crypto, external calls, value transfer,
+  validation removal. MEDIUM: business logic, state changes, new public
+  APIs. LOW: comments, tests, UI, logging. Size strategy: SMALL codebase
+  (<20 files) = deep; MEDIUM = 1-hop deps, priority files; LARGE =
+  critical paths only.
+- **Red flags — stop and investigate.** Code removed from security/CVE/fix
+  commits; access-control modifiers weakened; validation removed without
+  replacement; external calls added without checks; high blast radius
+  (50+ callers) + HIGH-risk change. These force adversarial analysis even
+  in quick triage.
+
+## 8. Taint lens — source → sink tracing on the cheap (enrich — source: `claude-red-skill-bug-identification`, raw SKILL.md fetched 2026-09-19; concepts only, exploit-research body NOT imported)
+
+For each attacker-reachable input, name the **sources** (data to track)
+and the **sinks** (locations that must never be influenced by tainted
+data), then trace propagation between them. Cheap manual version: grep
+every sink's backward call chain for an unvalidated source; grep every
+source's forward flow for a missing check. Dangerous-function hunt:
+`eval`/exec/spawn, raw SQL/shell/template construction, deserialization
+of untrusted bytes, crypto/hash primitives — each occurrence earns a
+source→sink trace, not a glance. Patch-diff lens: when reviewing a
+dependency upgrade or cherry-pick, diff old-vs-new for
+security-relevant changes (added sinks, removed checks, widened inputs)
+before reading anything else.
