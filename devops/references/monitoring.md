@@ -21,6 +21,13 @@ An observability setup: SLIs/SLOs, metrics, structured logs, traces where useful
 6. Attach a runbook link to each alert and route it to the on-call owner.
 7. Test alerting end to end (fire a synthetic alert) and tune noise.
 
+## Grafana mechanics (enrich — source: `wshobson/agents` (`grafana-dashboards`))
+
+- **PromQL copy-paste.** Error rate: `sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))`; p95 latency: `histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, route))`; saturation: `sum(rate(container_cpu_usage_seconds_total[5m])) by (pod) / sum(kube_pod_container_resource_limits{resource="cpu"}) by (pod)`.
+- **Panel JSON.** Export one panel JSON per alert-backed chart; keep `datasource` templated (`${DS_PROM}`), never hardcoded UID, so dashboards port across envs.
+- **Provisioning YAML.** Commit `provisioning/dashboards/*.yaml` (provider → dashboards path) + `provisioning/datasources/*.yaml`; Grafana boots with dashboards, no click-ops.
+- **Dashboards-as-code.** Dashboard JSON lives in git beside the service; change = PR → provisioned on deploy. One dashboard per SLO (status at a glance), drill-downs link from the alert, not the reverse.
+
 ## Quality gate
 
 - [ ] SLIs/SLOs defined from user experience.

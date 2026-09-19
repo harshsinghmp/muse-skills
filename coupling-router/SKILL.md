@@ -156,6 +156,8 @@ The primary verdict is spec alignment: a plan missing spec alignment is rejected
 
 **Phase-0 capability map** (source: `addyosmani/agent-skills` `spec-driven-development`): before any module spec is written, emit stable kebab-case module ids, a one-way dependency direction, and the build order; no `SPEC-<id>.md` is written until the map gates it.
 
+**Monorepo family — turbo-core portable** (source: `wshobson/agents` `monorepo-management` + `turborepo-caching`): pnpm workspaces, pipeline `dependsOn: ["^build"]` + declared outputs, persistent dev tasks, remote cache, affected-gate (build/test only what changed), cache-miss triage. Nx legs (tags + affected + library types feature/ui/data-access/util/shell) and Bazel legs (fine-grained targets + remote execution) gated on adoption — turbo only unless trivial.
+
 **Multi-perspective review (plans with ≥5 tasks):** a large plan is reviewed through more than one lens before dispatch — at minimum three, in sequence: (1) **spec/devil's-advocate lens** — does each task trace to the spec, and what premise could invalidate it; (2) **coupling lens** — write-overlap matrix, interface locks, wave structure (the checks of Steps 3–4); (3) **failure lens** — for each wave, what happens when it fails: recovery owner, dead-letter route, dependent-skip policy. Findings from each lens are recorded against the plan; unresolved findings reject the plan. Single-lens review is acceptable only below 5 tasks.
 
 ### Step 3 — Dependency & Artifact Overlap Audit

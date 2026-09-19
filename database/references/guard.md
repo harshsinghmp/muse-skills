@@ -61,6 +61,7 @@ reset role;
 - Connection or lock fallout from policy rewrites → `operate`.
 - App-side enforcement logic → `webdev`; the database remains the authority.
 - Supabase Auth service or dashboard config → link out to Supabase docs, never duplicate.
+- PG delta (source: `wshobson/agents` `postgresql-table-design` — ~60% already owned above, delta-only): TIMESTAMPTZ over TIMESTAMP, NUMERIC for money, TEXT+CHECK over VARCHAR(n), identity over serial; UNIQUE NULLS NOT DISTINCT (PG15+); EXCLUDE anti-double-book; BRIN for time-series, GIN/GiST chooser; RANGE/LIST/HASH partitioning; identity gaps + MVCC hot-churn notes.
 
 ## Sources
 

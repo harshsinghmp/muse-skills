@@ -34,6 +34,7 @@ A working end-to-end feature: schema, API, UI, states, and tests; verification g
 - Test-authoring (e2e): pyramid (few E2E on critical paths only), `data-testid`/role selectors over CSS, page-objects, `test.step` reporting, headed/debug/trace triage, no fixed-timeout waits. Source: `wshobson/agents` (`e2e-testing-patterns`).
 - Test-authoring (pytest): AAA shape, `test_<unit>_<input>_<expect>` names, retry-behavior via mock side_effect (transient-retry / permanent-no-retry), freezegun time-travel, markers (slow/integration/skipif/xfail), `--cov-fail-under` floor. Source: `wshobson/agents` (`python-testing-patterns`).
 - Temporal workflow tests + bats shell-test leg gated — adopt only if the project uses Temporal / shell-hook testing needs it; else skip (roadmap §4).
+- Temporal design twin (source: `wshobson/agents` `workflow-orchestration-patterns`): workflow-orchestrates/activity-executes split; determinism rules (no `datetime.now`, no threads, no direct API calls in workflows); idempotent activities + timeouts + heartbeats; WHEN-NOT-USE (CRUD→APIs, batch→Airflow, streaming→Kafka).
 
 ## Sources
 

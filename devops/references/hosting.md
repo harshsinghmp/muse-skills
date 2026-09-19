@@ -22,6 +22,27 @@ A deployed app: chosen host with rationale, build/deploy configuration as code, 
 7. Document the rollback command and test it once.
 8. Provision the hosting itself as infrastructure-as-code (Terraform/CDK/CloudFormation) rather than one-off console clicks wherever the target supports it — the infra, not just the app, must be reproducible so another engineer can rebuild the environment from a PR, not a person's memory.
 
+## K8s manifest checklist + Helm conventions (enrich — source: `wshobson/agents` (`kubernetes-deployment`, `helm-chart`))
+
+- **Manifest checklist.** Every Deployment ships requests/limits, `readinessProbe` + `livenessProbe`, `strategy.rollingUpdate`, `resources`, pod `labels` matching Service selector, image pinned by digest (`image:tag@sha256:…`, never `:latest`).
+- **Namespace + quota.** One namespace per env; `ResourceQuota` + `LimitRange` committed beside manifests so a noisy neighbor fails closed at apply time.
+- **Helm conventions.** `Chart.yaml` pinned `version` + `appVersion`; values split `values.yaml` (defaults) / `values-prod.yaml` (env delta only); secrets never in values — reference the secret manager, same rule as step 3.
+- **Render-before-apply.** `helm template . -f values-prod.yaml | kubectl apply --dry-run=client -f -` in CI before any cluster write.
+
+## Terraform skeleton + composition + Terratest (enrich — source: `wshobson/agents` (`terraform-module`, `terratest`))
+
+Upgrades step 8 (provision hosting as code): the infra rebuilds from a PR, not memory.
+
+- **Skeleton.** `main.tf` (providers, pinned versions) + `variables.tf` (typed, defaults) + `outputs.tf` (endpoints, IDs) + `envs/<env>.tfvars`. `terraform fmt -check` + `terraform validate` gate every PR.
+- **Composition.** One root module per env composing versioned child modules (`source = "./modules/network"`); no resource blocks in root. State in remote backend with locking; never local state for shared envs.
+- **Terratest.** One Go test per module: plan → apply → assert output (e.g. bucket versioning on) → destroy. Run on the smallest fixture that proves the invariant.
+
+## Multi-cloud advisory + cost tactics (enrich — source: `wshobson/agents` (`multi-cloud-strategy`, `cost-optimization`))
+
+- **Advisory-only.** Default single cloud + managed services; go multi-cloud only for a named residency, latency, or exit-risk requirement — record which one. Abstraction lives in Terraform modules, never in app code branches per cloud.
+- **Cost tactics.** Right-size from actuals (requests/limits from p95 usage, not guesses); autoscale down to zero where the platform allows; lifecycle rules on logs/artifacts/backups; one tagged owner per expensive resource.
+- **HCL tag block.** Every billable resource carries `env`, `owner`, `cost-center` — untagged apply fails review.
+
 ## Quality gate
 
 - [ ] Target chosen from the ladder with rationale.

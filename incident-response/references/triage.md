@@ -19,6 +19,12 @@ Triage sheet: SEV level, blast radius, incident commander, escalation spine, fir
 4. Set the comms cadence now: SEV-1 every 15 min, SEV-2 every 30 min, SEV-3 hourly, SEV-4 async. Hand the clock to `communicate`.
 5. Route to `mitigate` with severity + class hypothesis; record every assumption with a timestamp.
 
+## On-call handoff annex (enrich — source: `wshobson/agents` (`on-call-handoff`))
+
+- **Packet.** Outgoing on-call ships: active SEVs + state, top-3 risks (flaky alert, pending deploy, expiring cert), escalation contacts that changed, link to the incident log. No packet = no handoff.
+- **Readback.** Incoming acknowledges each line (ack/nack with timestamp); anything unacked stays with outgoing until acked.
+- **Overlap.** 15-min overlap window on rotation day; pages during overlap go to outgoing, shadow to incoming.
+
 ## Quality gate
 
 - [ ] SEV stated with blast radius and start time (assumptions marked).
