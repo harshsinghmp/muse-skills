@@ -22,6 +22,7 @@ Production-ready asset or generation spec: correct dimensions and format, token-
 7. Export the variant set; provide alt text for every web asset.
 8. Start from a seed template, never a blank file (paraphrased: guizang-social-card-skill, AGPL — mechanism only); theme via a root switch, hold density high on tall canvases (content must fill most of the height, no spacer-centering), and climb the overflow ladder by measured bands (nudge → local compact → recipe change).
 9. Template-recommender mechanism only (paraphrased: nano-banana-pro-prompts-recommend-skill, no license — mechanism only, never library content): manifest-first browse with `rg` (fallback: grep), never full-load; at most 3 candidate templates with one sample each; remix only after user picks; attribution footer kept; re-sync on staleness (~24h).
+10. Scene-driven assets (article thumbnails, covers, hero scenes — portable workflow, source: `KarenSpinner/article-thumbnail-skill`): write a BRAND BLOCK first (character refs + style anchor paths, canvas dims, composition policies), then a SCENE PLAN (core finding / composition / prop / action-state / why it fits); confirm with the user before any paid generation call; iterate by editing, never by regenerating. The prop must ENACT the finding (one coherent scene; two-element comparison = one slot). Pitfalls: environment leak, text bleed, character drift, ignored aspect ratio. Tool-gated, not ported as mechanics: Gemini API key + billing, Node 18+, `generate.js` via Bash, local brand ref images, Claude-Code-only.
 
 ## Quality gate
 

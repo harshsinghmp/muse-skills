@@ -214,6 +214,12 @@ Propagate downstream effects (e.g. API changes affecting types and tests) when f
 - **Warning**: `≥ 5KB`
 - **Hard Limit**: `≥ 10KB`
 Remove duplication and move verbose reference material to dedicated documentation.
+- **Conditional-block writing** (source: humanlayer improve-claude-md, mechanism-only — buyer archives CLAUDE.md, applies to DOX rail sections only): wrap domain guidance in `<important if="narrow-trigger">…</important>` scoped to one DOX section (`.agents/context/*` or router); one narrow trigger per rule, never group unrelated triggers.
+- **Bare-vs-wrap test**: bare (no wrapper) when rule applies to 90%+ tasks (identity, map, stack); wrap only domain guidance (testing, API, state, i18n).
+- **Keep-all commands**: keep every verified command; present as a single commands table/block (Step 10 verified-only still holds — never invent).
+- **Cut rules**: cut linter-enforceable patterns, code-discoverable patterns, and vague instructions; replace code snippets with path refs unless the snippet itself is the durable gotcha.
+- **Apply proc (compressed)**: identity → map → stack → commands table → split rules → wrap domains → cut linter/snippets/vague → size-check → validate.
+- Note (validator-later): narrow-condition lint (one trigger per block, no grouped triggers) proposed for `scripts/validate-memory-file.sh`; not implemented here.
 
 ### Step 16 — Validate
 Run `validate-memory-file.sh` to confirm size, structure, command accuracy, and verify `.memory/**` was untouched.
