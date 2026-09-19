@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muse Skills — Credits</title>
+<meta name="description" content="Public credits: which outside repos inspired each of our skills. Inspirations only; everything re-implemented in-house.">
+<style>
+:root{
+  --paper:#faf8f3; --ink:#1c1a16; --muted:#6b655a; --line:#e5ddcd;
+  --card:#ffffff; --accent:#0e5f56; --accent-soft:#e0efe9;
+  --radius:14px; --measure:72ch;
+  --shadow:0 1px 2px rgba(28,26,22,.06),0 8px 28px -12px rgba(28,26,22,.22);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16px;line-height:1.6}
+h1,h2{line-height:1.15;margin:0}
+p{margin:0 0 .75em}
+a{color:var(--accent)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:#f1ece0;padding:2px 6px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:8px 16px;z-index:99}
+.skip:focus{left:8px;top:8px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.hero{background:radial-gradient(1200px 420px at 15% -10%,#d9efe4 0%,transparent 60%),radial-gradient(900px 380px at 95% 0%,#f3e3c2 0%,transparent 55%),var(--paper);border-bottom:1px solid var(--line)}
+.hero-inner{padding:64px 0 40px}
+.kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid #bcd8cb;padding:6px 12px;border-radius:999px;margin-bottom:20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.hero h1{font-size:clamp(2.2rem,5vw,3.4rem);max-width:20ch;margin-bottom:16px}
+.hero .lede{font-size:1.15rem;color:var(--muted);max-width:var(--measure)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:32px 0 8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:1.9rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.topnav{position:sticky;top:0;z-index:50;background:rgba(250,248,243,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topnav .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.topnav a{text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink);padding:8px 14px;border-radius:999px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.topnav a:hover{background:var(--accent-soft)}
+section.block{padding:44px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.sec-head h2{font-size:clamp(1.5rem,3vw,2.1rem)}
+.sec-head .n{color:var(--accent);font-size:1rem}
+.sec-sub{color:var(--muted);max-width:var(--measure);margin-bottom:24px}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:999px;vertical-align:middle;white-space:nowrap;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.note-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f3eee1;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+td.skill{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;white-space:nowrap}
+footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 64px;color:var(--muted);font-size:.88rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media (max-width:560px){.hero-inner{padding:44px 0 28px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <span class="kicker">Credits</span>
+    <h1>Standing on good work</h1>
+    <p class="lede">Outside repos and ideas behind each of our skills. Listed as thanks only &mdash; everything here was rebuilt in-house, no source repo code shipped.</p>
+    <div class="stats" role="list" aria-label="Headline numbers">
+      <div class="stat" role="listitem"><b>33</b><span>our skills credited</span></div>
+      <div class="stat" role="listitem"><b>40+</b><span>source repos surveyed</span></div>
+      <div class="stat" role="listitem"><b>100+</b><span>source contributions mapped</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="topnav" aria-label="Credits sections">
+  <div class="wrap">
+    <a href="#credits">Credits table</a>
+    <a href="#license">License note</a>
+  </div>
+</nav>
+
+<main id="main" class="wrap">
+
+  <section class="block" id="credits" aria-labelledby="credits-h">
+    <div class="sec-head"><span class="n">01</span><h2 id="credits-h">Credits table</h2></div>
+    <p class="sec-sub">Grouped by our skill, one row per source contribution. Notes stay short by design.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Our skill</th><th>Inspired by</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>brainstorming</code></td><td>triage shape</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>subagent-driven-development</code></td><td>worker shape</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>systematic-debugging</code></td><td>debug discipline</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>tdd</code></td><td>test discipline</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> <code>ai-debt-detector</code></td><td>sweep reference</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/trailofbits/skills">trailofbits/skills</a> <code>code-improver</code></td><td>review loop</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/alchaincyf/darwin-skill">alchaincyf/darwin-skill</a> judge</td><td>judge pattern</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/bjgreenberg/senior-engineering-partner">bjgreenberg/senior-engineering-partner</a> evals</td><td>evals reference</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> <code>test-driven-development</code></td><td>test discipline</td></tr>
+        <tr><td class="skill">gauntlet-loop</td><td>99rebels <code>regression-guard</code></td><td>regression check</td></tr>
+        <tr><td class="skill">relay</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>brainstorming</code></td><td>triage shape</td></tr>
+        <tr><td class="skill">relay</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>writing-plans</code></td><td>plan shape</td></tr>
+        <tr><td class="skill">relay</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> <code>spec-driven-development</code></td><td>spec shape</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>systematic-debugging</code></td><td>debug discipline</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/obra/superpowers">obra/superpowers</a> <code>tdd</code></td><td>test discipline</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/bjgreenberg/senior-engineering-partner">bjgreenberg/senior-engineering-partner</a> <code>engineering-workflow</code></td><td>rigor reference</td></tr>
+        <tr><td class="skill">code-review</td><td>awesome-skills <code>code-review-skill</code></td><td>checklist reference</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/samber/cc-skills-golang">samber/cc-skills-golang</a> <code>golang-safety</code></td><td>language checklist</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/mattpocock/skills">mattpocock/skills</a> <code>code-review</code></td><td>smell baseline</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> <code>constraint-driven-development</code></td><td>checklist reference</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/tech-leads-club/agent-skills">tech-leads-club</a> the-judge</td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td>BagelHole <code>threat-modeling</code></td><td>threat lens</td></tr>
+        <tr><td class="skill">code-review</td><td>HoangNguyen <code>common-exploit-verification</code></td><td>verification lens</td></tr>
+        <tr><td class="skill">code-review</td><td>HoangNguyen <code>specialist-security-reviewer</code></td><td>reviewer lens</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/trailofbits/skills">trailofbits/skills</a> <code>differential-review</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td>usestrix/strix <code>find-security-vulnerabilities-in-code</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td>EveryInc <code>compound-engineering-plugin</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td>alirezarezvani <code>md-review</code></td><td>render reference</td></tr>
+        <tr><td class="skill">code-review</td><td>skills-hub <code>accessibility-agents-pr-review</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/phuryn/pm-skills">phuryn/pm-skills</a> agreement review</td><td>audit reference</td></tr>
+        <tr><td class="skill">code-review</td><td>pm-skills <code>intended-vs-implemented</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td>inkeep <code>open-knowledge-review-a-design</code></td><td>design review</td></tr>
+        <tr><td class="skill">code-review</td><td>skills-hub-registry <code>arch-review</code></td><td>review method</td></tr>
+        <tr><td class="skill">code-review</td><td><a href="https://github.com/DietrichGebert/ponytail">DietrichGebert/ponytail</a> <code>ponytail-review</code></td><td>simplify lens</td></tr>
+        <tr><td class="skill">code-review</td><td>brooks-lint <code>brooks-review</code></td><td>finding shape</td></tr>
+        <tr><td class="skill">code-review</td><td>cybersecurity-skills <code>detecting-malicious-npm-packages</code></td><td>supply-chain lens</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a> <code>react-best-practices</code></td><td>rule reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a> <code>composition-patterns</code></td><td>pattern reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a> <code>vercel-optimize</code></td><td>audit reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> python packaging</td><td>packaging reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> <code>async-python-patterns</code></td><td>async reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> python performance</td><td>perf reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> python style</td><td>style reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> architecture patterns</td><td>pattern reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> api design</td><td>api reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> event-sourcing chain</td><td>pattern reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> <code>saga-orchestration</code></td><td>pattern reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> testing patterns</td><td>test reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> api design</td><td>contract note</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> deprecation</td><td>lifecycle note</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> frontend engineering</td><td>ui reference</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/jlevy/simple-modern-uv">jlevy/simple-modern-uv</a></td><td>tooling note</td></tr>
+        <tr><td class="skill">webdev</td><td><a href="https://github.com/glitternetwork/pinme">glitternetwork/pinme</a></td><td>deploy shape</td></tr>
+        <tr><td class="skill">refactor-ui</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs/agent-skills</a> design guidelines</td><td>rule reference</td></tr>
+        <tr><td class="skill">refactor-ui</td><td><a href="https://github.com/humanlayer/skills">humanlayer/skills</a> <code>show-me</code></td><td>explain shape</td></tr>
+        <tr><td class="skill">refactor-ui</td><td><a href="https://github.com/humanlayer/skills">humanlayer/skills</a> <code>narrow-react-prop-types</code></td><td>prop reference</td></tr>
+        <tr><td class="skill">design</td><td>anthropics <code>frontend-design</code></td><td>design language</td></tr>
+        <tr><td class="skill">design</td><td><a href="https://github.com/Nutlope/hallmark">Nutlope/hallmark</a></td><td>quality bar</td></tr>
+        <tr><td class="skill">design</td><td><a href="https://github.com/mattpocock/skills">mattpocock/skills</a> prototype program</td><td>prototype shape</td></tr>
+        <tr><td class="skill">design</td><td>guizang <code>social-card-skill</code></td><td>template shape</td></tr>
+        <tr><td class="skill">design</td><td>nano-banana <code>prompt-lib</code></td><td>template shape</td></tr>
+        <tr><td class="skill">designscope</td><td>figma <code>figma-design-to-code</code></td><td>capture flow</td></tr>
+        <tr><td class="skill">animate</td><td>motion sandbox</td><td>motion reference</td></tr>
+        <tr><td class="skill">animate</td><td>OpenMontage skills</td><td>motion reference</td></tr>
+        <tr><td class="skill">animate</td><td>generative-media skills</td><td>production reference</td></tr>
+        <tr><td class="skill">animate</td><td>guizang <code>social-card-skill</code></td><td>motion reference</td></tr>
+        <tr><td class="skill">content</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>copy-editing</code></td><td>copy framework</td></tr>
+        <tr><td class="skill">content</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>copywriting</code></td><td>copy framework</td></tr>
+        <tr><td class="skill">content</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>content-strategy</code></td><td>strategy reference</td></tr>
+        <tr><td class="skill">content</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>emails</code></td><td>email reference</td></tr>
+        <tr><td class="skill">content</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>video</code></td><td>video reference</td></tr>
+        <tr><td class="skill">content</td><td>affaan-m/ECC <code>content-engine</code></td><td>repurpose reference</td></tr>
+        <tr><td class="skill">content</td><td>affaan-m/ECC <code>brand-voice</code></td><td>voice reference</td></tr>
+        <tr><td class="skill">content</td><td>resend <code>email-best-practices</code></td><td>deliverability notes</td></tr>
+        <tr><td class="skill">content</td><td>99rebels <code>skill-polisher</code></td><td>polish check</td></tr>
+        <tr><td class="skill">seo</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>seo-audit</code></td><td>audit reference</td></tr>
+        <tr><td class="skill">seo</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>site-architecture</code></td><td>structure reference</td></tr>
+        <tr><td class="skill">seo</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>programmatic-seo</code></td><td>catalog reference</td></tr>
+        <tr><td class="skill">seo</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>ai-seo</code></td><td>citation reference</td></tr>
+        <tr><td class="skill">seo</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs</a> <code>writing-guidelines</code></td><td>prose reference</td></tr>
+        <tr><td class="skill">smm</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>social</code></td><td>listening reference</td></tr>
+        <tr><td class="skill">smm</td><td>affaan-m/ECC <code>content-engine</code></td><td>platform reference</td></tr>
+        <tr><td class="skill">smm</td><td>affaan-m/ECC <code>crosspost</code></td><td>cross-post reference</td></tr>
+        <tr><td class="skill">smm</td><td>guizang <code>social-card-skill</code></td><td>motion reference</td></tr>
+        <tr><td class="skill">smm</td><td>linkedin-skills pack <code>hook-formulas</code></td><td>hook formulas</td></tr>
+        <tr><td class="skill">smm</td><td>linkedin-skills pack <code>algorithm-heuristics</code></td><td>algo notes</td></tr>
+        <tr><td class="skill">smm</td><td>linkedin-skills pack <code>threading-rules</code></td><td>reply reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>onboarding</code></td><td>activation reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>popups</code></td><td>capture reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> lead magnets</td><td>offer reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> offers + pricing</td><td>offer reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>churn-prevention</code></td><td>retention reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> referrals</td><td>referral reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> events + PR</td><td>event reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> planning + council</td><td>planning reference</td></tr>
+        <tr><td class="skill">growth</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> research + psychology</td><td>research reference</td></tr>
+        <tr><td class="skill">analytics</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>cro</code></td><td>test reference</td></tr>
+        <tr><td class="skill">analytics</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>attribution</code></td><td>attribution reference</td></tr>
+        <tr><td class="skill">gtm</td><td><a href="https://github.com/tech-leads-club/agent-skills">tech-leads-club/agent-skills</a> <code>gtm-metrics</code></td><td>metrics loop</td></tr>
+        <tr><td class="skill">gtm</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>prospecting</code></td><td>prospecting reference</td></tr>
+        <tr><td class="skill">gtm</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>revops</code></td><td>handover reference</td></tr>
+        <tr><td class="skill">gtm</td><td><a href="https://github.com/phuryn/pm-skills">phuryn/pm-skills</a> <code>gtm-strategy</code></td><td>strategy reference</td></tr>
+        <tr><td class="skill">gtm</td><td><a href="https://github.com/phuryn/pm-skills">phuryn/pm-skills</a> <code>competitive-battlecard</code></td><td>battlecard reference</td></tr>
+        <tr><td class="skill">gtm</td><td>affaan-m/ECC <code>competitive-platform-analysis</code></td><td>research reference</td></tr>
+        <tr><td class="skill">gtm</td><td>affaan-m/ECC <code>market-research</code></td><td>research reference</td></tr>
+        <tr><td class="skill">gtm</td><td>99rebels <code>web-design-lead-qualifier</code></td><td>qualifier reference</td></tr>
+        <tr><td class="skill">ops</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>product-marketing</code></td><td>template shape</td></tr>
+        <tr><td class="skill">ops</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>revops</code></td><td>deal-desk reference</td></tr>
+        <tr><td class="skill">sales-enablement</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>sales-enablement</code></td><td>talk-track reference</td></tr>
+        <tr><td class="skill">paidads</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> paid ads</td><td>creative reference</td></tr>
+        <tr><td class="skill">paidads</td><td>kim-barrett <code>advertising-skills</code></td><td>campaign reference</td></tr>
+        <tr><td class="skill">mobile</td><td><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a> <code>aso</code></td><td>scoring shape</td></tr>
+        <tr><td class="skill">mobile</td><td>Community-Access <code>accessibility-agents</code></td><td>audit reference</td></tr>
+        <tr><td class="skill">humanize</td><td><a href="https://github.com/conorbronsdon/avoid-ai-writing">conorbronsdon/avoid-ai-writing</a> detector</td><td>scoring reference</td></tr>
+        <tr><td class="skill">humanize</td><td><a href="https://github.com/conorbronsdon/avoid-ai-writing">conorbronsdon/avoid-ai-writing</a> validator</td><td>check reference</td></tr>
+        <tr><td class="skill">research</td><td>affaan-m/ECC <code>deep-research</code></td><td>research standards</td></tr>
+        <tr><td class="skill">research</td><td>affaan-m/ECC <code>market-research</code></td><td>research standards</td></tr>
+        <tr><td class="skill">research</td><td>LinklyAI <code>best-skills</code> rankings</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>Medium authors survey</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>VoltAgent catalog</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>sickn33 catalog</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>Aegis catalog</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>alibaba catalog</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>Mindrally catalog</td><td>survey corpus</td></tr>
+        <tr><td class="skill">research</td><td>runkids skillshare corpus</td><td>survey corpus</td></tr>
+        <tr><td class="skill">updatedocs</td><td><a href="https://github.com/vercel-labs/agent-skills">vercel-labs</a> <code>writing-guidelines</code></td><td>prose reference</td></tr>
+        <tr><td class="skill">updatedocs</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> docs + ADRs</td><td>docs reference</td></tr>
+        <tr><td class="skill">updatedocs</td><td>anthropics doc pattern</td><td>docs pattern</td></tr>
+        <tr><td class="skill">devops</td><td>skillshare audit pattern</td><td>audit shape</td></tr>
+        <tr><td class="skill">devops</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> pipeline reference</td><td>pipeline reference</td></tr>
+        <tr><td class="skill">git</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> git workflow</td><td>workflow reference</td></tr>
+        <tr><td class="skill">git</td><td><a href="https://github.com/tomascortereal/claude-code-setup">tomascortereal/claude-code-setup</a> <code>gsd-pr-branch</code></td><td>branch reference</td></tr>
+        <tr><td class="skill">git</td><td><a href="https://github.com/humanlayer/skills">humanlayer/skills</a> <code>visual-pr</code></td><td>review shape</td></tr>
+        <tr><td class="skill">qa-launch</td><td>HoangNguyen <code>common-pentest-methodology</code></td><td>test reference</td></tr>
+        <tr><td class="skill">qa-launch</td><td>BagelHole <code>penetration-testing</code></td><td>test reference</td></tr>
+        <tr><td class="skill">qa-launch</td><td><a href="https://github.com/trailofbits/skills">trailofbits/skills</a> keepers</td><td>checklist reference</td></tr>
+        <tr><td class="skill">qa-launch</td><td>99rebels <code>skill-polisher</code></td><td>checklist reference</td></tr>
+        <tr><td class="skill">incident-response</td><td>BagelHole <code>incident-response</code></td><td>triage reference</td></tr>
+        <tr><td class="skill">incident-response</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> on-call + runbook</td><td>ops reference</td></tr>
+        <tr><td class="skill">coupling-router</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> task breakdown</td><td>sizing gate</td></tr>
+        <tr><td class="skill">coupling-router</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> monorepo guide</td><td>monorepo reference</td></tr>
+        <tr><td class="skill">coupling-router</td><td><a href="https://github.com/samber/cc-skills-golang">samber/cc-skills-golang</a> <code>golang-how-to</code></td><td>orchestration reference</td></tr>
+        <tr><td class="skill">coupling-router</td><td>alirezarezvani <code>command-guide</code></td><td>selection reference</td></tr>
+        <tr><td class="skill">context-anchor</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> <code>context-engineering</code></td><td>context shape</td></tr>
+        <tr><td class="skill">new-project</td><td><a href="https://github.com/addyosmani/agent-skills">addyosmani/agent-skills</a> <code>interview-me</code></td><td>interview shape</td></tr>
+        <tr><td class="skill">pua</td><td><a href="https://github.com/mattpocock/skills">mattpocock/skills</a> <code>diagnosing-bugs</code></td><td>debug discipline</td></tr>
+        <tr><td class="skill">coach</td><td><a href="https://github.com/mattpocock/skills">mattpocock/skills</a> <code>tdd</code></td><td>test discipline</td></tr>
+        <tr><td class="skill">secretary</td><td><a href="https://github.com/mattpocock/skills">mattpocock/skills</a> <code>to-tickets</code></td><td>ticket shape</td></tr>
+        <tr><td class="skill">secretary</td><td><a href="https://github.com/wshobson/agents">wshobson/agents</a> review governance</td><td>governance reference</td></tr>
+        <tr><td class="skill">ai-ready</td><td>hyhmrright <code>brooks-lint</code> + <code>brooks-audit</code></td><td>audit reference</td></tr>
+        <tr><td class="skill">client-comms</td><td>99rebels <code>skill-polisher</code></td><td>report shape</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="block" id="license" aria-labelledby="license-h">
+    <div class="sec-head"><span class="n">02</span><h2 id="license-h">License note</h2></div>
+    <div class="note-card">
+      <p>Source repos keep their own licenses. AGPL and unlicensed sources were paraphrased only, never copied. Each row above names an inspiration; the code in this repo is our own. <span class="badge">MIT</span></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Muse Skills credits &mdash; inspirations, re-implemented in-house. Suite: MIT.
+  </div>
+</footer>
+
+</body>
+</html>

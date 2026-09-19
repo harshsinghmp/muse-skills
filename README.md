@@ -16,13 +16,13 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed collection of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill when you have a specific need, or install the complete forty-three-skill suite with `npx skills`. The agency layer scales down to a single operator managing multiple clients — every head states what changes when you are the whole team.
+Muse Skills is a public, MIT-licensed set of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill for a specific need, or install the full forty-three-skill suite with `npx skills`. The agency skills also work solo — each one notes what changes when you are the whole team.
 
-Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to verify the result. The suite helps agents produce work that is easier to resume, review, and hand off.
+Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to check the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
 ### What problem does this solve?
 
-Agent work often loses momentum in predictable ways: a project starts without durable operating context, instructions become stale, a subagent repeats work already ruled out, or a blocked task disappears with the session. Muse Skills addresses those failure modes with small, composable workflows rather than a hosted service or a framework.
+Agent work tends to stall in familiar ways: a project starts without lasting context, instructions go stale, a subagent repeats work already ruled out, or a blocked task vanishes with the session. Muse Skills answers those failure modes with small, composable workflows rather than a hosted service or a framework.
 
 ### At a glance
 
@@ -119,7 +119,7 @@ Installed via `bash scripts/hooks/install-hooks.sh`. Detects your agent runtime 
 
 ### 1. Choose a starting point
 
-If you are setting up a new repository, start with `new-project`. If the repository already exists and its instructions need attention, start with `updateagents`. Install a reliability skill when you are handing off work, recovering from a blocked task, or resuming after an interruption.
+Setting up a new repository, start with `new-project`. If the repository already exists and its instructions need work, start with `updateagents`. Pick a reliability skill when handing off work, recovering from a blocked task, or resuming after an interruption.
 
 ### 2. Install one skill
 
