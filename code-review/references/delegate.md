@@ -10,7 +10,13 @@
    the diff, PR, or working tree). If the change is ambiguous, use the smallest
    deterministic rule: e.g. "files modified in the last commit", "files in this PR",
    "files matching `<path>`". Record the rule — scope must be reproducible, not a
-   gut call.
+   gut call. Measure what the resolved mode will actually read: diff-shaped
+   targets → `CHANGED_LINES` (additions + deletions from `--numstat`) and
+   `CHANGED_FILES`; path targets → full contents (file count + total lines).
+   Untracked text files count whole; any binary file makes the scope non-small
+   (source: `cherry-studio-gh-pr-review`, raw SKILL.md fetched 2026-09-19).
+   `SMALL_SCOPE` holds only when `CHANGED_LINES <= 1000`,
+   `CHANGED_FILES <= 20`, and no binary file is present.
 2. **Resolve the mode** from that scope's nature:
    - single-hunk, one file → `hotfix`
    - API/signature-only → `contract`

@@ -23,6 +23,51 @@ A buildable Compose app: Material 3 screens per spec, platform integrations, and
 8. Test on emulator AND physical device (sizes, OEM quirks, permission flows).
 7. Release: signed AAB, staged rollout, data-safety form, store listing assets.
 
+## Compose performance audit (enrich — source: `android-skills-compose-performance-audit`, raw SKILL.md v1.0.0 fetched 2026-09-19)
+
+Code-first, then profile. Collect the target Composable + its data flow
+(state, remember, derived state, ViewModel) + symptoms before theorizing;
+if code review is inconclusive, profile — Layout Inspector
+(recomposition counts + highlights), Perfetto/System Trace (frame
+timing), Macrobenchmark (startup/scroll). Profile release builds with R8
+— debug overhead invalidates every number.
+
+- **Hunt, in impact order:** recomposition storms (unstable params, broad
+  state reads) → unstable/missing `LazyColumn` keys (`key = { it.id }`,
+  never index identity) → heavy work in composition (sort/filter/format
+  without `remember(key)`) → missing `remember` recreations → unstable
+  lambdas (remember or method reference) → state read in the wrong phase
+  (defer with `derivedStateOf`, lambda modifiers, `drawBehind`) →
+  unsized async images (Coil/Glide + constraints) → layout thrash (deep
+  nesting, intrinsics, `SubcomposeLayout` misuse).
+- **Stability rules:** primitives stable; `List`/`Map`/`Set`, `var`-classes,
+  lambdas NOT stable — `@Stable`/`@Immutable` (+ immutable collections)
+  where truly immutable. Unstable data classes are the commonest storm
+  source.
+- **Verify:** re-run Layout Inspector + Macrobenchmark on-device (release)
+  and report the before/after delta (recomposition counts, frame drops,
+  jank). No delta, no done.
+
+## APK/AAB static security scan — MobSF gate (enrich — source: `cybersecurity-skills-performing-android-app-static-analysis-with-mobsf`, Apache-2.0, signed SLSA L2, raw SKILL.md fetched 2026-09-19)
+
+Run before release and as a CI gate on the signed artifact
+(`security_score < 60` fails the build). Docker-isolated
+(`opensecurity/mobile-security-framework-mobsf`), upload via REST API,
+triage every HIGH manually (MobSF flags `password` in variable names —
+patterns are leads, not findings).
+
+- **Manifest:** exported components without permission guards,
+  `debuggable=true`, `allowBackup=true`, missing `networkSecurityConfig`.
+- **Code:** hardcoded keys/tokens, secrets in SharedPreferences, ECB /
+  static-IV / hardcoded-key crypto.
+- **Transport:** missing pinning, trust-all TrustManagers, cleartext HTTP.
+- **Binary:** missing R8/ProGuard, weak native protections (canaries, NX,
+  PIE), no debugger detection.
+- Static-only by design — it misses runtime logic flaws, so this gate
+  complements (never replaces) manual review and dynamic analysis. Keep
+  MobSF matched to the app's `targetSdkVersion`; cover `.so` files with
+  `checksec` + manual review.
+
 ## Quality gate
 
 - [ ] Single-activity Compose structure (no fragment fossils).

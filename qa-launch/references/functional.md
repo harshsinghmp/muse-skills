@@ -17,6 +17,22 @@ Pass/fail table per path: Path / Step / Expected / Observed / Evidence / Verdict
 3. Proof-gate each finding: Contract (which requirement it breaks) + Runtime (reproducible on the matrix) + Correction (one deterministic fix). Candidates without all three are notes.
 4. Report at most the top failures first; unrun paths marked Not verified, never implied pass.
 
+## Playwright test-quality lens (micro-enrich — source: `alirezarezvani/pw-review`, MIT, raw SKILL.md fetched 2026-09-19 from `github.com/alirezarezvani/claude-skills`)
+
+When the release candidate ships Playwright tests, review the tests
+themselves before trusting their green: read `playwright.config.ts`,
+then check every spec file against the anti-pattern ladder — **critical**
+(`waitForTimeout`, non-web-first assertions, hardcoded URLs over
+`baseURL`, CSS/XPath where a role locator exists, missing `await`,
+shared mutable state, order dependencies) / **warning** (>50-line tests,
+magic strings, missing edge cases, `page.evaluate` for locator work,
+>2 nested describes, generic names) / **info** (no page objects past 5
+locators, inline data over fixtures, missing a11y assertions, no visual
+regression on UI-heavy pages, unchecked console errors, network-idle
+waits, missing describe grouping). Score 1–10 per file, report
+line-anchored with the corrected form, and offer the fixes — a suite
+full of criticals gates Block regardless of its pass rate.
+
 ## Security verification boundary (black-box only — enrich, adoption-safe)
 
 Source: `HoangNguyen/common-pentest-methodology` (+ `BagelHole/penetration-testing`

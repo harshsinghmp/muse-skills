@@ -22,6 +22,35 @@ A deployed app: chosen host with rationale, build/deploy configuration as code, 
 7. Document the rollback command and test it once.
 8. Provision the hosting itself as infrastructure-as-code (Terraform/CDK/CloudFormation) rather than one-off console clicks wherever the target supports it — the infra, not just the app, must be reproducible so another engineer can rebuild the environment from a PR, not a person's memory.
 
+## Adversarial IaC self-review (enrich — source: `microsoft/azure-skills` `azure-app-onboard/scaffold`, MIT, raw SKILL.md fetched 2026-09-19; Bicep/MCP specifics generalized)
+
+Generated IaC is guilty until the self-review acquits it. Run four layers
+over every generated file before any plan/apply, and record each claim's
+rating — VERIFIED (evidence confirms) / PLAUSIBLE (no counter-evidence,
+unverified) / FLAGGED (contradicted or missing a critical pattern):
+
+- **L1 Security baseline.** Secrets in a manager (never literals), least
+  privilege (RBAC roles scoped, no wildcards), network exposure minimal,
+  encryption at rest/transit on. FLAGGED here blocks the deploy.
+- **L2 Pattern validation.** File/module structure matches the plan,
+  naming follows the plan exactly (the plan is the source of truth —
+  never invent names or derive them by string surgery), every referenced
+  file/module exists on disk, cross-module references resolve (params
+  passed match params declared, outputs referenced exist).
+- **L3 Hallucination detection.** Resource names match the plan exactly,
+  API versions are real and GA (no `-preview`), SKUs match the plan, no
+  invented resource types. Validate mechanically (`terraform validate`,
+  `az bicep build`) — FLAGGED here blocks the deploy.
+- **L4 Cross-cutting trace.** Follow every variable/output/secret
+  end-to-end across modules; dangling references and unwired outputs fail.
+
+**No-deploy bridge.** Validation proves correctness without deploying:
+format + syntax-validate + conformance checks first, then a plan/dry-run
+whose output is reviewed — the deploy gate never opens on unreviewed
+generated code. **Self-healing loop:** on validation failure, fix and
+re-run, max 3 attempts; exhaustion escalates to a human with the findings
+JSON, never a fourth silent retry.
+
 ## K8s manifest checklist + Helm conventions (enrich — source: `wshobson/agents` (`kubernetes-deployment`, `helm-chart`))
 
 - **Manifest checklist.** Every Deployment ships requests/limits, `readinessProbe` + `livenessProbe`, `strategy.rollingUpdate`, `resources`, pod `labels` matching Service selector, image pinned by digest (`image:tag@sha256:…`, never `:latest`).
