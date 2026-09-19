@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [4.4.2] - 2026-09-18
+
+### Added
+
+- **new-project grill-mode rhythm alternate**: Stage 1 picker (one-at-a-time default vs frontier-rounds grill-mode) — frontier rounds, Q/A format, facts/decisions split, anti-passivity + prototype hatch, confirmation gate, ops rules. Default untouched.
+
 ## [4.4.1] - 2026-09-18
 
 ### Added
