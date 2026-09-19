@@ -28,6 +28,7 @@ A shooting-ready script: a first-3-second hook, beats with visuals/shot directio
 12. For VO/narration, route voice identity through local profiles only; never print secrets or mutate saved account settings per request (keeper: mengto/elevenlabs-tts).
 13. For production beyond scripting, pick the pipeline from the job (source: marketingskills `video` SKILL.md): Hyperframes-style HTML rendering for programmatic/templated output vs Remotion-style React rendering for code-composed motion — decide on templating needs and team stack, not hype. When using AI generation, slot the model to the shot (Veo/Sora/Runway/Kling/Seedance/Hailuo/Pika/open-weights each carry different cost/quality slots) and record which model made which shot for re-runs.
 14. Reverse-engineer reference edits with an edit anatomy before rebuilding: cut cadence, transition grammar, text-on-screen system, sound-design layering, pacing curve — named mechanisms per beat, never "similar vibe".
+15. Production-family checklist (paraphrased: generative-media-skills production families, MIT — providers overlap vendor skills, delta only): lock content-format per surface; assemble at runtime from named parts (script/voice/timeline/captions); clear rights/provenance/consent before shipping (credit kept, consent on file); hold one creative-direction pass; finish with post-production (grade/mix/captions/export).
 
 ## Quality gate
 

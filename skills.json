@@ -782,7 +782,7 @@
     },
     {
       "name": "webdev",
-      "description": "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, and migrations \u2014 routed through eleven modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, or migrate sites and stacks. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
+      "description": "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, migrations, and deploy \u2014 routed through twelve modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, migrate sites and stacks, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
       "path": "webdev/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",

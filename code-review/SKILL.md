@@ -65,6 +65,10 @@ change* — review depth scales with blast radius. Load only the listed referenc
 `hotfix` and `contract` never load the theme catalog; `receive` and `fix` never load
 it either — they operate on existing findings, they do not produce new ones.
 
+**Rigor ladder** (source: `bjgreenberg/senior-engineering-partner` `references/engineering-workflow.md`, Apache-2.0): match review depth to tier — T0 spike (one-line spec, test-after acceptable, security floor still holds) · T1 MVP (short written spec, test-first on the critical path) · T2 production (written mini-spec + threat-model lines for auth/tenancy/ingestion/billing/secrets surfaces, iron-law TDD, regression test seen red before every fix). Spec-first gate: restate the understanding and get agreement before judging; the spec is the rubric the review checks against.
+
+**Per-language checklist pointers** (source: `awesome-skills/code-review-skill` `reference/`, MIT — checklists only, no process import): when the diff's language has a dedicated checklist in that catalog, consult it as a candidate generator; every candidate still enters through Steps 4–6 (forcing-violation proof, Torvalds severity). The supplier's 4-phase time-boxed process and 🔴🟡🟢 severities are NOT imported — buyer method and 5-tier calibration govern.
+
 ---
 
 ## When to Use

@@ -26,6 +26,7 @@ Ready-to-publish post(s): a platform-native hook, body/caption, CTA, hashtags or
 10. Atomize before you create (source: marketingskills `social` SKILL.md): break each source asset into content atoms (one claim, stat, quote, or clip per atom) and rebuild platform-natively — one atom never ships verbatim everywhere. Podcast rule of thumb: 8 derivative assets per episode with per-episode quotas set before recording.
 11. Build carousels on a named architecture, not vibes (source: marketingskills `social` SKILL.md): pick one of five — mistake-myth-fix, step-by-step system, before-after-bridge, listicle-stack, story-lesson-pivot — and hold its slide grammar throughout.
 12. Short-form rule: 3 hooks minimum per video (spoken, on-screen, caption), caption spec = hook restated + one context line + single CTA.
+13. Motion-card branch (paraphrased: guizang-social-card-skill, AGPL — mechanism only): first frame must pass static layout rules before packaging as motion; hold per-platform duration caps; diagnose before cutting long sources.
 
 ## Quality gate
 

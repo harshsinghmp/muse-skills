@@ -27,3 +27,14 @@ After fixing one call site, rg sibling call sites of the same function/pattern a
 ## 6. Honest CI Shepherding
 
 Distinguish own-diff failures (fix them) from baseline/infra flakes. One rerun max for a suspected flake (`gh run rerun <id>`); comment on the PR what landed vs what was pre-existing. Never claim green without live `gh pr checks` evidence.
+
+## 7. Visual Reviewer Outline
+
+(source: `humanlayer/skills` `visual-pr` + `show-me`, MIT — outline conventions only)
+
+Write the PR body for the reviewer's comprehension, not as a changelog:
+
+- **Why the change**: exactly one sentence.
+- **Special things to note**: 1–3 bullets — reviewer warnings, migrations, compatibility constraints, deliberate omissions, surprising decisions; `- None.` when empty.
+- **Change outline**: a compact structural view (`/show-me`-inspired), not prose — include only the views that changed: endpoint/SQL contract + business-logic pseudocode, key type/data-structure changes, shallow file tree of changed responsibilities, component tree (hooks/state/package boundaries), call-tree/control-flow/data-flow diffs. Prefer `diff` blocks on existing shapes; show the full target shape when most is new.
+- Keep it human: one human talking to another, simple concise language, no jargon padding.

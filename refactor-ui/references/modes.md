@@ -61,7 +61,8 @@ per root cause listing every location it appears in:
 1. Resolve the target to a concrete file path (ports drift; paths don't).
 2. Squint test → identify primary/secondary/groups in order.
 3. Check the 11 heuristics + concentric radius + grouping ratio, holding hierarchy thresholds (≥1.5× size differentials between levels; exactly one emphasis zone; entry point = primary goal; bold sparing) and density/scan checks (F-pattern for lists/tables, Z-pattern for hero+CTA; every element earns its place — flag 10+-column tables and disclosure that hides primary actions).
-4. Emit the severity table with **no edits**. Offer modes: "want me to
+4. Visual explain on request (source: `humanlayer/skills` `show-me`, MIT): skip preamble, pick the smallest view that makes the point — pseudocode for logic, call tree for control flow, component tree (with state/module boundaries) for UI structure, shallow file tree for ownership, Mermaid for data flow, `diff` blocks for shape changes, one focused HTML artifact when Mermaid is too dense. Place each visual next to the short text it supports; omit everything not needed for the current question.
+5. Emit the severity table with **no edits**. Offer modes: "want me to
    `improve` this, or `audit` it mechanically first?"
 
 ### audit
@@ -82,6 +83,7 @@ also apply:
 concentric radius (`inner = outer − padding`), grouping ratio (inter ≥ 2×
 intra), named z-scale (no raw 9999), theme parity (verify in light AND dark).
 Tokenize in three tiers (global raw values → semantic aliases → component tokens; no raw values in components). Feedback timing: acknowledge input ≤100ms, indicator for 400ms–3s, determinate progress beyond; never flash a spinner under ~400ms. Error messages state what happened, why, and the exact fix — and preserve user input.
+Prop narrowing, when widened story/mock types force dead fallbacks (source: `humanlayer/skills` `narrow-react-prop-types`, MIT): derive the contract from live (non-test, non-Storybook) call sites only — required if every live caller supplies it, removed if none does; require handlers for always-rendered affordances (no inert `onAction?.(...)`); delete fallbacks (`?? []`, `?? 0`) that only existed for widened types; let stories/tests adapt via helpers, never by re-widening the API. Full 11-step workflow at `humanlayer/skills` `plugins/narrow-react-prop-types`.
 
 ### sweep
 1. Inventory: enumerate routes/views touching the surface family.
