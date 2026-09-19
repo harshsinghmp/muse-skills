@@ -61,6 +61,20 @@ Make non-interpolable values (gradients, colors) animatable:
   `--spring: linear(0, 0.14 4%, 0.94 17%, 1.15 24% 30%, 1.02 43%, 0.98 51%, 1 77%, 1);` — overshoot >1 then settle (Generated Spring-style bounce).
 - Built-in `ease`/`ease-out` are too weak for deliberate UI — use the strong tokens.
 
+### CSS spring / bounce generation
+
+No native spring easing in CSS — sample the curve into `linear()`. Two kinds:
+
+| Kind | Meaning | Params that matter |
+|---|---|---|
+| `spring` (default) | Settles with overshoot | `duration` + `bounce` (0–1, default 0.2) |
+| `bounce` | Ball hitting a floor | `duration` only — `bounce` is ignored |
+
+- **Defaults:** `duration` 0.4s spring / 1s bounce. **Bands:** snappy ~0.2s, normal 0.3–0.4s, slow/heavy ~1s. Bounces read better long — 1s feels like normal gravity, shorter feels heavier, longer feels floatier.
+- **Perceptual duration:** the returned transition runs *longer* than requested (settle tail included). Time sibling animations off the requested duration, not the returned one: a 0.2s spring yields `opacity 0.2s linear` + `transform 0.35s linear(...)`.
+- **CSS only.** Inside Motion, use a live spring (`{ type: "spring", visualDuration: 0.4, bounce: 0.2 }`) — it retargets mid-flight and carries velocity; a sampled `linear()` curve cannot.
+- Match the product: trading UI gets no overshoot; playful sites earn softer curves and longer durations.
+
 Animate `translate`/`rotate`/`scale` (not `transform`) to time each independently: `transition: translate 300ms, rotate 400ms, scale 200ms`. For keyframes, `animation-composition: replace|add|accumulate` controls how overlapping animations combine (default `replace`; `add`/`accumulate` stack effects into the base value).
 
 ## 5. Scroll-driven animations (modern)
@@ -243,3 +257,4 @@ theme: {
 - Keyframes restart from zero on retrigger; transitions retarget — use transitions for dynamic UI.
 - Touch devices fire false `:hover` on tap — gate with `@media (hover: hover) and (pointer: fine)`.
 - Ship `prefers-reduced-motion` alongside every animation.
+- Source: motion sandbox skill (no license file — mechanisms paraphrased only, zero verbatim).
