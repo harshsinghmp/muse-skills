@@ -17,7 +17,8 @@
 1. Aggregate into a per-topic briefing: what people are saying, where, with what sentiment and traction.
 2. Identify recurring themes, complaints, and unmet asks (recurrence across sources is what makes a signal).
 3. Note competitive timing signals: launches, positioning shifts, pricing changes.
-4. Produce a brief with citations, a sentiment/trend read, and a "so what / what to do by when" recommendation tied to the decision.
+4. Split fact / inference / recommendation: facts carry URL + date; inferences and estimates are labelled as such with the leap stated; recommendations follow from the evidence, never from unsourced assertion (source: ECC `market-research` Research Standards; `deep-research` Quality Rules).
+5. Produce a brief with citations, a sentiment/trend read, and a "so what / what to do by when" recommendation tied to the decision.
 
 ## Quality gate
 
@@ -25,6 +26,7 @@
 - [ ] Recency window stated.
 - [ ] Every claim carries a URL + date.
 - [ ] Themes gated on cross-source recurrence.
+- [ ] Fact / inference / recommendation split labelled (estimates and leaps stated, never asserted as fact).
 - [ ] Recommendation is decision-linked (timing/posture/positioning).
 
 ## Routing

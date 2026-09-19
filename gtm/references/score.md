@@ -22,6 +22,7 @@ A ranked lead list with scores, the scoring rubric, TAM/SAM sizing, and signal l
 7. Surface the coverage gap (key accounts with no signal data) as an import shortlist, and rescore tiers as new signals land.
 8. Close the loop with win/loss: for every lost or stalled deal, capture the reason in the buyer's words (price, timing, competitor, no-fit, ghosting) and feed it back to scoring weights, messaging, and pricing — a pipeline that never learns why deals die keeps scoring the same wrong profile.
 9. Size TAM/SAM/SOM both directions and reconcile: top-down (addressable × ICP reach) AND bottoms-up (segment counts × average deal value × capture rate); a single un-sourced number is a claim, not a size. State the arithmetic and populations behind each direction and flag where they diverge before committing a number.
+10. Feed the battlecard comparison table (Us/Them/Winner per capability) into fit-signal weights, and use the Moore positioning statement as the tiebreak when two leads score level — the one closer to the stated differentiator ranks up (sources: `phuryn/pm-skills` `competitive-battlecard`; ECC `brand-discovery` 20_positioning).
 
 ## Quality gate
 

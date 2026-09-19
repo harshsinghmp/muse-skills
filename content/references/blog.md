@@ -22,7 +22,7 @@ A publish-ready blog post: intent-matching H1, a scannable outline (H2/H3), a st
 6. Add internal links to related pages and one clear CTA.
 7. Write the meta title and description; give an image/diagram direction.
 8. Treat the brief as contract: confirm keyword, intent, reader, one action, and source facts in writing before drafting — no draft without sign-off.
-9. Repurpose standalone test: every derivative gets its own hook and payoff for its format; list what was cut, not just what was kept. Plan distribution Create-Once-Distribute-Twice: each post ships with its two native cuts named up front, and every phase draws on owned, rented, AND borrowed channels (ORB spine; source: marketingskills `content-strategy` SKILL.md).
+9. Repurpose standalone test: every derivative gets its own hook and payoff for its format; list what was cut, not just what was kept. Plan distribution Create-Once-Distribute-Twice: each post ships with its two native cuts named up front, and every phase draws on owned, rented, AND borrowed channels (ORB spine; source: marketingskills `content-strategy` SKILL.md). Run the atomic-claim flow for derivatives (source: ECC `content-engine`): extract 3–7 atomic claims/scenes from the anchor asset, rank by sharpness/novelty/proof, assign one strong idea per output, adapt structure per platform, strip platform-shaped filler, then quality-gate.
 10. Decay-refresh triage: score decaying posts 0–100 on traffic loss, rank potential, and refresh cost; prioritize recoverable posts in revenue tiers first.
 11. Run a humanize pass and verify claims before delivery.
 12. Reader-test: paste the draft into a fresh context-free session; every blind spot it surfaces gets fixed before ship.

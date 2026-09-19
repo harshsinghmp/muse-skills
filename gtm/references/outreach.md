@@ -19,6 +19,11 @@ A sequenced outbound campaign: touches with spacing, subject angles, interest CT
 4. Deliverability: SPF/DKIM/DMARC verified, plain-text first touch, one link max, no attachments.
 5. End every sequence in a breakup that invites a no and parks the lead with a revisit date.
 
+## Investor-outreach variant (alternative cadence)
+
+- Warm intros carry a forwardable blurb (<100 words): why this investor, what the company does, why now, one proof point, one ask — so the connector forwards, not rewrites.
+- Short investor cadence as alternative to the 4–5-touch sequence: day 0 initial → day 4–5 follow-up with one new data point → day 10–12 final close; stop after that unless a longer sequence is requested (source: ECC `investor-outreach`).
+
 ## Quality gate
 
 - [ ] Touch count, spacing, and caps stated.

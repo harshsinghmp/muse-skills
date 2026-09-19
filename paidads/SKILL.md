@@ -97,6 +97,13 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 `utm_source={platform}&utm_medium=paid&utm_campaign={campaign_slug}` — derive `utm_term`/`utm_content` per variant. Apply on every ad; `analytics` reads this contract.
 
+### Message-to-market foundation (run before any channel mode; source: kim-barrett `advertising-skills` MIT — `copy-chief/schwartz-awareness-mapper`, `copy-chief/mechanism-builder`, `copy-chief/headline-matrix`, `orchestrators/full-funnel-campaign-orchestrator`)
+
+1. **Diagnose awareness first.** Place the audience on the 5-stage ladder (unaware → problem-aware → solution-aware → product-aware → most-aware) by asking: do they know the problem, do they know solutions exist, do they know us? Then set messaging rules (what you can say / must not say) and pick the angle type: education, agitation, comparison, or offer. Wrong stage = dead ad; match message to awareness, not product.
+2. **Build the mechanism.** Name what the audience tried before and why it failed, then define the new mechanism (what is different, why it works now) under a simple, memorable, ownable name. Believable and distinct beats generic.
+3. **Vary headlines structurally.** Generate ~25 headlines across 7 types (curiosity, specificity, proof, urgency, contrarian, mechanism, identity) — each structurally distinct, specific over vague.
+4. **Chain the campaign in order.** avatar → offer → awareness → mechanism → angles → creative → path → objection → language-kill; one consistent strategy/ads/funnel output, never a skipped step.
+
 ### Platform table (verify current specs against platform docs before launch)
 
 | Channel | Bid engine heart | Native strength | Watch out |
@@ -137,6 +144,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 ## Verification
 
 - [ ] Objective named in one word before any platform object was created.
+- [ ] Awareness stage diagnosed and angle type chosen before creative; mechanism named before headlines.
 - [ ] Tracking verified (pixel fires, events test-fire, UTM applied) before launch.
 - [ ] 3–5 creative variants per ad set, differing on message not color.
 - [ ] Budget floor respected: ≥ 10× target CPA per ad set.

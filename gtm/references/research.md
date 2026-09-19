@@ -38,6 +38,16 @@ Sourced account and lead briefs: firmographics, key people, trigger events, fit 
 - Wording and copy craft → `content`.
 - Status tracking and milestones → `ops`; results measurement → `analytics`.
 
+## Competitive intel (append-only enrichments)
+
+- **Positioning brief gate.** Never scope a competitor set blind: establish identity, offer, target clients, differentiator, and strategic tension (paired axes marking target white-space) first; the brief's scoping consequence decides who counts as Direct vs Adjacent vs Aspirational (source: ECC `competitive-platform-analysis`).
+- **8-axis taxonomy.** Plot each candidate on positioning stance, specialization, size/model, engagement format, distinctiveness posture, evidence model, operator brand strength, market/reach; direct = near client on positioning + specialization + size + market at once; verify every attribute across ≥2 sources (source: ECC `competitive-platform-analysis`).
+- **Battlecard shape (deliverable, not a mode).** For a named competitor, append: Company Overview (founded/HQ/funding, ICP, one-sentence positioning) → Quick Comparison table (Us/Them/Winner per capability + pricing/support) → Where We Win (advantage + proof) → Where They Win + counter → Objections & Responses → Landmines (questions exposing their gaps) → Win/Loss Patterns (win-when / lose-when / tipping differentiator); every win/counter claim needs recurrence across ≥2 of 3 source classes (own site, third-party, buyer language) or is marked UNVERIFIED (sources: `phuryn/pm-skills` `competitive-battlecard`; ECC `benchmark-methodology` asserted-vs-proven).
+- **Benchmark + report rules.** Score comparably with per-dimension evidence (no score without a source link); report dimensions separately — never a blended total; every recommendation checked against the client's brand balance, flagging shifts explicitly (sources: ECC `benchmark-methodology` nine-dimension rubric + bias controls; `competitive-report-structure`).
+- **Moore positioning statement.** State it as: For [target] who [need], [product] is a [category] that [benefit]; unlike [alternative], we [differentiator] (sources: ECC `brand-discovery` 20_positioning Moore template; `phuryn/pm-skills` `positioning-ideas`).
+- **Pawel GTM strategy.** Shape the plan as market selection → channel fit (few channels excellently) → message-market fit per segment → KPIs → 90-day execution roadmap with feedback loops (source: `phuryn/pm-skills` `gtm-strategy`).
+- **Fund diligence (investor accounts).** Collect fund size, stage, check size, portfolio, public thesis + recent activity, fit verdict, red flags/mismatches — then proceed with normal account research (source: ECC `market-research` Investor/Fund Diligence).
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
