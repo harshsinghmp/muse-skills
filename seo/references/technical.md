@@ -27,6 +27,8 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
 11. Sitemap health: lastmod staleness and fake-date detection, canonical-only URLs, no conflicts with robots/noindex/canonical.
 12. Redirects: flatten chains to single-hop, verify each target live, log every mapping, snapshot pre-change state with rollback behind an approval gate.
 13. Robots bot-split + IndexNow: check training vs search bots separately (GPTBot blocks training only, OAI-SearchBot governs ChatGPT Search citability; Google-Extended blocks training/grounding only, Googlebot governs Search/AI-Overview eligibility) — never infer one from the other; ping IndexNow for fast non-Google indexing where supported.
+14. i18n edge cases (source: marketingskills `seo-audit` SKILL.md): Next.js `alternates.languages` can miss the self-reference — verify the self-ref tag explicitly; full-hreflang sitemaps hit the 50MB bottleneck around 2–5K URLs (split sitemaps before that); Bing supplements hreflang with `<html lang>` — keep it correct; thin-locale policy: never create a locale you cannot make genuinely helpful.
+15. Deliver IA as artifacts, not advice (source: marketingskills `site-architecture` SKILL.md): an ASCII tree of the proposed structure, a Mermaid nav-zone sitemap, a URL-pattern table (incl. `/compare/`, `/alternatives/` conventions), breadcrumb↔URL alignment check, hub-and-spoke internal linking at 5–10 links per 1k words.
 
 ## Quality gate
 
@@ -36,7 +38,8 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
 - [ ] Canonical/robots/sitemap corrections are exact (not 'review this').
 - [ ] Redirects are single-hop, loop-free.
 - [ ] Fix list is impact × effort ranked.
-- [ ] Hreflang passes the seven-check order.
+ - [ ] Hreflang passes the seven-check order.
+ - [ ] i18n edges covered (self-ref verified, sitemap split before 50MB, `<html lang>` correct, no thin locales); IA delivered as tree + nav-zone map + URL-pattern table with breadcrumb alignment.
 - [ ] Sitemap passes health (honest lastmod, canonical-only, no conflicts).
 - [ ] Redirects flattened, verified, logged, with rollback snapshot approved.
 

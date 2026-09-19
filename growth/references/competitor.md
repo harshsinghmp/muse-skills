@@ -33,6 +33,7 @@ A competitor analysis: a landscape map (direct/indirect/substitutes), a feature/
 17. Shape each gap recommendation as what-changes + why (cited evidence) + how to verify — no recommendation ships without a re-check step.
 18. Refresh the social picture on cadence: last-7-day stories per niche with verified dates and links; score rival posts by engagement (reactions + 3×comments) and extract top/bottom-decile hook and format patterns.
 19. Re-verify each cited rival move fresh before publishing — never assert from memory or a stale snapshot; a source checked last week is a hypothesis, not a fact.
+20. Persist evidence in a dated raw-data lake (source: marketingskills `competitor-profiling` SKILL.md): `competitor-profiles/raw/<slug>/<YYYY-MM-DD>/{scrapes,seo,reviews}` — never overwrite; Firecrawl Map→Scrape pipeline per page with an extraction matrix; cross-check site claims against traffic/backlink scale; keep one profile doc per competitor plus a `_summary.md` roll-up.
 
 ## Quality gate
 
@@ -48,7 +49,8 @@ A competitor analysis: a landscape map (direct/indirect/substitutes), a feature/
 - [ ] Monitoring cadence set with per-dimension thresholds vs baselines and a recurring brief.
 - [ ] Share-of-voice scored on organic/paid/social/AI-citation.
 - [ ] Each recommendation states what, why (cited), and how to verify.
-- [ ] No rival move asserted from memory or a stale snapshot; every claim re-verified fresh.
+ - [ ] No rival move asserted from memory or a stale snapshot; every claim re-verified fresh.
+ - [ ] Raw evidence lake dated and append-only with claim cross-checks; per-competitor docs + summary current.
 
 ## Routing
 

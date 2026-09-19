@@ -23,6 +23,8 @@ Link plan: profile analysis (anchor distribution, referring-domain quality, comp
 7. Unlinked mentions: claim existing brand mentions (fastest legitimate win).
 8. Score backlink gaps weighted by authority, multi-competitor overlap, traffic, and relevance; require overlap on 2+ competitors before prioritizing.
 9. Run broken-link and unlinked-mention fast lanes before any cold outreach.
+10. Aim format choice at earning power — DIRECTIONAL multiples ex marketingskills `content-strategy` SKILL.md (single vendor study, never canon): stats roundups ~4.25×, glossaries ~1.47×, tools ~1.38× baseline; prefer building one earning asset over ten outreach emails.
+11. Build the destination first (source: marketingskills `directory-submissions` SKILL.md): template/alternative/integration pages live before any directory push — directories pass equity into destinations, not homepages. Gate directory KPIs by domain rating (day-0/30/90 targets scale with DR); run the reviews lane (G2/Capterra/TrustRadius) and a Product Hunt anchor event per launch-worthy asset.
 
 ## Quality gate
 
@@ -32,7 +34,8 @@ Link plan: profile analysis (anchor distribution, referring-domain quality, comp
 - [ ] Outreach is 1:1 quality, not mass-blast.
 - [ ] Disavow only with documented evidence.
 - [ ] Gap targets scored (authority x overlap x traffic x relevance) with 2+ competitor overlap.
-- [ ] Fast lanes (broken-link, unlinked mentions) exhausted before cold outreach.
+ - [ ] Fast lanes (broken-link, unlinked mentions) exhausted before cold outreach.
+ - [ ] Format picked for earning power (directional multiples labeled); destinations built before directories; DR-gated KPIs + reviews lane + PH anchor set.
 
 ## Sources
 
