@@ -11,6 +11,7 @@ evaluative audit/polish mechanics live in `refactor-ui`, routed below).
 - Approved references/mood; existing stack and component library
 - Visitor lens: Persuade+Experience (marketing) vs Operate+Read (product) — changes what counts as crowded
 - One-line Design Read before generating: page kind + audience + vibe + system/aesthetic family; if the brief genuinely diverges, ask exactly one question — otherwise declare the read and proceed
+- Subject-vernacular grounding (source: `anthropics/frontend-design`, MIT): derive palette/type/layout from the subject's own materials and vernacular (a toy brief for ages 8–11 vs an analyst dashboard obey different worlds); when the brief lacks a concrete subject/audience/job, propose one and design to it.
 - Pre-flight scan (source: `Nutlope/hallmark` component-scope Step 0 + Design-flow Step 0, MIT): when project code exists, read tokens/fonts/framework/motion-stance/spacing *before asking anything* — emit a preserve/introduce block with file:line cites, cache it (reuse unless manifests changed); stomping an established palette is an uninstall-grade defect. No signals → proceed silently with the full stack.
 
 ## Deliverable
@@ -23,7 +24,7 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 - Commit to one aesthetic archetype per surface — never mix two (e.g. Swiss-print vs terminal, minimal vs maximal) inside one interface.
 - Break LLM defaults deliberately: no AI-purple gradient, no centered dark-mesh hero, no three-equal-cards row, no glassmorphism on everything.
 - Direction before code: write a one-line visual thesis + one-line motion narrative before generating anything — every section must serve the thesis, every animation the narrative (choreography itself routes to `animate`).
-- Reject list (quality bar): generic blobs/gradients, ornamental bento grids with dead cells, blanket glassmorphism, stock layouts (three-equal-cards, centered dark-mesh hero), motion without a narrative role.
+- Reject list (quality bar): generic blobs/gradients, ornamental bento grids with dead cells, blanket glassmorphism, stock layouts (three-equal-cards, centered dark-mesh hero), motion without a narrative role. Tell-catalog rejects (source: `anthropics/frontend-design`, MIT): cream `#F4F1EA` + terracotta `#D97757` pairing, black + acid-green/vermilion pairing, broadsheet hairline dividers with zero radius, SaaS-card kit (single radius + `rgba(0,0,0,.1)` shadow + gradient wash), template chrome (ALL-CAPS eyebrow, `A · B · C` meta row, `WORD — fragment` headlines, `#0B0B0B`/`#111` near-black, mono data labels, trailing `→`).
 - Self-critique before build: if the plan reads like the default for any similar brief rather than a choice for this one, revise and note what changed and why; structural devices encode information (numbered markers only for real sequences).
 - Diversification rotation (source: `Nutlope/hallmark` Steps 2/2.5, MIT): track recent builds (macrostructure + theme + nav/footer archetypes); each new surface must differ from the last entries — different page-shape, and theme differing on ≥1 axis (paper band / display style / accent hue). State the pick and the axes it differs on before generating. Inverted on system-managed projects: pages share the locked system instead.
 - Pre-emit critique stamp (source: `Nutlope/hallmark` discipline 1, MIT): score the artifact 1–5 on Philosophy, Hierarchy, Execution, Specificity, Restraint, Variety — anything <3 forces a revision pass; stamp the six scores atop the artifact.
@@ -47,6 +48,8 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 - Honest assets: no fake testimonials, invented partnerships, or logo-wall theater — every proof element must be real; photo avatars over initials/illustrations for people; keep media provenance (source/credit) with the asset, never stripped.
 - Data graphics: chart by intent (bar = comparison, line = trend, donut = part-whole under ~6 slices, histogram = distribution, scatter = relationship); bars start y at zero; label directly over legends; colorblind-safe palette with redundant encoding (pattern/label/shape — never color alone).
 - Isolation: one differentiated element per screen/section; audit isolation inflation (every new highlight request degrades the system); differentiation must survive grayscale.
+- Specificity caution (source: `anthropics/frontend-design`, MIT): a type selector (`.section`) vs an element selector (`.cta`) can cancel out on section padding/margin — keep section spacing on one governed selector.
+- Vocab cohesion (source: `anthropics/frontend-design`, MIT): an action keeps one name through the whole flow (button `Publish` → toast `Published`); errors stay direct, never apologetic; empty screens invite the action.
 
 ## Quality gate
 
