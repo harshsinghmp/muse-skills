@@ -1,0 +1,21 @@
+# audit-rules example — custom secret-scan rules (doc sketch, not an engine)
+#
+# Pattern: runkids/skillshare `audit` flags --threshold/--format/--output
+# (MIT, pattern-only). Consumed via:
+#   bash scripts/hooks/secret-scan-pre-commit.sh --rules-file audit-rules.yaml
+#
+# 3-layer merge sketch (precedence low → high; doc-only, engine reads one
+# --rules-file and appends to built-ins):
+#   1. defaults  — built-in credential patterns in secret-scan-pre-commit.sh
+#      (private keys = critical, tokens = high)
+#   2. repo      — ./audit-rules.yaml (this file's shape); appends patterns,
+#      custom matches default to medium severity
+#   3. local     — ~/.config/muse-skills/audit-rules.yaml or explicit
+#      --rules-file path wins over both above
+# Merge rule: patterns concatenate; highest severity wins per finding;
+# --severity-threshold filters below-threshold findings.
+threshold: low # critical|high|medium|low
+format: text # text|json|sarif
+patterns:
+  - "aws_secret_access_key\\s*[:=]"
+  - "GOOGLE_API_KEY\\s*[:=]"
