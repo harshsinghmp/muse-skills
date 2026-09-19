@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented in this file.
 
+## [4.4.0] - 2026-09-18
+
+### Added
+
+- **New skill `retain` (#43)**: post-delivery retention loop — check-in, value-note, QBR, review-ask, referral/rebuy, churn-watch modes.
+- **webdev new modes (8→12)**: spec, implement, LOGIC-prototype, deploy (one-command ship + static-upload fallback + object-storage contract).
+- **design new mode**: UI-prototype (clickable mock, locked/iterate/kill verdict).
+- **Step 3b addy enriches**: capability map (coupling-router), assumptions + spec template (relay), CONSTRAINTS contract (code-review), context hierarchy (context-anchor), stack preamble + testing bar + adversarial critic (gauntlet-loop), deprecation + Hyrum's Law (webdev), gate order + flags (devops), rollout thresholds + DoD bar (qa-launch).
+- **Step 3c marketingskills enriches**: Seven Sweeps + panel gates (content), SEO/GEO/pSEO/IA/ASO deltas, social atomization (smm), CRO + lifecycle mechanics (growth/analytics), revops + prospecting + PR/events/directories (gtm/ops), ads playbooks (paidads), seam-3 shared context template (ops).
+- **Step 3d 16-repo enriches**: show-me/narrow-props (refactor-ui), rigor ladder + lang refs (code-review), scorer + validator (humanize), agent-loop scaffold (devops), hallmark rotation/stamp/wrapper (design), paired-judge + ratchet (gauntlet), CN specs + motion-cards (design/smm, paraphrased), video-delivery lane (animate), audit-gate + doctor/JSON (devops).
+
 ## [4.3.0] - 2026-09-18
 
 ### Added
