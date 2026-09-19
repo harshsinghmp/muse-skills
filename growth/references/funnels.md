@@ -25,6 +25,9 @@ A funnel map: stages with volumes/rates, the biggest leak, prioritized improveme
 10. Engineer the referral stage: default double-sided rewards, lead with the larger-feeling number ($10 off beats 40% off on low-ticket), reward at the aha moment or milestone — not signup — with one-click share.
 11. Endow progress in activation: pre-complete the first checklist step so users start at ~20%, not 0%.
 12. Rank acquisition triggers by purchase correlation before sequencing: former users/champions first (immediate), new leadership in days 14-45, high-intent behavior within 24-48h, tech-stack change 1-2 weeks out; time win-backs (ghosted 30-60 days, competitor renewal 90 days before) — execution routes to content email mode.
+13. Define the aha moment by diffing retained vs churned action histories (source: marketingskills `onboarding` SKILL.md), then instrument activation rate, time-to-aha, steps-to-aha, and all three by cohort. Run a 3–7-item value-ordered dismissable checklist, empty states in the explain + preview + primary-action (+ optional seed data) formula, tours capped at 3–5 dismissable steps, and a stalled-user recovery ladder (email → in-app → human touch by value tier).
+14. Gate mid-funnel capture with popup discipline (source: marketingskills `popups` SKILL.md; benchmarks DIRECTIONAL): triggers — time 30–60s (never 5s), scroll 25–50%, exit-intent (mobile: back-press/scroll-up alts), click-triggered, page-count, behavior-based; type playbooks (email / lead-magnet / discount / exit / banner / slide-in) each with copy structure; frequency caps of 1/session, 7–30-day re-show, always excluding converted/dismissed/checkout; GDPR + a11y + no-SEO-interstitial compliance.
+15. Match magnets and tools to stage (source: marketingskills `free-tools` + `lead-magnets` SKILL.md; benchmarks DIRECTIONAL): tool types (calculators/generators/analyzers/testers/libraries/interactive) picked via pain-point → search-demand/uniqueness/lead-quality/feasibility; gate on the 4-rung ladder (full/partial/optional/none) with trade-offs stated; ship tools scoring 25+ on the 8-factor eval; route magnet types by buyer stage (awareness/consideration/decision); one extra form field costs ~5–10% (DIRECTIONAL); content upgrades lift ~2–5× (DIRECTIONAL).
 
 ## Quality gate
 
@@ -36,7 +39,8 @@ A funnel map: stages with volumes/rates, the biggest leak, prioritized improveme
 - [ ] Each fix ships as a falsifiable hypothesis (If/Then/Because): one variable, pre-set sample size or duration, no peeking, guardrail metrics watched.
 - [ ] Leak quantified via model comparison, then assisted ratios, then path/time distributions.
 - [ ] No channel execution here — routed to the relevant tool.
-- [ ] Retention split voluntary/involuntary with pause-before-cancel and capped save offers; referral engineered double-sided at the aha moment; activation endowed.
+ - [ ] Retention split voluntary/involuntary with pause-before-cancel and capped save offers; referral engineered double-sided at the aha moment; activation endowed.
+ - [ ] Aha diffed and instrumented by cohort; checklist/empty-state/tour/recovery ladder set; popups gated by trigger + caps + compliance; magnets/tools staged with gating ladder and field-cost honored.
 - [ ] Acquisition triggers ranked with timing; execution routed to content email mode.
 
 ## Routing

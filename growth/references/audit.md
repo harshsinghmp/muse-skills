@@ -15,7 +15,8 @@
 - [ ] LTV (lifetime value) estimated per cohort
 - [ ] Churn tracked and action plan documented
 - [ ] Next action defined after each experiment (scale, pivot, kill)
-- [ ] All analytics events firing correctly (see `analytics` audit)
+ - [ ] All analytics events firing correctly (see `analytics` audit)
+ - [ ] Recurring ops run as loops, not reminders (source: marketingskills `marketing-loops` SKILL.md): each loop states 9 parts (cadence / acts-when / purpose / skills / body / self-check / state-idempotency / stop-bailout / output); most runs end "checked, nothing to do" by design; cadence follows signal (rankings weekly … churn daily); send/spend/publish steps hold a human checkpoint; every loop carries a kill-switch plus a banned-vocabulary honesty bar.
 
 ## Severity & routing
 

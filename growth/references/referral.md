@@ -18,13 +18,16 @@ A referral/partnership program: which growth loop fits (referral vs affiliate vs
 4. Set tracking (codes/links), payout/fulfilment rules, and fraud guardrails up front.
 5. Promote where the audience already is; never let the program die silently.
 6. Measure: new customers, CAC per channel, and net referral lift — not raw signups of the program page.
+7. Ask at trigger moments, not at signup (source: marketingskills `referrals` SKILL.md): aha, milestone, support-win, renewal. Rank share mechanics in-product > link > email > social > code; pick single/double/tiered incentives with the chooser (double-sided default per funnels mode); run the nurture sequence (7/30/60-day + milestone touches) and the pre/launch/30-day launch checklist.
+8. Score co-marketing partners 1–5 on 6 criteria before committing (source: marketingskills `co-marketing` SKILL.md); pick from the 4-format campaign tables (content/events/product/community with effort + lead-split); cold-outreach with the template; sign the 8-point agreement (leads/promo/assets/timeline/metrics/costs/branding) before spend.
 
 ## Quality gate
 
 - [ ] Loop chosen by fit with reasons.
 - [ ] Partner-fit scored (overlap, trust, offer) before launch.
 - [ ] Incentive sized to behavior; tracking + fraud guardrails defined.
-- [ ] Measurement loop on CAC and net lift, not vanity signups.
+ - [ ] Measurement loop on CAC and net lift, not vanity signups.
+ - [ ] Asks timed to trigger moments with ranked share mechanics + incentive chooser + nurture/launch checklists; partners scored and agreement signed before spend.
 - [ ] Routing to launch: the program ships as a promo, not a hope.
 
 ## Routing

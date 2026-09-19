@@ -18,7 +18,10 @@ A playbook: the sale stages, per-stage scripts and asks, disqualify rules, pitch
 4. Define disqualify rules (budget, fit, timing) so reps stop chasing bad deals.
 5. Build pitch paths by buyer type (champion vs economic buyer vs technical).
 6. Cross-link the objection handbook and demo so the playbook is one system.
-7. Keep the voice consistent with positioning and pricing set in `growth`.
+7. Attach an ROI calculator spec (source: `coreyhaines31/marketingskills` `sales-enablement` ROI calc, G3 parked-NEW): inputs (current cost, volume, time lost) → calcs (payback months, 1-yr gain) → outputs (one-line number + persona-adjusted table); 3 implementation options — back-of-napkin (rep-led), spreadsheet (prospect-filled), interactive (web). Numbers directional, labeled with source.
+8. Retrieve case briefs by tag (industry × pain × buyer type) from `ops/references/product-marketing-template.md` §8 (local copy at `.agents/product-marketing.md`); each brief carries the proof point plus when NOT to use it.
+9. Close with a deal-proposal template (terms, options, validity window) — agency proposals/SOWs stay in `ops` proposal/sow modes; this is the rep's deal close sheet, not the agency contract.
+10. Keep the voice consistent with positioning and pricing set in `growth`.
 
 ## Quality gate
 

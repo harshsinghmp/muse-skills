@@ -16,6 +16,7 @@ An onboarded client: an isolated, clearly named workspace, a populated intake re
 
 1. Create an isolated client workspace (via `new-project` client mode) named consistently.
 2. Record intake: contacts, scope, success criteria, key dates, comms preferences.
+3. Read `ops/references/product-marketing-template.md` first (copy to `.agents/product-marketing.md` at intake); populate its §§1–11 from intake answers (mark gaps Unverified) with a §12 changelog entry — never re-ask positioning/ICP other skills already captured (source: `coreyhaines31/marketingskills` `product-marketing`, G3 #1 seam-3 closure).
 3. Run an access checklist: brand assets, analytics, ad accounts, CMS — collected securely.
 4. Confirm scope and start date in writing before work begins.
 5. Schedule and run a kickoff; capture decisions and next steps.

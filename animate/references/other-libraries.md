@@ -166,6 +166,14 @@ Load only on explicit request or when already a project dependency.
 - **Matter.js** — 2D physics: gravity, collisions, constraints. `npm i matter-js`. Use for falling/stacking/colliding scenes. Gotcha: you render bodies yourself (canvas/DOM) with your own rAF loop; bodies won't draw themselves.
 - **Tone.js** — audio-reactive animation via Web Audio synthesis and effects. `npm i tone`. Use when visuals respond to sound/frequency. Gotcha: `AudioContext` requires a user gesture — start `Tone.start()` on click/keydown.
 
+## 9. Programmatic video delivery (new lane — UI motion above untouched)
+
+Paraphrased mechanisms (source: OpenMontage `.agents/skills`, AGPL — mechanism only, zero verbatim):
+
+- One doc per concern, loaded on demand (timing, sequencing, captions, audio-viz kept separate); constant-playback-rate caps mean extreme speeds get pre-processed offline, never stretched at play time.
+- Per-target export matrix: one encode preset per distribution surface, cut from a single master render into optimized copies via a batch export script.
+- Route by control need: one-shot idea-to-video vs exact avatar/script/multi-scene control are different jobs with different tools; prefer a vendor MCP when the project already wires it, HTTP fallback otherwise. Default stack: ffmpeg for assembly/export, or any renderer already present in the project.
+
 ## Getting answers on library choice
 
 If the need is a fade/spring/layout/animation and the user didn't name a library, stop at Motion or CSS — none of these tools earn a dependency for that.

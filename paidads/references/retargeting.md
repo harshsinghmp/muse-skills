@@ -16,7 +16,7 @@ Retargeting plan: segment definitions with events and windows, channel mapping (
 1. Define segments by behavior depth: viewer → engager → cart/pricing → lapsed.
 2. Exclude converts everywhere — paying to chase customers is the #1 retargeting waste.
 3. Map channels: Meta/dynamic product ads for carts; Google RLSA for high-intent; LinkedIn for B2B engagers.
-4. Sequence messages by stage: social proof → objection handling → offer (only at the bottom).
+4. Sequence messages by stage: social proof → objection handling → offer (only at the bottom). Retarget with a different offer than the first touch, and mirror the headline to the landing H1 (source: `coreyhaines31/marketingskills` paid ads, G3 #14).
 5. Cap frequency (2–3/week display, tighter on social) — fatigue is retargeting's default state.
 6. Set window lengths by sales cycle (14–30d e-com, 30–90d B2B).
 7. Decide discounts deliberately: a cart-abandon coupon leaks margin; test against a no-offer control.

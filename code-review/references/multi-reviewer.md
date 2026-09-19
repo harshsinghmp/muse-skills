@@ -26,6 +26,7 @@ Run N concurrent review passes, each scoped to ONE dimension:
 - docs / intent → `intended-vs-implemented` mode
 
 Each pass reports findings with its OWN severity, before cross-pass calibration.
+**No-persona-spawns** (source: `addyosmani/agent-skills` agents rule): a pass never delegates to sub-reviewers — orchestration belongs to the caller.
 **Mandatory-findings**: every lens must return at least one finding or finding-free
 declaration with named satisfied principles — a pass that returns nothing and names
 no principles hasn't looked. A lens earning no real finding names that explicitly

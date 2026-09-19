@@ -154,6 +154,8 @@ The primary verdict is spec alignment: a plan missing spec alignment is rejected
 
 **Sizing + checkpoint gate** (source: `addyosmani/agent-skills` `planning-and-task-breakdown`): size every task XS (1 file) / S (1–2) / M (3–5) / L (5–8) / XL (8+ = split further); split on "and" in title or >3 acceptance criteria; dependency-graph-first ordering (foundations first); checkpoint every 2–3 tasks (tests pass, build clean, review before proceeding).
 
+**Phase-0 capability map** (source: `addyosmani/agent-skills` `spec-driven-development`): before any module spec is written, emit stable kebab-case module ids, a one-way dependency direction, and the build order; no `SPEC-<id>.md` is written until the map gates it.
+
 **Multi-perspective review (plans with ≥5 tasks):** a large plan is reviewed through more than one lens before dispatch — at minimum three, in sequence: (1) **spec/devil's-advocate lens** — does each task trace to the spec, and what premise could invalidate it; (2) **coupling lens** — write-overlap matrix, interface locks, wave structure (the checks of Steps 3–4); (3) **failure lens** — for each wave, what happens when it fails: recovery owner, dead-letter route, dependent-skip policy. Findings from each lens are recorded against the plan; unresolved findings reject the plan. Single-lens review is acceptable only below 5 tasks.
 
 ### Step 3 — Dependency & Artifact Overlap Audit
@@ -203,3 +205,4 @@ Before executing subagent delegation:
 6. [ ] Shared types and database schemas are fully committed before fan-out begins.
 7. [ ] Output `ROUTING_PLAN.md` provides unambiguous subagent assignments, skill stacks, isolation boundaries, and verification receipts for every completion claim.
 8. [ ] Worktree lease probed (and held, if mutating) before every branch switch, stash operation, or shared-surface staging; foreign WIP untouched.
+9. [ ] Phase-0 capability map emitted (module ids, one-way deps, build order) before any module spec.

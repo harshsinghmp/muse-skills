@@ -28,6 +28,9 @@ AEO plan: entity definition fixes (about/schema/sameAs), fact-extraction restruc
 12. Match optimization level to industry risk: conservative for healthcare/legal (minimal edits, strict citations), balanced as default, aggressive for low-authority challengers and e-commerce (max extraction points).
 13. Per-LLM + multilingual pass: note which LLMs cite you vs. competitors, then re-test key prompts in each target locale/language (e.g. Mistral for European queries) and fix locale-specific authority sources and tone.
 14. Right bot per claim: verify citability against the search bot, never the training bot (OAI-SearchBot for ChatGPT Search, Googlebot for Search/AI Overviews) — GPTBot/Google-Extended status says nothing about being cited.
+15. Weight GEO edits by ranked lift — DIRECTIONAL ex Princeton study via marketingskills `ai-seo` SKILL.md (single study, never canon): cite sources ~+40%, add statistics ~+37%, add quotations ~+30%; keyword stuffing hurts (~−10%). Ship extractable 40–60-word answer blocks at content starts, keep pricing parseable for buying agents (agent-readable pricing files), and run the presence playbook: Wikipedia, Reddit, reviews, YouTube text layer, podcasts.
+16. Teardown pricing pages on two axes (source: marketingskills `pricing` SKILL.md): human-buyer clarity plus AI-agent readiness — run the "paste test" (ask Perplexity/ChatGPT "what are the plans and prices?" and fix what it gets wrong); route schema fixes to onpage mode and citability fixes here.
+17. Fuel citations monthly (source: marketingskills `directory-submissions` SKILL.md): single-H1 pages, FAQPage schema, Reddit/HN presence, Crunchbase/Wikidata/MCP-registry claims, and a monthly manual citation check across the prompt set.
 
 ## Quality gate
 
@@ -42,7 +45,8 @@ AEO plan: entity definition fixes (about/schema/sameAs), fact-extraction restruc
 - [ ] Citation frequency/context/rank logged per LLM with trend alerts; runnable manually with no paid APIs.
 - [ ] Optimization level chosen matches industry risk (conservative/balanced/aggressive).
 - [ ] Per-LLM + locale gaps noted with fixes.
-- [ ] Snippet blocks typed: paragraph answers 40–60 words, lists 5–8 steps, tables for comparisons, answers at content start (keeper: wshobson/seo-technical-optimization).
+ - [ ] Snippet blocks typed: paragraph answers 40–60 words, lists 5–8 steps, tables for comparisons, answers at content start (keeper: wshobson/seo-technical-optimization).
+ - [ ] GEO edits weighted by ranked lift (directional, source-labeled); pricing parseable by agents; presence playbook running; pricing pages pass the paste test; monthly citation fuel logged.
 
 ## Routing
 

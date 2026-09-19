@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **branding** | "brand identity", "brand guidelines", "brand system" | Full identity system: color, type, spacing, voice → brand.md + tokens | [references/branding.md](references/branding.md) |
 | **socials** | "social templates", "post designs", "profile kit" | Social template system: profiles, post formats, grid consistency | [references/socials.md](references/socials.md) |
 | **graphics** | "banner", "OG image", "hero art", "flyer" | One-off graphic assets: banners, OG/social share, print-adjacent | [references/graphics.md](references/graphics.md) |
+| **prototype** | "prototype this flow", "clickable mock", "test the riskiest screen first" | Riskiest-visual-unknown-first clickable mock → fast test → locked/iterate/kill verdict | [references/prototype.md](references/prototype.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

@@ -15,8 +15,8 @@ Campaign structure doc: campaigns by objective, ad sets with audience + budget, 
 
 1. Choose campaign objective to match the business event (sales objective for sales — not traffic).
 2. Structure: CBO for scale on proven winners, ABO for testing new audiences.
-3. Define audiences: broad (let the algorithm work) + interest stacks + 1–3% lookalikes from buyers.
-4. Brief 3–5 creatives per ad set: video-first (hook < 3s), 1:1 and 9:16 variants.
+3. Define audiences: broad (let the algorithm work) + interest stacks + 1–3% lookalikes from buyers. Andromeda-era: creative-is-targeting — broad audience plus variant angles does the targeting work (source: `coreyhaines31/marketingskills` paid ads, G3 #13).
+4. Brief 3–5 creatives per ad set: video-first (hook < 3s), 1:1 and 9:16 variants. Ground every creative in offer/proof/verbatim inputs — no invented claims (source: `coreyhaines31/marketingskills` paid ads, G3 #15).
 5. Write primary text to the placement (feed short, story native); headline carries the offer.
 6. Set placements: Advantage+ once stable; manual (feed+stories+reels) for control.
 7. Learning discipline: do not touch budget/creative for ~50 conversions or 7 days.

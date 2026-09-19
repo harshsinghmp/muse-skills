@@ -11,6 +11,7 @@ evaluative audit/polish mechanics live in `refactor-ui`, routed below).
 - Approved references/mood; existing stack and component library
 - Visitor lens: Persuade+Experience (marketing) vs Operate+Read (product) — changes what counts as crowded
 - One-line Design Read before generating: page kind + audience + vibe + system/aesthetic family; if the brief genuinely diverges, ask exactly one question — otherwise declare the read and proceed
+- Pre-flight scan (source: `Nutlope/hallmark` component-scope Step 0 + Design-flow Step 0, MIT): when project code exists, read tokens/fonts/framework/motion-stance/spacing *before asking anything* — emit a preserve/introduce block with file:line cites, cache it (reuse unless manifests changed); stomping an established palette is an uninstall-grade defect. No signals → proceed silently with the full stack.
 
 ## Deliverable
 
@@ -24,6 +25,8 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 - Direction before code: write a one-line visual thesis + one-line motion narrative before generating anything — every section must serve the thesis, every animation the narrative (choreography itself routes to `animate`).
 - Reject list (quality bar): generic blobs/gradients, ornamental bento grids with dead cells, blanket glassmorphism, stock layouts (three-equal-cards, centered dark-mesh hero), motion without a narrative role.
 - Self-critique before build: if the plan reads like the default for any similar brief rather than a choice for this one, revise and note what changed and why; structural devices encode information (numbered markers only for real sequences).
+- Diversification rotation (source: `Nutlope/hallmark` Steps 2/2.5, MIT): track recent builds (macrostructure + theme + nav/footer archetypes); each new surface must differ from the last entries — different page-shape, and theme differing on ≥1 axis (paper band / display style / accent hue). State the pick and the axes it differs on before generating. Inverted on system-managed projects: pages share the locked system instead.
+- Pre-emit critique stamp (source: `Nutlope/hallmark` discipline 1, MIT): score the artifact 1–5 on Philosophy, Hierarchy, Execution, Specificity, Restraint, Variety — anything <3 forces a revision pass; stamp the six scores atop the artifact.
 
 ## Procedure
 
@@ -33,7 +36,7 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 4. Assign the type hierarchy: display/heading/body/caption from the scale; one display + one text family. Body measure 60–75ch; line-height by role (1.1 headings, 1.5–1.6 body); negative tracking on large display, slight positive on small labels; `balance` on headings, `pretty` on descriptions; tabular numerals on changing values; sentence-case labels. Glyph correctness is silent and automatic: curly quotes/apostrophes, en dash for ranges, em dash for breaks, single ellipsis character, one space after punctuation, no underline on non-links.
 5. Assign color roles (primary/action/neutral/semantic); check AA contrast for each text pair. One theme per page — no section-level inversion; semantic tokens so dark mode is a value swap, verified for logos/icons in both.
 6. Radius: concentric — inner radius = outer radius − padding. Depth: shadows signal elevation, borders signal structure; name z-tokens, never raw high values; still images get a 1px neutral outline.
-7. Componentize: list every component with its states (hover, focus, disabled, loading, empty, error). State priority when several apply: disabled > loading > active > focus > hover > default. In card rows, pin CTAs to a shared baseline and start feature lists at the same Y across columns. Touch inputs ≥ 16px type to avoid mobile zoom; align icons optically (nudge by eye, match icon stroke to adjacent text weight).
+7. Componentize: list every component with its states (hover, focus, disabled, loading, empty, error). State priority when several apply: disabled > loading > active > focus > hover > default. In card rows, pin CTAs to a shared baseline and start feature lists at the same Y across columns. Touch inputs ≥ 16px type to avoid mobile zoom; align icons optically (nudge by eye, match icon stroke to adjacent text weight). For single-component briefs, ship an 8-state demo wrapper alongside the artifact (source: `Nutlope/hallmark` component-scope, MIT): all states (default · hover · focus-visible · active · disabled · loading · error · success) rendered side-by-side via force-classes (`.is-hover` etc.), each labelled — opened once for review, then deleted, never production code.
 8. Define responsive behavior where the content breaks (not device presets) — what stacks, what truncates, what hides; test extremes first (narrowest, widest, 200% zoom).
 9. Annotate interactions (what animates is decided with `animate`, but note intent).
 10. Emit the spec doc + tokens; hand off to engineering or `refactor-ui` for polish later. When a visual reference governs, extract its type/spacing/color/component tokens first and anti-drift check the build against it. Give each page one signature second-read detail — restraint everywhere else.

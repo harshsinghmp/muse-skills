@@ -30,3 +30,11 @@ $$S_{\text{total}} = 0.40 \cdot S_{\text{correctness}} + 0.25 \cdot S_{\text{min
 
 - **Root-cause-before-fix**: no fix scores above 5 on Correctness without a named root cause (Symptom→Source chain). Symptom-only patches are rejected feedback, not progress.
 - **3-failed-fixes → question architecture**: three rounds failing on the same root cause stops the fix loop — the critic escalates to an architecture question instead of requesting another same-shape fix. Record the escalation in `ITERATION_LEDGER.md`.
+
+## Judge Pattern (paired-judge + ratchet)
+
+(sources: `alchaincyf/darwin-skill` judge/ratchet legs + `bjgreenberg/senior-engineering-partner` `evals/` + `references/skill-self-improvement.md` — judge pattern only, MIT/Apache-2.0; single-supplier ENRICH, no optimizer CREATE)
+
+- **Paired same-judge**: when two candidates compete, score both with the *same* judge and prompt — absolute scores are triage-only (which advances), never proof of quality; odd-N majority settles disagreements.
+- **Keep/revert ratchet**: every accepted round is a git checkpoint; a regressing round reverts to the previous checkpoint instead of patching forward — the bar only ratchets up, never drifts down to meet the candidate.
+- **Evals regression suite**: persist real misses as replayable scenarios; re-run the suite per round with an LLM-judge plus per-model baselines so a fixed defect stays fixed. Self-improvement of the loop itself stays consent-gated and ledger-recorded — never silent.

@@ -62,6 +62,8 @@ ADRs document significant architectural choices, their context, and evaluated tr
 - **Status**: PROPOSED | APPROVED | SUPERSEDED | DEPRECATED
 - **Context**: What problem are we solving? What constraints exist?
 - **Decision**: What did we choose to do?
+- **Alternatives**: options considered with pros/cons — why this, why not that (why-not-what).
+- **Agent-context rationale**: state the non-obvious why so future agents don't re-decide; link known gotchas to the ADR. Source: `addyosmani/agent-skills` (`documentation-and-adrs`).
 - **Consequences**:
   - Positive outcomes and capabilities unlocked.
   - Negative trade-offs, constraints, and operational overhead.

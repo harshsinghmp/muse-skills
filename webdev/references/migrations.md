@@ -33,6 +33,7 @@ Migration plan: full inventory, URL/redirect map, execution stages with go/no-go
 
 - Schema: expand→migrate→contract — additive first, dual-write + batched backfill off the hot path, switch reads, destructive drops alone in a later deploy with a tested down path; large indexes without blocking writes.
 - Code: strangler (parallel run, shift traffic 0→canary→50→100→remove) or adapter (old interface, new impl), flag-decoupled when risky; the owner migrates users (churn rule); zombie code gets an owner or a deprecation plan — never limbo.
+- Deprecation contract: label every deprecation advisory (recommended move, nothing breaks) vs compulsory (removal date + migration path); design-for-removal (name an expiry owner + date at introduction). Source: `addyosmani/agent-skills` (`deprecation-and-migration`).
 
 ## Sources
 

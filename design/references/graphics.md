@@ -20,6 +20,8 @@ Production-ready asset or generation spec: correct dimensions and format, token-
 5. Apply brand tokens; contrast-check any text over imagery.
 6. Produce or spec the asset (image-generation tool for raster art; vector spec for logo-grade work).
 7. Export the variant set; provide alt text for every web asset.
+8. Start from a seed template, never a blank file (paraphrased: guizang-social-card-skill, AGPL — mechanism only); theme via a root switch, hold density high on tall canvases (content must fill most of the height, no spacer-centering), and climb the overflow ladder by measured bands (nudge → local compact → recipe change).
+9. Template-recommender mechanism only (paraphrased: nano-banana-pro-prompts-recommend-skill, no license — mechanism only, never library content): manifest-first browse with `rg` (fallback: grep), never full-load; at most 3 candidate templates with one sample each; remix only after user picks; attribution footer kept; re-sync on staleness (~24h).
 
 ## Quality gate
 

@@ -27,6 +27,8 @@ Section-by-section page copy: hero (headline + subhead + CTA), proof, feature/be
 11. Offer low-friction CTAs first: insight, benchmark, resource, diagnostic question — never a meeting ask before value is established; escalate the ask only after trust is earned.
 12. Ban hype adjectives (seamless, robust, cutting-edge, world-class, unleash, elevate, empower, utilize, just/simply) — plain words and observed numbers only; never invent savings, percentages, or claims without a real fact behind them.
 13. Pair the hero value prop with a real workflow demo or clearly labeled sample — input → processing → draft → approval states — never a magical one-click promise (keeper: mengto/product-proof-saas).
+14. Run the message-market-fit trio before finalizing copy (source: marketingskills `copywriting` SKILL.md): the "Now you can" test (does the headline complete "now you can ___" with a concrete outcome?), the Human Action Model (name the discomfort → the vision → the path, in that order), and the Perception Gap check (what the reader believes now vs what must be true to act — close it explicitly).
+15. Shape CTAs as [Verb] + [Get] + [Qualifier] (e.g. "Start — get the audit — free, 2 minutes") — value-not-action verbs first (source: marketingskills `copywriting` SKILL.md).
 
 ## Quality gate
 
@@ -37,7 +39,8 @@ Section-by-section page copy: hero (headline + subhead + CTA), proof, feature/be
 - [ ] CTA microcopy lowers friction.
 - [ ] Humanize pass run.
 - [ ] Persuasion levers matched to their jobs; no manufactured scarcity.
-- [ ] CTA ladder climbed in order (value first, meeting ask last).
+ - [ ] CTA ladder climbed in order (value first, meeting ask last).
+ - [ ] Message-fit trio passed ("Now you can" completes, discomfort→vision→path ordered, perception gap closed); CTAs follow [Verb]+[Get]+[Qualifier].
 - [ ] No hype adjectives; every number traceable to an observed fact.
 - [ ] Each state leads with the one needed fact, then the next action, then supporting context — said once (keeper: pbakaus/impeccable).
 - [ ] Readability: one idea per paragraph (≤2 lines), one block per concept, tables ≤3 tight columns (keeper: 99rebels/skill-polisher).
