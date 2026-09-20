@@ -2,10 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [5.0.0] - 2026-09-21
 
 ### Added
 
+- **Native Agent Taste Engine (`scripts/taste-engine.ts`)**: Autonomous, zero-third-party SaaS preference learning and behavioral habit extraction engine. Classifies recurring user steering across 5 taxonomy classes (Style, Architecture, Quality, Workflow, Communication), tracks recurrence count ($N \ge 2$), enforces configurable active atom cap (scalable up to 40+), performs real-time conflict detection, and automatically prunes stale atoms (>365 days).
+- **Task Observation Hook (`scripts/hooks/taste-observer.sh`)**: 15th shell hook for real-time passive learning from conversation corrections and feedback with Vibeguard zero-leak sanitization.
+- **DOX Engine 17 Modular Standards**: Upgraded template canon in `ai-ready/templates/.agents/standards/` to 17 modular standards (adding `boundary-governance.md`, `fintech-gateways.md`, `client-reporting.md`, `motion-diagrams.md`), with Turn Invariant #13 (Atomic PR Protocol) in `AGENTS.md` and `git-workflow.md`.
+- **OpenAccountants Fintech Clearing & ITC Recovery**: Built-in multi-gateway transaction reconciliation engine (`accounts/scripts/reconcile-gateways.ts`) for Stripe, Razorpay, Cashfree, PayU, and Paytm with 18% GST ITC recovery and universal multi-currency ledger interoperability (QuickBooks, Xero, NetSuite, Zoho, OpenAccountants, plain-text accounting).
+- **Agency Council Capabilities Playbooks**:
+  - **Jasper (Creative Technologist)**: Dashmotion zero-JS moving SVG technical architecture diagrams (`animate/references/technical-diagrams.md`) and Agent Reach zero-cost social listening (`smm/references/social-intel.md`).
+  - **Sol (Product Architect)**: Optim-Agent semantic DB parameter optimization (`database/references/tuning.md`) and Browser Relay authenticated session bridge (`automation/references/browser-relay.md`).
+  - **Nexus (Technical Director)**: Odai 5-checkpoint mission-focused boundary governance (`code-review/references/boundary-governance.md`).
+  - **Crew (Delivery Specialist)**: Ribao commit-verified factual progress reporting (`client-comms/references/factual-reporting.md`).
+  - **Council Overall**: Global Invariant Atom Table telemetry (`updateagents/references/global-atoms.md`).
 - **New skill `accounts` (#45)**: Agency and client financial operations engine — 6 modes (`invoicing`, `bookkeeping`, `client-pnl`, `cashflow`, `tax-compliance`, `audit`), complete playbooks, and companion metadata.
 - **New skill `muse-security` (#44)**: Single source of truth for external security workflows — 6 modes (`cve`, `remediate`, `cloud-waf`, `sast`, `runtime`, `audit`), complete playbooks, and companion metadata.
 - **`smm` Postiz Mode (#28)**: Added `postiz` multi-channel scheduled dispatch mode across 28+ networks via Postiz API/CLI (`smm/references/postiz.md`), remote media upload pipeline, dynamic integration discovery, and TikTok `DIRECT_POST` flags.

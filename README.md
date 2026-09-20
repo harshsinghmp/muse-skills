@@ -5,7 +5,7 @@
 **A curated suite of 45 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, unified security & cloud WAF governance, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, post-delivery retention, and financial accounts operations.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-5.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-45%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
