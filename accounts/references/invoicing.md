@@ -3,13 +3,18 @@
 ## Scope
 
 - Agency milestone contracts, upfront deposit billing (50/25/25 or 50/50), and recurring monthly retainer invoices.
-- Payment gateway dispatch (Stripe Invoicing, Razorpay Invoices, Wise, direct wire/ACH).
+- Modern payment gateway dispatch:
+  - **Stripe**: International card payments, USD/EUR/GBP cross-border retainers, SEPA/ACH direct debit.
+  - **Razorpay**: Domestic cards, Netbanking, UPI, payment links, and **Smart Collect** virtual accounts.
+  - **Cashfree Payments**: **AutoCollect** dynamic virtual accounts/VPAs for real-time NEFT/IMPS/UPI reconciliation and instant settlement.
+  - **PayU**: Enterprise Indian payments, recurring mandates, and multi-currency checkout.
+  - **Paytm Payment Gateway**: UPI intent, dynamic QR, wallet, and netbanking rails.
 - Automated dunning ladder and Days Sales Outstanding (DSO) compression.
 - Both agency-to-client billing and advising clients on their own customer invoicing workflows.
 
 ## Deliverable
 
-A formatted, statutory-compliant invoice specification (Markdown/CSV), digital payment link payload, and scheduled dunning reminders.
+A formatted, statutory-compliant invoice specification (Markdown/CSV), digital payment link payload (Stripe/Razorpay/Cashfree/PayU/Paytm), virtual account transfer details, and scheduled dunning reminders.
 
 ## Procedure
 
@@ -23,7 +28,10 @@ A formatted, statutory-compliant invoice specification (Markdown/CSV), digital p
    - Agency legal name, business address, and Tax ID (GST/VAT/EIN).
    - Client legal name, billing contact, address, and Tax ID.
    - Clear line items: Deliverable description, quantity/hours (if T&M), unit rate, subtotal, applicable taxes (or zero-rated export notation), and total payable.
-   - Clear settlement instructions: Direct wire details (IBAN/SWIFT/Routing) and digital one-click payment link (Stripe/Razorpay/Wise).
+   - Clear settlement instructions:
+     - **International Clients**: Stripe payment link / ACH routing / SWIFT wire instructions.
+     - **Domestic B2B Clients (Auto-Reconciled)**: Cashfree AutoCollect or Razorpay Smart Collect dedicated Virtual Account (VAN) + Virtual UPI ID. Client sends wire; payment auto-matches without manual bank statement parsing.
+     - **Quick Checkout**: Razorpay / Cashfree / PayU / Paytm dynamic payment link or QR code.
 3. **Automated Dunning Cadence (DSO Compression Ladder)**:
    - **T-3 Days (Courtesy Heads-Up)**: *"Hi [Client], a quick note that Invoice #INV-XXXX for Milestone 2 ($X,XXX) is due on [Date]. Link: [URL]. Let us know if you need any vendor portal PO details."*
    - **Day 0 (Due Date)**: *"Hi [Client], Invoice #INV-XXXX is due today. Please settle via the link below or reply with the transfer wire receipt."*

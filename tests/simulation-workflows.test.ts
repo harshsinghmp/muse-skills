@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -242,6 +243,50 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(auditRef).toContain("Payment Gateway & FX Spread Drag");
       expect(auditRef).toContain("Contractor Margin Distortion");
       expect(auditRef).toContain("Immediate Remedy (24h)");
+    });
+
+    test("bookkeeping reference implements OpenAccountants 3-outcome model and modern gateway clearing accounts", () => {
+      const bookRef = fs.readFileSync(path.join(accountsDir, "references", "bookkeeping.md"), "utf8");
+      // Modern Fintech Gateway Clearing Ledgers (No QuickBooks/Xero dependency)
+      expect(bookRef).toContain("1031` Stripe Clearing");
+      expect(bookRef).toContain("1032` Razorpay Clearing");
+      expect(bookRef).toContain("1033` Cashfree Clearing & AutoCollect");
+      expect(bookRef).toContain("1034` PayU Clearing");
+      expect(bookRef).toContain("1035` Paytm Gateway Clearing");
+      expect(bookRef).toContain("1200` GST / Tax Input Credit (ITC");
+
+      // OpenAccountants Epistemic Model & Working Paper
+      expect(bookRef).toContain("OpenAccountants Three-Outcome Classification Protocol");
+      expect(bookRef).toContain("`1. CLASSIFIED` (Definitive)");
+      expect(bookRef).toContain("`2. ASSUMED` (Disclosed Conservative Default)");
+      expect(bookRef).toContain("`3. NEEDS INPUT` (Gated Stop)");
+      expect(bookRef).toContain("OpenAccountants Standardized Working Paper Schema");
+    });
+
+    test("invoicing reference supports AutoCollect virtual accounts and modern payment rails", () => {
+      const invRef = fs.readFileSync(path.join(accountsDir, "references", "invoicing.md"), "utf8");
+      expect(invRef).toContain("Stripe");
+      expect(invRef).toContain("Razorpay");
+      expect(invRef).toContain("Cashfree Payments");
+      expect(invRef).toContain("PayU");
+      expect(invRef).toContain("Paytm Payment Gateway");
+      expect(invRef).toContain("AutoCollect");
+    });
+
+    test("reconcile-gateways script executes cleanly and outputs valid working papers with ITC calculations", () => {
+      const scriptPath = path.join(accountsDir, "scripts", "reconcile-gateways.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const res = spawnSync("bun", [scriptPath, "--demo"], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("Payment Gateway Settlement & OpenAccountants Reconciliation Report");
+      expect(res.stdout).toContain("STRIPE");
+      expect(res.stdout).toContain("RAZORPAY");
+      expect(res.stdout).toContain("CASHFREE");
+      expect(res.stdout).toContain("PAYU");
+      expect(res.stdout).toContain("PAYTM");
+      expect(res.stdout).toContain("Total Recoverable GST Input Tax Credit (ITC on Fees)");
+      expect(res.stdout).toContain("CLASSIFIED");
     });
   });
 });
