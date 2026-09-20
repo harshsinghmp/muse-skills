@@ -289,4 +289,80 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(res.stdout).toContain("CLASSIFIED");
     });
   });
+
+  describe("7. Council Persona Capabilities & Multi-Ecosystem Simulation", () => {
+    test("Jasper: animate technical-diagrams generates zero-JS moving SVG architectures", () => {
+      const diagPath = path.join(REPO_ROOT, "animate", "references", "technical-diagrams.md");
+      expect(fs.existsSync(diagPath)).toBe(true);
+      const content = fs.readFileSync(diagPath, "utf8");
+      expect(content).toContain("stroke-dashoffset");
+      expect(content).toContain("animateMotion");
+      expect(content).toContain("Flow Mode");
+      expect(content).toContain("Architecture Mode");
+      expect(content).toContain("prefers-reduced-motion");
+    });
+
+    test("Jasper: smm social-intel harvests multi-platform sentiment and viral hooks at zero cost", () => {
+      const intelPath = path.join(REPO_ROOT, "smm", "references", "social-intel.md");
+      expect(fs.existsSync(intelPath)).toBe(true);
+      const content = fs.readFileSync(intelPath, "utf8");
+      expect(content).toContain("Twitter / X");
+      expect(content).toContain("Reddit");
+      expect(content).toContain("YouTube");
+      expect(content).toContain("Social Intelligence Dossier");
+      expect(content).toContain("Viral Hook Bank");
+    });
+
+    test("Sol: database tuning runs semantic parameter optimization loops against real metrics", () => {
+      const tuningPath = path.join(REPO_ROOT, "database", "references", "tuning.md");
+      expect(fs.existsSync(tuningPath)).toBe(true);
+      const content = fs.readFileSync(tuningPath, "utf8");
+      expect(content).toContain("Semantic parameter reasoning");
+      expect(content).toContain("Database Connection Pooling");
+      expect(content).toContain("Vector Search Indexing & Quantization");
+      expect(content).toContain("Optimization Report Schema");
+    });
+
+    test("Sol & Crew: automation browser-relay connects authenticated browser tabs with zero credential leak", () => {
+      const relayPath = path.join(REPO_ROOT, "automation", "references", "browser-relay.md");
+      expect(fs.existsSync(relayPath)).toBe(true);
+      const content = fs.readFileSync(relayPath, "utf8");
+      expect(content).toContain("127.0.0.1:18795");
+      expect(content).toContain("browser-relay doctor");
+      expect(content).toContain("LifeOS Vibeguard Protocol");
+      expect(content).toContain("Zero Password Ingestion");
+    });
+
+    test("Nexus: code-review boundary-governance strictly enforces the 5 checkpoints", () => {
+      const govPath = path.join(REPO_ROOT, "code-review", "references", "boundary-governance.md");
+      expect(fs.existsSync(govPath)).toBe(true);
+      const content = fs.readFileSync(govPath, "utf8");
+      expect(content).toContain("The 5 Checkpoints");
+      expect(content).toContain("1. GOAL");
+      expect(content).toContain("2. FACTS");
+      expect(content).toContain("3. METHOD");
+      expect(content).toContain("4. VERIFICATION");
+      expect(content).toContain("5. BOUNDARIES");
+      expect(content).toContain("Unsolicited Refactoring");
+    });
+
+    test("Crew: client-comms factual-reporting grounds status updates in verified Git evidence", () => {
+      const repPath = path.join(REPO_ROOT, "client-comms", "references", "factual-reporting.md");
+      expect(fs.existsSync(repPath)).toBe(true);
+      const content = fs.readFileSync(repPath, "utf8");
+      expect(content).toContain("Evidence Precedes Claims");
+      expect(content).toContain("Completed & Verified Deliverables");
+      expect(content).toContain("Risks & Decisions Required From Client");
+    });
+
+    test("Council Overall: updateagents global-atoms caps active cross-project invariants at <=20", () => {
+      const atomPath = path.join(REPO_ROOT, "updateagents", "references", "global-atoms.md");
+      expect(fs.existsSync(atomPath)).toBe(true);
+      const content = fs.readFileSync(atomPath, "utf8");
+      expect(content).toContain("Global Atom Cap (≤20 active invariant atoms)");
+      expect(content).toContain("Promotion Gate (≥2 Independent Repositories)");
+      expect(content).toContain("365-Day Demotion Lifecycle");
+      expect(content).toContain("Task Observation Loop");
+    });
+  });
 });
