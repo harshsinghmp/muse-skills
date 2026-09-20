@@ -51,3 +51,19 @@ Before `gh pr create`, re-read the staged diff like a hostile reviewer — not t
 - Any unrequested orthogonal changes (refactors, formatting-only swings) that review will block — revert them now, not after a round-trip.
 
 Fix everything you catch, re-run the verification gate (tests, type-check, secret scan), then open the PR. A self-checked diff ships for review once; a sloppy diff ships twice.
+
+## 9. Pre-PR Adversarial Grilling Checklist
+
+(source: `VoDaiLocz/kilo-kit-mcp` C4 Gate & Adversarial Red-Teaming)
+
+Before executing `gh pr create` or requesting review, subject the changeset to an explicit adversarial grill across three catastrophic failure lenses:
+
+1. **Inversion & Catastrophic Failure**:
+   - *Question*: "If a malicious or chaotic actor wanted to bring down this service using only this change, what payload or timing sequence would they use?"
+   - *Check*: Trace unhandled nulls, missing validation on request boundaries, malformed JSON, and external API timeouts or HTTP 5xx cascades.
+2. **Blast Radius & Shared State**:
+   - *Question*: "What other systems, background queues, scheduled cron jobs, or database tables could be destabilized by this change?"
+   - *Check*: Verify that modifications to shared schemas, utility helpers, or ORM models do not inadvertently alter behavior for consumers outside the immediate diff.
+3. **Async Race Conditions & Ordering**:
+   - *Question*: "What happens when two concurrent requests hit this logic within 5 milliseconds of each other?"
+   - *Check*: Audit database transaction isolation, optimistic locking, idempotent webhook keys, and eliminate check-then-act race windows.

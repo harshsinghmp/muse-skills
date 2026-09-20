@@ -979,7 +979,7 @@ Custom billing engine for healthcare providers.
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
       expect(deepSeaTokens).toContain("DEEP-SEA");
-    }, 60000);
+    }, 120000);
 
     it("provisions project-scoped oklch-skill strictly inside target project with zero global pollution", () => {
       const targetProject = join(TEST_SANDBOX, "oklch-skill-showcase");

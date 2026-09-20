@@ -30,6 +30,30 @@ Section-by-section page copy: hero (headline + subhead + CTA), proof, feature/be
 14. Run the message-market-fit trio before finalizing copy (source: marketingskills `copywriting` SKILL.md): the "Now you can" test (does the headline complete "now you can ___" with a concrete outcome?), the Human Action Model (name the discomfort → the vision → the path, in that order), and the Perception Gap check (what the reader believes now vs what must be true to act — close it explicitly).
 15. Shape CTAs as [Verb] + [Get] + [Qualifier] (e.g. "Start — get the audit — free, 2 minutes") — value-not-action verbs first (source: marketingskills `copywriting` SKILL.md).
 
+## Aaron 8 Pre-Flight Auditor Gates
+
+Before any marketing copy, launch asset, or sales collateral is marked ready, audit across the 8 standardized gates (source: `aaron-he-zhu/aaron-marketing-skills`):
+
+1. **CORE-EEAT (Quality & Authority Gate)**:
+   - *CORE*: Contextual Clarity (purpose unmistakable in 5 seconds), Organization (logical hierarchy), Referenceability (modular, cite-friendly layout), Exclusivity (first-party data, proprietary angle, or novel insight).
+   - *EEAT*: Experience (first-person evidence), Expertise (technical domain depth), Authoritativeness (named credentials/case evidence), Trust (transparent commercial intent, zero unverifiable claims).
+2. **CITE (Algorithmic Quotability Gate)**:
+   - *18-Token Self-Contained Rule*: Key claims and definitions must be extractable as complete standalone sentences without dangling pronouns (`this`, `they`, `these`).
+   - *Primary Source Linkage*: All statistical proof points must cite primary empirical studies or first-party benchmarks, never secondary blog aggregators.
+3. **STAR (Case Study & Proof Point Gate)**:
+   - Enforce Situation → Task → Action → Result for B2B evidence.
+   - *Result Metric Mandate*: Prohibit vague claims ("greatly accelerated onboarding"); mandate baseline, timeframe, and quantified delta ("slashed P99 onboarding latency from 14 days to 4 hours over 60 days").
+4. **ROAS (Acquisition Efficiency Gate)**:
+   - Hook and angle audit: ensure the headline promise aligns directly with post-click destination to prevent bounce and wasted ad spend.
+5. **SEND (Outreach & Email Copy Gate)**:
+   - Subject line clarity, Emotional resonance, Novelty angle, and deliverability check before dispatch.
+6. **RAMP (Readiness Gate)**:
+   - Relevance, Authority, Mechanics (syntax, mobile line breaks), and Polish.
+7. **ECHO (Tonal Integrity Gate)**:
+   - Voice consistency verification against approved brand persona vectors — zero abrupt register shifts.
+8. **TALE (Narrative Arc Gate)**:
+   - Tension → Adversity → Lesson → Elevation sequence to maintain cognitive engagement over flat, bulleted recitation.
+
 ## Quality gate
 
 - [ ] One primary action drives the whole page.
@@ -39,8 +63,9 @@ Section-by-section page copy: hero (headline + subhead + CTA), proof, feature/be
 - [ ] CTA microcopy lowers friction.
 - [ ] Humanize pass run.
 - [ ] Persuasion levers matched to their jobs; no manufactured scarcity.
- - [ ] CTA ladder climbed in order (value first, meeting ask last).
- - [ ] Message-fit trio passed ("Now you can" completes, discomfort→vision→path ordered, perception gap closed); CTAs follow [Verb]+[Get]+[Qualifier].
+- [ ] CTA ladder climbed in order (value first, meeting ask last).
+- [ ] Message-fit trio passed ("Now you can" completes, discomfort→vision→path ordered, perception gap closed); CTAs follow [Verb]+[Get]+[Qualifier].
+- [ ] Aaron 8 Pre-Flight Auditor Gates passed (CORE-EEAT, CITE 18-token rule, STAR result metrics, RAMP/ECHO).
 - [ ] No hype adjectives; every number traceable to an observed fact.
 - [ ] Each state leads with the one needed fact, then the next action, then supporting context — said once (keeper: pbakaus/impeccable).
 - [ ] Readability: one idea per paragraph (≤2 lines), one block per concept, tables ≤3 tight columns (keeper: 99rebels/skill-polisher).

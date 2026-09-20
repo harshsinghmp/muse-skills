@@ -28,6 +28,13 @@ is a radar, not a verdict.
 These are inputs to scope the review, not findings. They decide where the
 review's energy goes.
 
+### Isolated Fresh-Eyes Review Protocol (`context: fork`)
+(source: `saleh-alhaddad/itqan-engineering` & `GanyuanRan/Aegis`)
+When reviewing changesets exceeding 300 LOC or touching mission-critical modules:
+1. **Zero-Context Blind Pass**: Isolate the diff from author narratives, commit messages, or PR explanations.
+2. **Self-Documentation Verification**: Evaluate whether the interfaces, variable names, and error handling self-describe their intent without external coaching.
+3. **Edge-Case Triangulation**: Trace how unexpected inputs, null values, or network timeouts behave without trusting the author's stated assumptions.
+
 ### Structural-decay input (modularity decay)
 While enumerating scope, if the changeset keeps extending a file or module
 that is already large or is taking a disproportionate share of recent commit
@@ -47,5 +54,7 @@ names are examples, the gate is manifest-generic):
    vulnerable or deprecated versions.
 3. Check it introduces no unexpected dependency edge or cycle (Theme 23.2)
    and that the version bump's rationale is stated (Theme 12.1).
-Gate is advisory unless a change fails 1–3; a silent risky dependency
+4. **Strict Isolation Rule**: Enforce 1 major dependency bump per commit. Never bundle dependency updates with feature or bugfix logic.
+5. **Lockfile Diff Audit**: Inspect lockfile diffs for suspicious transitive additions, mismatched checksums, or malicious postinstall lifecycle scripts.
+Gate is advisory unless a change fails 1–5; a silent risky dependency
 introduction is Request Changes, not a hard reject on its own.
