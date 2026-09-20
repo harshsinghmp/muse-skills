@@ -80,6 +80,7 @@ npx skills add harshsinghmp/muse-skills --skill animate
 | `review-checklist.md` | Reviewing or auditing motion quality |
 | `gsap.md` | GSAP + ScrollTrigger (explicit ask only) |
 | `mobile.md` | Reanimated / SwiftUI / Compose / Flutter (explicit ask only) |
+| `technical-diagrams.md` | Dashmotion zero-JS animated SVG system architectures & data flows |
 | `other-libraries.md` | Anime.js, Lottie, Rive, SVG, Three.js |
 
 ---

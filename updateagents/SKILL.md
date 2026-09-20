@@ -192,7 +192,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
    - Deploy lean root `AGENTS.md` DOX rail (<50 lines) pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize `.agents/standards/` (all 13 rulebooks, including modern WordPress) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
+Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.

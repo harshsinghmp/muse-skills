@@ -9,6 +9,7 @@ This directory is the database department for the agency: query read-only, diagn
 - **index** — missing, composite, covering, partial, and FK indexes plus N+1 and batch-upsert patterns. Production DDL uses `CONCURRENTLY`; write cost stated per index.
 - **guard** — RLS policies with verification tests, `security_invoker` views, PK and identifier rules. Auth calls wrapped in `(select ...)` to avoid per-row full scans.
 - **operate** — pooling sizing, partitioning, pgvector basics, lock triage, and monitoring queries the operator keeps. Mutating commands flagged before handoff.
+- **tuning** — automated semantic parameter optimization for connection pools, cache TTLs, worker concurrency, and vector quantization with controlled benchmark feedback loops.
 
 ## When to use it
 
@@ -40,7 +41,15 @@ You run a full-service creative web marketing agency with multiple projects, mul
 
 5. **Keep production healthy.** When pooling, partitioning, pgvector, locks, or monitoring come up, the `operate` mode sizes the pool from math, partitions the growing table, stands up the vector index, triages the lock, and leaves monitoring queries behind. This is the operations layer.
 
-A single skill, five modes, four database types. The agent resolves the mode from the request, loads only that mode's reference, and follows the playbook. The postgres-perf-tuner content (diagnose, index, guard, operate) is folded into this skill — Postgres is still the primary dialect, but the query mode works with any SQL database, and the other modes are written to be dialect-aware where it matters.
+6. **Tune system parameters.** When latency, throughput, or infrastructure costs require optimization, the `tuning` mode uses semantic parameter reasoning (rather than naive brute-force grid search) to tune connection pools, cache TTLs, worker concurrency, and vector quantization against controlled benchmark loops.
+
+A single skill, six modes, four database types. The agent resolves the mode from the request, loads only that mode's reference, and follows the playbook.
+
+### Specialized Deep-Dive References
+
+- `references/vector-search.md`: Vector search architecture, HNSW vs IVF indexing, payload filtering, scalar/binary quantization, and RAG chunking (Qdrant & pgvector).
+- `references/tuning.md`: Automated semantic parameter tuning & benchmark optimization loops.
+- `references/analytical.md`: Columnar analytics routing (DuckDB/ClickHouse) vs OLTP and zero-downtime scaling.
 
 ## Setup
 

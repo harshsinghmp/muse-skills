@@ -31,7 +31,7 @@ flowchart TD
 
 ### Invariant Rules for Global Atoms
 1. **Strict Ceiling (≤20 Active Atoms)**:
-   - At no time may the global invariant table contain more than 20 active atoms.
+   - At no time may the global invariant table contain more than the configured active atom cap (default baseline ≤20 active atoms, configurable up to 40 via `bun scripts/taste-engine.ts set-cap --cap=40`).
    - If a new atom is proposed when the table is full, the least-frequently triggered atom must be reviewed for consolidation or demotion.
 2. **Promotion Gate (≥2 Independent Repositories)**:
    - A bug fix or coding rule learned in Client Project A remains **project-local** in `Client-A/.agents/context/decisions.md`.

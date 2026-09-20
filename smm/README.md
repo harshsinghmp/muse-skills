@@ -31,6 +31,11 @@ Design an influencer and UGC program to launch our new skincare line.
 | **influencer** | influencer collaboration | Influencer: creator fit, briefs, disclosure, and measurement. |
 | **ugc** | UGC pipeline | UGC: source, license, and reuse user content on brand channels and ads. |
 | **analytics** | social performance reporting | Analytics: platform metrics, reporting, and the iteration loop. |
+| **postiz** | schedule via postiz / social automation | Postiz: automated multi-channel dispatch across 28+ channels via API/CLI. |
+
+### Specialized References
+
+- `social-intel.md`: Agent Reach zero-cost social listening, sentiment harvesting, and viral hook extraction across X, Reddit, and YouTube transcripts.
 
 ## How it works
 

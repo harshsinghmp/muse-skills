@@ -217,7 +217,7 @@ The skill writes or updates the artifact described in its documentation. Review 
 
 ### Install the complete suite
 
-Install all forty-three skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, unified database operations, Telegram messaging, and full-service creative web marketing agency toolkit:
+Install all forty-five skills when you want the full Project OS, context, recovery, orchestration, design-extraction, UI refactoring, animation, code-review, governance, audit, unified database operations, Telegram messaging, and full-service creative web marketing agency toolkit:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
