@@ -52,7 +52,7 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 
 ## Infrastructure
 
-- **Hooks** (14 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
+- **Hooks** (15 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
 - **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish)
 - **Audit modes**: 13 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
 - **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking

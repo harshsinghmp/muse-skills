@@ -2,7 +2,7 @@
 
 Shell hooks that improve workflow safety, accuracy, and session continuity. Install alongside skills via `bash scripts/hooks/install-hooks.sh`. Each hook is fail-closed (log + continue, never blocks the agent).
 
-## Hooks (14 total)
+## Hooks (15 total)
 
 | # | Hook | Trigger | Agent | Behavior |
 |:---|:---|:---|:---|:---|
@@ -19,7 +19,8 @@ Shell hooks that improve workflow safety, accuracy, and session continuity. Inst
 | 11 | `gauntlet-closeout.sh` | gauntlet-loop terminates | all | Checks for ACCEPTANCE_PACKET.md; prints termination status |
 | 12 | `dead-letter-nightly.sh` | scheduled (cron) or manual | all | Counts open dead-letter records; recommends `dead-letter status` |
 | 13 | `cache-pressure-check.sh` | periodic (cron) or pre-build | all | Warns when disk space < 10GB; recommends `clean-system-cache` |
-| 14 | `install-hooks.sh` | manual / post-skill-install | all | Detects agent runtimes, installs hooks into correct directories |
+| 14 | `taste-observer.sh` | session end / user input | all | Passively extracts user corrections and preferences into Native Taste Engine |
+| 15 | `install-hooks.sh` | manual / post-skill-install | all | Detects agent runtimes, installs hooks into correct directories |
 
 ## Auto-detection table
 
@@ -82,6 +83,10 @@ hooks:
       matcher: "session.start"
       command: "bash scripts/hooks/session-resume-probe.sh"
       timeout: 5
+    - name: taste-observer
+      matcher: "session.end"
+      command: "bash scripts/hooks/taste-observer.sh"
+      timeout: 10
 ```
 
 Adjust `matcher` names to your installed Hermes version's event vocabulary.
@@ -103,6 +108,9 @@ hooks:
     - name: session-resume
       handler: session-resume-probe
       events: ["session.start"]
+    - name: taste-observer
+      handler: taste-observer
+      events: ["session.end"]
 ```
 
 Handler values map to `scripts/hooks/<handler>.sh`.

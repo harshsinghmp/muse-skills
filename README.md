@@ -82,7 +82,7 @@ Agent work tends to stall in familiar ways: a project starts without lasting con
 
 ## 🔧 Automation Infrastructure
 
-### Hooks (14 shell hooks)
+### Hooks (15 shell hooks)
 
 Installed via `bash scripts/hooks/install-hooks.sh`. Detects your agent runtime (Git, Claude Code, Codex, OpenCode, Cursor, Windsurf, Aider, Cline, Trae, Continue, Omo, Crush, Antigravity) and installs into existing directories only — never creates new ones.
 
@@ -101,6 +101,7 @@ Installed via `bash scripts/hooks/install-hooks.sh`. Detects your agent runtime 
 | `gauntlet-closeout.sh` | gauntlet termination | Checks acceptance packet |
 | `dead-letter-nightly.sh` | cron / manual | Counts open dead-letter records |
 | `cache-pressure-check.sh` | cron / pre-build | Warns when disk < 10GB |
+| `taste-observer.sh` | session end / user input | Passively observes user steering & preferences |
 | `install-hooks.sh` | manual | Detects runtimes, installs hooks |
 
 ### CI/CD
