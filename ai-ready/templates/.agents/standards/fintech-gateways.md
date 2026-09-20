@@ -32,3 +32,20 @@ Every settlement batch processed across gateways must resolve to one of three de
 1. `MATCH`: Gross collection minus calculated gateway fees and GST perfectly equals the bank credit.
 2. `DISCREPANCY`: Variance exists (e.g. unexpected refund clawback, disputed chargeback fee, or rounding diff). Requires manual review.
 3. `MISSING_PAYOUT`: Gateway reports payout transmitted, but the bank account shows no corresponding deposit within the T+2 settlement window. Requires clearing trace.
+
+---
+
+## 3. Universal Currency & Ledger Interoperability
+
+### Multi-Currency Flexibility
+This standard is strictly currency-agnostic. Projects configure their primary and settlement currencies in `.agents/context/product.md` or `.env`:
+- **Global Currencies**: USD, EUR, GBP, AUD, CAD, JPY, SGD, CHF, etc.
+- **Domestic / Regional Currencies**: INR, BRL (Pix), IDR, AED, etc.
+- **FX Settlement**: When processing cross-border payments, capture gross customer currency, processor FX rate, and net settled amount into corresponding clearing sub-accounts.
+
+### Accounting Platform & ERP Agnostic
+Reconciliation pipelines and chart of accounts structures export cleanly to any target system:
+- **Global Cloud Suites**: QuickBooks Online (QBO), Xero, NetSuite, FreshBooks.
+- **Regional / Specialized Platforms**: Zoho Books, TallyPrime, Busy.
+- **Developer & Plain-Text Accounting**: OpenAccountants, hledger, beancount, or CSV working papers.
+- **Organization-Level Choice**: Each client or repository defines its preferred accounting platform without framework lock-in. Individual developer or principal preferences never restrict the platform options of downstream users.
