@@ -130,4 +130,28 @@ describe("🧠 Native Agent Taste Engine", () => {
     expect(md).toContain("Always native English output");
     expect(md).toContain("communication");
   });
+
+  it("allows increasing the active atom cap to accommodate more rules", () => {
+    const engine = new TasteEngine(tempStatePath);
+    engine.getState().activeAtomCap = 5;
+
+    for (let i = 1; i <= 5; i++) {
+      const sig = engine.observeSignal(`Dynamic rule ${i}`, { category: "architecture" });
+      sig.signal.recurrenceCount = 2;
+      engine.promoteSignalToAtom(sig.signal.id);
+    }
+
+    const active = engine.getState().atoms.filter((a) => a.status === "active");
+    expect(active.length).toBe(5);
+  });
+
+  it("does not flag conflict when an atom contains general fintech rails without negative rules", () => {
+    const engine = new TasteEngine(tempStatePath);
+    const sig = engine.observeSignal("We use Stripe for payment processing", { category: "fintech" });
+    sig.signal.recurrenceCount = 2;
+    engine.promoteSignalToAtom(sig.signal.id);
+
+    const result = engine.observeSignal("Integrate QuickBooks Online for reconciliation", { category: "fintech" });
+    expect(result.conflictWithAtom).toBeNull();
+  });
 });

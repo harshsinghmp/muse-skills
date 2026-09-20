@@ -136,7 +136,10 @@ export class TasteEngine {
       // Heuristic conflict detection
       if (
         (lower.includes("quickbooks") || lower.includes("xero")) &&
-        (atomLower.includes("zero-quickbooks") || atomLower.includes("stripe") || atomLower.includes("cashfree"))
+        (atomLower.includes("zero-quickbooks") ||
+          atomLower.includes("zero quickbooks") ||
+          atomLower.includes("no quickbooks") ||
+          atomLower.includes("without quickbooks"))
       ) {
         return atom;
       }
@@ -326,8 +329,22 @@ async function main() {
     const retired = engine.pruneStaleAtoms();
     console.log(`Retired ${retired.length} stale atoms (>365 days).`);
     await engine.save();
+  } else if (command === "set-cap") {
+    let cap = DEFAULT_ACTIVE_ATOM_CAP;
+    for (const arg of args.slice(1)) {
+      if (arg.startsWith("--cap=")) {
+        cap = Number.parseInt(arg.slice("--cap=".length), 10);
+      }
+    }
+    if (Number.isNaN(cap) || cap < 1) {
+      console.error("Error: --cap must be a positive integer.");
+      process.exit(1);
+    }
+    engine.getState().activeAtomCap = cap;
+    console.log(`✓ Active atom cap updated to ${cap}`);
+    await engine.save();
   } else {
-    console.log(`Usage: bun scripts/taste-engine.ts [observe|status|list|prune]`);
+    console.log(`Usage: bun scripts/taste-engine.ts [observe|status|list|prune|set-cap --cap=<N>]`);
   }
 }
 
