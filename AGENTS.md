@@ -1,6 +1,6 @@
 # AGENTS.md - muse-skills
 
-Curated suite of forty-four universal AI agent skills. MIT. Install via
+Curated suite of forty-five universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working

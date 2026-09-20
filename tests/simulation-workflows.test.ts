@@ -173,4 +173,75 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(patternsRef).toContain("P60 Venue Mismatch Register");
     });
   });
+
+  describe("6. accounts Financial Operations Engine Simulation", () => {
+    const accountsDir = path.join(REPO_ROOT, "accounts");
+    const skillPath = path.join(accountsDir, "SKILL.md");
+
+    test("accounts declares all 6 core operating modes and matching references", () => {
+      expect(fs.existsSync(skillPath)).toBe(true);
+      const skillContent = fs.readFileSync(skillPath, "utf8");
+
+      const expectedModes = ["invoicing", "bookkeeping", "client-pnl", "cashflow", "tax-compliance", "audit"];
+      for (const mode of expectedModes) {
+        expect(skillContent).toContain(`**${mode}**`);
+        const refPath = path.join(accountsDir, "references", `${mode}.md`);
+        expect(fs.existsSync(refPath)).toBe(true);
+      }
+    });
+
+    test("invoicing reference defines DSO compression dunning ladder and upfront deposit mandate", () => {
+      const invRef = fs.readFileSync(path.join(accountsDir, "references", "invoicing.md"), "utf8");
+      expect(invRef).toContain("50% deposit upfront");
+      expect(invRef).toContain("T-3 Days (Courtesy Heads-Up)");
+      expect(invRef).toContain("Day 0 (Due Date)");
+      expect(invRef).toContain("T+7 Days (Delivery Notice)");
+      expect(invRef).toContain("T+14 Days (Hard Delivery Pause)");
+    });
+
+    test("bookkeeping reference defines standard 6-class COA and Deferred Revenue recognition", () => {
+      const bookRef = fs.readFileSync(path.join(accountsDir, "references", "bookkeeping.md"), "utf8");
+      expect(bookRef).toContain("1000–1999 Assets");
+      expect(bookRef).toContain("2020");
+      expect(bookRef).toContain("Deferred Revenue");
+      expect(bookRef).toContain("5000–5999 Direct Cost of Goods Sold (COGS)");
+      expect(bookRef).toContain("5-Step Monthly Financial Close Protocol");
+    });
+
+    test("client-pnl reference specifies gross margin benchmarks and EHR realization formula", () => {
+      const pnlRef = fs.readFileSync(path.join(accountsDir, "references", "client-pnl.md"), "utf8");
+      expect(pnlRef).toContain("Client Gross Margin");
+      expect(pnlRef).toContain("Effective Hourly Rate (EHR)");
+      expect(pnlRef).toContain("$150/hr");
+      expect(pnlRef).toContain("Rule of 10%");
+      expect(pnlRef).toContain("Change-Order Fee");
+    });
+
+    test("cashflow reference enforces 3-to-6 month reserve buffer and 3-account segregation", () => {
+      const cashRef = fs.readFileSync(path.join(accountsDir, "references", "cashflow.md"), "utf8");
+      expect(cashRef).toContain("13-Week Rolling Cash Flow Forecast");
+      expect(cashRef).toContain("Cash Runway (Months)");
+      expect(cashRef).toContain("Operating Account");
+      expect(cashRef).toContain("Tax Reserve Sub-Account");
+      expect(cashRef).toContain("Days Sales Outstanding (DSO)");
+    });
+
+    test("tax-compliance specifies cross-border export zero-rating and contractor compliance", () => {
+      const taxRef = fs.readFileSync(path.join(accountsDir, "references", "tax-compliance.md"), "utf8");
+      expect(taxRef).toContain("Export of Services under Letter of Undertaking (LUT)");
+      expect(taxRef).toContain("Reverse Charge: VAT to be accounted for by the recipient");
+      expect(taxRef).toContain("Form W-9");
+      expect(taxRef).toContain("Form W-8BEN");
+      expect(taxRef).toContain("1099-NEC");
+    });
+
+    test("audit reference outlines 5 financial leakage vectors and prioritized action matrix", () => {
+      const auditRef = fs.readFileSync(path.join(accountsDir, "references", "audit.md"), "utf8");
+      expect(auditRef).toContain("Zombie SaaS & Cloud Tooling");
+      expect(auditRef).toContain("Unbilled Work & Creeping Milestones");
+      expect(auditRef).toContain("Payment Gateway & FX Spread Drag");
+      expect(auditRef).toContain("Contractor Margin Distortion");
+      expect(auditRef).toContain("Immediate Remedy (24h)");
+    });
+  });
 });
