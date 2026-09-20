@@ -25,6 +25,9 @@ when docs drift.
 - Commits follow `CONTRIBUTING.md` (Meaningful Git Commit Protocol).
 - Branch and release lifecycle lives in `CONTRIBUTING.md` as well:
   never commit to `main`; cut `feat/*` from `dev`.
+- Atomic PR per Skill: Always open a separate, dedicated feature branch and PR
+  for each new feature per skill, even when executing multiple upgrades from a
+  single working session. Never batch multi-skill changes into one monolithic PR.
 - No secrets or personal environment values in any shipped file.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
