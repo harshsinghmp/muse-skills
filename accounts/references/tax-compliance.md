@@ -28,8 +28,22 @@ A cross-border digital service tax decision matrix, compliant export invoice dis
        > *"Reverse Charge: VAT to be accounted for by the recipient per Article 196 of Council Directive 2006/112/EC (or UK equivalent)."*
    - **Domestic B2B Billing**:
      - Mandatory application of domestic sales tax / GST (e.g. 18% SAC 998314 for IT & Software Development). Both parties must state valid tax registration numbers for input tax credit pass-through.
+   - **Foreign Inward Remittance Certificate (FIRC / FIRS)**:
+     - For cross-border Stripe or bank wire settlements, download the FIRS remittance statement with Purpose Code `P0802` (Software consultancy / implementation) as mandatory statutory proof of foreign exchange realization.
 
-2. **Contractor Tax Documentation & Withholding**:
+2. **OpenAccountants Three-Outcome Tax Determination Protocol**:
+   - **`CLASSIFIED` (Definitive)**:
+     - Fact pattern satisfies statutory code with zero ambiguity.
+     - *Rule*: Non-resident client + valid foreign address + foreign currency receipt (Stripe USD/EUR wire) + active LUT = Zero-Rated Export under CGST Act Section 2(6) / Section 16 IGST.
+   - **`ASSUMED` (Conservative Disclosed Default)**:
+     - Minor technicality pending, default to conservative compliance position with logged working paper disclosure.
+     - *Rule*: Domestic client claims GST registration but portal lookup is pending; issue invoice with provisional IGST/CGST charging until verified GSTIN is confirmed.
+   - **`NEEDS INPUT` (Gated Clarification Stop)**:
+     - Material fact missing that determines tax rate or legal liability.
+     - Agent halts processing and presents a binary clarification prompt.
+     - *Example*: Domestic vs SEZ (Special Economic Zone) status unclear; ask user whether client is in DTA (taxable at 18%) or SEZ unit (zero-rated with endorsement).
+
+3. **Contractor Tax Documentation & Withholding**:
    - **US-Based Subcontractors**:
      - Collect **Form W-9** (Request for Taxpayer Identification Number) *prior* to releasing the first payout.
      - Track cumulative payments: If aggregate compensation reaches **$600 or more** in a tax year, file **Form 1099-NEC** by January 31.

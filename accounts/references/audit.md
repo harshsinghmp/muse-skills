@@ -26,9 +26,10 @@ A Financial Hygiene Audit Scorecard identifying leakage vectors, gross margin co
      - Audit why payments are delayed (missing vendor form, wrong PO, forgotten follow-up).
      - Calculate the cost of delayed capital: every $10,000 stalled for 60 days strains operating runway.
    - **Vector 4: Payment Gateway & FX Spread Drag**:
-     - Audit merchant fees across Stripe, PayPal, and traditional credit card processors.
-     - Cross-border penalty: Stripe charges up to 1.5% extra for international cards + 2% FX conversion markup.
-     - Remedy: Route high-value international client settlements through Wise Business or direct USD/EUR wire transfers into multi-currency accounts.
+     - Audit merchant fees and settlement lags across **Stripe, Razorpay, Cashfree, PayU, and Paytm**.
+     - *Unclaimed Gateway GST/ITC*: Domestic gateways (Razorpay, Cashfree, PayU, Paytm) levy 18% GST on top of their 1.75%–2% processing fees. If monthly GST invoices from gateways are not downloaded and filed, the agency forfeits valuable Input Tax Credits (`1200 ITC`).
+     - *Rail Optimization*: Route large domestic B2B client transfers through Cashfree AutoCollect or Razorpay Smart Collect virtual bank accounts (zero or negligible flat fee) instead of card payment gateways (2% MDR + 18% GST).
+     - *Cross-Border Card Drag*: Stripe charges up to 1.5% extra for international cards + 2% FX conversion markup. High-value international retainers (> $3,000) should be settled via direct ACH / SWIFT wire or Wise into multi-currency accounts.
    - **Vector 5: Contractor Margin Distortion**:
      - Check whether contractor payouts are assigned to specific client accounts or dumped into generic overhead.
      - Fix misallocated costs to reveal the true profitability of every client engagement.
@@ -39,7 +40,7 @@ A Financial Hygiene Audit Scorecard identifying leakage vectors, gross margin co
    |:---|:---|:---|:---|
    | **Zombie SaaS Subscriptions** | $250 – $1,000 | $3,000 – $12,000 | Cancel unused seats; consolidate duplicate tool stacks. |
    | **Unbilled Milestone Scope** | $1,000 – $5,000 | $12,000 – $60,000 | Issue retroactive Change-Order true-up invoice before deployment. |
-   | **Gateway & FX Surcharges** | $300 – $1,500 | $3,600 – $18,000 | Implement Wise ACH/wire routing for payments over $3,000. |
+   | **Payment Gateway & FX Drag** | $300 – $1,500 | $3,600 – $18,000 | Shift domestic B2B to AutoCollect; switch international >$3K to ACH/Wire; claim gateway GST ITC. |
    | **Aging Invoices (>14d)** | Variable | Liquidity Risk | Deploy automated T+7 and T+14 stop-work dunning ladder. |
 
 3. **Remediation Execution Protocol**:
