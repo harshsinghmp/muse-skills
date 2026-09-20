@@ -23,6 +23,7 @@
 10. **Modern Tool Primacy (MANDATORY)**: Always use modern high-speed tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `jq`/`rg` pipelines > `cut` for field extraction, `ps` with standard flags for process inspection, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Subshells run non-interactively and DO NOT load `.bashrc` aliases—agents MUST invoke installed modern binaries explicitly by name, never legacy tools unless modern binaries are absent. Never mandate tools outside the installed set.
 11. **Zero Synthetic ADE Artifact Leakage**: Never accept, commit, or propagate synthetic ADE/IDE placeholders or rich markdown wrappers (such as ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor `[cursor:...]`, Windsurf wrappers, or Claude artifacts). Always unwrap and decode them to raw content, and wrap template tokens in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
 12. **Clean Package Syntax & No Published Refs**: In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is a git reference. Never append, publish, or pass raw commit hashes or arbitrary branch references (`#<ref>`); downstream installers execute `git clone --depth 1 --branch <ref>` which fatally rejects commit SHAs. Always keep repository links and skill installation commands clean (`skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it is a valid tag/branch that never breaks linking. For package managers (`npm`, `bun`, etc.), use `@latest` when specified as a parameter; otherwise keep commands clean without redundant arguments to fetch latest automatically.
+13. **Atomic PR Per Skill / Feature Protocol**: Always open a separate, dedicated feature branch and PR for each new feature per skill, even when executing multiple upgrades from a single working session. Never batch multi-skill changes into one monolithic PR.
 
 ---
 
@@ -32,6 +33,10 @@ Load these relative modules on-demand when relevant to your active task:
 ### 🌐 Universal Core Standards (All Frameworks)
 - ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, 32-tool modern CLI matrix & fallbacks, synthetic ADE sanitization, Fowler Refactoring.
 - 🛡️ [Security & Vibeguard Protocol](./.agents/standards/security-vibeguard.md) — Secret isolation, Destructive Command Gate, Untrusted Tool Output defense.
+- 🛡️ [Boundary Governance & Nexus Gate](./.agents/standards/boundary-governance.md) — 5-checkpoint boundary verification: Goal, Facts, Method, Proof, and Boundaries.
+- 💳 [Fintech Gateways & Tax Compliance](./.agents/standards/fintech-gateways.md) — Multi-gateway settlements (Stripe, Razorpay, Cashfree, PayU, Paytm), 18% GST ITC recovery, 3-outcome reconciliation.
+- 📊 [Evidence-Based Client Reporting](./.agents/standards/client-reporting.md) — Progress updates grounded in verified Git commits, test runner outcomes, and stage artifacts.
+- 🎬 [Animated Technical Diagrams](./.agents/standards/motion-diagrams.md) — Zero-JS SVG architecture diagrams and dataflow animations.
 - 📐 [System, Domain & Resilience Design](./.agents/standards/system-design.md) — Evans DDD, Nygard Release It! stability, migration rehearsal, and schemas.
 - 🔄 [Development Workflows & Gates](./.agents/standards/workflows.md) — Scaled tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.
 - 📜 [Git Branching, Commits & SemVer](./.agents/standards/git-workflow.md) — Branch lifecycle (`master`/`dev`/`feature`/`release`/`hotfix`), commit standards, and SemVer.
