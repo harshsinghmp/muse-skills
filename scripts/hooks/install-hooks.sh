@@ -35,6 +35,7 @@ CONF="$HOOKS_DIR/agent-dirs.conf"
 if [ -f "$CONF" ]; then
   while IFS=':' read -r dir subdir fmt; do
     [ -z "$dir" ] && continue
+    [[ "$dir" =~ ^[[:space:]]*# ]] && continue
     HOOK_SUBDIR["$dir"]="$subdir"
     HOOK_CONFIG["$dir"]="$fmt"
   done < "$CONF"
@@ -124,6 +125,10 @@ Add a hooks section like this:
         matcher: "git.pre-commit"
         command: "bash scripts/hooks/secret-scan-pre-commit.sh"
         timeout: 5
+      - name: taste-observer
+        matcher: "session.end"
+        command: "bash scripts/hooks/taste-observer.sh"
+        timeout: 10
 
 Adjust matcher names to your installed Hermes version's event vocabulary.
 HERMES_DOCS
@@ -166,6 +171,9 @@ hooks:
     - name: cache-pressure-check
       handler: cache-pressure-check
       events: ["cron.weekly"]
+    - name: taste-observer
+      handler: taste-observer
+      events: ["session.end"]
 OPENCLAW_YAML
     echo "[hooks] openclaw: created hooks config at .openclaw/hooks.yaml"
     INSTALLED=$((INSTALLED + 1))
@@ -207,6 +215,9 @@ hooks:
     - name: cache-pressure-check
       handler: cache-pressure-check
       events: ["cron.weekly"]
+    - name: taste-observer
+      handler: taste-observer
+      events: ["session.end"]
 OPENCODE_YAML
   echo "[hooks] opencode: created hooks config at .opencode/hooks.yaml"
   INSTALLED=$((INSTALLED + 1))
@@ -245,6 +256,9 @@ hooks:
     - name: cache-pressure-check
       handler: cache-pressure-check
       events: ["cron.weekly"]
+    - name: taste-observer
+      handler: taste-observer
+      events: ["session.end"]
 GEMINI_YAML
   echo "[hooks] gemini: created hooks config at .gemini/hooks.yaml"
   INSTALLED=$((INSTALLED + 1))
@@ -274,6 +288,12 @@ if [ -d "$REPO_ROOT/.continue" ] && [ ! -f "$CONTINUE_CONFIG" ]; then
         "matcher": "git.pre-commit",
         "command": "bash scripts/hooks/secret-scan-pre-commit.sh",
         "timeout": 5
+      },
+      {
+        "name": "taste-observer",
+        "matcher": "session.end",
+        "command": "bash scripts/hooks/taste-observer.sh",
+        "timeout": 10
       }
     ]
   }
