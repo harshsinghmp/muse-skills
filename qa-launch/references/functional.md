@@ -33,6 +33,20 @@ waits, missing describe grouping). Score 1–10 per file, report
 line-anchored with the corrected form, and offer the fixes — a suite
 full of criticals gates Block regardless of its pass rate.
 
+## Cypress enterprise testing discipline (source: Cypress.io official patterns)
+
+When reviewing or authoring Cypress E2E/component test suites:
+
+- **Asynchronous command queueing invariants**: Cypress commands are enqueued, not standard JavaScript Promises. **Never use `async/await` with `cy` commands**. Never assign the return value of `cy.get()` to a variable (`const el = cy.get(...)` is an anti-pattern); chain assertions directly or use `.then(($el) => ...)`.
+- **Selector hierarchy ladder**:
+  1. Dedicated test attributes: `cy.get('[data-cy="submit"]')` (Mandatory best practice).
+  2. Test IDs: `cy.get('[data-testid="submit"]')`.
+  3. User-facing text / role: `cy.contains('button', 'Submit')`.
+  4. Static ID: `cy.get('#submit-btn')`.
+  5. *BANNED*: Brittle CSS utility classes (e.g. `cy.get('.btn-primary')` or Tailwind classes like `cy.get('.bg-blue-500')`).
+- **Zero arbitrary waits**: `cy.wait(5000)` is strictly prohibited. Network synchronization must be handled by `cy.intercept('POST', '/api/*').as('apiCall')` followed by deterministic assertions: `cy.wait('@apiCall').its('response.statusCode').should('eq', 200)`.
+- **Direct state seeding & fast auth**: Avoid driving the login UI in `beforeEach` hooks for every test. Use `cy.request()` or `cy.session()` to bypass the UI for authentication and test data setup.
+
 ## Security verification boundary (black-box only — enrich, adoption-safe)
 
 Source: `HoangNguyen/common-pentest-methodology` (+ `BagelHole/penetration-testing`

@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **New skill `muse-security` (#44)**: Single source of truth for external security workflows — 6 modes (`cve`, `remediate`, `cloud-waf`, `sast`, `runtime`, `audit`), complete playbooks, and companion metadata.
+- **`smm` Postiz Mode (#28)**: Added `postiz` multi-channel scheduled dispatch mode across 28+ networks via Postiz API/CLI (`smm/references/postiz.md`), remote media upload pipeline, dynamic integration discovery, and TikTok `DIRECT_POST` flags.
+- **Enterprise & Growth Invariants Enriched**:
+  - `database`: Vector search recipes, Qdrant SQ/PQ/BQ quantization trade-offs, and zero-downtime alias swap model migration in `database/references/vector-search.md`.
+  - `seo`: Citlyze $Citation\,SoV$ algorithm, 4-quadrant gap triage, 6-platform tracking, and bot log analysis in `seo/references/aeo.md`.
+  - `automation`: n8n execution syntax, webhook body scoping, and `$input.all()` Code node contracts in `automation/references/workflow.md`.
+  - `qa-launch`: Cypress `[data-cy]` selector hierarchy, `cy.intercept()` network aliasing, zero arbitrary `cy.wait()`, and session auth caching in `qa-launch/references/functional.md`.
+  - `devops`: Keyless cloud auth (OIDC Workload Identity for GCP/AWS), GKE Autopilot golden path, and FinOps lifecycle tiers in `devops/references/hosting.md`.
+  - `incident-response`: Non-destructive automated diagnostic gathering protocol (`sosreport`, system telemetry) in `incident-response/references/triage.md`.
+  - `code-review`: Simple-man zero-fluff review standards and Poka-Yoke unrepresentable state checks in `code-review/references/simplify.md`.
+  - `webdev`: In-dev security prevention rules (tenant ID isolation, SSRF IP blocklist, Zod schema boundaries) in `webdev/references/backend.md`.
+- **Simulation Test Suite**: Added `tests/simulation-workflows.test.ts` verifying all 44 skills, `muse-security` 6 modes, `smm postiz` dispatch, `database` quantization, and `seo aeo` calculations (61/61 tests passing across suite).
+
 ## [4.4.2] - 2026-09-18
 
 ### Added

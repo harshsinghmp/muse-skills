@@ -2,11 +2,12 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of 43 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, and post-delivery retention.**
+**A curated suite of 44 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, unified security & cloud WAF governance, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, and post-delivery retention.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-43%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-44%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -65,8 +66,10 @@ Agent work tends to stall in familiar ways: a project starts without lasting con
 | #35 Gate the launch | [`qa-launch`](qa-launch/README.md) | Matrix, functional verification, release gate, and regression |
 | #36 Talk to clients | [`client-comms`](client-comms/README.md) | Status, change-request, handover, and feedback modes |
 | #37 Build outbound pipeline | [`gtm`](gtm/README.md) | Research, score, outreach, list, and handover modes |
-|| #38 Tune Postgres performance | [`database`](database/README.md) | Query, diagnose, index, guard, and operate modes |
+| #38 Tune Postgres performance | [`database`](database/README.md) | Query, diagnose, index, guard, and operate modes |
 | #39 Command live incidents | [`incident-response`](incident-response/README.md) | Triage, mitigate, communicate, and retro modes |
+| #43 Run post-delivery retention loops | [`retain`](retain/README.md) | Check-in, value-note, QBR, review-ask, referral, and churn-watch modes |
+| #44 Unified security & cloud WAF governance | [`muse-security`](muse-security/README.md) | CVE triage, Ansible remediation, Cloud WAF 6-pillar audits, SAST, and runtime defenses |
 
 ### Explore the repository
 
@@ -133,12 +136,13 @@ npx skills add harshsinghmp/muse-skills --skill git
 npx skills add harshsinghmp/muse-skills --skill new-project
 npx skills add harshsinghmp/muse-skills --skill ai-ready
 
-# Quality & Review (#4, #9, #15, #16, #21)
+# Quality & Review (#4, #9, #15, #16, #21, #44)
 npx skills add harshsinghmp/muse-skills --skill code-review
 npx skills add harshsinghmp/muse-skills --skill gauntlet-loop
 npx skills add harshsinghmp/muse-skills --skill dead-letter
 npx skills add harshsinghmp/muse-skills --skill pua
 npx skills add harshsinghmp/muse-skills --skill humanize
+npx skills add harshsinghmp/muse-skills --skill muse-security
 
 # Context & Orchestration (#6, #8, #12, #13, #14)
 npx skills add harshsinghmp/muse-skills --skill relay
@@ -339,13 +343,14 @@ flowchart TD
 | **#41** | [**`research`**](research/README.md) | **Agency Delivery** | `user research`, `interview users`, `market pulse`, `due diligence`, `competitor teardown` | `evidence-ledger`, `content`, `growth`, `analytics`, `client-comms` | Client research department head with three modes: user-research, market-pulse, and entity-dossier — method-matched user research, recency-windowed market briefing, and hypothesis-forced due-diligence dossiers, all cited and decision-ready. |
 | **#42** | [**`sales-enablement`**](sales-enablement/README.md) | **Agency Delivery** | `demo script`, `objection handling`, `sales playbook`, `one pager`, `sale enablement` | `growth`, `ops`, `gtm`, `content`, `client-comms` | Pre-sale sales enablement department head with four modes: demo, objection, one-pager, and playbook — the assets a client's sales team needs to win deals, grounded in real buyer objections. |
 | **#43** | [**`retain`**](retain/README.md) | **Agency Delivery** | `follow up after delivery`, `prove value`, `QBR`, `review ask`, `referral offer`, `churn risk` | `growth`, `client-comms`, `ops`, `analytics` | Post-delivery retention loop head with six modes: check-in, value-note, qbr, review-ask, referral-rebuy, and churn-watch — scheduled check-ins, monthly value notes, transcript-run QBRs, delight-peak review asks, referral and repurchase offers, and churn-signal triage routed to growth. |
+| **#44** | [**`muse-security`**](muse-security/README.md) | **Quality & Review** | `security audit`, `cve triage`, `cloud waf`, `sast scan`, `runtime security`, `ansible remediation` | `devops`, `incident-response`, `code-review`, `webdev` | Single source of truth for external security workflows: CVE vulnerability triage, Ansible fleet remediation, Cloud Armor / Cloudflare WAF 6-pillar audits, SAST scanning, and runtime execution protection. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 40 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 44 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -1133,7 +1138,14 @@ muse-skills/
 │   ├── README.md
 │   └── SKILL.md
 │
+├── muse-security/                  # Unified security authority & cloud WAF (6 modes: cve, remediate, cloud-waf, sast, runtime, audit)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
 ├── .agents/
+
 │   └── context/                     # Durable agent context pack (index, product, architecture, ...)
 │
 ├── AGENTS.md                        # Agent working rules & context routing

@@ -66,10 +66,12 @@ Upgrades step 8 (provision hosting as code): the infra rebuilds from a PR, not m
 - **Composition.** One root module per env composing versioned child modules (`source = "./modules/network"`); no resource blocks in root. State in remote backend with locking; never local state for shared envs.
 - **Terratest.** One Go test per module: plan → apply → assert output (e.g. bucket versioning on) → destroy. Run on the smallest fixture that proves the invariant.
 
-## Multi-cloud advisory + cost tactics (enrich — source: `wshobson/agents` (`multi-cloud-strategy`, `cost-optimization`))
+## Multi-cloud advisory + cost tactics (enrich — source: `wshobson/agents` (`multi-cloud-strategy`, `cost-optimization`) & Google Cloud Well-Architected Framework)
 
 - **Advisory-only.** Default single cloud + managed services; go multi-cloud only for a named residency, latency, or exit-risk requirement — record which one. Abstraction lives in Terraform modules, never in app code branches per cloud.
-- **Cost tactics.** Right-size from actuals (requests/limits from p95 usage, not guesses); autoscale down to zero where the platform allows; lifecycle rules on logs/artifacts/backups; one tagged owner per expensive resource.
+- **Keyless Cloud Auth Standard.** Mandatory GitHub Actions OIDC / Workload Identity Federation for Google Cloud and AWS. Creating or downloading long-lived service account JSON keys (`.json`) into CI/CD secrets is strictly prohibited.
+- **GKE Autopilot Golden Path.** When container workloads require Kubernetes, default to GKE Autopilot with Dataplane V2 (eBPF networking), private node CIDRs, and Authorized Networks on the control plane. Avoid GKE Standard unless custom kernel modules or unsupported daemonsets are strictly required.
+- **FinOps Lifecycle Gates.** Right-size from actuals (requests/limits from p95 usage, not guesses); autoscale down to zero where the platform allows; automated storage lifecycle transitions: Standard → Nearline (30d) → Coldline (90d) → Archive (365d); budget auto-stoppers at 50%, 90%, and 100% of forecasted burn.
 - **HCL tag block.** Every billable resource carries `env`, `owner`, `cost-center` — untagged apply fails review.
 
 ## Quality gate

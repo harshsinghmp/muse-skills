@@ -61,3 +61,15 @@ Every README should follow the *Refactoring UI* visual hierarchy and plain-prose
 - **No Cliché Triads**: Do not force phrases into artificial groups of three ("innovation, inspiration, insights").
 - **No Emoji Spilling**: Use emojis strictly as functional section glyphs; never sprinkle emojis throughout sentences.
 - **Evidence Receipts**: Always cite concrete test counts, benchmark numbers, and exact command outputs.
+
+---
+
+## 4. Canonical Attachments for PR/Issue Screenshots & Logs
+
+When a PR or issue needs screenshot or log evidence, upload each asset once to a canonical attachment URL, then link that URL in the body — never paste inline or leave it tied to a local path:
+
+1. **Resolve/upload to a canonical URL**: commit the asset into the repo (e.g. `assets/`), attach it to the PR/issue, or host it at a stable URL — so the link is permanent and every reviewer can open it.
+2. **Link in the body**: reference it as a markdown image (`![caption](<url>)`) or link with a one-line caption saying what it demonstrates.
+3. **No local paths**: `~/Pictures/...` or `/tmp/...` breaks for everyone but you.
+4. **Redact before upload**: secrets, keys, or private data become part of the (possibly public) record the moment the asset ships.
+5. After linking, sweep leftover attachment scratch (see the release sanitization gate) so it never lands in a release.

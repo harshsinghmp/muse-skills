@@ -122,7 +122,7 @@ const ALLOWED_TEST_CMD_PREFIXES = [
 
 function isAllowedTestCommand(cmd: string): boolean {
   const trimmed = cmd.trim();
-  return ALLOWED_TEST_CMD_PREFIXES.some((prefix) => trimmed === prefix || trimmed.startsWith(prefix + " "));
+  return ALLOWED_TEST_CMD_PREFIXES.some((prefix) => trimmed === prefix || trimmed.startsWith(`${prefix} `));
 }
 
 /**
@@ -335,7 +335,7 @@ flowchart TD
  * Generate companion README.md content.
  */
 export function generateReadmeMd(opts: { name: string; description: string; tags?: string[] }): string {
-  const title = opts.name
+  const _title = opts.name
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
@@ -559,7 +559,7 @@ export function extractSkill(options: ExtractionOptions): {
               tags: options.tags || ["automation", "workflow", "self-learning"],
             });
             if (!options.dryRun) {
-              writeFileSync(skillsJsonPath, JSON.stringify(json, null, 2) + "\n", "utf8");
+              writeFileSync(skillsJsonPath, `${JSON.stringify(json, null, 2)}\n`, "utf8");
             }
             registered.skillsJson = true;
           }
@@ -575,7 +575,7 @@ export function extractSkill(options: ExtractionOptions): {
       try {
         let llmsContent = readFileSync(llmsTxtPath, "utf8");
         if (!llmsContent.includes(`- [${options.name}]`)) {
-          llmsContent = llmsContent.trimEnd() + `\n- [${options.name}](${relSkillPath}): ${options.desc}\n`;
+          llmsContent = `${llmsContent.trimEnd()}\n- [${options.name}](${relSkillPath}): ${options.desc}\n`;
           if (!options.dryRun) {
             writeFileSync(llmsTxtPath, llmsContent, "utf8");
           }

@@ -16,8 +16,8 @@
       "!.aider",
       "!.cline",
       "!.trae",
-      "!.omo",
-      "!.antigravity",
+      "!.memory",
+      "!docs/**/*.html",
       "!**/*.css"
     ]
   },

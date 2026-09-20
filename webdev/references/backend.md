@@ -44,7 +44,14 @@ Working API endpoints / schema changes with validation at boundaries, auth enfor
 - CQRS event-sourcing chain (one chain, three legs): command/query model split, projector → denormalized read model, eventual-consistency SLA, event versioning, don't-query-in-commands; store leg — append-only, per-stream/global ordering, optimistic concurrency, stream-ID `Type-{uuid}`, correlation/causation IDs, chooser (EventStoreDB vs PG vs Kafka vs DynamoDB vs Marten); read leg — live/catchup/persistent/inline projections, idempotent replay, checkpoints, lag monitoring, rebuild-by-design. Source: `wshobson/agents` (`cqrs-implementation`, `event-store-design`, `projection-patterns`).
 - Saga orchestration (pairs the chain): per-step (not global) timeouts, idempotent always-succeeds compensations in reverse order, `saga_id` correlation, stuck-COMPENSATING → DLQ recovery, fail-at-each-step-index tests. Source: `wshobson/agents` (`saga-orchestration`).
 - Microservices doctrine: decompose by capability/subdomain (strangler-fig for monoliths), database-per-service, sync (REST/gRPC) vs async (Kafka/RMQ/SQS), resilience (circuit-breaker, retry-backoff, bulkhead). Source: `wshobson/agents` (`microservices-patterns`).
+- **In-Dev Web Security Prevention Rules (Developer Boundary)**:
+  - *IDOR / BOLA Prevention*: Always enforce tenant/owner ownership predicate in database queries (`WHERE id = :id AND tenant_id = :tenant_id`), never query by raw ID alone.
+  - *SSRF & Cloud Metadata Blocking*: When fetching external URLs provided by users, strictly blacklist private/internal IPv4/IPv6 ranges and cloud metadata IP (`169.254.169.254`, `127.0.0.1`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`).
+  - *SQL Injection & Sanitization*: Mandatory parameterized statements or typed ORM builders (Drizzle/Prisma/SQLAlchemy); raw string interpolation in queries is strictly prohibited.
+  - *Mass Assignment Prevention*: Always validate requests against strict DTO / Zod schemas; never pass raw request bodies directly to database updates or inserts.
+  - *Security Audit Escalation*: For full vulnerability assessments, CVE triage, or cloud WAF infrastructure audits, invoke the external `muse-security` skill.
 
 ## Sources
+
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

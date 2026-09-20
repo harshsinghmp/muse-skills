@@ -69,3 +69,10 @@ fewer lines — show the shorter form). End with the only metric:
 `` net: -<N> lines possible. `` Nothing to cut → `Lean already. Ship.`
 A single smoke test or `assert`-based self-check is the minimum, never
 bloat — never flag it for deletion. List only; never apply the fixes.
+
+## Simple-man zero-fluff & Poka-Yoke standards (source: Simple-man & Poka-Yoke frameworks)
+
+- **Zero-Fluff Review Contract**: Every finding must name a concrete, reproducible failure mode or an exact line count reduction. Vague aesthetic opinions ("this could be cleaner") without a 1:1 drop-in replacement diff are rejected.
+- **Poka-Yoke (Make Illegal States Unrepresentable)**:
+  - Check whether enum variants or discriminated unions eliminate invalid boolean combinations (e.g., `status: 'idle' | 'loading' | 'success' | 'error'` instead of `isLoading: boolean, isError: boolean, isSuccess: boolean`).
+  - Validate that domain boundary types enforce validation at instantiation rather than scattering assertions throughout business logic.

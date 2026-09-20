@@ -61,6 +61,8 @@ alter table orders set (autovacuum_vacuum_scale_factor = 0.05,
 
 - Slow query underneath the ops symptom → `diagnose` first.
 - New indexes for partitions or vectors → `index`.
+- Deep vector/hybrid search (embedding choice, IVF, payload filters, hybrid FTS+vector, RAG) → `reference: vector-search.md` alongside this mode's pgvector basics.
+- Autoscaling / read replicas / zero-downtime migrations → `reference: analytical.md`.
 - RLS on partitioned tables → `guard` (policies must cover the parent).
 - Deploying pools, partitions, or extensions → `devops`; Supabase platform pooler settings → link out.
 

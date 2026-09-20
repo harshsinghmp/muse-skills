@@ -166,6 +166,10 @@ Each selection prunes irrelevant downstream choices while explicitly surfacing a
 
 ### Stage 3: Official Package Installation & Full End-to-End Companion Wiring
 The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is provisioned with its complete working ecosystem—schemas, route handlers, client SDKs, admin UIs, and Docker container services:
+
+> **Companion integration blueprints**: for automation (n8n) and social scheduling (Postiz)
+> scaffolding, and the poka-yoke fail-fast rule for every emitted config/template, see
+> `new-project/references/integration-blueprints.md`.
 - **Pure HTML/CSS Framework Option (`--type=html` / `pure-html`)**:
   - Standalone `index.html` with semantic BEM classes, linking wide-gamut OKLCH design tokens, reset, and hardware-accelerated animations with zero build step.
   - Pinned `package.json` scripts (`bun x serve .`, `bun test`, `biome check src`).

@@ -31,11 +31,24 @@ AEO plan: entity definition fixes (about/schema/sameAs), fact-extraction restruc
 15. Weight GEO edits by ranked lift — DIRECTIONAL ex Princeton study via marketingskills `ai-seo` SKILL.md (single study, never canon): cite sources ~+40%, add statistics ~+37%, add quotations ~+30%; keyword stuffing hurts (~−10%). Ship extractable 40–60-word answer blocks at content starts, keep pricing parseable for buying agents (agent-readable pricing files), and run the presence playbook: Wikipedia, Reddit, reviews, YouTube text layer, podcasts.
 16. Teardown pricing pages on two axes (source: marketingskills `pricing` SKILL.md): human-buyer clarity plus AI-agent readiness — run the "paste test" (ask Perplexity/ChatGPT "what are the plans and prices?" and fix what it gets wrong); route schema fixes to onpage mode and citability fixes here.
 17. Fuel citations monthly (source: marketingskills `directory-submissions` SKILL.md): single-H1 pages, FAQPage schema, Reddit/HN presence, Crunchbase/Wikidata/MCP-registry claims, and a monthly manual citation check across the prompt set.
+18. Citlyze Citation Gap Algorithm & 4-Quadrant Triage:
+    - **Citation Share of Voice ($Citation\,SoV$) Formula**:
+      $$\text{Citation SoV} = \frac{\sum (\text{Rank Weight} \times \text{Direct Domain Links})}{\text{Total Citations Across Golden Prompt Set}} \times 100$$
+    - **4-Quadrant Gap Triage**:
+      - **Critical Gap** (Zero Citations / High Search Volume): Deploy targeted entity schema, 18-token extractable answers, and top-of-funnel definition pages.
+      - **Rank Gap** (Competitor Cited Ahead): Optimize content recency (<90 days), inline primary data sources, and author credential blocks.
+      - **Fidelity Gap** (Cited with Hallucinated/Outdated Facts): Fix contradictory site copy, update `llms.txt`, and disavow scrapers.
+      - **Opportunity Gap** (Cited in Perplexity but Missing in ChatGPT Search): Optimize for specific crawler formats (Markdown tables for Perplexity vs clean semantic paragraphs for ChatGPT).
+19. 6-Platform AEO/GEO Monitoring Loop:
+    - Track prompt results across: Perplexity, ChatGPT Search, Google Gemini/AI Overviews, Microsoft Copilot, Claude, and Grok.
+    - Inspect server access logs to confirm crawl hits by `OAI-SearchBot`, `Claude-SearchBot`, `PerplexityBot`.
 
 ## Quality gate
 
-- [ ] Baseline prompt set exists and is repeatable.
-- [ ] Definitions extractable in first 100 words of key pages.
+- [ ] Baseline prompt set exists and is repeatable across the 6-platform matrix.
+- [ ] 4-quadrant citation gap triage completed ($Citation\,SoV$ benchmarked).
+- [ ] Definitions extractable in first 100 words of key pages (18-token rule).
+
 - [ ] Entity schema with sameAs present and valid.
 - [ ] Named authors with credentials on money pages.
 - [ ] Before/after citation comparison recorded.

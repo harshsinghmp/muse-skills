@@ -58,7 +58,7 @@ create index concurrently orders_pending_idx on orders (customer_id) where statu
 
 - Slow query with no plan yet → `diagnose` first, then return with evidence.
 - RLS-wrapped access path → `guard` (policy shape changes the index choice).
-- Vector similarity search → `operate` for HNSW basics.
+- Vector similarity search → `operate` for HNSW basics, and `vector-search.md` for rendering index choice, payload filters, and hybrid search.
 - App-side loop rewrites → `webdev` implements; this mode owns the SQL pattern.
 
 ## Sources

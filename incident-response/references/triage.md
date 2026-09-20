@@ -25,6 +25,13 @@ Triage sheet: SEV level, blast radius, incident commander, escalation spine, fir
 - **Readback.** Incoming acknowledges each line (ack/nack with timestamp); anything unacked stays with outgoing until acked.
 - **Overlap.** 15-min overlap window on rotation day; pages during overlap go to outgoing, shadow to incoming.
 
+## Non-destructive diagnostic gathering protocol (source: Red Hat SRE framework)
+
+Before applying aggressive mitigations (restarting nodes, wiping state, rolling back DBs) that could destroy ephemeral evidence:
+- **Capture ephemeral state**: Capture running container process trees (`ps aux`, `top`), network socket states (`ss -tulpn`), and connection counts.
+- **Diagnostic bundles**: Generate system diagnostic bundles (`sosreport -k`, journalctl dumps, pod crash logs `kubectl logs --previous`) and save directly to incident scratch storage.
+- **Preserve telemetry**: Snapshot live Prometheus/Grafana graphs and cloud metrics over the incident window (-30m to +now) before state mutation.
+
 ## Quality gate
 
 - [ ] SEV stated with blast radius and start time (assumptions marked).
