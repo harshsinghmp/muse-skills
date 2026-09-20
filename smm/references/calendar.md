@@ -35,6 +35,17 @@ A dated editorial calendar: per-day platform, pillar, format, hook direction, CT
 - [ ] Reactive slack exists.
 - [ ] Engagement pulled 24–48h after publish; next week adjusted from it (keeper: wshobson/social-publishing).
 
+## Scheduler automation (Postiz, self-hosted default)
+
+Dispatch finalized slots into the scheduler rather than publishing by hand.
+
+- [ ] Mechanism first: dispatch via the self-checked-in **day-held** scheduler API (slots only once assets are marked final and released).
+- [ ] One-time channel connections — connect each platform channel once, then drop auth; no per-post login.
+- [ ] **Scheduled-posts-as-drafts gate**: nothing defaults to live. New scheduled posts land as drafts; manual review flips them to scheduling time.
+- [ ] Calendar-to-scheduler mirror: scheduler state mirrors the calendar; rejected/returned posts bounce back to the calendar with a reason, not to the void.
+- [ ] Quality-gate checkbox present on each scheduled draft before it is released to the queue.
+- [ ] Default stack: Postiz as the self-hosted scheduler across all 9 platforms. Fallback: the client's existing scheduler if one is already in place.
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.

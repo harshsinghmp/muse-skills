@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **New skill `accounts` (#45)**: Agency and client financial operations engine — 6 modes (`invoicing`, `bookkeeping`, `client-pnl`, `cashflow`, `tax-compliance`, `audit`), complete playbooks, and companion metadata.
+- **New skill `muse-security` (#44)**: Single source of truth for external security workflows — 6 modes (`cve`, `remediate`, `cloud-waf`, `sast`, `runtime`, `audit`), complete playbooks, and companion metadata.
+- **`smm` Postiz Mode (#28)**: Added `postiz` multi-channel scheduled dispatch mode across 28+ networks via Postiz API/CLI (`smm/references/postiz.md`), remote media upload pipeline, dynamic integration discovery, and TikTok `DIRECT_POST` flags.
+- **Enterprise & Growth Invariants Enriched**:
+  - `database`: Vector search recipes, Qdrant SQ/PQ/BQ quantization trade-offs, and zero-downtime alias swap model migration in `database/references/vector-search.md`.
+  - `seo`: Citlyze $Citation\,SoV$ algorithm, 4-quadrant gap triage, 6-platform tracking, and bot log analysis in `seo/references/aeo.md`.
+  - `automation`: n8n execution syntax, webhook body scoping, and `$input.all()` Code node contracts in `automation/references/workflow.md`.
+  - `qa-launch`: Cypress `[data-cy]` selector hierarchy, `cy.intercept()` network aliasing, zero arbitrary `cy.wait()`, and session auth caching in `qa-launch/references/functional.md`.
+  - `devops`: Keyless cloud auth (OIDC Workload Identity for GCP/AWS), GKE Autopilot golden path, and FinOps lifecycle tiers in `devops/references/hosting.md`.
+  - `incident-response`: Non-destructive automated diagnostic gathering protocol (`sosreport`, system telemetry) in `incident-response/references/triage.md`.
+  - `code-review`: Simple-man zero-fluff review standards and Poka-Yoke unrepresentable state checks in `code-review/references/simplify.md`.
+  - `webdev`: In-dev security prevention rules (tenant ID isolation, SSRF IP blocklist, Zod schema boundaries) in `webdev/references/backend.md`.
+- **Simulation Test Suite**: Added `tests/simulation-workflows.test.ts` verifying all 44 skills, `muse-security` 6 modes, `smm postiz` dispatch, `database` quantization, and `seo aeo` calculations (68/68 tests passing across suite).
+- **Cognitive & Quality Low-Hanging Enrichments**:
+  - `content`: Added Aaron 8 Pre-Flight Auditor Gates (`CORE-EEAT`, `CITE`, `STAR`, `ROAS`, `SEND`, `RAMP`, `ECHO`, `TALE`) with 18-token self-contained rule and quantified result metric mandate in `content/references/copy.md`.
+  - `gtm`: Added Gooseworks 4-Tier Fit-Intent Matrix & real-world intent signal harvesters (job posting deltas, stack shifts, funding rounds) in `gtm/references/score.md`.
+  - `growth`: Added Viral Loop formula ($K = i \times c$) and Cycle Time ($ct$) acceleration model in `growth/references/referral.md`.
+  - `code-review`: Added Isolated Fresh-Eyes Review Protocol (`context: fork`) and strict dependency bump review rules (1 bump per commit, lockfile diff review) in `code-review/references/triage-matrix.md`.
+  - `git`: Added Section 9 Pre-PR Adversarial Grilling Checklist (Inversion / Catastrophic Failure, Blast Radius & Shared State, Async Race Conditions) in `git/references/issue-to-pr-discipline.md`.
+  - `new-project`: Added Poka-Yoke architectural scaffolding contracts (branded IDs, discriminated union states) and Milestone Exclusion List ("What We Are NOT Building") in `new-project/SKILL.md`.
+  - `humanize`: Expanded structural de-AI detection patterns P51–P60 (Somatic Cliches, Narrative Moralizing, Artificial Causal Tidiness, Sycophantic Openers, Hedging Stacks, Nominalization Bloat, Reasoning Trace Leakage, Em-Dash Saturation, Pseudo-Profundity, Venue Mismatch) in `humanize/references/patterns.md`.
+
 ## [3.1.0] - 2026-09-11
 
 ### Added

@@ -28,6 +28,12 @@ A performance report: headline result vs target, KPI scorecard with trend, wins 
 12. Before hypothesizing from a surprising number, rule out artefacts: event definition vs label, denominator shift, unenforced funnel order, deploy/holiday/campaign overlap, hidden platform split.
 13. When data and interviews conflict, route each question to its source (what/how-many/where → data; why/intent → research); pre-register what result would kill each account; never average both into a compromise.
 
+## Quarterly executive (QBR) cut
+
+Same playbook on a quarterly cadence for executive review: headline result vs quarterly target, KPI scorecard with prior-quarter trend, wins and misses with causes, a risk register (risk, owner, mitigation, date), and a next-quarter plan (action, owner, date). Write the client-language cut execs actually read; archive each quarterly report so quarters stay comparable.
+
+Boundary: meeting decisions are not logged here — route to retain qbr.
+
 ## Quality gate
 
 - [ ] Headline result vs target leads.
@@ -39,10 +45,12 @@ A performance report: headline result vs target, KPI scorecard with trend, wins 
 - [ ] Retention read as cohort matrix with floor/stabilization; churn scored 4-tier by LTV-at-risk.
 - [ ] Reallocation scenarios (2-3) checked for declining returns and CPA-vs-LTV.
 - [ ] KPIs carry full definitions with baselines; artefacts ruled out before hypotheses; data/research conflicts resolved by source, not averaged.
+- [ ] Quarterly cut shows prior-quarter trend, a risk register (owner/mitigation/date), and a next-quarter plan (owner/date).
 
 ## Routing
 
 - Deep instrumentation or event-definition work → tracking mode.
+- Meeting decisions → retain qbr.
 
 ## Sources
 

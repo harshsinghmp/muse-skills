@@ -22,7 +22,12 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 6. Personalize with real data you have — never fake personalization.
 7. Define the success metric and exit condition per email.
 8. Map the narrative arc across the sequence plus branching logic: one action per send, conditional paths with exits for converted/unengaged readers.
-9. Pass the bulk-sender deliverability gate: authentication set, one-click unsubscribe present, complaint rate under ceiling, list hygiene current.
+9. Pass the bulk-sender deliverability gate: authentication set, one-click unsubscribe present, complaint rate under ceiling, list hygiene current. Infra spine (source: resend `email-best-practices` SKILL.md + `references/deliverability.md`, MIT — mechanisms only, client's own ESP/DNS tooling):
+   - Authenticate the domain before first send: SPF TXT (`v=spf1 … ~all`), DKIM TXT from the ESP, DMARC starting `p=none` with `rua=` reporting, then tighten `p=quarantine; pct=25` → `p=reject`. Verify with `dig TXT` on the domain, `<selector>._domainkey`, and `_dmarc` — no output = record missing. Gmail/Yahoo/Microsoft reject or spam-filter unauthenticated mail.
+   - Split sending purpose by subdomain (`t.` transactional vs `m.` marketing); low DNS TTL during setup, high after stable.
+   - Warm new domains/IPs gradually (roughly 50–100/day week 1 → 5k–10k by week 4), starting with engaged users; never buy lists or spike volume.
+   - Hold the ceilings: bounce <1% good (remove hard bounces immediately; soft-bounce retry 1h → 4h → 24h, drop after 3–5 fails), complaints <0.01% excellent / >0.05% critical (remove complainers immediately, feedback loops via Gmail Postmaster Tools / Yahoo / Microsoft SNDS).
+   - Send idempotently with retry logic; process delivery/bounce/complaint webhook events into a suppression list; run list-hygiene jobs. Diagnose in order: auth → List-Unsubscribe header (required since Feb 2024) → reputation (Postmaster Tools, mail-tester, MXToolbox blacklists) → content → sending patterns.
 10. Humanize pass; verify every claim and link.
 11. For cold outbound (separate send on a separate domain — never mixed with lifecycle mail): personalization must connect to the problem (if the opening line is removable, it fails); interest-based CTAs ("worth exploring?") beat meeting asks; 3-5 touches with widening gaps, each adding new value, ending in a breakup email that honors the no.
 12. Tier cold opens by seniority: executives get 2-3 strategic sentences (revenue, risk, competitive edge) — operational detail gets delegated; managers/ICs get tactical workflow pain and time savings.
@@ -42,6 +47,7 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 - [ ] Success metric and exit condition per email.
 - [ ] Branching paths with exits defined; arc holds across the sequence.
 - [ ] Deliverability gate passed (auth, unsubscribe, complaint ceiling, hygiene).
+- [ ] Purpose-split subdomains set; new senders warmed gradually; idempotent sends + webhook-driven suppression live.
 - [ ] Humanize pass run.
 - [ ] Cold outbound isolated on its own domain; personalization passes the removable-opening test; sequence ends in a breakup.
 - [ ] Cold opens tiered by seniority (strategic-brief for execs, tactical for users); hook strength matched to deal size.

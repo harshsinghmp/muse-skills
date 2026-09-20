@@ -166,6 +166,10 @@ Each selection prunes irrelevant downstream choices while explicitly surfacing a
 
 ### Stage 3: Official Package Installation & Full End-to-End Companion Wiring
 The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is provisioned with its complete working ecosystem—schemas, route handlers, client SDKs, admin UIs, and Docker container services:
+
+> **Companion integration blueprints**: for automation (n8n) and social scheduling (Postiz)
+> scaffolding, and the poka-yoke fail-fast rule for every emitted config/template, see
+> `new-project/references/integration-blueprints.md`.
 - **Pure HTML/CSS Framework Option (`--type=html` / `pure-html`)**:
   - Standalone `index.html` with semantic BEM classes, linking wide-gamut OKLCH design tokens, reset, and hardware-accelerated animations with zero build step.
   - Pinned `package.json` scripts (`bun x serve .`, `bun test`, `biome check src`).
@@ -240,6 +244,14 @@ The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled wi
 - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
 - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
 - Records initial shipped state in `.agents/context/current.md` and `.agents/context/architecture.md`.
+
+**Poka-Yoke Architectural Scaffolding Contracts**:
+(source: `rainmanjam/poka-yoke` & `saleh-alhaddad/itqan-engineering`)
+- **Unrepresentable Misuse States**: Scaffolds strong domain boundaries where impossible states cannot be constructed. Prohibits loose stringly-typed IDs or ambiguous optional bags; enforces branded ID types (e.g. `type UserId = string & { readonly __brand: unique symbol }`) and discriminated union lifecycle states (e.g. `{ status: 'idle' } | { status: 'loading' } | { status: 'success'; data: T } | { status: 'error'; error: Error }`).
+- **Three Regulatory Axes**: Control (compiler enforces structural invariants) > Warning (linter and TypeScript strict flags highlight hazardous idioms) > Detection (runtime boundary validation via Zod or Valibot).
+
+**Milestone Exclusion List ("What We Are NOT Building")**:
+- Explicitly documents negative scope in `00-Intake-Brief.md` and `.agents/context/product.md` under an **Exclusion List** section (e.g., custom auth engines, multi-tenant billing, prematurely abstracted microservices, unrequested payment gateways) to arrest scope creep before code is drafted.
 
 ---
 

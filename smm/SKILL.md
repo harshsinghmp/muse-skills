@@ -1,10 +1,10 @@
 ---
 name: smm
 aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc"]
-description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, and social analytics — routed through seven modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
-argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics]"
+description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, and social analytics — routed through eight modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
+argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 28
-  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc"]
+  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "postiz"]
   suggested_skills: ["content", "design", "analytics", "paidads"]
   hermes:
-    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "engagement", "social-analytics"]
+    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "postiz", "engagement", "social-analytics"]
     related_skills: ["content", "design", "analytics", "paidads"]
     suggested_skills: ["content", "design", "analytics", "paidads"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["content", "design", "analytics", "paidads"]
-    primary_triggers: ["organic social", "social media strategy", "content calendar", "social posts", "community management", "influencer program", "ugc campaign", "social analytics"]
+    primary_triggers: ["organic social", "social media strategy", "content calendar", "social posts", "schedule via postiz", "postiz api", "community management", "influencer program", "ugc campaign", "social analytics"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **influencer** | "influencer", "creator collab", "sponsored post" | Creator selection, briefs, contracts, disclosure, measurement | [references/influencer.md](references/influencer.md) |
 | **ugc** | "ugc", "user generated content", "creator content pipeline" | UGC sourcing, rights, and paid/organic reuse pipeline | [references/ugc.md](references/ugc.md) |
 | **analytics** | "social analytics", "social report", "engagement metrics" | Performance reporting, metric definitions, iteration loop | [references/analytics.md](references/analytics.md) |
+| **postiz** | "postiz", "schedule with postiz", "multi-channel postiz dispatch", "postiz queue" | Automated multi-channel publishing & queue management via Postiz API/CLI | [references/postiz.md](references/postiz.md) |
 | **audit** | "audit social", "content audit", "channel audit", "engagement audit" | Content audit (style guide, authenticity) + channel audit (cross-platform consistency, cadence) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

@@ -22,6 +22,12 @@ A working automation: a trigger, the ordered steps (with mappings), failure/retr
 6. Make side-effecting steps idempotent (no duplicate emails/records).
 7. Set an owner, an off-switch, and a runbook; test the happy and failure paths.
 8. Diagnose broken runs by error class first (expression/mapping, credential/auth, HTTP/API, logic/flow, platform config): state root cause, why it happened, and where to look — then fix, re-test, and log one prevention note.
+9. n8n Engineering & Expression Invariants (Default Stack Protocol):
+   - **Expression Syntax**: Double braces `{{ $json.field }}`; node references `{{ $node["Node Name"].json.field }}`.
+   - **Webhook Scoping Trap**: Webhook trigger data is nested under `.body`: use `{{ $json.body.field }}`, NOT `{{ $json.field }}`.
+   - **Code Node Return Contract**: Default to `Run Once for All Items` (95% of workflows); access via `$input.all()`; return contract strictly `[{ json: { ... } }]`. Never put `{{}}` expressions inside Code nodes (use direct JS/Python syntax).
+   - **Progressive Node Discovery**: Inspect schemas via `get_node({ detail: "standard" })` first (1–2k tokens covers 95%); run runtime validation loop before publishing.
+   - **Error Handling Triggers**: Configure an explicit Error Trigger node routing failed executions to alert channels with step-name, error message, and input payload snapshot.
 
 ## Quality gate
 
@@ -31,6 +37,7 @@ A working automation: a trigger, the ordered steps (with mappings), failure/retr
 - [ ] Side effects idempotent.
 - [ ] Happy and failure paths tested.
 - [ ] Failures diagnosed by error class with a prevention note logged.
+- [ ] n8n expressions validated: webhook references use `.body.*`, Code nodes return `[{ json: { ... } }]`.
 
 ## Routing
 
@@ -38,4 +45,6 @@ A working automation: a trigger, the ordered steps (with mappings), failure/retr
 
 ## Sources
 
-Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+- czlonkowski/n8n-expression-syntax, n8n-validation-expert, n8n-workflow-patterns
+- Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+

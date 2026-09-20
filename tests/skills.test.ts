@@ -56,6 +56,8 @@ const EXPECTED_ORDERED_SKILLS = [
   "research",
   "sales-enablement",
   "retain",
+  "muse-security",
+  "accounts",
 ];
 
 describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
@@ -74,18 +76,18 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(parsed).toHaveProperty("name", "@harshsinghmp/muse-skills");
   });
 
-  test("skills.json preserves requested priority ordering (#1 updatedocs through #43 retain)", () => {
+  test("skills.json preserves requested priority ordering (#1 updatedocs through #45 accounts)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(43);
+    expect(skills.length).toBe(45);
     for (let i = 0; i < EXPECTED_ORDERED_SKILLS.length; i++) {
       expect(skills[i].name).toBe(EXPECTED_ORDERED_SKILLS[i]);
       expect(skills[i].priority).toBe(i + 1);
     }
   });
 
-  test("skills.json contains all 43 total skills categorized across 6 divisions", () => {
+  test("skills.json contains all 45 total skills categorized across 6 divisions", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(43);
+    expect(skills.length).toBe(45);
 
     const skillNames = skills.map((s: { name: string }) => s.name);
     for (const skill of EXPECTED_ORDERED_SKILLS) {

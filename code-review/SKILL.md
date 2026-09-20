@@ -47,9 +47,9 @@ change* — review depth scales with blast radius. Load only the listed referenc
 
 | Mode | Trigger phrases | Scope | Loads |
 |:---|:---|:---|:---|
-| **diff** (default) | "review this PR", "review this diff", `/torvalds` | Full theme-catalog adversarial review with severity calibration | [references/themes.md](references/themes.md) |
+| **diff** (default) | "review this PR", "review this diff", `/torvalds` | Full theme-catalog adversarial review with severity calibration | [references/themes.md](references/themes.md) + [references/pr-context.md](references/pr-context.md) |
 | **hotfix** | "quick review", "one-liner review", "is this safe to merge" | Single-hunk changes: correctness + surgical-diff + tests-only; skips architectural themes | nothing extra |
-| **audit** | "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over a whole module, not one diff; discovers the project's own conventions (test runner, standards docs, error conventions) before judging | [references/themes.md](references/themes.md) + [references/cross-file-invariants.md](references/cross-file-invariants.md) |
+| **audit** | "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over a whole module, not one diff; discovers the project's own conventions (test runner, standards docs, error conventions) before judging | [references/themes.md](references/themes.md) + [references/cross-file-invariants.md](references/cross-file-invariants.md) + [references/agreement-review.md](references/agreement-review.md) |
 | **contract** | "review the API change", "is this breaking" | API/ABI stability only: signatures, return semantics, error conventions | Quick Reference table below |
 | **security** | "security review", "check this for vulnerabilities", "OWASP pass" | Numbered control pass (SEC-01..10) over a diff or module; evidence-first findings, threat-model/differential/fix-verification discipline | [references/security-controls.md](references/security-controls.md) + [references/security-process.md](references/security-process.md) |
 | **receive** | "review feedback arrived", "act on review comments" | Incoming feedback: verify → implement/rebut/ask per item; anti-sycophancy; risk-gating | [references/receiving-feedback.md](references/receiving-feedback.md) |
@@ -67,7 +67,7 @@ it either — they operate on existing findings, they do not produce new ones.
 
 **Rigor ladder** (source: `bjgreenberg/senior-engineering-partner` `references/engineering-workflow.md`, Apache-2.0): match review depth to tier — T0 spike (one-line spec, test-after acceptable, security floor still holds) · T1 MVP (short written spec, test-first on the critical path) · T2 production (written mini-spec + threat-model lines for auth/tenancy/ingestion/billing/secrets surfaces, iron-law TDD, regression test seen red before every fix). Spec-first gate: restate the understanding and get agreement before judging; the spec is the rubric the review checks against.
 
-**Per-language checklist pointers** (source: `awesome-skills/code-review-skill` `reference/`, MIT — checklists only, no process import): when the diff's language has a dedicated checklist in that catalog, consult it as a candidate generator; every candidate still enters through Steps 4–6 (forcing-violation proof, Torvalds severity). The supplier's 4-phase time-boxed process and 🔴🟡🟢 severities are NOT imported — buyer method and 5-tier calibration govern.
+**Per-language checklist pointers** (source: `awesome-skills/code-review-skill` `reference/`, MIT — checklists only, no process import): when the diff's language has a dedicated checklist in that catalog, consult it as a candidate generator; every candidate still enters through Steps 4–6 (forcing-violation proof, Torvalds severity). For Go diffs use the built-in [references/go-traps.md](references/go-traps.md) (source: `samber/cc-skills-golang` `golang-safety`, MIT) the same way. The supplier's 4-phase time-boxed process and 🔴🟡🟢 severities are NOT imported — buyer method and 5-tier calibration govern.
 
 ---
 

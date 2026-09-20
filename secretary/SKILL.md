@@ -105,6 +105,14 @@ When the secretary routes work to subagents on governed surfaces:
 | **Wave Dispatch (DAG)** | Independent tasks in the same dependency wave dispatch in parallel; a wave completes and its results are validated before the next wave launches | Parent failure → dependents are marked `SKIP` (never dispatched), not left dangling; the failure routes to `dead-letter` |
 | **Feedback Reception** | Review feedback returning from delegations or reviewers is verified against the code before implementation; each item is classified implement / rebut (with evidence, never deference) / ask (one specific question); items touching auth, payments, or migrations get investigation before application | Performative agreement or blind application → the gate failed; re-verify every item before any further edit |
 
+### Policy-Engine Gate (review-surface actions)
+
+Deny-by-default enforcement for the hash gate on review surfaces (source: `wshobson/agents` `review-agent-governance`, MIT — generalized: Cedar-or-equivalent policy language, Ed25519-or-SHA-256 signed receipts):
+
+- **Forbid list** (require an open human approval window, else deny): posting review-surface actions (`gh pr review/comment/close/merge/edit`, `gh issue comment/close/edit`, `gh release create/edit`, `glab mr` equivalents), git pushes to protected branches (`main`, `master`, `release`, `production`), direct writes to CI/CD config paths (`.github/workflows/`, `CODEOWNERS`, `.gitlab-ci.yml`, equivalents).
+- **Approval window**: human opens it per action (flag file or approve-command with reason), agent retries inside it, human closes it immediately after — narrowest window that covers the action.
+- **Receipt chain**: every attempt, allowed or denied, emits a signed receipt; the chain is offline-verifiable (authenticity + tamper detection) for later audit. Dry-run mode forces full policy evaluation with no approval bypass (CI / locked-down audit runs).
+
 ### Blast-Radius Replan Ladder
 
 When an approved plan is invalidated (failed assumption, broken dependency, new constraint), classify before re-proposing:

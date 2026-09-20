@@ -137,6 +137,14 @@ Full contract, takeover rules, and the collision repair ladder: `references/work
 5. **Enforce Token Budget Gate**:
    - Ensure the total active skill prompt footprint remains $\le 6,000$ tokens ($\le 3$ active skills per subagent context).
    - Prune auxiliary skills into staged sequential handoffs if the token budget is exceeded.
+6. **Co-Load + Disambiguate (family-agnostic orchestrator surface)** (source: `samber/cc-skills-golang` `golang-how-to`, MIT — generalized: intents below are placeholders, each skill family ships its own intent→primary+secondary table):
+   - For each task load the **primary skill plus all applicable secondaries together at start** — a task rarely belongs to one skill (e.g. build-API loads design + testing + error-handling; debug-panic loads troubleshooting + safety).
+   - When two candidate skills overlap, show the **boundary table first** (one owner per cluster: measure vs optimize vs root-cause; concepts vs tool-specific; internal-bug vs external-threat) and load the owner, not both.
+   - Optional always-load directive: must-always-apply skills get one line in the project agent-config so routing never forgets them.
+7. **Interactive Selection Surface** (source: `alirezarezvani/command-guide` v1.0.0, signed SLSA L2 — generalized cross-runtime; no `/plan`/`/tdd`/`/compact` names):
+   - Request-type → workflow flowchart: new feature → spec/plan → tests-first → implement → review; bug → reproducer test → fix → review; review request → reviewer skill; build/test failure → fixer → verify → review; context pressure → handover/compact at milestone boundary; docs → docs skill.
+   - Parallel-vs-sequential rule: independent review axes (quality, security, e2e) fan out; dependency chains (plan → implement → review) stay sequential.
+   - Auto-triggers (no user request needed): code written → review; build fails → fixer; auth/sensitive-data touched → security review; complex feature → planner.
 
 ### Step 2 — Plan-Evaluation Gate (pre-execution)
 
@@ -155,6 +163,8 @@ The primary verdict is spec alignment: a plan missing spec alignment is rejected
 **Sizing + checkpoint gate** (source: `addyosmani/agent-skills` `planning-and-task-breakdown`): size every task XS (1 file) / S (1–2) / M (3–5) / L (5–8) / XL (8+ = split further); split on "and" in title or >3 acceptance criteria; dependency-graph-first ordering (foundations first); checkpoint every 2–3 tasks (tests pass, build clean, review before proceeding).
 
 **Phase-0 capability map** (source: `addyosmani/agent-skills` `spec-driven-development`): before any module spec is written, emit stable kebab-case module ids, a one-way dependency direction, and the build order; no `SPEC-<id>.md` is written until the map gates it.
+
+**Monorepo family — turbo-core portable** (source: `wshobson/agents` `monorepo-management` + `turborepo-caching`): pnpm workspaces, pipeline `dependsOn: ["^build"]` + declared outputs, persistent dev tasks, remote cache, affected-gate (build/test only what changed), cache-miss triage. Nx legs (tags + affected + library types feature/ui/data-access/util/shell) and Bazel legs (fine-grained targets + remote execution) gated on adoption — turbo only unless trivial.
 
 **Multi-perspective review (plans with ≥5 tasks):** a large plan is reviewed through more than one lens before dispatch — at minimum three, in sequence: (1) **spec/devil's-advocate lens** — does each task trace to the spec, and what premise could invalidate it; (2) **coupling lens** — write-overlap matrix, interface locks, wave structure (the checks of Steps 3–4); (3) **failure lens** — for each wave, what happens when it fails: recovery owner, dead-letter route, dependent-skip policy. Findings from each lens are recorded against the plan; unresolved findings reject the plan. Single-lens review is acceptable only below 5 tasks.
 

@@ -13,11 +13,24 @@ Triage sheet: SEV level, blast radius, incident commander, escalation spine, fir
 
 ## Procedure
 
-1. Classify severity — SEV-1 (full outage / breach / data loss, all hands), SEV-2 (major degradation, core path broken), SEV-3 (partial, workaround exists), SEV-4 (cosmetic, track only). Default ambiguous → one level higher, state the assumption.
+1. Classify severity — SEV-1 (full outage / breach / data loss, all hands), SEV-2 (major degradation, core path broken), SEV-3 (partial, workaround exists), SEV-4 (cosmetic, track only). Default ambiguous → one level higher, state the assumption. Response-time spine (source: `BagelHole/incident-response` P1–P4): P1/SEV-1 respond 15 min → P2/SEV-2 30 min → P3/SEV-3 4h → P4/SEV-4 next business day.
 2. Name the incident commander (default: you) and the escalation spine: commander → tech lead → client stakeholder. Page SEV-1/2 immediately; SEV-3 async.
 3. Run the first-15-minutes checklist: confirm blast radius, freeze deploys, open the incident channel/log, snapshot logs and metrics, start the comms clock.
 4. Set the comms cadence now: SEV-1 every 15 min, SEV-2 every 30 min, SEV-3 hourly, SEV-4 async. Hand the clock to `communicate`.
 5. Route to `mitigate` with severity + class hypothesis; record every assumption with a timestamp.
+
+## On-call handoff annex (enrich — source: `wshobson/agents` (`on-call-handoff`))
+
+- **Packet.** Outgoing on-call ships: active SEVs + state, top-3 risks (flaky alert, pending deploy, expiring cert), escalation contacts that changed, link to the incident log. No packet = no handoff.
+- **Readback.** Incoming acknowledges each line (ack/nack with timestamp); anything unacked stays with outgoing until acked.
+- **Overlap.** 15-min overlap window on rotation day; pages during overlap go to outgoing, shadow to incoming.
+
+## Non-destructive diagnostic gathering protocol (source: Red Hat SRE framework)
+
+Before applying aggressive mitigations (restarting nodes, wiping state, rolling back DBs) that could destroy ephemeral evidence:
+- **Capture ephemeral state**: Capture running container process trees (`ps aux`, `top`), network socket states (`ss -tulpn`), and connection counts.
+- **Diagnostic bundles**: Generate system diagnostic bundles (`sosreport -k`, journalctl dumps, pod crash logs `kubectl logs --previous`) and save directly to incident scratch storage.
+- **Preserve telemetry**: Snapshot live Prometheus/Grafana graphs and cloud metrics over the incident window (-30m to +now) before state mutation.
 
 ## Quality gate
 

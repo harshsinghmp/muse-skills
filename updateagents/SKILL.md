@@ -192,7 +192,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
    - Deploy lean root `AGENTS.md` DOX rail (<50 lines) pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize `.agents/standards/` (all 13 rulebooks, including modern WordPress) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
+Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.
@@ -214,6 +214,12 @@ Propagate downstream effects (e.g. API changes affecting types and tests) when f
 - **Warning**: `≥ 5KB`
 - **Hard Limit**: `≥ 10KB`
 Remove duplication and move verbose reference material to dedicated documentation.
+- **Conditional-block writing** (source: humanlayer improve-claude-md, mechanism-only — buyer archives CLAUDE.md, applies to DOX rail sections only): wrap domain guidance in `<important if="narrow-trigger">…</important>` scoped to one DOX section (`.agents/context/*` or router); one narrow trigger per rule, never group unrelated triggers.
+- **Bare-vs-wrap test**: bare (no wrapper) when rule applies to 90%+ tasks (identity, map, stack); wrap only domain guidance (testing, API, state, i18n).
+- **Keep-all commands**: keep every verified command; present as a single commands table/block (Step 10 verified-only still holds — never invent).
+- **Cut rules**: cut linter-enforceable patterns, code-discoverable patterns, and vague instructions; replace code snippets with path refs unless the snippet itself is the durable gotcha.
+- **Apply proc (compressed)**: identity → map → stack → commands table → split rules → wrap domains → cut linter/snippets/vague → size-check → validate.
+- Note (validator-later): narrow-condition lint (one trigger per block, no grouped triggers) proposed for `scripts/validate-memory-file.sh`; not implemented here.
 
 ### Step 16 — Validate
 Run `validate-memory-file.sh` to confirm size, structure, command accuracy, and verify `.memory/**` was untouched.

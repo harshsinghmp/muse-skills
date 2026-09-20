@@ -3,7 +3,7 @@ The default React animation library: declarative springs, layout animations, exi
 
 ## When to load
 
-Any React motion beyond a trivial CSS state toggle — springs, entrances/exits, layout shifts, gestures, scroll-linking.
+Any React motion beyond a trivial CSS state toggle — springs, entrances/exits, layout shifts, gestures, scroll-linking. Vanilla/Vue/Base UI/Radix deltas live in Platform deltas below.
 
 ## 1. Import & mount
 
@@ -213,6 +213,16 @@ const c = { hidden: { opacity: 0, transform: "translateY(50px) rotateX(-90deg)" 
 
 In Motion, convert to arrays: `ease: [0.23, 1, 0.32, 1]`.
 
+## Platform deltas — vanilla / Vue / Base UI / Radix
+
+React-first above; deltas when the stack differs:
+
+- **Vanilla JS** — import from `motion`, never `framer-motion`. `animate()` takes three shapes: motion value + target, plain value + target (with `onUpdate`), or element/object + keyframes. Easing is camelCase (`easeOut`, `circOut`). Stop with `value.stop()`; a new animation on the same value cancels the old one — don't track it in a variable.
+- **Vue** — import everything from `motion-v`. Never read a motion value in a template (use `watch`/callbacks); dynamic styles via `:style`; exits via `v-if`/`v-show` inside `AnimatePresence`. Compose `useTransform`/`useSpring`/`useMotionValue`/`useVelocity` instead of branching.
+- **Base UI** — pass a `motion` element via the `render` prop (not function/spread props — type errors). Standard exits: `AnimatePresence` + `exit` as usual. Self-managed popups (`Popover`, `ContextMenu`): hoist `open` state, add `keepMounted` to `Portal`, wrap in `AnimatePresence`. The exit must animate a composited prop (`opacity`/`transform`/`filter`/`clipPath`) or Base UI won't detect it via `getAnimations()`.
+- **Radix** — animate via `asChild` + a `motion` child; hoist open/value state and conditionally render inside `AnimatePresence`; put `forceMount` on the Radix component (never a DOM node).
+- **Shared** — never read motion values during render, only in effects/callbacks. Prefer range-style `useTransform(value, in, out)` over callback mappers. When motion values drive `style`, animate the source value directly and skip the `transition` prop (derived values follow). In per-frame callbacks (rAF, `onUpdate`, pointer handlers): no allocation, `for` over `forEach`/`map`, skip `Object.entries`/`values`. Subscribe with `on("change", …)`, not `onChange`.
+
 ## Gotchas
 
 - **Import `motion/react`, not `framer-motion`** (v11 renamed it).
@@ -223,3 +233,4 @@ In Motion, convert to arrays: `ease: [0.23, 1, 0.32, 1]`.
 - `whileTap` always pairs with a fast transition (`0.16s`); press feedback is instant.
 - `ease: "easeIn"` on UI entrances reads as sluggish — use `easeOut`.
 - Keyframe `times`/`ease` arrays must match the keyframe array lengths, or segments sample unpredictably.
+- Source: motion sandbox skill (no license file — mechanisms paraphrased only, zero verbatim).

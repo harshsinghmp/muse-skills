@@ -78,3 +78,57 @@ will ship it.
 
 The `skillscan` mode (`skill-bundle-scan.md`) is the trust gate for agent-skill
 bundles specifically; SEC-10 + this appendix cover application dependencies.
+
+## Always-apply P0 gate + trust-boundary workflow (enrich — source: `HoangNguyen/common-security-standards`)
+
+Landed here once — this is the single home (converges with the unlanded H6
+Always tier; `secure-code-guardian` verified absent on disk, so no double-land).
+
+- **Every-write P0 gate.** No hardcoded secrets, no raw SQL strings, no prod
+  stacktraces to clients. Any hit is P0 regardless of finding count.
+- **4-step workflow.** Boundaries (name trust crossings first) → validate
+  (all crossings) → least-privilege (scope to need) → verify (SAST/DAST
+  re-run on the changed code).
+- **Data rules.** PII minimized + redacted in logs, data collection minimal,
+  security-relevant actions audit-logged.
+- **Remediation anchors.** Argon2id for passwords, parameterized queries/ORM
+  for SQL, rate limiting for abuse paths, HttpOnly Secure cookies for sessions.
+
+## OWASP triple-list signals (enrich — source: `HoangNguyen/common-owasp`)
+
+SEC-01..10 + AppB cover web basics; these API + Mobile signals extend the pass:
+
+- **API 2023.** BOLA (object access without owner check), BFLA (function-level
+  authZ missing), mass assignment, consumption quotas, business-flow abuse,
+  inventory gaps (shadow endpoints), unsafe consumption of third-party APIs.
+- **Mobile 2024 (M1–M10).** Insecure credential storage (use keychain/keystore,
+  never plaintext), weak auth, insecure comms (cert-pinning gaps), debuggable
+  builds shipped, insufficient cryptography, IPC exposure.
+- **4 always-apply rules.** Owner-filter on every object fetch, no wildcard
+  CORS with credentials, DTO projection (never serialize full models),
+  mobile secrets in platform stores only.
+- **Marking + P0 cap.** Mark each signal ✅ (holds) / ⚠️ (partial) / 🔴 (missing);
+  🔴 on authZ/data-exposure caps at P0 — at most 40 points before the verdict
+  is Reject regardless of the rest.
+
+## LLM issue-spotting note (enrich — source: `HoangNguyen/common-llm-security`)
+
+Full LLM01–10 checklist lives in `devops` `security.md` step 9 (operator-role
+posture). For this control pass: no prompt concatenation with untrusted input,
+no raw model output to sinks (exec/SQL/HTML), capped agent loops. Hits route
+as SEC-01/SEC-02/SEC-08 equivalents with the LLM mapping named.
+
+## Audit bundle + deduction scoring (enrich — source: `HoangNguyen/common-security-audit`)
+
+- **Bundle secret scope.** Scan client bundles for `REACT_APP_` /
+  `NEXT_PUBLIC_` / `VITE_` prefixed secrets plus generic token patterns.
+- **Log-leakage scans per language.** Credential/token/PII patterns in logging
+  calls; sinks + sourcemaps reviewed for exposed internals.
+- **Coverage measurement.** Injection + auth-coverage: which sinks lack
+  parameterized/owner-checked paths; BOLA/JWT/mass-assignment/race/GraphQL
+  checks named per endpoint.
+- **Per-ecosystem CVE cmds.** `npm audit`, `go list -m all` + govulncheck,
+  `flutter pub audit` / dart, gradle dependencies, `cargo audit`, pod audit —
+  run the one matching the stack, record resolved versions.
+- **Deduction table + P0-cap-40.** Start 100, deduct per finding weight;
+  any P0 caps the score at 40. Mobile refs included where the target is a client.

@@ -54,3 +54,25 @@ ceiling comment naming the ceiling and the upgrade path (e.g. `// ponytail:
 O(n²) scan, index it if callers grow`) and harvest deferred items into the
 change's debt ledger — a tracked item with a promotion trigger, never a bare
 TODO.
+
+## Deletion-only finding format (enrich — source: `DietrichGebert/ponytail` `ponytail-review`, raw SKILL.md fetched 2026-09-19)
+
+When the pass runs deletion-only (correctness/security/performance
+explicitly out of scope — route those to a normal pass, never mix them in),
+one line per finding: `` L<line>: <tag> <what>. <replacement>. ``
+(`<file>:L<line>:` for multi-file diffs). Tags: `delete:` (dead code,
+unused flexibility, speculative feature — replacement: nothing) /
+`stdlib:` (hand-rolled stdlib — name the function) / `native:` (platform
+already does it — name the feature) / `yagni:` (one-implementation
+abstraction, unset config, one-caller layer) / `shrink:` (same logic,
+fewer lines — show the shorter form). End with the only metric:
+`` net: -<N> lines possible. `` Nothing to cut → `Lean already. Ship.`
+A single smoke test or `assert`-based self-check is the minimum, never
+bloat — never flag it for deletion. List only; never apply the fixes.
+
+## Simple-man zero-fluff & Poka-Yoke standards (source: Simple-man & Poka-Yoke frameworks)
+
+- **Zero-Fluff Review Contract**: Every finding must name a concrete, reproducible failure mode or an exact line count reduction. Vague aesthetic opinions ("this could be cleaner") without a 1:1 drop-in replacement diff are rejected.
+- **Poka-Yoke (Make Illegal States Unrepresentable)**:
+  - Check whether enum variants or discriminated unions eliminate invalid boolean combinations (e.g., `status: 'idle' | 'loading' | 'success' | 'error'` instead of `isLoading: boolean, isError: boolean, isSuccess: boolean`).
+  - Validate that domain boundary types enforce validation at instantiation rather than scattering assertions throughout business logic.

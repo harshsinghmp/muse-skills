@@ -31,6 +31,10 @@ Build a support chatbot grounded in our help docs with evaluation tests.
 | **integrations** | API / webhook integration | Integrations: reliable API/webhook connections with auth and error handling. |
 | **prompt** | prompt engineering / evals | Prompt: engineered, versioned, and evaluated prompts. |
 
+### Specialized References
+
+- `references/browser-relay.md`: Browser Relay in-session authenticated Chrome bridge for interacting with protected SaaS, dashboards, and enterprise portals without credential exposure.
+
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.

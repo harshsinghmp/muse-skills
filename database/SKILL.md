@@ -50,6 +50,15 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
+### Deep-dive references (load on topic, no separate mode)
+
+Mode behavior is fixed; these extend a resolved mode when the request dips deeper than its playbook:
+
+- Vector/hybrid search (embeddings, HNSW vs IVF, payload filters, hybrid FTS+vector, RAG chunking; Qdrant default, pgvector fallback) → [references/vector-search.md](references/vector-search.md)
+- Analytical query modes (columnar/DuckDB vs OLTP routing, aggregation-window analysis) and Neon/Supabase autoscaling + zero-downtime migration → [references/analytical.md](references/analytical.md)
+
+Load alongside `operate` for vector basics or `query` for aggregation routing.
+
 ## Verification
 
 Run before reporting completion:
@@ -75,6 +84,7 @@ Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 - Writing or verifying RLS policies and secure views.
 - Choosing PK strategy, identifiers, and constraints for a new schema.
 - Sizing connection pools, partitioning tables, triaging locks, tuning vacuum.
+- Designing vector/hybrid search, routing analytical (columnar) queries, or planning Neon/Supabase autoscaling and zero-downtime migrations.
 
 ### Anti-Triggers
 

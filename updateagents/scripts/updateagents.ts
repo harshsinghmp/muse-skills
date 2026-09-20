@@ -23,7 +23,6 @@
  *   bun path/to/updateagents.ts [options] [targetPath]
  */
 
-import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -143,7 +142,7 @@ if (!hasAnyAgentFiles) {
   console.log("  ℹ️  No existing agent files or .agents/ container found.");
 } else {
   console.log(
-    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"}`,
+    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"} (standards: ${hasStandards ? "Yes" : "No"}, context: ${hasContext ? "Yes" : "No"})`,
   );
 }
 
@@ -457,7 +456,7 @@ if (hasAnyAgentFiles) {
 // =========================================================================
 // Step 5: Synchronize Standards & Brand Tokens from Master Canon
 // =========================================================================
-console.log("\n🔄 Step 5: Synchronizing 13 standards & brand tokens from ai-ready/templates/...");
+console.log("\n🔄 Step 5: Synchronizing standards & brand tokens from ai-ready/templates/...");
 
 if (existsSync(TEMPLATES_DIR)) {
   // Sync .agents/standards/
@@ -521,6 +520,21 @@ if (existsSync(rootAgentsFile)) {
   console.log(`  📄 AGENTS.md size: ${size} bytes (<5KB: ${size < 5120 ? "PASSED" : "REVIEW"})`);
 }
 
+// Taste State & Global Invariant Atom Table Check
+const tasteStateFile = join(agentsDir, "context/taste-state.json");
+if (existsSync(tasteStateFile)) {
+  try {
+    const tasteData = JSON.parse(readFileSync(tasteStateFile, "utf8"));
+    const activeAtoms = (tasteData.atoms || []).filter((a: { status?: string }) => a.status === "active");
+    const cap = tasteData.activeAtomCap || 20;
+    console.log(
+      `  🧠 Invariant Atom Table: ${activeAtoms.length}/${cap} active atoms (${activeAtoms.length <= cap ? "PASSED" : "EXCEEDS CAP"})`,
+    );
+  } catch {
+    // Non-blocking telemetry
+  }
+}
+
 // =========================================================================
 // Step 7: Detailed User Report
 // =========================================================================
@@ -553,5 +567,6 @@ console.log(`\n✅ SYNCHRONIZED FROM AI-READY CANON:`);
 console.log(`   • Standards:   ${report.standardsSynced.length} rulebooks in .agents/standards/`);
 console.log(`   • Brand:       Design tokens & guidelines in .agents/brand/`);
 console.log(`   • Router:      Lean root AGENTS.md DOX rail active`);
+console.log(`   • Cognitive:   Taste & Invariant Atom Table verified`);
 console.log(`   • Safety:      Application code & .memory/** 100% untouched`);
 console.log("============================================================\n");

@@ -1,6 +1,6 @@
 # AGENTS.md - muse-skills
 
-Curated suite of forty-three universal AI agent skills. MIT. Install via
+Curated suite of forty-five universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working
@@ -25,6 +25,9 @@ when docs drift.
 - Commits follow `CONTRIBUTING.md` (Meaningful Git Commit Protocol).
 - Branch and release lifecycle lives in `CONTRIBUTING.md` as well:
   never commit to `main`; cut `feat/*` from `dev`.
+- Atomic PR per Skill: Always open a separate, dedicated feature branch and PR
+  for each new feature per skill, even when executing multiple upgrades from a
+  single working session. Never batch multi-skill changes into one monolithic PR.
 - No secrets or personal environment values in any shipped file.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
@@ -49,7 +52,7 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 
 ## Infrastructure
 
-- **Hooks** (14 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
+- **Hooks** (15 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
 - **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish)
 - **Audit modes**: 13 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
 - **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking

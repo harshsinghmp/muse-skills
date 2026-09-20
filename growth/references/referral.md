@@ -21,13 +21,32 @@ A referral/partnership program: which growth loop fits (referral vs affiliate vs
 7. Ask at trigger moments, not at signup (source: marketingskills `referrals` SKILL.md): aha, milestone, support-win, renewal. Rank share mechanics in-product > link > email > social > code; pick single/double/tiered incentives with the chooser (double-sided default per funnels mode); run the nurture sequence (7/30/60-day + milestone touches) and the pre/launch/30-day launch checklist.
 8. Score co-marketing partners 1–5 on 6 criteria before committing (source: marketingskills `co-marketing` SKILL.md); pick from the 4-format campaign tables (content/events/product/community with effort + lead-split); cold-outreach with the template; sign the 8-point agreement (leads/promo/assets/timeline/metrics/costs/branding) before spend.
 
+## Viral Mechanics & Loop Acceleration Model
+
+Model referral velocity and compounding through the formal viral loop equation:
+
+$$K = i \times c$$
+
+- $K$ (**Viral Factor**): Number of new customers acquired by each existing customer.
+  - If $K > 1$: Exponential viral growth (self-sustaining organic loop).
+  - If $K < 1$: Organic amplification factor. The acquisition multiplier is $\frac{1}{1 - K}$ (e.g. $K = 0.5$ yields a $2\times$ amplifier on paid/organic acquisition).
+- $i$ (**Invitation Rate**): Number of referral invites/links dispatched per customer.
+- $c$ (**Conversion Rate**): Percentage of invited prospects who convert to active customers.
+
+### Viral Cycle Time ($ct$) Acceleration
+The velocity of referral compounding depends equally on Cycle Time ($ct$) — the elapsed hours/days from receiving an invitation to sending downstream invites:
+1. **Reduce Friction to Zero**: Eliminate manual signup gates for the invitee; pre-fill referrer details and apply rewards automatically.
+2. **Compress $ct$ from Weeks to Hours**: Surface contextual sharing prompts immediately after "Aha!" realization moments (e.g. successful export, benchmark unlock, milestone reached), rather than delayed email nudges.
+3. **Double-Sided Asymmetric Rewards**: Ensure immediate tangible utility for the invitee (e.g. instant discount/credit) paired with milestone rewards for the inviter.
+
 ## Quality gate
 
 - [ ] Loop chosen by fit with reasons.
 - [ ] Partner-fit scored (overlap, trust, offer) before launch.
 - [ ] Incentive sized to behavior; tracking + fraud guardrails defined.
- - [ ] Measurement loop on CAC and net lift, not vanity signups.
- - [ ] Asks timed to trigger moments with ranked share mechanics + incentive chooser + nurture/launch checklists; partners scored and agreement signed before spend.
+- [ ] Measurement loop on CAC and net lift, not vanity signups.
+- [ ] Viral Factor ($K = i \times c$) and Cycle Time ($ct$) acceleration modeled with friction-reduction gates.
+- [ ] Asks timed to trigger moments with ranked share mechanics + incentive chooser + nurture/launch checklists; partners scored and agreement signed before spend.
 - [ ] Routing to launch: the program ships as a promo, not a hope.
 
 ## Routing

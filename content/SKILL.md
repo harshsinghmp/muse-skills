@@ -1,8 +1,8 @@
 ---
 name: content
 aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "editorial"]
-description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, customer case studies, and prose humanization — routed through six modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
-argument-hint: "[blog|copy|email|video|case-study|humanize]"
+description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, customer case studies, and prose humanization — routed through seven modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
+argument-hint: "[blog|copy|email|video|case-study|humanize|launch]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **video** | "video script", "youtube script", "explainer video", "reel script" | Video scripts: hooks, structure, and shot direction | [references/video.md](references/video.md) |
 | **case-study** | "case study", "success story", "customer story" | Customer case study: outcome, proof, and narrative | [references/case-study.md](references/case-study.md) |
 | **humanize** | "humanize this", "remove AI writing", "make it sound natural", "de-slop" | Editorial pass removing AI-sounding prose without changing facts or voice | [references/humanize.md](references/humanize.md) |
+| **launch** | "product launch", "launch announcement", "feature release", "launch copy" | Launch copy kit: headline, offer, key messages, and channel-ready assets | [references/launch.md](references/launch.md) |
 | **audit** | "audit content", "content audit", "fact check", "slop audit", "style guide audit" | Content-quality audit (anti-slop scan, fact verification, brand voice, readability) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -59,6 +60,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Scripting video content for YouTube, social, or product.
 - Documenting a customer case study or success story.
 - Editing a draft to remove AI-sounding prose.
+- Announcing a product or feature launch.
 
 ### Anti-Triggers
 

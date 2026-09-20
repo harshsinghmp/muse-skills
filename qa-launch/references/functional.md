@@ -17,6 +17,59 @@ Pass/fail table per path: Path / Step / Expected / Observed / Evidence / Verdict
 3. Proof-gate each finding: Contract (which requirement it breaks) + Runtime (reproducible on the matrix) + Correction (one deterministic fix). Candidates without all three are notes.
 4. Report at most the top failures first; unrun paths marked Not verified, never implied pass.
 
+## Playwright test-quality lens (micro-enrich — source: `alirezarezvani/pw-review`, MIT, raw SKILL.md fetched 2026-09-19 from `github.com/alirezarezvani/claude-skills`)
+
+When the release candidate ships Playwright tests, review the tests
+themselves before trusting their green: read `playwright.config.ts`,
+then check every spec file against the anti-pattern ladder — **critical**
+(`waitForTimeout`, non-web-first assertions, hardcoded URLs over
+`baseURL`, CSS/XPath where a role locator exists, missing `await`,
+shared mutable state, order dependencies) / **warning** (>50-line tests,
+magic strings, missing edge cases, `page.evaluate` for locator work,
+>2 nested describes, generic names) / **info** (no page objects past 5
+locators, inline data over fixtures, missing a11y assertions, no visual
+regression on UI-heavy pages, unchecked console errors, network-idle
+waits, missing describe grouping). Score 1–10 per file, report
+line-anchored with the corrected form, and offer the fixes — a suite
+full of criticals gates Block regardless of its pass rate.
+
+## Cypress enterprise testing discipline (source: Cypress.io official patterns)
+
+When reviewing or authoring Cypress E2E/component test suites:
+
+- **Asynchronous command queueing invariants**: Cypress commands are enqueued, not standard JavaScript Promises. **Never use `async/await` with `cy` commands**. Never assign the return value of `cy.get()` to a variable (`const el = cy.get(...)` is an anti-pattern); chain assertions directly or use `.then(($el) => ...)`.
+- **Selector hierarchy ladder**:
+  1. Dedicated test attributes: `cy.get('[data-cy="submit"]')` (Mandatory best practice).
+  2. Test IDs: `cy.get('[data-testid="submit"]')`.
+  3. User-facing text / role: `cy.contains('button', 'Submit')`.
+  4. Static ID: `cy.get('#submit-btn')`.
+  5. *BANNED*: Brittle CSS utility classes (e.g. `cy.get('.btn-primary')` or Tailwind classes like `cy.get('.bg-blue-500')`).
+- **Zero arbitrary waits**: `cy.wait(5000)` is strictly prohibited. Network synchronization must be handled by `cy.intercept('POST', '/api/*').as('apiCall')` followed by deterministic assertions: `cy.wait('@apiCall').its('response.statusCode').should('eq', 200)`.
+- **Direct state seeding & fast auth**: Avoid driving the login UI in `beforeEach` hooks for every test. Use `cy.request()` or `cy.session()` to bypass the UI for authentication and test data setup.
+
+## Security verification boundary (black-box only — enrich, adoption-safe)
+
+Source: `HoangNguyen/common-pentest-methodology` (+ `BagelHole/penetration-testing`
+ROE folded in, exploit commands parked — this skill never authors adversarial
+tests per lane-C #10; exploit work routes to specialists).
+
+- **Phases (verify, never exploit).** Scope (what is in/out, written) →
+  recon (enumerate surfaces from outside) → threat (map surfaces to the
+  platform matrix below) → analyze (which controls should hold) → report.
+  Exploit/post-exploit phases are out of scope — record as Routed, not run.
+- **Platform matrix (control checks, not payloads).** Backend: injection,
+  auth, authZ, SSRF, logic, crypto, config, deps, secrets, LLM. Frontend:
+  XSS, auth/session, config, deps, secrets. Mobile: storage, auth, transport,
+  build config. Each cell = control present + behaving (pass/fail), never a
+  bypass attempt.
+- **Rules.** No-Exploit-No-Report (a finding needs observed behavior, not
+  a payload theory); no prod testing (staging target only, written scope).
+- **Continuous + compliance.** Delta re-verify on changed surfaces + replay
+  of prior findings per release; map results to SOC2/ISO/PCI control refs
+  without giving a compliance verdict.
+- **Parked.** Bagel ROE shape + recon/scan/exploit command set parked here:
+  adopt only with a dedicated pentest engagement; until then this boundary holds.
+
 ## Quality gate
 
 - [ ] All P0 paths walked, none assumed.

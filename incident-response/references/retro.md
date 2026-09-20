@@ -18,6 +18,12 @@ Postmortem doc filed in `.agents/artifacts/postmortem-<ts>.md`: timeline, five-w
 3. Write action items with owner + date + verification method each (default owner: commander if unassigned — an unowned action is a wish). Cap at five; more means unfocused.
 4. Feed `ops` retro mode with the postmortem link and action list; schedule the 30-day check that actions actually closed.
 
+## Postmortem triggers + evidence-per-why + facilitation agenda (enrich — source: `wshobson/agents` (`postmortem-facilitation`))
+
+- **Triggers.** Any SEV-1/2, any SEV-3 with user impact > 4h or repeat of an open action, any breach/data-loss regardless of SEV. Solo default: trigger still fires — shorter doc, same rigor.
+- **Evidence-per-why.** Each of the five whys cites one artifact (log line, metric snapshot, deploy SHA, comms timestamp). A why without evidence is a theory — mark it as such, never as fact.
+- **Facilitation agenda (30 min).** 0–5 timeline readback (corrections only) → 5–15 whys on process → 15–25 actions (owner + date + verification each) → 25–30 ops handoff + 30-day check owner. Scribe ships the doc within 24h.
+
 ## Quality gate
 
 - [ ] Timeline complete and timestamped; no blame language anywhere in the doc.

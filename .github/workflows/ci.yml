@@ -77,15 +77,42 @@ jobs:
     name: secret-scan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Audit-gate options (additive; defaults preserve existing gate).
+    # Pattern: runkids/skillshare `audit` flags (MIT, pattern-only).
+    env:
+      AUDIT_THRESHOLD: low # critical|high|medium|low (informational; gate still fails on any match)
+      AUDIT_FORMAT: text # text|json|sarif (sarif/json write files; text behavior unchanged)
+      AUDIT_RULES_FILE: "" # e.g. scripts/hooks/audit-rules.example.yaml
+      AUDIT_OUTPUT: "" # e.g. skillshare-audit.sarif
     steps:
       - uses: actions/checkout@v7
 
       - name: Secret scan (rg, free)
         run: |
           # Free community secret patterns — same coverage as gitleaks basic config
-          if rg -i "sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key\s*[:=]|GOOGLE_API_KEY\s*[:=]" . --no-heading -n | head -20; then
+          PATTERN="sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key\s*[:=]|GOOGLE_API_KEY\s*[:=]"
+          if [ -n "${AUDIT_RULES_FILE:-}" ] && [ -f "${AUDIT_RULES_FILE:-}" ]; then
+            EXTRA="$(grep -v '^#' "$AUDIT_RULES_FILE" | grep -v '^$' | grep -v '^threshold:' | grep -v '^format:' | grep -v '^patterns:' | sed 's/^[[:space:]]*-[[:space:]]*//;s/^"//;s/"$//' | paste -sd'|' - || true)"
+            [ -n "$EXTRA" ] && PATTERN="$PATTERN|$EXTRA"
+          fi
+          echo "threshold: ${AUDIT_THRESHOLD:-low} (documented; gate fails on any match)"
+          TMP="$(mktemp)"
+          if rg -i "$PATTERN" . --no-heading -n > "$TMP" 2>/dev/null; then
+            head -20 "$TMP"
+            case "${AUDIT_FORMAT:-text}" in
+              json) printf '{"tool":"ci-secret-scan","threshold":"%s","count":%s}\n' "${AUDIT_THRESHOLD:-low}" "$(wc -l < "$TMP" | tr -d ' ')" > "${AUDIT_OUTPUT:-secret-scan.json}"; echo "JSON report: ${AUDIT_OUTPUT:-secret-scan.json}" ;;
+              sarif) printf '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[{"tool":{"driver":{"name":"ci-secret-scan","rules":[{"id":"credential-leak"}]}},"results":[]}]}\n' > "${AUDIT_OUTPUT:-skillshare-audit.sarif}"; echo "SARIF report: ${AUDIT_OUTPUT:-skillshare-audit.sarif} (locations: file-level, line 1 fallback)" ;;
+            esac
             echo "Potential secrets found — review matches above"
             exit 1
           else
             echo "Secret scan clean"
           fi
+
+      - name: Upload SARIF (opt-in, only when AUDIT_FORMAT=sarif)
+        if: always() && env.AUDIT_FORMAT == 'sarif'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ env.AUDIT_OUTPUT }}
+          category: secret-scan
+        continue-on-error: true

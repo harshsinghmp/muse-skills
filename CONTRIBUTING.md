@@ -68,7 +68,8 @@ feat(new-project): add dynamic llms.txt generation and reality machine
 ### Rules
 
 - Feature branches must be created from `dev`.
-- Use descriptive branch names.
+- Use descriptive branch names (`feat/<skill>-<feature>`, `fix/<skill>-<issue>`).
+- **Atomic PR Per Skill / Feature**: Always open a separate, dedicated Pull Request for each new feature per skill. Even when executing multiple skill upgrades within the same working session, each skill's modifications must be isolated in its own branch and PR. Never bundle multi-skill changes into a single monolithic PR.
 - Every merge into `dev` or `main` requires a Pull Request and code review.
 - Do not rewrite or force-push `dev` or `main` history.
 - Prefer `rebase` within feature branches when integrating changes and keeping history linear.

@@ -266,6 +266,76 @@ The prose spends more time explaining that information is limited than stating w
 
 **Fix:** State the documented limit once, then stop. Never use the disclaimer to license a guess.
 
+### P51 Somatic Cliche Mapping
+**Signals:** heart sank, stomach churned, pulse raced, jaw clenched, eyes widened, breath caught, shiver down the spine.
+
+**Problem:** Emotions and tension are rendered through generic biological reactions rather than concrete external reality or intellectual consequence.
+
+**Fix:** State the concrete stakes, the dilemma, or the operational impact. Let the reader feel tension through the facts.
+
+### P52 Narrative Moralizing / Thematic Over-Explanation
+**Signals:** this serves as a reminder that, teaching us that, the real takeaway is, highlighting the broader lesson, at its core this represents.
+
+**Problem:** The narrator steps out of the factual account to preach or spoon-feed the reader what they should think about the event.
+
+**Fix:** Cut the lesson. End on the last observable fact or decision.
+
+### P53 Artificial Causal Tidiness
+**Signals:** seamlessly leading to, naturally resulted in, perfectly aligned with, in an effortless progression.
+
+**Problem:** Complex engineering, organizational, or market processes are depicted as frictionless, perfectly planned triumphs.
+
+**Fix:** Restore the real-world friction: note the trade-offs, unexpected edge cases, bugs, or compromises made along the way.
+
+### P54 Sycophantic / Enthusiastic Opener
+**Signals:** Great question!, Absolutely!, Certainly!, I would be delighted to help with that!, You have made an excellent choice!.
+
+**Problem:** Conversational filler that wastes token bandwidth and creates a submissive, non-authoritative tone.
+
+**Fix:** Delete entirely. Begin immediately with the direct answer or operational action.
+
+### P55 Hedging Stack
+**Signals:** it is arguably possible that one might consider, could potentially serve to somewhat mitigate, perhaps it may be worth noting.
+
+**Problem:** 3+ layers of qualification that dilute the claim into meaninglessness.
+
+**Fix:** State the claim with the exact level of certainty the evidence supports. If uncertain, state the condition once.
+
+### P56 Nominalization Bloat
+**Signals:** the implementation of, the utilization of, the execution of the optimization of, the facilitation of.
+
+**Problem:** Active verbs are converted into abstract Latinate nouns, destroying sentence momentum and clarity.
+
+**Fix:** Convert nouns back to strong transitive verbs (e.g. "for the utilization of" -> "to use").
+
+### P57 Reasoning Trace Leakage
+**Signals:** let me consider, taking a step back, as an AI, looking at this from multiple angles, my analysis suggests.
+
+**Problem:** Internal drafting or scratchpad reasoning leaks into final user-facing artifacts.
+
+**Fix:** Strip all meta-reflection. Retain only the verified conclusion and supporting evidence.
+
+### P58 Em-Dash Over-Saturation
+**Signals:** More than one em-dash per paragraph, or em-dashes used symmetrically in 3+ consecutive sentences.
+
+**Problem:** Em-dashes are used as an all-purpose crutch for rhythm, replacing periods, colons, commas, and parentheses.
+
+**Fix:** Limit to maximum 1 em-dash per 500 words unless the author's authentic voice sample exhibits a higher baseline. Swap for periods or parentheses.
+
+### P59 Pseudo-Profundity / Fortune Cookie Aphorism
+**Signals:** in the dance between X and Y, where innovation meets necessity, code is poetry written in logic, technology is only as good as the humans who wield it.
+
+**Problem:** Vague philosophical platitudes that sound deep on first read but contain zero operational substance.
+
+**Fix:** Replace with concrete engineering or business trade-offs.
+
+### P60 Venue Mismatch Register
+**Signals:** Technical release notes written like marketing brochures; commit messages written like essays; API docs written like casual blog posts.
+
+**Problem:** Failing to adopt the strict canonical format, density, and tone of the target engineering artifact.
+
+**Fix:** Enforce venue-matched constraints (e.g., Conventional Commits for git; Diataxis framework for documentation).
+
 ## False positives to protect
 
 Do not flag these in isolation:
