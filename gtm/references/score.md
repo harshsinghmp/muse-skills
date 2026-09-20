@@ -24,11 +24,28 @@ A ranked lead list with scores, the scoring rubric, TAM/SAM sizing, and signal l
 9. Size TAM/SAM/SOM both directions and reconcile: top-down (addressable × ICP reach) AND bottoms-up (segment counts × average deal value × capture rate); a single un-sourced number is a claim, not a size. State the arithmetic and populations behind each direction and flag where they diverge before committing a number.
 10. Feed the battlecard comparison table (Us/Them/Winner per capability) into fit-signal weights, and use the Moore positioning statement as the tiebreak when two leads score level — the one closer to the stated differentiator ranks up (sources: `phuryn/pm-skills` `competitive-battlecard`; ECC `brand-discovery` 20_positioning).
 
+## Gooseworks 4-Tier Fit-Intent Matrix & Real-World Signal Harvesters
+
+Segment accounts across both fit (firmographic compatibility) and intent (active market signals) before assigning SDR bandwidth (source: `gooseworks-ai/goose-skills`):
+
+| Tier | Fit / Intent | Channel Action & SLA | Routing & Resource Allocation |
+|:---|:---|:---|:---|
+| **Tier 1** | High Fit + High Intent | Immediate multi-channel outbound (<4h SLA) | Bespoke video/executive memo, dedicated account rep |
+| **Tier 2** | High Fit + Low Intent | Programmatic thought-leadership warm-up | Trigger-event monitoring, retargeting, peer case studies |
+| **Tier 3** | Low Fit + High Intent | Self-service & automated qualification | Product-led onboarding / qualification bot (protect sales time) |
+| **Tier 4** | Low Fit + Low Intent | Disqualified / suppression list | Zero outbound spend, purge from active pipeline |
+
+### Real-World Intent Signal Harvesters:
+1. **Hiring / Job Posting Deltas**: Specific job postings (e.g. "Head of Security", "Founding AI Engineer", "VP Sales") indicate unlocked budget and active mandate changes before public product launches.
+2. **Tech Stack & Infrastructure Shifts**: DNS records, job requirements, or API client telemetry showing migrations away from legacy competitors.
+3. **Capital & Corporate Events**: Growth funding rounds (Series A/B), PE acquisitions, or C-suite executive appointments triggering 90-day vendor evaluation windows.
+
 ## Quality gate
 
 - [ ] TAM/SAM sized and dated before scoring.
 - [ ] Market size triangulated top-down AND bottoms-up, arithmetic stated, divergence flagged.
 - [ ] Rubric stated with fit plus intent weights.
+- [ ] Accounts prioritized using 4-Tier Fit-Intent Matrix with appropriate SLA and routing.
 - [ ] Every score traces to signals, none to gut.
 - [ ] Tiers mapped to a next action with owners.
 - [ ] Unscorable leads get NULL or a capped score with a data-gap flag — never inflated; nuance lives in the report, not the number (keeper: 99rebels/web-design-lead-qualifier).
