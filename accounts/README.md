@@ -4,12 +4,23 @@ Agency and client financial operations engine: milestone invoicing, recurring re
 
 ## Modes
 
-- `invoicing`: Milestone billing, retainer schedules, deposit terms, payment gateway links, and dunning cadence.
-- `bookkeeping`: Standard agency & client Chart of Accounts (COA), double-entry ledger classification, and subscription audits.
+- `invoicing`: Milestone billing, retainer schedules, deposit terms, AutoCollect virtual accounts, payment gateway links, and dunning cadence.
+- `bookkeeping`: Standard agency & client Chart of Accounts (COA), double-entry ledger classification, OpenAccountants 3-outcome protocol, and multi-gateway clearing (Stripe, Razorpay, Cashfree, PayU, Paytm).
 - `client-pnl`: True client & project gross margin calculation, scope-creep margin leakage detection, and Effective Hourly Rate (EHR).
 - `cashflow`: Bootstrapped CFO cash forecasting, Days Sales Outstanding (DSO) compression, and operating reserve buffers.
-- `tax-compliance`: Cross-border digital services tax rules (GST/VAT zero-rating, reverse charge), invoice requirements, and contractor compliance.
+- `tax-compliance`: Cross-border digital services tax rules (GST/VAT zero-rating, reverse charge), 18% GST Input Tax Credit (ITC) recovery, invoice requirements, and contractor compliance.
 - `audit`: Comprehensive financial hygiene audit detecting zombie subscriptions, unbilled deliverables, and gateway drag.
+
+## Universal Currency & Ledger Interoperability
+
+- **Multi-Currency Support**: Fully currency-agnostic — operates seamlessly in USD, EUR, GBP, AUD, CAD, INR, JPY, SGD, etc.
+- **Accounting Suite Compatibility**: Compatible with QuickBooks Online, Xero, NetSuite, Zoho Books, OpenAccountants, or Plain-Text Accounting (hledger/beancount).
+- **Automated Payout Reconciliation**: Built-in CLI script to reconcile multi-gateway settlement batches into 3 outcomes (`MATCH`, `DISCREPANCY`, `MISSING_PAYOUT`):
+
+```bash
+# Run multi-gateway transaction reconciliation
+bun accounts/scripts/reconcile-gateways.ts
+```
 
 ## Installation & Usage
 

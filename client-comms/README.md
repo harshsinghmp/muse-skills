@@ -29,6 +29,10 @@ The client wants three extra pages — triage the change request before we agree
 | **handover** | handover / project docs / training | Handover: docs, credentials, training, and support terms. |
 | **feedback** | feedback / client review | Feedback: structured intake, triage, and response plan. |
 
+### Specialized References
+
+- `references/factual-reporting.md`: Ribao automated daily/weekly factual progress reporting grounded strictly in Git commit SHAs, test receipts, and verified task completions (zero speculation).
+
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.

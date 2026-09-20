@@ -44,7 +44,7 @@ export interface TasteState {
   atoms: InvariantAtom[];
 }
 
-export const DEFAULT_ACTIVE_ATOM_CAP = 20;
+export const DEFAULT_ACTIVE_ATOM_CAP = 40;
 
 export class TasteEngine {
   private stateFilePath: string;
