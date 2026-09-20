@@ -63,7 +63,7 @@
     "test": "bun test",
     "validate": "bash updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && ruff check scripts/",
-    "type-check": "tsc --noEmit"
+    "type-check": "bunx --bun tsc --noEmit"
   },
   "type": "module",
   "version": "4.4.2",
