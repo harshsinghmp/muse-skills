@@ -17,6 +17,7 @@
 5. Prefer `git rebase` within feature branches to keep history clean and linear.
 6. For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
 7. Prefer a new revert commit over rewriting shared history.
+8. **Atomic PR Per Skill / Feature Protocol**: Always open a separate, dedicated feature branch and PR for each new feature per skill, even when executing multiple upgrades from a single working session. Never batch multi-skill changes into one monolithic PR.
 
 ---
 

@@ -23,7 +23,6 @@
  *   bun path/to/updateagents.ts [options] [targetPath]
  */
 
-import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -143,7 +142,7 @@ if (!hasAnyAgentFiles) {
   console.log("  ℹ️  No existing agent files or .agents/ container found.");
 } else {
   console.log(
-    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"}`,
+    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"} (standards: ${hasStandards ? "Yes" : "No"}, context: ${hasContext ? "Yes" : "No"})`,
   );
 }
 
@@ -457,7 +456,7 @@ if (hasAnyAgentFiles) {
 // =========================================================================
 // Step 5: Synchronize Standards & Brand Tokens from Master Canon
 // =========================================================================
-console.log("\n🔄 Step 5: Synchronizing 13 standards & brand tokens from ai-ready/templates/...");
+console.log("\n🔄 Step 5: Synchronizing standards & brand tokens from ai-ready/templates/...");
 
 if (existsSync(TEMPLATES_DIR)) {
   // Sync .agents/standards/
