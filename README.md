@@ -2,11 +2,11 @@
 
 # 🏛️ Muse Skills
 
-**A curated suite of 44 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, unified security & cloud WAF governance, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, and post-delivery retention.**
+**A curated suite of 45 portable AI agent skills for building durable projects, preserving context, coordinating reliable work, documentation synchronization & drift detection, extracting design systems, Refactoring UI design heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling-aware routing, claim verification, reflective audits, autonomous Git release lifecycles, UI motion & animation, repository AI-readiness auditing, unified security & cloud WAF governance, and a full-service creative web marketing agency — design, paid ads, SEO, web engineering, mobile, organic social, content, analytics, automation, infrastructure, agency operations, growth strategy, sales enablement, launch QA, client communication, research, unified database operations, Telegram messaging, post-delivery retention, and financial accounts operations.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-4.0.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-44%20Available-purple.svg?style=for-the-badge)](#-available-skills)
+[![Skills Count](https://img.shields.io/badge/Skills-45%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 
 [![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -17,7 +17,7 @@
 
 ## 🧭 Overview
 
-Muse Skills is a public, MIT-licensed set of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill for a specific need, or install the full forty-three-skill suite with `npx skills`. The agency skills also work solo — each one notes what changes when you are the whole team.
+Muse Skills is a public, MIT-licensed set of agent workflows for the **LifeOS** ecosystem and compatible Markdown-based agent runtimes. Install one skill for a specific need, or install the full forty-five-skill suite with `npx skills`. The agency skills also work solo — each one notes what changes when you are the whole team.
 
 Each skill is a self-contained `SKILL.md` with structured YAML frontmatter and a repeatable workflow: when to use it, what to do, what to avoid, and how to check the result. The suite helps agents produce work that is easier to resume, review, and hand off.
 
@@ -70,6 +70,7 @@ Agent work tends to stall in familiar ways: a project starts without lasting con
 | #39 Command live incidents | [`incident-response`](incident-response/README.md) | Triage, mitigate, communicate, and retro modes |
 | #43 Run post-delivery retention loops | [`retain`](retain/README.md) | Check-in, value-note, QBR, review-ask, referral, and churn-watch modes |
 | #44 Unified security & cloud WAF governance | [`muse-security`](muse-security/README.md) | CVE triage, Ansible remediation, Cloud WAF 6-pillar audits, SAST, and runtime defenses |
+| #45 Manage agency & client financial operations | [`accounts`](accounts/README.md) | Invoicing, retainer billing, Chart of Accounts bookkeeping, client profitability P&L, cash runway, and cross-border digital tax |
 
 ### Explore the repository
 
@@ -344,13 +345,14 @@ flowchart TD
 | **#42** | [**`sales-enablement`**](sales-enablement/README.md) | **Agency Delivery** | `demo script`, `objection handling`, `sales playbook`, `one pager`, `sale enablement` | `growth`, `ops`, `gtm`, `content`, `client-comms` | Pre-sale sales enablement department head with four modes: demo, objection, one-pager, and playbook — the assets a client's sales team needs to win deals, grounded in real buyer objections. |
 | **#43** | [**`retain`**](retain/README.md) | **Agency Delivery** | `follow up after delivery`, `prove value`, `QBR`, `review ask`, `referral offer`, `churn risk` | `growth`, `client-comms`, `ops`, `analytics` | Post-delivery retention loop head with six modes: check-in, value-note, qbr, review-ask, referral-rebuy, and churn-watch — scheduled check-ins, monthly value notes, transcript-run QBRs, delight-peak review asks, referral and repurchase offers, and churn-signal triage routed to growth. |
 | **#44** | [**`muse-security`**](muse-security/README.md) | **Quality & Review** | `security audit`, `cve triage`, `cloud waf`, `sast scan`, `runtime security`, `ansible remediation` | `devops`, `incident-response`, `code-review`, `webdev` | Single source of truth for external security workflows: CVE vulnerability triage, Ansible fleet remediation, Cloud Armor / Cloudflare WAF 6-pillar audits, SAST scanning, and runtime execution protection. |
+| **#45** | [**`accounts`**](accounts/README.md) | **Agency Delivery** | `send invoice`, `retainer billing`, `bookkeeping`, `client profitability`, `cash runway`, `gst vat digital services`, `financial audit` | `ops`, `retain`, `client-comms`, `growth`, `gtm`, `webdev` | Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance. |
 
 ---
 
 ## 🔍 Detailed Skill Breakdown
 
 <details>
-<summary><b>📖 Click to expand Detailed Skill Breakdown (all 44 skills)</b></summary>
+<summary><b>📖 Click to expand Detailed Skill Breakdown (all 45 skills)</b></summary>
 <br/>
 
 ### 🚀 `new-project` (Flagship #1 — Agent Engine / DOX Engine)
@@ -1139,6 +1141,12 @@ muse-skills/
 │   └── SKILL.md
 │
 ├── muse-security/                  # Unified security authority & cloud WAF (6 modes: cve, remediate, cloud-waf, sast, runtime, audit)
+│   ├── agents/openai.yaml
+│   ├── references/                 # one playbook per mode
+│   ├── README.md
+│   └── SKILL.md
+│
+├── accounts/                       # Agency & client financial operations (6 modes: invoicing, bookkeeping, client-pnl, cashflow, tax-compliance, audit)
 │   ├── agents/openai.yaml
 │   ├── references/                 # one playbook per mode
 │   ├── README.md
