@@ -1,6 +1,6 @@
 ---
 name: smm
-aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc"]
+aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "social-media-posts"]
 description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, and social analytics — routed through eight modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
 argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz]"
 user-invocable: true
@@ -12,10 +12,10 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 28
-  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "postiz"]
+  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "postiz", "social-media-posts"]
   suggested_skills: ["content", "design", "analytics", "paidads"]
   hermes:
-    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "postiz", "engagement", "social-analytics"]
+    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "postiz", "engagement", "social-analytics", "social-media-posts"]
     related_skills: ["content", "design", "analytics", "paidads"]
     suggested_skills: ["content", "design", "analytics", "paidads"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
