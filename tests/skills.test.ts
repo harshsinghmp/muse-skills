@@ -22,7 +22,7 @@ const EXPECTED_ORDERED_SKILLS = [
   "ai-ready",
   "context-anchor",
   "gauntlet-loop",
-  "refactor-ui",
+  "refactor",
   "designscope",
   "coupling-router",
   "secretary",
