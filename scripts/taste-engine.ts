@@ -88,7 +88,11 @@ export class TasteEngine {
       lower.includes("tone") ||
       lower.includes("concise") ||
       lower.includes("translate") ||
-      lower.includes("slop")
+      lower.includes("slop") ||
+      lower.includes("copy") ||
+      lower.includes("copywriting") ||
+      lower.includes("aeo") ||
+      lower.includes("seo")
     ) {
       return "communication";
     }
