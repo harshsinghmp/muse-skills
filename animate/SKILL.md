@@ -1,8 +1,8 @@
 ---
 name: animate
-aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions"]
+aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions", "scroll-experience", "animation-on-scroll", "gsap"]
 description: "Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. Use when asked to animate something, add motion, build a transition, make a component feel alive, review/audit/improve existing motion, or find places that should animate. Defaults to Motion (motion.dev, formerly Framer Motion) for React and CSS for quick fixes; uses any animation library already present in the project first; GSAP, WebGL, and native-mobile (Reanimated/SwiftUI/Compose/Flutter) are loaded only on explicit request."
-argument-hint: "[build|review|improve|audit|find]"
+argument-hint: "[build|review|improve|audit|audit-deep|threejs|find]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: design-interface
 metadata:
   category: design-interface
   priority: 22
-  aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions"]
+  aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions", "scroll-experience", "animation-on-scroll", "gsap", "threejs", "webgl"]
   suggested_skills: ["refactor-ui", "designscope", "code-review", "gauntlet-loop"]
   hermes:
-    tags: [animation, motion, framer-motion, motion-dev, css, transitions, easing, gsap, scroll, micro-interactions, ui, design, springs, reduced-motion, accessibility]
+    tags: [animation, motion, framer-motion, motion-dev, css, transitions, easing, gsap, threejs, webgl, scroll, scroll-experience, animation-on-scroll, micro-interactions, ui, design, springs, reduced-motion, accessibility]
     related_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
     suggested_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
     requires_tools: [view_file, write_to_file, bash]
   openclaw:
     category: design-interface
     suggested_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
-    primary_triggers: ["animate this", "add motion", "add a transition", "make it feel alive", "spring", "entrance animation", "exit animation", "micro-interaction", "scroll animation", "page transition", "hover effect", "framer motion", "gsap", "reduce motion", "review animation", "audit motion", "improve animations", "what could animate here"]
+    primary_triggers: ["animate this", "add motion", "add a transition", "make it feel alive", "spring", "entrance animation", "exit animation", "micro-interaction", "scroll animation", "page transition", "hover effect", "framer motion", "gsap", "threejs", "three.js", "webgl", "3d canvas", "reduce motion", "review animation", "audit motion", "improve animations", "what could animate here"]
     requires_tools: [view_file, write_to_file, bash]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -42,7 +42,7 @@ Three principles govern everything:
 
 ## Modes — quick commands
 
-Every invocation resolves to one of five modes. Route on the *verb*, not the noun:
+Every invocation resolves to one of six modes. Route on the *verb*, not the noun:
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
@@ -51,9 +51,10 @@ Every invocation resolves to one of five modes. Route on the *verb*, not the nou
 | **improve** | "improve the animations", "make this app feel better" | Read-only recon → audit → prioritized plan (does **not** edit source) | [review-checklist.md](references/review-checklist.md) |
 | **audit** | "audit the motion", "animation audit" | Same as **improve**: severity-ordered findings + self-contained remediation plans | [review-checklist.md](references/review-checklist.md) |
 | **audit-deep** | "deep audit", "accessibility audit", "performance audit" | Reduced-motion check, vestibular triggers, performance budget, jank detection | [references/audit.md](references/audit.md) |
+| **threejs** | "threejs", "three.js", "webgl", "3d canvas", "glsl shader", "r3f", "interactive 3d" | Interactive 3D WebGL scenes, PBR materials, custom shaders, GLTF/Draco pipelines, post-processing, and GPU memory lifecycle | [references/threejs.md](references/threejs.md) |
 | **find** | "what could animate here?", "make this more alive" | Gate-driven hunt; rejects most candidates, proposes only high-leverage motion | [review-checklist.md](references/review-checklist.md) |
 
-In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. Only **build** edits code.
+In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. In **threejs**, load `references/threejs.md` for 3D/WebGL workflows. Only **build** edits code.
 
 ---
 
