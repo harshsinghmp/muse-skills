@@ -37,7 +37,7 @@ jobs:
         run: bunx biome check .
 
       - name: Ruff lint
-        run: bunx ruff check scripts/
+        run: pip install ruff && ruff check scripts/
 
   type-check:
     name: type-check
