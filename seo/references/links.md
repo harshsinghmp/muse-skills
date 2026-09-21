@@ -25,6 +25,9 @@ Link plan: profile analysis (anchor distribution, referring-domain quality, comp
 9. Run broken-link and unlinked-mention fast lanes before any cold outreach.
 10. Aim format choice at earning power — DIRECTIONAL multiples ex marketingskills `content-strategy` SKILL.md (single vendor study, never canon): stats roundups ~4.25×, glossaries ~1.47×, tools ~1.38× baseline; prefer building one earning asset over ten outreach emails.
 11. Build the destination first (source: marketingskills `directory-submissions` SKILL.md): template/alternative/integration pages live before any directory push — directories pass equity into destinations, not homepages. Gate directory KPIs by domain rating (day-0/30/90 targets scale with DR); run the reviews lane (G2/Capterra/TrustRadius) and a Product Hunt anchor event per launch-worthy asset.
+12. **Zero-Budget Backlink Fallback Sources (Open PageRank & Common Crawl)**:
+    - When proprietary Ahrefs or Semrush API credentials are not configured, fallback to Keywords Everywhere API or Open PageRank API to extract domain authority and page-level trust scores at near-zero cost.
+    - Validate referring domain graphs against Common Crawl web archives (`commoncrawl.org`) using open-source link graph analyzers to compute normalized PageRank ($0.0 - 10.0$) and referring domain velocity before committing client budget to link building campaigns.
 
 ## Quality gate
 
