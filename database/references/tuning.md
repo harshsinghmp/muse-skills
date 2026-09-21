@@ -1,5 +1,7 @@
 # tuning — Automated System Parameter Tuning & Benchmark Optimization
 
+Operational formulas, closed-loop semantic parameter tuning, and configuration scripts for PostgreSQL and MySQL query engine tuning, memory pools, connection sizing, and index maintenance.
+
 ## Scope
 
 - Iterative parameter optimization for database connection pools, cache TTLs, vector search quantization, and API worker concurrency.
@@ -23,6 +25,8 @@ flowchart TD
     F -->|No| C
     F -->|Yes| G[Lock Optimal Configuration & Generate Production Diff]
 ```
+
+---
 
 ## Common Agency Optimization Targets
 
@@ -52,6 +56,101 @@ flowchart TD
   - `worker_concurrency` (Parallel threads/processes).
   - `batch_size` (Items processed per database transaction).
 - **Objective**: Maximize throughput without saturating CPU or triggering external API rate limits.
+
+---
+
+## Production Memory Calibration Formulas
+
+### 1. PostgreSQL Memory Pool Calibration
+
+#### A. Core Parameters
+```sql
+-- 1. Shared Buffers (Target: 25% of dedicated RAM, max 40%)
+-- For a 16GB RAM database server:
+ALTER SYSTEM SET shared_buffers = '4GB';
+
+-- 2. Effective Cache Size (Estimated OS + DB cache available; target: 50% - 75% RAM)
+-- For 16GB RAM:
+ALTER SYSTEM SET effective_cache_size = '12GB';
+
+-- 3. Work Memory (Per sorting/hashing operation)
+-- Formula: (Total RAM * 0.25) / max_connections
+-- For 16GB RAM, max_connections = 100: (4GB) / 100 = ~40MB
+ALTER SYSTEM SET work_mem = '40MB';
+
+-- 4. Maintenance Work Memory (For VACUUM, CREATE INDEX, ALTER TABLE)
+ALTER SYSTEM SET maintenance_work_mem = '2GB';
+ALTER SYSTEM SET autovacuum_work_mem = '512MB';
+
+-- Reload configuration without downtime
+SELECT pg_reload_conf();
+```
+
+#### B. Cache Hit Ratio Verification
+```sql
+-- Target: > 99% hit ratio
+SELECT
+    sum(heap_blks_read) as heap_read,
+    sum(heap_blks_hit) as heap_hit,
+    round(sum(heap_blks_hit) / nullif(sum(heap_blks_hit) + sum(heap_blks_read), 0) * 100, 2) as cache_hit_ratio
+FROM pg_statio_user_tables;
+```
+
+---
+
+### 2. MySQL / InnoDB Memory Calibration
+
+```ini
+[mysqld]
+# 1. InnoDB Buffer Pool Size (Target: 70% - 80% of dedicated RAM)
+# For 16GB RAM server:
+innodb_buffer_pool_size = 12G
+
+# 2. Buffer Pool Instances (1 instance per 1GB-2GB of pool size)
+innodb_buffer_pool_instances = 8
+
+# 3. Redo Log Capacity (Target: 25% of buffer pool size)
+innodb_redo_log_capacity = 3G
+
+# 4. Flush Method (Direct I/O avoids double buffering with OS page cache)
+innodb_flush_method = O_DIRECT
+```
+
+---
+
+## Production Index Strategies
+
+### A. Index Column Ordering Rule (Equality First, Range Second)
+When building composite indexes:
+1. Put all columns filtered with exact equality (`=`) first.
+2. Put the column used in range comparisons (`<`, `>`, `BETWEEN`) or `ORDER BY` last.
+
+```sql
+-- Query: WHERE status = 'active' AND tenant_id = 42 AND created_at >= '2026-01-01' ORDER BY created_at DESC
+-- Optimal Index:
+CREATE INDEX idx_orders_tenant_status_created 
+ON orders (tenant_id, status, created_at DESC);
+```
+
+### B. Covering Indexes (`INCLUDE` Clause)
+Eliminate Table Heap Lookups (Index-Only Scans):
+```sql
+-- Query fetches email and name while searching by user_id and active state:
+CREATE INDEX idx_users_active_lookup
+ON users (tenant_id, is_active)
+INCLUDE (email, full_name);
+```
+
+### C. Partial Indexes (Zero Wasted Space)
+Index only rows that are frequently queried:
+```sql
+-- Do not index 99% completed jobs; only index pending/failed:
+CREATE INDEX idx_jobs_pending
+ON background_jobs (priority, scheduled_at)
+WHERE status IN ('pending', 'failed');
+```
+
+---
 
 ## Optimization Report Schema
 

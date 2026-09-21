@@ -1,8 +1,8 @@
 ---
 name: database
-aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning"]
-description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through five modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
-argument-hint: "[query|diagnose|index|guard|operate]"
+aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning", "database-optimizer"]
+description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through six modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
+argument-hint: "[query|diagnose|index|guard|operate|optimize]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 40
-  aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning"]
+  aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning", "database-optimizer"]
   suggested_skills: ["webdev", "devops", "qa-launch"]
   hermes:
-    tags: ["database", "sql", "postgres", "mysql", "mssql", "sqlite", "performance", "slow-query", "explain-analyze", "pg-stat-statements", "indexing", "covering-index", "rls", "security-invoker", "connection-pooling", "partitioning", "vacuum", "lock-triage", "monitoring", "read-only", "query-execution"]
+    tags: ["database", "sql", "postgres", "mysql", "mssql", "sqlite", "performance", "slow-query", "explain-analyze", "pg-stat-statements", "indexing", "covering-index", "rls", "security-invoker", "connection-pooling", "partitioning", "vacuum", "lock-triage", "monitoring", "read-only", "query-execution", "database-optimizer", "query-optimization"]
     related_skills: ["webdev", "devops", "qa-launch"]
     suggested_skills: ["webdev", "devops", "qa-launch"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["webdev", "devops", "qa-launch"]
-    primary_triggers: ["run a read-only query", "explore a schema", "slow query", "EXPLAIN this", "design an index", "missing index", "RLS policy", "security invoker", "connection pooling", "vacuum tuning", "lock triage", "partition a table", "database performance", "query database"]
+    primary_triggers: ["run a read-only query", "explore a schema", "slow query", "EXPLAIN this", "design an index", "missing index", "optimize database", "database-optimizer", "query tuning", "RLS policy", "security invoker", "connection pooling", "vacuum tuning", "lock triage", "partition a table", "database performance", "query database"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -39,13 +39,14 @@ Default stack: self-hosted Postgres 16+ with `pg_stat_statements` enabled for th
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
-|| Mode | Trigger phrases | Behavior | Reference |
-||:---|:---|:---|:---|
-|| **query** | "run a query", "select from", "query the database", "read from table" | Read-only query execution with defense-in-depth safety: config discovery, credential protection, query whitelist, single-statement enforcement, timeout, row/col caps, tabular output | [references/query.md](references/query.md) |
-|| **diagnose** | "slow query", "why is this slow", "EXPLAIN this", "high CPU", "timeouts" | Slow-query triage: pg_stat_statements ranking, EXPLAIN ANALYZE read, bloat and vacuum checks | [references/diagnose.md](references/diagnose.md) |
-|| **index** | "design an index", "missing index", "covering index", "N+1", "FK is slow" | Missing, composite, covering, partial, and FK indexes plus N+1 and batch-upsert patterns | [references/index.md](references/index.md) |
-|| **guard** | "write an RLS policy", "verify RLS", "security invoker", "PK strategy", "row visible to wrong tenant" | RLS authoring with verification tests, security_invoker views, PK and identifier rules | [references/guard.md](references/guard.md) |
-|| **operate** | "pooling", "partition this table", "pgvector", "locks", "vacuum tuning", "connection exhaustion" | Pooling, partitioning, pgvector basics, lock triage, and monitoring | [references/operate.md](references/operate.md) |
+| Mode | Trigger phrases | Behavior | Reference |
+|:---|:---|:---|:---|
+| **query** | "run a query", "select from", "query the database", "read from table" | Read-only query execution with defense-in-depth safety: config discovery, credential protection, query whitelist, single-statement enforcement, timeout, row/col caps, tabular output | [references/query.md](references/query.md) |
+| **diagnose** | "slow query", "why is this slow", "EXPLAIN this", "high CPU", "timeouts" | Slow-query triage: pg_stat_statements ranking, EXPLAIN ANALYZE read, bloat and vacuum checks | [references/diagnose.md](references/diagnose.md) |
+| **index** | "design an index", "missing index", "covering index", "N+1", "FK is slow" | Missing, composite, covering, partial, and FK indexes plus N+1 and batch-upsert patterns | [references/index.md](references/index.md) |
+| **guard** | "write an RLS policy", "verify RLS", "security invoker", "PK strategy", "row visible to wrong tenant" | RLS authoring with verification tests, security_invoker views, PK and identifier rules | [references/guard.md](references/guard.md) |
+| **operate** | "pooling", "partition this table", "pgvector", "locks", "vacuum tuning", "connection exhaustion" | Pooling, partitioning, pgvector basics, lock triage, and monitoring | [references/operate.md](references/operate.md) |
+| **optimize** | "optimize query", "database tuning", "slow query optimization", "work_mem", "buffer pool", "database-optimizer" | Deep performance tuning: execution plan diffing, memory tuning (shared_buffers, work_mem), query rewriting, and deadlock elimination | [references/optimize.md](references/optimize.md) |
 | **audit** | "audit the database", "query audit", "performance audit", "debug slow queries" | Query audit (read-only verification, config paths) + performance audit (EXPLAIN plans, index gaps) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
