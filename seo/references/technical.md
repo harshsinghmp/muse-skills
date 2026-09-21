@@ -29,6 +29,10 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
 13. Robots bot-split + IndexNow: check training vs search bots separately (GPTBot blocks training only, OAI-SearchBot governs ChatGPT Search citability; Google-Extended blocks training/grounding only, Googlebot governs Search/AI-Overview eligibility) — never infer one from the other; ping IndexNow for fast non-Google indexing where supported.
 14. i18n edge cases (source: marketingskills `seo-audit` SKILL.md): Next.js `alternates.languages` can miss the self-reference — verify the self-ref tag explicitly; full-hreflang sitemaps hit the 50MB bottleneck around 2–5K URLs (split sitemaps before that); Bing supplements hreflang with `<html lang>` — keep it correct; thin-locale policy: never create a locale you cannot make genuinely helpful.
 15. Deliver IA as artifacts, not advice (source: marketingskills `site-architecture` SKILL.md): an ASCII tree of the proposed structure, a Mermaid nav-zone sitemap, a URL-pattern table (incl. `/compare/`, `/alternatives/` conventions), breadcrumb↔URL alignment check, hub-and-spoke internal linking at 5–10 links per 1k words.
+16. **Crawler URL Safety & Anti-SSRF Defense**:
+    - When executing automated site audits and link extraction, enforce strict IP and protocol allowlists to prevent Server-Side Request Forgery (SSRF) and private cloud boundary leakage:
+      - Refuse RFC 1918 private ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), loopback (`127.0.0.1`), link-local metadata (`169.254.169.254`), and RFC 6598 carrier-grade NAT space (`100.64.0.0/10`).
+      - Sanitize all crawl cache paths against directory traversal attempts (`../`), and validate outbound HTTP proxy endpoints before dispatch.
 
 ## Quality gate
 
