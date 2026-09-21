@@ -1,8 +1,8 @@
 ---
 name: devops
-aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform"]
-description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, security hardening, monitoring and alerting, and incident response — routed through six modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
-argument-hint: "[hosting|cicd|domains|security|monitoring|incident]"
+aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform", "cloudflare", "devops-engineer"]
+description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
+argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 32
-  aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform"]
+  aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform", "cloudflare", "devops-engineer"]
   suggested_skills: ["git", "webdev", "automation", "code-review"]
   hermes:
-    tags: ["devops", "hosting", "deployment", "cicd", "github-actions", "domains", "dns", "security", "monitoring", "alerting", "incident-response", "uptime", "infrastructure-as-code"]
+    tags: ["devops", "hosting", "deployment", "cicd", "github-actions", "domains", "dns", "cloudflare", "workers", "pages", "security", "monitoring", "alerting", "incident-response", "uptime", "infrastructure-as-code", "devops-engineer"]
     related_skills: ["git", "webdev", "automation", "code-review"]
     suggested_skills: ["git", "webdev", "automation", "code-review"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["git", "webdev", "automation", "code-review"]
-    primary_triggers: ["deploy this", "set up hosting", "ci/cd pipeline", "configure domain", "dns", "harden security", "add monitoring", "incident postmortem"]
+    primary_triggers: ["deploy this", "set up hosting", "ci/cd pipeline", "configure domain", "dns", "cloudflare", "cloudflare workers", "devops engineer", "harden security", "add monitoring", "incident postmortem"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -42,6 +42,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **hosting** | "deploy", "hosting", "publish this app", "server setup" | Deploy and host an app with a reproducible, reversible setup | [references/hosting.md](references/hosting.md) |
 | **cicd** | "ci/cd", "github actions", "pipeline", "automate tests and deploy" | CI/CD pipeline: test, build, gate, deploy | [references/cicd.md](references/cicd.md) |
 | **domains** | "domain", "dns", "point the domain", "ssl certificate", "subdomain" | Domain, DNS, and TLS configuration | [references/domains.md](references/domains.md) |
+| **cloudflare** | "cloudflare", "workers", "pages", "cloudflare dns", "cloudflared", "turnstile", "edge routing" | Cloudflare edge ecosystem: Workers, Pages, Full (Strict) SSL, WAF rules, caching, and Zero Trust tunnels | [references/cloudflare.md](references/cloudflare.md) |
 | **security** | "harden security", "security headers", "infrastructure security", "least privilege" | Infrastructure and application security hardening | [references/security.md](references/security.md) |
 | **monitoring** | "monitoring", "alerts", "observability", "uptime", "logging" | Monitoring, logging, and actionable alerting | [references/monitoring.md](references/monitoring.md) |
 | **incident** | "incident", "outage", "postmortem", "site is down", "production issue" | Incident response and blameless postmortem | [references/incident.md](references/incident.md) |
