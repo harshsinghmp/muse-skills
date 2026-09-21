@@ -2,6 +2,52 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.1.0] - 2026-09-22
+
+### Internal Activity & System Consolidation (Pain → Feature → Solution)
+
+#### 1. Three.js Micro-Skill Proliferation & Prompt Overlap
+- **Pain**: The workspace accumulated 16 disparate Three.js micro-skills, causing trigger overlap, inflated context loading, and inconsistent WebGL practices across agency design tasks.
+- **Feature**: Consolidated all 16 micro-skills into the canonical `animate:threejs` mode (`animate/references/threejs.md`) and registered explicit shader, physics, and post-processing patterns under `animate/SKILL.md`.
+- **Solution**: The team safely archived and purged all 16 standalone Three.js directories into compressed tarballs, channeling all 3D canvas and WebGL orchestration through a single deterministic entry point.
+
+#### 2. Accessibility Deficits & Inconsistent Web Compliance
+- **Pain**: Audits revealed accessibility was treated as an afterthought without unified WCAG AA standards, resulting in keyboard navigation barriers, invisible focus outlines, and unhandled modal focus traps.
+- **Feature**: Codified a complete WCAG 2.2 AA operating playbook into `webdev:accessibility` (`webdev/references/accessibility.md`) featuring semantic landmark hierarchies, `:focus-visible` styling patterns, keyboard trapping routines, ARIA design tokens, and Playwright axe test scripts.
+- **Solution**: Embedded compliance checks directly into the web development lifecycle, providing engineers and agents with clear verification recipes before shipping client interfaces.
+
+#### 3. Restricted Scope of Interface Refactoring
+- **Pain**: The legacy `refactor-ui` skill only addressed styling and Tailwind classes, leaving architectural drift, backend code smells, unoptimized database queries, and multi-page inconsistencies unmanaged by a dedicated engine.
+- **Feature**: Evolved `refactor-ui` into the universal `refactor` department skill (`refactor/SKILL.md`) with 7 specialized execution modes: `ui`, `code`, `architecture`, `perf`, `database`, `sweep`, and `polish`.
+- **Solution**: Standardized full-stack refactoring under one unified command suite equipped with automated contrast audits, cyclomatic complexity reduction criteria, and zero-downtime database migration rules.
+
+#### 4. Fragmented Client Brand Onboarding & Delegation Security
+- **Pain**: Brand onboarding lacked a standardized operational harness, leading to scattered client intake briefs, ad-hoc credential sharing, misaligned design directives, and loose access revocation upon project completion.
+- **Feature**: Formalized `brand` (`brand/SKILL.md`) as the 46th canonical agency department, introducing 8 operational modes (`intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, `audit`) and an automated 50-point intake audit script (`brand/scripts/intake-audit.ts`).
+- **Solution**: Delivered an end-to-end client lifecycle mechanism enforcing LifeOS zero-leak access delegation, cross-department brief generation (design, webdev, content, paidads), and a mandatory 48-hour access revocation protocol.
+
+#### 5. Workspace Clutter & Redundant Cluster D Skills
+- **Pain**: Over 1,000 legacy and third-party skills cluttered global and local trees, diluting discovery relevance and consuming unnecessary disk and memory footprint.
+- **Feature**: Harvested high-signal frameworks, playbooks, and templates from 52 Cluster D skills into the agency's primary departments:
+  - **`ops`**: SOW/NDA/MSA contract drafting standards (`ops/references/contracts.md`) and 4-section meeting capture formats (`ops/references/meeting-notes.md`).
+  - **`client-comms`**: P0–P3 inbox triage rubrics and nudge sequences (`client-comms/references/inbox-triage.md`).
+  - **`growth`**: Affiliate tier reward models and referral loops (`growth/references/affiliates-referrals.md`).
+  - **`smm`**: 25-point creator vetting scorecard and red-flag audits (`smm/references/creator-vetting.md`).
+  - **`brand`**: 7-element customer persona framework (`brand/references/persona.md`) and starter guidelines template (`brand/templates/brand-guidelines-starter.md`).
+  - **`content`**: High-CTR thumbnail prompt syntax (`content/references/thumbnails.md`), 12 editorial voice archetypes (`content/references/voice-archetypes.md`), and broadcast podcast audio engineering (`content/references/podcast.md`).
+  - **`research`**: Competitor messaging grids and pricing tier analyses (`research/references/competitor-analysis.md`).
+  - **`database`**: PostgreSQL/MySQL memory calibration formulas and index optimization (`database/references/tuning.md`, `database/references/optimize.md`).
+  - **`webdev`**: Security headers, rate limiting, and EARS requirements extraction template (`webdev/references/security-headers.md`, `webdev/templates/specification-template.md`).
+  - **`design`**: 15 slide deck structures (`design/references/slides.md`), W3C design tokens starter (`design/templates/design-tokens-starter.json`), and component UI kit architecture (`design/references/uikit.md`).
+  - **`devops`**: Cloudflare Workers, Pages, and Zero Trust tunnels (`devops/references/cloudflare.md`).
+  - **`git`**: Secret exposure audit procedures (`git/references/exposure-audit.md`).
+- **Solution**: Safely pruned 1,080 redundant skills across workspace environments into compressed tarballs, bringing the overlap matrix to 1,080 pruned, 83 preserved unique properties, and 0 replace-with-muse remaining.
+
+#### 6. Catalog Integrity & Zero-Leak Quality Enforcement
+- **Pain**: High-velocity multi-skill refactoring created risks of unmonitored test failures, secret leaks, or catalog drift between `SKILL.md`, `skills.json`, and `llms.txt`.
+- **Feature**: Expanded the automated test suite with simulation workflows (`tests/simulation-workflows.test.ts`), added strict byte-parity validation across registry files, and executed automated TruffleHog secret scans via LifeOS Vibeguard.
+- **Solution**: Locked in 100% test pass rate across 116 tests in 7 files with zero credential leaks, validating all 46 canonical skills for production readiness.
+
 ## [5.0.0] - 2026-09-21
 
 ### Added

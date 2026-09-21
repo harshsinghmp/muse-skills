@@ -365,4 +365,442 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("Task Observation Loop");
     });
   });
+
+  describe("8. Department Upgrades & Consolidations Simulation", () => {
+    test("content: registers podcast mode and implements broadcast audio engineering standards", () => {
+      const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "content", "SKILL.md"), "utf8");
+      expect(contentSkill).toContain("| **podcast** |");
+      expect(contentSkill).toContain("references/podcast.md");
+
+      const podcastRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "podcast.md"), "utf8");
+      expect(podcastRef).toContain("-16.0 LUFS");
+      expect(podcastRef).toContain("-19.0 LUFS");
+      expect(podcastRef).toContain("-1.0 dBTP");
+      expect(podcastRef).toContain("80 Hz");
+      expect(podcastRef).toContain("Cold Open");
+    });
+
+    test("content: video mode houses HeyFrames AI editing, short-form retention, and long-form essay strategies", () => {
+      const videoRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "video.md"), "utf8");
+      expect(videoRef).toContain("HeyFrames & Automated AI Video Workflows");
+      expect(videoRef).toContain("Intelligent Aspect Ratio Reframing");
+      expect(videoRef).toContain("16:9 to 9:16");
+      expect(videoRef).toContain("Kinetic Subtitle Engineering");
+      expect(videoRef).toContain("The 3-Second Retention Law");
+      expect(videoRef).toContain("Long-Form Video Strategy");
+    });
+
+    test("database: registers optimize mode consolidating database-optimizer with memory and query tuning", () => {
+      const dbSkill = fs.readFileSync(path.join(REPO_ROOT, "database", "SKILL.md"), "utf8");
+      expect(dbSkill).toContain("| **optimize** |");
+      expect(dbSkill).toContain("database-optimizer");
+      expect(dbSkill).toContain("references/optimize.md");
+
+      const optRef = fs.readFileSync(path.join(REPO_ROOT, "database", "references", "optimize.md"), "utf8");
+      expect(optRef).toContain("EXPLAIN (ANALYZE, BUFFERS");
+      expect(optRef).toContain("shared_buffers");
+      expect(optRef).toContain("work_mem");
+      expect(optRef).toContain("SKIP LOCKED");
+      expect(optRef).toContain("Covering Indexes (`INCLUDE`)");
+    });
+
+    test("webdev: fullstack mode consolidates fullstack-guardian with Three-Perspective Security Architecture", () => {
+      const fsRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "fullstack.md"), "utf8");
+      expect(fsRef).toContain("Three-Perspective Security Architecture (fullstack-guardian)");
+      expect(fsRef).toContain("[Backend Perspective]");
+      expect(fsRef).toContain("[Frontend Perspective]");
+      expect(fsRef).toContain("[Security Perspective]");
+      expect(fsRef).toContain("parameterized queries");
+      expect(fsRef).toContain("state matrix");
+    });
+
+    test("webdev: spec mode consolidates spec-miner with Arch/QA hats and EARS requirements extraction", () => {
+      const specRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "spec.md"), "utf8");
+      expect(specRef).toContain("legacy reverse-engineering (spec-miner)");
+      expect(specRef).toContain("Arch Hat");
+      expect(specRef).toContain("QA Hat");
+      expect(specRef).toContain("EARS Syntax");
+      expect(specRef).toContain("Ubiquitous");
+      expect(specRef).toContain("Event-driven");
+      expect(specRef).toContain("State-driven");
+      expect(specRef).toContain("specs/{project_name}_reverse_spec.md");
+    });
+
+    test("webdev: audit mode registers responsiveness-check, viewport test matrix, and touch targets", () => {
+      const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "webdev", "SKILL.md"), "utf8");
+      expect(webdevSkill).toContain("| **audit** |");
+      expect(webdevSkill).toContain("responsiveness-check");
+      expect(webdevSkill).toContain("references/audit.md");
+
+      const auditRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "audit.md"), "utf8");
+      expect(auditRef).toContain("Viewport Breakdown Matrix");
+      expect(auditRef).toContain("Horizontal Overflow & Layout Blowout Scan");
+      expect(auditRef).toContain("Mobile Touch Targets & Ergonomic Safety");
+      expect(auditRef).toContain("44x44px");
+      expect(auditRef).toContain("100dvh");
+    });
+
+    test("devops: cloudflare mode consolidates Workers, Pages, Full (Strict) SSL, and Zero Trust tunnels", () => {
+      const devopsSkill = fs.readFileSync(path.join(REPO_ROOT, "devops", "SKILL.md"), "utf8");
+      expect(devopsSkill).toContain("| **cloudflare** |");
+      expect(devopsSkill).toContain("references/cloudflare.md");
+
+      const cfRef = fs.readFileSync(path.join(REPO_ROOT, "devops", "references", "cloudflare.md"), "utf8");
+      expect(cfRef).toContain("Full (Strict)");
+      expect(cfRef).toContain("Zero Trust Tunnels (`cloudflared`)");
+      expect(cfRef).toContain("Rate Limiting Rule");
+      expect(cfRef).toContain("wrangler.toml");
+    });
+
+    test("design: uikit mode consolidates starwind-ui, stitch-design-taste, headless primitives, and CVA", () => {
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **uikit** |");
+      expect(designSkill).toContain("starwind-ui");
+      expect(designSkill).toContain("stitch-design-taste");
+      expect(designSkill).toContain("references/uikit.md");
+
+      const uikitRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "uikit.md"), "utf8");
+      expect(uikitRef).toContain("stitch-design-taste");
+      expect(uikitRef).toContain("Starwind UI");
+      expect(uikitRef).toContain("Class Variance Authority / CVA");
+      expect(uikitRef).toContain("44×44px");
+      expect(uikitRef).toContain("focus-visible");
+    });
+
+    test("growth: launch mode incorporates Product Hunt launch playbook", () => {
+      const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "growth", "SKILL.md"), "utf8");
+      expect(growthSkill).toContain("producthunt");
+      expect(growthSkill).toContain("product hunt launch");
+
+      const launchRef = fs.readFileSync(path.join(REPO_ROOT, "growth", "references", "launch.md"), "utf8");
+      expect(launchRef).toContain("Product Hunt Launch Playbook (`producthunt`)");
+      expect(launchRef).toContain("12:01 AM PST");
+      expect(launchRef).toContain("first-4-hours momentum");
+    });
+
+    test("design: saas landing page template enforces 9-section sequence and 9 copywriting frameworks", () => {
+      const templatePath = path.join(REPO_ROOT, "design", "templates", "saas.md");
+      expect(fs.existsSync(templatePath)).toBe(true);
+
+      const tpl = fs.readFileSync(templatePath, "utf8");
+      // 9 canonical sections
+      expect(tpl).toContain("1. Header / Nav");
+      expect(tpl).toContain("2. Hero Section");
+      expect(tpl).toContain("3. Logos / Trust Marquee");
+      expect(tpl).toContain("4. Features Section(s)");
+      expect(tpl).toContain("5. Product Showcase Section");
+      expect(tpl).toContain("6. Pricing Section");
+      expect(tpl).toContain("7. Testimonial Section");
+      expect(tpl).toContain("8. Final CTA Section");
+      expect(tpl).toContain("9. Footer");
+
+      // 7 copywriting frameworks + storytelling + SPIN
+      expect(tpl).toContain("AIDA (Attention → Interest → Desire → Action)");
+      expect(tpl).toContain("PASTOR (Problem → Amplify → Solution → Testimonial → Offer → Response)");
+      expect(tpl).toContain("4 P's (Promise → Picture → Proof → Push)");
+      expect(tpl).toContain("PRUNE (Point → Reason → Unveil → Nail → Exit)");
+      expect(tpl).toContain("SLAP (Stop → Look → Act → Purchase)");
+      expect(tpl).toContain("So What? (Problem → Consequence → Solution)");
+      expect(tpl).toContain("PAPA (Problem → Advantages → Proof → Action)");
+      expect(tpl).toContain("Star-Story-Solution (Storytelling Framework)");
+      expect(tpl).toContain("SPIN (Situation → Problem → Implication → Need-Payoff)");
+
+      // Cross references in ui and wireframe references
+      const uiRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "ui.md"), "utf8");
+      expect(uiRef).toContain("templates/saas.md");
+
+      const wireframeRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "wireframe.md"), "utf8");
+      expect(wireframeRef).toContain("templates/saas.md");
+    });
+
+    test("design: ux mode consolidates UX Architecture, Research, Persona Walkthroughs, Onboarding UX, and Interaction Patterns", () => {
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **ux** |");
+      expect(designSkill).toContain("ux-architect");
+      expect(designSkill).toContain("ux-researcher");
+      expect(designSkill).toContain("persona-walkthrough");
+      expect(designSkill).toContain("onboarding-ux");
+      expect(designSkill).toContain("ux-patterns");
+
+      const uxRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "ux.md"), "utf8");
+      // Pillar 1: UX Architecture & Systems
+      expect(uxRef).toContain("Pillar 1: UX Architecture & Systems Foundations (ArchitectUX)");
+      expect(uxRef).toContain("The 3-Click / 3-Level Rule");
+      expect(uxRef).toContain("Mandatory Theme Ergonomics");
+
+      // Pillar 2: UX Research & Usability
+      expect(uxRef).toContain("Pillar 2: UX Research & Usability Engineering (UX Researcher)");
+      expect(uxRef).toContain("The 10 Nielsen-Norman Usability Heuristics Audit");
+      expect(uxRef).toContain("System Usability Scale (SUS");
+
+      // Pillar 3: Persona Walkthrough & Psychological Auditing
+      expect(uxRef).toContain("Pillar 3: Cognitive Persona Walkthroughs & Conversion Auditing");
+      expect(uxRef).toContain("The 5-Second Test");
+      expect(uxRef).toContain("The LIFT Model Conversion Audit");
+      expect(uxRef).toContain("Fogg Behavior Model ($B = \\text{MAP}$)");
+      expect(uxRef).toContain("Dual-Voice Evaluation Format");
+
+      // Pillar 4: Onboarding UX
+      expect(uxRef).toContain("Pillar 4: Onboarding UX & Adoption Flow (`onboarding-ux`)");
+      expect(uxRef).toContain("The 4-Stage Progressive Disclosure Onboarding Arc");
+      expect(uxRef).toContain("Walkthrough Fatigue Prevention");
+
+      // Pillar 5: Interaction Patterns
+      expect(uxRef).toContain("Pillar 5: Canonical UX Interaction Patterns (`ux-patterns`)");
+      expect(uxRef).toContain("Sequential Stepper / Wizard");
+      expect(uxRef).toContain("Soft Delete + 10s Undo Toast");
+    });
+
+    test("design: story mode implements visual storytelling, narrative arcs, and video storyboards", () => {
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **story** |");
+      expect(designSkill).toContain("visual storytelling");
+      expect(designSkill).toContain("references/story.md");
+      expect(designSkill).toContain(
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story]"',
+      );
+
+      const storyRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "story.md"), "utf8");
+      expect(storyRef).toContain("Visual Storytelling Philosophy & The 4 Pillars");
+      expect(storyRef).toContain("The 3-Act Visual Arc");
+      expect(storyRef).toContain("The Emotional Journey Map");
+      expect(storyRef).toContain("Video Storyboarding & Motion Design Direction");
+      expect(storyRef).toContain("Information Design & Data Storytelling");
+      expect(storyRef).toContain("Cross-Platform Visual Narrative Adaptation");
+    });
+
+    test("devops: cloudflare covers try.cloudflare.com quick tunnels and homelab zero trust", () => {
+      const scriptPath = path.join(REPO_ROOT, "devops", "scripts", "tunnel.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const script = fs.readFileSync(scriptPath, "utf8");
+      expect(script).toContain("try.cloudflare.com");
+      expect(script).toContain("cloudflared");
+      expect(script).toContain("pacman -S cloudflared");
+
+      const cfRef = fs.readFileSync(path.join(REPO_ROOT, "devops", "references", "cloudflare.md"), "utf8");
+      expect(cfRef).toContain("try.cloudflare.com");
+      expect(cfRef).toContain("Client Live Previews");
+      expect(cfRef).toContain("External Webhook Simulation");
+      expect(cfRef).toContain("Real-Device Mobile & Cellular QA");
+      expect(cfRef).toContain("Zero Trust Tunnels (`cloudflared`) & Homelab Architecture");
+      expect(cfRef).toContain("docker-compose");
+      expect(cfRef).toContain("Cloudflare Access");
+    });
+
+    test("content: copy mode incorporates comprehensive copywriting formulas and auto-suggestion matrix", () => {
+      const copyRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "copy.md"), "utf8");
+
+      // Auto-Suggestion & Selector Matrix
+      expect(copyRef).toContain("Automated Formula Selector & Decision Matrix");
+      expect(copyRef).toContain("Eugene Schwartz 5 Stages");
+
+      // Core Full-Page Formulas
+      expect(copyRef).toContain("AIDA");
+      expect(copyRef).toContain("AIDCA & IDCA");
+      expect(copyRef).toContain("Danny Iny’s 6+1 Formula");
+      expect(copyRef).toContain("PAS (Problem → Agitation → Solution)");
+      expect(copyRef).toContain("The 4 Ps (Two Proven Variations)");
+      expect(copyRef).toContain("ACCA (Awareness → Comprehension → Conviction → Action)");
+      expect(copyRef).toContain("QUEST (Qualify → Understand → Educate → Stimulate → Transition)");
+      expect(copyRef).toContain("SLAP (Stop → Look → Act → Purchase)");
+      expect(copyRef).toContain("AIDPPC");
+      expect(copyRef).toContain("5-Point Copywriting Formula");
+      expect(copyRef).toContain("DOS (Dream → Obstacle → Solution)");
+      expect(copyRef).toContain("AICPBSAWN");
+
+      // Long-Form & Direct Response
+      expect(copyRef).toContain("Bob Serling’s 36-Step Power Copywriting Formula");
+      expect(copyRef).toContain("Star → Story → Solution");
+      expect(copyRef).toContain("Bob Stone’s 7-Step Copywriting Formula");
+      expect(copyRef).toContain("Frank Egner’s 9-Point Formula");
+      expect(copyRef).toContain("David Frey’s 12-Step Foolproof Sales Letter");
+      expect(copyRef).toContain("Perry Belcher’s 21-Part Sales Letter Formula");
+      expect(copyRef).toContain("HELLYEAH");
+      expect(copyRef).toContain("PASTOR");
+
+      // VSLs, Headlines & Fascinations
+      expect(copyRef).toContain("The Jim Edwards VSL Method");
+      expect(copyRef).toContain("Common 3-CTA Video Blueprint");
+      expect(copyRef).toContain("Geoffrey Moore’s Positioning Statement");
+      expect(copyRef).toContain("Steve Blank’s VAD");
+      expect(copyRef).toContain("The 7 Deadly Fascinations");
+      expect(copyRef).toContain("RAD Framework (Require → Acquire → Desire)");
+      expect(copyRef).toContain("Rob Walling’s 5-Day SaaS Onboarding Drip");
+      expect(copyRef).toContain("Wishpond 5-Part Lead Nurture Sequence");
+      expect(copyRef).toContain("String of Pearls");
+      expect(copyRef).toContain("PASOP Email Sequence");
+      expect(copyRef).toContain("ERERS Framework");
+    });
+
+    test("Universal Copywriting & SEO/AEO Mandate is strictly enforced across AGENTS.md, content, smm, and taste engine", () => {
+      // AGENTS.md working rule
+      const agentsMd = fs.readFileSync(path.join(REPO_ROOT, "AGENTS.md"), "utf8");
+      expect(agentsMd).toContain("Universal Copywriting & SEO/AEO Mandate");
+      expect(agentsMd).toContain("content/references/copy.md");
+      expect(agentsMd).toContain("AI Engine Optimization (AEO");
+
+      // content SKILL.md
+      const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "content", "SKILL.md"), "utf8");
+      expect(contentSkill).toContain("Universal Copywriting & SEO/AEO Mandate");
+
+      // content blog mode
+      const blogRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "blog.md"), "utf8");
+      expect(blogRef).toContain("Select a proven copywriting formula from `copy.md`");
+      expect(blogRef).toContain("Answer-First AEO formatting");
+      expect(blogRef).toContain("18-Token Standalone Quotability Rule (CITE Gate)");
+
+      // content email mode
+      const emailRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "email.md"), "utf8");
+      expect(emailRef).toContain("proven sequence formula from `copy.md`");
+      expect(emailRef).toContain("12 High-Open Subject Line Archetypes in `copy.md`");
+      expect(emailRef).toContain("AEO/SEO indexing");
+
+      // smm content mode
+      const smmRef = fs.readFileSync(path.join(REPO_ROOT, "smm", "references", "content.md"), "utf8");
+      expect(smmRef).toContain("Select a proven copywriting formula from `copy.md`");
+      expect(smmRef).toContain("Social Search & AEO");
+
+      // decisions.md and current.md persistent invariants
+      const decisionsMd = fs.readFileSync(path.join(REPO_ROOT, ".agents", "context", "decisions.md"), "utf8");
+      expect(decisionsMd).toContain("atom-communication-mub4copy02");
+
+      const currentMd = fs.readFileSync(path.join(REPO_ROOT, ".agents", "context", "current.md"), "utf8");
+      expect(currentMd).toContain("atom-communication-mub4copy02");
+
+      // taste-state.json
+      const tastePath = path.join(REPO_ROOT, ".agents", "context", "taste-state.json");
+      const tasteJson = JSON.parse(fs.readFileSync(tastePath, "utf8")) as { atoms: Array<{ id: string }> };
+      const hasAtom = tasteJson.atoms.some((a) => a.id === "atom-communication-mub4copy02");
+      expect(hasAtom).toBe(true);
+    });
+  });
+
+  describe("8. Brand Lifecycle & Client Onboarding Engine (brand)", () => {
+    const brandDir = path.join(REPO_ROOT, "brand");
+
+    test("brand SKILL.md registers all 8 modes in table and frontmatter", () => {
+      const skillMd = fs.readFileSync(path.join(brandDir, "SKILL.md"), "utf8");
+      expect(skillMd).toContain("name: brand");
+      expect(skillMd).toContain(
+        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|audit]"',
+      );
+
+      // Modes table
+      expect(skillMd).toContain("| **intake** |");
+      expect(skillMd).toContain("| **research** |");
+      expect(skillMd).toContain("| **pipeline** |");
+      expect(skillMd).toContain("| **accounts-access** |");
+      expect(skillMd).toContain("| **brief** |");
+      expect(skillMd).toContain("| **ecommerce** |");
+      expect(skillMd).toContain("| **offboard** |");
+      expect(skillMd).toContain("| **audit** |");
+
+      // Verify companion files
+      expect(fs.existsSync(path.join(brandDir, "README.md"))).toBe(true);
+      expect(fs.existsSync(path.join(brandDir, "agents", "openai.yaml"))).toBe(true);
+    });
+
+    test("all 8 mode reference documents exist with actionable agency playbooks", () => {
+      const expectedModes = [
+        "intake",
+        "research",
+        "pipeline",
+        "accounts-access",
+        "brief",
+        "ecommerce",
+        "offboard",
+        "audit",
+      ];
+      for (const mode of expectedModes) {
+        const refPath = path.join(brandDir, "references", `${mode}.md`);
+        expect(fs.existsSync(refPath)).toBe(true);
+        const content = fs.readFileSync(refPath, "utf8");
+        expect(content.length).toBeGreaterThan(500);
+      }
+    });
+
+    test("ecommerce mode covers Amazon, Shopee, TikTok Shop, international logistics, and global compliance", () => {
+      const ecomRef = fs.readFileSync(path.join(brandDir, "references", "ecommerce.md"), "utf8");
+      expect(ecomRef).toContain("Amazon (North America, Europe, Japan)");
+      expect(ecomRef).toContain("Shopee & Lazada");
+      expect(ecomRef).toContain("TikTok Shop");
+      expect(ecomRef).toContain("International Logistics & Overseas Warehousing");
+      expect(ecomRef).toContain("Global Tax, Compliance & Regulatory Architecture");
+      expect(ecomRef).toContain("Multilingual Listing Optimization & Localization Standards");
+    });
+
+    test("pipeline mode implements BANT and MEDDIC qualification with 5-stage progression", () => {
+      const pipeRef = fs.readFileSync(path.join(brandDir, "references", "pipeline.md"), "utf8");
+      expect(pipeRef).toContain("Stage 1: Lead Intake & First Touch");
+      expect(pipeRef).toContain("Stage 2: Discovery & Qualification (BANT & MEDDIC)");
+      expect(pipeRef).toContain("Stage 3: Solution Architecture & Proposal Blueprint");
+      expect(pipeRef).toContain("Stage 4: Contract, SOW & Payment Kickoff");
+      expect(pipeRef).toContain("Stage 5: Handover to Agency Delivery Council");
+      expect(pipeRef).toContain("Budget");
+      expect(pipeRef).toContain("Authority");
+      expect(pipeRef).toContain("Need");
+      expect(pipeRef).toContain("Timeline");
+      expect(pipeRef).toContain("Economic Buyer");
+      expect(pipeRef).toContain("Decision Criteria");
+    });
+
+    test("accounts-access mode enforces LifeOS zero-leak delegation protocol across all platforms", () => {
+      const accessRef = fs.readFileSync(path.join(brandDir, "references", "accounts-access.md"), "utf8");
+      expect(accessRef).toContain("Zero-Credential Leak Delegation Standard");
+      expect(accessRef).toContain("Never accept, request, or store plaintext passwords");
+      expect(accessRef).toContain("Meta Ads & Business Portfolio");
+      expect(accessRef).toContain("Manager Account (MCC) Link Request");
+      expect(accessRef).toContain("Google Analytics 4 (GA4)");
+      expect(accessRef).toContain("Google Tag Manager (GTM)");
+      expect(accessRef).toContain("Developer");
+      expect(accessRef).toContain("NEVER `Administrator` or `Owner`");
+    });
+
+    test("brief mode generates master dossier and cross-department briefs for design, webdev, content, paidads, qa", () => {
+      const briefRef = fs.readFileSync(path.join(brandDir, "references", "brief.md"), "utf8");
+      expect(briefRef).toContain("The Master Brand Dossier Architecture");
+      expect(briefRef).toContain("Department Brief 1: For `design`");
+      expect(briefRef).toContain("Department Brief 2: For `webdev`");
+      expect(briefRef).toContain("Department Brief 3: For `content` & `smm`");
+      expect(briefRef).toContain("Department Brief 4: For `paidads`");
+      expect(briefRef).toContain("Department Brief 5: For `qa-launch`");
+    });
+
+    test("offboard mode enforces 5-phase structured exit and 48-hour access revocation protocol", () => {
+      const offboardRef = fs.readFileSync(path.join(brandDir, "references", "offboard.md"), "utf8");
+      expect(offboardRef).toContain("Phase 1: Final Deliverable Audit & SOW Sign-Off");
+      expect(offboardRef).toContain("Phase 2: Asset Packaging & Custody Transfer");
+      expect(offboardRef).toContain("Phase 3: Access Revocation & Security Vault Purge (48-Hour SLA)");
+      expect(offboardRef).toContain("Phase 4: Final Financial Reconciliation");
+      expect(offboardRef).toContain("Phase 5: Client NPS & Reverse Testimonial Capture");
+      expect(offboardRef).toContain("48-Hour SLA");
+    });
+
+    test("intake-audit script computes 50-point score, evaluates gates, and emits clarification prompts", () => {
+      const scriptPath = path.join(brandDir, "scripts", "intake-audit.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      // 1. Ready for build simulation (score = 48)
+      const resGreen = spawnSync("bun", [scriptPath, "--mock", "--score", "48"], { encoding: "utf8" });
+      expect(resGreen.status).toBe(0);
+      expect(resGreen.stdout).toContain("READY_FOR_BUILD");
+      expect(resGreen.stdout).toContain("GREEN LIGHT");
+
+      // 2. Needs clarification simulation (score = 38, exit code 1)
+      const resAmber = spawnSync("bun", [scriptPath, "--mock", "--score", "38", "--json"], { encoding: "utf8" });
+      expect(resAmber.status).toBe(1);
+      const amberJson = JSON.parse(resAmber.stdout);
+      expect(amberJson.verdict).toBe("NEEDS_CLARIFICATION");
+      expect(amberJson.score).toBe(38);
+      expect(amberJson.missing.length).toBe(12);
+
+      // 3. Blocked incomplete simulation (score = 20, exit code 2)
+      const resRed = spawnSync("bun", [scriptPath, "--mock", "--score", "20"], { encoding: "utf8" });
+      expect(resRed.status).toBe(2);
+      expect(resRed.stdout).toContain("BLOCKED_INCOMPLETE");
+      expect(resRed.stdout).toContain("RED LIGHT");
+      expect(resRed.stdout).toContain("Missing Brand Discovery Parameters");
+    });
+  });
 });
