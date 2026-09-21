@@ -14,14 +14,16 @@ A publish-ready blog post: intent-matching H1, a scannable outline (H2/H3), a st
 
 ## Procedure
 
-1. Confirm intent (informational, commercial, navigational) — match the format to it.
-2. Outline H2/H3 around the questions the searcher actually has.
-3. Write a hook intro that names the problem in the reader's words.
-4. Write the body with concrete detail, examples, and sourced claims — no filler sentences.
-5. Answer the likely follow-up questions in an FAQ or key-takeaways block (AEO lift).
-6. Add internal links to related pages and one clear CTA.
-7. Write the meta title and description; give an image/diagram direction.
-8. Treat the brief as contract: confirm keyword, intent, reader, one action, and source facts in writing before drafting — no draft without sign-off.
+1. Select a proven copywriting formula from `copy.md` (e.g., **QUEST** for comprehensive guides, **Hyatt 6-Part** for thought leadership, **AIDA** or **Star-Story-Solution** for case/story articles, **ACCA** for paradigm shifts). Never write unanchored freestyle blog copy.
+2. Confirm intent (informational, commercial, navigational) — match the format and H1 to it.
+3. Outline H2/H3 around the exact high-intent queries searchers and AI prompt engines ask.
+4. Enforce Answer-First AEO formatting: the first 1-2 sentences immediately under each H2/H3 must directly answer the heading query in 40–60 words, followed by in-depth explanation and data.
+5. Apply the 18-Token Standalone Quotability Rule (CITE Gate): every core claim, definition, or takeaway must be a complete, self-contained sentence without dangling pronouns (`this`, `these`, `they`) so AI search bots (ChatGPT Search, Perplexity, Gemini AI Overviews) can quote it verbatim.
+6. Write the body with concrete detail, primary benchmark data, and expert quotes — zero fluff or empty filler adjectives.
+7. Include an FAQ or Key Takeaways block with structured Article/FAQPage schema (essential for both Google rich snippets and AI Answer Engine citation).
+8. Add internal links to related cluster pages and one clear CTA adhering to the First-Person / RAD rules in `copy.md`.
+9. Write the meta title and description; provide social OG image/diagram direction.
+10. Treat the brief as contract: confirm keyword, intent, reader, one action, and source facts in writing before drafting — no draft without sign-off.
 9. Repurpose standalone test: every derivative gets its own hook and payoff for its format; list what was cut, not just what was kept. Plan distribution Create-Once-Distribute-Twice: each post ships with its two native cuts named up front, and every phase draws on owned, rented, AND borrowed channels (ORB spine; source: marketingskills `content-strategy` SKILL.md). Run the atomic-claim flow for derivatives (source: ECC `content-engine`): extract 3–7 atomic claims/scenes from the anchor asset, rank by sharpness/novelty/proof, assign one strong idea per output, adapt structure per platform, strip platform-shaped filler, then quality-gate.
 10. Decay-refresh triage: score decaying posts 0–100 on traffic loss, rank potential, and refresh cost; prioritize recoverable posts in revenue tiers first.
 11. Run a humanize pass and verify claims before delivery.
@@ -32,12 +34,15 @@ A publish-ready blog post: intent-matching H1, a scannable outline (H2/H3), a st
 
 ## Quality gate
 
-- [ ] Intent matched; format fits it.
-- [ ] Outline answers real searcher questions.
-- [ ] Every claim sourced; no inflated language.
-- [ ] FAQ/key-takeaways present for AEO.
-- [ ] Meta title/description written; internal links set.
- - [ ] Brief signed off before drafting; derivatives pass the standalone test.
+- [ ] Copywriting formula selected from `copy.md` (e.g. QUEST, Hyatt, AIDA, ACCA) and held consistently.
+- [ ] Intent matched; format fits it; H1 aligned with query.
+- [ ] Answer-first paragraph present under every H2/H3 (40–60 words directly answering the prompt).
+- [ ] 18-Token Standalone Quotability Rule satisfied for key claims and definitions (no dangling pronouns).
+- [ ] Outline answers real searcher questions; zero fluff or empty buzzwords.
+- [ ] Every claim sourced with verifiable facts/benchmarks; CORE-EEAT compliant.
+- [ ] FAQ/key-takeaways present with structured Article/FAQPage schema for AEO.
+- [ ] Meta title/description written; internal links set; CTA follows First-Person/RAD rule.
+- [ ] Brief signed off before drafting; derivatives pass the standalone test.
  - [ ] Distribution named up front (two native cuts + ORB coverage); social/OG image shipped with the post.
 - [ ] QA sequenced cheapest-first with one owner; halt/flag/auto-fix triage honored.
 - [ ] Decay-refresh scored 0–100; revenue-tier recoverables prioritized.
