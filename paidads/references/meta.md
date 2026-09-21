@@ -23,6 +23,10 @@ Campaign structure doc: campaigns by objective, ad sets with audience + budget, 
 8. Verify pixel events + Conversions API before launch; set a post-ID rule for social proof.
 9. Hold out 10–20% of budget as control; graduate proven winners to an evergreen campaign and backfill new tests behind them.
 10. Size tests by absolute MDE (percentage-point shift), not relative lift alone; fix sample size up front and do not peek early.
+11. **Meta Cold-Start Contract (Learning Phase Ramp)**:
+    - **Minimum Budget Pacing**: Set starting ad set daily budgets to at least $5 \times$ target CPA to ensure the algorithm can exit the learning phase (50 conversions/week).
+    - **Funnel Step-Down Fallback**: If the terminal conversion event (e.g., `Purchase`) generates $< 15$ events/week during initial launch, step down the optimization event to `Add to Cart` or `Initiate Checkout` to build pixel attribution density before graduating to terminal purchase bidding.
+    - **Creative Fatigue Defense**: Launch with maximum 3–5 active creative variations per ad set. Never launch 10+ variants simultaneously in a cold ad set, which fragments impressions and prevents any single creative from exiting the learning phase.
 
 ## Quality gate
 
@@ -33,6 +37,7 @@ Campaign structure doc: campaigns by objective, ad sets with audience + budget, 
 - [ ] Lookalike/audience sources ≥ 100 records or use broad.
 - [ ] Holdout control reserved (10–20%); winner-graduation path to evergreen defined.
 - [ ] Guardrails checked — a CTR win that tanks CVR is not a winner; absolute MDE and no-peeking rule honored.
+- [ ] Meta Cold-Start Contract honored: ad set budget $\ge 5 \times$ target CPA; funnel step-down ready if terminal volume $< 15$/week.
 
 ## Sources
 

@@ -24,6 +24,9 @@ Campaign structure doc: campaigns (by objective/budget), ad groups (one theme ea
 9. Launch BLOCKER gates (dependency-ordered, checkpoint each): tracking verified firing → billing/budget caps set → negatives seeded → RSA assets within limits → extensions attached. No step starts until the prior checkpoint passes.
 10. Define conversion actions and mirror them exactly in site tracking (analytics contract).
 11. Attach extensions: sitelinks, callouts, structured snippets, lead form if qualified.
+12. **Search Overlap Controls (G96 & G97 Hygiene)**:
+    - **Control G96 (Cross-Campaign Query Cannibalization & Exact Isolation)**: When running Exact match alongside Broad/Phrase or Performance Max, add exact match target keywords as negative exact matches to Broad/PMax campaigns. Prevents internal bidding competition, high-intent query cannibalization, and CPC inflation.
+    - **Control G97 (Negative Conflict & Shared Budget Isolation)**: Audit shared negative lists before activating campaigns to ensure converting search queries are not unintentionally blocked. Isolate high-converting brand/core search campaigns onto dedicated budgets—never pool brand with unproven generic discovery campaigns under a shared budget cap.
 
 ## Quality gate
 
@@ -32,6 +35,8 @@ Campaign structure doc: campaigns (by objective/budget), ad groups (one theme ea
 - [ ] RSA assets within limits, offer in 3+ headlines.
 - [ ] Bidding stage matches conversion volume (no tCPA at 10 conv/mo).
 - [ ] Conversion actions verified firing before spend.
+- [ ] Search Overlap Controls (G96 exact-match isolation & G97 negative conflict checks) passed.
+- [ ] Brand and generic discovery budgets strictly segregated (no shared budget cannibalization).
 
 ## Sources
 
