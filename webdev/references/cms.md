@@ -19,6 +19,18 @@ Content model (types, fields, validation), CMS integration with typed frontend q
 4. Editor experience: draft preview at real routes, role-appropriate permissions.
 5. Migrate existing content: export → transform → import script, verified counts.
 6. Document the editorial workflow (draft → review → publish) inside the CMS.
+7. **WordPress Pro Architecture (`wordpress-pro`)**:
+   - Structure production WordPress using Bedrock (`/web/app/`), isolating core from custom code.
+   - Enforce composer-driven plugin and theme dependencies; manage environmental variables via `.env` (never commit DB credentials).
+   - Use Advanced Custom Fields (ACF Pro) with typed JSON sync (`acf-json/`) or custom Gutenberg Block Patterns (FSE) instead of unstructured WYSIWYG blobs.
+8. **Elementor Engineering & Performance (`wordpress-elementor`)**:
+   - Custom Widgets: Extend `\Elementor\Widget_Base`, register scripts/styles with conditional enqueueing only when widget is active on page.
+   - DOM Optimization: Enable Elementor performance features (Optimized DOM Output, Inline Font Icons, Improved Asset Loading) to prevent 15+ level deep `div` nesting.
+   - Dynamic Data: Bind widgets to ACF fields using Elementor dynamic tags rather than hardcoding client data.
+9. **Headless & Enterprise WordPress Integration**:
+   - Pair WordPress backend with headless frontends (Next.js / Astro) via WPGraphQL or REST API.
+   - Implement webhooks (`publish_post`, `save_post`) triggering on-demand Incremental Static Regeneration (ISR) or cache tag purges.
+   - Enforce Redis Object Caching for database query transient caching.
 
 ## Quality gate
 
@@ -27,6 +39,8 @@ Content model (types, fields, validation), CMS integration with typed frontend q
 - [ ] Preview works at real routes.
 - [ ] Import verified by count + spot-check.
 - [ ] Editorial workflow documented.
+- [ ] WordPress security: `DISALLOW_FILE_MODS` enabled, XML-RPC disabled, `.env` isolated.
+- [ ] Elementor DOM depth audited (<8 levels); unused CSS/JS deregistered on non-builder templates.
 
 ## Sources
 
