@@ -14,7 +14,7 @@ Wireframe set (grayscale, no styling): annotated blocks with content priority, l
 ## Procedure
 
 1. One page at a time; restate its single goal.
-2. Place blocks in grayscale: nav, hero, content units, CTA zones, footer — boxes and labels only. Separate with space first (inter-group gap ≥ 2× intra-group); divider lines only where space fails.
+2. Place blocks in grayscale: nav, hero, content units, CTA zones, footer — boxes and labels only (For SaaS landing pages, wireframe the canonical 9 sections and framework sequence in [../templates/saas.md](../templates/saas.md)). Separate with space first (inter-group gap ≥ 2× intra-group); divider lines only where space fails.
 3. Annotate each block: purpose, content plan, priority (P0/P1/P2), behavior (what click/hover yields), heading hierarchy with approximate char counts, image aspect ratios, and content source (static/CMS/API).
 4. Note responsive collapse order for mobile; show breakpoint variants where order changes meaning.
 5. Flag TBD content explicitly — never fake-fill with lorem on client work.
