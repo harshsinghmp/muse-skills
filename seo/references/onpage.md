@@ -26,10 +26,14 @@ Per-page optimization spec: title (≤ 60 chars, front-loaded), meta description
 10. Image audit by role tier: alt-text classes per role, file-size thresholds by role, modern-format ladder; never lazy-load the hero, set fetchpriority on the LCP image, and check CLS.
 11. Page-type mismatch check first: classify the SERP's dominant page type (strong consensus >60%, mixed 40-60%, fragmented <40%) — a technically perfect page of the wrong type never ranks; on mismatch, build the matching page type instead of optimizing.
 12. Product-page specifics: breadcrumb trail (Home > Category > Product), unique description (200+ words, never manufacturer copy) plus specs table plus on-page reviews, 3+ images (800px+, descriptive filenames, `<picture>` AVIF → WebP → JPEG), keyword-rich filenames, and og:image tags with dimensions/alt.
+13. **Templated Metadata & Programmatic Clutter Audit**:
+    - Audit bulk-generated title tags and meta descriptions for robotic boilerplate patterns (e.g. `{City} {Service} - Best {Service} in {City} Reviews`). Formulaic metadata lacking page-specific value triggers algorithmic unhelpful-content suppression.
+    - Require programmatic pages to inject dynamic, entity-grounded differentiating parameters (e.g. specific local inventory counts, verified pricing ranges, unique local customer verbatims) rather than static Mad-Libs text strings.
 
 ## Quality gate
 
 - [ ] Title/description within limits and query-matched.
+- [ ] Programmatic pages audited for boilerplate spam: templated metadata check passed with page-unique entity parameters.
 - [ ] SERP-shape matched (format follows what ranks).
 - [ ] One H1; logical H2/H3 depth.
 - [ ] Internal links added from real authority pages.
