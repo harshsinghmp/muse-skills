@@ -110,11 +110,11 @@ Hand-drawn/vector motion without a library:
 
 See [css-animations.md](css-animations.md) §6. `document.startViewTransition()` + `view-transition-name` morphs between routes/pages with shared elements. Respect reduced motion.
 
-## 6. Three.js / R3F — real 3D (heavy — minimum unless asked)
+## 6. Three.js / R3F / WebGL — real 3D & interactive graphics
 
-WebGL is heavy and not widely supported — treat as a last resort. Load only when 3D is explicitly asked for or already a project dependency.
+See [threejs.md](threejs.md) for the complete, canonical playbook on Vanilla Three.js, React Three Fiber (R3F), PBR materials, custom GLSL shaders, GLTF/Draco asset pipelines, Globe.GL geospatial viz, and GPU memory lifecycle management.
 
-When the task is genuine 3D scenes, not 2.5D UI polish.
+Load only when 3D is explicitly asked for or already a project dependency. When the task is genuine 3D scenes, not 2.5D UI polish.
 
 ```jsx
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -130,7 +130,7 @@ function Cube() {
 
 - `useFrame((state, delta) => …)` runs every frame — mutate transforms/refs, not React state.
 - For 2D UI "depth" (tilt, flip), CSS `perspective` + `rotateX/Y` is cheaper — Three.js is for actual meshes/scenes.
-- Gotcha: heavy bundle; only bundle when 3D is core, and gate behind reduced motion (pause loops).
+- Full reference: [threejs.md](threejs.md) (covers Draco/GLTF, InstancedMesh, ShaderMaterial, EffectComposer, and cleanup).
 
 ## 7. Lenis — smooth scroll (heavy — explicit)
 
