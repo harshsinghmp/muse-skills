@@ -1,8 +1,8 @@
 ---
 name: content
-aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "editorial"]
-description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, customer case studies, and prose humanization — routed through seven modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
-argument-hint: "[blog|copy|email|video|case-study|humanize|launch]"
+aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial"]
+description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
+argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 29
-  aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "editorial"]
+  aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial"]
   suggested_skills: ["seo", "design", "humanize", "smm"]
   hermes:
-    tags: ["content", "blog", "copywriting", "email", "video", "case-study", "humanize", "seo-writing", "landing-page", "newsletter", "editorial", "prose"]
+    tags: ["content", "blog", "copywriting", "email", "video", "podcast", "case-study", "humanize", "seo-writing", "landing-page", "newsletter", "editorial", "prose"]
     related_skills: ["seo", "design", "humanize", "smm"]
     suggested_skills: ["seo", "design", "humanize", "smm"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["seo", "design", "humanize", "smm"]
-    primary_triggers: ["write a blog post", "landing page copy", "email sequence", "video script", "case study", "humanize this", "remove AI writing", "content calendar writing"]
+    primary_triggers: ["write a blog post", "landing page copy", "email sequence", "video script", "podcast script", "podcast episode", "case study", "humanize this", "remove AI writing", "content calendar writing"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -30,6 +30,8 @@ metadata:
 # ✍️ content — Content Studio Department
 
 One head skill for content. Every piece starts from a source of truth — a keyword, a customer outcome, a product fact — and ends with a specific reader taking a specific action. Generic prose ranks nowhere and converts nobody. Facts before adjectives; clarity before cleverness.
+
+**Universal Copywriting & SEO/AEO Mandate**: All copy creation across every mode (landing pages, emails, blogs, video scripts, launches) must strictly follow an appropriate battle-tested copywriting formula from `copy.md` (e.g. AIDA, PAS, QUEST, ACCA, 4 Ps, Star-Story-Solution). All public-facing content MUST be dual-optimized for traditional Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: ChatGPT Search, Perplexity, Gemini AI Overviews, Claude) enforcing CORE-EEAT, 18-token standalone quotability, and answer-first structuring.
 
 ---
 
@@ -42,7 +44,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **blog** | "blog post", "article", "pillar page", "write an SEO article" | SEO-aware blog post from a keyword brief and search intent | [references/blog.md](references/blog.md) |
 | **copy** | "landing page copy", "website copy", "product copy", "hero copy" | Conversion-focused website, landing, and product copy | [references/copy.md](references/copy.md) |
 | **email** | "email sequence", "welcome email", "newsletter", "lifecycle email" | Lifecycle and campaign email sequences | [references/email.md](references/email.md) |
-| **video** | "video script", "youtube script", "explainer video", "reel script" | Video scripts: hooks, structure, and shot direction | [references/video.md](references/video.md) |
+| **video** | "video script", "youtube script", "explainer video", "reel script", "heyframes" | Video creation & editing: short-form Reels/Shorts/TikTok, long-form YouTube essays, HeyFrames reframing/clipping, hooks, and shot direction | [references/video.md](references/video.md) |
+| **podcast** | "podcast", "podcast script", "show notes", "guest interview", "podcast episode" | Full podcast lifecycle: show concept, guest prep, interview & solo scripting, audio specs (-16 LUFS), show notes, and chaptering | [references/podcast.md](references/podcast.md) |
 | **case-study** | "case study", "success story", "customer story" | Customer case study: outcome, proof, and narrative | [references/case-study.md](references/case-study.md) |
 | **humanize** | "humanize this", "remove AI writing", "make it sound natural", "de-slop" | Editorial pass removing AI-sounding prose without changing facts or voice | [references/humanize.md](references/humanize.md) |
 | **launch** | "product launch", "launch announcement", "feature release", "launch copy" | Launch copy kit: headline, offer, key messages, and channel-ready assets | [references/launch.md](references/launch.md) |
@@ -57,7 +60,8 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Writing SEO-aware blog posts, articles, or pillar pages.
 - Drafting website, landing page, or product copy.
 - Building email campaigns and lifecycle sequences.
-- Scripting video content for YouTube, social, or product.
+- Scripting video content for YouTube, social, or product, or editing with HeyFrames.
+- Producing podcasts: guest prep, show notes, audio specs (-16 LUFS), and episode scripting.
 - Documenting a customer case study or success story.
 - Editing a draft to remove AI-sounding prose.
 - Announcing a product or feature launch.

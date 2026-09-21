@@ -14,11 +14,12 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 
 ## Procedure
 
-1. Map the sequence to the lifecycle moment and the reader's state.
-2. Give each email exactly one action; sequence the actions toward the outcome.
-3. Write subject lines that earn the open without clickbait (2 variants for testing).
-4. Write skimmable bodies: short paragraphs, a clear single CTA.
-5. Set cadence and timing from the reader's behavior, not a fixed drip.
+1. Map the sequence to the lifecycle moment and the reader's state using a proven sequence formula from `copy.md` (e.g. **Rob Walling 5-Day Onboarding Drip**, **Wishpond 5-Part Lead Nurture**, **String of Pearls**, **PASOP Sequence**, or **6-Email Product Launch**).
+2. Select subject lines from the 12 High-Open Subject Line Archetypes in `copy.md` (Curiosity Gap, Data/Numbered, How-To, Direct Inquiry, Social Endorsement, Punctuator, Shorty, etc.) with 2 variants for split-testing.
+3. Shape body copy around the chosen formula: one action per send, short scannable paragraphs, and CTAs following the First-Person / RAD rules in `copy.md`.
+4. Give each email exactly one action; sequence the actions toward the outcome.
+5. For newsletters and publicly archived sends, ensure AEO/SEO indexing: include extractable 18-token standalone insight sentences and structured key takeaways.
+6. Set cadence and timing from the reader's behavior, not a fixed drip.
 6. Personalize with real data you have — never fake personalization.
 7. Define the success metric and exit condition per email.
 8. Map the narrative arc across the sequence plus branching logic: one action per send, conditional paths with exits for converted/unengaged readers.
@@ -40,10 +41,12 @@ An email sequence: subject line + preview per send, body copy, one CTA each, cad
 
 ## Quality gate
 
-- [ ] Each email has a single action.
-- [ ] Subject variants provided.
+- [ ] Sequence mapped to a recognized formula from `copy.md` (Walling 5-day, Wishpond, String of Pearls, PASOP, 6-email launch).
+- [ ] Subject lines drawn from the 12 Subject Line Archetypes in `copy.md` with test variants.
+- [ ] Each email has a single action and CTA follows RAD/First-Person rules.
 - [ ] Cadence and segmentation defined.
 - [ ] Personalization uses real data only.
+- [ ] Publicly archived issues AEO-indexed with 18-token extractable insights.
 - [ ] Success metric and exit condition per email.
 - [ ] Branching paths with exits defined; arc holds across the sequence.
 - [ ] Deliverability gate passed (auth, unsubscribe, complaint ceiling, hygiene).
