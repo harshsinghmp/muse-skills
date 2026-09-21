@@ -1,8 +1,8 @@
 ---
 name: design
-aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design"]
-description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, and graphic assets — routed through seven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, or produce any graphic design deliverable. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
-argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics]"
+aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding"]
+description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, and visual storytelling — routed through ten modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, or architect visual narratives. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
+argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 23
-  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design"]
+  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding"]
   suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
   hermes:
-    tags: ["design", "ui", "ux", "wireframe", "logo", "branding", "brand-identity", "social-media-design", "graphics", "visual-design", "design-tokens", "typography", "color", "layout"]
+    tags: ["design", "ui", "ux", "wireframe", "logo", "branding", "brand-identity", "social-media-design", "graphics", "visual-design", "design-tokens", "typography", "color", "layout", "starwind-ui", "brandkit", "banner-creator", "stitch-design-taste", "uikit", "visual-storytelling", "storyboard", "narrative-arc", "data-storytelling"]
     related_skills: ["refactor-ui", "designscope", "animate", "new-project"]
     suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
-    primary_triggers: ["design a website", "design a landing page", "create a wireframe", "design a logo", "build a brand identity", "social media templates", "design our dashboard", "graphic design"]
+    primary_triggers: ["design a website", "design a landing page", "create a wireframe", "design a logo", "build a brand identity", "social media templates", "design our dashboard", "graphic design", "starwind-ui", "ui kit", "stitch design taste", "brandkit", "banner creator", "visual storytelling", "storyboard"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -40,13 +40,15 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
 | **ui** | "design the homepage", "hi-fi mockup", "design this screen" | Full interface design pass: layout, hierarchy, tokens, states | [references/ui.md](references/ui.md) |
-| **ux** | "map the user flow", "improve the UX", "information architecture" | Flows, IA, journeys, and heuristic friction findings | [references/ux.md](references/ux.md) |
+| **ux** | "map the user flow", "improve the UX", "information architecture", "ux-architect", "ux-researcher", "persona-walkthrough", "onboarding-ux", "ux-patterns" | UX architecture, user research, persona cognitive walkthroughs, onboarding flows, heuristic audits | [references/ux.md](references/ux.md) |
 | **wireframe** | "wireframe the homepage", "low-fi layout", "structure first" | Grayscale structure with content plan, pre-visual-design | [references/wireframe.md](references/wireframe.md) |
 | **logo** | "design a logo", "new mark", "refresh our logo" | Logo concept territories → refinement → variants + usage rules | [references/logo.md](references/logo.md) |
-| **branding** | "brand identity", "brand guidelines", "brand system" | Full identity system: color, type, spacing, voice → brand.md + tokens | [references/branding.md](references/branding.md) |
+| **branding** | "brand identity", "brand guidelines", "brand system", "brandkit" | Full identity system: color, type, spacing, voice → brand.md + tokens | [references/branding.md](references/branding.md) |
 | **socials** | "social templates", "post designs", "profile kit" | Social template system: profiles, post formats, grid consistency | [references/socials.md](references/socials.md) |
-| **graphics** | "banner", "OG image", "hero art", "flyer" | One-off graphic assets: banners, OG/social share, print-adjacent | [references/graphics.md](references/graphics.md) |
+| **graphics** | "banner", "OG image", "hero art", "flyer", "banner-creator" | One-off graphic assets: banners, OG/social share, print-adjacent | [references/graphics.md](references/graphics.md) |
 | **prototype** | "prototype this flow", "clickable mock", "test the riskiest screen first" | Riskiest-visual-unknown-first clickable mock → fast test → locked/iterate/kill verdict | [references/prototype.md](references/prototype.md) |
+| **uikit** | "uikit", "ui kit", "component library", "starwind-ui", "stitch-design-taste", "design system components", "primitives" | Component libraries, headless primitives, Starwind UI / Tailwind component kits, tokens-to-components | [references/uikit.md](references/uikit.md) |
+| **story** | "visual storytelling", "visual narrative", "storyboard", "data storytelling", "infographic narrative", "emotional journey" | Visual narrative design: story arcs (setup → conflict → resolution), video storyboards, infographics/data storytelling, emotional journeys, cross-platform visual adaptations | [references/story.md](references/story.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
@@ -58,6 +60,12 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Creating wireframes, user flows, or information architecture before any visual design.
 - Designing a logo or full brand identity system (colors, type, voice rules).
 - Building a social template system or graphic assets (banners, covers, OG images).
+- Building industry-specific landing pages using structured layout templates (e.g. SaaS).
+
+### Layout Templates
+
+When designing landing pages by vertical type, load the corresponding layout template from `templates/`:
+- **SaaS** (`templates/saas.md`): Canonical 9-section problem-solving landing page layout (Header/Nav → Hero → Logos/Trust Marquee → Features → Product Showcase → Pricing → Testimonials → Final CTA → Footer) aligned with 9 copywriting frameworks (AIDA, PASTOR, 4 P's, PRUNE, SLAP, So What?, PAPA, Star-Story-Solution, SPIN).
 
 ### Anti-Triggers
 

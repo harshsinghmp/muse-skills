@@ -1,6 +1,6 @@
 # 🎨 design
 
-The design department head: one skill, seven modes — ui, ux, wireframe, logo, branding, socials, graphics. Creates original design from a brief or idea and outputs buildable tokens and specs.
+The design department head: one skill, ten modes — ui, ux, wireframe, logo, branding, socials, graphics, prototype, uikit, story. Creates original design from a brief or idea and outputs buildable tokens and specs.
 
 ## Install
 
@@ -31,6 +31,9 @@ Create a logo and brand identity for our new fintech client.
 | **branding** | build a brand identity system | Brand identity system: from logo+brief to tokens, assets rules, and voice guidelines. |
 | **socials** | build a social template kit | Social design system: profile kit, post templates per format, grid rhythm. |
 | **graphics** | produce a graphic asset (banner, OG image, flyer) | Graphic assets: web banners, OG/share images, hero art, print-adjacent collateral. |
+| **prototype** | prototype flows, test risky screens | Clickable mocks, fast user tests, locked/iterate/kill verdicts. |
+| **uikit** | build component library or UI kit | Headless primitives, Tailwind/Starwind UI component kits, token bindings. |
+| **story** | visual storytelling, storyboarding, data narrative | Visual narratives: story arcs, video storyboards, data infographics, cross-platform visual adaptations. |
 
 ## How it works
 
