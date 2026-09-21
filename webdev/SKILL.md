@@ -1,8 +1,8 @@
 ---
 name: webdev
-aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "ecommerce", "cms"]
-description: "Full web engineering department: frontend, backend, fullstack builds, e-commerce, CMS integration, web performance, accessibility, migrations, and deploy — routed through twelve modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, migrate sites and stacks, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|deploy]"
+aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
+description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, deploy, and responsive audits — routed through thirteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|deploy|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 26
-  aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "ecommerce", "cms"]
+  aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
   suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
   hermes:
-    tags: ["web-development", "frontend", "backend", "fullstack", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript"]
+    tags: ["web-development", "frontend", "backend", "fullstack", "fullstack-guardian", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript"]
     related_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
-    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse"]
+    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "fullstack-guardian", "spec-miner", "reverse engineer", "responsiveness-check", "audit mobile responsiveness", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse", "wordpress pro", "elementor", "react native expert"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -39,18 +39,19 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
-| **frontend** | "build this page/component", "frontend work", "react/astro/vue work" | Component/page implementation against the design spec | [references/frontend.md](references/frontend.md) |
-| **backend** | "api design", "endpoint", "database schema", "auth flow" | APIs, data models, integrations, auth | [references/backend.md](references/backend.md) |
-| **fullstack** | "fullstack feature", "end-to-end build", "ship the feature" | Full-feature build: data → API → UI → verified | [references/fullstack.md](references/fullstack.md) |
+| **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki" | Component/page implementation against design spec with responsive image assets and UI wiki patterns | [references/frontend.md](references/frontend.md) |
+| **backend** | "api design", "endpoint", "database schema", "auth flow", "cli-developer" | APIs, data models, integrations, auth, and CLI developer tooling | [references/backend.md](references/backend.md) |
+| **fullstack** | "fullstack feature", "end-to-end build", "ship the feature", "fullstack-guardian" | Full-feature build with Three-Perspective Security Architecture (Frontend, Backend, Security): data → API → UI → verified | [references/fullstack.md](references/fullstack.md) |
 | **ecommerce** | "ecommerce", "checkout", "product catalog", "cart", "payment gateway" | Catalog, cart, checkout, payments, post-purchase flows | [references/ecommerce.md](references/ecommerce.md) |
 | **cms** | "cms integration", "content model", "payload", "sanity", "headless cms" | Content modeling + CMS integration + preview/editor experience | [references/cms.md](references/cms.md) |
-| **performance** | "site is slow", "core web vitals", "lighthouse", "lcp/cls/inp" | Measure-first optimization: profile → fix → verify in field data | [references/performance.md](references/performance.md) |
+| **performance** | "site is slow", "core web vitals", "lighthouse", "lcp/cls/inp", "cache-component" | Measure-first optimization: profile → fix → verify in field data with component caching | [references/performance.md](references/performance.md) |
 | **accessibility** | "accessibility", "wcag", "screen reader", "keyboard nav", "a11y" | WCAG 2.2 AA audit and fixes: keyboard, contrast, semantics, forms | [references/accessibility.md](references/accessibility.md) |
 | **migrations** | "migrate the site", "platform migration", "react 18 to 19", "major version upgrade" | Planned migrations: audit → map → execute → verify with rollback | [references/migrations.md](references/migrations.md) |
 | **prototype** | "spike this", "is this approach feasible", "riskiest unknown first", "throwaway probe" | Riskiest-technical-unknown-first throwaway tracer → proven/disproven/needs-probe verdict; code never ships | [references/prototype.md](references/prototype.md) |
-| **spec** | "write the spec", "spec this feature", "ready-for-agent", "scope this build" | Build-ready spec packet (problem/solution/stories/seams-first/assumptions); human gate per phase | [references/spec.md](references/spec.md) |
+| **spec** | "write the spec", "spec this feature", "ready-for-agent", "scope this build", "spec-miner", "reverse engineer" | Build-ready spec packet and legacy code reverse-engineering (EARS format, Arch Hat vs QA Hat, deep seams); human gate per phase | [references/spec.md](references/spec.md) |
 | **implement** | "implement the spec", "build from spec", "tracer slices", "ship this story" | Spec-to-shipped tracer slices (one test → one impl); Simplicity-First; review chain before done | [references/implement.md](references/implement.md) |
 | **deploy** | "ship the build", "static upload", "one-command deploy", "deploy the frontend" | App-side ship: one-command full-stack deploy, static-upload fallback, object-storage contract (pipelines live in `devops`) | [references/deploy.md](references/deploy.md) |
+| **audit** | "audit responsiveness", "responsiveness-check", "mobile responsiveness", "viewport audit", "touch targets", "overflow check" | Responsive design audits (responsiveness-check), mobile viewports (375px–1920px), touch targets, and code health | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
