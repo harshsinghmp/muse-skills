@@ -39,6 +39,7 @@ when docs drift.
 - Clean Package Syntax: in `<owner>/<repo>#<ref>` specs, never append
   raw commit hashes; keep install commands clean (`npx skills add
   <owner>/<repo>`).
+- Universal Copywriting & SEO/AEO Mandate: Every piece of copy created across the agency (social posts, threads, direct messages, outreach emails, lifecycle sequences, newsletters, blog articles, landing pages, VSLs, and sales collateral) must strictly follow the copywriting formula selector and battle-tested frameworks codified in `content:copy` (`content/references/copy.md`). Furthermore, all public-facing content MUST be actively optimized for both Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: Perplexity, ChatGPT Search, Gemini AI Overviews, Claude) enforcing CORE-EEAT, the 18-token standalone quotability rule, answer-first density under headers, and structured semantic markup.
 - Test gate: `bun test` must pass before any merge.
 
 ## Verification
