@@ -20,7 +20,7 @@ All skills follow a dual-layer architecture:
 | **CLI & Registry** | `npx skills` / `skills.sh` | Global repository discovery & tree installation |
 | **Scaffolding Tooling** | TypeScript / Bun | Strict-mode project OS generation (`NewProject.ts`) |
 | **Validation Suite** | Bash & Node.js | Memory file assertion & JSON schema validation |
-| **Version Control** | Git + Meaningful Commit Protocol | Semantic versioning (`v1.3.0`) with structured changelog |
+| **Version Control** | Git + Meaningful Commit Protocol | Semantic versioning (`v5.16.0`) with structured changelog |
 
 ---
 
@@ -104,9 +104,9 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── refactor-ui/                    # Atomic UI design & interface refactoring engine
+├── refactor/                       # Universal full-stack refactoring engine (7 modes: ui, code, architecture, perf, db, sweep, polish)
 │   ├── agents/openai.yaml          # Agent tool definition
-│   ├── references/                 # 10 Heuristic reference guides
+│   ├── references/                 # 7 mode guides & 10 UI heuristic references
 │   ├── scripts/                    # WCAG contrast calculator & static UI auditor
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
@@ -172,11 +172,36 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── animate/                        # UI motion & animation: 5-mode router, frequency/named-purpose gates (Priority #22)
+├── animate/                        # UI motion & animation: 5-mode router, Three.js WebGL & moving SVGs (Priority #22)
 │   ├── agents/openai.yaml          # Agent tool definition
-│   ├── references/                 # Easing tables, library ladder, per-pattern motion recipes
+│   ├── references/                 # Three.js recipes, easing tables, library ladder
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
+│
+├── design/                         # Website design department head (10 modes: ui, ux, wireframe, logo, brand, etc.)
+├── paidads/                        # Paid advertising department head (10 modes: google, meta, linkedin, etc.)
+├── seo/                            # Search & AEO department head (7 modes: technical, onpage, links, aeo, etc.)
+├── webdev/                         # Web engineering department head (8 modes: frontend, backend, fullstack, accessibility, etc.)
+├── mobile/                         # Mobile app engineering department head (5 modes: ios, android, cross, pwa, aso)
+├── smm/                            # Organic social media department head (7 modes: strategy, content, creator-vetting, etc.)
+├── content/                        # Content studio department head (6 modes: blog, copy, email, video, podcast, etc.)
+├── analytics/                      # Data & analytics department head (5 modes: tracking, dashboards, attribution, cro)
+├── automation/                     # Automation & AI services department head (6 modes: workflow, chatbot, agents, rag, etc.)
+├── devops/                         # Infrastructure & reliability department head (6 modes: hosting, cloudflare, security, etc.)
+├── ops/                            # Agency operations department head (6 modes: onboarding, proposal, contracts, etc.)
+├── growth/                         # Strategy & scaling department head (7 modes: positioning, pricing, launch, referrals)
+├── qa-launch/                      # Pre-launch quality gate (4 modes: matrix, functional, gate, regression)
+├── client-comms/                   # Client communications & triage (4 modes: status, change, handover, feedback)
+├── gtm/                            # Outbound GTM & pipeline department head (5 modes: research, score, outreach, etc.)
+├── incident-response/              # Live incident command (4 modes: triage, mitigate, communicate, retro)
+├── database/                       # Unified database department (5 modes: query, diagnose, index, guard, operate)
+├── telegram/                       # Telegram messaging department (5 modes: notify, approve, hook, route, setup)
+├── research/                       # Client research department head (3 modes: user-research, market-pulse, entity-dossier)
+├── sales-enablement/               # Pre-sale sales enablement department head (4 modes: demo, objection, playbook, etc.)
+├── retain/                         # Post-delivery retention loop head (6 modes: check-in, value-note, qbr, review-ask, etc.)
+├── muse-security/                  # Unified external security workflows & Cloud WAF audit
+├── accounts/                       # Financial operations engine & multi-gateway reconciliation (6 modes)
+├── brand/                          # Client lifecycle & brand governance department head (8 modes + 50-pt intake audit)
 │
 ├── tests/                          # Automated TDD test suite
 │   ├── skills.test.ts              # Catalog, schema, and RFC assertions
