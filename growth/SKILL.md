@@ -1,8 +1,8 @@
 ---
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
-description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, and growth audits — routed through eight modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|audit]"
+description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, and growth audits — routed through nine modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -15,14 +15,14 @@ metadata:
   aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
   suggested_skills: ["analytics", "content", "paidads", "seo"]
   hermes:
-    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt"]
+    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt", "pr", "public-relations", "earned-media", "press-release"]
     related_skills: ["analytics", "content", "paidads", "seo"]
     suggested_skills: ["analytics", "content", "paidads", "seo"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["analytics", "content", "paidads", "seo"]
-    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch"]
+    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch", "press release", "public relations", "media pitch", "crisis comms"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **competitor** | "competitor analysis", "competitive landscape", "market analysis", "who else does this" | Competitor and market analysis with actionable gaps | [references/competitor.md](references/competitor.md) |
 | **referral** | "referral program", "affiliate program", "co-marketing", "refer a friend" | Referral/affiliate/co-marketing program design and partner-fit analysis | [references/referral.md](references/referral.md) |
 | **retention** | "churn", "reduce churn", "retention", "win back", "cancel flow", "dunning" | Churn prevention and renewal strategy (voluntary vs involuntary) | [references/retention.md](references/retention.md) |
+| **pr** | "press release", "public relations", "media pitch", "journalist outreach", "crisis comms", "thought leadership", "earned media" | Media outreach, AP-style press releases, crisis response, and executive bylines | [references/pr.md](references/pr.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
