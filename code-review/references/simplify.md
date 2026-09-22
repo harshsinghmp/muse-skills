@@ -5,6 +5,9 @@
 > complex to hold in your head. Loaded by the `simplify` mode, scoped to
 > **recently-changed code only**.
 
+> [!IMPORTANT]
+> **Strict Execution Policy (On-Demand Only)**: `simplify` mode **NEVER executes automatically** during standard code reviews (`diff`, `hotfix`, `audit`, `contract`, `security`). It must be explicitly invoked by user command (e.g. "simplify this", "make this simpler", "reduce complexity"). Default reviews must NEVER rewrite code or mandate simplifications unprompted.
+
 ## Scope discipline
 
 - Only simplify code that this changeset (or the recent work at hand) introduced or

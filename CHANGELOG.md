@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.23.0] - 2026-09-22
+
+### Changed
+
+- **Strict On-Demand Execution Policy (`code-review:simplify` & `refactor:sweep`)**: Enforced strict governance policies across `code-review` and `refactor` engines guaranteeing that `simplify` and `sweep` execution modes are strictly on-demand. Added explicit warnings and rules in `code-review/SKILL.md`, `code-review/references/simplify.md`, `refactor/SKILL.md`, and `refactor/references/sweep.md` ensuring autonomous agents never trigger behavioral simplifications or codebase-wide component rewiring unprompted.
+
 ## [5.22.0] - 2026-09-22
 
 ### Added

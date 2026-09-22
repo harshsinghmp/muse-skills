@@ -58,12 +58,13 @@ change* — review depth scales with blast radius. Load only the listed referenc
 | **intended** | "does the code match the docs", "intended vs implemented", "access control vs permissions", "audit AI-built code against its spec" | Bind each documented-intent claim to implementation evidence or an explicit mismatch; no hand-wavy findings | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
 | **design** | "is this the right design", "review this design", "soundness check" | Right-problem check from goals/constraints; findings-not-edits; author-vs-critic routing | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
 | **skillscan** | "check this skill before install", "is this agent skill safe", "scan this skill bundle", "pre-install gate" | Ten-category static trust gate over an agent skill bundle (SKILL.md + scripts + metadata + hooks); returns structured PASS/WARN/FAIL naming the category; the supply-chain trust mechanism | [references/skill-bundle-scan.md](references/skill-bundle-scan.md) |
-| **simplify** | "make this simpler", "reduce complexity without changing behavior" | Rule-of-500 behavior-preserving simplification, scoped to recently-changed code only; never expands scope to refactor stable code | [references/simplify.md](references/simplify.md) |
+| **simplify** | "make this simpler", "reduce complexity without changing behavior" | Rule-of-500 behavior-preserving simplification (strictly on-demand, never runs automatically); scoped to recently-changed code only; never expands scope to refactor stable code | [references/simplify.md](references/simplify.md) |
 | **delegate** | "delegate review", "pick a scope and review just that" | Deterministically pick the changed-file scope + resolve the mode, then run the LLM pass over that scope only | [references/delegate.md](references/delegate.md) |
 
 **Token minimization rule**: a mode loads its listed references and nothing else.
 `hotfix` and `contract` never load the theme catalog; `receive` and `fix` never load
-it either — they operate on existing findings, they do not produce new ones.
+it either — they operate on existing findings, they do not produce new ones. `simplify`
+is strictly on-demand and is NEVER executed automatically during standard reviews.
 
 **Rigor ladder** (source: `bjgreenberg/senior-engineering-partner` `references/engineering-workflow.md`, Apache-2.0): match review depth to tier — T0 spike (one-line spec, test-after acceptable, security floor still holds) · T1 MVP (short written spec, test-first on the critical path) · T2 production (written mini-spec + threat-model lines for auth/tenancy/ingestion/billing/secrets surfaces, iron-law TDD, regression test seen red before every fix). Spec-first gate: restate the understanding and get agreement before judging; the spec is the rubric the review checks against.
 
