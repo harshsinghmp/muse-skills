@@ -2,6 +2,9 @@
 
 > **Executive Scope**: Multi-page/multi-view consistency refactoring, eliminating parallel component duplicates, centralizing ad-hoc styling into design tokens, and aligning design system patterns across an entire codebase.
 
+> [!IMPORTANT]
+> **Strict Execution Policy (On-Demand Only)**: `sweep` mode **NEVER executes automatically** during routine refactor passes (`ui`, `code`, `architecture`, `perf`, `database`, `polish`). Sweeping rewires components across the entire codebase and has an extensive blast radius. It must be explicitly requested by user command (e.g. "run a sweep", "sweep consistency", "unify all components"). Automated agents must NEVER trigger a full-codebase sweep unprompted.
+
 ---
 
 ## 1. When to Run a Sweep

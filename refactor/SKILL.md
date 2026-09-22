@@ -48,10 +48,10 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **architecture** | "refactor codebase structure", "decouple modules", "clean architecture", "break circular dependency", "modularize" | Structural refactoring: modular boundaries, separating business logic from UI/framework, domain-driven organization, and dependency inversion | [references/architecture.md](references/architecture.md) |
 | **perf** | "optimize performance", "refactor for speed", "reduce bundle size", "fix memory leak", "perf refactor" | Runtime & build refactoring: algorithmic efficiency ($O(n^2) \rightarrow O(n)$), tree-shaking, component memoization, dynamic imports, and Core Web Vitals optimization | [references/perf.md](references/perf.md) |
 | **database** | "refactor schema", "zero-downtime migration", "normalize tables", "fix N+1 queries", "db refactor" | Data layer refactoring: non-breaking column migrations, query optimization, indexing strategy, and ORM query batching | [references/database.md](references/database.md) |
-| **sweep** | "sweep consistency", "unify all pages", "standardize components across app", "design consistency" | Multi-page consistency refactoring: sweeping duplicate components into single sources of truth, aligning button styles, cards, and patterns across the app | [references/sweep.md](references/sweep.md) |
+| **sweep** | "sweep consistency", "unify all pages", "standardize components across app", "design consistency" | Multi-page consistency refactoring (strictly on-demand, never runs automatically): sweeping duplicate components into single sources of truth, aligning button styles, cards, and patterns across the app | [references/sweep.md](references/sweep.md) |
 | **polish** | "final polish before release", "clean up deprecated code", "pre-merge polish", "ship readiness" | Pre-launch refactoring pass: dead-letter triage, deprecated API cleanup, lint/formatting sweep, and edge-case hardening | [references/polish.md](references/polish.md) |
 
-Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
+Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run. Note: `sweep` mode carries codebase-wide blast radius and is strictly on-demand; automated agents must never run it automatically without explicit user direction.
 
 ---
 
