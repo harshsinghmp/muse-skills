@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.19.0] - 2026-09-22
+
+### Added
+
+- **Public Relations & Crisis Communications Engine (`growth:pr`)**: Consolidated `agency-pr-communications-manager` into `growth` as its 9th operational mode (`growth/references/pr.md`). Includes AP-style newswire release frameworks, 3-paragraph journalist pitching rules, 30-minute crisis communications holding statements (P1–P4 triage), and executive thought leadership byline templates.
+
 ## [5.18.0] - 2026-09-22
 
 ### Added
