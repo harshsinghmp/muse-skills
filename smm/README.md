@@ -1,6 +1,6 @@
 # 📣 smm
 
-The organic social department head: one skill, seven modes — strategy, calendar, content, community, influencer, ugc, analytics. Platform-native strategy, then a repeatable publishing and community engine.
+The organic social department head: one skill, ten modes — strategy, calendar, content, community, influencer, ugc, analytics, postiz, carousel, audit. Platform-native strategy, viral carousels, and multi-channel publishing.
 
 ## Install
 

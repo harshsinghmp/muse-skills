@@ -1,41 +1,83 @@
-# Skill Authoring Specification (RFC)
+# Skill Authoring Specification (RFC Standard)
 
-This document establishes the official standard for authoring, structuring, and maintaining skills in the `**muse-skills**` repository.
+> **The Danny Iny 6+1 Standard for Autonomous Agent Extensibility**: Context, Attention, Desire, The Gap, Solution, Call to Action + Credibility.
+
+This specification establishes the official technical standard for authoring, structuring, and verifying portable skills within the `muse-skills` ecosystem.
 
 ---
 
-## 1. Directory Anatomy
+## 🌐 1. Context (The Fragmented Agent Landscape)
 
-Every skill must reside in its own dedicated directory at the repository root:
+Over the past two years, the AI developer landscape has fractured across dozens of competing agent harnesses—Claude Code, OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Hermes, Aider, and Cline. Each harness attempts to solve agent capabilities through proprietary configuration formats, ad-hoc system prompts, or complex SDK wrappers.
 
-```
+When developers build agent capabilities as ad-hoc markdown files or custom python plugins, those capabilities are permanently trapped inside a single runtime.
+
+---
+
+## ⚡ 2. Attention (One Universal Skill Contract)
+
+The `muse-skills` RFC establishes a **pure, vendor-neutral skill standard**.
+
+Every capability in this repository is packaged as an independent, deterministic folder containing human-readable Markdown instructions, standardized YAML frontmatter, machine-readable tool schemas, and executable verification scripts.
+
+By adhering to this standard, your skill operates natively across **80+ agent harnesses** with zero translation layers, zero API lock-in, and zero external dependencies.
+
+---
+
+## 🎯 3. Desire (The Autonomous Ideal State)
+
+Imagine authoring a complex engineering workflow—such as Cloudflare edge deployment, 6-slide viral carousel generation, or Linus Torvalds-style code auditing—**exactly once**.
+
+Once authored:
+- Any AI agent instantly discovers it via natural language triggers.
+- Multi-harness exporters automatically compile it into native slash commands (`/<skill>`, `/<skill>:<mode>`).
+- Central dispatchers (`secretary:dispatch`) automatically route tasks to it without user prompt gymnastics.
+- Verification gates enforce that the agent cannot claim completion until real tests pass.
+
+---
+
+## ⚠️ 4. The Gap (Why Raw Prompts Fail)
+
+Vanilla system prompts and unstructured markdown fail in production due to four structural flaws:
+
+| Flaw | How It Breaks in Production | The Muse RFC Remedy |
+|:---|:---|:---|
+| **Context Pollution** | Monolithic prompt files consume 20k+ tokens on load, causing prompt cache eviction. | **Progressive Disclosure**: SKILL.md acts as a lean contract; deep reference playbooks load only on-demand per mode. |
+| **Silent Drift** | Prompts describe tools or options that no longer exist in code. | **Tri-File Byte Parity**: Automated tests enforce byte parity across `SKILL.md`, `skills.json`, and `llms.txt`. |
+| **Premature Success** | Agents hallucinate that tasks worked without executing proof commands. | **Mandatory `## Verification` Gate**: Tasks require executable terminal receipts before sign-off. |
+| **Tool Lock-in** | Prompts depend on harness-specific API calls. | **Modern-Tool Primacy**: Standard shell utilities (`rg`, `fd`, `bat`, `eza`, `bun`) with POSIX fallbacks. |
+
+---
+
+## 🏗️ 5. Solution (The 6-Part Architectural Anatomy)
+
+Every skill must reside in a dedicated root directory conforming to this exact anatomy:
+
+```text
 <skill-name>/
 ├── agents/
-│   └── openai.yaml         # Tool parameter schema for OpenAI/Codex/Cursor
-├── examples/               # (Optional but recommended) Concrete input/output artifacts
+│   └── openai.yaml         # Tool parameter schema for OpenAI, Codex, and Cursor
+├── examples/               # (Recommended) Concrete input/output working papers
 │   └── sample-<name>.md
-├── references/             # (Optional) Supporting deep architectural references
-│   └── reference-doc.md
-├── scripts/                # (Optional) Executable validation or generation scripts
-│   └── helper-script.sh
-├── README.md               # User-facing summary & installation guide
+├── references/             # Mode playbooks and deep architectural guides
+│   ├── <mode-1>.md
+│   └── <mode-2>.md
+├── scripts/                # (Optional) Executable TypeScript / Bash verification scripts
+│   └── <utility>.ts
+├── README.md               # User-facing manual, modes table & installation guide
 └── SKILL.md                # The definitive agent operational prompt
 ```
 
----
+### A. Frontmatter Standard (Hermes Extended Schema)
 
-## 2. Frontmatter Standard (Hermes Extended Schema)
-
-Every `SKILL.md` must begin with YAML frontmatter conforming to this schema:
+Every `SKILL.md` must begin with YAML frontmatter matching this schema:
 
 ```yaml
 ---
 name: <skill-name>
-description: "<Brief 1-2 sentence trigger and capability summary shown in search results>"
-version: 1.0.0
-author: Harsh Singh
-license: MIT
-platforms: [macos, linux, windows]
+description: "<Trigger-rich summary covering when to invoke, what is delivered, and boundaries>"
+argument-hint: "[mode] [flags]"
+user-invocable: true
 metadata:
   hermes:
     tags: [tag1, tag2, tag3]
@@ -44,55 +86,45 @@ metadata:
 ---
 ```
 
-### Field Definitions:
+### B. Standard Markdown Body Structure
 
-- `**name**` *(string, required)*: Kebab-case unique identifier matching directory name.
-- `**description**` *(string, required)*: Clear trigger condition and action summary.
-- `**version**` *(string, required)*: Semantic version (`1.0.0`).
-- `**author**` *(string, required)*: Skill author (`Harsh Singh`).
-- `**license**` *(string, required)*: License (`MIT`).
-- `**platforms**` *(array of strings, optional)*: Supported OS platforms (`[macos, linux, windows]`).
-- `**metadata.hermes**` *(object, optional)*: Hermes-specific metadata namespace.
-  - `tags`: Classification tags.
-  - `related_skills`: Companion skills in the catalog.
-  - `requires_tools`: Specific tool capabilities required by the skill.
+The body of `SKILL.md` must adhere to these 6 mandatory sections:
+
+1. **`# <Icon> <skill-name> — <Concise Subtitle>`**: Overview defining the purpose and operational scope.
+2. **`## When to Use`**: Explicit trigger keywords, natural language patterns, and anti-triggers (when *not* to use).
+3. **`## Quick Reference`**: Scannable markdown table summarizing modes, deliverable artifacts, and flags.
+4. **`## Procedure`**: Chronological, numbered steps with concrete command examples and deterministic targets.
+5. **`## Pitfalls`**: Catalog of known failure modes, negative boundaries, and anti-rationalizations.
+6. **`## Verification`**: Executable commands and assertions the agent must satisfy before declaring completion.
 
 ---
 
-## 3. Required Markdown Sections
+## 🚀 6. Call to Action (Authoring & Verification Workflow)
 
-The body of `SKILL.md` must adhere to these 5 standard sections:
+Follow these steps to scaffold and validate a new skill:
 
-### `# <Icon> <skill-name> — <Concise Subtitle>`
+```bash
+# 1. Initialize skill directory from template
+mkdir -p my-skill/{agents,references,examples,scripts}
 
-Introductory overview defining the purpose and operational scope of the skill.
+# 2. Populate canonical assets (SKILL.md, README.md, agents/openai.yaml)
+# Ensure SKILL.md has valid frontmatter and required sections
 
-### `## When to Use`
+# 3. Register skill in skills.json and synchronize manifests
+bun run sync-dispatch
 
-Explicit trigger conditions and anti-triggers (when *not* to use).
-
-### `## Quick Reference`
-
-Scannable markdown table summarizing modes, taxonomy, parameter combinations, or command cheat-sheets.
-
-### `## Procedure`
-
-Numbered, step-by-step instructions the agent follows during execution. Must include concrete command examples, file targets, and deterministic steps.
-
-### `## Pitfalls`
-
-Catalog of known failure modes, anti-rationalizations, and constraints (e.g., negative boundaries, forbidden paths, anti-patterns).
-
-### `## Verification`
-
-Explicit assertions, validation commands, or checklists the agent must execute and satisfy before declaring the task complete.
+# 4. Verify compliance against repository test contracts
+bun test tests/skills.test.ts
+```
 
 ---
 
-## 4. Flagship Skill Ordering Invariant
+## 🛡️ +1. Credibility (Automated Verification Contracts)
 
-`new-project` and `updateagents` are the foundational flagship skills of the `muse-skills` catalog.
+This specification is not mere documentation; it is an **executable contract**.
 
-- In `skills.json`, `new-project` must always be index `0`, and `updateagents` must be index `1`.
-- In `README.md`, `new-project` and `updateagents` must always appear first in the Quick Start, Available Skills Table, and Detailed Breakdown.
-
+Every pull request is automatically verified by `tests/skills.test.ts` against the following assertions:
+- **Byte-Parity Assertion**: The `description` in `SKILL.md`, `skills.json`, and `llms.txt` must match byte-for-byte.
+- **Section Integrity**: Every `SKILL.md` must contain `## When to Use`, `## Quick Reference`, and `## Verification`.
+- **Mode Resolution**: Every mode listed in a skill's Quick Reference table must have a corresponding file in `references/<mode>.md`.
+- **Zero-Drift Dispatch**: `secretary/references/dispatch.md` must remain in exact synchronization with the catalog.

@@ -1,6 +1,6 @@
 # 🛠️ webdev
 
-The web engineering department head: one skill, twelve modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy. Stack-agnostic: uses what the project uses.
+The web engineering department head: one skill, fifteen modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, onboard, audit. Stack-agnostic: uses what the project uses.
 
 ## Install
 
@@ -36,6 +36,9 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 | **spec** | feature specs, build-ready scope | Spec: problem/solution/stories/seams-first/assumptions; human gate per phase. |
 | **implement** | spec-to-shipped builds | Implement: vertical tracer slices, TDD at seams, review chain before done. |
 | **deploy** | app-side ship, static upload | Deploy: one-command full-stack deploy, static-upload fallback, object-storage contract. |
+| **funnel** | sales & conversion funnels | Funnel: high-converting lead capture, upsell/downsell sequences, and order bumps. |
+| **onboard** | developer repo onboarding | Onboard: rapid codebase orientation, architecture map, and first PR readiness. |
+| **audit** | responsive & technical web audit | Audit: mobile responsiveness matrix, touch target audit, and security headers. |
 
 Chain: `prototype` → `spec` → `implement` → `qa-launch` gate. Visual prototyping lives in `design`.
 
