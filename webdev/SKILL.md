@@ -1,8 +1,8 @@
 ---
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
-description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, deploy, and responsive audits — routed through thirteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|deploy|audit]"
+description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, deploy, and responsive audits — routed through fourteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|deploy|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -50,6 +50,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **prototype** | "spike this", "is this approach feasible", "riskiest unknown first", "throwaway probe" | Riskiest-technical-unknown-first throwaway tracer → proven/disproven/needs-probe verdict; code never ships | [references/prototype.md](references/prototype.md) |
 | **spec** | "write the spec", "spec this feature", "ready-for-agent", "scope this build", "spec-miner", "reverse engineer" | Build-ready spec packet and legacy code reverse-engineering (EARS format, Arch Hat vs QA Hat, deep seams); human gate per phase | [references/spec.md](references/spec.md) |
 | **implement** | "implement the spec", "build from spec", "tracer slices", "ship this story" | Spec-to-shipped tracer slices (one test → one impl); Simplicity-First; review chain before done | [references/implement.md](references/implement.md) |
+| **onboard** | "onboard", "oinboard", "codebase onboarding", "orient", "explain this repo", "explore codebase" | Rapid codebase orientation, execution path tracing, mental models, and repository exploration without speculation | [references/onboard.md](references/onboard.md) |
 | **deploy** | "ship the build", "static upload", "one-command deploy", "deploy the frontend" | App-side ship: one-command full-stack deploy, static-upload fallback, object-storage contract (pipelines live in `devops`) | [references/deploy.md](references/deploy.md) |
 | **audit** | "audit responsiveness", "responsiveness-check", "mobile responsiveness", "viewport audit", "touch targets", "overflow check" | Responsive design audits (responsiveness-check), mobile viewports (375px–1920px), touch targets, and code health | [references/audit.md](references/audit.md) |
 
