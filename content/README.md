@@ -1,6 +1,6 @@
 # ✍️ content
 
-The content studio department head: one skill, seven modes — blog, copy, email, video, case-study, humanize, launch. Source-anchored writing, then an editorial pass that keeps it human.
+The content studio department head: one skill, nine modes — blog, copy, email, video, case-study, humanize, launch, podcast, audit. Source-anchored writing, then an editorial pass that keeps it human.
 
 ## Install
 
@@ -17,7 +17,7 @@ Write a 1,500-word SEO blog post on React Server Components for our dev blog.
 ```
 
 ```text
-Draft a 5-email onboarding sequence and a launch case study for our SaaS.
+Record a podcast episode outline with broadcast engineering standards, or run a copywriting audit.
 ```
 
 ## Modes
@@ -31,6 +31,8 @@ Draft a 5-email onboarding sequence and a launch case study for our SaaS.
 | **case-study** | customer case study | Case study: a before/after customer story with real numbers and a quote. |
 | **humanize** | prose humanization | Humanize: strip AI-sounding patterns while locking facts and voice. |
 | **launch** | product / feature launch | Launch: headline, offer, key messages, and channel-ready assets. |
+| **podcast** | podcast script & audio engineering | Podcast: multi-segment interview/solo scripts with EBU R128 loudness standards. |
+| **audit** | content & copy audit | Audit: readability metrics, hook strength, and conversion leak detection. |
 
 ## How it works
 

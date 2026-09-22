@@ -1,6 +1,6 @@
 # Database — for the humans who run this skill.
 
-This directory is the database department for the agency: query read-only, diagnose slow queries, design indexes, guard rows with RLS, and keep production healthy — across Postgres, MySQL, MSSQL, and SQLite, through five modes.
+This directory is the database department for the agency: query read-only, diagnose slow queries, design indexes, guard rows with RLS, operate infrastructure, and tune parameters — across Postgres, MySQL, MSSQL, and SQLite, through six modes.
 
 ## What you get
 
