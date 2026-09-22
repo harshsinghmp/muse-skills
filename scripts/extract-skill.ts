@@ -69,7 +69,7 @@ export interface ExtractionOptions {
 
 export interface GateResult {
   ok: boolean;
-  gate: "recurrence" | "verification" | "generalization";
+  gate: "recurrence" | "verification" | "generalization" | "tdd";
   message: string;
 }
 
