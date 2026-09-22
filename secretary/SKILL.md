@@ -1,10 +1,10 @@
 ---
 name: secretary
-aliases: ["secretary-controller","staff-controller","approval-gate"]
-description: "Evidence-grounded staff-work controller and approval gate for high-stakes decisions, executive briefs, memos, and outbound actions. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest."
-argument-hint: "executive brief, approval gate, socratic review"
+aliases: ["secretary-controller","staff-controller","approval-gate","agency-dispatcher","chief-of-staff","session-router"]
+description: "Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. On session launch or incoming work, triages user intent across 46 canonical agency departments, maps Council Leads (Sol, Jasper, Crew, Nexus), and selectively loads mode playbooks with minimal token overhead. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest."
+argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"
 user-invocable: true
-version: 1.4.0
+version: 1.5.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,24 +12,34 @@ category: context-orchestration
 metadata:
   category: context-orchestration
   priority: 13
-  aliases: ["secretary-controller","staff-controller","approval-gate"]
+  aliases: ["secretary-controller","staff-controller","approval-gate","agency-dispatcher","chief-of-staff","session-router"]
   suggested_skills: ["evidence-ledger","coupling-router","gauntlet-loop","code-review"]
   hermes:
-    tags: [staff-work, executive-brief, approval-gate, governance, decision-memo, evidence, hash-approval, socratic-lens, adversarial-review, dissent-preservation, teachback, two-stage-review, replan, handover, wave-dispatch, task-ledger, handoff-harvest]
+    tags: [staff-work, executive-brief, approval-gate, governance, decision-memo, evidence, hash-approval, socratic-lens, adversarial-review, dissent-preservation, teachback, two-stage-review, replan, handover, wave-dispatch, task-ledger, handoff-harvest, dispatch, agency-directory]
     related_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
     suggested_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
   openclaw:
     category: context-orchestration
     suggested_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
-    primary_triggers: ["prepare staff packet","executive memo","request approval hash","socratic review","dispatch subagent with teachback","review delegated work","replan invalidated plan","orient briefing","session handover","dispatch wave","task ledger status"]
+    primary_triggers: ["prepare staff packet","executive memo","request approval hash","socratic review","dispatch subagent with teachback","review delegated work","replan invalidated plan","orient briefing","session handover","dispatch wave","task ledger status","agency dispatch","session launch","triage request"]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
-# 📑 Secretary Controller — Evidence-Grounded Staff-Work Controller
+# 📑 Secretary Controller — Evidence-Grounded Staff-Work Controller & Agency Dispatcher
 
-> Controls high-stakes staff work (executive briefs, decision memos, architecture governance, outbound comms). Enforces the iron doctrine of *Judgment, not authority*: agents synthesize evidence, stress-test proposals through a mandatory Socratic adversarial challenge (3-prong devil's advocate), preserve contradictions and uncertainties, and halt at an unyielding cryptographic single-use SHA-256 hash approval gate before committing any real-world changes.
+> Controls high-stakes staff work and universal agency dispatch. On session launch or intake, triages requests against 46 canonical departments, maps the governing Council Lead (**Sol**, **Jasper**, **Crew**, **Nexus**), and loads only the required mode playbook. Enforces the iron doctrine of *Judgment, not authority*: agents synthesize evidence, stress-test proposals through a mandatory Socratic adversarial challenge (3-prong devil's advocate), preserve contradictions and uncertainties, and halt at an unyielding cryptographic single-use SHA-256 hash approval gate before committing any real-world changes.
+
+---
+
+## Operating Modes
+
+| Mode | Purpose | Reference Document |
+| :--- | :--- | :--- |
+| **dispatch** | Universal Agency Department Directory, intent triage, Council Lead assignment, and progressive disclosure routing. | `references/dispatch.md` |
+| **socratic** | Socratic Adversarial Stress-Testing, 3-prong devil's advocate challenge, and dissent preservation. | `references/socratic-adversarial-gate.md` |
+| **staff-work** | Completed Staff Work doctrine, decision memos, frozen evidence verification, and cryptographic hash approval gates. | `references/staff-work-doctrine.md` |
 
 ---
 
@@ -37,7 +47,8 @@ metadata:
 
 ### Trigger Conditions
 Execute this skill when:
-1. **Preparing High-Stakes Staff Work**: Drafting executive summaries, investment/architecture decision memos, RFCs, or principal briefs.
+1. **Session Launch & Agency Routing**: Intake triage across 46 agency departments to resolve the right department skill, operating mode, and Council Lead.
+2. **Preparing High-Stakes Staff Work**: Drafting executive summaries, investment/architecture decision memos, RFCs, or principal briefs.
 2. **Conducting Socratic Adversarial Review**: Subjecting architectural or operational decisions to an uncompromising devil's advocate stress test.
 3. **Mandatory Approval Gates**: Any operation involving irreversible filesystem writes, production deployments, database migrations, or outbound communications.
 4. **Preserving Critical Dissent**: Complex problem spaces where contradictory data, uncertainty, or "no data" gaps must be preserved rather than smoothed over.

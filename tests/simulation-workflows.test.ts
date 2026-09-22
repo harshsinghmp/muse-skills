@@ -872,4 +872,36 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain('"node-root"');
     });
   });
+
+  describe("10. Executive Secretary Controller (secretary) & Universal Dispatcher", () => {
+    const secretaryDir = path.join(REPO_ROOT, "secretary");
+
+    test("secretary SKILL.md registers dispatch mode in frontmatter, aliases, and modes table", () => {
+      const skillPath = path.join(secretaryDir, "SKILL.md");
+      const content = fs.readFileSync(skillPath, "utf8");
+      expect(content).toContain("agency-dispatcher");
+      expect(content).toContain("session-router");
+      expect(content).toContain("| **dispatch** |");
+      expect(content).toContain("references/dispatch.md");
+      expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
+    });
+
+    test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
+      const refPath = path.join(secretaryDir, "references", "dispatch.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("Sol");
+      expect(ref).toContain("Jasper");
+      expect(ref).toContain("Crew");
+      expect(ref).toContain("Nexus");
+      expect(ref).toContain("5-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("Progressive Disclosure Loading");
+      expect(ref).toContain("webdev");
+      expect(ref).toContain("design");
+      expect(ref).toContain("smm");
+      expect(ref).toContain("devops");
+      expect(ref).toContain("ops");
+      expect(ref).toContain("code-review");
+    });
+  });
 });

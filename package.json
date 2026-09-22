@@ -60,6 +60,8 @@
   },
   "scripts": {
     "extract-skill": "bun scripts/extract-skill.ts",
+    "export-commands": "bun scripts/export-commands.ts",
+    "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
     "validate": "bash updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && ruff check scripts/",
