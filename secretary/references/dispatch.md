@@ -17,6 +17,7 @@ Every routed task is governed by one of four specialized Council Leads:
 
 ---
 
+<!-- agency-directory:start -->
 ## 📋 Canonical 46-Department Agency Directory
 
 When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.
@@ -25,27 +26,29 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 | Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
 | :--- | :--- | :--- | :--- | :--- |
-| **`webdev`** | `frontend`, `backend`, `fullstack`, `api`, `state`, `styling`, `forms`, `seo`, `perf`, `testing`, `a11y`, `spec`, `onboard`, `funnel`, `audit` | **Sol** | Web applications, components, APIs, Next.js, React, Astro, forms, sales funnels, checkout flows, onboarding. | `webdev/references/<mode>.md` |
-| **`design`** | `brand`, `tokens`, `ui`, `logo`, `cip`, `presentation`, `banner`, `icon`, `social`, `print`, `3d`, `color`, `typography`, `layout`, `uikit`, `saas`, `ux`, `story`, `asset`, `audit` | **Jasper** | UI design, component styling, color palettes, typography, design systems, SaaS landing pages, UX flows, image assets. | `design/references/<mode>.md` |
-| **`content`** | `blog`, `social`, `email`, `video`, `ad`, `landing`, `case-study`, `whitepaper`, `script`, `pr`, `podcast`, `copy`, `audit` | **Jasper** | Copywriting, blog posts, video scripts, HeyFrames AI editing, broadcast podcast audio, email sequences. | `content/references/<mode>.md` |
-| **`smm`** | `strategy`, `calendar`, `content`, `community`, `influencer`, `ugc`, `analytics`, `postiz`, `carousel`, `audit` | **Jasper** | Social media planning, editorial calendars, Postiz multi-channel scheduling, autonomous 6-slide TikTok/Instagram carousels. | `smm/references/<mode>.md` |
-| **`seo`** | `technical`, `onpage`, `keyword`, `content-gap`, `backlink`, `local`, `programmatic`, `schema`, `analytics`, `aeo`, `audit` | **Jasper** | Search engine optimization, schema markup, technical crawling, AEO (Perplexity/ChatGPT/Gemini AI Overviews) citation share. | `seo/references/<mode>.md` |
-| **`brand`** | `discovery`, `intake`, `identity`, `voice`, `guidelines`, `audit`, `brief`, `accounts-access`, `pipeline`, `ecommerce`, `offboard` | **Crew & Jasper** | Client onboarding, brand identity discovery, voice and tone, zero-leak credential delegation, 50-point intake audit. | `brand/references/<mode>.md` |
-| **`mobile`** | `cross-platform`, `native-ios`, `native-android`, `design`, `performance`, `offline`, `push`, `biometrics`, `app-store`, `aso`, `audit` | **Sol** | React Native, Expo, Flutter, iOS Swift, Android Kotlin, App Store Optimization (ASO), offline sync, push notifications. | `mobile/references/<mode>.md` |
-| **`ops`** | `onboarding`, `proposal`, `sow`, `milestone`, `retro`, `multi-client`, `vendor`, `obsidian`, `audit` | **Crew** | Client operations, SOW generation, milestone pacing, multi-client isolation, Obsidian PKM vaults, OFM syntax, JSON Canvas. | `ops/references/<mode>.md` |
-| **`accounts`** | `invoicing`, `bookkeeping`, `reconcile`, `client-pnl`, `tax-compliance`, `cashflow`, `audit` | **Crew** | Agency financial ops, Stripe/Razorpay clearing accounts, EHR margin calculation, tax zero-rating, gateway reconciliation. | `accounts/references/<mode>.md` |
-| **`devops`** | `ci-cd`, `docker`, `kubernetes`, `terraform`, `monitoring`, `security`, `cost`, `serverless`, `cloudflare`, `audit` | **Sol** | CI/CD pipelines, Docker, Kubernetes, Terraform, Cloudflare Workers, Pages, Zero Trust tunnels, Wrangler v4 CLI bindings. | `devops/references/<mode>.md` |
-| **`database`** | `schema`, `migrate`, `query`, `index`, `backup`, `redis`, `nosql`, `timeseries`, `vector-search`, `optimize`, `audit` | **Sol** | PostgreSQL, MySQL, SQLite, Drizzle/Prisma, D1, Redis, vector search (SQ/PQ/BQ), connection pooling, query optimization. | `database/references/<mode>.md` |
-| **`animate`** | `svg`, `canvas`, `webgl`, `css`, `gsap`, `scroll`, `micro`, `diagram`, `delight`, `audit` | **Jasper** | GSAP animations, interactive SVGs, WebGL shaders, zero-JS technical diagrams, micro-interactions, delight/confetti. | `animate/references/<mode>.md` |
-| **`growth`** | `funnel`, `retention`, `referral`, `viral`, `activation`, `analytics`, `launch`, `pr`, `audit` | **Jasper & Crew** | Growth hacking, Product Hunt launches, referral loops, viral loops, media outreach, press releases, crisis comms. | `growth/references/<mode>.md` |
-| **`gtm`** | `icp`, `positioning`, `pricing`, `launch`, `enablement`, `partnerships`, `metrics`, `audit` | **Crew** | Go-to-market strategies, ICP definitions, tiered pricing structures, channel partner roadmaps. | `gtm/references/<mode>.md` |
-| **`retain`** | `onboarding`, `health`, `churn`, `expansion`, `nps`, `advocacy`, `renewal`, `audit` | **Crew** | Client retention, health scoring, churn prevention, expansion proposals, account renewal playbooks. | `retain/references/<mode>.md` |
-| **`sales-enablement`** | `battlecards`, `decks`, `demos`, `objections`, `one-pagers`, `proposals`, `metrics`, `audit` | **Crew** | Sales pitch decks, competitor battlecards, objection handling playbooks, interactive product demos. | `sales-enablement/references/<mode>.md` |
-| **`paidads`** | `strategy`, `meta`, `google`, `tiktok`, `linkedin`, `creative`, `landing`, `analytics`, `audit` | **Crew & Jasper** | Paid advertising campaigns, Meta Ads, Google Search/Performance Max, TikTok Ads, ad creative copy. | `paidads/references/<mode>.md` |
-| **`automation`** | `relay`, `pipeline`, `webhook`, `scheduler`, `n8n`, `zapier`, `bot`, `audit` | **Sol** | Headless browser relay, n8n/Zapier workflows, authenticated browser session scraping, automated webhooks. | `automation/references/<mode>.md` |
-| **`telegram`** | `bot`, `mini-app`, `channel`, `webhook`, `payment`, `auth`, `audit` | **Sol** | Telegram bots, Telegram Mini Apps (TMA), TON wallet integrations, channel broadcast bots. | `telegram/references/<mode>.md` |
-| **`client-comms`** | `status`, `handoff`, `blocker`, `review-request`, `decision`, `audit` | **Crew** | Factual client reporting grounded in verified Git evidence, formal handoffs, decision documentation. | `client-comms/references/<mode>.md` |
-| **`incident-response`**| `triage`, `mitigate`, `rca`, `postmortem`, `runbook`, `audit` | **Nexus** | Production outages, security breaches, rapid rollback procedures, Root Cause Analysis (RCA). | `incident-response/references/<mode>.md` |
+| **`design`** | `branding`, `graphics`, `logo`, `prototype`, `slides`, `socials`, `story`, `ui`, `uikit`, `ux`, `wireframe` | **Jasper** | Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, and visual storytelling — routed through ten modes. | `design/references/<mode>.md` |
+| **`paidads`** | `audit`, `extra-platforms`, `google`, `linkedin`, `meta`, `programmatic`, `reddit`, `retargeting`, `snapchat`, `tiktok`, `youtube` | **Crew & Jasper** | Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, budget pacing, and account audits — routed through ten modes. | `paidads/references/<mode>.md` |
+| **`seo`** | `aeo`, `audit`, `content`, `links`, `local`, `onpage`, `technical` | **Jasper** | Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. | `seo/references/<mode>.md` |
+| **`webdev`** | `accessibility`, `audit`, `backend`, `cms`, `deploy`, `ecommerce`, `frontend`, `fullstack`, `funnel`, `implement`, `migrations`, `onboard`, `performance`, `prototype`, `security-headers`, `spec` | **Sol** | Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. | `webdev/references/<mode>.md` |
+| **`mobile`** | `android`, `aso`, `audit`, `cross`, `ios`, `pwa` | **Sol** | Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization — routed through five modes. | `mobile/references/<mode>.md` |
+| **`smm`** | `analytics`, `audit`, `calendar`, `carousel`, `community`, `content`, `creator-vetting`, `influencer`, `postiz`, `social-intel`, `strategy`, `ugc` | **Jasper** | Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics — routed through ten modes. | `smm/references/<mode>.md` |
+| **`content`** | `audit`, `blog`, `case-study`, `copy`, `email`, `humanize`, `launch`, `podcast`, `thumbnails`, `video`, `voice-archetypes` | **Jasper** | Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. | `content/references/<mode>.md` |
+| **`analytics`** | `attribution`, `audit`, `cro`, `dashboards`, `reporting`, `tracking` | **Nexus** | Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through five modes. | `analytics/references/<mode>.md` |
+| **`automation`** | `agents`, `browser-relay`, `chatbot`, `integrations`, `prompt`, `rag`, `workflow` | **Sol** | Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through six modes. | `automation/references/<mode>.md` |
+| **`devops`** | `cicd`, `cloudflare`, `domains`, `hosting`, `incident`, `monitoring`, `security` | **Sol** | Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. | `devops/references/<mode>.md` |
+| **`ops`** | `audit`, `contracts`, `meeting-notes`, `milestone`, `multi-client`, `obsidian`, `onboarding`, `product-marketing-template`, `proposal`, `retro`, `sow`, `vendor` | **Crew** | Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, and Obsidian PKM vault workflows (wikilinks, callouts, frontmatter properties, embeds, CLI automation, and plugin debugging) — routed through nine modes. | `ops/references/<mode>.md` |
+| **`growth`** | `affiliates-referrals`, `audit`, `competitor`, `funnels`, `launch`, `positioning`, `pr`, `pricing`, `referral`, `retention` | **Jasper & Crew** | Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, and growth audits — routed through nine modes. | `growth/references/<mode>.md` |
+| **`qa-launch`** | `audit`, `functional`, `gate`, `matrix`, `regression` | **Nexus** | Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through four modes. | `qa-launch/references/<mode>.md` |
+| **`client-comms`** | `change`, `factual-reporting`, `feedback`, `handover`, `inbox-triage`, `status` | **Crew** | Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through four modes. | `client-comms/references/<mode>.md` |
+| **`gtm`** | `audit`, `handover`, `list`, `outreach`, `research`, `score` | **Crew** | Outbound GTM department: account and lead research, lead scoring with TAM and SAM sizing, cold email sequencing with deliverability, list building with hygiene and enrichment, and sales handover with context packets, routed through five modes. | `gtm/references/<mode>.md` |
+| **`incident-response`** | `communicate`, `mitigate`, `retro`, `triage` | **Nexus** | Live incident command: severity triage with first-15-minutes checklist, stop-the-bleeding mitigation playbooks for outage breach data-loss and perf-collapse, severity-linked status-page and client communication, and blameless postmortem with tracked actions, routed through four modes. | `incident-response/references/<mode>.md` |
+| **`database`** | `analytical`, `audit`, `diagnose`, `guard`, `index`, `operate`, `optimize`, `query`, `tuning`, `vector-search` | **Sol** | Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through six modes. | `database/references/<mode>.md` |
+| **`telegram`** | `approve`, `hook`, `notify`, `route`, `setup` | **Sol** | Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. | `telegram/references/<mode>.md` |
+| **`research`** | `audit`, `competitor-analysis`, `entity-dossier`, `market-pulse`, `user-research` | **Sol & Jasper** | Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through three modes. | `research/references/<mode>.md` |
+| **`sales-enablement`** | `audit`, `demo`, `objection`, `one-pager`, `playbook` | **Crew** | Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks — routed through four modes. | `sales-enablement/references/<mode>.md` |
+| **`retain`** | `check-in`, `churn-watch`, `qbr`, `referral-rebuy`, `review-ask`, `value-note` | **Crew** | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals — routed through six modes. | `retain/references/<mode>.md` |
+| **`accounts`** | `audit`, `bookkeeping`, `cashflow`, `client-pnl`, `invoicing`, `tax-compliance` | **Crew** | Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. | `accounts/references/<mode>.md` |
+| **`brand`** | `accounts-access`, `audit`, `brief`, `ecommerce`, `intake`, `offboard`, `persona`, `pipeline`, `research` | **Crew & Jasper** | Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes. | `brand/references/<mode>.md` |
 
 ---
 
@@ -53,11 +56,11 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
-| **`secretary`** | Staff work controller, Socratic devil's advocate, approval hash gate, delegation control, and agency dispatch. | **Nexus & Sol** |
-| **`coupling-router`**| Multi-agent file contention prevention, worktree lease arbitration, cross-repo dependency routing. | **Sol** |
-| **`dead-letter`** | Quarantine and post-mortem triage for failed subagent tasks, truncated outputs, and unhandled errors. | **Nexus** |
-| **`context-anchor`** | Anti-hallucination context grounding, file-backed invariant preservation, compact task state recovery. | **Sol** |
-| **`evidence-ledger`**| Persistent immutable ledger of architectural decisions, client commitments, and verified benchmark claims. | **Crew & Nexus** |
+| **`relay`** | Bidirectional agent handoff and session resumption engine with ambient continuity. | **Sol** |
+| **`context-anchor`** | Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. | **Sol** |
+| **`coupling-router`** | Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. | **Sol & Nexus** |
+| **`secretary`** | Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. | **Nexus & Sol** |
+| **`evidence-ledger`** | Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. | **Crew & Nexus** |
 
 ---
 
@@ -65,12 +68,11 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
-| **`new-project`** | The **DOX Engine**: Scaffolds `AGENTS.md`, 9-folder `.agents/` container, 12 modular standards, brand tokens. | **Sol** |
-| **`updateagents`** | Project OS memory synchronizer, global atom governance, and pre-merge Gate 4 TDD test protocol enforcement. | **Nexus** |
-| **`updatedocs`** | Code-synchronized living documentation engine: keeps README, architecture, and API docs aligned with git diffs. | **Sol** |
-| **`clean-system-cache`**| Safe multi-platform developer, designer, and browser cache purge across 15+ package managers and IDEs. | **Sol** |
-| **`relay`** | Cross-workspace authenticated browser bridge and token-safe data pipeline. | **Sol** |
-| **`research`** | Deep codebase survey, architecture discovery, and external documentation synthesis. | **Sol & Jasper** |
+| **`updatedocs`** | Project-wide documentation synchronization, drift detection, and governance engine. | **Sol** |
+| **`updateagents`** | Synchronize AI-agent instructions and project context with the actual current state of the workspace. | **Nexus** |
+| **`git`** | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. | **Nexus** |
+| **`new-project`** | Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. | **Sol** |
+| **`ai-ready`** | Comprehensive repository AI-readiness auditor and scaffolding engine. | **Nexus** |
 
 ---
 
@@ -78,26 +80,34 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
-| **`code-review`** | Linus Torvalds-style rigorous code auditing: boundary governance, concurrency, minimal diffs, on-demand simplify. | **Nexus** |
-| **`qa-launch`** | Multi-gate launch verification: unit/e2e testing, build verification, responsive viewport matrix, zero-secret scan. | **Nexus** |
-| **`muse-security`** | Enterprise security suite: CVE vulnerability scoring, automated remediation, Cloud WAF, SAST, runtime protection. | **Nexus** |
-| **`audit`** | Deep systematic codebase health checks, dependency drift analysis, financial leakage checks, dead code audits. | **Nexus** |
-| **`refactor`** | 7-mode surgical refactoring engine: extract, inline, rename, simplify, modernize, decouple, on-demand sweep. | **Sol & Nexus** |
-| **`pua`** | Pure Universal Architecture: functional purity, deterministic state machines, boundary decoupling, testability. | **Sol** |
-| **`git`** | Meaningful Git Commit Protocol, atomic PR per skill, branch lifecycle, conventional release tagging. | **Nexus** |
-| **`ai-ready`** | Workspace AI-friendliness auditor: semantic file layout, llms.txt generation, prompt discoverability. | **Nexus** |
-| **`humanize`** | Editorial anti-slop engine: removes AI clichés, converts passive voice, enforces punchy human cadence. | **Jasper** |
-| **`gauntlet-loop`** | Adversarial validation gauntlet: blind A/B critique, stress testing, edge-case torture testing. | **Nexus** |
-| **`designscope`** | Visual system extraction: token extraction, CSS architecture analysis, component atomic decomposition. | **Jasper** |
+| **`code-review`** | A language-agnostic code review method derived from Linus Torvalds' review corpus. | **Nexus** |
+| **`gauntlet-loop`** | Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. | **Nexus** |
+| **`dead-letter`** | Capture a failed or blocked task before it disappears. | **Nexus** |
+| **`pua`** | Put your AI on a Performance Improvement Plan. | **Sol** |
+| **`audit`** | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. | **Nexus** |
+| **`humanize`** | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. | **Jasper** |
+| **`muse-security`** | Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. | **Nexus** |
 
 ---
 
-### 5. Reflective Strategy Division
+### 5. Interface & Visual Engineering Division
 
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
-| **`coach`** | Daily agile standup facilitator, sprint blocker resolution, progress velocity scoring. | **Crew** |
-| **`periodic-retreat`** | High-level strategic review, tech debt prioritization, quarterly architecture roadmap planning. | **Sol & Crew** |
+| **`refactor`** | Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through seven execution modes. | **Nexus & Sol** |
+| **`designscope`** | Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design. | **Jasper** |
+| **`animate`** | Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. | **Jasper** |
+
+---
+
+### 6. Reflection & Systems Maintenance Division
+
+| Department | Purpose & Invariant | Council Lead |
+| :--- | :--- | :--- |
+| **`coach`** | Daily reflective check-in and effort scorecard for developers and AI agents. | **Crew** |
+| **`periodic-retreat`** | Quarterly personal and project strategic retreat facilitator. | **Sol & Crew** |
+| **`clean-system-cache`** | Cross-platform developer, designer, and browser cache cleaner for Windows, Linux, and macOS. | **Sol** |
+<!-- agency-directory:end -->
 
 ---
 

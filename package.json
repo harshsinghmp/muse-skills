@@ -61,6 +61,8 @@
   "scripts": {
     "extract-skill": "bun scripts/extract-skill.ts",
     "export-commands": "bun scripts/export-commands.ts",
+    "sync-dispatch": "bun scripts/sync-dispatch.ts",
+    "sync": "python3 scripts/sync_registry.py && bun scripts/sync-dispatch.ts",
     "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
     "validate": "bash updateagents/scripts/validate-memory-file.sh",
