@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.20.0] - 2026-09-22
+
+### Added
+
+- **Full-Funnel App Store Optimization Engine (`mobile:aso`)**: Deepened `mobile:aso` (`mobile/references/aso.md`) with comprehensive frameworks consolidated from `agency-app-store-optimizer`. Adds Apple Product Page Optimization (PPO) vs. Google Play Store Listing Experiments, 6-slide narrative screenshot storytelling psychology, in-app ratings prompt trigger heuristics (`SKStoreReviewController`/`ReviewManager`), review response customer-service templates, and tiered metadata localization matrices.
+
 ## [5.19.0] - 2026-09-22
 
 ### Added
