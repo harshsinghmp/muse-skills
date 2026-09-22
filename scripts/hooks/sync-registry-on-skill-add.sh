@@ -18,4 +18,10 @@ else
   echo "[hooks] sync_registry.py not found — run manually after adding a skill"
 fi
 
+# Auto-sync secretary dispatch directory & multi-harness commands
+SYNC_DISPATCH="$ROOT/scripts/sync-dispatch.ts"
+if [ -f "$SYNC_DISPATCH" ] && command -v bun >/dev/null 2>&1; then
+  bun "$SYNC_DISPATCH" 2>&1 | tail -3
+fi
+
 exit 0
