@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.24.0] - 2026-09-22
+
+### Added
+
+- **TDD Skill Engineering Protocol & Gate 4 in `extract-skill` (`updateagents`)**: Codified the TDD Skill Engineering Protocol (`updateagents/references/skill-authoring.md`) derived from `writing-skills`. Establishes the Red-Green-Refactor loop for agent prompt instructions (RED: baseline adversarial pressure scenario, GREEN: minimal constraint, REFACTOR: loophole closure against LLM rationalizations). Upgraded `scripts/extract-skill.ts` with Gate 4 (`checkTddEngineeringGate`, `--tdd-scenario`, `--tdd`) and linked Step 13b in `updateagents/SKILL.md`.
+
 ## [5.23.0] - 2026-09-22
 
 ### Changed
