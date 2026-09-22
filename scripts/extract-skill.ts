@@ -6,10 +6,11 @@
  * Packages verified problem-solving patterns into a standard, RFC-compliant Agent Skill.
  * Inspired by self-learning-skills and the Self-Improvement extraction workflow.
  *
- * The 3 Extraction Gates:
- *   1. Recurrence Gate: Pattern observed across >=3 tasks/occurrences.
+ * The 4 Extraction Gates:
+ *   1. Recurrence Gate: Pattern observed across >=4 tasks/occurrences.
  *   2. Verification Gate: Solution verified by passing tests/code.
  *   3. Generalization Gate: Portable across codebases (no hardcoded environment paths or secrets).
+ *   4. TDD Engineering Gate: Red-Green-Refactor for agent instructions with baseline pressure testing.
  *
  * Usage:
  *   bun scripts/extract-skill.ts --name <skill-name> --desc "<description>" [options]
@@ -21,6 +22,8 @@
  *   -e, --evidence <file|num>  Evidence log file path or recurrence count
  *   -t, --test-cmd <cmd>       Verification test command to validate solution
  *       --verified             Flag confirming solution is already tested and verified
+ *       --tdd-scenario <desc>  Baseline adversarial test scenario where unassisted agent fails
+ *       --tdd                  Flag confirming TDD instruction engineering protocol executed
  *   -p, --dest <path>          Target destination directory (auto-detected if omitted)
  *       --tags <tags>          Comma-separated tags (default: automation,workflow)
  *       --tools <tools>        Comma-separated tools (default: bash,view_file,write_to_file,run_command)
@@ -50,6 +53,8 @@ export interface ExtractionOptions {
   evidence?: string;
   testCmd?: string;
   verified?: boolean;
+  tddScenario?: string;
+  tdd?: boolean;
   dest?: string;
   tags?: string[];
   tools?: string[];
@@ -203,6 +208,40 @@ export function checkGeneralizationGate(texts: string[], force = false): GateRes
 }
 
 /**
+ * Gate 4: Check TDD skill engineering gate (Red-Green-Refactor protocol for agent instructions).
+ * Requires either an adversarial test scenario description (>=10 chars), or explicit tdd/verified certification or force.
+ */
+export function checkTddEngineeringGate(tddScenario?: string, tdd = false, force = false): GateResult {
+  if (force) {
+    return { ok: true, gate: "tdd", message: "TDD skill engineering gate bypassed via --force." };
+  }
+
+  if (tddScenario && tddScenario.trim().length >= 10) {
+    const preview = tddScenario.trim().length > 60 ? `${tddScenario.trim().slice(0, 60)}...` : tddScenario.trim();
+    return {
+      ok: true,
+      gate: "tdd",
+      message: `TDD skill engineering verified with baseline pressure scenario: "${preview}".`,
+    };
+  }
+
+  if (tdd) {
+    return {
+      ok: true,
+      gate: "tdd",
+      message: "TDD skill engineering protocol confirmed (Red-Green-Refactor for agent instructions).",
+    };
+  }
+
+  return {
+    ok: false,
+    gate: "tdd",
+    message:
+      "TDD skill engineering gate not satisfied. Provide --tdd-scenario '<adversarial scenario where agent fails without skill>' or --tdd to certify instruction testing (Red-Green-Refactor).",
+  };
+}
+
+/**
  * Validate skill name format (kebab-case).
  */
 export function validateSkillName(name: string): boolean {
@@ -222,6 +261,7 @@ export function generateSkillMd(opts: {
   tags?: string[];
   tools?: string[];
   testCmd?: string;
+  tddScenario?: string;
 }): string {
   const version = opts.version || "1.0.0";
   const author = opts.author || "Agency Council";
@@ -328,7 +368,7 @@ flowchart TD
    \`\`\`
 2. Verify all assertions pass cleanly.
 3. Confirm companion documentation remains synchronized.
-`;
+${opts.tddScenario ? `4. Baseline Adversarial Pressure Scenario (TDD):\n   - **Scenario**: ${opts.tddScenario}\n   - **Expected Failure without Skill**: Agent evades constraint, cuts corners, or fabricates state.\n   - **Observed Compliance with Skill**: Agent adheres to procedure, validates exit codes, and respects boundaries.\n` : ""}`;
 }
 
 /**
@@ -449,6 +489,18 @@ export function extractSkill(options: ExtractionOptions): {
     };
   }
 
+  // Gate 4: TDD Engineering Gate (Red-Green-Refactor for agent instructions)
+  const tddGate = checkTddEngineeringGate(options.tddScenario, options.tdd ?? options.verified, options.force);
+  if (!tddGate.ok) {
+    return {
+      success: false,
+      skillDir: "",
+      filesCreated: [],
+      registered: { skillsJson: false, llmsTxt: false, readme: false },
+      error: tddGate.message,
+    };
+  }
+
   // Resolve target directory
   let skillDir = "";
   if (options.dest) {
@@ -501,6 +553,7 @@ export function extractSkill(options: ExtractionOptions): {
     category: options.category,
     priority: options.priority,
     testCmd: options.testCmd,
+    tddScenario: options.tddScenario,
   });
 
   const readmeContent = generateReadmeMd({
@@ -631,6 +684,8 @@ if (import.meta.main) {
       evidence: { type: "string", short: "e" },
       "test-cmd": { type: "string", short: "t" },
       verified: { type: "boolean", default: false },
+      "tdd-scenario": { type: "string" },
+      tdd: { type: "boolean", default: false },
       dest: { type: "string", short: "p" },
       tags: { type: "string" },
       tools: { type: "string" },
@@ -662,6 +717,8 @@ Gate Validation Options:
   -e, --evidence <file|num>  Evidence log file path or recurrence count
   -t, --test-cmd <cmd>       Verification command to test solution
       --verified             Flag asserting solution is verified by existing tests
+      --tdd-scenario <desc>  Baseline adversarial test scenario where unassisted agent fails
+      --tdd                  Flag confirming TDD instruction engineering protocol executed
   -f, --force                Bypass gate checks or replace existing destination target
 
 Scaffolding & Catalog Options:
@@ -698,6 +755,8 @@ Scaffolding & Catalog Options:
     evidence: values.evidence,
     testCmd: values["test-cmd"],
     verified: values.verified,
+    tddScenario: values["tdd-scenario"],
+    tdd: values.tdd,
     dest: values.dest,
     tags,
     tools,

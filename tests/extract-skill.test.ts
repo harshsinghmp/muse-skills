@@ -5,6 +5,7 @@ import path from "node:path";
 import {
   checkGeneralizationGate,
   checkRecurrenceGate,
+  checkTddEngineeringGate,
   checkVerificationGate,
   extractSkill,
   validateSkillName,
@@ -114,6 +115,34 @@ describe("Skill Extraction Helper (extract-skill)", () => {
 
     // Force bypass
     const forcePass = checkGeneralizationGate(["/home/user/path"], true);
+    expect(forcePass.ok).toBe(true);
+  });
+
+  test("Gate 4: TDD Engineering Gate enforces pressure testing and Red-Green-Refactor protocol", () => {
+    // Neither scenario nor tdd flag fails
+    const failRes = checkTddEngineeringGate(undefined, false, false);
+    expect(failRes.ok).toBe(false);
+    expect(failRes.message).toContain("TDD skill engineering gate not satisfied");
+
+    // Short scenario fails (< 10 chars)
+    const shortRes = checkTddEngineeringGate("too short", false, false);
+    expect(shortRes.ok).toBe(false);
+
+    // Valid scenario passes
+    const passScenario = checkTddEngineeringGate(
+      "Agent bypasses verification when instructed to do a quick fix; test confirms agent halts without test suite",
+      false,
+      false,
+    );
+    expect(passScenario.ok).toBe(true);
+    expect(passScenario.message).toContain("TDD skill engineering verified with baseline pressure scenario");
+
+    // Explicit tdd flag passes
+    const passFlag = checkTddEngineeringGate(undefined, true, false);
+    expect(passFlag.ok).toBe(true);
+
+    // Force bypass
+    const forcePass = checkTddEngineeringGate(undefined, false, true);
     expect(forcePass.ok).toBe(true);
   });
 
