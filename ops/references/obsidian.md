@@ -254,6 +254,97 @@ When developing, modifying, or debugging Obsidian plugins and themes:
 
 ---
 
+### 4. JSON Canvas (.canvas) Specification & Visual Spatial Graphs
+
+Obsidian native infinite canvases use the open [JSON Canvas 1.0](https://jsoncanvas.org/) specification (`.canvas` files). Use this format to programmatically build architecture maps, mind maps, concept clusters, and client onboarding roadmaps.
+
+#### Core JSON Structure
+```json
+{
+  "nodes": [
+    {
+      "id": "node-root",
+      "type": "text",
+      "text": "# Client Architecture\nCore system topology",
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 180,
+      "color": "1"
+    },
+    {
+      "id": "node-scope-file",
+      "type": "file",
+      "file": "Projects/Orion/Scope.md",
+      "x": 420,
+      "y": -50,
+      "width": 300,
+      "height": 220
+    },
+    {
+      "id": "node-live-url",
+      "type": "link",
+      "url": "https://client-demo.vercel.app",
+      "x": 420,
+      "y": 200,
+      "width": 300,
+      "height": 220
+    },
+    {
+      "id": "group-backend",
+      "type": "group",
+      "label": "Data Tier",
+      "x": -40,
+      "y": 360,
+      "width": 780,
+      "height": 340,
+      "color": "4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "fromNode": "node-root",
+      "fromSide": "right",
+      "toNode": "node-scope-file",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "governed by"
+    },
+    {
+      "id": "edge-2",
+      "fromNode": "node-root",
+      "fromSide": "bottom",
+      "toNode": "group-backend",
+      "toSide": "top",
+      "toEnd": "arrow"
+    }
+  ]
+}
+```
+
+#### Node Schema Reference
+| Type | Required Properties | Optional Properties | Purpose |
+|:---|:---|:---|:---|
+| `text` | `id`, `type: "text"`, `text`, `x`, `y`, `width`, `height` | `color` | Markdown-rendered card containing headings, checklists, code blocks. |
+| `file` | `id`, `type: "file"`, `file`, `x`, `y`, `width`, `height` | `subpath` (e.g. `#Heading`), `color` | Embedded vault file (`.md`, `.png`, `.pdf`). |
+| `link` | `id`, `type: "link"`, `url`, `x`, `y`, `width`, `height` | `color` | Web bookmark card with preview. |
+| `group` | `id`, `type: "group"`, `x`, `y`, `width`, `height` | `label`, `background`, `backgroundStyle` (`cover`\|`ratio`\|`repeat`), `color` | Visual bounding box clustering related nodes. |
+
+#### Edge Schema & Canvas Colors
+- **Sides**: `"top"`, `"right"`, `"bottom"`, `"left"`.
+- **End Shapes**: `"none"`, `"arrow"` (applied to `fromEnd` or `toEnd`).
+- **Standard Canvas Palette**:
+  - `"1"`: Red (`#e93535`)
+  - `"2"`: Orange (`#ec7500`)
+  - `"3"`: Yellow (`#e0ac00`)
+  - `"4"`: Green (`#08b94e`)
+  - `"5"`: Cyan / Teal (`#00bfbc`)
+  - `"6"`: Purple (`#7852ee`)
+  - Custom: Valid hex color (e.g. `"#4338ca"`).
+
+---
+
 ## Quality Gate Checklist
 
 Before completing an Obsidian documentation or vault task, verify:
@@ -261,4 +352,5 @@ Before completing an Obsidian documentation or vault task, verify:
 - [ ] All internal cross-references use double-bracket wikilinks (`[[Note Name]]`).
 - [ ] Callouts adhere to standard types (`note`, `tip`, `warning`, `important`, `faq`).
 - [ ] Embedded media specifies responsive dimensions or block identifiers where appropriate.
+- [ ] Canvas files (`.canvas`) parse as strictly valid JSON matching the JSON Canvas 1.0 schema (valid `nodes` and `edges`).
 - [ ] CLI executions utilize `silent` when run by background agent scripts.

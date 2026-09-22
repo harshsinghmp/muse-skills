@@ -867,6 +867,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("obsidian search");
       expect(ref).toContain("obsidian plugin:reload");
       expect(ref).toContain("obsidian dev:screenshot");
+      expect(ref).toContain("JSON Canvas (.canvas) Specification & Visual Spatial Graphs");
+      expect(ref).toContain("JSON Canvas 1.0");
+      expect(ref).toContain('"node-root"');
     });
   });
 });
