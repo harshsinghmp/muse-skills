@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.25.1] - 2026-09-22
+
+### Fixed
+
+- **Type Definition Parity in `extract-skill`**: Updated `GateResult` interface in `scripts/extract-skill.ts` to include `"tdd"` in its `gate` union type, ensuring strict TypeScript check (`bun run type-check`) compiles with zero diagnostics.
+
 ## [5.25.0] - 2026-09-22
 
 ### Added
