@@ -1535,7 +1535,8 @@
         "cloud",
         "infrastructure-as-code",
         "reproducible",
-        "reversible"
+        "reversible",
+        "wrangler"
       ],
       "suggested_skills": [
         "git",
@@ -1548,7 +1549,8 @@
         "deployment",
         "ci-cd",
         "hosting",
-        "security-hardening"
+        "security-hardening",
+        "wrangler"
       ],
       "scope": "local"
     },
