@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.22.0] - 2026-09-22
+
+### Added
+
+- **Developer Codebase Orientation & Execution Path Tracing (`webdev:onboard`)**: Consolidated `agency-codebase-onboarding-engineer` into `webdev` as its 14th execution mode (`webdev/references/onboard.md`, with `onboard` and `oinboard` triggers). Implements the 3-Tier Orientation Map (1-Line Summary, 5-Minute Overview, Deep Dive into Boundaries), end-to-end execution path tracing, and strict code-grounded heuristics without speculative inferences.
+
 ## [5.21.0] - 2026-09-22
 
 ### Added
