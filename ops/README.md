@@ -1,6 +1,6 @@
 # 🗂️ ops
 
-The agency operations department head: one skill, six modes — onboarding, proposal, sow, milestone, retro, multi-client. Clean intake, written scope, tracked delivery, honest retrospectives.
+The agency operations department head: one skill, nine modes — onboarding, proposal, sow, milestone, retro, multi-client, vendor, obsidian, audit. Clean intake, written scope, tracked delivery, honest retrospectives, and Obsidian PKM vault automation.
 
 ## Install
 
@@ -20,6 +20,10 @@ Onboard a new client into an isolated workspace and write the project SOW.
 Run a retrospective on the just-finished rebrand and manage next quarter's three retainer clients.
 ```
 
+```text
+Structure our Obsidian client vault with wikilinks, callouts, and frontmatter properties.
+```
+
 ## Modes
 
 | Mode | Request it with | Deliverable |
@@ -30,6 +34,9 @@ Run a retrospective on the just-finished rebrand and manage next quarter's three
 | **milestone** | milestone & scope tracking | Milestones: tracked delivery, scope control, and change orders. |
 | **retro** | project retrospective | Retro: blameless review producing tracked process improvements. |
 | **multi-client** | multi-client portfolio | Multi-client: one view across engagements, capacity, and risk. |
+| **vendor** | vendor management | Vendor: contractor scorecards, spend control, and tooling consolidation. |
+| **obsidian** | obsidian vault & markdown | Obsidian: OFM grammar, wikilinks, callouts, embeds, CLI automation, and plugin dev. |
+| **audit** | ops audit | Audit: process compliance, milestone risk, and cross-reference validation. |
 
 ## How it works
 

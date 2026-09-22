@@ -811,4 +811,32 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(resRed.stdout).toContain("Missing Brand Discovery Parameters");
     });
   });
+
+  describe("9. Agency Operations Department (ops) & Obsidian PKM Workflows", () => {
+    const opsDir = path.join(REPO_ROOT, "ops");
+
+    test("ops SKILL.md registers obsidian mode in frontmatter and modes table", () => {
+      const skillPath = path.join(opsDir, "SKILL.md");
+      const content = fs.readFileSync(skillPath, "utf8");
+      expect(content).toContain("obsidian");
+      expect(content).toContain("| **obsidian** |");
+      expect(content).toContain("references/obsidian.md");
+      expect(content).toContain("argument-hint: \"[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]\"");
+    });
+
+    test("ops references/obsidian.md comprehensively covers OFM syntax, wikilinks, callouts, and CLI", () => {
+      const refPath = path.join(opsDir, "references", "obsidian.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("[[Note Name]]");
+      expect(ref).toContain("![[image.png");
+      expect(ref).toContain("> [!note]");
+      expect(ref).toContain("> [!important]");
+      expect(ref).toContain("> [!faq]-");
+      expect(ref).toContain("obsidian create");
+      expect(ref).toContain("obsidian search");
+      expect(ref).toContain("obsidian plugin:reload");
+      expect(ref).toContain("obsidian dev:screenshot");
+    });
+  });
 });
