@@ -2,6 +2,130 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.18.0] - 2026-09-22
+
+### Added
+
+- **Comprehensive Historical Changelog Sync (v5.0.0 → v5.17.0)**: Fully backfilled and documented detailed changelog records for all 17 minor releases across the v5 milestone series, detailing atomic features, department consolidations, architectural improvements, and security verifications.
+
+## [5.17.0] - 2026-09-22
+
+### Added
+
+- **High-Converting Developer Blueprint (`README.md`)**: Re-architected root documentation applying the Before-After-Bridge (BAB) + AIDCA developer copywriting framework.
+- **1-Command Quick Start Above the Fold**: Placed `npx skills add harshsinghmp/muse-skills` prominently at the very top for zero-friction agent and developer installation.
+- **Progressive Disclosure Toggles**: Incorporated `<details><summary>` interactive collapsibles for System Architecture (Mermaid workflows and runtime specs) and the complete 46-Skill Catalog table.
+- **Historical Documentation Archive**: Preserved the complete v5.0.0 documentation as an archival reference at [`docs/README-v5.0.0.md`](docs/README-v5.0.0.md).
+- **Branch Cleanliness**: Pruned 22 merged local feature branches, keeping the local workspace lean and strictly aligned with remote branches.
+
+## [5.16.0] - 2026-09-22
+
+### Added
+
+- **Brand Lifecycle & Client Onboarding Engine (`brand`)**: Registered the 46th canonical agency department skill (`brand/SKILL.md`) equipped with 8 operational modes: `intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, and `audit`.
+- **Automated 50-Point Intake Audit Tool (`brand/scripts/intake-audit.ts`)**: Fast CLI utility scoring client intake briefs across clarity, completeness, and feasibility gates with instant clarification generation.
+- **LifeOS Zero-Leak Credential Delegation Protocol**: Enforces secure client credential exchange without storing secrets in plaintext across Google, Meta, AWS, Shopify, and Cloudflare in `brand:accounts-access`.
+- **Executive Milestone Reports**: Shipped comprehensive interactive HTML milestone reports at [`.agents/reports/v5.16.0-2026-09-22.html`](.agents/reports/v5.16.0-2026-09-22.html) and [`.agents/reports/latest.html`](.agents/reports/latest.html).
+
+## [5.15.0] - 2026-09-22
+
+### Added
+
+- **Universal Full-Stack Refactoring Engine (`refactor`)**: Promoted and expanded `refactor-ui` into a full-system refactoring department (`refactor/SKILL.md`) featuring 7 dedicated execution modes: `ui`, `code`, `architecture`, `perf`, `database`, `sweep`, and `polish`.
+- **Architectural Decoupling & Cyclomatic Reduction**: Standardized procedural guidelines for reducing cyclomatic complexity, breaking circular module dependencies, and enforcing zero-downtime database migration patterns.
+
+## [5.14.0] - 2026-09-22
+
+### Added
+
+- **WCAG 2.2 AA Accessibility Engine (`webdev:accessibility`)**: Added comprehensive accessibility operating playbooks (`webdev/references/accessibility.md`) featuring automated Playwright axe test scripts, modal focus trapping routines, semantic ARIA landmarks, and `:focus-visible` ring conventions.
+- **Fullstack Security Architecture (`webdev:security-headers`)**: Consolidated Three-Perspective Security Architecture, security headers (CSP, HSTS, X-Frame-Options), and SSRF IP blocklists (`webdev/references/security-headers.md`, `webdev/references/backend.md`).
+- **EARS Specification Miner (`webdev:spec`)**: Integrated Easy Approach to Requirements Syntax (EARS) template for extracting unambiguous requirements from client briefs (`webdev/templates/specification-template.md`).
+
+## [5.13.0] - 2026-09-22
+
+### Added
+
+- **Design Department UI Kit Architecture (`design:uikit`)**: Consolidated starwind-ui, headless primitives, and Class Variance Authority (CVA) patterns in `design/references/uikit.md`.
+- **Visual Storytelling & Narrative Arcs (`design:story`)**: Codified brand narrative frameworks, emotional arcs, and multi-frame video storyboards (`design/references/story.md`).
+- **Presentation Decks & W3C Design Tokens**: Added 15 proven slide deck structures (`design/references/slides.md`) and a W3C-compliant design tokens starter template (`design/templates/design-tokens-starter.json`).
+
+## [5.12.0] - 2026-09-22
+
+### Added
+
+- **Broadcast Podcast Audio Engineering (`content:podcast`)**: Codified industry-standard LUFS loudness targets (-16 LUFS stereo, -19 LUFS mono), dynamic range multi-band compression, and background de-noising procedures (`content/references/podcast.md`).
+- **AI Video Editing & Short-Form Retention (`content:video`)**: Integrated HeyFrames AI workflows, 3-second visual hooks, pattern interrupts, and high-CTR thumbnail prompt syntax (`content/references/video.md`, `content/references/thumbnails.md`).
+- **Copywriting Framework Selector (`content:copy`)**: Systematized PAS, AIDA, BAB, FAB, 4Ps, QUEST, and StoryBrand frameworks with automatic context recommendation matrices.
+
+## [5.11.0] - 2026-09-22
+
+### Added
+
+- **Competitor Intelligence & Market Research (`research`)**: Added structured competitor messaging grids, feature parity matrices, and pricing tier analyses (`research/references/competitor-analysis.md`).
+- **Due Diligence Dossiers**: Codified corporate research dossiers with source validation, market opportunity scoring, and citation verification.
+
+## [5.10.0] - 2026-09-22
+
+### Added
+
+- **Client Communications Inbox Triage (`client-comms`)**: Implemented P0–P3 inbox triage rubrics and automated client nudge sequences (`client-comms/references/inbox-triage.md`).
+- **Factual Git-Evidence Reporting**: Standardized progress updates grounded exclusively in verified Git commits, build artifacts, and test logs (`client-comms/references/factual-reporting.md`).
+
+## [5.9.0] - 2026-09-22
+
+### Added
+
+- **Agency Legal & Contract Standards (`ops:contracts`)**: Added production-ready SOW, NDA, and MSA contract drafting standards with explicit scope boundaries and change-order clauses (`ops/references/contracts.md`).
+- **4-Section Executive Meeting Capture (`ops:meeting-notes`)**: Codified standardized meeting capture templates with automated action item extraction, deadlines, and direct owner attribution (`ops/references/meeting-notes.md`).
+
+## [5.8.0] - 2026-09-22
+
+### Added
+
+- **Git Credential Exposure Audit Protocol (`git:exposure-audit`)**: Codified emergency remediation workflows for token exposures, git history purging with git-filter-repo, and pre-commit secret scanning hooks (`git/references/exposure-audit.md`).
+
+## [5.7.0] - 2026-09-22
+
+### Added
+
+- **SEO & AI Answer Engine Optimization (`seo:aeo`)**: Added answer-first content density under headers, 18-token standalone quotability rules, and Citation Share of Voice (SoV) benchmarks for Perplexity, ChatGPT Search, Gemini, and Claude (`seo/references/aeo.md`).
+- **Structured Semantic Markup**: Implemented JSON-LD schema generation standards for technical documentation, software products, and FAQs.
+
+## [5.6.0] - 2026-09-22
+
+### Added
+
+- **Paid Ads Google & Meta Playbooks (`paidads`)**: Added campaign architecture playbooks for Google Search/PMax and Meta Ads (`paidads/references/google.md`, `paidads/references/meta.md`), including conversion pixel tracking, retargeting funnels, and budget pacing algorithms.
+
+## [5.5.0] - 2026-09-22
+
+### Added
+
+- **SMM Creator Vetting Scorecard (`smm:creator-vetting`)**: Added 25-point creator vetting scorecard, engagement authenticity verification, and red-flag audit matrices (`smm/references/creator-vetting.md`).
+- **Social Search AEO**: Optimized caption keyword density, hashtag taxonomy, and semantic hooks for social search discovery across TikTok, Instagram, and LinkedIn.
+
+## [5.4.0] - 2026-09-22
+
+### Added
+
+- **Affiliate Reward Models & Referral Loops (`growth:affiliates`)**: Added affiliate reward tier structures, referral loop tracking, and viral coefficient calculations ($K = i \times c$) in `growth/references/affiliates-referrals.md`.
+- **Product Hunt Launch Engine (`growth:launch`)**: Integrated hour-by-hour launch day playbooks, community engagement strategies, and initial upvote activation sequences.
+
+## [5.3.0] - 2026-09-22
+
+### Added
+
+- **DevOps Cloudflare Edge & Zero Trust Tunnels (`devops:cloudflare`)**: Added Cloudflare Workers, Pages, Full (Strict) SSL encryption, and Zero Trust tunnel deployment procedures (`devops/references/cloudflare.md`).
+- **Quick Tunnels**: Added `try.cloudflare.com` quick tunnel support for instant ephemeral testing of local web servers without opening firewall ports.
+
+## [5.2.0] - 2026-09-22
+
+### Added
+
+- **Database Memory Calibration & Query Optimization (`database`)**: Added memory calibration formulas (`shared_buffers`, `work_mem`, `effective_cache_size`) for PostgreSQL and MySQL in `database/references/tuning.md`.
+- **Consolidated Query Optimizer**: Merged standalone database-optimizer into `database:optimize` mode (`database/references/optimize.md`).
+
 ## [5.1.0] - 2026-09-22
 
 ### Internal Activity & System Consolidation (Pain → Feature → Solution)
