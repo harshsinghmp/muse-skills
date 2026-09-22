@@ -206,6 +206,9 @@ Explicitly document authority relationships (package scripts authoritative for c
 ### Step 13 — Capture Agent-Specific Rules
 Record operational rules (Vibeguard, test gates, token usage) supported by actual project policy.
 
+### Step 13b — Skill Authoring & Instruction Engineering (TDD Protocol)
+When authoring, scaffolding, or updating agent skills or behavioral guidance, enforce the TDD Skill Engineering Protocol: Red-Green-Refactor for agent instructions, baseline adversarial pressure testing, and anti-rationalization loophole closures (see [references/skill-authoring.md](references/skill-authoring.md)). When extracting recurring patterns into reusable skills via `bun scripts/extract-skill.ts`, all 4 Extraction Gates (Recurrence, Verification, Generalization, and TDD Engineering) must pass.
+
 ### Step 14 — Synchronize Related Knowledge
 Propagate downstream effects (e.g. API changes affecting types and tests) when future agent behavior should change.
 
