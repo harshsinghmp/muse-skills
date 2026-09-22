@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.21.0] - 2026-09-22
+
+### Added
+
+- **Purposeful Whimsy & Delight Engine (`animate:delight`)**: Integrated `agency-whimsy-injector` into `animate` as its 7th execution mode (`animate/references/delight.md`). Adds brand personality spectrum matrices (Professional vs. Casual vs. Error vs. Success), spring-loaded micro-interactions, zero-dependency canvas confetti celebrations, Konami code discovery easter eggs, and charming empty/error states under strict WCAG `prefers-reduced-motion` compliance.
+
 ## [5.20.0] - 2026-09-22
 
 ### Added
