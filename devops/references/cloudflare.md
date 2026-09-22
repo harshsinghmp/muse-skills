@@ -32,22 +32,107 @@ A production-hardened Cloudflare configuration:
 - **Grey Cloud (DNS Only)**: Mandate for mail servers (MX, SPF, DKIM, DMARC), SSH/FTP, or direct non-HTTP origins.
 - **CNAME Flattening**: Use on apex domain (`example.com`) to allow root CNAME pointing to Pages or external SaaS without breaking RFC 1034.
 
-### 3. Cloudflare Workers & Pages Deployment
-- Maintain declarative `wrangler.toml`:
-  ```toml
-  name = "edge-service"
-  main = "src/index.ts"
-  compatibility_date = "2026-09-01"
-  compatibility_flags = ["nodejs_compat"]
+### 3. Cloudflare Workers & Pages Deployment (Wrangler v4.x+ & wrangler.jsonc)
 
-  [vars]
-  ENVIRONMENT = "production"
+Use modern Wrangler CLI (v4.x+) for deploying, developing, and managing Workers, Pages, and edge data stores. Prefer declarative `wrangler.jsonc` over `wrangler.toml` (newer Cloudflare features are JSON-only and support JSON Schema validation):
 
-  [[kv_namespaces]]
-  binding = "CACHE_KV"
-  id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#### A. Toolchain Installation & Standards
+- Install latest pinned CLI:
+  ```bash
+  bun add -d wrangler@latest # or npm install -D wrangler@latest
+  wrangler --version         # Requires v4.x+
   ```
-- Deploy via CI/CD using `wrangler deploy` with scoped API tokens (`CLOUDFLARE_API_TOKEN`). Never use global API keys.
+- **JSON Schema Validation**: Add `$schema` pointing to `./node_modules/wrangler/config-schema.json`.
+- **Compatibility Pinning**: Always pin `compatibility_date` to within 30 days and add `compatibility_flags: ["nodejs_compat"]`.
+- **TypeScript Type Generation**: Run `wrangler types` after any config modification to generate typed interfaces for `Env` bindings.
+- **Worker Startup Profiling**: Run `wrangler check startup` to measure cold-start execution time and prevent CPU limits.
+
+#### B. Full Declarative Configuration (`wrangler.jsonc`)
+```jsonc
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "edge-service",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static Assets / Pages Full-Stack Serving
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+
+  // Environment Variables (Non-sensitive)
+  "vars": {
+    "ENVIRONMENT": "production",
+    "API_VERSION": "v1"
+  },
+
+  // KV Namespace (Key-Value Edge Cache)
+  "kv_namespaces": [
+    { "binding": "CACHE_KV", "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" }
+  ],
+
+  // D1 SQL Relational Database
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "prod-db",
+      "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "migrations_dir": "d1/migrations"
+    }
+  ],
+
+  // R2 Object Storage (S3-compatible)
+  "r2_buckets": [
+    { "binding": "MEDIA_BUCKET", "bucket_name": "agency-prod-media" }
+  ],
+
+  // Vectorize Vector Database
+  "vectorize": [
+    { "binding": "VECTOR_INDEX", "index_name": "knowledge-embeddings" }
+  ],
+
+  // Hyperdrive Connection Pooler (Postgres / MySQL)
+  "hyperdrive": [
+    { "binding": "HYPERDRIVE", "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" }
+  ],
+
+  // Asynchronous Queues
+  "queues": {
+    "producers": [{ "binding": "TASK_QUEUE", "queue": "agency-tasks" }],
+    "consumers": [{ "queue": "agency-tasks", "max_batch_size": 10, "max_batch_timeout": 5 }]
+  },
+
+  // Workers AI (Llama, Whisper, Embeddings)
+  "ai": { "binding": "AI" },
+
+  // Environment Overrides
+  "env": {
+    "staging": {
+      "name": "edge-service-staging",
+      "vars": { "ENVIRONMENT": "staging" }
+    }
+  }
+}
+```
+
+#### C. Core Wrangler CLI Playbook
+| Operation | CLI Command | Notes |
+|:---|:---|:---|
+| **Local Dev** | `wrangler dev` | Local storage simulation (Miniflare/workerd). |
+| **Live Remote Dev** | `wrangler dev --remote` | Proxies bindings to live Cloudflare edge data. |
+| **Deploy** | `wrangler deploy` | Deploys worker via CI/CD with `CLOUDFLARE_API_TOKEN`. |
+| **Dry Run Deploy** | `wrangler deploy --dry-run` | Validates bundle and bindings without uploading. |
+| **Generate Types** | `wrangler types` | Updates `worker-configuration.d.ts` for TypeScript. |
+| **Startup Check** | `wrangler check startup` | Profiles memory and cold-start execution latency. |
+| **Tail Live Logs** | `wrangler tail --status error` | Streams real-time production exceptions. |
+| **D1 Local Migrate** | `wrangler d1 migrations apply DB --local` | Runs SQL migrations on local dev SQLite database. |
+| **D1 Remote Migrate**| `wrangler d1 migrations apply DB --remote`| Applies SQL migrations to production D1 database. |
+| **Set Secret** | `wrangler secret put <NAME>` | Encrypted variable stored in Cloudflare HSM. |
+| **Pipe Secret** | `echo "$KEY" \| wrangler secret put <NAME>` | Non-interactive secret injection for CI/CD. |
+| **List Secrets** | `wrangler secret list` | Displays encrypted secret names (values hidden). |
+| **Local Dev Secrets**| Edit `.dev.vars` | Key-value file for local runtime (strictly `.gitignore`'d). |
 
 ### 4. WAF & Edge Defense Architecture
 - **Rate Limiting Rule**: Limit mutation endpoints (e.g. `/api/auth/login`, `/api/checkout`) to 10 requests per minute per IP. Action: Managed Challenge.

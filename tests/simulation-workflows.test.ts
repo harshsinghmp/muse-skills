@@ -449,7 +449,10 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(cfRef).toContain("Full (Strict)");
       expect(cfRef).toContain("Zero Trust Tunnels (`cloudflared`)");
       expect(cfRef).toContain("Rate Limiting Rule");
-      expect(cfRef).toContain("wrangler.toml");
+      expect(cfRef).toContain("wrangler.jsonc");
+      expect(cfRef).toContain("wrangler types");
+      expect(cfRef).toContain("d1_databases");
+      expect(cfRef).toContain("wrangler dev --remote");
     });
 
     test("design: uikit mode consolidates starwind-ui, stitch-design-taste, headless primitives, and CVA", () => {
