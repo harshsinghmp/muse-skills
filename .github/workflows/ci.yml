@@ -111,7 +111,7 @@ jobs:
 
       - name: Upload SARIF (opt-in, only when AUDIT_FORMAT=sarif)
         if: always() && env.AUDIT_FORMAT == 'sarif'
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: ${{ env.AUDIT_OUTPUT }}
           category: secret-scan
