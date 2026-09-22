@@ -51,9 +51,10 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     });
   });
 
-  describe("2. smm Postiz Multi-Channel Dispatch Simulation", () => {
+  describe("2. smm Multi-Channel Dispatch & Carousel Growth Engine Simulation", () => {
     const smmDir = path.join(REPO_ROOT, "smm");
     const postizRefPath = path.join(smmDir, "references", "postiz.md");
+    const carouselRefPath = path.join(smmDir, "references", "carousel.md");
 
     test("smm registers postiz mode in SKILL.md and openai.yaml", () => {
       const skillContent = fs.readFileSync(path.join(smmDir, "SKILL.md"), "utf8");
@@ -72,6 +73,30 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("postiz upload");
       expect(content).toContain("TikTok Direct-Post Mandate");
       expect(content).toContain("DIRECT_POST");
+    });
+
+    test("smm registers carousel mode in SKILL.md and openai.yaml", () => {
+      const skillContent = fs.readFileSync(path.join(smmDir, "SKILL.md"), "utf8");
+      expect(skillContent).toContain("**carousel**");
+      expect(skillContent).toContain("references/carousel.md");
+      expect(skillContent).toContain(
+        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|audit]"',
+      );
+
+      const openaiYaml = fs.readFileSync(path.join(smmDir, "agents", "openai.yaml"), "utf8");
+      expect(openaiYaml.toLowerCase()).toContain("carousel");
+    });
+
+    test("carousel reference defines 6-slide arc, visual consistency, and Upload-Post publishing pipeline", () => {
+      expect(fs.existsSync(carouselRefPath)).toBe(true);
+      const content = fs.readFileSync(carouselRefPath, "utf8");
+
+      expect(content).toContain("6-Slide Narrative Storyboard");
+      expect(content).toContain("Slide 1: High-impact Scroll-Stopping Hook");
+      expect(content).toContain("Slide 6: High-Conversion CTA");
+      expect(content).toContain("Visual Coherence Assets");
+      expect(content).toContain("Upload-Post");
+      expect(content).toContain("learnings.json");
     });
   });
 
@@ -824,7 +849,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("obsidian");
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
-      expect(content).toContain("argument-hint: \"[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]\"");
+      expect(content).toContain(
+        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]"',
+      );
     });
 
     test("ops references/obsidian.md comprehensively covers OFM syntax, wikilinks, callouts, and CLI", () => {
