@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [5.25.0] - 2026-09-22
+
+### Added
+
+- **Full-Stack Funnel & Checkout Engineering Pipeline (`webdev:funnel`)**: Added the 15th execution mode to `webdev` (`webdev/references/funnel.md`). Codifies complete full-stack funnel architectures: multi-step form state machines with per-step Zod validation and endowed progress, frictionless Stripe checkout with order bump mechanics and idempotency headers, 1-click post-purchase upsell/downsell state machines via tokenized payment methods, dual-rail conversion tracking (Meta CAPI server endpoints with SHA-256 PII hashing and `event_id` deduplication), and asynchronous CRM webhook queues.
+
 ## [5.24.0] - 2026-09-22
 
 ### Added
