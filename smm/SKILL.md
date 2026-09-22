@@ -1,10 +1,10 @@
 ---
 name: smm
-aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "social-media-posts"]
-description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, and social analytics — routed through eight modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
-argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz]"
+aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "social-media-posts", "carousel", "carousel-growth-engine", "tiktok-carousel"]
+description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics — routed through ten modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
+argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|audit]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 28
-  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "postiz", "social-media-posts"]
+  aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "postiz", "social-media-posts", "carousel", "carousel-growth-engine", "tiktok-carousel"]
   suggested_skills: ["content", "design", "analytics", "paidads"]
   hermes:
-    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "postiz", "engagement", "social-analytics", "social-media-posts"]
+    tags: ["social-media", "organic-social", "strategy", "calendar", "content", "community", "influencer", "ugc", "instagram", "tiktok", "linkedin", "youtube", "postiz", "engagement", "social-analytics", "social-media-posts", "carousel", "viral-carousel"]
     related_skills: ["content", "design", "analytics", "paidads"]
     suggested_skills: ["content", "design", "analytics", "paidads"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["content", "design", "analytics", "paidads"]
-    primary_triggers: ["organic social", "social media strategy", "content calendar", "social posts", "schedule via postiz", "postiz api", "community management", "influencer program", "ugc campaign", "social analytics"]
+    primary_triggers: ["organic social", "social media strategy", "content calendar", "social posts", "schedule via postiz", "postiz api", "community management", "influencer program", "ugc campaign", "social analytics", "carousel", "carousel generator", "tiktok carousel", "instagram carousel"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -47,6 +47,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **ugc** | "ugc", "user generated content", "creator content pipeline" | UGC sourcing, rights, and paid/organic reuse pipeline | [references/ugc.md](references/ugc.md) |
 | **analytics** | "social analytics", "social report", "engagement metrics" | Performance reporting, metric definitions, iteration loop | [references/analytics.md](references/analytics.md) |
 | **postiz** | "postiz", "schedule with postiz", "multi-channel postiz dispatch", "postiz queue" | Automated multi-channel publishing & queue management via Postiz API/CLI | [references/postiz.md](references/postiz.md) |
+| **carousel** | "carousel", "carousel growth engine", "tiktok carousel", "instagram carousel", "6-slide carousel", "carousel generator" | Autonomous 6-slide viral carousel generation (Hook → Problem → Agitation → Solution → Feature → CTA) via Playwright, Gemini image-to-image, and Upload-Post API | [references/carousel.md](references/carousel.md) |
 | **audit** | "audit social", "content audit", "channel audit", "engagement audit" | Content audit (style guide, authenticity) + channel audit (cross-platform consistency, cadence) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

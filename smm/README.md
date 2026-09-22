@@ -32,6 +32,8 @@ Design an influencer and UGC program to launch our new skincare line.
 | **ugc** | UGC pipeline | UGC: source, license, and reuse user content on brand channels and ads. |
 | **analytics** | social performance reporting | Analytics: platform metrics, reporting, and the iteration loop. |
 | **postiz** | schedule via postiz / social automation | Postiz: automated multi-channel dispatch across 28+ channels via API/CLI. |
+| **carousel** | viral carousel generator | Carousel: 6-slide narrative carousels via Playwright, Gemini, and Upload-Post. |
+| **audit** | audit social channels | Audit: content consistency, style compliance, and engagement diagnostics. |
 
 ### Specialized References
 
