@@ -70,7 +70,7 @@
     "type-check": "bunx --bun tsc --noEmit"
   },
   "type": "module",
-  "version": "5.25.1",
+  "version": "5.26.0",
   "devDependencies": {
     "bun-types": "^1.4.2",
     "ruff": "^1.5.4"
