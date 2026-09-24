@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -194,5 +195,11 @@ describe("Invocation UX & conventions", () => {
       const body = content.split("---").slice(2).join("---");
       expect(body).toMatch(/\| Mode \|/);
     }
+  });
+
+  test("secretary/references/dispatch.md stays in zero-drift synchronization with skills.json and reference modes", () => {
+    const res = spawnSync("bun", ["scripts/sync-dispatch.ts", "--check"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("perfect sync");
   });
 });

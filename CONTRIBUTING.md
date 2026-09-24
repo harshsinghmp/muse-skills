@@ -1,16 +1,43 @@
 # Contributing to Muse Skills
 
-Thank you for contributing to the **Muse Skills** repository.
+> **The QUEST Standard for Autonomous & Human Engineering**: Quality, Understanding, Education, Stimulation, and Transition.
+
+Thank you for contributing to **Muse Skills**. This guide establishes the mandatory engineering standards, Git workflow, and skill anatomy required to maintain a zero-defect, production-grade AI agent skills library.
 
 ---
 
-## 📜 Meaningful Git Commit Protocol (Mandatory)
+## 🎯 1. Qualify (Who This Is For)
+
+This guide is for **human engineers, agency architects, and autonomous AI coding agents** contributing new capabilities, bug fixes, or performance optimizations to the `muse-skills` ecosystem.
+
+We operate under a strict **Evidence Over Claims** doctrine:
+- If code changes, tests and documentation must change.
+- Claims of success must be backed by real, executable terminal output (`bun test`).
+- Every contribution must maintain 100% backward compatibility and zero credential leakage.
+
+---
+
+## 🧩 2. Understand (The Problems We Solve)
+
+Vanilla AI agent contributions frequently suffer from four fatal failure modes:
+1. **Chaotic Commit History**: Vague messages like `update files` or `fix stuff` destroy forensic traceability and break automated changelogs.
+2. **Monolithic Pull Requests**: Bundling multiple skill modifications into one giant PR creates merge conflicts, blocks releases, and hides regressions.
+3. **Documentation Drift**: Adding features without updating `skills.json`, `llms.txt`, and `dispatch.md` blinds agent discovery engines.
+4. **Credential Exposure**: Accidentally committing `.env` files or hardcoded API keys compromises security across the entire ecosystem.
+
+In `muse-skills`, our protocols eliminate these risks at the root.
+
+---
+
+## 📚 3. Educate (Core Engineering Standards)
+
+### A. Meaningful Git Commit Protocol (Mandatory)
 
 Every commit in this repository must follow the **Conventional Commits** standard with explicit, high-signal context in the body.
 
-### Commit Format
+#### Commit Message Format
 
-```
+```text
 <type>(<scope>): <concise-imperative-summary>
 
 - Why: [Explain the problem, user request, or business rationale]
@@ -18,92 +45,136 @@ Every commit in this repository must follow the **Conventional Commits** standar
 - Verification: [Proof of clean build, linter/typecheck, or test receipts]
 ```
 
----
+#### Allowed Types
 
-### Allowed Types
-
-- `feat`: A new skill, feature, or CLI capability.
+- `feat`: A new skill, sub-mode, or CLI capability.
 - `fix`: A bug fix or defect correction.
-- `docs`: Documentation only changes (README, references, comments).
-- `refactor`: Code restructuring without changing behavior.
-- `perf`: Performance optimizations.
-- `test`: Adding or modifying automated tests/probes.
+- `docs`: Documentation updates (`README.md`, references, comments).
+- `refactor`: Code restructuring without changing observable behavior.
+- `perf`: Performance optimizations (context compression, execution speed).
+- `test`: Adding or modifying automated test suites.
 - `chore`: Dependency updates, registry metadata, build tooling.
 - `ci`: CI/CD workflow updates.
 
----
+#### Commit Examples
 
-### Examples
+```text
+# ✅ Good Commit (Accepted):
+feat(secretary): add continuous auto-sync dispatch engine and zero-drift contract (#31)
 
-#### Good Commit:
-```
-feat(new-project): add dynamic llms.txt generation and reality machine
-
-- Why: Enables newly scaffolded projects to maintain persistent, auto-indexed documentation for LLMs.
+- Why: Ensures secretary:dispatch and multi-harness commands never drift when skills are modified.
 - What:
-  - Added scripts/generate_llms_txt.ts to Project OS template.
-  - Initialized STATE.md with 8-stage reality lifecycle.
-  - Linked agency-suite skills into .agents/skills.
-- Verification: Tested in sandbox directory /tmp/test-project-os; build and index generation passed.
+  - Added scripts/sync-dispatch.ts to regenerate agency directory dynamically.
+  - Wired auto-sync into scripts/hooks/sync-registry-on-skill-add.sh.
+  - Added zero-drift test assertion in tests/skills.test.ts.
+- Verification: Ran bun test (124 passed, 2,855 assertions); bun run lint passed cleanly.
+
+# ❌ Bad Commits (Rejected by Pre-Commit Gates):
+update files
+fix bugs
+wip
+changes
 ```
 
-#### Bad Commits (Rejected):
-❌ `update files`
-❌ `fix bugs`
-❌ `wip`
-❌ `changes`
+---
+
+### B. Git Workflow & Release Lifecycle
+
+#### Branching Matrix
+
+- `main` → Production releases only. **Never commit directly to `main`.**
+- `dev` → Active integration and staging branch. All feature branches cut from `dev`.
+- `feat/<skill>-<feature>` → Isolated feature branches for individual tasks or skills.
+- `release/vX.Y.Z` → Staged from `dev` when preparing production release; merged into `main`, then back into `dev`.
+- `hotfix/<issue>` → Emergency fixes cut from `main`; merged into both `main` and `dev`.
+
+#### Invariant Rules
+
+1. **Atomic PR Per Skill / Feature**: Always open a separate, dedicated feature branch and Pull Request for each skill or feature. Even when executing multiple upgrades in a single working session, never bundle multi-skill changes into one monolithic PR.
+2. **Linear History & Rebase**: Prefer `git rebase` within feature branches to keep history clean and linear before merging.
+3. **Zero Secrets (LifeOS Vibeguard)**: Never commit secrets, tokens (`sk-*`, `ghp_*`, private keys), or `.env` files. Run pre-commit secret scans before staging.
 
 ---
 
-## 🌿 Git Workflow & Release Lifecycle (Mandatory)
+### C. Skill Directory Anatomy (RFC Standard)
 
-### Branches
+Every skill must reside in its own dedicated directory at repository root:
 
-- `main` → Production. **Never commit directly to** `main`**.**
-- `dev` → Staging/integration branch.
-- `feature/*` or `feat/*` → Created from `dev` for individual features/tasks.
-- `release/vX.Y.Z` → Created from `dev` when changes are ready for production; merge into `main`, then back into `dev`.
-- `hotfix/*` → Created from `main` for urgent production fixes; merge into both `main` and `dev`.
+```text
+<skill-name>/
+├── agents/
+│   └── openai.yaml         # Tool parameter schema for OpenAI/Codex/Cursor
+├── examples/               # (Recommended) Concrete input/output artifacts
+│   └── sample-<name>.md
+├── references/             # Supporting deep architectural references and mode playbooks
+│   └── <mode>.md
+├── scripts/                # (Optional) Executable validation or generation scripts
+│   └── helper-script.ts
+├── README.md               # User-facing summary, modes table & installation guide
+└── SKILL.md                # The definitive agent operational prompt with YAML frontmatter
+```
 
-### Rules
+#### Required Frontmatter Parity
 
-- Feature branches must be created from `dev`.
-- Use descriptive branch names (`feat/<skill>-<feature>`, `fix/<skill>-<issue>`).
-- **Atomic PR Per Skill / Feature**: Always open a separate, dedicated Pull Request for each new feature per skill. Even when executing multiple skill upgrades within the same working session, each skill's modifications must be isolated in its own branch and PR. Never bundle multi-skill changes into a single monolithic PR.
-- Every merge into `dev` or `main` requires a Pull Request and code review.
-- Do not rewrite or force-push `dev` or `main` history.
-- Prefer `rebase` within feature branches when integrating changes and keeping history linear.
-- For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
-- Prefer a new revert commit over rewriting shared history.
+Every `SKILL.md` must have valid YAML frontmatter matching `skills.json` and `llms.txt`:
 
-### Commit Message Standard
-
-- **Subject (≤50 chars)**: Capitalized imperative Conventional Commit (e.g., `Skill: Added New - Designs Scope`, never `Added designscope` or `Fix stuff`).
-- **Body (≤72 chars/line)**: Focus on *why* and non-obvious rationale instead of restating the diff; avoid pronouns (`I`, `we`) and meta-phrasing (`This commit/PR`).
-- **Issue References**: Link issues at the bottom (e.g., `Closes #123`, `Resolves #456`).
-
-### Releases & Semantic Versioning (`vX.Y.Z`)
-
-- `X` **(Major)**: Breaking architectural changes, core schema shifts, or protocol overhauls (`vX.0.0`).
-- `Y` **(Feature)**: Substantive new agent capabilities, MCP tools, or CLI subcommands (`vX.Y.0`).
-- `Z` **(Minor / Hotfix)**: Bug fixes, security patches, performance, and urgent hotfixes (`vX.Y.Z`).
-
-Invariants:
-
-- Sync `package.json` `"version"` with the `vX.Y.Z` tag in the release commit.
-- Stage on `release/vX.Y.Z` from `dev` → merge to `main` → back-merge to `dev`.
-- CI creates GitHub release on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). No npm publish — `npx skills add` fetches from GitHub.
+```yaml
+---
+name: <skill-name>
+description: "Trigger-rich description outlining when to invoke and what is delivered."
+argument-hint: "[mode] [flags]"
+user-invocable: true
+metadata:
+  hermes:
+    tags: [tag1, tag2]
+    related_skills: [skill-a, skill-b]
+    requires_tools: [bash, view_file, write_to_file]
+---
+```
 
 ---
 
-## Adding a New Skill
+## ⚡ 4. Stimulate (Why High Standards Matter)
 
-1. Create a directory for your skill: `mkdir my-skill`
-2. Include all required assets:
-   - `SKILL.md` (Main skill prompt & workflow)
-   - `README.md` (User documentation)
-   - `agents/openai.yaml` (Agent tool definition)
-   - `scripts/` or `references/` (Optional helpers)
-3. Register the skill in `skills.json`.
-4. Validate JSON and test locally.
-5. Create a meaningful commit following the protocol above and submit a PR or push.
+When your pull request respects these standards:
+- **Instant Portability**: Your skill is immediately usable across 80+ agent harnesses (OpenCode, Antigravity, Cursor, Windsurf, Claude Code, Hermes).
+- **Universal Slash Commands**: It automatically compiles into native slash commands (`/<skill>`, `/<skill>:<mode>`) and the `muse` CLI runner.
+- **Autonomous Dispatch**: It gets indexed into `secretary:dispatch`, allowing agents to auto-route tasks to your skill without user prompt engineering.
+- **Zero Regression Churn**: Automated test suites protect your code from being broken by future changes.
+
+---
+
+## 🚀 5. Transition (Step-by-Step Contribution Checklist)
+
+Follow this 6-step checklist to submit your contribution:
+
+```bash
+# 1. Cut a fresh feature branch from dev
+git checkout dev
+git pull origin dev
+git checkout -b feat/<skill-name>-<feature>
+
+# 2. Author or modify your skill assets
+# (SKILL.md, README.md, agents/openai.yaml, references/<mode>.md)
+
+# 3. Synchronize catalog, dispatch directory & harness commands
+bun run sync-dispatch
+
+# 4. Verify test suite, linting & type checks
+bun test
+bun run lint
+bun run type-check
+
+# 5. Commit using the Meaningful Git Commit Protocol
+git add -A
+git commit -m "feat(<skill-name>): <imperative summary> (#issue)"
+
+# 6. Push and open your atomic PR against dev
+git push origin feat/<skill-name>-<feature>
+```
+
+---
+
+## 📄 License
+
+By contributing to Muse Skills, you agree that your contributions will be licensed under the [MIT License](LICENSE).

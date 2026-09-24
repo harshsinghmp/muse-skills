@@ -1,26 +1,55 @@
-# muse-skills hooks
+# 🛡️ muse-skills Safety & Continuity Hooks
 
-Shell hooks that improve workflow safety, accuracy, and session continuity. Install alongside skills via `bash scripts/hooks/install-hooks.sh`. Each hook is fail-closed (log + continue, never blocks the agent).
+> **The PAS Framework for Agent Guardrails**: Problem, Agitation, and Definitive Solution.
 
-## Hooks (15 total)
+Autonomous AI coding agents operate at superhuman speed, but without strict environmental guardrails, speed turns into liability. These 15 lightweight, zero-dependency shell hooks provide the passive safety net your coding agents need to build fearlessly.
 
-| # | Hook | Trigger | Agent | Behavior |
+---
+
+## ⚠️ The Problem & Agitation
+
+### The Problem
+When autonomous agents run in production repositories without guardrails, four catastrophic failure modes routinely occur:
+1. **Accidental Credential Exposure**: An agent casually commits `.env`, private keys, or API tokens (`sk-*`, `ghp_*`) into public or shared git history.
+2. **Worktree Race Conditions**: Two parallel agent sessions in the same clone mutate branches and stashes simultaneously, clobbering uncommitted work.
+3. **Context Eviction on Crash**: An agent terminal crashes or closes mid-task, wiping active progress and forcing the developer to reconstruct context manually.
+4. **Silent Manifest Drift**: Skills or modes are added, but manifests (`skills.json`, `llms.txt`, `dispatch.md`) are never updated, blinding downstream agents.
+
+### The Agitation
+A single leaked secret can trigger security revocations, cloud bills, and client breaches. A clobbered branch destroys hours of engineering effort. And an agent claiming code works without running tests pushes broken builds straight to CI.
+
+---
+
+## ⚡ The Solution: 15 Fail-Closed Safety Hooks
+
+The `muse-skills` hook suite runs passively at the git and agent harness lifecycle layers. 
+
+**Operating Principles**:
+- **Fail-Closed & Advisory**: Hooks log high-visibility warnings and reminders without forcibly crashing or freezing the agent.
+- **Zero External Dependencies**: Pure POSIX/Bash scripts—no Node/Python runtime required for git-level hooks.
+- **Vendor-Neutral Portability**: Installs automatically into any detected harness (.git, OpenCode, Antigravity, Cursor, Windsurf, Hermes, Claude Code).
+
+---
+
+## 📋 Complete Hooks Catalog (15 Total)
+
+| # | Hook | Trigger Event | Target Layer | Deterministic Behavior |
 |:---|:---|:---|:---|:---|
-| 1 | `gen-repo-report-on-close.sh` | session end | all | Copies latest `session-history-*.html` from drafts into `.agents/archive/reports/session-<id>--<date>.html` |
-| 2 | `secret-scan-pre-commit.sh` | git pre-commit | git-native | Scans staged files for credential patterns (`sk-*`, `ghp_*`, `glpat-*`, private keys). Warns only |
-| 3 | `worktree-lease-check.sh` | git branch ops | git-native + coupling-router | Probes `WORKTREE-LEASE.md` before branch mutations; warns if another session holds the lease |
-| 4 | `audit-quick-on-skill-use.sh` | post-skill execution | all | Checks that the executed skill's `SKILL.md` has a `## Verification` section; prints reminder |
-| 5 | `sync-registry-on-skill-add.sh` | post-skill-install | all | Runs `scripts/sync_registry.py` to sync `skills.json` + `llms.txt` + `README.md` |
-| 6 | `stale-frontmatter-check.sh` | post-merge, post-commit | git-native | Runs `sync_registry.py` to detect frontmatter drift between SKILL.md and skills.json |
-| 7 | `pre-push-test-gate.sh` | git pre-push | git-native | Warns if `bun test` is not green before push. Advisory only |
-| 8 | `session-resume-probe.sh` | session start / workspace entry | all | Probes `HANDOFF.md` for relay ambient continuity; prints resumption block |
-| 9 | `context-switch-snapshot.sh` | context-anchor park/switch | all | Reminds to update anchor before switching workstreams |
-| 10 | `evidence-decision-sync.sh` | evidence-ledger decide completes | all | Recommends `updatedocs change` if decision affects docs |
-| 11 | `gauntlet-closeout.sh` | gauntlet-loop terminates | all | Checks for ACCEPTANCE_PACKET.md; prints termination status |
-| 12 | `dead-letter-nightly.sh` | scheduled (cron) or manual | all | Counts open dead-letter records; recommends `dead-letter status` |
-| 13 | `cache-pressure-check.sh` | periodic (cron) or pre-build | all | Warns when disk space < 10GB; recommends `clean-system-cache` |
-| 14 | `taste-observer.sh` | session end / user input | all | Passively extracts user corrections and preferences into Native Taste Engine |
-| 15 | `install-hooks.sh` | manual / post-skill-install | all | Detects agent runtimes, installs hooks into correct directories |
+| 1 | `gen-repo-report-on-close.sh` | session end | all | Automatically archives session HTML report into `.agents/archive/reports/` |
+| 2 | `secret-scan-pre-commit.sh` | git pre-commit | git-native | Scans staged diffs for credential patterns (`sk-*`, `ghp_*`, private keys) and warns before commit |
+| 3 | `worktree-lease-check.sh` | git branch ops | git-native + coupling-router | Probes `WORKTREE-LEASE.md` before branch switches to prevent multi-agent collisions |
+| 4 | `audit-quick-on-skill-use.sh` | post-skill execution | all | Verifies the invoked skill's `SKILL.md` contains an executable `## Verification` section |
+| 5 | `sync-registry-on-skill-add.sh` | post-skill-install | all | Runs `sync_registry.py` and `sync-dispatch.ts` to sync `skills.json`, `llms.txt`, `README.md`, `dispatch.md`, and harness commands |
+| 6 | `stale-frontmatter-check.sh` | post-merge, post-commit | git-native | Audits byte-parity and frontmatter drift between `SKILL.md` and `skills.json` |
+| 7 | `pre-push-test-gate.sh` | git pre-push | git-native | Verifies that `bun test` is green before pushing to remote branches |
+| 8 | `session-resume-probe.sh` | session start / entry | all | Probes `HANDOFF.md` for `relay` ambient continuity and displays previous session state |
+| 9 | `context-switch-snapshot.sh` | context-anchor switch | all | Prompts the agent to snapshot anchor state before switching workstreams |
+| 10 | `evidence-decision-sync.sh` | evidence-ledger commit | all | Recommends running `updatedocs change` if a recorded decision impacts documentation |
+| 11 | `gauntlet-closeout.sh` | gauntlet-loop close | all | Confirms `ACCEPTANCE_PACKET.md` exists and prints final gauntlet verification score |
+| 12 | `dead-letter-nightly.sh` | scheduled / manual | all | Scans unhandled failure logs and recommends running `dead-letter status` |
+| 13 | `cache-pressure-check.sh` | periodic / pre-build | all | Monitors disk pressure and triggers `clean-system-cache` when disk space < 10GB |
+| 14 | `taste-observer.sh` | session end / feedback | all | Passively extracts user corrections and stylistic preferences into the Taste Engine |
+| 15 | `install-hooks.sh` | manual install | all | Detects active agent runtimes and installs hooks into existing harness directories |
 
 ## Auto-detection table
 

@@ -1,6 +1,6 @@
 # 🛠️ devops
 
-The infrastructure and reliability department head: one skill, six modes — hosting, cicd, domains, security, monitoring, incident. Reproducible deploys, then observability, then learning from failure.
+The infrastructure and reliability department head: one skill, seven modes — hosting, cicd, domains, security, monitoring, incident, cloudflare. Reproducible deploys, edge compute, and Zero Trust security.
 
 ## Install
 
@@ -17,7 +17,7 @@ Deploy our Next.js app to production with a CI/CD pipeline and monitoring.
 ```
 
 ```text
-Configure our domain with TLS, add uptime alerts, and run an incident postmortem.
+Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero Trust access.
 ```
 
 ## Modes
@@ -30,6 +30,7 @@ Configure our domain with TLS, add uptime alerts, and run an incident postmortem
 | **security** | security hardening | Security: least privilege, headers, secrets, and dependency hygiene. |
 | **monitoring** | monitoring & alerting | Monitoring: metrics, logs, traces, and alerts that are actionable. |
 | **incident** | incident response / postmortem | Incident: stabilize first, then a blameless postmortem with tracked actions. |
+| **cloudflare** | cloudflare edge, workers & pages | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, and Wrangler CLI. |
 
 ## How it works
 

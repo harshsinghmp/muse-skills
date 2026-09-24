@@ -1,6 +1,6 @@
 # AGENTS.md - muse-skills
 
-Curated suite of forty-five universal AI agent skills. MIT. Install via
+Curated suite of forty-six universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working
@@ -55,7 +55,7 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 
 - **Hooks** (15 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
 - **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish)
-- **Audit modes**: 13 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
+- **Audit modes**: 20 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
 - **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking
 - **Session reports**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
 
@@ -67,3 +67,10 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 - Modern-tool primacy (installed set only, never mandate outside it)
 - Tool-independent mechanisms with Default-stack lines where a stack was chosen
 - No secrets or personal values in shipped files
+
+<!-- muse-secretary-router:start -->
+## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
+- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md`).
+- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
+- **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
+<!-- muse-secretary-router:end -->

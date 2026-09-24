@@ -60,13 +60,17 @@
   },
   "scripts": {
     "extract-skill": "bun scripts/extract-skill.ts",
+    "export-commands": "bun scripts/export-commands.ts",
+    "sync-dispatch": "bun scripts/sync-dispatch.ts",
+    "sync": "python3 scripts/sync_registry.py && bun scripts/sync-dispatch.ts",
+    "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
     "validate": "bash updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && ruff check scripts/",
     "type-check": "bunx --bun tsc --noEmit"
   },
   "type": "module",
-  "version": "5.25.1",
+  "version": "5.26.0",
   "devDependencies": {
     "bun-types": "^1.4.2",
     "ruff": "^1.5.4"

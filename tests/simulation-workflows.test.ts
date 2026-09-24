@@ -51,9 +51,10 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     });
   });
 
-  describe("2. smm Postiz Multi-Channel Dispatch Simulation", () => {
+  describe("2. smm Multi-Channel Dispatch & Carousel Growth Engine Simulation", () => {
     const smmDir = path.join(REPO_ROOT, "smm");
     const postizRefPath = path.join(smmDir, "references", "postiz.md");
+    const carouselRefPath = path.join(smmDir, "references", "carousel.md");
 
     test("smm registers postiz mode in SKILL.md and openai.yaml", () => {
       const skillContent = fs.readFileSync(path.join(smmDir, "SKILL.md"), "utf8");
@@ -72,6 +73,30 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("postiz upload");
       expect(content).toContain("TikTok Direct-Post Mandate");
       expect(content).toContain("DIRECT_POST");
+    });
+
+    test("smm registers carousel mode in SKILL.md and openai.yaml", () => {
+      const skillContent = fs.readFileSync(path.join(smmDir, "SKILL.md"), "utf8");
+      expect(skillContent).toContain("**carousel**");
+      expect(skillContent).toContain("references/carousel.md");
+      expect(skillContent).toContain(
+        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|audit]"',
+      );
+
+      const openaiYaml = fs.readFileSync(path.join(smmDir, "agents", "openai.yaml"), "utf8");
+      expect(openaiYaml.toLowerCase()).toContain("carousel");
+    });
+
+    test("carousel reference defines 6-slide arc, visual consistency, and Upload-Post publishing pipeline", () => {
+      expect(fs.existsSync(carouselRefPath)).toBe(true);
+      const content = fs.readFileSync(carouselRefPath, "utf8");
+
+      expect(content).toContain("6-Slide Narrative Storyboard");
+      expect(content).toContain("Slide 1: High-impact Scroll-Stopping Hook");
+      expect(content).toContain("Slide 6: High-Conversion CTA");
+      expect(content).toContain("Visual Coherence Assets");
+      expect(content).toContain("Upload-Post");
+      expect(content).toContain("learnings.json");
     });
   });
 
@@ -449,7 +474,10 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(cfRef).toContain("Full (Strict)");
       expect(cfRef).toContain("Zero Trust Tunnels (`cloudflared`)");
       expect(cfRef).toContain("Rate Limiting Rule");
-      expect(cfRef).toContain("wrangler.toml");
+      expect(cfRef).toContain("wrangler.jsonc");
+      expect(cfRef).toContain("wrangler types");
+      expect(cfRef).toContain("d1_databases");
+      expect(cfRef).toContain("wrangler dev --remote");
     });
 
     test("design: uikit mode consolidates starwind-ui, stitch-design-taste, headless primitives, and CVA", () => {
@@ -809,6 +837,71 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(resRed.stdout).toContain("BLOCKED_INCOMPLETE");
       expect(resRed.stdout).toContain("RED LIGHT");
       expect(resRed.stdout).toContain("Missing Brand Discovery Parameters");
+    });
+  });
+
+  describe("9. Agency Operations Department (ops) & Obsidian PKM Workflows", () => {
+    const opsDir = path.join(REPO_ROOT, "ops");
+
+    test("ops SKILL.md registers obsidian mode in frontmatter and modes table", () => {
+      const skillPath = path.join(opsDir, "SKILL.md");
+      const content = fs.readFileSync(skillPath, "utf8");
+      expect(content).toContain("obsidian");
+      expect(content).toContain("| **obsidian** |");
+      expect(content).toContain("references/obsidian.md");
+      expect(content).toContain(
+        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]"',
+      );
+    });
+
+    test("ops references/obsidian.md comprehensively covers OFM syntax, wikilinks, callouts, and CLI", () => {
+      const refPath = path.join(opsDir, "references", "obsidian.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("[[Note Name]]");
+      expect(ref).toContain("![[image.png");
+      expect(ref).toContain("> [!note]");
+      expect(ref).toContain("> [!important]");
+      expect(ref).toContain("> [!faq]-");
+      expect(ref).toContain("obsidian create");
+      expect(ref).toContain("obsidian search");
+      expect(ref).toContain("obsidian plugin:reload");
+      expect(ref).toContain("obsidian dev:screenshot");
+      expect(ref).toContain("JSON Canvas (.canvas) Specification & Visual Spatial Graphs");
+      expect(ref).toContain("JSON Canvas 1.0");
+      expect(ref).toContain('"node-root"');
+    });
+  });
+
+  describe("10. Executive Secretary Controller (secretary) & Universal Dispatcher", () => {
+    const secretaryDir = path.join(REPO_ROOT, "secretary");
+
+    test("secretary SKILL.md registers dispatch mode in frontmatter, aliases, and modes table", () => {
+      const skillPath = path.join(secretaryDir, "SKILL.md");
+      const content = fs.readFileSync(skillPath, "utf8");
+      expect(content).toContain("agency-dispatcher");
+      expect(content).toContain("session-router");
+      expect(content).toContain("| **dispatch** |");
+      expect(content).toContain("references/dispatch.md");
+      expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
+    });
+
+    test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
+      const refPath = path.join(secretaryDir, "references", "dispatch.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("Sol");
+      expect(ref).toContain("Jasper");
+      expect(ref).toContain("Crew");
+      expect(ref).toContain("Nexus");
+      expect(ref).toContain("5-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("Progressive Disclosure Loading");
+      expect(ref).toContain("webdev");
+      expect(ref).toContain("design");
+      expect(ref).toContain("smm");
+      expect(ref).toContain("devops");
+      expect(ref).toContain("ops");
+      expect(ref).toContain("code-review");
     });
   });
 });
