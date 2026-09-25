@@ -68,3 +68,15 @@ To balance velocity with rigor, overhead is strictly proportional to task risk:
   - Prohibited: *"powerful"*, *"seamless"*, *"next-gen"*, *"revolutionary"*, *"best-in-class"*, *"game-changing"*.
   - Required: Concrete, quantified, and verifiable metrics (e.g., *"sub-15ms p99 latency"*, *"1-command setup"*, *"100% test pass rate"*).
 
+### C. Universal Industry Vertical Alignment Standard
+- Every client project MUST declare its **Industry Vertical** in `.agents/context/product.md`:
+  - `developer_tools`: APIs, CLIs, SDKs, open-source libraries, dev infrastructure, AI agent harnesses.
+  - `b2b_saas`: Enterprise software, internal ops, HR, CRM, financial management, team collaboration.
+  - `ecommerce_retail`: D2C retail, physical consumer products, apparel, marketplace shops.
+  - `professional_services`: Legal, accounting, marketing/design agencies, consulting firms.
+  - `local_healthcare`: Dental/medical practices, local contractors, fitness gyms, hospitality.
+  - `creator_media`: Newsletters, podcasts, education courses, paid communities.
+- **Strict Anti-Mismatch Guard**:
+  - All downstream agents (`design`, `webdev`, `smm`, `content`, `paidads`, `seo`) MUST inspect the project's vertical before selecting templates, layouts, components, or copy.
+  - NEVER apply developer-first components (terminal boxes, code grids, API tabs, GitHub star badges) to retail, services, local business, or non-technical SaaS clients. Mismatching industry archetypes is classified as a P0 deliverable defect.
+

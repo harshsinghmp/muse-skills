@@ -2166,10 +2166,22 @@ async function main() {
       .join("\n");
     const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
 
+    let industryVertical = "b2b_saas";
+    if (config.intent === "ecommerce" || config.ecommerce !== "none") {
+      industryVertical = "ecommerce_retail";
+    } else if (
+      config.intent === "cli" ||
+      /developer|engineer|devops|architect|sdk|api|agent/i.test(targetAudience) ||
+      /developer|engineer|api|cli/i.test(projectDesc)
+    ) {
+      industryVertical = "developer_tools";
+    }
+
     const tokenMap: Record<string, string> = {
       "{{PROJECT_NAME}}": projectName,
       "{{PROJECT_DESC}}": projectDesc,
       "{{AUTHOR_NAME}}": authorName,
+      "{{INDUSTRY_VERTICAL}}": industryVertical,
       "{{TARGET_AUDIENCE}}": targetAudience,
       "{{PROBLEM_SOLVED}}": coreProblem,
       "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
