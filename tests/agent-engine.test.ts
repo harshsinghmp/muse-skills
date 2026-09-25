@@ -1126,5 +1126,50 @@ Custom billing engine for healthcare providers.
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
     }, 30000);
+
+    it("supports graphics, ecom, and growth archetypes with dedicated creative/ and marketing/ directories", () => {
+      // 1. Graphics preset
+      const targetGraphics = join(TEST_SANDBOX, "preset-graphics");
+      const resGraphics = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGraphics.status).toBe(0);
+      expect(existsSync(join(targetGraphics, "creative/tokens"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/decks"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/assets"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/README.md"))).toBe(true);
+      const productGraphics = readFileSync(join(targetGraphics, ".agents/context/product.md"), "utf8");
+      expect(productGraphics).toContain("creative_design_studio");
+
+      // 2. Growth preset
+      const targetGrowth = join(TEST_SANDBOX, "preset-growth");
+      const resGrowth = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGrowth.status).toBe(0);
+      expect(existsSync(join(targetGrowth, "marketing/smm"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/seo"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/paidads"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/README.md"))).toBe(true);
+      const productGrowth = readFileSync(join(targetGrowth, ".agents/context/product.md"), "utf8");
+      expect(productGrowth).toContain("growth_marketing_agency");
+
+      // 3. E-commerce preset
+      const targetEcom = join(TEST_SANDBOX, "preset-ecom");
+      const resEcom = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resEcom.status).toBe(0);
+      const productEcom = readFileSync(join(targetEcom, ".agents/context/product.md"), "utf8");
+      expect(productEcom).toContain("ecommerce_retail");
+      const roadmapEcom = readFileSync(join(targetEcom, ".agents/context/roadmap.md"), "utf8");
+      expect(roadmapEcom).toContain("webdev:ecommerce");
+    }, 30000);
   });
 });

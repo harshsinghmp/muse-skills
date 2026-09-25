@@ -4,33 +4,39 @@
 
 ---
 
-## 1. Enterprise Multi-Client & Sub-App Workspace Topology
+## 1. Enterprise Multi-Client & Sub-App Workspace Topology (Adaptive Multi-Service)
 
-Every client engagement is provisioned as an independent workspace container under `~/Projects/<client_brand>/`. Within a client container, umbrella brands and multi-product systems house their sub-applications under `apps/`:
+Engagements, ventures, and open-source packages are partitioned into three dedicated domains to prevent operational crosstalk:
+- `~/Projects/clients/<client_brand>/`: Multi-client retainers, agency deliverables, and customer projects with strict multi-tenant firewalling.
+- `~/Projects/products/<product_name>/`: Sovereign internal ventures, SaaS platforms, and digital applications.
+- `~/Projects/oss/<repo_name>/`: Public open-source libraries, CLI harnesses, and universal tools.
 
+### Workspace Layout (Full-Service Client Brand):
 ```
-~/Projects/<client_brand>/             <-- Client Root Workspace (scaffolded via new-project)
+~/Projects/clients/<client_brand>/     <-- Client Root Workspace (scaffolded via new-project)
 ├── .memory/                          <-- Client-Wide Isolated Memory (Hermetic local SQLite/DB)
 │   ├── CURRENT.md                    <-- Active client hard constraints & in-flight tasks
 │   └── memory.db                     <-- Local client cognitive memory store
-├── .agents/
-│   ├── brand/tokens/                 <-- Shared Brand Tokens (OKLCH colors.json, typography.json)
-│   └── context/
-│       ├── product.md                <-- Canonical Sub-App Topology Table & Industry Vertical
-│       ├── brand.md                  <-- Master Brand Dossier & Claims Library
-│       ├── current.md                <-- Shipped milestone reality
-│       └── architecture.md           <-- Cross-app contracts & system topology
+├── .agents/                          <-- Unified DOX Context & Brand Container
+│   ├── brand/                        <-- Design tokens, voice.md, personas.md, positioning.md
+│   └── context/                      <-- product.md, accounts.md (Zero-Leak Registry), architecture.md
 ├── AGENTS.md                         <-- Client Root Router & Progressive Disclosure Rules
-└── apps/                             <-- Sub-Applications & Subdomains (Optional: for multi-app setups)
-    ├── <sub-app-1>/                  <-- Primary Service / Web (e.g. apps/web or root src/)
-    │   ├── AGENTS.md                 <-- Sub-app rules (dev port 3000)
-    │   ├── .env                      <-- Isolated environment variables
-    │   └── src/
-    └── <sub-app-2>/                  <-- Secondary Service / Subdomain (e.g. apps/portal or apps/app)
-        ├── AGENTS.md                 <-- Sub-app rules (dev port 3001)
-        ├── .env                      <-- Isolated environment variables
-        └── src/
+├── apps/                             <-- Sub-Applications & Engineering (Optional: apps/web, apps/shop)
+│   └── web/                          <-- Primary Web Application / Storefront
+├── creative/                         <-- (If Graphics/Design) tokens, decks, SVG vectors
+└── marketing/                        <-- (If Growth/Marketing) smm calendars, SEO clusters, ad copy
 ```
+
+### The 6 Adaptive Project Archetypes
+
+| Archetype | Primary Focus | Hosting & DevOps | Core Output Assets | Primary Lead |
+| :--- | :--- | :--- | :--- | :--- |
+| **`static-edge`** | Fast marketing sites, blogs, portfolios, docs | Cloudflare Pages, GitHub Pages | Astro / Plain HTML, BEM, fluid OKLCH tokens | **Sol** |
+| **`saas-fullstack`** | Authenticated SaaS, web apps, portals | Docker, VPS, Coolify, Fly.io, Vercel | Next.js, Postgres/Neon, Drizzle, Better Auth | **Sol** & **Nexus** |
+| **`ecom`** | Headless & hosted e-commerce storefronts | Cloudflare Edge / Docker | Medusa v2, Stripe checkout, product catalogs | **Sol** & **Jasper** |
+| **`graphics`** | Brand identity, design systems, visual assets | None / Static styleguide | W3C tokens, Figma handoff, decks, SVG vectors | **Jasper** |
+| **`oss-library`** | Public tools, CLI packages, universal engines | GitHub Releases / npm / bun | TypeScript library, GitHub Actions CI, MIT license | **Sol** & **Nexus** |
+| **`growth-retainer`** | SMM, SEO keyword clusters, paid advertising | None / Platform APIs | Content calendars, viral hooks, ad variations | **Jasper** & **Crew** |
 
 ---
 
