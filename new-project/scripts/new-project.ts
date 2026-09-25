@@ -2083,16 +2083,91 @@ async function main() {
     );
   }
 
+  // Compute tokenMap for both Brand and Context templates
+  const featureBullets = coreFeatures
+    .split(",")
+    .map((f) => `- **${f.trim()}**: Core capability and automated verification.`)
+    .join("\n");
+  const plannedBullets = plannedMilestones
+    .split(",")
+    .map((m) => `- **${m.trim()}**: Scheduled for upcoming development sprint.`)
+    .join("\n");
+  const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
+
+  let industryVertical = "b2b_saas";
+  if (config.intent === "ecommerce" || config.ecommerce !== "none") {
+    industryVertical = "ecommerce_retail";
+  } else if (
+    config.intent === "cli" ||
+    /developer|engineer|devops|architect|sdk|api|agent/i.test(targetAudience) ||
+    /developer|engineer|api|cli/i.test(projectDesc)
+  ) {
+    industryVertical = "developer_tools";
+  }
+
+  const tokenMap: Record<string, string> = {
+    "{{PROJECT_NAME}}": projectName,
+    "{{PROJECT_DESC}}": projectDesc,
+    "{{AUTHOR_NAME}}": authorName,
+    "{{INDUSTRY_VERTICAL}}": industryVertical,
+    "{{TARGET_AUDIENCE}}": targetAudience,
+    "{{PROBLEM_SOLVED}}": coreProblem,
+    "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
+    "{{CORE_FEATURES}}": featureBullets,
+    "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
+    "{{BRAND_VOICE}}": brandVoice,
+    "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
+    "{{FIRST_MILESTONE}}": firstMilestone,
+    "{{PLANNED_MILESTONES}}": plannedBullets,
+    "{{REQUESTED_BACKLOG}}": requestedBullets,
+    "{{PROJECT_INTENT}}": config.intent.toUpperCase() || "WEB",
+    "{{FRAMEWORK_DETAILS}}": `${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""} (@latest)`,
+    "{{STYLING_DETAILS}}": `${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in .agents/brand/tokens/)`,
+    "{{ANIMATION_DETAILS}}": `${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}`,
+    "{{STATE_DETAILS}}": `${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}`,
+    "{{MOBILE_DETAILS}}": `${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}`,
+    "{{CMS_COMMERCE_DETAILS}}": `CMS: ${config.cms.toUpperCase()}${config.puck ? " (+ Puck Visual Builder)" : ""} | E-Commerce: ${config.ecommerce.toUpperCase()}`,
+    "{{DATABASE_AUTH_DETAILS}}": `Database: ${config.db.toUpperCase()} | Auth: ${config.auth.toUpperCase()}`,
+    "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
+    "{{AGENT_NAME}}": agentName,
+    "{{AGENT_ROLE}}": agentRole,
+    "{{STATUS_QUO}}": "Manual ad-hoc processes, custom spreadsheets, or legacy tooling",
+    "{{TRACTION_METRICS}}": "Active development / initial workspace initialization",
+    "{{PRIMARY_ASSET}}": "Autonomous DOX Engine architecture with verified automated test suite",
+    "{{STRATEGIC_DIAGNOSIS}}": `Establish core ${config.intent.toLowerCase()} user journey, verify execution in staging, and validate initial user flow.`,
+    "{{NOW_SKILL}}": config.intent === "ecommerce" ? "webdev:ecommerce" : "webdev:frontend",
+    "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
+    "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
+    "{{FRAMEWORK_PRIMARY}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
+    "{{FRAMEWORK_SECONDARY}}": "Next.js / Service API",
+  };
+
   // 1.5 Copy Brand Guidelines & Tokens
   const brandSrc = join(TEMPLATES_DIR, ".agents/brand");
   const brandDest = join(agentsDir, "brand");
   if (existsSync(brandSrc)) {
-    const brandFiles = ["design.md", "bem-conventions.md", "a11y.md"];
+    const brandFiles = [
+      "design.md",
+      "bem-conventions.md",
+      "a11y.md",
+      "voice.md",
+      "personas.md",
+      "positioning.md",
+      "messaging.md",
+      "visual-identity.md",
+      "social-hooks.md",
+    ];
     for (const bf of brandFiles) {
       const src = join(brandSrc, bf);
       const dest = join(brandDest, bf);
-      if (!existsSync(dest) || isForce) {
-        if (!isDryRun) cpSync(src, dest);
+      if (existsSync(src) && (!existsSync(dest) || isForce)) {
+        if (!isDryRun) {
+          let c = readFileSync(src, "utf8");
+          for (const [k, v] of Object.entries(tokenMap)) {
+            c = c.replaceAll(k, v);
+          }
+          writeFileSync(dest, c, "utf8");
+        }
       }
     }
     const tokensSrc = join(brandSrc, "tokens");
@@ -2156,64 +2231,6 @@ async function main() {
   const contextSrc = join(TEMPLATES_DIR, ".agents/context");
   const contextDest = join(agentsDir, "context");
   if (existsSync(contextSrc)) {
-    const featureBullets = coreFeatures
-      .split(",")
-      .map((f) => `- **${f.trim()}**: Core capability and automated verification.`)
-      .join("\n");
-    const plannedBullets = plannedMilestones
-      .split(",")
-      .map((m) => `- **${m.trim()}**: Scheduled for upcoming development sprint.`)
-      .join("\n");
-    const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
-
-    let industryVertical = "b2b_saas";
-    if (config.intent === "ecommerce" || config.ecommerce !== "none") {
-      industryVertical = "ecommerce_retail";
-    } else if (
-      config.intent === "cli" ||
-      /developer|engineer|devops|architect|sdk|api|agent/i.test(targetAudience) ||
-      /developer|engineer|api|cli/i.test(projectDesc)
-    ) {
-      industryVertical = "developer_tools";
-    }
-
-    const tokenMap: Record<string, string> = {
-      "{{PROJECT_NAME}}": projectName,
-      "{{PROJECT_DESC}}": projectDesc,
-      "{{AUTHOR_NAME}}": authorName,
-      "{{INDUSTRY_VERTICAL}}": industryVertical,
-      "{{TARGET_AUDIENCE}}": targetAudience,
-      "{{PROBLEM_SOLVED}}": coreProblem,
-      "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
-      "{{CORE_FEATURES}}": featureBullets,
-      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
-      "{{BRAND_VOICE}}": brandVoice,
-      "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
-      "{{FIRST_MILESTONE}}": firstMilestone,
-      "{{PLANNED_MILESTONES}}": plannedBullets,
-      "{{REQUESTED_BACKLOG}}": requestedBullets,
-      "{{PROJECT_INTENT}}": config.intent.toUpperCase() || "WEB",
-      "{{FRAMEWORK_DETAILS}}": `${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""} (@latest)`,
-      "{{STYLING_DETAILS}}": `${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in .agents/brand/tokens/)`,
-      "{{ANIMATION_DETAILS}}": `${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}`,
-      "{{STATE_DETAILS}}": `${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}`,
-      "{{MOBILE_DETAILS}}": `${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}`,
-      "{{CMS_COMMERCE_DETAILS}}": `CMS: ${config.cms.toUpperCase()}${config.puck ? " (+ Puck Visual Builder)" : ""} | E-Commerce: ${config.ecommerce.toUpperCase()}`,
-      "{{DATABASE_AUTH_DETAILS}}": `Database: ${config.db.toUpperCase()} | Auth: ${config.auth.toUpperCase()}`,
-      "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
-      "{{AGENT_NAME}}": agentName,
-      "{{AGENT_ROLE}}": agentRole,
-      "{{STATUS_QUO}}": "Manual ad-hoc processes, custom spreadsheets, or legacy tooling",
-      "{{TRACTION_METRICS}}": "Active development / initial workspace initialization",
-      "{{PRIMARY_ASSET}}": "Autonomous DOX Engine architecture with verified automated test suite",
-      "{{STRATEGIC_DIAGNOSIS}}": `Establish core ${config.intent.toLowerCase()} user journey, verify execution in staging, and validate initial user flow.`,
-      "{{NOW_SKILL}}": config.intent === "ecommerce" ? "webdev:ecommerce" : "webdev:frontend",
-      "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
-      "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
-      "{{FRAMEWORK_PRIMARY}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
-      "{{FRAMEWORK_SECONDARY}}": "Next.js / Service API",
-    };
-
     const ctxFiles = readdirSync(contextSrc);
     for (const f of ctxFiles) {
       const src = join(contextSrc, f);
@@ -2228,7 +2245,7 @@ async function main() {
         }
       }
     }
-    console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, decisions, roadmap)");
+    console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, brand, accounts, decisions, roadmap)");
   }
 
   // 1.7 Initialize Cognitive Memory (.memory/ + CURRENT.md)
