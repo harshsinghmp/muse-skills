@@ -39,8 +39,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
-| **tracking** | "set up tracking", "GA4 events", "GTM", "event tracking", "tag setup" | Event/tag plan, implementation, and live verification | [references/tracking.md](references/tracking.md) |
-| **dashboards** | "build a dashboard", "looker studio", "kpi dashboard", "reporting view" | KPI dashboards built for a decision-making audience | [references/dashboards.md](references/dashboards.md) |
+| **tracking** | "set up tracking", "GA4 events", "GTM", "event tracking", "tag setup", "dream funnel", "developer funnel", "telemetry" | Event/tag plan, DREAM developer adoption telemetry, and live verification | [references/tracking.md](references/tracking.md) |
+| **dashboards** | "build a dashboard", "looker studio", "kpi dashboard", "reporting view", "ndr", "net developer retention", "developer metrics" | KPI and Net Developer Retention (NDR) dashboards built for a decision-making audience | [references/dashboards.md](references/dashboards.md) |
 | **attribution** | "attribution", "which channel converts", "marketing mix", "hero channel" | Multi-touch attribution and channel contribution analysis | [references/attribution.md](references/attribution.md) |
 | **reporting** | "marketing report", "monthly report", "performance report", "client report" | Recurring performance reports that end in decisions | [references/reporting.md](references/reporting.md) |
 | **cro** | "increase conversions", "cro", "a/b test", "funnel audit", "conversion audit" | Funnel audit and conversion experiments | [references/cro.md](references/cro.md) |
