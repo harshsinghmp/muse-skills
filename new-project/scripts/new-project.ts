@@ -2252,6 +2252,9 @@ async function main() {
     "{{PROJECT_DESC}}": projectDesc,
     "{{AUTHOR_NAME}}": authorName,
     "{{INDUSTRY_VERTICAL}}": industryVertical,
+    "{{INDUSTRY}}": industry || industryVertical || "(unanswered)",
+    "{{OFFERINGS}}": offerings || "(unanswered)",
+    "{{COLOR_PALETTE}}": colorPalette,
     "{{TARGET_AUDIENCE}}": targetAudience,
     "{{PROBLEM_SOLVED}}": coreProblem,
     "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
@@ -6280,13 +6283,30 @@ input, button, textarea, select {
 
   if (!isDryRun) {
     const intakeDir = join(resolvedTarget, "Client-Intake");
-    // ponytail: single canonical folder; no Intake//Onboarding/ mirrors —
-    // re-add alias copy pass only if an external consumer appears.
+    const templateIntakeDir = join(TEMPLATES_DIR, "Client-Intake");
     for (const sub of ["01-Brand", "02-Business", "03-Offerings", "04-Technical-Intake"]) {
-      mkdirSync(join(intakeDir, sub), { recursive: true });
+      const destSub = join(intakeDir, sub);
+      mkdirSync(destSub, { recursive: true });
+      const keepSrc = join(templateIntakeDir, sub, ".gitkeep");
+      const keepDest = join(destSub, ".gitkeep");
+      if (existsSync(keepSrc) && !existsSync(keepDest)) {
+        cpSync(keepSrc, keepDest);
+      }
     }
 
-    const intakeBriefContent = `# Client Intake Brief — ${projectName}
+    const templateBriefPath = join(templateIntakeDir, "00-Intake-Brief.md");
+    let intakeBriefContent = "";
+    if (existsSync(templateBriefPath)) {
+      intakeBriefContent = readFileSync(templateBriefPath, "utf8");
+      for (const [token, val] of Object.entries(tokenMap)) {
+        intakeBriefContent = intakeBriefContent.replaceAll(token, val);
+      }
+      intakeBriefContent = intakeBriefContent.replaceAll(
+        "{{STACK_DETAILS}}",
+        `framework \`${config.framework}\`, CMS \`${config.cms}\`, e-commerce \`${config.ecommerce}\`, database \`${config.db}\`, auth \`${config.auth}\`, styling \`${config.styling}\`, animation \`${config.animation}\`, state \`${config.state}\``,
+      );
+    } else {
+      intakeBriefContent = `# Client Intake Brief — ${projectName}
 
 > **How this works**: You (the employee/client) answer the checklist below in
 > conversation with your AI agent. The agent then writes every document in this
@@ -6326,6 +6346,7 @@ input, button, textarea, select {
 - Zero secrets in any file; credential docs contain placeholder links (1Password/Bitwarden share) only.
 - Modern fluid CSS only: \`clamp()\`, logical properties, zero \`px\` in fluid contexts.
 `;
+    }
     writeFileSync(join(intakeDir, "00-Intake-Brief.md"), intakeBriefContent, "utf8");
 
     console.log("  ✅ Generated: `./Client-Intake/00-Intake-Brief.md` (employee checklist + agent instructions)");

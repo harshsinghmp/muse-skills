@@ -28,6 +28,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/standards"))).toBe(true);
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/brand"))).toBe(true);
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/context"))).toBe(true);
+      expect(existsSync(join(AI_READY_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
 
     it("ai-ready/templates contains all 17 modular standards including backend-wordpress.md", () => {
@@ -67,6 +68,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(existsSync(join(TEST_SANDBOX, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/standards/backend-wordpress.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/brand/tokens"))).toBe(true);
+      expect(existsSync(join(TEST_SANDBOX, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
   });
 
