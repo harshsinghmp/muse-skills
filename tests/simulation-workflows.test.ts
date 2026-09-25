@@ -934,6 +934,19 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("JSON Canvas 1.0");
       expect(ref).toContain('"node-root"');
     });
+
+    test("ops references/multi-client.md implements Two-Tier Memory and Sub-App Workspace Isolation", () => {
+      const refPath = path.join(opsDir, "references", "multi-client.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("Enterprise Multi-Client & Sub-App Workspace Topology");
+      expect(ref).toContain("Two-Tier Memory Isolation Standard");
+      expect(ref).toContain("~/.memory");
+      expect(ref).toContain("<client-root>/.memory/");
+      expect(ref).toContain("Sub-App Routing Table & Domain Mapping");
+      expect(ref).toContain("5-Checkpoint Cross-Client Context Firewall");
+      expect(ref).toContain("5-Line Context Switch Audit Log");
+    });
   });
 
   describe("10. Executive Secretary Controller (secretary) & Universal Dispatcher", () => {
