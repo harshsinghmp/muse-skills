@@ -7,6 +7,7 @@
 {{PROJECT_DESC}}
 
 ## 2. Target Audience & Problem Statement
+- **Industry Vertical**: {{INDUSTRY_VERTICAL}} (e.g. `developer_tools` | `b2b_saas` | `ecommerce_retail` | `professional_services` | `local_healthcare` | `creator_media`) `[assumption]`
 - **Target Audience**: {{TARGET_AUDIENCE}} `[assumption]`
 - **Core Problem**: {{PROBLEM_SOLVED}} `[assumption]`
 - **Value Proposition**: {{VALUE_PROPOSITION}} `[assumption]`
