@@ -970,7 +970,8 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("Jasper");
       expect(ref).toContain("Crew");
       expect(ref).toContain("Nexus");
-      expect(ref).toContain("5-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("6-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("Sub-App Intent Resolution & Scope Anchoring");
       expect(ref).toContain("Progressive Disclosure Loading");
       expect(ref).toContain("webdev");
       expect(ref).toContain("design");
@@ -978,6 +979,16 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("devops");
       expect(ref).toContain("ops");
       expect(ref).toContain("code-review");
+    });
+
+    test("ai-ready product template contains Sub-App Topology & Domain Map", () => {
+      const templatePath = path.join(REPO_ROOT, "ai-ready", "templates", ".agents", "context", "product.md");
+      expect(fs.existsSync(templatePath)).toBe(true);
+      const content = fs.readFileSync(templatePath, "utf8");
+      expect(content).toContain("## 9. Sub-App Topology & Domain Map");
+      expect(content).toContain("apps/web/");
+      expect(content).toContain("apps/shop/");
+      expect(content).toContain("apps/academy/");
     });
   });
 });

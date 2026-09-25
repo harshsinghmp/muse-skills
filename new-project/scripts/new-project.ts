@@ -2209,6 +2209,10 @@ async function main() {
       "{{STRATEGIC_DIAGNOSIS}}": `Establish core ${config.intent.toLowerCase()} user journey, verify execution in staging, and validate initial user flow.`,
       "{{NOW_SKILL}}": config.intent === "ecommerce" ? "webdev:ecommerce" : "webdev:frontend",
       "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
+      "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
+      "{{FRAMEWORK_WEB}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
+      "{{FRAMEWORK_SHOP}}": "Next.js + Medusa",
+      "{{FRAMEWORK_APP}}": "Next.js + Payload",
     };
 
     const ctxFiles = readdirSync(contextSrc);
