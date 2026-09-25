@@ -164,7 +164,7 @@ footer {
       <span class="badge">Zero TypeScript Errors</span>
     </div>
     <h1>🏛️ Muse Skills — Overlap Matrix & Release Report</h1>
-    <p class="lead">Executive consolidation report, skills mapping matrix, and verification log for releases v5.19.0 through v5.25.1 across Harsh's agency ecosystem.</p>
+    <p class="lead">Executive consolidation report, skills mapping matrix, and verification log for releases v5.19.0 through v5.25.1 across the universal agency ecosystem.</p>
   </header>
 
   <section>
@@ -279,7 +279,7 @@ footer {
   </section>
 
   <footer>
-    <p>Muse Skills Suite · Built for Harsh's LifeOS & Agency Council · 100% Verified Production Delivery</p>
+    <p>Muse Skills Suite · Built for Sovereign Agency Council · 100% Verified Production Delivery</p>
   </footer>
 </div>
 </body>

@@ -540,7 +540,7 @@
     },
     {
       "name": "periodic-retreat",
-      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md.",
+      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem. Generates quarterly-retreat.md.",
       "path": "periodic-retreat/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
@@ -555,7 +555,7 @@
         "deprecated-purge",
         "wheel-of-life",
         "okr-handoff",
-        "lifeos",
+        "strategic-alignment",
         "next-quarter"
       ],
       "suggested_skills": ["coach", "audit", "updatedocs"],

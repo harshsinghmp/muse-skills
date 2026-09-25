@@ -1,6 +1,6 @@
 # 🔐 brand:accounts-access — Client Credentials & Logins Intake Workflow
 
-> **Operating Principle**: Zero-secret leakage is non-negotiable across the entire LifeOS ecosystem. Never accept, request, or store plaintext passwords, database root credentials, or private API keys in chat or public documents. Always enforce role-based, platform-native delegation (Partner Access, Manager Accounts, and IAM roles) with least-privilege permissions. Where direct logins are unavoidable, enforce 1Password/Bitwarden encrypted share links with temporary session handshakes.
+> **Operating Principle**: Zero-secret leakage is non-negotiable across the entire agency ecosystem. Never accept, request, or store plaintext passwords, database root credentials, or private API keys in chat or public documents. Always enforce role-based, platform-native delegation (Partner Access, Manager Accounts, and IAM roles) with least-privilege permissions. Where direct logins are unavoidable, enforce 1Password/Bitwarden encrypted share links with temporary session handshakes.
 
 ---
 

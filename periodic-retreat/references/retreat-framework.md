@@ -8,5 +8,5 @@
    - Module decoupling, runtime migrations, toolchain upgrades.
 3. **Horizon 3 (Agency Capabilities - 1 Year)**:
    - New agent skills, service offerings, client infrastructure.
-4. **Horizon 4 (TELOS / LifeOS - 3-5 Years)**:
+4. **Horizon 4 (TELOS / Sovereign System - 3-5 Years)**:
    - Long-term autonomy, financial leverage, physical and cognitive vitality.

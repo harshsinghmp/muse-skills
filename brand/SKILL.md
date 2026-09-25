@@ -104,4 +104,4 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - [ ] All 7 mode reference files exist and are syntactically valid in `references/`.
 - [ ] Frontmatter conforms to Hermes, OpenClaw, and RFC specifications.
 - [ ] Automated intake audit script (`scripts/intake-audit.ts`) executes and scores brand completeness.
-- [ ] LifeOS zero-credential leak protocol strictly maintained across all account-access guides.
+- [ ] Vibeguard zero-credential leak protocol strictly maintained across all account-access guides.

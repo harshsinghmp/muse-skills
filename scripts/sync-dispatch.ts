@@ -9,6 +9,7 @@
  */
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { exportAntigravityCommands, exportOpenCodeCommands, getSkills } from "./export-commands";
 
@@ -195,7 +196,7 @@ export function syncAll(): void {
 
   // Refresh commands across active harnesses
   const skills = getSkills();
-  const userHome = process.env.HOME || "/home/harsh";
+  const userHome = process.env.HOME || os.homedir();
 
   const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
   if (fs.existsSync(path.dirname(opencodeGlobal))) {

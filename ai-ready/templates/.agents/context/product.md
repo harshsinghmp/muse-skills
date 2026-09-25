@@ -37,10 +37,12 @@
 - **DOX Container (`.agents/`)**: Progressive disclosure documentation container maintaining durable context.
 - **Vibeguard**: Zero-secret credential leakage defense protocol.
 
-## 9. Sub-App Topology & Domain Map
+## 9. Sub-App Topology & Domain Map (Optional — Multi-App Workspaces)
+> Only applicable when the project contains multiple sub-applications under `apps/`. Omit or keep empty for single-app repositories.
+
 | Sub-App / Folder | Domain / Subdomain | Primary Role | Tech Stack | Root Dir | Dev Port |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `apps/web/` | `{{DOMAIN_ROOT}}` | Public Marketing & Landing | {{FRAMEWORK_WEB}} | `apps/web/` | `3000` |
-| `apps/shop/` | `shop.{{DOMAIN_ROOT}}` | E-Commerce Storefront | {{FRAMEWORK_SHOP}} | `apps/shop/` | `3001` |
-| `apps/academy/` | `learn.{{DOMAIN_ROOT}}` | Student LMS / Portal | {{FRAMEWORK_APP}} | `apps/academy/` | `3002` |
+| `apps/<sub-app-1>/` | `{{DOMAIN_ROOT}}` | Primary Web Application | {{FRAMEWORK_PRIMARY}} | `apps/<sub-app-1>/` | `3000` |
+| `apps/<sub-app-2>/` | `app.{{DOMAIN_ROOT}}` | Secondary Service / Subdomain | {{FRAMEWORK_SECONDARY}} | `apps/<sub-app-2>/` | `3001` |
+
 

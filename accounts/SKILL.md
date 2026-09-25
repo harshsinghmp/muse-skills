@@ -31,7 +31,7 @@ metadata:
 
 The single source of truth for financial management, billing workflows, profitability modeling, cash runway preservation, and tax readiness across the agency and its clients.
 
-Operates as the executive financial engine within Harsh's **LifeOS Agency Council** (supporting **Crew** on delivery operations and the principal on capital allocation). Grounded in the unit economics and cash disciplines of bootstrapped CFO principles (`charlie-cfo-skill`) and cross-border digital service taxation (`openaccountants`).
+Operates as the executive financial engine within the **Agency Council** (supporting **Crew** on delivery operations and the principal on capital allocation). Grounded in the unit economics and cash disciplines of bootstrapped CFO principles (`charlie-cfo-skill`) and cross-border digital service taxation (`openaccountants`).
 
 ---
 
@@ -95,7 +95,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 1. **Intake & Scope**: Establish context (Agency internal vs Client advisory) and identify the financial objective (invoicing, bookkeeping, margin review, cashflow modeling, tax review, or audit).
 2. **Resolve Mode**: Match request against the Modes table and load exactly one reference file (`references/<mode>.md`).
 3. **Execute Mode Playbook**: Follow the structured intake, procedure, quality gate, and formulas defined in the reference.
-4. **Enforce Zero Credential Policy**: Never output raw banking logins, credit card numbers, or live secret keys (`sk_live_*`). Always mask as `[REDACTED]` (LifeOS Vibeguard Protocol).
+4. **Enforce Zero Credential Policy**: Never output raw banking logins, credit card numbers, or live secret keys (`sk_live_*`). Always mask as `[REDACTED]` (Vibeguard Protocol).
 5. **Output Deliverable**: Generate clear, auditable Markdown tables, CSV schemas, or step-by-step financial schedules.
 
 ---
@@ -114,6 +114,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 - [ ] Target financial mode resolved and executed via dedicated reference.
 - [ ] Calculations verified with explicit formulas (margins, EHR, DSO, runway).
-- [ ] Zero secret leaks or credentials in output (LifeOS Vibeguard Protocol compliant).
+- [ ] Zero secret leaks or credentials in output (Vibeguard Protocol compliant).
 - [ ] Invoices and financial ledgers carry statutory requirements (invoice number, date, tax ID, terms).
 - [ ] Financial findings and action items documented clearly for executive decision-making.

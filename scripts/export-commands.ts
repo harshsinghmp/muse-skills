@@ -14,6 +14,7 @@
  */
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -339,7 +340,7 @@ export function runSetup(workspaceRoot: string = process.cwd()): void {
   const skills = getSkills();
   console.log(`📦 Loaded ${skills.length} canonical Muse skills from skills.json`);
 
-  const userHome = process.env.HOME || "/home/harsh";
+  const userHome = process.env.HOME || os.homedir();
   let totalCommands = 0;
 
   // 1. OpenCode (Global & Workspace)

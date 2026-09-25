@@ -64,4 +64,4 @@ pua/
 
 ## 📄 License
 
-[MIT](../LICENSE) © [Harsh](https://github.com/harshsinghmp)
+[MIT](../LICENSE) © [Harsh Singh](https://github.com/harshsinghmp)

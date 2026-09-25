@@ -122,10 +122,8 @@ When `secretary:dispatch` is activated on session launch or upon receiving a pro
 
 ### Step 2: Sub-App Intent Resolution & Scope Anchoring
 - In multi-app and client workspaces, inspect `.agents/context/product.md` for the **Sub-App Topology Table**.
-- Map the user intent to the specific sub-application directory:
-  - Landing pages, marketing blogs, public site $\rightarrow$ `apps/web/` (or project root).
-  - Merch store, cart, checkout, payment webhooks $\rightarrow$ `apps/shop/`.
-  - Student portal, LMS, course library, quizzes $\rightarrow$ `apps/academy/`.
+- Map the user intent to the matching sub-application directory (e.g. `apps/<sub-app>/` or project root).
+- If the target workspace or sub-app is ambiguous, ask the user to clarify before modifying files.
 - Lock active execution scope: anchor CWD to that sub-application, respect its local `.env`, and adhere to its specific framework and port.
 
 ### Step 3: Department & Mode Selection
