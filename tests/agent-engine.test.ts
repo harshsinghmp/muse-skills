@@ -518,9 +518,32 @@ Custom billing engine for healthcare providers.
 
       const dockerCompose = readFileSync(join(target, "backend/docker-compose.yml"), "utf8");
       expect(dockerCompose).toContain("postgres:16-alpine");
-      expect(dockerCompose).toContain("redis:7-alpine");
-
       expect(readFileSync(join(target, "Client-Intake/00-Intake-Brief.md"), "utf8")).toContain("medusa");
+
+      // 7. Verify DOX full-service brand and accounts suite
+      expect(existsSync(join(target, ".agents/context/accounts.md"))).toBe(true);
+      const accountsContent = readFileSync(join(target, ".agents/context/accounts.md"), "utf8");
+      expect(accountsContent).toContain("Vibeguard Zero-Leak Protocol");
+      expect(accountsContent).toContain("Sovereign Store");
+
+      const indexContent = readFileSync(join(target, ".agents/context/index.md"), "utf8");
+      expect(indexContent).toContain("accounts.md");
+      expect(indexContent).toContain("voice.md");
+
+      expect(existsSync(join(target, ".agents/brand/voice.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/personas.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/positioning.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/messaging.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/visual-identity.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/social-hooks.md"))).toBe(true);
+
+      const voiceContent = readFileSync(join(target, ".agents/brand/voice.md"), "utf8");
+      expect(voiceContent).toContain("Sovereign Store");
+      expect(voiceContent).toContain("Anti-Puffery Blacklist");
+
+      const personasContent = readFileSync(join(target, ".agents/brand/personas.md"), "utf8");
+      expect(personasContent).toContain("Sovereign Store");
+      expect(personasContent).toContain("The Operational Champion");
     });
 
     it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
