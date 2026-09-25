@@ -60,12 +60,13 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Creating wireframes, user flows, or information architecture before any visual design.
 - Designing a logo or full brand identity system (colors, type, voice rules).
 - Building a social template system or graphic assets (banners, covers, OG images).
-- Building industry-specific landing pages using structured layout templates (e.g. SaaS).
+- Building industry-specific landing pages using structured layout templates (e.g. SaaS, Developer Tools).
 
 ### Layout Templates
 
 When designing landing pages by vertical type, load the corresponding layout template from `templates/`:
 - **SaaS** (`templates/saas.md`): Canonical 9-section problem-solving landing page layout (Header/Nav → Hero → Logos/Trust Marquee → Features → Product Showcase → Pricing → Testimonials → Final CTA → Footer) aligned with 9 copywriting frameworks (AIDA, PASTOR, 4 P's, PRUNE, SLAP, So What?, PAPA, Star-Story-Solution, SPIN).
+- **Developer** (`templates/developer.md`): Canonical 7-block developer homepage layout (Hero with 1-Command Install → Frictionless Demo / Playground → Architecture & Mechanics → Code-First Feature Grid → Developer Social Proof & OSS Stats → Quickstart & Integration Surface → Transparent Pricing & License) synthesized from Jakub Czakon's developer marketing framework.
 
 ### Anti-Triggers
 

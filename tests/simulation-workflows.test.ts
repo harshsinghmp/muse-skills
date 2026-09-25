@@ -541,6 +541,36 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(wireframeRef).toContain("templates/saas.md");
     });
 
+    test("design: developer homepage template enforces 7-block architecture and anti-puffery standards", () => {
+      const templatePath = path.join(REPO_ROOT, "design", "templates", "developer.md");
+      expect(fs.existsSync(templatePath)).toBe(true);
+
+      const tpl = fs.readFileSync(templatePath, "utf8");
+      // 7 canonical blocks
+      expect(tpl).toContain("1. Hero Block");
+      expect(tpl).toContain("2. Frictionless Demo / Playground");
+      expect(tpl).toContain("3. Architecture & Mechanics");
+      expect(tpl).toContain("4. Code-First Feature Grid");
+      expect(tpl).toContain("5. Developer Social Proof & Open Source Trust Metrics");
+      expect(tpl).toContain("6. Quickstart & Integration Surface");
+      expect(tpl).toContain("7. Transparent Pricing & Open Source License");
+
+      // Developer anti-puffery and TTFV rules
+      expect(tpl).toContain("TTFV < 15 minutes");
+      expect(tpl).toContain("The Anti-Puffery Copywriting Standard");
+      expect(tpl).toContain("1-Command Copyable Terminal Box");
+
+      // Cross references in ui, wireframe, and SKILL.md
+      const uiRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "ui.md"), "utf8");
+      expect(uiRef).toContain("templates/developer.md");
+
+      const wireframeRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "wireframe.md"), "utf8");
+      expect(wireframeRef).toContain("templates/developer.md");
+
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("templates/developer.md");
+    });
+
     test("design: ux mode consolidates UX Architecture, Research, Persona Walkthroughs, Onboarding UX, and Interaction Patterns", () => {
       const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
       expect(designSkill).toContain("| **ux** |");
