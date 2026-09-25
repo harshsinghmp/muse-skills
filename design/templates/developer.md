@@ -87,6 +87,18 @@ Developer landing pages reject vague marketing buzzwords, stock photography, and
 
 ---
 
+## 🚫 When NOT to Use This Template (Anti-Triggers & Negative Guards)
+
+**STRICT PROHIBITION**: This template is engineered exclusively for developers, DevOps, and technical architects.
+
+1. **Non-Technical & Retail E-Commerce**: NEVER apply to retail, fashion, direct-to-consumer (D2C), consumer goods, or physical products. Terminal code boxes, package managers, and architecture diagrams are complete non-sequiturs for retail shoppers. (Route to `webdev:ecommerce` / Retail flow).
+2. **Professional Services & Consulting**: NEVER apply to law firms, accounting practices, design/marketing agencies, or management consultancies. (Route to `brand:pipeline` / Service Lead-gen).
+3. **Local Business & Healthcare/Clinics**: NEVER apply to dental clinics, trade contractors, real estate, gyms, or restaurants. (Route to Local Lead-Gen).
+4. **General B2B Business SaaS**: NEVER apply to business SaaS where the buyer does not write code, manage infrastructure, or execute CLI commands (e.g. HR tools, CRM, marketing automation). (Route to `templates/saas.md`).
+5. **Fall-Through Invariant**: If the target audience is not an engineer, or if the product cannot be installed or executed via code/CLI, applying `templates/developer.md` is a critical P0 design hallucination.
+
+---
+
 ## 🚫 The Anti-Puffery Copywriting Standard
 
 When drafting copy for developer homepages under this template:
@@ -100,6 +112,7 @@ When drafting copy for developer homepages under this template:
 
 ## 📋 Quality Gate
 
+- [ ] Vertical match verified: target audience is verified as software engineers/DevOps; strictly confirmed product is NOT retail, professional services, local business, or non-technical business SaaS.
 - [ ] All 7 canonical blocks present in sequence (Hero → Demo → Architecture → Code Grid → Proof → Quickstart → Pricing).
 - [ ] 1-command copyable installation snippet located above the fold in the Hero.
 - [ ] Frictionless demo or terminal recording accessible with zero login or signup gate.

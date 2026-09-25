@@ -62,11 +62,22 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Building a social template system or graphic assets (banners, covers, OG images).
 - Building industry-specific landing pages using structured layout templates (e.g. SaaS, Developer Tools).
 
-### Layout Templates
+### Layout Templates & Vertical Selector Matrix
 
-When designing landing pages by vertical type, load the corresponding layout template from `templates/`:
+Every landing page or homepage design MUST strictly match the client's industry vertical. Never apply technical or code-first templates to non-developer verticals:
+
+| Vertical Type | Target Buyer / User | Canonical Template / Flow | Core Elements & Visual Language |
+|:---|:---|:---|:---|
+| **Developer Tools & Infrastructure** | Software Engineers, DevOps, Architects | `templates/developer.md` | 1-line install, code grid, zero-auth demo, architecture diagram, GitHub stars |
+| **B2B SaaS (Business / Ops)** | Founders, Managers, Execs, Sales/Ops | `templates/saas.md` | 9-section problem-to-solution, ROI justification, enterprise logos, value tiers |
+| **E-Commerce & Retail** | Consumers, Shoppers, Retail Buyers | Route to `webdev:ecommerce` / Retail flow | Lifestyle imagery, product catalog/grid, variant selector, cart, reviews |
+| **Professional Services & Agencies** | Clients seeking consulting/services | Route to `brand:pipeline` / Service Lead-gen | Deliverable scope, client case studies, team credentials, booking CTA |
+| **Local Business & Healthcare** | Local clientele (clinics, legal, trade) | Local Lead-Gen flow | Location/hours, phone/booking CTA, service menu, verified testimonials |
+| **Creator, Media & Communities** | Readers, listeners, community members | Media / Newsletter flow | Content samples, subscriber count, episode highlights, community benefits |
+
+Layout template details:
 - **SaaS** (`templates/saas.md`): Canonical 9-section problem-solving landing page layout (Header/Nav → Hero → Logos/Trust Marquee → Features → Product Showcase → Pricing → Testimonials → Final CTA → Footer) aligned with 9 copywriting frameworks (AIDA, PASTOR, 4 P's, PRUNE, SLAP, So What?, PAPA, Star-Story-Solution, SPIN).
-- **Developer** (`templates/developer.md`): Canonical 7-block developer homepage layout (Hero with 1-Command Install → Frictionless Demo / Playground → Architecture & Mechanics → Code-First Feature Grid → Developer Social Proof & OSS Stats → Quickstart & Integration Surface → Transparent Pricing & License) synthesized from Jakub Czakon's developer marketing framework.
+- **Developer** (`templates/developer.md`): Canonical 7-block developer homepage layout (Hero with 1-Command Install → Frictionless Demo / Playground → Architecture & Mechanics → Code-First Feature Grid → Developer Social Proof & OSS Stats → Quickstart & Integration Surface → Transparent Pricing & License) synthesized from Jakub Czakon's developer marketing framework. Strict negative guards prevent application to non-technical verticals.
 
 ### Anti-Triggers
 

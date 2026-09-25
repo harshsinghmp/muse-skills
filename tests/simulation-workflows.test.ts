@@ -575,17 +575,24 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       // Developer anti-puffery and TTFV rules
       expect(tpl).toContain("TTFV < 15 minutes");
       expect(tpl).toContain("The Anti-Puffery Copywriting Standard");
-      expect(tpl).toContain("1-Command Copyable Terminal Box");
+      // Anti-triggers, negative guards, and vertical matching
+      expect(tpl).toContain("When NOT to Use This Template (Anti-Triggers & Negative Guards)");
+      expect(tpl).toContain("Non-Technical & Retail E-Commerce");
+      expect(tpl).toContain("Professional Services & Consulting");
 
       // Cross references in ui, wireframe, and SKILL.md
       const uiRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "ui.md"), "utf8");
       expect(uiRef).toContain("templates/developer.md");
+      expect(uiRef).toContain("Vertical Template Matching Gate");
+      expect(uiRef).toContain("Template Mismatch Prohibition");
 
       const wireframeRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "wireframe.md"), "utf8");
       expect(wireframeRef).toContain("templates/developer.md");
+      expect(wireframeRef).toContain("Vertical Layout Gate");
 
       const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
       expect(designSkill).toContain("templates/developer.md");
+      expect(designSkill).toContain("Vertical Selector Matrix");
     });
 
     test("design: ux mode consolidates UX Architecture, Research, Persona Walkthroughs, Onboarding UX, and Interaction Patterns", () => {
