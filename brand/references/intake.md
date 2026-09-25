@@ -85,6 +85,34 @@ A standardized Markdown Brand Intake Document saved to:
 
 ---
 
+## 🛠️ Automated DOX Intake Compiler (`brand:intake`)
+
+Run the automated intake compiler to bridge completed client briefs directly into canonical `.agents/brand/` and `.agents/context/`:
+
+```bash
+# Run intake compilation on active workspace
+bun brand/scripts/intake-compiler.ts .
+
+# Preview compilation without writing
+bun brand/scripts/intake-compiler.ts . --dry-run
+
+# Compile with explicit intake brief path
+bun brand/scripts/intake-compiler.ts . --brief ./Client-Intake/00-Intake-Brief.md --force
+```
+
+### Auto-Compiled Assets:
+1. `.agents/brand/voice.md` — Voice character, dimension sliders (Formality, Directness, Humor, Technical Depth), DO/DON'T vocabulary, and 18-token rule.
+2. `.agents/brand/personas.md` — ICP avatar, daily friction, status wins, and objection matrix.
+3. `.agents/brand/positioning.md` — Value proposition, status quo vs villain, competitive matrix, and negative scope exclusion list.
+4. `.agents/brand/messaging.md` — 10s/30s elevator pitches, offerings catalog, approved proof claims, and standalone quotes.
+5. `.agents/brand/visual-identity.md` — Selected OKLCH palette tokens, typography pairings, and vector asset guidelines.
+6. `.agents/brand/social-hooks.md` — Problem-agitation, contrarian, and proof angles for LinkedIn/X/Shorts.
+7. `.agents/context/accounts.md` — Zero-leak account delegation table mapped to domain, organization, and agency leads.
+8. `.agents/context/product.md` — Promotes intake assumptions (`[assumption]`) to validated facts (`[validated]`).
+9. `start-here.md` — Developer orientation matching the scaffolded stack.
+
+---
+
 ## Quality Gate
 
 - [ ] Legal entity, key stakeholders, and business model clearly defined.
@@ -93,3 +121,4 @@ A standardized Markdown Brand Intake Document saved to:
 - [ ] Visual assets verified (SVG logos, color hexes, typography fonts).
 - [ ] Technical stack and repository URLs identified.
 - [ ] Missing-field detector run: all missing items prompted via structured clarification questions.
+- [ ] DOX compiler executed (`bun brand/scripts/intake-compiler.ts`): all 6 `.agents/brand/` files synchronized.
