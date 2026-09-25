@@ -853,14 +853,17 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(accessRef).toContain("NEVER `Administrator` or `Owner`");
     });
 
-    test("brief mode generates master dossier and cross-department briefs for design, webdev, content, paidads, qa", () => {
+    test("brief mode generates master dossier, technical founder AI moat audit, and 6 cross-department briefs", () => {
       const briefRef = fs.readFileSync(path.join(brandDir, "references", "brief.md"), "utf8");
       expect(briefRef).toContain("The Master Brand Dossier Architecture");
+      expect(briefRef).toContain("Technical Founder Intake & AI Defensibility Moat Audit");
+      expect(briefRef).toContain("Defensibility Moat Index");
       expect(briefRef).toContain("Department Brief 1: For `design`");
       expect(briefRef).toContain("Department Brief 2: For `webdev`");
       expect(briefRef).toContain("Department Brief 3: For `content` & `smm`");
-      expect(briefRef).toContain("Department Brief 4: For `paidads`");
-      expect(briefRef).toContain("Department Brief 5: For `qa-launch`");
+      expect(briefRef).toContain("Department Brief 4: For `growth` & `gtm`");
+      expect(briefRef).toContain("Department Brief 5: For `paidads`");
+      expect(briefRef).toContain("Department Brief 6: For `qa-launch`");
     });
 
     test("offboard mode enforces 5-phase structured exit and 48-hour access revocation protocol", () => {
