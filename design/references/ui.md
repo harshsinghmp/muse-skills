@@ -33,7 +33,15 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 
 1. State the page's one goal and the primary action it must drive.
 2. Set the grid and spacing scale before any blocks (4px base). Inter-group gap ≥ 2× intra-group (e.g. 8px inside cards, 16px+ between sections). Prefer space, then surface shift, then divider lines — in that order.
-3. Block the layout as sections: header → hero → proof → features → CTA → footer patterns (For SaaS landing pages, implement the canonical 9-section problem-solving layout and copywriting framework mapping in [../templates/saas.md](../templates/saas.md); for Developer & Technical Tool homepages, implement the canonical 7-block architecture in [../templates/developer.md](../templates/developer.md)). Hero H1 ≤ 3 lines in a wide container; no stats, pills, or badges inside the hero — one focal message, everything else subordinate. Bento grids interlock with no dead cells; 3–5 intentional cards beat 8 messy ones.
+3. Block the layout as sections: header → hero → proof → features → CTA → footer patterns.
+**Vertical Template Matching Gate (Mandatory)**: Check client vertical in `.agents/context/product.md` or project brief before selecting a template:
+- For Developer & Technical Tools: implement the canonical 7-block architecture in [../templates/developer.md](../templates/developer.md).
+- For B2B SaaS (Business/Operations): implement the canonical 9-section layout in [../templates/saas.md](../templates/saas.md).
+- For E-Commerce & Retail: route to `webdev:ecommerce` (lifestyle hero, product catalog/grid, variant selector, cart, reviews).
+- For Professional Services & Agencies: use Service Lead-Gen flow (problem diagnosis, deliverable scope, case study proof, booking CTA).
+- For Local Business & Healthcare: use Local Lead-Gen flow (location/hours, phone/booking CTA, service menu, verified testimonials).
+- **Template Mismatch Prohibition**: NEVER apply `developer.md` (terminal install box, code snippets, architecture diagrams) to retail, services, local business, or non-technical SaaS. Mismatching industry templates is a P0 design failure.
+Hero H1 ≤ 3 lines in a wide container; no stats, pills, or badges inside the hero — one focal message, everything else subordinate. Bento grids interlock with no dead cells; 3–5 intentional cards beat 8 messy ones.
 4. Assign the type hierarchy: display/heading/body/caption from the scale; one display + one text family. Body measure 60–75ch; line-height by role (1.1 headings, 1.5–1.6 body); negative tracking on large display, slight positive on small labels; `balance` on headings, `pretty` on descriptions; tabular numerals on changing values; sentence-case labels. Glyph correctness is silent and automatic: curly quotes/apostrophes, en dash for ranges, em dash for breaks, single ellipsis character, one space after punctuation, no underline on non-links.
 5. Assign color roles (primary/action/neutral/semantic); check AA contrast for each text pair. One theme per page — no section-level inversion; semantic tokens so dark mode is a value swap, verified for logos/icons in both.
 6. Radius: concentric — inner radius = outer radius − padding. Depth: shadows signal elevation, borders signal structure; name z-tokens, never raw high values; still images get a 1px neutral outline.
@@ -71,6 +79,7 @@ Per-screen design spec: section-by-section layout structure, applied type/color/
 - [ ] Hover treatments gated to hover-capable devices — no sticky hover states left on touch (keeper: animate-ui).
 - [ ] Every form input ships with label, description, and error state — never a bare input (keeper: prototyper-ui).
 - [ ] New components justified against the existing inventory — reuse or variant before inventing (keeper: create-component).
+- [ ] Vertical template match verified: layout template strictly corresponds to client's industry archetype; developer.md applied ONLY when target buyer writes code, never to retail, services, or local businesses.
 
 ## Routing (token discipline — do not duplicate)
 
