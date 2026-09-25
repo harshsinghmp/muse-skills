@@ -15,7 +15,7 @@ metadata:
   aliases: ["daily-standup-coach","standup-coach","daily-standup"]
   suggested_skills: ["audit","periodic-retreat","context-anchor"]
   hermes:
-    tags: [standup, daily-review, effort-scorecard, reflection, developer-productivity, habits, lifeos]
+    tags: [standup, daily-review, effort-scorecard, reflection, developer-productivity, habits, discipline]
     related_skills: [audit, periodic-retreat, context-anchor]
     suggested_skills: [audit, periodic-retreat, context-anchor]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
@@ -40,7 +40,7 @@ Execute this skill when:
 1. **End-of-Day Reflection**: Closing a working session and summarizing progress, friction, and next day priorities.
 2. **Morning Planning**: Setting atomic 1–3 focus tasks and identifying potential dependency blockers.
 3. **Effort Calibration**: Assessing whether time was spent on high-leverage controllable execution vs chaotic firefighting.
-4. **LifeOS / Council Sync**: Generating daily sync artifacts for the orchestrator.
+4. **Operating System / Council Sync**: Generating daily sync artifacts for the orchestrator.
 
 ### Anti-Triggers
 Do NOT use this skill when:

@@ -38,7 +38,7 @@ When instrumenting developer tools, APIs, open-source libraries, or CLI agents, 
 - **Monetize (M)**: Transition from free/OSS developer to commercial buyer.
   - Events: `tier_limit_reached`, `enterprise_feature_clicked`, `champion_packet_downloaded`, `upgrade_initiated`.
   - Parameters: `feature_name`, `team_seat_count`, `usage_threshold_pct`.
-9. Enforce Zero-Leak Telemetry Protocol (LifeOS Vibeguard):
+9. Enforce Zero-Leak Telemetry Protocol (Vibeguard Protocol):
 - Never capture, transmit, or store source code, environment variables, API tokens (`sk-*`, `ghp_*`), database URLs, local file paths with usernames, or PII.
 - Only transmit anonymized metadata: hashed machine ID, OS platform, package version, command duration, and sanitized error categories.
 

@@ -4,7 +4,7 @@
  *
  * Scan directories, repositories, and multi-tenant sub-apps for sensitive information
  * using TruffleHog. Detects 700+ credential types with entropy analysis and pattern matching.
- * Enforces LifeOS & Muse Vibeguard zero-leak protocol.
+ * Enforces Muse Vibeguard zero-leak protocol.
  *
  * Usage:
  *   bun scripts/secret-scan.ts <directory>
@@ -68,6 +68,18 @@ async function runTruffleHog(targetDir: string, options: string[]): Promise<stri
   });
 }
 
+const IGNORED_PATH_PATTERNS = [
+  /node_modules[\\/]/,
+  /\.git[\\/]/,
+  /\.crush[\\/]/,
+  /\.opencode[\\/]/,
+  /\.cache[\\/]/,
+  /\.turbo[\\/]/,
+  /\.next[\\/]/,
+  /dist[\\/]/,
+  /build[\\/]/,
+];
+
 function parseTruffleHogOutput(output: string): TruffleHogFinding[] {
   const findings: TruffleHogFinding[] = [];
   const lines = output.split("\n").filter((line) => line.trim());
@@ -75,7 +87,11 @@ function parseTruffleHogOutput(output: string): TruffleHogFinding[] {
   for (const line of lines) {
     try {
       const finding = JSON.parse(line);
-      if (finding.SourceMetadata?.Data?.Filesystem) {
+      const filePath = finding.SourceMetadata?.Data?.Filesystem?.file;
+      if (filePath) {
+        if (IGNORED_PATH_PATTERNS.some((pattern) => pattern.test(filePath))) {
+          continue;
+        }
         findings.push(finding);
       }
     } catch {

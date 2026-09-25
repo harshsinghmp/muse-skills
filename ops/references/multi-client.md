@@ -21,18 +21,14 @@ Every client engagement is provisioned as an independent workspace container und
 │       ├── current.md                <-- Shipped milestone reality
 │       └── architecture.md           <-- Cross-app contracts & system topology
 ├── AGENTS.md                         <-- Client Root Router & Progressive Disclosure Rules
-└── apps/                             <-- Sub-Applications & Subdomains
-    ├── web/                          <-- Public Marketing Site (e.g. client.com)
-    │   ├── AGENTS.md                 <-- Sub-app rules (Astro / Instatic, port 3000)
-    │   ├── .env                      <-- Isolated public environment variables
+└── apps/                             <-- Sub-Applications & Subdomains (Optional: for multi-app setups)
+    ├── <sub-app-1>/                  <-- Primary Service / Web (e.g. apps/web or root src/)
+    │   ├── AGENTS.md                 <-- Sub-app rules (dev port 3000)
+    │   ├── .env                      <-- Isolated environment variables
     │   └── src/
-    ├── shop/                         <-- E-Commerce Subdomain (e.g. shop.client.com)
-    │   ├── AGENTS.md                 <-- Sub-app rules (Next.js + Medusa, port 3001)
-    │   ├── .env                      <-- Isolated checkout & payment secrets
-    │   └── src/
-    └── academy/                      <-- Course LMS Subdomain (e.g. learn.client.com)
-        ├── AGENTS.md                 <-- Sub-app rules (Next.js + Payload, port 3002)
-        ├── .env                      <-- Isolated LMS database credentials
+    └── <sub-app-2>/                  <-- Secondary Service / Subdomain (e.g. apps/portal or apps/app)
+        ├── AGENTS.md                 <-- Sub-app rules (dev port 3001)
+        ├── .env                      <-- Isolated environment variables
         └── src/
 ```
 
@@ -50,14 +46,14 @@ flowchart TD
         GZ["STRICT RULE: Zero Client Data / Zero Secrets / Zero Customer Info"]
     end
 
-    subgraph ClientA["2. Client A Local Memory (Projects/K-Ecom/.memory)"]
-        MA["K-Ecom memory.db"]
+    subgraph ClientA["2. Client A Local Memory (Projects/client-alpha/.memory)"]
+        MA["client-alpha memory.db"]
         CA1["Unit Economics, Margins & Suppliers"]
         CA2["Custom API Integrations & Customer Avatars"]
     end
 
-    subgraph ClientB["2. Client B Local Memory (Projects/MusePanda/.memory)"]
-        MB["MusePanda memory.db"]
+    subgraph ClientB["2. Client B Local Memory (Projects/client-beta/.memory)"]
+        MB["client-beta memory.db"]
         CB1["Brand Voice, Editorial Calendars & Storyboards"]
         CB2["Target Demographic & Creator Partnerships"]
     end

@@ -354,7 +354,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const content = fs.readFileSync(relayPath, "utf8");
       expect(content).toContain("127.0.0.1:18795");
       expect(content).toContain("browser-relay doctor");
-      expect(content).toContain("LifeOS Vibeguard Protocol");
+      expect(content).toContain("Vibeguard Protocol");
       expect(content).toContain("Zero Password Ingestion");
     });
 
@@ -841,7 +841,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(pipeRef).toContain("Decision Criteria");
     });
 
-    test("accounts-access mode enforces LifeOS zero-leak delegation protocol across all platforms", () => {
+    test("accounts-access mode enforces zero-leak delegation protocol across all platforms", () => {
       const accessRef = fs.readFileSync(path.join(brandDir, "references", "accounts-access.md"), "utf8");
       expect(accessRef).toContain("Zero-Credential Leak Delegation Standard");
       expect(accessRef).toContain("Never accept, request, or store plaintext passwords");
@@ -986,9 +986,8 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(fs.existsSync(templatePath)).toBe(true);
       const content = fs.readFileSync(templatePath, "utf8");
       expect(content).toContain("## 9. Sub-App Topology & Domain Map");
-      expect(content).toContain("apps/web/");
-      expect(content).toContain("apps/shop/");
-      expect(content).toContain("apps/academy/");
+      expect(content).toContain("apps/<sub-app-1>/");
+      expect(content).toContain("apps/<sub-app-2>/");
     });
   });
 });

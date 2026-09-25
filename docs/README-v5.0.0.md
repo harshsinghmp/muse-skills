@@ -8,7 +8,7 @@
 [![Version](https://img.shields.io/badge/Version-5.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-available-skills)
 
-[![Ecosystem](https://img.shields.io/badge/Ecosystem-LifeOS%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
+[![Ecosystem](https://img.shields.io/badge/Ecosystem-Sovereign%20%7C%20Muse-emerald.svg?style=for-the-badge)](https://github.com/harshsinghmp)
 [![Compatibility](https://img.shields.io/badge/Compatible%20With-Any%20AI%20Agent%20%7C%20Hermes%20%7C%20Codex%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
@@ -1301,7 +1301,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vu
 
 ## 📄 License
 
-[MIT](LICENSE) © [Harsh](https://github.com/harshsinghmp)
+[MIT](LICENSE) © [Harsh Singh](https://github.com/harshsinghmp)
 
 ---
 

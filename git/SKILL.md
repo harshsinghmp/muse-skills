@@ -236,7 +236,7 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    # Run type checks
    tsc --noEmit
    # Run pre-ship secret scan
-   bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts . 2>/dev/null || rg -i "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . || grep -riE "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . --exclude-dir={.git,node_modules,dist}
+   bun run secret-scan . 2>/dev/null || rg -i "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . || grep -riE "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" . --exclude-dir={.git,node_modules,dist}
    ```
 4. Commit using Conventional Commits format:
    ```bash

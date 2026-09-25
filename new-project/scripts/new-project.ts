@@ -2210,9 +2210,8 @@ async function main() {
       "{{NOW_SKILL}}": config.intent === "ecommerce" ? "webdev:ecommerce" : "webdev:frontend",
       "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
       "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
-      "{{FRAMEWORK_WEB}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
-      "{{FRAMEWORK_SHOP}}": "Next.js + Medusa",
-      "{{FRAMEWORK_APP}}": "Next.js + Payload",
+      "{{FRAMEWORK_PRIMARY}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
+      "{{FRAMEWORK_SECONDARY}}": "Next.js / Service API",
     };
 
     const ctxFiles = readdirSync(contextSrc);
@@ -5315,7 +5314,7 @@ describe("🏥 Project OS Health & Baseline Verification", () => {
       const privKeyPattern = "BEGIN " + "PRIVATE KEY";
 
       const preCommitScript = `#!/usr/bin/env bash
-# LifeOS Vibeguard Pre-Commit Secret Defense Gate
+# Vibeguard Pre-Commit Secret Defense Gate
 set -e
 
 echo "🛡️ Vibeguard: Inspecting staged files for secrets..."
@@ -5352,7 +5351,7 @@ exit 0
       try {
         chmodSync(preCommitPath, 0o755);
       } catch {}
-      console.log("  ✅ Auto-wired: `scripts/pre-commit.sh` (LifeOS Vibeguard pre-commit secret audit)");
+      console.log("  ✅ Auto-wired: `scripts/pre-commit.sh` (Vibeguard pre-commit secret audit)");
 
       const gitHooksDir = join(resolvedTarget, ".git", "hooks");
       if (existsSync(join(resolvedTarget, ".git"))) {
