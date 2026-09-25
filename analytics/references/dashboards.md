@@ -21,6 +21,20 @@ A live dashboard: a scorecard of the north-star + supporting KPIs, trend vs prio
 5. Annotate launches/campaigns so spikes have a cause on the chart.
 6. Set refresh cadence and data-source reliability; document the metric dictionary.
 7. Keep it to one screen where possible; a dashboard nobody opens is dead weight.
+8. Construct Developer Adoption & Net Developer Retention (NDR) Dashboards:
+When visualizing developer platforms, open-source tools, or APIs, build the 4-panel Developer Health Dashboard:
+- **Panel 1: DREAM Funnel Waterfall**:
+  - Funnel visual tracking volume and conversion rate across Discover → Research → Evaluate → Adopt → Monetize.
+  - Highlights drop-off velocity: pinpointing where developers bounce (e.g. docs vs. install vs. first run).
+- **Panel 2: Time to First Value (TTFV) & Evaluation Friction**:
+  - Median TTFV histogram (seconds from quickstart view to successful execution).
+  - Top 5 CLI/SDK exit error codes during evaluation (surfacing environmental roadblocks).
+- **Panel 3: Net Developer Retention (NDR) Cohort Heatmap**:
+  - Cohort rows (month of first evaluation) tracking weekly/monthly retained consumption (API requests, CLI runs, active project workflows).
+  - Benchmark: NDR > 100% indicates organic expansion (developer usage grows faster than churn).
+- **Panel 4: Developer Onboarding Ratio (DOR) & Expansion Signals**:
+  - DOR = (Adopted Developers at Day 14 / Evaluated Developers) × 100%.
+  - Multi-contributor team adoption flags (multiple engineers using the tool in the same git organization).
 
 ## Quality gate
 
@@ -30,6 +44,9 @@ A live dashboard: a scorecard of the north-star + supporting KPIs, trend vs prio
 - [ ] Metric definitions documented.
 - [ ] Annotations explain known spikes.
 - [ ] Fits a single view where feasible.
+- [ ] For developer platforms: DREAM Funnel waterfall and conversion drop-offs visualized.
+- [ ] Net Developer Retention (NDR) cohort heatmap tracks consumption retention over time.
+- [ ] Median TTFV and evaluation error categories surfaced.
 
 ## Sources
 

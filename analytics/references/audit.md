@@ -14,6 +14,7 @@
 - [ ] Conversion funnel definitions documented and stable
 - [ ] Dashboard filters match documented date ranges
 - [ ] No credentials or PII in analytics payloads
+- [ ] For developer tools: DREAM funnel stages (Discover, Research, Evaluate, Adopt, Monetize) tracked with TTFV latency markers (< 15 min threshold) and zero telemetry credential/code leakage
 
 ## Severity & routing
 
@@ -23,6 +24,7 @@
 | Definition drift | `AUTO-REPAIR` | `updatedocs` + re-tag |
 | PII in analytics payload | `PROPOSE-DIFF` | `secretary` (approval + purge) |
 | Funnel definition changed mid-quarter | `REPORT-ONLY` | `analytics` (re-baseline) |
+| Broken TTFV evaluation telemetry | `REPORT-ONLY` | `webdev` (fix quickstart tracking) |
 
 ## Output
 
