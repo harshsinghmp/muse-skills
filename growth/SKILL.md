@@ -38,8 +38,7 @@ One head skill for strategy and scaling. Win by choosing where to compete and wh
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
-|:---|:---|:---|:---|
-| **positioning** | "positioning", "value proposition", "messaging", "differentiation" | Positioning and value proposition from audience and competitive gap | [references/positioning.md](references/positioning.md) |
+| **positioning** | "positioning", "value proposition", "messaging", "differentiation", "ai defensibility", "moat", "beyond the wrapper" | Positioning and value proposition from audience, competitive gap, and AI defensibility moats | [references/positioning.md](references/positioning.md) |
 | **funnels** | "funnel", "acquisition funnel", "conversion funnel", "customer journey" | Funnel mapping and stage-by-stage improvement plan | [references/funnels.md](references/funnels.md) |
 | **pricing** | "pricing", "pricing strategy", "how much to charge", "pricing tiers" | Pricing structure from value, willingness, and positioning | [references/pricing.md](references/pricing.md) |
 | **launch** | "launch plan", "go to market", "gtm", "product launch", "producthunt", "product hunt launch" | Go-to-market launch plan with sequencing, Product Hunt playbook, and metrics | [references/launch.md](references/launch.md) |

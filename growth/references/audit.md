@@ -17,6 +17,7 @@
 - [ ] Next action defined after each experiment (scale, pivot, kill)
  - [ ] All analytics events firing correctly (see `analytics` audit)
  - [ ] Recurring ops run as loops, not reminders (source: marketingskills `marketing-loops` SKILL.md): each loop states 9 parts (cadence / acts-when / purpose / skills / body / self-check / state-idempotency / stop-bailout / output); most runs end "checked, nothing to do" by design; cadence follows signal (rankings weekly … churn daily); send/spend/publish steps hold a human checkpoint; every loop carries a kill-switch plus a banned-vocabulary honesty bar.
+- [ ] AI product defensibility evaluated against the 4-layer moat framework (Workflow State, Proprietary Data, Deterministic Evals, Integration Surface); N+1 frontier model resilience confirmed.
 
 ## Severity & routing
 
@@ -27,6 +28,7 @@
 | Results not recorded after end date | `AUTO-REPAIR` | `analytics` (pull data now) |
 | Channel strategy missing | `REPORT-ONLY` | `growth` (document strategy) |
 | LTV > CAC assumed unverified | `AUTO-REPAIR` | `analytics` (run cohort analysis) |
+| AI wrapper vulnerability / no moat | `PROPOSE-DIFF` | `growth:positioning` (architect 4-layer defensibility) |
 
 ## Output
 
