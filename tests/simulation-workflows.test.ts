@@ -480,6 +480,12 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(frontendRef).toContain("<QuickstartSection />");
       expect(frontendRef).toContain("<PricingLicenseGrid />");
       expect(frontendRef).toContain("TTFV quickstart < 15 min");
+      expect(frontendRef).toContain("Universal Vertical Component Routing");
+      expect(frontendRef).toContain("Component Mismatch Prohibition");
+      expect(frontendRef).toContain("<ProductHero />");
+
+      const auditRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "audit.md"), "utf8");
+      expect(auditRef).toContain("Vertical component alignment verified");
     });
 
     test("devops: cloudflare mode consolidates Workers, Pages, Full (Strict) SSL, and Zero Trust tunnels", () => {
