@@ -520,6 +520,16 @@ export function scaffoldAgentEngine(
     created.push(".agents/artifacts/README.md");
   }
 
+  // 10. Deploy Client-Intake brief if missing
+  const srcClientIntake = join(TEMPLATES_DIR, "Client-Intake");
+  const destClientIntake = join(target, "Client-Intake");
+  if (!existsSync(destClientIntake) && existsSync(srcClientIntake)) {
+    if (!dry) {
+      cpSync(srcClientIntake, destClientIntake, { recursive: true });
+    }
+    created.push("Client-Intake/00-Intake-Brief.md");
+  }
+
   return { created, skipped };
 }
 
