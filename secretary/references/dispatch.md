@@ -111,7 +111,7 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 ---
 
-## ⚡ The 5-Step Autonomous Dispatch Protocol
+## ⚡ The 6-Step Autonomous Dispatch Protocol
 
 When `secretary:dispatch` is activated on session launch or upon receiving a prompt:
 
@@ -120,21 +120,29 @@ When `secretary:dispatch` is activated on session launch or upon receiving a pro
 - Identify the primary intent (e.g. *"build animated hero section"* → `animate:gsap` + `design:ui`).
 - If the request is ambiguous, formulate **one** single high-leverage clarifying question before proceeding.
 
-### Step 2: Department & Mode Selection
+### Step 2: Sub-App Intent Resolution & Scope Anchoring
+- In multi-app and client workspaces, inspect `.agents/context/product.md` for the **Sub-App Topology Table**.
+- Map the user intent to the specific sub-application directory:
+  - Landing pages, marketing blogs, public site $\rightarrow$ `apps/web/` (or project root).
+  - Merch store, cart, checkout, payment webhooks $\rightarrow$ `apps/shop/`.
+  - Student portal, LMS, course library, quizzes $\rightarrow$ `apps/academy/`.
+- Lock active execution scope: anchor CWD to that sub-application, respect its local `.env`, and adhere to its specific framework and port.
+
+### Step 3: Department & Mode Selection
 - Look up the matching department from the Agency Directory above.
 - Resolve the exact operating mode (e.g. `webdev:funnel`, `smm:carousel`, `ops:obsidian`, `devops:cloudflare`).
 - Identify the governing Council Lead (**Sol**, **Jasper**, **Crew**, or **Nexus**).
 
-### Step 3: Progressive Disclosure Loading
+### Step 4: Progressive Disclosure Loading
 - Execute `view_file` on **only** the target skill's `SKILL.md` and the designated `references/<mode>.md`.
 - **DO NOT** load other modes or extraneous department files. Keep active context lean and focused.
 
-### Step 4: Persona Execution
+### Step 5: Persona Execution
 - Adopt the Council Lead's persona, standards, and vocabulary.
 - Follow the exact technical procedures, frameworks, and safe-guards codified in that mode's reference file.
 - Enforce modern-tool primacy (`rg` > `grep`, `fd` > `find`, `eza` > `ls`, `bat` > `cat`).
 
-### Step 5: Nexus Quality Handback
+### Step 6: Nexus Quality Handback
 - Before declaring the task complete, verify deliverable against the Nexus Quality Gate:
   1. `bun test` passes with zero failures.
   2. `bun run lint` and `bun run type-check` pass.
