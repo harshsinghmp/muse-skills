@@ -52,3 +52,19 @@ To balance velocity with rigor, overhead is strictly proportional to task risk:
 - **Archive Work Artifacts**: Move completed plans or temporary scratchpads into `.agents/archive/` using the timestamped format `[title]-[YYYYMMDD-HHMMSS].md`.
 - **DOX Pass**: Update `./.agents/context/current.md` and the nearest owning `AGENTS.md`.
 - **Memory Update**: Persist newly confirmed invariants or architectural decisions into `./.memory`.
+
+---
+
+## 3. Evidence & Verification Protocol
+
+### A. The Validation Tagging Rule
+- Any claim in `./.agents/context/product.md` regarding user demand, pain points, willingness to pay, or ICP must carry an explicit inline tag:
+  - `[validated]`: Verified through direct interaction with a real paying/active user (not a friend, team member, or hypothetical persona).
+  - `[assumption]`: A working hypothesis or founder best-guess that must be tested via customer discovery (`gtm:discovery`) before building load-bearing features or marketing campaigns.
+- Never convert `[assumption]` to `[validated]` without citing real user evidence or an entry in `evidence-ledger.md`.
+
+### B. The Anti-Puffery Standard
+- In all public documentation, README files, and landing page copy, unprovable superlatives are banned:
+  - Prohibited: *"powerful"*, *"seamless"*, *"next-gen"*, *"revolutionary"*, *"best-in-class"*, *"game-changing"*.
+  - Required: Concrete, quantified, and verifiable metrics (e.g., *"sub-15ms p99 latency"*, *"1-command setup"*, *"100% test pass rate"*).
+

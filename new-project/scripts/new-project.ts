@@ -1878,6 +1878,27 @@ async function main() {
 
   // Fallbacks & Defaults
   const resolvedTarget = isAbsolute(targetPath || ".") ? targetPath || "." : resolve(process.cwd(), targetPath || ".");
+
+  // Auto-detect existing project metadata if target directory already exists
+  if (existsSync(join(resolvedTarget, "package.json"))) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(resolvedTarget, "package.json"), "utf8"));
+      if (!values.name && pkg.name) projectName = pkg.name;
+      if (!values.desc && pkg.description) projectDesc = pkg.description;
+      if (!values.author && pkg.author)
+        authorName = typeof pkg.author === "string" ? pkg.author : pkg.author.name || authorName;
+    } catch {}
+  }
+  if (existsSync(join(resolvedTarget, "README.md"))) {
+    try {
+      const readme = readFileSync(join(resolvedTarget, "README.md"), "utf8");
+      const firstHeading = readme.match(/^#\s+([^\n]+)$/m);
+      if (!values.name && !projectName && firstHeading) projectName = firstHeading[1].trim();
+      const firstParagraph = readme.match(/^([^#\n\r][^\n\r]+)/m);
+      if (!values.desc && !projectDesc && firstParagraph) projectDesc = firstParagraph[1].trim();
+    } catch {}
+  }
+
   projectName = projectName || basename(resolvedTarget);
   projectDesc = projectDesc || tagline || `${projectName} - Modern application governed by DOX Engine.`;
   authorName = authorName || projectName;
@@ -2170,6 +2191,12 @@ async function main() {
       "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
       "{{AGENT_NAME}}": agentName,
       "{{AGENT_ROLE}}": agentRole,
+      "{{STATUS_QUO}}": "Manual ad-hoc processes, custom spreadsheets, or legacy tooling",
+      "{{TRACTION_METRICS}}": "Active development / initial workspace initialization",
+      "{{PRIMARY_ASSET}}": "Autonomous DOX Engine architecture with verified automated test suite",
+      "{{STRATEGIC_DIAGNOSIS}}": `Establish core ${config.intent.toLowerCase()} user journey, verify execution in staging, and validate initial user flow.`,
+      "{{NOW_SKILL}}": config.intent === "ecommerce" ? "webdev:ecommerce" : "webdev:frontend",
+      "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
     };
 
     const ctxFiles = readdirSync(contextSrc);
@@ -6234,21 +6261,38 @@ ${artifactList}
 
       const productContent = `# 📦 Product Scope & Inventory — ${projectName}
 
+> Canonical source of truth for product scope, ICP, positioning, and traction. Every agent reads this before executing GTM, design, or engineering work.
+> Every substantive claim must carry an inline tag: \`[validated]\` (proven with a real paying/active user who is not a friend) or \`[assumption]\` (working hypothesis to test).
+
 ## 1. Overview & Vision
 ${projectDesc}
 
 ## 2. Target Audience & Problem Statement
-- **Target Audience**: ${targetAudience}
-- **Core Problem**: ${coreProblem}
-- **Value Proposition**: High-performance, agency-grade ${config.intent.toLowerCase()} system governed by DOX Engine.
+- **Target Audience**: ${targetAudience} \`[assumption]\`
+- **Core Problem**: ${coreProblem} \`[assumption]\`
+- **Value Proposition**: High-performance, agency-grade ${config.intent.toLowerCase()} system governed by DOX Engine. \`[assumption]\`
 
-## 3. Core Capabilities & Features
+## 3. Status Quo & Competitive Wedge
+- **Status Quo (What they use today)**: Manual ad-hoc workflows, custom spreadsheets, or legacy tooling \`[assumption]\`
+- **The Villain / Breaking Point**: Inefficient manual execution, slow turnaround, and lack of automated verification.
+- **Why Us over Status Quo**: Purpose-first architecture with progressive disclosure governance and zero-drift verification.
+
+## 4. Defensibility & "Beyond the Wrapper" Wedge
+- **Core Wedge**: Domain-specific automation, deep workflow integration, and autonomous verification.
+- **Commoditization Defense**: System-level integration that cannot be replicated by simple prompt wrappers.
+
+## 5. Core Capabilities & Features
 ${featItems}
 
-## 4. Key Deliverables & Catalog Offerings
+## 6. Traction, Retention & Strongest Proof Point
+- **Current Traction**: Initial scaffold and active development stage \`[assumption]\`
+- **Retention / Activation Metric**: Time to first successful user workflow execution (< 15 min).
+- **Single Strongest Asset**: Production-ready codebase with full test coverage and automated quality gates \`[validated]\`
+
+## 7. Key Deliverables & Catalog Offerings
 ${offerItems}
 
-## 5. Domain Vocabulary & Key Concepts
+## 8. Domain Vocabulary & Key Concepts
 - **${projectName}**: Primary application and governed workspace.
 - **DOX Container (\`.agents/\`)**: Progressive disclosure documentation container maintaining durable context.
 - **Vibeguard**: Zero-secret credential leakage defense protocol.
