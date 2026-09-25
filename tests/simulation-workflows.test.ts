@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -900,6 +901,87 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(resRed.stdout).toContain("BLOCKED_INCOMPLETE");
       expect(resRed.stdout).toContain("RED LIGHT");
       expect(resRed.stdout).toContain("Missing Brand Discovery Parameters");
+    });
+
+    test("intake-compiler script compiles 00-Intake-Brief into .agents/brand suite and updates context", () => {
+      const compilerPath = path.join(brandDir, "scripts", "intake-compiler.ts");
+      expect(fs.existsSync(compilerPath)).toBe(true);
+
+      const sandboxDir = path.join(os.tmpdir(), `brand-intake-sandbox-${Date.now()}`);
+      fs.mkdirSync(path.join(sandboxDir, "Client-Intake"), { recursive: true });
+      fs.mkdirSync(path.join(sandboxDir, ".agents", "context"), { recursive: true });
+
+      // Write mock 00-Intake-Brief.md
+      const briefContent = `# Client Intake Brief — Lumina Studio
+
+## Pre-Filled From Scaffold
+- **Project Name**: Lumina Studio
+- **Organization**: Lumina Creative Co
+- **One-Line Purpose**: High-end architectural visualization and brand identity studio.
+- **Industry / Vertical**: creative_design_studio
+- **Target Audience**: Luxury hospitality brands and boutique real estate developers
+- **Core Problem Solved**: Generic rendering templates that fail to convey spatial craftsmanship
+- **Brand Voice**: Minimalist, architectural, discerning
+- **OKLCH Palette**: bronze
+- **Offerings**: Spatial CGI Renderings, Architectural Brand Strategy, Digital Lookbooks
+- **Stack**: framework \`astro\`, CMS \`payload\`, e-commerce \`none\`, database \`postgres\`, auth \`better-auth\`, styling \`unocss\`, animation \`gsap\`, state \`nanostores\`
+
+## Employee Checklist (answer these with your agent)
+1. **Brand**: Verified assets in creative/assets/
+2. **Business**: Top 3 Competitors: Studio A, Studio B, Legacy 3D Agency. Launch goal: 5 enterprise retainer signups.
+3. **Offerings**: As listed above.
+4. **Technical**: Domain lumina-studio.com, DNS managed on Cloudflare.
+5. **Boundaries**: No low-cost residential staging, no generic stock asset packs.
+`;
+      fs.writeFileSync(path.join(sandboxDir, "Client-Intake", "00-Intake-Brief.md"), briefContent, "utf8");
+
+      // Write mock product.md and accounts.md
+      fs.writeFileSync(
+        path.join(sandboxDir, ".agents", "context", "product.md"),
+        `# 📦 Product Scope\n- **Target Audience**: Developers [assumption]\n- **Core Problem**: Manual tasks [assumption]\n- **Value Proposition**: Fast system [assumption]\n\n## 7. Key Deliverables & Catalog Offerings\n- **Initial MVP**\n\n## 8. Domain\n`,
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(sandboxDir, ".agents", "context", "accounts.md"),
+        `# 🛡️ Accounts — {{PROJECT_NAME}}\nsc-domain:{{DOMAIN_ROOT}}\nOrganization: {{AUTHOR_NAME}}\n`,
+        "utf8",
+      );
+
+      // Execute compiler
+      const res = spawnSync("bun", [compilerPath, sandboxDir, "--force"], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("DOX Intake Compiler: Compilation Complete");
+      expect(res.stdout).toContain("Lumina Studio");
+      expect(res.stdout).toContain("creative_design_studio");
+
+      // Verify compiled files
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/voice.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/personas.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/positioning.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/messaging.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/visual-identity.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/social-hooks.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, "start-here.md"))).toBe(true);
+
+      const voice = fs.readFileSync(path.join(sandboxDir, ".agents/brand/voice.md"), "utf8");
+      expect(voice).toContain("Minimalist, architectural, discerning");
+
+      const personas = fs.readFileSync(path.join(sandboxDir, ".agents/brand/personas.md"), "utf8");
+      expect(personas).toContain("Luxury hospitality brands");
+
+      const positioning = fs.readFileSync(path.join(sandboxDir, ".agents/brand/positioning.md"), "utf8");
+      expect(positioning).toContain("Lumina Studio");
+
+      const product = fs.readFileSync(path.join(sandboxDir, ".agents/context/product.md"), "utf8");
+      expect(product).toContain("[validated]");
+      expect(product).toContain("Spatial CGI Renderings");
+
+      const accounts = fs.readFileSync(path.join(sandboxDir, ".agents/context/accounts.md"), "utf8");
+      expect(accounts).toContain("Lumina Studio");
+      expect(accounts).toContain("Lumina Creative Co");
+
+      // Cleanup
+      fs.rmSync(sandboxDir, { recursive: true, force: true });
     });
   });
 
