@@ -42,6 +42,13 @@ When implementing developer tools, technical SaaS, or open-source homepages, con
   - Install → Init → Execute walkthrough targeting Time to First Value in < 15 minutes.
 - **7. Transparent Pricing & License Grid (`<PricingLicenseGrid />`)**:
   - Open-source tier with clear license declaration and un-gated self-serve tiers.
+- **Universal Vertical Component Routing**:
+  - *Developer Tools / Infrastructure*: Emits `<DeveloperHero />`, `<InteractiveDemo />`, `<ArchitectureOverview />`, `<CodeFeatureGrid />`.
+  - *E-Commerce & Retail*: Emits `<ProductHero />`, `<CollectionGrid />`, `<VariantPicker />`, `<CartDrawer />`, `<ReviewMarquee />` (never terminal code boxes or API grids).
+  - *Professional Services & Consulting*: Emits `<ConsultingHero />`, `<ScopeOfWorkGrid />`, `<CaseStudyProof />`, `<CalendlyBooking />`.
+  - *Local Business & Healthcare*: Emits `<LocalHero />`, `<HoursLocationBar />`, `<ServiceMenu />`, `<DirectCallAction />`.
+  - *General B2B SaaS*: Emits `<SaaSHero />`, `<ProblemSolutionGrid />`, `<EnterpriseLogoMarquee />`, `<TierPricingTable />`.
+- **Component Mismatch Prohibition**: Never emit code blocks, terminal boxes, or GitHub metrics for retail, healthcare, consulting, or non-technical SaaS clients. Mismatching component archetypes is a critical P0 front-end defect.
 
 ## Quality gate
 
@@ -53,6 +60,7 @@ When implementing developer tools, technical SaaS, or open-source homepages, con
 - [ ] Verification gate green.
 - [ ] Markup semantic (landmarks, headings, labels) — not div soup.
 - [ ] For developer tools: 7-block developer homepage architecture followed; 1-command install above the fold; zero-auth demo verified; TTFV quickstart < 15 min.
+- [ ] Vertical component alignment verified: component hierarchy strictly matches client industry archetype; developer-specific components (<DeveloperHero />, CLI boxes) NEVER emitted for retail, consulting, or healthcare.
 
 ## Routing
 
