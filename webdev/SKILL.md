@@ -38,8 +38,7 @@ One head skill for web engineering. The stack is whatever the project already us
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
-|:---|:---|:---|:---|
-| **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki" | Component/page implementation against design spec with responsive image assets and UI wiki patterns | [references/frontend.md](references/frontend.md) |
+| **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki", "developer homepage", "developer landing page" | Component/page implementation against design spec, including developer 7-block architecture | [references/frontend.md](references/frontend.md) |
 | **backend** | "api design", "endpoint", "database schema", "auth flow", "cli-developer" | APIs, data models, integrations, auth, and CLI developer tooling | [references/backend.md](references/backend.md) |
 | **fullstack** | "fullstack feature", "end-to-end build", "ship the feature", "fullstack-guardian" | Full-feature build with Three-Perspective Security Architecture (Frontend, Backend, Security): data → API → UI → verified | [references/fullstack.md](references/fullstack.md) |
 | **ecommerce** | "ecommerce", "checkout", "product catalog", "cart", "payment gateway" | Catalog, cart, checkout, payments, post-purchase flows | [references/ecommerce.md](references/ecommerce.md) |

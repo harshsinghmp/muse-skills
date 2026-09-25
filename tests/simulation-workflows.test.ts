@@ -465,6 +465,23 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(auditRef).toContain("100dvh");
     });
 
+    test("webdev: frontend mode implements Jakub Czakon 7-block developer homepage standard", () => {
+      const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "webdev", "SKILL.md"), "utf8");
+      expect(webdevSkill).toContain("developer homepage");
+      expect(webdevSkill).toContain("references/frontend.md");
+
+      const frontendRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "frontend.md"), "utf8");
+      expect(frontendRef).toContain("Jakub Czakon 7-Block Standard");
+      expect(frontendRef).toContain("<DeveloperHero />");
+      expect(frontendRef).toContain("<InteractiveDemo />");
+      expect(frontendRef).toContain("<ArchitectureOverview />");
+      expect(frontendRef).toContain("<CodeFeatureGrid />");
+      expect(frontendRef).toContain("<DeveloperProofBar />");
+      expect(frontendRef).toContain("<QuickstartSection />");
+      expect(frontendRef).toContain("<PricingLicenseGrid />");
+      expect(frontendRef).toContain("TTFV quickstart < 15 min");
+    });
+
     test("devops: cloudflare mode consolidates Workers, Pages, Full (Strict) SSL, and Zero Trust tunnels", () => {
       const devopsSkill = fs.readFileSync(path.join(REPO_ROOT, "devops", "SKILL.md"), "utf8");
       expect(devopsSkill).toContain("| **cloudflare** |");

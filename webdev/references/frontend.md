@@ -22,6 +22,26 @@ Implemented, tested components/pages following repo conventions, with states (lo
 6. Responsive container-first: components respond to their container (container queries); breakpoints where content breaks, not device presets; logical properties for RTL; safe-area insets.
 7. Design judgments (palette, scale, hierarchy) are not decided here — route to `design`/`refactor-ui`.
 8. Run the verification gate; fix everything it reports.
+9. Implement Developer Homepage Component Architecture (Jakub Czakon 7-Block Standard):
+When implementing developer tools, technical SaaS, or open-source homepages, construct the interface using the 7 canonical component blocks specified in `design/templates/developer.md`:
+- **1. Hero (`<DeveloperHero />`)**:
+  - Plain-language technical H1 (zero buzzwords).
+  - Copyable 1-line installation terminal box (`npm i`, `pip install`, `brew install`) with clipboard API feedback (`navigator.clipboard.writeText`) and keyboard accessibility.
+  - Dual CTAs: Primary "Read the Docs" button + Secondary "Star on GitHub" badge.
+- **2. Zero-Signup Interactive Demo (`<InteractiveDemo />` / `<SandboxEmbed />`)**:
+  - Client-side WebAssembly, mock runner, or SVG/Asciinema player.
+  - Strict contract: Zero auth or email gate before seeing execution.
+- **3. System Architecture & Data Boundary Diagram (`<ArchitectureOverview />`)**:
+  - Responsive SVG or Mermaid component clarifying local vs cloud execution and network privacy.
+- **4. Code-First Feature Grid (`<CodeFeatureGrid />`)**:
+  - Syntax-highlighted code panels paired with technical capabilities.
+  - Multi-language tab switcher with persistent active tab across the page.
+- **5. Open Source & Developer Social Proof Bar (`<DeveloperProofBar />`)**:
+  - Live/cached GitHub stars counter, release badge, and npm/docker download counters.
+- **6. 3-Step TTFV Quickstart (`<QuickstartSection />`)**:
+  - Install → Init → Execute walkthrough targeting Time to First Value in < 15 minutes.
+- **7. Transparent Pricing & License Grid (`<PricingLicenseGrid />`)**:
+  - Open-source tier with clear license declaration and un-gated self-serve tiers.
 
 ## Quality gate
 
@@ -32,6 +52,7 @@ Implemented, tested components/pages following repo conventions, with states (lo
 - [ ] Extremes-first tested: narrowest container, 200% zoom, RTL.
 - [ ] Verification gate green.
 - [ ] Markup semantic (landmarks, headings, labels) — not div soup.
+- [ ] For developer tools: 7-block developer homepage architecture followed; 1-command install above the fold; zero-auth demo verified; TTFV quickstart < 15 min.
 
 ## Routing
 
