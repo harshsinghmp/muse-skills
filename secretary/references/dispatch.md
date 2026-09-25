@@ -135,6 +135,16 @@ When `secretary:dispatch` is activated on session launch or upon receiving a pro
 - Execute `view_file` on **only** the target skill's `SKILL.md` and the designated `references/<mode>.md`.
 - **DO NOT** load other modes or extraneous department files. Keep active context lean and focused.
 
+### Step 4b: Selective Brand & Accounts Context Injection
+When executing client work, do NOT load the entire documentation container. Dynamically inject only the precise `.agents/brand/` and `.agents/context/` files required for the Council Lead's domain:
+
+| Council Lead | Target Departments | Selective Context Files Ingested |
+| :--- | :--- | :--- |
+| **Sol** *(Product Architect)* | `webdev`, `database`, `devops`, `mobile`, `automation` | • `.agents/brand/visual-identity.md` (OKLCH color tokens, typography scales, layout rules)<br>• `.agents/context/accounts.md` (domain registrar, Cloudflare routing, staging URLs, payment gateways)<br>• `.agents/context/architecture.md` (stack invariants, DB schemas, auth providers) |
+| **Jasper** *(Creative Technologist)* | `design`, `content`, `smm`, `seo`, `brand`, `growth` | • `.agents/brand/voice.md` (voice dimension sliders, vocabulary do's & don'ts, 18-token rule)<br>• `.agents/brand/messaging.md` (10s/30s elevator pitches, approved claims, quotable soundbites)<br>• `.agents/brand/social-hooks.md` (problem-agitation, contrarian, proof hooks)<br>• `.agents/brand/personas.md` (ICP avatar, daily frustrations, status triggers) |
+| **Crew** *(Operations Lead)* | `ops`, `accounts`, `client-comms`, `gtm`, `sales-enablement`, `paidads`, `retain` | • `.agents/context/accounts.md` (zero-leak account delegation table, partner access IDs)<br>• `.agents/brand/personas.md` (buyer roles, BANT/MEDDIC qualification criteria, objections)<br>• `.agents/brand/positioning.md` (competitors, value prop, negative scope exclusion list) |
+| **Nexus** *(Technical Director)* | `code-review`, `qa-launch`, `audit`, `muse-security` | • Audit against `.agents/brand/voice.md` (anti-puffery blacklist: no "revolutionary", "game-changing", etc.; 18-token standalone rule)<br>• Audit against `.agents/context/accounts.md` (zero raw passwords, zero credentials exposed)<br>• Audit against `.agents/brand/positioning.md` (verify PR does not violate negative scope exclusion list) |
+
 ### Step 5: Persona Execution
 - Adopt the Council Lead's persona, standards, and vocabulary.
 - Follow the exact technical procedures, frameworks, and safe-guards codified in that mode's reference file.

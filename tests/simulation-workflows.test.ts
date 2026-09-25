@@ -1055,12 +1055,31 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("6-Step Autonomous Dispatch Protocol");
       expect(ref).toContain("Sub-App Intent Resolution & Scope Anchoring");
       expect(ref).toContain("Progressive Disclosure Loading");
+      expect(ref).toContain("Selective Brand & Accounts Context Injection");
+      expect(ref).toContain(".agents/brand/visual-identity.md");
+      expect(ref).toContain(".agents/brand/voice.md");
+      expect(ref).toContain(".agents/context/accounts.md");
       expect(ref).toContain("webdev");
       expect(ref).toContain("design");
       expect(ref).toContain("smm");
       expect(ref).toContain("devops");
       expect(ref).toContain("ops");
       expect(ref).toContain("code-review");
+    });
+
+    test("downstream skills (content, design, paidads) reference modular .agents/brand standards and accounts registry", () => {
+      const copyRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "copy.md"), "utf8");
+      expect(copyRef).toContain(".agents/brand/voice.md");
+      expect(copyRef).toContain(".agents/brand/messaging.md");
+      expect(copyRef).toContain(".agents/brand/personas.md");
+
+      const brandingRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "branding.md"), "utf8");
+      expect(brandingRef).toContain(".agents/brand/visual-identity.md");
+      expect(brandingRef).toContain(".agents/brand/tokens/");
+
+      const paidadsRef = fs.readFileSync(path.join(REPO_ROOT, "paidads", "references", "audit.md"), "utf8");
+      expect(paidadsRef).toContain(".agents/context/accounts.md");
+      expect(paidadsRef).toContain(".agents/brand/personas.md");
     });
 
     test("ai-ready product template contains Sub-App Topology & Domain Map", () => {
