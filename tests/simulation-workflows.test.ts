@@ -519,6 +519,20 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(uikitRef).toContain("focus-visible");
     });
 
+    test("design: 3d mode covers Spline, Three.js/R3F, Blender asset optimization, and polygon budgets", () => {
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **3d** |");
+      expect(designSkill).toContain("references/3d.md");
+
+      const ref = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "3d.md"), "utf8");
+      expect(ref).toContain("Spline");
+      expect(ref).toContain("Three.js / React Three Fiber");
+      expect(ref).toContain("Asset Optimization & Compression Protocol (Blender → Web)");
+      expect(ref).toContain("Polygon Budget");
+      expect(ref).toContain("Draco Geometry Compression");
+      expect(ref).toContain("React Three Fiber (R3F) Clean Implementation Pattern");
+    });
+
     test("growth: launch mode incorporates Product Hunt launch playbook", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain("producthunt");
@@ -646,7 +660,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(designSkill).toContain("visual storytelling");
       expect(designSkill).toContain("references/story.md");
       expect(designSkill).toContain(
-        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story]"',
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|3d]"',
       );
 
       const storyRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "story.md"), "utf8");
