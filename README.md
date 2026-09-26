@@ -167,7 +167,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`crm`](crm/README.md) | Full customer relationship and marketing flow department: audience segmentation, RFM scoring, welcome onboarding, cart abandonment recovery, lead nurture journeys, winback, deliverability DNS (SPF/DKIM/DMARC), and SMS triggers across 7 modes. |
 | [`database`](database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 6 modes. |
 | [`dead-letter`](dead-letter/README.md) | Capture, triage, and quarantine failed tasks before they disappear, generating bounded retry packets or escalation questions. |
-| [`design`](design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, and visual storytelling across 10 modes. |
+| [`design`](design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, visual storytelling, and interactive 3D web scenes across 11 modes. |
 | [`designscope`](designscope/README.md) | Reverse-engineers design systems, color palettes, typography hierarchies, layout trees, and tokens from existing websites, images, or Figma. |
 | [`devops`](devops/README.md) | Full infrastructure and reliability department: hosting, CI/CD pipelines, DNS, Cloudflare edge and Workers, security hardening, monitoring, and incident response across 7 modes. |
 | [`evidence-ledger`](evidence-ledger/README.md) | Persistent per-project evidence tracking and source-cited claim verification gate enforcing 'No source, no claim. No verification path, no release.' |
