@@ -1,6 +1,6 @@
 # AGENTS.md - muse-skills
 
-Curated suite of forty-six universal AI agent skills. MIT. Install via
+Curated suite of forty-seven universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working
@@ -71,6 +71,6 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 <!-- muse-secretary-router:start -->
 ## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
 - **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md`).
-- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
+- **Autonomous Routing**: Triage user intent against the 47 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
 - **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
 <!-- muse-secretary-router:end -->

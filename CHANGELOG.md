@@ -2,6 +2,30 @@
 
 All notable changes to this project are documented in this file.
 
+## [6.0.0] - 2026-09-27
+
+### Added
+
+- **Unified Customer Relationship & Event-Driven Marketing Flow Engine (`crm` #47 & `flows` alias)**: Added the 47th canonical agency department (`crm/SKILL.md`) with 7 high-impact production modes (`onboard`, `abandon`, `nurture`, `winback`, `deliverability`, `sms`, `contacts`). Features:
+  - Canonical 5-stage activation sequences (`references/onboard.md`) driving time-to-value under 15 minutes.
+  - Multi-touch abandonment rescue state machines (`references/abandon.md`) for e-commerce cart/checkout and SaaS trial drop-offs.
+  - Value-first customer nurture sequences (`references/nurture.md`) with segment-aware branch logic.
+  - Reason-aware win-back playbooks (`references/winback.md`) recovering churned and dormant accounts.
+  - Strict email authentication infrastructure (`references/deliverability.md`) enforcing SPF, DKIM, DMARC, RFC 8058 1-click unsubscribe headers, and progressive IP/domain warming schedules.
+  - Compliant SMS automation (`references/sms.md`) implementing TCPA express written consent, CTIA rules, A2P 10DLC registration, and timezone quiet hours.
+  - Unified contact data schemas and dynamic RFM segmentation (`references/contacts.md`) with GDPR/CCPA right-to-erasure and identity resolution rules.
+- **3D Motion & Interactive Spatial Design Mode (`design:3d`)**: Added the 11th mode to `design` (`design/references/3d.md`), establishing Spline embeds, Three.js / React Three Fiber (R3F) declarative pipelines, Blender asset optimization, and strict mobile polygon/draw-call budgets with Draco geometry compression.
+- **Agency Legal Architecture Mode (`ops:legal`)**: Added the 10th mode to `ops` (`ops/references/legal.md`), providing standardized contracts: Master Services Agreements (MSAs), Statements of Work (SOWs), subcontractor IP assignment agreements, two-way NDAs, and generative AI disclosure and confidentiality clauses.
+- **Conversational Voice AI & Telephony Mode (`automation:voice`)**: Added the 7th mode to `automation` (`automation/references/voice.md`), codifying sub-600ms latency voice agents across Retell AI, Bland AI, Twilio Voice SIP media streams, ElevenLabs synthesis, and warm human transfer escalations.
+- **Community Architecture & Engagement Loops Mode (`growth:community`)**: Added the 10th mode to `growth` (`growth/references/community.md`), detailing channel taxonomies, Day 1 to Day 30 onboarding rituals, weekly engagement calendars, 14d/30d inactivity winback loops, and AutoMod regex spam guardrails across Discord, Skool, Slack, and Circle.
+
+### Changed
+
+- **Agency Department Expansion**: Scaled catalog to 47 production-grade agency departments.
+- **Universal Executive Secretary Sync**: Synchronized `secretary:dispatch` directory and 174 slash commands across all supported agent harnesses (OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, Hermes).
+- **Catalog Byte-Parity Contract**: Reconciled skill definitions, argument hints, and mode counts across `SKILL.md`, `skills.json`, `llms.txt`, and `README.md`.
+- **Test Suite Expansion**: Added comprehensive simulation tests covering all new department modes (142 tests passing with 3,157 assertions).
+
 ## [5.26.0] - 2026-09-24
 
 ### Added
