@@ -1,6 +1,6 @@
 # 📈 growth
 
-The strategy and scaling department head: one skill, five modes — positioning, funnels, pricing, launch, competitor. Choose the playing field, then make the bets measurable.
+The strategy and scaling department head: one skill, ten modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, audit. Choose the playing field, then make the bets measurable.
 
 ## Install
 
@@ -29,6 +29,11 @@ Plan the go-to-market launch for our new product with a full funnel map.
 | **pricing** | pricing strategy | Pricing: value-based tiers, tested and aligned to positioning. |
 | **launch** | product launch / GTM | Launch: warmed audience, sequenced channels, and launch-day metrics. |
 | **competitor** | competitor analysis | Competitor: sourced landscape analysis that surfaces a usable gap. |
+| **referral** | referral & affiliate programs | Referral/affiliate program design and partner-fit economics. |
+| **retention** | churn reduction & renewals | Voluntary/involuntary churn prevention, dunning cadences, and winback flows. |
+| **pr** | public relations & press releases | AP-style press releases, journalist pitches, crisis holding statements, and bylines. |
+| **community** | community architecture & rituals | Discord/Skool/Slack community onboarding, weekly engagement loops, and AutoMod guardrails. |
+| **audit** | growth experiment audit | Rigorous experiment and acquisition channel audit (CAC, LTV, hypotheses). |
 
 ## How it works
 
