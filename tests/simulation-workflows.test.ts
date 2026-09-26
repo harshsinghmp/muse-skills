@@ -1009,7 +1009,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|legal|audit]"',
       );
     });
 
@@ -1042,6 +1042,16 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("Sub-App Routing Table & Domain Mapping");
       expect(ref).toContain("5-Checkpoint Cross-Client Context Firewall");
       expect(ref).toContain("5-Line Context Switch Audit Log");
+    });
+
+    test("ops references/legal.md covers MSAs, subcontractor IP assignment, NDAs, and AI disclosures", () => {
+      const refPath = path.join(opsDir, "references", "legal.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("MSA (Master Services Agreement)");
+      expect(ref).toContain("Subcontractor IP Assignment");
+      expect(ref).toContain("Intellectual Property (IP) Vesting Clause");
+      expect(ref).toContain("AI Tooling Safeguards");
     });
   });
 
