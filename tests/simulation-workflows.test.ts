@@ -558,6 +558,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(launchRef).toContain("first-4-hours momentum");
     });
 
+    test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
+      const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "growth", "SKILL.md"), "utf8");
+      expect(growthSkill).toContain(
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|audit]"',
+      );
+      expect(growthSkill).toContain("| **community** |");
+      expect(growthSkill).toContain("references/community.md");
+
+      const communityRef = fs.readFileSync(path.join(REPO_ROOT, "growth", "references", "community.md"), "utf8");
+      expect(communityRef).toContain("Discord, Skool, Slack, and Circle");
+      expect(communityRef).toContain("The 3-Question Introduction Template");
+      expect(communityRef).toContain("Engagement Loops & Ritual Calendar");
+      expect(communityRef).toContain("14-Day Inactivity Soft Nudge");
+      expect(communityRef).toContain("3-Tier Escalation Ladder");
+    });
+
     test("design: saas landing page template enforces 9-section sequence and 9 copywriting frameworks", () => {
       const templatePath = path.join(REPO_ROOT, "design", "templates", "saas.md");
       expect(fs.existsSync(templatePath)).toBe(true);
