@@ -18,7 +18,7 @@ Every routed task is governed by one of four specialized Council Leads:
 ---
 
 <!-- agency-directory:start -->
-## 📋 Canonical 46-Department Agency Directory
+## 📋 Canonical 47-Department Agency Directory
 
 When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.
 
@@ -49,6 +49,7 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 | **`retain`** | `check-in`, `churn-watch`, `qbr`, `referral-rebuy`, `review-ask`, `value-note` | **Crew** | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals — routed through six modes. | `retain/references/<mode>.md` |
 | **`accounts`** | `audit`, `bookkeeping`, `cashflow`, `client-pnl`, `invoicing`, `tax-compliance` | **Crew** | Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. | `accounts/references/<mode>.md` |
 | **`brand`** | `accounts-access`, `audit`, `brief`, `ecommerce`, `intake`, `offboard`, `persona`, `pipeline`, `research` | **Crew & Jasper** | Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes. | `brand/references/<mode>.md` |
+| **`crm`** | `abandon`, `contacts`, `deliverability`, `nurture`, `onboard`, `sms`, `winback` | **Sol & Jasper** | Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. | `crm/references/<mode>.md` |
 
 ---
 
