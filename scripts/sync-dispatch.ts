@@ -9,6 +9,7 @@
  */
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { exportAntigravityCommands, exportOpenCodeCommands, getSkills } from "./export-commands";
 
@@ -32,6 +33,7 @@ const COUNCIL_LEADS: Record<string, string> = {
   smm: "Jasper",
   content: "Jasper",
   seo: "Jasper",
+  crm: "Sol & Jasper",
   brand: "Crew & Jasper",
   growth: "Jasper & Crew",
   animate: "Jasper",
@@ -84,7 +86,7 @@ export function buildDirectoryMarkdown(): string {
     byCategory[s.category].push(s);
   }
 
-  let md = `## 📋 Canonical 46-Department Agency Directory\n\n`;
+  let md = `## 📋 Canonical 47-Department Agency Directory\n\n`;
   md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n\n`;
 
   // 1. Agency Delivery Division
@@ -195,7 +197,7 @@ export function syncAll(): void {
 
   // Refresh commands across active harnesses
   const skills = getSkills();
-  const userHome = process.env.HOME || "/home/harsh";
+  const userHome = process.env.HOME || os.homedir();
 
   const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
   if (fs.existsSync(path.dirname(opencodeGlobal))) {

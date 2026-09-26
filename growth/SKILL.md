@@ -1,8 +1,8 @@
 ---
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
-description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, and growth audits — routed through nine modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|audit]"
+description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits — routed through ten modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -15,14 +15,14 @@ metadata:
   aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
   suggested_skills: ["analytics", "content", "paidads", "seo"]
   hermes:
-    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt", "pr", "public-relations", "earned-media", "press-release"]
+    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt", "pr", "public-relations", "earned-media", "press-release", "community", "community-building", "discord", "skool", "slack"]
     related_skills: ["analytics", "content", "paidads", "seo"]
     suggested_skills: ["analytics", "content", "paidads", "seo"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["analytics", "content", "paidads", "seo"]
-    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch", "press release", "public relations", "media pitch", "crisis comms"]
+    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch", "press release", "public relations", "media pitch", "crisis comms", "community", "discord community", "skool", "slack community"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -38,15 +38,15 @@ One head skill for strategy and scaling. Win by choosing where to compete and wh
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
-|:---|:---|:---|:---|
-| **positioning** | "positioning", "value proposition", "messaging", "differentiation" | Positioning and value proposition from audience and competitive gap | [references/positioning.md](references/positioning.md) |
+| **positioning** | "positioning", "value proposition", "messaging", "differentiation", "ai defensibility", "moat", "beyond the wrapper" | Positioning and value proposition from audience, competitive gap, and AI defensibility moats | [references/positioning.md](references/positioning.md) |
 | **funnels** | "funnel", "acquisition funnel", "conversion funnel", "customer journey" | Funnel mapping and stage-by-stage improvement plan | [references/funnels.md](references/funnels.md) |
 | **pricing** | "pricing", "pricing strategy", "how much to charge", "pricing tiers" | Pricing structure from value, willingness, and positioning | [references/pricing.md](references/pricing.md) |
-| **launch** | "launch plan", "go to market", "gtm", "product launch", "producthunt", "product hunt launch" | Go-to-market launch plan with sequencing, Product Hunt playbook, and metrics | [references/launch.md](references/launch.md) |
+| **launch** | "launch plan", "go to market", "gtm", "product launch", "producthunt", "product hunt launch", "show hn", "hacker news launch", "reddit launch", "developer launch" | Go-to-market launch plan with sequencing, Product Hunt, Show HN, and technical Reddit playbooks | [references/launch.md](references/launch.md) |
 | **competitor** | "competitor analysis", "competitive landscape", "market analysis", "who else does this" | Competitor and market analysis with actionable gaps | [references/competitor.md](references/competitor.md) |
 | **referral** | "referral program", "affiliate program", "co-marketing", "refer a friend" | Referral/affiliate/co-marketing program design and partner-fit analysis | [references/referral.md](references/referral.md) |
 | **retention** | "churn", "reduce churn", "retention", "win back", "cancel flow", "dunning" | Churn prevention and renewal strategy (voluntary vs involuntary) | [references/retention.md](references/retention.md) |
 | **pr** | "press release", "public relations", "media pitch", "journalist outreach", "crisis comms", "thought leadership", "earned media" | Media outreach, AP-style press releases, crisis response, and executive bylines | [references/pr.md](references/pr.md) |
+| **community** | "community", "discord community", "skool", "slack community", "community onboarding", "engagement loops", "moderation", "member retention" | Community architecture, onboarding rituals, engagement loops, and moderation guardrails across Discord, Skool, Slack, and Circle | [references/community.md](references/community.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -83,8 +83,9 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 | 'What is everyone else doing?' | competitor |
 | 'How do we grow via referrals/partners?' | referral |
 | 'How do we keep what we won?' | retention |
+| 'How do we build belonging and peer rituals?' | community |
 
-Order: competitor → positioning → funnels → pricing → launch → referral → retention. Know the landscape, choose the position, build the path, then protect what you earn.
+Order: competitor → positioning → funnels → pricing → launch → referral → retention → community. Know the landscape, choose the position, build the path, then protect and compound what you earn.
 
 ### Verification gate (every mode)
 

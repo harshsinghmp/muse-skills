@@ -1228,6 +1228,76 @@ function getPresetConfig(preset: string): StackConfig {
         auth: "none",
         deploy: "cloudflare",
       };
+    case "graphics":
+    case "creative":
+    case "brand-studio":
+      return {
+        intent: "graphics",
+        framework: "html",
+        styling: "bem",
+        animation: "css",
+        state: "none",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "none",
+      };
+    case "ecom":
+    case "storefront":
+      return {
+        intent: "ecommerce",
+        framework: "astro",
+        styling: "hybrid",
+        animation: "css",
+        state: "nanostores",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "stripe",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "cloudflare",
+      };
+    case "growth":
+    case "retainer":
+    case "marketing":
+      return {
+        intent: "growth",
+        framework: "none",
+        styling: "none",
+        animation: "none",
+        state: "none",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "none",
+      };
+    case "oss":
+    case "oss-library":
+      return {
+        intent: "oss",
+        framework: "none",
+        styling: "none",
+        animation: "none",
+        state: "none",
+        mobile: "none",
+        cms: "none",
+        puck: false,
+        ecommerce: "none",
+        db: "none",
+        orm: "none",
+        auth: "none",
+        deploy: "github-pages",
+      };
     case "plain-astro":
     case "astro-plain":
       return {
@@ -1456,23 +1526,31 @@ async function main() {
       // =====================================================================
       console.log("\n⚡ STAGE 2: Progressive Technical Architecture Pipeline");
 
-      // Step 1: Project Type / Intent
-      console.log("\n🎯 Step 1: Project Type");
+      // Step 1: Project Type / Archetype
+      console.log("\n🎯 Step 1: Project Archetype");
       console.log(
-        "  [1] Static & Content Site    (Portfolio, blog, publication, documentation, landing page) [Default]",
+        "  [1] Static & Edge Site          (Cloudflare Pages, GitHub Pages, Astro, portfolio, docs) [Default]",
       );
-      console.log("  [2] Web Application & SaaS   (Dashboard, authenticated portal, database application)");
-      console.log("  [3] E-Commerce Storefront     (Product catalog, shopping cart, checkout, payments)");
-      console.log("  [4] Mobile Application       (Cross-platform iOS/Android app via Expo or Capacitor)");
-      console.log("  [5] Custom / DOX Baseline    (Agent governance container on existing workspace)");
+      console.log("  [2] Full-Stack SaaS & Web App   (Next.js, Astro SSR, database, auth, Docker/Cloud)");
+      console.log("  [3] E-Commerce Storefront (Ecom)(Medusa v2, Stripe checkout, product catalog, cart)");
+      console.log(
+        "  [4] Creative & Graphic Studio   (Brand tokens, visual identity, Figma handoff, decks, social assets)",
+      );
+      console.log("  [5] Open-Source (OSS) Library   (Public package/CLI, GitHub Actions CI, MIT/Apache license)");
+      console.log("  [6] Growth & Marketing Retainer (SMM, SEO, Paid Ads campaigns, zero heavy backend)");
+      console.log("  [7] Mobile Application          (Expo React Native, Ionic Capacitor)");
+      console.log("  [8] Custom / DOX Baseline       (Agent governance container on existing workspace)");
 
-      const purposeChoice = await ask(rl, "Select project type [1-5]", "1");
+      const purposeChoice = await ask(rl, "Select project archetype [1-8]", "1");
       const purposeMap: Record<string, string> = {
         "1": "content",
         "2": "app",
         "3": "ecommerce",
-        "4": "mobile",
-        "5": "governance",
+        "4": "graphics",
+        "5": "oss",
+        "6": "growth",
+        "7": "mobile",
+        "8": "governance",
       };
       config.intent = purposeMap[purposeChoice] || "content";
 
@@ -1508,6 +1586,42 @@ async function main() {
         console.log("  [3] Custom");
         const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
         config.framework = fwChoice === "2" ? "nextjs" : fwChoice === "3" ? "custom" : "astro";
+      } else if (config.intent === "graphics") {
+        console.log("  [1] Pure Design System & Tokens (HTML showcase, W3C tokens, OKLCH fluid clamp) [Recommended]");
+        console.log("  [2] Astro Visual Styleguide     (Component token viewer & brand documentation)");
+        console.log("  [3] None / Headless Asset Vault (Only .agents/brand/ & creative/ assets)");
+        const fwChoice = await ask(rl, "Choose graphics delivery mode [1-3]", "1");
+        if (fwChoice === "1") {
+          config.framework = "html";
+          config.styling = "bem";
+        } else if (fwChoice === "2") {
+          config.framework = "astro";
+          config.styling = "hybrid";
+        } else {
+          config.framework = "none";
+          config.styling = "none";
+        }
+        config.cms = "none";
+        config.db = "none";
+        config.auth = "none";
+        config.ecommerce = "none";
+      } else if (config.intent === "oss") {
+        console.log("  [1] TypeScript Library / CLI Harness [Recommended]");
+        console.log("  [2] Plain Astro Documentation Suite");
+        console.log("  [3] Pure Markdown & Script Container");
+        const fwChoice = await ask(rl, "Choose OSS architecture [1-3]", "1");
+        config.framework = fwChoice === "2" ? "astro" : "none";
+        config.cms = "none";
+        config.db = "none";
+        config.auth = "none";
+        config.ecommerce = "none";
+      } else if (config.intent === "growth") {
+        config.framework = "none";
+        config.styling = "none";
+        config.cms = "none";
+        config.db = "none";
+        config.auth = "none";
+        config.ecommerce = "none";
       } else if (config.intent === "mobile") {
         console.log("  [1] React Native with Expo   (Native iOS/Android with Expo Router) [Recommended]");
         console.log("  [2] Astro + Ionic Capacitor  (Convert Astro web app to native APK/iOS)");
@@ -1782,6 +1896,29 @@ async function main() {
         }
       }
 
+      // Step 5b: Deployment & DevOps Target
+      if (!values.deploy && config.intent !== "graphics" && config.intent !== "growth") {
+        console.log("\n🚀 Step 5b: Deployment & Hosting Target:");
+        console.log("  [1] Cloudflare Edge (Pages / Workers) (Sub-50ms worldwide edge delivery) [Recommended]");
+        console.log("  [2] GitHub Pages                       (Zero-cost static hosting for OSS/docs)");
+        console.log("  [3] Docker / Self-Hosted VPS           (Container isolation, Coolify/Fly.io/VPS)");
+        console.log("  [4] Vercel Serverless                  (Serverless compute with edge routing)");
+        console.log("  [5] Static Export / Nginx              (Zero server runtime, static HTML/assets)");
+        console.log("  [6] None / Local Workspace Only");
+        const deployChoice = await ask(rl, "Choose deployment target [1-6]", "1");
+        const deployMap: Record<string, string> = {
+          "1": "cloudflare",
+          "2": "github-pages",
+          "3": "docker",
+          "4": "vercel",
+          "5": "static",
+          "6": "none",
+        };
+        config.deploy = deployMap[deployChoice] || "cloudflare";
+      } else if (config.intent === "graphics" || config.intent === "growth") {
+        config.deploy = "none";
+      }
+
       // =====================================================================
       // STAGE 6: Client Onboarding & Brand Intake Gate
       // =====================================================================
@@ -1878,6 +2015,27 @@ async function main() {
 
   // Fallbacks & Defaults
   const resolvedTarget = isAbsolute(targetPath || ".") ? targetPath || "." : resolve(process.cwd(), targetPath || ".");
+
+  // Auto-detect existing project metadata if target directory already exists
+  if (existsSync(join(resolvedTarget, "package.json"))) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(resolvedTarget, "package.json"), "utf8"));
+      if (!values.name && pkg.name) projectName = pkg.name;
+      if (!values.desc && pkg.description) projectDesc = pkg.description;
+      if (!values.author && pkg.author)
+        authorName = typeof pkg.author === "string" ? pkg.author : pkg.author.name || authorName;
+    } catch {}
+  }
+  if (existsSync(join(resolvedTarget, "README.md"))) {
+    try {
+      const readme = readFileSync(join(resolvedTarget, "README.md"), "utf8");
+      const firstHeading = readme.match(/^#\s+([^\n]+)$/m);
+      if (!values.name && !projectName && firstHeading) projectName = firstHeading[1].trim();
+      const firstParagraph = readme.match(/^([^#\n\r][^\n\r]+)/m);
+      if (!values.desc && !projectDesc && firstParagraph) projectDesc = firstParagraph[1].trim();
+    } catch {}
+  }
+
   projectName = projectName || basename(resolvedTarget);
   projectDesc = projectDesc || tagline || `${projectName} - Modern application governed by DOX Engine.`;
   authorName = authorName || projectName;
@@ -2062,16 +2220,106 @@ async function main() {
     );
   }
 
+  // Compute tokenMap for both Brand and Context templates
+  const featureBullets = coreFeatures
+    .split(",")
+    .map((f) => `- **${f.trim()}**: Core capability and automated verification.`)
+    .join("\n");
+  const plannedBullets = plannedMilestones
+    .split(",")
+    .map((m) => `- **${m.trim()}**: Scheduled for upcoming development sprint.`)
+    .join("\n");
+  const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
+
+  let industryVertical = "b2b_saas";
+  if (config.intent === "ecommerce" || config.intent === "ecom" || config.ecommerce !== "none") {
+    industryVertical = "ecommerce_retail";
+  } else if (config.intent === "graphics") {
+    industryVertical = "creative_design_studio";
+  } else if (config.intent === "growth") {
+    industryVertical = "growth_marketing_agency";
+  } else if (
+    config.intent === "cli" ||
+    config.intent === "oss" ||
+    /developer|engineer|devops|architect|sdk|api|agent/i.test(targetAudience) ||
+    /developer|engineer|api|cli/i.test(projectDesc)
+  ) {
+    industryVertical = "developer_tools";
+  }
+
+  const tokenMap: Record<string, string> = {
+    "{{PROJECT_NAME}}": projectName,
+    "{{PROJECT_DESC}}": projectDesc,
+    "{{AUTHOR_NAME}}": authorName,
+    "{{INDUSTRY_VERTICAL}}": industryVertical,
+    "{{INDUSTRY}}": industry || industryVertical || "(unanswered)",
+    "{{OFFERINGS}}": offerings || "(unanswered)",
+    "{{COLOR_PALETTE}}": colorPalette,
+    "{{TARGET_AUDIENCE}}": targetAudience,
+    "{{PROBLEM_SOLVED}}": coreProblem,
+    "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
+    "{{CORE_FEATURES}}": featureBullets,
+    "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
+    "{{BRAND_VOICE}}": brandVoice,
+    "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
+    "{{FIRST_MILESTONE}}": firstMilestone,
+    "{{PLANNED_MILESTONES}}": plannedBullets,
+    "{{REQUESTED_BACKLOG}}": requestedBullets,
+    "{{PROJECT_INTENT}}": config.intent.toUpperCase() || "WEB",
+    "{{FRAMEWORK_DETAILS}}": `${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""} (@latest)`,
+    "{{STYLING_DETAILS}}": `${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in .agents/brand/tokens/)`,
+    "{{ANIMATION_DETAILS}}": `${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}`,
+    "{{STATE_DETAILS}}": `${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}`,
+    "{{MOBILE_DETAILS}}": `${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}`,
+    "{{CMS_COMMERCE_DETAILS}}": `CMS: ${config.cms.toUpperCase()}${config.puck ? " (+ Puck Visual Builder)" : ""} | E-Commerce: ${config.ecommerce.toUpperCase()}`,
+    "{{DATABASE_AUTH_DETAILS}}": `Database: ${config.db.toUpperCase()} | Auth: ${config.auth.toUpperCase()}`,
+    "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
+    "{{AGENT_NAME}}": agentName,
+    "{{AGENT_ROLE}}": agentRole,
+    "{{STATUS_QUO}}": "Manual ad-hoc processes, custom spreadsheets, or legacy tooling",
+    "{{TRACTION_METRICS}}": "Active development / initial workspace initialization",
+    "{{PRIMARY_ASSET}}": "Autonomous DOX Engine architecture with verified automated test suite",
+    "{{STRATEGIC_DIAGNOSIS}}": `Establish core ${config.intent.toLowerCase()} user journey, verify execution in staging, and validate initial user flow.`,
+    "{{NOW_SKILL}}":
+      config.intent === "ecommerce" || config.intent === "ecom"
+        ? "webdev:ecommerce"
+        : config.intent === "graphics"
+          ? "design"
+          : config.intent === "growth"
+            ? "smm"
+            : "webdev:frontend",
+    "{{SCAFFOLD_DATE}}": new Date().toISOString().split("T")[0],
+    "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
+    "{{FRAMEWORK_PRIMARY}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
+    "{{FRAMEWORK_SECONDARY}}": "Next.js / Service API",
+  };
+
   // 1.5 Copy Brand Guidelines & Tokens
   const brandSrc = join(TEMPLATES_DIR, ".agents/brand");
   const brandDest = join(agentsDir, "brand");
   if (existsSync(brandSrc)) {
-    const brandFiles = ["design.md", "bem-conventions.md", "a11y.md"];
+    const brandFiles = [
+      "design.md",
+      "bem-conventions.md",
+      "a11y.md",
+      "voice.md",
+      "personas.md",
+      "positioning.md",
+      "messaging.md",
+      "visual-identity.md",
+      "social-hooks.md",
+    ];
     for (const bf of brandFiles) {
       const src = join(brandSrc, bf);
       const dest = join(brandDest, bf);
-      if (!existsSync(dest) || isForce) {
-        if (!isDryRun) cpSync(src, dest);
+      if (existsSync(src) && (!existsSync(dest) || isForce)) {
+        if (!isDryRun) {
+          let c = readFileSync(src, "utf8");
+          for (const [k, v] of Object.entries(tokenMap)) {
+            c = c.replaceAll(k, v);
+          }
+          writeFileSync(dest, c, "utf8");
+        }
       }
     }
     const tokensSrc = join(brandSrc, "tokens");
@@ -2135,43 +2383,6 @@ async function main() {
   const contextSrc = join(TEMPLATES_DIR, ".agents/context");
   const contextDest = join(agentsDir, "context");
   if (existsSync(contextSrc)) {
-    const featureBullets = coreFeatures
-      .split(",")
-      .map((f) => `- **${f.trim()}**: Core capability and automated verification.`)
-      .join("\n");
-    const plannedBullets = plannedMilestones
-      .split(",")
-      .map((m) => `- **${m.trim()}**: Scheduled for upcoming development sprint.`)
-      .join("\n");
-    const requestedBullets = `- Community feedback and user-requested capabilities pending triage.\n- Telemetry, observability, and automated health checks.`;
-
-    const tokenMap: Record<string, string> = {
-      "{{PROJECT_NAME}}": projectName,
-      "{{PROJECT_DESC}}": projectDesc,
-      "{{AUTHOR_NAME}}": authorName,
-      "{{TARGET_AUDIENCE}}": targetAudience,
-      "{{PROBLEM_SOLVED}}": coreProblem,
-      "{{VALUE_PROPOSITION}}": `Provides a structured, high-performance, and verifiable solution addressing ${coreProblem.toLowerCase()}.`,
-      "{{CORE_FEATURES}}": featureBullets,
-      "{{KEY_DELIVERABLES}}": `- \`src/\` — Application source code and component architecture\n- \`public/\` — Static assets, icons, and brand graphics\n- \`Client-Intake/\` — Brand identity, business strategy, offerings catalog, and technical intake artifacts\n- \`docs/\` — Architecture documentation, API specifications, and guides\n- \`.agents/\` — 9-folder progressive disclosure governance container`,
-      "{{BRAND_VOICE}}": brandVoice,
-      "{{COLOR_THEME}}": `${colorPalette.toUpperCase()} theme configured in DTCG tokens (\`./.agents/brand/tokens/\`)`,
-      "{{FIRST_MILESTONE}}": firstMilestone,
-      "{{PLANNED_MILESTONES}}": plannedBullets,
-      "{{REQUESTED_BACKLOG}}": requestedBullets,
-      "{{PROJECT_INTENT}}": config.intent.toUpperCase() || "WEB",
-      "{{FRAMEWORK_DETAILS}}": `${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""} (@latest)`,
-      "{{STYLING_DETAILS}}": `${config.styling.toUpperCase()}${config.customStyling ? ` (${config.customStyling})` : ""} (Design tokens in .agents/brand/tokens/)`,
-      "{{ANIMATION_DETAILS}}": `${config.animation.toUpperCase()}${config.customAnimation ? ` (${config.customAnimation})` : ""}`,
-      "{{STATE_DETAILS}}": `${config.state.toUpperCase()}${config.customState ? ` (${config.customState})` : ""}`,
-      "{{MOBILE_DETAILS}}": `${config.mobile.toUpperCase()}${config.customMobile ? ` (${config.customMobile})` : ""}`,
-      "{{CMS_COMMERCE_DETAILS}}": `CMS: ${config.cms.toUpperCase()}${config.puck ? " (+ Puck Visual Builder)" : ""} | E-Commerce: ${config.ecommerce.toUpperCase()}`,
-      "{{DATABASE_AUTH_DETAILS}}": `Database: ${config.db.toUpperCase()} | Auth: ${config.auth.toUpperCase()}`,
-      "{{DEPLOYMENT_DETAILS}}": `${config.deploy.toUpperCase()}`,
-      "{{AGENT_NAME}}": agentName,
-      "{{AGENT_ROLE}}": agentRole,
-    };
-
     const ctxFiles = readdirSync(contextSrc);
     for (const f of ctxFiles) {
       const src = join(contextSrc, f);
@@ -2186,7 +2397,7 @@ async function main() {
         }
       }
     }
-    console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, decisions, roadmap)");
+    console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, brand, accounts, decisions, roadmap)");
   }
 
   // 1.7 Initialize Cognitive Memory (.memory/ + CURRENT.md)
@@ -2223,6 +2434,45 @@ async function main() {
 `;
     writeFileSync(join(memoryDir, "CURRENT.md"), baselineCurrent, "utf8");
     console.log("  ✅ Initialized: `./.memory/CURRENT.md`");
+  }
+
+  // 1.8 Archetype-Specific Scaffolding (creative/ for graphics, marketing/ for growth)
+  if (config.intent === "graphics") {
+    const creativeDir = join(resolvedTarget, "creative");
+    if (!existsSync(creativeDir) && !isDryRun) {
+      mkdirSync(join(creativeDir, "tokens"), { recursive: true });
+      mkdirSync(join(creativeDir, "decks"), { recursive: true });
+      mkdirSync(join(creativeDir, "assets"), { recursive: true });
+      const creativeReadme = `# 🎨 Creative & Visual Asset Studio — ${projectName}
+
+> **Operating Directive**: Centralized storage for client brand vectors, pitch decks, Figma handoffs, and compiled design tokens.
+
+## Directory Structure
+- \`tokens/\`: Compiled DTCG design tokens and fluid geometry clamps.
+- \`decks/\`: Client pitch decks, presentation slides, and sales collateral.
+- \`assets/\`: SVG emblems, illustrations, favicons, and social sharing banners.
+`;
+      writeFileSync(join(creativeDir, "README.md"), creativeReadme, "utf8");
+      console.log("  ✅ Provisioned: `./creative/` (tokens, decks, assets)");
+    }
+  } else if (config.intent === "growth") {
+    const marketingDir = join(resolvedTarget, "marketing");
+    if (!existsSync(marketingDir) && !isDryRun) {
+      mkdirSync(join(marketingDir, "smm"), { recursive: true });
+      mkdirSync(join(marketingDir, "seo"), { recursive: true });
+      mkdirSync(join(marketingDir, "paidads"), { recursive: true });
+      const marketingReadme = `# 📈 Growth & Marketing Retainer — ${projectName}
+
+> **Operating Directive**: Centralized storage for social media management, SEO keyword clusters, and paid ad creative briefs.
+
+## Directory Structure
+- \`smm/\`: Social media calendars, post copy drafts, thread outlines, and viral hooks.
+- \`seo/\`: Keyword research clusters, programmatic page briefs, and search audit logs.
+- \`paidads/\`: Ad creative variations, campaign angle briefs, and ROAS tracking targets.
+`;
+      writeFileSync(join(marketingDir, "README.md"), marketingReadme, "utf8");
+      console.log("  ✅ Provisioned: `./marketing/` (smm, seo, paidads)");
+    }
   }
 
   console.log("  🛡️ Stage 1 Complete: Governance container active.\n");
@@ -5272,7 +5522,7 @@ describe("🏥 Project OS Health & Baseline Verification", () => {
       const privKeyPattern = "BEGIN " + "PRIVATE KEY";
 
       const preCommitScript = `#!/usr/bin/env bash
-# LifeOS Vibeguard Pre-Commit Secret Defense Gate
+# Vibeguard Pre-Commit Secret Defense Gate
 set -e
 
 echo "🛡️ Vibeguard: Inspecting staged files for secrets..."
@@ -5309,7 +5559,7 @@ exit 0
       try {
         chmodSync(preCommitPath, 0o755);
       } catch {}
-      console.log("  ✅ Auto-wired: `scripts/pre-commit.sh` (LifeOS Vibeguard pre-commit secret audit)");
+      console.log("  ✅ Auto-wired: `scripts/pre-commit.sh` (Vibeguard pre-commit secret audit)");
 
       const gitHooksDir = join(resolvedTarget, ".git", "hooks");
       if (existsSync(join(resolvedTarget, ".git"))) {
@@ -6033,13 +6283,30 @@ input, button, textarea, select {
 
   if (!isDryRun) {
     const intakeDir = join(resolvedTarget, "Client-Intake");
-    // ponytail: single canonical folder; no Intake//Onboarding/ mirrors —
-    // re-add alias copy pass only if an external consumer appears.
+    const templateIntakeDir = join(TEMPLATES_DIR, "Client-Intake");
     for (const sub of ["01-Brand", "02-Business", "03-Offerings", "04-Technical-Intake"]) {
-      mkdirSync(join(intakeDir, sub), { recursive: true });
+      const destSub = join(intakeDir, sub);
+      mkdirSync(destSub, { recursive: true });
+      const keepSrc = join(templateIntakeDir, sub, ".gitkeep");
+      const keepDest = join(destSub, ".gitkeep");
+      if (existsSync(keepSrc) && !existsSync(keepDest)) {
+        cpSync(keepSrc, keepDest);
+      }
     }
 
-    const intakeBriefContent = `# Client Intake Brief — ${projectName}
+    const templateBriefPath = join(templateIntakeDir, "00-Intake-Brief.md");
+    let intakeBriefContent = "";
+    if (existsSync(templateBriefPath)) {
+      intakeBriefContent = readFileSync(templateBriefPath, "utf8");
+      for (const [token, val] of Object.entries(tokenMap)) {
+        intakeBriefContent = intakeBriefContent.replaceAll(token, val);
+      }
+      intakeBriefContent = intakeBriefContent.replaceAll(
+        "{{STACK_DETAILS}}",
+        `framework \`${config.framework}\`, CMS \`${config.cms}\`, e-commerce \`${config.ecommerce}\`, database \`${config.db}\`, auth \`${config.auth}\`, styling \`${config.styling}\`, animation \`${config.animation}\`, state \`${config.state}\``,
+      );
+    } else {
+      intakeBriefContent = `# Client Intake Brief — ${projectName}
 
 > **How this works**: You (the employee/client) answer the checklist below in
 > conversation with your AI agent. The agent then writes every document in this
@@ -6079,6 +6346,7 @@ input, button, textarea, select {
 - Zero secrets in any file; credential docs contain placeholder links (1Password/Bitwarden share) only.
 - Modern fluid CSS only: \`clamp()\`, logical properties, zero \`px\` in fluid contexts.
 `;
+    }
     writeFileSync(join(intakeDir, "00-Intake-Brief.md"), intakeBriefContent, "utf8");
 
     console.log("  ✅ Generated: `./Client-Intake/00-Intake-Brief.md` (employee checklist + agent instructions)");
@@ -6234,21 +6502,39 @@ ${artifactList}
 
       const productContent = `# 📦 Product Scope & Inventory — ${projectName}
 
+> Canonical source of truth for product scope, ICP, positioning, and traction. Every agent reads this before executing GTM, design, or engineering work.
+> Every substantive claim must carry an inline tag: \`[validated]\` (proven with a real paying/active user who is not a friend) or \`[assumption]\` (working hypothesis to test).
+
 ## 1. Overview & Vision
 ${projectDesc}
 
 ## 2. Target Audience & Problem Statement
-- **Target Audience**: ${targetAudience}
-- **Core Problem**: ${coreProblem}
-- **Value Proposition**: High-performance, agency-grade ${config.intent.toLowerCase()} system governed by DOX Engine.
+- **Industry Vertical**: ${industryVertical}
+- **Target Audience**: ${targetAudience} \`[assumption]\`
+- **Core Problem**: ${coreProblem} \`[assumption]\`
+- **Value Proposition**: High-performance, agency-grade ${config.intent.toLowerCase()} system governed by DOX Engine. \`[assumption]\`
 
-## 3. Core Capabilities & Features
+## 3. Status Quo & Competitive Wedge
+- **Status Quo (What they use today)**: Manual ad-hoc workflows, custom spreadsheets, or legacy tooling \`[assumption]\`
+- **The Villain / Breaking Point**: Inefficient manual execution, slow turnaround, and lack of automated verification.
+- **Why Us over Status Quo**: Purpose-first architecture with progressive disclosure governance and zero-drift verification.
+
+## 4. Defensibility & "Beyond the Wrapper" Wedge
+- **Core Wedge**: Domain-specific automation, deep workflow integration, and autonomous verification.
+- **Commoditization Defense**: System-level integration that cannot be replicated by simple prompt wrappers.
+
+## 5. Core Capabilities & Features
 ${featItems}
 
-## 4. Key Deliverables & Catalog Offerings
+## 6. Traction, Retention & Strongest Proof Point
+- **Current Traction**: Initial scaffold and active development stage \`[assumption]\`
+- **Retention / Activation Metric**: Time to first successful user workflow execution (< 15 min).
+- **Single Strongest Asset**: Production-ready codebase with full test coverage and automated quality gates \`[validated]\`
+
+## 7. Key Deliverables & Catalog Offerings
 ${offerItems}
 
-## 5. Domain Vocabulary & Key Concepts
+## 8. Domain Vocabulary & Key Concepts
 - **${projectName}**: Primary application and governed workspace.
 - **DOX Container (\`.agents/\`)**: Progressive disclosure documentation container maintaining durable context.
 - **Vibeguard**: Zero-secret credential leakage defense protocol.

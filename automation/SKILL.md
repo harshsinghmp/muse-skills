@@ -1,8 +1,8 @@
 ---
 name: automation
 aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering"]
-description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through six modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics)."
-argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt]"
+description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics)."
+argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 31
-  aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering"]
+  aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering", "voice-ai", "voice-agent", "telephony"]
   suggested_skills: ["webdev", "analytics", "devops", "new-project"]
   hermes:
-    tags: ["automation", "workflow", "chatbot", "ai-agents", "rag", "llm", "integrations", "webhooks", "api", "prompt-engineering", "evals", "n8n", "zapier"]
+    tags: ["automation", "workflow", "chatbot", "ai-agents", "rag", "llm", "integrations", "webhooks", "api", "prompt-engineering", "evals", "n8n", "zapier", "voice", "voice-agents", "retell-ai", "bland-ai", "twilio", "elevenlabs", "telephony"]
     related_skills: ["webdev", "analytics", "devops", "new-project"]
     suggested_skills: ["webdev", "analytics", "devops", "new-project"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["webdev", "analytics", "devops", "new-project"]
-    primary_triggers: ["automate this process", "build a chatbot", "ai agent", "rag pipeline", "connect two apps", "webhook", "write a prompt", "ai assistant"]
+    primary_triggers: ["automate this process", "build a chatbot", "ai agent", "rag pipeline", "connect two apps", "webhook", "write a prompt", "ai assistant", "voice agent", "phone bot", "retell ai", "voice assistant"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **rag** | "rag", "retrieval augmented", "chat with my docs", "knowledge base bot" | Retrieval-augmented generation over a knowledge base | [references/rag.md](references/rag.md) |
 | **integrations** | "connect two apps", "api integration", "webhook", "sync systems" | Third-party API/webhook integrations and data sync | [references/integrations.md](references/integrations.md) |
 | **prompt** | "write a prompt", "prompt engineering", "improve this prompt", "eval a prompt" | Prompt design, iteration, and evaluation | [references/prompt.md](references/prompt.md) |
+| **voice** | "voice agent", "phone bot", "retell ai", "bland ai", "call assistant", "telephony", "voice ai" | Conversational voice AI agents, Retell/Bland pipelines, Twilio SIP, and real-time STT/TTS | [references/voice.md](references/voice.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

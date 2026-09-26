@@ -19,6 +19,13 @@ Before choosing or executing any formula, discover and document:
 4. **Verified Product Truth**: What are the verified facts, benchmarks, proprietary mechanisms, and customer testimonials? (Zero unverified claims).
 5. **Brand Tone & Register**: Direct response punchy, authoritative enterprise B2B, witty conversational, or polished editorial.
 
+### Canonical DOX Context Sources (Single Source of Truth):
+Before drafting copy, read the client's modular brand standards in `.agents/brand/`:
+- `.agents/brand/voice.md` — Voice dimension sliders, vocabulary DOs/DON'Ts, anti-puffery clichés, and 18-token standalone quotability rule.
+- `.agents/brand/messaging.md` — 10s/30s elevator pitches, approved claims, and catalog offerings.
+- `.agents/brand/personas.md` — Target ICP avatar, daily operational friction, status aspirations, and objection matrix.
+- `.agents/brand/social-hooks.md` — Problem-agitation, contrarian, and proof angles.
+
 ---
 
 ## 🧭 Automated Formula Selector & Decision Matrix

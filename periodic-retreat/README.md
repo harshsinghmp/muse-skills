@@ -4,7 +4,7 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /retreat](https://img.shields.io/badge/Triggers-%2Fretreat%20%7C%20%2Fquarterly-purple.svg?style=for-the-badge)](#)
 
-Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem.
+Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem.
 
 ---
 

@@ -5,7 +5,7 @@
 - Agent command payloads, shell scripts, or CI/CD workflow steps
 - Target host or container execution context
 - Environment variable schemas (`.env.schema`)
-- Default stack: LifeOS Vibeguard Protocol / ClawSec runtime AST interceptor.
+- Default stack: Vibeguard Protocol / ClawSec runtime AST interceptor.
 
 ## Deliverable
 

@@ -115,5 +115,5 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - [ ] CVEs validated against official NVD / vendor advisories with CVSS scores.
 - [ ] Remediation playbooks tested with `--check` / dry-run before execution.
 - [ ] Cloud WAF evaluated across all 6 Well-Architected Framework pillars.
-- [ ] Zero secret leaks in output logs (LifeOS Vibeguard standard).
+- [ ] Zero secret leaks in output logs (Vibeguard standard).
 - [ ] All audit findings recorded into the evidence ledger.

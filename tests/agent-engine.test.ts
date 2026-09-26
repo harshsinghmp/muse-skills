@@ -28,6 +28,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/standards"))).toBe(true);
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/brand"))).toBe(true);
       expect(existsSync(join(AI_READY_TEMPLATES, ".agents/context"))).toBe(true);
+      expect(existsSync(join(AI_READY_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
 
     it("ai-ready/templates contains all 17 modular standards including backend-wordpress.md", () => {
@@ -67,6 +68,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(existsSync(join(TEST_SANDBOX, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/standards/backend-wordpress.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/brand/tokens"))).toBe(true);
+      expect(existsSync(join(TEST_SANDBOX, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
   });
 
@@ -518,9 +520,32 @@ Custom billing engine for healthcare providers.
 
       const dockerCompose = readFileSync(join(target, "backend/docker-compose.yml"), "utf8");
       expect(dockerCompose).toContain("postgres:16-alpine");
-      expect(dockerCompose).toContain("redis:7-alpine");
-
       expect(readFileSync(join(target, "Client-Intake/00-Intake-Brief.md"), "utf8")).toContain("medusa");
+
+      // 7. Verify DOX full-service brand and accounts suite
+      expect(existsSync(join(target, ".agents/context/accounts.md"))).toBe(true);
+      const accountsContent = readFileSync(join(target, ".agents/context/accounts.md"), "utf8");
+      expect(accountsContent).toContain("Vibeguard Zero-Leak Protocol");
+      expect(accountsContent).toContain("Sovereign Store");
+
+      const indexContent = readFileSync(join(target, ".agents/context/index.md"), "utf8");
+      expect(indexContent).toContain("accounts.md");
+      expect(indexContent).toContain("voice.md");
+
+      expect(existsSync(join(target, ".agents/brand/voice.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/personas.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/positioning.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/messaging.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/visual-identity.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/social-hooks.md"))).toBe(true);
+
+      const voiceContent = readFileSync(join(target, ".agents/brand/voice.md"), "utf8");
+      expect(voiceContent).toContain("Sovereign Store");
+      expect(voiceContent).toContain("Anti-Puffery Blacklist");
+
+      const personasContent = readFileSync(join(target, ".agents/brand/personas.md"), "utf8");
+      expect(personasContent).toContain("Sovereign Store");
+      expect(personasContent).toContain("The Operational Champion");
     });
 
     it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
@@ -1102,6 +1127,51 @@ Custom billing engine for healthcare providers.
       );
       expect(resGit.status).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
+    }, 30000);
+
+    it("supports graphics, ecom, and growth archetypes with dedicated creative/ and marketing/ directories", () => {
+      // 1. Graphics preset
+      const targetGraphics = join(TEST_SANDBOX, "preset-graphics");
+      const resGraphics = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGraphics.status).toBe(0);
+      expect(existsSync(join(targetGraphics, "creative/tokens"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/decks"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/assets"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/README.md"))).toBe(true);
+      const productGraphics = readFileSync(join(targetGraphics, ".agents/context/product.md"), "utf8");
+      expect(productGraphics).toContain("creative_design_studio");
+
+      // 2. Growth preset
+      const targetGrowth = join(TEST_SANDBOX, "preset-growth");
+      const resGrowth = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGrowth.status).toBe(0);
+      expect(existsSync(join(targetGrowth, "marketing/smm"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/seo"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/paidads"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/README.md"))).toBe(true);
+      const productGrowth = readFileSync(join(targetGrowth, ".agents/context/product.md"), "utf8");
+      expect(productGrowth).toContain("growth_marketing_agency");
+
+      // 3. E-commerce preset
+      const targetEcom = join(TEST_SANDBOX, "preset-ecom");
+      const resEcom = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resEcom.status).toBe(0);
+      const productEcom = readFileSync(join(targetEcom, ".agents/context/product.md"), "utf8");
+      expect(productEcom).toContain("ecommerce_retail");
+      const roadmapEcom = readFileSync(join(targetEcom, ".agents/context/roadmap.md"), "utf8");
+      expect(roadmapEcom).toContain("webdev:ecommerce");
     }, 30000);
   });
 });

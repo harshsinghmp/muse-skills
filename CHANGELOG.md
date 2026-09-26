@@ -2,6 +2,30 @@
 
 All notable changes to this project are documented in this file.
 
+## [6.0.0] - 2026-09-27
+
+### Added
+
+- **Unified Customer Relationship & Event-Driven Marketing Flow Engine (`crm` #47 & `flows` alias)**: Added the 47th canonical agency department (`crm/SKILL.md`) with 7 high-impact production modes (`onboard`, `abandon`, `nurture`, `winback`, `deliverability`, `sms`, `contacts`). Features:
+  - Canonical 5-stage activation sequences (`references/onboard.md`) driving time-to-value under 15 minutes.
+  - Multi-touch abandonment rescue state machines (`references/abandon.md`) for e-commerce cart/checkout and SaaS trial drop-offs.
+  - Value-first customer nurture sequences (`references/nurture.md`) with segment-aware branch logic.
+  - Reason-aware win-back playbooks (`references/winback.md`) recovering churned and dormant accounts.
+  - Strict email authentication infrastructure (`references/deliverability.md`) enforcing SPF, DKIM, DMARC, RFC 8058 1-click unsubscribe headers, and progressive IP/domain warming schedules.
+  - Compliant SMS automation (`references/sms.md`) implementing TCPA express written consent, CTIA rules, A2P 10DLC registration, and timezone quiet hours.
+  - Unified contact data schemas and dynamic RFM segmentation (`references/contacts.md`) with GDPR/CCPA right-to-erasure and identity resolution rules.
+- **3D Motion & Interactive Spatial Design Mode (`design:3d`)**: Added the 11th mode to `design` (`design/references/3d.md`), establishing Spline embeds, Three.js / React Three Fiber (R3F) declarative pipelines, Blender asset optimization, and strict mobile polygon/draw-call budgets with Draco geometry compression.
+- **Agency Legal Architecture Mode (`ops:legal`)**: Added the 10th mode to `ops` (`ops/references/legal.md`), providing standardized contracts: Master Services Agreements (MSAs), Statements of Work (SOWs), subcontractor IP assignment agreements, two-way NDAs, and generative AI disclosure and confidentiality clauses.
+- **Conversational Voice AI & Telephony Mode (`automation:voice`)**: Added the 7th mode to `automation` (`automation/references/voice.md`), codifying sub-600ms latency voice agents across Retell AI, Bland AI, Twilio Voice SIP media streams, ElevenLabs synthesis, and warm human transfer escalations.
+- **Community Architecture & Engagement Loops Mode (`growth:community`)**: Added the 10th mode to `growth` (`growth/references/community.md`), detailing channel taxonomies, Day 1 to Day 30 onboarding rituals, weekly engagement calendars, 14d/30d inactivity winback loops, and AutoMod regex spam guardrails across Discord, Skool, Slack, and Circle.
+
+### Changed
+
+- **Agency Department Expansion**: Scaled catalog to 47 production-grade agency departments.
+- **Universal Executive Secretary Sync**: Synchronized `secretary:dispatch` directory and 174 slash commands across all supported agent harnesses (OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, Hermes).
+- **Catalog Byte-Parity Contract**: Reconciled skill definitions, argument hints, and mode counts across `SKILL.md`, `skills.json`, `llms.txt`, and `README.md`.
+- **Test Suite Expansion**: Added comprehensive simulation tests covering all new department modes (142 tests passing with 3,157 assertions).
+
 ## [5.26.0] - 2026-09-24
 
 ### Added
@@ -89,7 +113,7 @@ All notable changes to this project are documented in this file.
 
 - **Brand Lifecycle & Client Onboarding Engine (`brand`)**: Registered the 46th canonical agency department skill (`brand/SKILL.md`) equipped with 8 operational modes: `intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, and `audit`.
 - **Automated 50-Point Intake Audit Tool (`brand/scripts/intake-audit.ts`)**: Fast CLI utility scoring client intake briefs across clarity, completeness, and feasibility gates with instant clarification generation.
-- **LifeOS Zero-Leak Credential Delegation Protocol**: Enforces secure client credential exchange without storing secrets in plaintext across Google, Meta, AWS, Shopify, and Cloudflare in `brand:accounts-access`.
+- **Zero-Leak Credential Delegation Protocol**: Enforces secure client credential exchange without storing secrets in plaintext across Google, Meta, AWS, Shopify, and Cloudflare in `brand:accounts-access`.
 - **Executive Milestone Reports**: Shipped comprehensive interactive HTML milestone reports at [`.agents/reports/v5.16.0-2026-09-22.html`](.agents/reports/v5.16.0-2026-09-22.html) and [`.agents/reports/latest.html`](.agents/reports/latest.html).
 
 ## [5.15.0] - 2026-09-22
@@ -213,7 +237,7 @@ All notable changes to this project are documented in this file.
 #### 4. Fragmented Client Brand Onboarding & Delegation Security
 - **Pain**: Brand onboarding lacked a standardized operational harness, leading to scattered client intake briefs, ad-hoc credential sharing, misaligned design directives, and loose access revocation upon project completion.
 - **Feature**: Formalized `brand` (`brand/SKILL.md`) as the 46th canonical agency department, introducing 8 operational modes (`intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, `audit`) and an automated 50-point intake audit script (`brand/scripts/intake-audit.ts`).
-- **Solution**: Delivered an end-to-end client lifecycle mechanism enforcing LifeOS zero-leak access delegation, cross-department brief generation (design, webdev, content, paidads), and a mandatory 48-hour access revocation protocol.
+- **Solution**: Delivered an end-to-end client lifecycle mechanism enforcing zero-leak access delegation, cross-department brief generation (design, webdev, content, paidads), and a mandatory 48-hour access revocation protocol.
 
 #### 5. Workspace Clutter & Redundant Cluster D Skills
 - **Pain**: Over 1,000 legacy and third-party skills cluttered global and local trees, diluting discovery relevance and consuming unnecessary disk and memory footprint.
@@ -234,7 +258,7 @@ All notable changes to this project are documented in this file.
 
 #### 6. Catalog Integrity & Zero-Leak Quality Enforcement
 - **Pain**: High-velocity multi-skill refactoring created risks of unmonitored test failures, secret leaks, or catalog drift between `SKILL.md`, `skills.json`, and `llms.txt`.
-- **Feature**: Expanded the automated test suite with simulation workflows (`tests/simulation-workflows.test.ts`), added strict byte-parity validation across registry files, and executed automated TruffleHog secret scans via LifeOS Vibeguard.
+- **Feature**: Expanded the automated test suite with simulation workflows (`tests/simulation-workflows.test.ts`), added strict byte-parity validation across registry files, and executed automated TruffleHog secret scans via Vibeguard Protocol.
 - **Solution**: Locked in 100% test pass rate across 116 tests in 7 files with zero credential leaks, validating all 46 canonical skills for production readiness.
 
 ## [5.0.0] - 2026-09-21

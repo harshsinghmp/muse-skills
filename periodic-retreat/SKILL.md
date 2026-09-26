@@ -1,7 +1,7 @@
 ---
 name: periodic-retreat
 aliases: ["retreat","quarterly-retreat","strategic-retreat"]
-description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md."
+description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem. Generates quarterly-retreat.md."
 argument-hint: "quarterly retreat, purge debt, next-quarter OKRs"
 user-invocable: true
 version: 1.0.0
@@ -15,7 +15,7 @@ metadata:
   aliases: ["retreat","quarterly-retreat","strategic-retreat"]
   suggested_skills: ["coach","audit","updateagents","updatedocs"]
   hermes:
-    tags: [retreat, strategic-planning, quarterly-review, lifeos, architecture-debt, okrs, telos]
+    tags: [retreat, strategic-planning, quarterly-review, strategic-alignment, architecture-debt, okrs, telos]
     related_skills: [coach, audit, updateagents, updatedocs]
     suggested_skills: [coach, audit, updateagents, updatedocs]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
@@ -63,7 +63,7 @@ Do NOT use this skill when:
                                              ▼
 ┌─────────────────────────┐     ┌─────────────────────────┐
 │ Phase 4: Next-Q OKRs    │ ◀── │ Phase 3: TELOS Sync     │
-│ 3 high-leverage goals   │     │ LifeOS Wheel of Life &  │
+│ 3 high-leverage goals   │     │ Founder Wheel of Life & │
 │ with binary finish lines│     │ Principal alignment     │
 └─────────────────────────┘     └─────────────────────────┘
 ```
@@ -91,7 +91,7 @@ Do NOT use this skill when:
 2. Audit documentation: Delete outdated guides and update stale README tables.
 3. Consolidate: Merge overlapping scripts and replace multi-step hacks with canonical tooling.
 
-### Step 3 — TELOS & LifeOS Alignment
+### Step 3 — TELOS & Operating System Alignment
 1. Compare actual time and commit distribution against `PRINCIPAL_TELOS.md`.
 2. Score the 4 Core Agency Divisions (Sol, Jasper, Crew, Nexus) for capability balance.
 

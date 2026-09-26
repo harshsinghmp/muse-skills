@@ -41,7 +41,7 @@ browser-relay click 'button[type=submit]' --tab <tabId>
 browser-relay screenshot /tmp/dashboard-verification.png --tab <tabId>
 ```
 
-## Security & Privacy Guardrails (LifeOS Vibeguard Protocol)
+## Security & Privacy Guardrails (Vibeguard Protocol)
 
 1. **Localhost Binding**: The relay server binds strictly to `127.0.0.1:18795`. No external public network ingress is permitted.
 2. **Zero Password Ingestion**: The agent must never type or request plaintext passwords. All authentication relies on existing session cookies already held in Chrome.

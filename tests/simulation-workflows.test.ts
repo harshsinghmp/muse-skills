@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -354,8 +355,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const content = fs.readFileSync(relayPath, "utf8");
       expect(content).toContain("127.0.0.1:18795");
       expect(content).toContain("browser-relay doctor");
-      expect(content).toContain("LifeOS Vibeguard Protocol");
+      expect(content).toContain("Vibeguard Protocol");
       expect(content).toContain("Zero Password Ingestion");
+    });
+
+    test("Sol: automation voice mode covers Retell AI, Bland AI, Twilio SIP, and sub-600ms latency", () => {
+      const autoSkill = fs.readFileSync(path.join(REPO_ROOT, "automation", "SKILL.md"), "utf8");
+      expect(autoSkill).toContain("| **voice** |");
+      expect(autoSkill).toContain("references/voice.md");
+      expect(autoSkill).toContain('argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"');
+
+      const voiceRef = fs.readFileSync(path.join(REPO_ROOT, "automation", "references", "voice.md"), "utf8");
+      expect(voiceRef).toContain("sub-600ms round-trip latency");
+      expect(voiceRef).toContain("Retell AI");
+      expect(voiceRef).toContain("Bland AI");
+      expect(voiceRef).toContain("Twilio Voice + Media Streams");
+      expect(voiceRef).toContain("Human Warm Transfer & Escalation Guardrails");
     });
 
     test("Nexus: code-review boundary-governance strictly enforces the 5 checkpoints", () => {
@@ -465,6 +480,29 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(auditRef).toContain("100dvh");
     });
 
+    test("webdev: frontend mode implements Jakub Czakon 7-block developer homepage standard", () => {
+      const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "webdev", "SKILL.md"), "utf8");
+      expect(webdevSkill).toContain("developer homepage");
+      expect(webdevSkill).toContain("references/frontend.md");
+
+      const frontendRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "frontend.md"), "utf8");
+      expect(frontendRef).toContain("Jakub Czakon 7-Block Standard");
+      expect(frontendRef).toContain("<DeveloperHero />");
+      expect(frontendRef).toContain("<InteractiveDemo />");
+      expect(frontendRef).toContain("<ArchitectureOverview />");
+      expect(frontendRef).toContain("<CodeFeatureGrid />");
+      expect(frontendRef).toContain("<DeveloperProofBar />");
+      expect(frontendRef).toContain("<QuickstartSection />");
+      expect(frontendRef).toContain("<PricingLicenseGrid />");
+      expect(frontendRef).toContain("TTFV quickstart < 15 min");
+      expect(frontendRef).toContain("Universal Vertical Component Routing");
+      expect(frontendRef).toContain("Component Mismatch Prohibition");
+      expect(frontendRef).toContain("<ProductHero />");
+
+      const auditRef = fs.readFileSync(path.join(REPO_ROOT, "webdev", "references", "audit.md"), "utf8");
+      expect(auditRef).toContain("Vertical component alignment verified");
+    });
+
     test("devops: cloudflare mode consolidates Workers, Pages, Full (Strict) SSL, and Zero Trust tunnels", () => {
       const devopsSkill = fs.readFileSync(path.join(REPO_ROOT, "devops", "SKILL.md"), "utf8");
       expect(devopsSkill).toContain("| **cloudflare** |");
@@ -495,6 +533,20 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(uikitRef).toContain("focus-visible");
     });
 
+    test("design: 3d mode covers Spline, Three.js/R3F, Blender asset optimization, and polygon budgets", () => {
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **3d** |");
+      expect(designSkill).toContain("references/3d.md");
+
+      const ref = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "3d.md"), "utf8");
+      expect(ref).toContain("Spline");
+      expect(ref).toContain("Three.js / React Three Fiber");
+      expect(ref).toContain("Asset Optimization & Compression Protocol (Blender → Web)");
+      expect(ref).toContain("Polygon Budget");
+      expect(ref).toContain("Draco Geometry Compression");
+      expect(ref).toContain("React Three Fiber (R3F) Clean Implementation Pattern");
+    });
+
     test("growth: launch mode incorporates Product Hunt launch playbook", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain("producthunt");
@@ -504,6 +556,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(launchRef).toContain("Product Hunt Launch Playbook (`producthunt`)");
       expect(launchRef).toContain("12:01 AM PST");
       expect(launchRef).toContain("first-4-hours momentum");
+    });
+
+    test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
+      const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "growth", "SKILL.md"), "utf8");
+      expect(growthSkill).toContain(
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|audit]"',
+      );
+      expect(growthSkill).toContain("| **community** |");
+      expect(growthSkill).toContain("references/community.md");
+
+      const communityRef = fs.readFileSync(path.join(REPO_ROOT, "growth", "references", "community.md"), "utf8");
+      expect(communityRef).toContain("Discord, Skool, Slack, and Circle");
+      expect(communityRef).toContain("The 3-Question Introduction Template");
+      expect(communityRef).toContain("Engagement Loops & Ritual Calendar");
+      expect(communityRef).toContain("14-Day Inactivity Soft Nudge");
+      expect(communityRef).toContain("3-Tier Escalation Ladder");
     });
 
     test("design: saas landing page template enforces 9-section sequence and 9 copywriting frameworks", () => {
@@ -539,6 +607,43 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
 
       const wireframeRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "wireframe.md"), "utf8");
       expect(wireframeRef).toContain("templates/saas.md");
+    });
+
+    test("design: developer homepage template enforces 7-block architecture and anti-puffery standards", () => {
+      const templatePath = path.join(REPO_ROOT, "design", "templates", "developer.md");
+      expect(fs.existsSync(templatePath)).toBe(true);
+
+      const tpl = fs.readFileSync(templatePath, "utf8");
+      // 7 canonical blocks
+      expect(tpl).toContain("1. Hero Block");
+      expect(tpl).toContain("2. Frictionless Demo / Playground");
+      expect(tpl).toContain("3. Architecture & Mechanics");
+      expect(tpl).toContain("4. Code-First Feature Grid");
+      expect(tpl).toContain("5. Developer Social Proof & Open Source Trust Metrics");
+      expect(tpl).toContain("6. Quickstart & Integration Surface");
+      expect(tpl).toContain("7. Transparent Pricing & Open Source License");
+
+      // Developer anti-puffery and TTFV rules
+      expect(tpl).toContain("TTFV < 15 minutes");
+      expect(tpl).toContain("The Anti-Puffery Copywriting Standard");
+      // Anti-triggers, negative guards, and vertical matching
+      expect(tpl).toContain("When NOT to Use This Template (Anti-Triggers & Negative Guards)");
+      expect(tpl).toContain("Non-Technical & Retail E-Commerce");
+      expect(tpl).toContain("Professional Services & Consulting");
+
+      // Cross references in ui, wireframe, and SKILL.md
+      const uiRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "ui.md"), "utf8");
+      expect(uiRef).toContain("templates/developer.md");
+      expect(uiRef).toContain("Vertical Template Matching Gate");
+      expect(uiRef).toContain("Template Mismatch Prohibition");
+
+      const wireframeRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "wireframe.md"), "utf8");
+      expect(wireframeRef).toContain("templates/developer.md");
+      expect(wireframeRef).toContain("Vertical Layout Gate");
+
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("templates/developer.md");
+      expect(designSkill).toContain("Vertical Selector Matrix");
     });
 
     test("design: ux mode consolidates UX Architecture, Research, Persona Walkthroughs, Onboarding UX, and Interaction Patterns", () => {
@@ -585,7 +690,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(designSkill).toContain("visual storytelling");
       expect(designSkill).toContain("references/story.md");
       expect(designSkill).toContain(
-        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story]"',
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|3d]"',
       );
 
       const storyRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "story.md"), "utf8");
@@ -781,7 +886,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(pipeRef).toContain("Decision Criteria");
     });
 
-    test("accounts-access mode enforces LifeOS zero-leak delegation protocol across all platforms", () => {
+    test("accounts-access mode enforces zero-leak delegation protocol across all platforms", () => {
       const accessRef = fs.readFileSync(path.join(brandDir, "references", "accounts-access.md"), "utf8");
       expect(accessRef).toContain("Zero-Credential Leak Delegation Standard");
       expect(accessRef).toContain("Never accept, request, or store plaintext passwords");
@@ -793,14 +898,17 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(accessRef).toContain("NEVER `Administrator` or `Owner`");
     });
 
-    test("brief mode generates master dossier and cross-department briefs for design, webdev, content, paidads, qa", () => {
+    test("brief mode generates master dossier, technical founder AI moat audit, and 6 cross-department briefs", () => {
       const briefRef = fs.readFileSync(path.join(brandDir, "references", "brief.md"), "utf8");
       expect(briefRef).toContain("The Master Brand Dossier Architecture");
+      expect(briefRef).toContain("Technical Founder Intake & AI Defensibility Moat Audit");
+      expect(briefRef).toContain("Defensibility Moat Index");
       expect(briefRef).toContain("Department Brief 1: For `design`");
       expect(briefRef).toContain("Department Brief 2: For `webdev`");
       expect(briefRef).toContain("Department Brief 3: For `content` & `smm`");
-      expect(briefRef).toContain("Department Brief 4: For `paidads`");
-      expect(briefRef).toContain("Department Brief 5: For `qa-launch`");
+      expect(briefRef).toContain("Department Brief 4: For `growth` & `gtm`");
+      expect(briefRef).toContain("Department Brief 5: For `paidads`");
+      expect(briefRef).toContain("Department Brief 6: For `qa-launch`");
     });
 
     test("offboard mode enforces 5-phase structured exit and 48-hour access revocation protocol", () => {
@@ -838,6 +946,87 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(resRed.stdout).toContain("RED LIGHT");
       expect(resRed.stdout).toContain("Missing Brand Discovery Parameters");
     });
+
+    test("intake-compiler script compiles 00-Intake-Brief into .agents/brand suite and updates context", () => {
+      const compilerPath = path.join(brandDir, "scripts", "intake-compiler.ts");
+      expect(fs.existsSync(compilerPath)).toBe(true);
+
+      const sandboxDir = path.join(os.tmpdir(), `brand-intake-sandbox-${Date.now()}`);
+      fs.mkdirSync(path.join(sandboxDir, "Client-Intake"), { recursive: true });
+      fs.mkdirSync(path.join(sandboxDir, ".agents", "context"), { recursive: true });
+
+      // Write mock 00-Intake-Brief.md
+      const briefContent = `# Client Intake Brief — Lumina Studio
+
+## Pre-Filled From Scaffold
+- **Project Name**: Lumina Studio
+- **Organization**: Lumina Creative Co
+- **One-Line Purpose**: High-end architectural visualization and brand identity studio.
+- **Industry / Vertical**: creative_design_studio
+- **Target Audience**: Luxury hospitality brands and boutique real estate developers
+- **Core Problem Solved**: Generic rendering templates that fail to convey spatial craftsmanship
+- **Brand Voice**: Minimalist, architectural, discerning
+- **OKLCH Palette**: bronze
+- **Offerings**: Spatial CGI Renderings, Architectural Brand Strategy, Digital Lookbooks
+- **Stack**: framework \`astro\`, CMS \`payload\`, e-commerce \`none\`, database \`postgres\`, auth \`better-auth\`, styling \`unocss\`, animation \`gsap\`, state \`nanostores\`
+
+## Employee Checklist (answer these with your agent)
+1. **Brand**: Verified assets in creative/assets/
+2. **Business**: Top 3 Competitors: Studio A, Studio B, Legacy 3D Agency. Launch goal: 5 enterprise retainer signups.
+3. **Offerings**: As listed above.
+4. **Technical**: Domain lumina-studio.com, DNS managed on Cloudflare.
+5. **Boundaries**: No low-cost residential staging, no generic stock asset packs.
+`;
+      fs.writeFileSync(path.join(sandboxDir, "Client-Intake", "00-Intake-Brief.md"), briefContent, "utf8");
+
+      // Write mock product.md and accounts.md
+      fs.writeFileSync(
+        path.join(sandboxDir, ".agents", "context", "product.md"),
+        `# 📦 Product Scope\n- **Target Audience**: Developers [assumption]\n- **Core Problem**: Manual tasks [assumption]\n- **Value Proposition**: Fast system [assumption]\n\n## 7. Key Deliverables & Catalog Offerings\n- **Initial MVP**\n\n## 8. Domain\n`,
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(sandboxDir, ".agents", "context", "accounts.md"),
+        `# 🛡️ Accounts — {{PROJECT_NAME}}\nsc-domain:{{DOMAIN_ROOT}}\nOrganization: {{AUTHOR_NAME}}\n`,
+        "utf8",
+      );
+
+      // Execute compiler
+      const res = spawnSync("bun", [compilerPath, sandboxDir, "--force"], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("DOX Intake Compiler: Compilation Complete");
+      expect(res.stdout).toContain("Lumina Studio");
+      expect(res.stdout).toContain("creative_design_studio");
+
+      // Verify compiled files
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/voice.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/personas.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/positioning.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/messaging.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/visual-identity.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, ".agents/brand/social-hooks.md"))).toBe(true);
+      expect(fs.existsSync(path.join(sandboxDir, "start-here.md"))).toBe(true);
+
+      const voice = fs.readFileSync(path.join(sandboxDir, ".agents/brand/voice.md"), "utf8");
+      expect(voice).toContain("Minimalist, architectural, discerning");
+
+      const personas = fs.readFileSync(path.join(sandboxDir, ".agents/brand/personas.md"), "utf8");
+      expect(personas).toContain("Luxury hospitality brands");
+
+      const positioning = fs.readFileSync(path.join(sandboxDir, ".agents/brand/positioning.md"), "utf8");
+      expect(positioning).toContain("Lumina Studio");
+
+      const product = fs.readFileSync(path.join(sandboxDir, ".agents/context/product.md"), "utf8");
+      expect(product).toContain("[validated]");
+      expect(product).toContain("Spatial CGI Renderings");
+
+      const accounts = fs.readFileSync(path.join(sandboxDir, ".agents/context/accounts.md"), "utf8");
+      expect(accounts).toContain("Lumina Studio");
+      expect(accounts).toContain("Lumina Creative Co");
+
+      // Cleanup
+      fs.rmSync(sandboxDir, { recursive: true, force: true });
+    });
   });
 
   describe("9. Agency Operations Department (ops) & Obsidian PKM Workflows", () => {
@@ -850,7 +1039,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|legal|audit]"',
       );
     });
 
@@ -871,6 +1060,29 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("JSON Canvas 1.0");
       expect(ref).toContain('"node-root"');
     });
+
+    test("ops references/multi-client.md implements Two-Tier Memory and Sub-App Workspace Isolation", () => {
+      const refPath = path.join(opsDir, "references", "multi-client.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("Enterprise Multi-Client & Sub-App Workspace Topology");
+      expect(ref).toContain("Two-Tier Memory Isolation Standard");
+      expect(ref).toContain("~/.memory");
+      expect(ref).toContain("<client-root>/.memory/");
+      expect(ref).toContain("Sub-App Routing Table & Domain Mapping");
+      expect(ref).toContain("5-Checkpoint Cross-Client Context Firewall");
+      expect(ref).toContain("5-Line Context Switch Audit Log");
+    });
+
+    test("ops references/legal.md covers MSAs, subcontractor IP assignment, NDAs, and AI disclosures", () => {
+      const refPath = path.join(opsDir, "references", "legal.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("MSA (Master Services Agreement)");
+      expect(ref).toContain("Subcontractor IP Assignment");
+      expect(ref).toContain("Intellectual Property (IP) Vesting Clause");
+      expect(ref).toContain("AI Tooling Safeguards");
+    });
   });
 
   describe("10. Executive Secretary Controller (secretary) & Universal Dispatcher", () => {
@@ -886,7 +1098,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
     });
 
-    test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
+    test("secretary references/dispatch.md comprehensively catalogs all 47 departments and Council leads", () => {
       const refPath = path.join(secretaryDir, "references", "dispatch.md");
       expect(fs.existsSync(refPath)).toBe(true);
       const ref = fs.readFileSync(refPath, "utf8");
@@ -894,14 +1106,117 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("Jasper");
       expect(ref).toContain("Crew");
       expect(ref).toContain("Nexus");
-      expect(ref).toContain("5-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("6-Step Autonomous Dispatch Protocol");
+      expect(ref).toContain("Sub-App Intent Resolution & Scope Anchoring");
       expect(ref).toContain("Progressive Disclosure Loading");
+      expect(ref).toContain("Selective Brand & Accounts Context Injection");
+      expect(ref).toContain(".agents/brand/visual-identity.md");
+      expect(ref).toContain(".agents/brand/voice.md");
+      expect(ref).toContain(".agents/context/accounts.md");
       expect(ref).toContain("webdev");
       expect(ref).toContain("design");
       expect(ref).toContain("smm");
       expect(ref).toContain("devops");
+      expect(ref).toContain("crm");
       expect(ref).toContain("ops");
       expect(ref).toContain("code-review");
+    });
+
+    test("downstream skills (content, design, paidads) reference modular .agents/brand standards and accounts registry", () => {
+      const copyRef = fs.readFileSync(path.join(REPO_ROOT, "content", "references", "copy.md"), "utf8");
+      expect(copyRef).toContain(".agents/brand/voice.md");
+      expect(copyRef).toContain(".agents/brand/messaging.md");
+      expect(copyRef).toContain(".agents/brand/personas.md");
+
+      const brandingRef = fs.readFileSync(path.join(REPO_ROOT, "design", "references", "branding.md"), "utf8");
+      expect(brandingRef).toContain(".agents/brand/visual-identity.md");
+      expect(brandingRef).toContain(".agents/brand/tokens/");
+
+      const paidadsRef = fs.readFileSync(path.join(REPO_ROOT, "paidads", "references", "audit.md"), "utf8");
+      expect(paidadsRef).toContain(".agents/context/accounts.md");
+      expect(paidadsRef).toContain(".agents/brand/personas.md");
+    });
+
+    test("ai-ready product template contains Sub-App Topology & Domain Map", () => {
+      const templatePath = path.join(REPO_ROOT, "ai-ready", "templates", ".agents", "context", "product.md");
+      expect(fs.existsSync(templatePath)).toBe(true);
+      const content = fs.readFileSync(templatePath, "utf8");
+      expect(content).toContain("## 9. Sub-App Topology & Domain Map");
+      expect(content).toContain("apps/<sub-app-1>/");
+      expect(content).toContain("apps/<sub-app-2>/");
+    });
+  });
+
+  describe("11. Customer Relationship & Event-Driven Marketing Flows (crm)", () => {
+    const crmDir = path.join(REPO_ROOT, "crm");
+    const skillPath = path.join(crmDir, "SKILL.md");
+
+    test("crm SKILL.md registers all 7 modes in table and frontmatter", () => {
+      expect(fs.existsSync(skillPath)).toBe(true);
+      const content = fs.readFileSync(skillPath, "utf8");
+
+      expect(content).toContain('argument-hint: "[onboard|abandon|nurture|winback|deliverability|sms|contacts]"');
+      expect(content).toContain("priority: 47");
+      expect(content).toContain("category: agency-delivery");
+
+      const expectedModes = ["onboard", "abandon", "nurture", "winback", "deliverability", "sms", "contacts"];
+      for (const mode of expectedModes) {
+        expect(content).toContain(`| **${mode}** |`);
+        expect(content).toContain(`references/${mode}.md`);
+      }
+    });
+
+    test("all 7 mode reference documents exist with actionable playbooks and blueprints", () => {
+      const expectedModes = ["onboard", "abandon", "nurture", "winback", "deliverability", "sms", "contacts"];
+      for (const mode of expectedModes) {
+        const refPath = path.join(crmDir, "references", `${mode}.md`);
+        expect(fs.existsSync(refPath)).toBe(true);
+        const ref = fs.readFileSync(refPath, "utf8");
+        expect(ref.length).toBeGreaterThan(300);
+      }
+    });
+
+    test("onboard mode defines the 5-stage activation sequence", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "onboard.md"), "utf8");
+      expect(ref).toContain("The Canonical 5-Stage Onboarding Flow Architecture");
+      expect(ref).toContain("Send 1: The Instant Welcome & First Activation Win");
+      expect(ref).toContain("Time-to-Value < 15 minutes");
+    });
+
+    test("abandon mode defines cart, browse, and checkout recovery windows", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "abandon.md"), "utf8");
+      expect(ref).toContain("Trigger Architecture & Timing Intervals");
+      expect(ref).toContain("Touch 1: Helpful Concierge");
+      expect(ref).toContain("Touch 2: Social Proof & Urgency");
+      expect(ref).toContain("Touch 3: Final Call & Expiring Incentive");
+      expect(ref).toContain("E-Commerce Cart Recovery Flow");
+      expect(ref).toContain("SaaS Trial & Checkout Rescue Flow");
+    });
+
+    test("deliverability mode enforces SPF, DKIM, DMARC, and RFC 8058 one-click unsubscribe", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "deliverability.md"), "utf8");
+      expect(ref).toContain("SPF (Sender Policy Framework)");
+      expect(ref).toContain("DKIM (DomainKeys Identified Mail)");
+      expect(ref).toContain("DMARC (Domain-based Message Authentication, Reporting, and Conformance)");
+      expect(ref).toContain("RFC 8058 One-Click Unsubscribe");
+      expect(ref).toContain("4-Week Progressive IP & Domain Warming Schedule");
+    });
+
+    test("sms mode enforces TCPA consent, A2P 10DLC, and quiet hours", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "sms.md"), "utf8");
+      expect(ref).toContain("TCPA & CTIA Regulatory Compliance Guardrails");
+      expect(ref).toContain("Prior Express Written Consent");
+      expect(ref).toContain("A2P 10DLC Registration");
+      expect(ref).toContain("Quiet Hours Enforcement");
+      expect(ref).toContain("The Abandoned Cart / Checkout Recovery SMS");
+    });
+
+    test("contacts mode implements dynamic RFM segmentation and identity resolution", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "contacts.md"), "utf8");
+      expect(ref).toContain("The Unified Contact Schema");
+      expect(ref).toContain("Dynamic RFM Segmentation Matrix");
+      expect(ref).toContain("Identity Resolution & Deduplication Rules");
+      expect(ref).toContain("Right to Erasure (Forget Me)");
     });
   });
 });

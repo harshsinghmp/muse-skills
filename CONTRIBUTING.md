@@ -92,7 +92,7 @@ changes
 
 1. **Atomic PR Per Skill / Feature**: Always open a separate, dedicated feature branch and Pull Request for each skill or feature. Even when executing multiple upgrades in a single working session, never bundle multi-skill changes into one monolithic PR.
 2. **Linear History & Rebase**: Prefer `git rebase` within feature branches to keep history clean and linear before merging.
-3. **Zero Secrets (LifeOS Vibeguard)**: Never commit secrets, tokens (`sk-*`, `ghp_*`, private keys), or `.env` files. Run pre-commit secret scans before staging.
+3. **Zero Secrets (Vibeguard Protocol)**: Never commit secrets, tokens (`sk-*`, `ghp_*`, private keys), or `.env` files. Run pre-commit secret scans before staging.
 
 ---
 

@@ -540,7 +540,7 @@
     },
     {
       "name": "periodic-retreat",
-      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the LifeOS ecosystem. Generates quarterly-retreat.md.",
+      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem. Generates quarterly-retreat.md.",
       "path": "periodic-retreat/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
@@ -555,7 +555,7 @@
         "deprecated-purge",
         "wheel-of-life",
         "okr-handoff",
-        "lifeos",
+        "strategic-alignment",
         "next-quarter"
       ],
       "suggested_skills": ["coach", "audit", "updatedocs"],
@@ -689,7 +689,7 @@
     },
     {
       "name": "design",
-      "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, and visual storytelling — routed through ten modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, or architect visual narratives. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
+      "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes — routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
       "path": "design/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -992,7 +992,7 @@
     },
     {
       "name": "automation",
-      "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through six modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics).",
+      "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics).",
       "path": "automation/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1065,7 +1065,7 @@
     },
     {
       "name": "ops",
-      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, and Obsidian PKM vault workflows (wikilinks, callouts, frontmatter properties, embeds, CLI automation, and plugin debugging) — routed through nine modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, or interact with and structure Obsidian knowledge vaults. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
       "path": "ops/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
@@ -1111,7 +1111,7 @@
     },
     {
       "name": "growth",
-      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, and growth audits — routed through nine modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
+      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits — routed through ten modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
       "path": "growth/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1197,9 +1197,9 @@
     },
     {
       "name": "gtm",
-      "description": "Outbound GTM department: account and lead research, lead scoring with TAM and SAM sizing, cold email sequencing with deliverability, list building with hygiene and enrichment, and sales handover with context packets, routed through five modes. Use when asked to research target accounts, score leads, build a prospect list, run a cold outbound sequence, or hand off qualified pipeline to sales. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics).",
+      "description": "Outbound and developer GTM department: account research, lead scoring, cold email sequencing, list hygiene, sales handover, developer customer discovery (TAB), champion enablement, and founder-led sales, routed through nine modes. Use when asked to research target accounts, score leads, build a prospect list, run cold outbound, interview users via TAB, arm developer champions, or close early deals. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics).",
       "path": "gtm/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "agency-delivery",
       "priority": 37,
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -1468,6 +1468,35 @@
         "amazon-operations",
         "marketplace-operations"
       ],
+      "scope": "local"
+    },
+    {
+      "name": "crm",
+      "description": "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain).",
+      "path": "crm/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 47,
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": [
+        "crm",
+        "flows",
+        "email",
+        "sms",
+        "lifecycle",
+        "customer-journey",
+        "klaviyo",
+        "resend",
+        "customer-io",
+        "deliverability",
+        "abandoned-cart",
+        "drip-campaign",
+        "onboarding",
+        "winback",
+        "segmentation"
+      ],
+      "suggested_skills": ["content", "webdev", "brand", "analytics", "growth", "accounts"],
+      "aliases": ["flows", "customer-flows", "lifecycle-flows", "email-flows", "retention-flows", "customer-journeys"],
       "scope": "local"
     }
   ],

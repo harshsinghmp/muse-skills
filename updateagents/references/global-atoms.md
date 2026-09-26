@@ -37,7 +37,7 @@ flowchart TD
    - A bug fix or coding rule learned in Client Project A remains **project-local** in `Client-A/.agents/context/decisions.md`.
    - Only when the exact same pattern recurs in Client Project B is it evaluated for promotion to the global table.
 3. **Deduplication by Root Cause**:
-   - Multiple manifestations of the same architectural problem are consolidated into a single root-cause invariant (e.g. all credential leak rules consolidated into the LifeOS Vibeguard Protocol).
+   - Multiple manifestations of the same architectural problem are consolidated into a single root-cause invariant (e.g. all credential leak rules consolidated into the Vibeguard Protocol).
 4. **365-Day Demotion Lifecycle**:
    - Any global atom that is not triggered or referenced within 365 days is flagged for deprecation and retired to archival storage.
 

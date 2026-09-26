@@ -1,8 +1,8 @@
 ---
 name: design
 aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding"]
-description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, and visual storytelling — routed through ten modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, or architect visual narratives. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
-argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story]"
+description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes — routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
+argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|3d]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 23
-  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding"]
+  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "3d-design"]
   suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
   hermes:
-    tags: ["design", "ui", "ux", "wireframe", "logo", "branding", "brand-identity", "social-media-design", "graphics", "visual-design", "design-tokens", "typography", "color", "layout", "starwind-ui", "brandkit", "banner-creator", "stitch-design-taste", "uikit", "visual-storytelling", "storyboard", "narrative-arc", "data-storytelling"]
+    tags: ["design", "ui", "ux", "wireframe", "logo", "branding", "brand-identity", "social-media-design", "graphics", "visual-design", "design-tokens", "typography", "color", "layout", "starwind-ui", "brandkit", "banner-creator", "stitch-design-taste", "uikit", "visual-storytelling", "storyboard", "narrative-arc", "data-storytelling", "3d", "spline", "threejs", "webgl", "blender"]
     related_skills: ["refactor-ui", "designscope", "animate", "new-project"]
     suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
-    primary_triggers: ["design a website", "design a landing page", "create a wireframe", "design a logo", "build a brand identity", "social media templates", "design our dashboard", "graphic design", "starwind-ui", "ui kit", "stitch design taste", "brandkit", "banner creator", "visual storytelling", "storyboard"]
+    primary_triggers: ["design a website", "design a landing page", "create a wireframe", "design a logo", "build a brand identity", "social media templates", "design our dashboard", "graphic design", "starwind-ui", "ui kit", "stitch design taste", "brandkit", "banner creator", "visual storytelling", "storyboard", "3d scene", "spline", "three.js"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -49,6 +49,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **prototype** | "prototype this flow", "clickable mock", "test the riskiest screen first" | Riskiest-visual-unknown-first clickable mock → fast test → locked/iterate/kill verdict | [references/prototype.md](references/prototype.md) |
 | **uikit** | "uikit", "ui kit", "component library", "starwind-ui", "stitch-design-taste", "design system components", "primitives" | Component libraries, headless primitives, Starwind UI / Tailwind component kits, tokens-to-components | [references/uikit.md](references/uikit.md) |
 | **story** | "visual storytelling", "visual narrative", "storyboard", "data storytelling", "infographic narrative", "emotional journey" | Visual narrative design: story arcs (setup → conflict → resolution), video storyboards, infographics/data storytelling, emotional journeys, cross-platform visual adaptations | [references/story.md](references/story.md) |
+| **3d** | "3d scene", "spline", "three.js", "r3f", "blender model", "3d asset optimization" | Interactive 3D web scenes, Spline embeds, Three.js/R3F setups, and glTF optimization | [references/3d.md](references/3d.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
@@ -60,12 +61,24 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Creating wireframes, user flows, or information architecture before any visual design.
 - Designing a logo or full brand identity system (colors, type, voice rules).
 - Building a social template system or graphic assets (banners, covers, OG images).
-- Building industry-specific landing pages using structured layout templates (e.g. SaaS).
+- Building industry-specific landing pages using structured layout templates (e.g. SaaS, Developer Tools).
 
-### Layout Templates
+### Layout Templates & Vertical Selector Matrix
 
-When designing landing pages by vertical type, load the corresponding layout template from `templates/`:
+Every landing page or homepage design MUST strictly match the client's industry vertical. Never apply technical or code-first templates to non-developer verticals:
+
+| Vertical Type | Target Buyer / User | Canonical Template / Flow | Core Elements & Visual Language |
+|:---|:---|:---|:---|
+| **Developer Tools & Infrastructure** | Software Engineers, DevOps, Architects | `templates/developer.md` | 1-line install, code grid, zero-auth demo, architecture diagram, GitHub stars |
+| **B2B SaaS (Business / Ops)** | Founders, Managers, Execs, Sales/Ops | `templates/saas.md` | 9-section problem-to-solution, ROI justification, enterprise logos, value tiers |
+| **E-Commerce & Retail** | Consumers, Shoppers, Retail Buyers | Route to `webdev:ecommerce` / Retail flow | Lifestyle imagery, product catalog/grid, variant selector, cart, reviews |
+| **Professional Services & Agencies** | Clients seeking consulting/services | Route to `brand:pipeline` / Service Lead-gen | Deliverable scope, client case studies, team credentials, booking CTA |
+| **Local Business & Healthcare** | Local clientele (clinics, legal, trade) | Local Lead-Gen flow | Location/hours, phone/booking CTA, service menu, verified testimonials |
+| **Creator, Media & Communities** | Readers, listeners, community members | Media / Newsletter flow | Content samples, subscriber count, episode highlights, community benefits |
+
+Layout template details:
 - **SaaS** (`templates/saas.md`): Canonical 9-section problem-solving landing page layout (Header/Nav → Hero → Logos/Trust Marquee → Features → Product Showcase → Pricing → Testimonials → Final CTA → Footer) aligned with 9 copywriting frameworks (AIDA, PASTOR, 4 P's, PRUNE, SLAP, So What?, PAPA, Star-Story-Solution, SPIN).
+- **Developer** (`templates/developer.md`): Canonical 7-block developer homepage layout (Hero with 1-Command Install → Frictionless Demo / Playground → Architecture & Mechanics → Code-First Feature Grid → Developer Social Proof & OSS Stats → Quickstart & Integration Surface → Transparent Pricing & License) synthesized from Jakub Czakon's developer marketing framework. Strict negative guards prevent application to non-technical verticals.
 
 ### Anti-Triggers
 

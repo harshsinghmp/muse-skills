@@ -14,6 +14,7 @@
  */
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -51,6 +52,7 @@ const COUNCIL_LEADS: Record<string, string> = {
   smm: "Jasper (Creative Technologist & Growth Mastermind)",
   content: "Jasper (Creative Technologist & Growth Mastermind)",
   seo: "Jasper (Creative Technologist & Growth Mastermind)",
+  crm: "Sol & Jasper (CRM Architect & Retention Copywriter)",
   brand: "Jasper & Crew (Creative Technologist & Brand Strategy)",
   growth: "Jasper & Crew (Growth Mastermind & Operations)",
   animate: "Jasper (Creative Technologist & Growth Mastermind)",
@@ -339,7 +341,7 @@ export function runSetup(workspaceRoot: string = process.cwd()): void {
   const skills = getSkills();
   console.log(`📦 Loaded ${skills.length} canonical Muse skills from skills.json`);
 
-  const userHome = process.env.HOME || "/home/harsh";
+  const userHome = process.env.HOME || os.homedir();
   let totalCommands = 0;
 
   // 1. OpenCode (Global & Workspace)

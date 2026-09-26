@@ -52,3 +52,31 @@ To balance velocity with rigor, overhead is strictly proportional to task risk:
 - **Archive Work Artifacts**: Move completed plans or temporary scratchpads into `.agents/archive/` using the timestamped format `[title]-[YYYYMMDD-HHMMSS].md`.
 - **DOX Pass**: Update `./.agents/context/current.md` and the nearest owning `AGENTS.md`.
 - **Memory Update**: Persist newly confirmed invariants or architectural decisions into `./.memory`.
+
+---
+
+## 3. Evidence & Verification Protocol
+
+### A. The Validation Tagging Rule
+- Any claim in `./.agents/context/product.md` regarding user demand, pain points, willingness to pay, or ICP must carry an explicit inline tag:
+  - `[validated]`: Verified through direct interaction with a real paying/active user (not a friend, team member, or hypothetical persona).
+  - `[assumption]`: A working hypothesis or founder best-guess that must be tested via customer discovery (`gtm:discovery`) before building load-bearing features or marketing campaigns.
+- Never convert `[assumption]` to `[validated]` without citing real user evidence or an entry in `evidence-ledger.md`.
+
+### B. The Anti-Puffery Standard
+- In all public documentation, README files, and landing page copy, unprovable superlatives are banned:
+  - Prohibited: *"powerful"*, *"seamless"*, *"next-gen"*, *"revolutionary"*, *"best-in-class"*, *"game-changing"*.
+  - Required: Concrete, quantified, and verifiable metrics (e.g., *"sub-15ms p99 latency"*, *"1-command setup"*, *"100% test pass rate"*).
+
+### C. Universal Industry Vertical Alignment Standard
+- Every client project MUST declare its **Industry Vertical** in `.agents/context/product.md`:
+  - `developer_tools`: APIs, CLIs, SDKs, open-source libraries, dev infrastructure, AI agent harnesses.
+  - `b2b_saas`: Enterprise software, internal ops, HR, CRM, financial management, team collaboration.
+  - `ecommerce_retail`: D2C retail, physical consumer products, apparel, marketplace shops.
+  - `professional_services`: Legal, accounting, marketing/design agencies, consulting firms.
+  - `local_healthcare`: Dental/medical practices, local contractors, fitness gyms, hospitality.
+  - `creator_media`: Newsletters, podcasts, education courses, paid communities.
+- **Strict Anti-Mismatch Guard**:
+  - All downstream agents (`design`, `webdev`, `smm`, `content`, `paidads`, `seo`) MUST inspect the project's vertical before selecting templates, layouts, components, or copy.
+  - NEVER apply developer-first components (terminal boxes, code grids, API tabs, GitHub star badges) to retail, services, local business, or non-technical SaaS clients. Mismatching industry archetypes is classified as a P0 deliverable defect.
+

@@ -1,6 +1,6 @@
 {
-  "author": "Harsh",
-  "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, editorial anti-slop review, and reflective audits across the LifeOS ecosystem",
+  "author": "Harsh Singh",
+  "description": "Universal AI agent skills for Project OS scaffolding, memory synchronization, PIP performance enforcement, subagent orchestration, design system extraction, Refactoring UI heuristics, Linus Torvalds code review, bounded gauntlet loops, staff work governance, coupling routing, claim verification, editorial anti-slop review, and reflective audits across the agency ecosystem",
   "keywords": [
     "skills",
     "agents",
@@ -65,12 +65,13 @@
     "sync": "python3 scripts/sync_registry.py && bun scripts/sync-dispatch.ts",
     "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
+    "secret-scan": "bun scripts/secret-scan.ts",
     "validate": "bash updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && ruff check scripts/",
     "type-check": "bunx --bun tsc --noEmit"
   },
   "type": "module",
-  "version": "5.26.0",
+  "version": "6.0.0",
   "devDependencies": {
     "bun-types": "^1.4.2",
     "ruff": "^1.5.4"

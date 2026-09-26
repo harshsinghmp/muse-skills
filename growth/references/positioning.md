@@ -29,6 +29,25 @@ A positioning statement: target segment, category frame, key differentiator, and
 14. Research in 3 modes before writing (source: marketingskills `customer-research` SKILL.md): analyze assets → mine signal (watering-hole sources with per-source extract targets) → go-ask; synthesize themes ranked by frequency × intensity; use the no-review persona fallback when reviews are thin; ship personas with anti-patterns checked and deliverables in the format the decision needs.
 15. Borrow pressure-tested psychology deliberately (source: marketingskills `marketing-psychology` SKILL.md, 60+ models in 6 groups, each with an ethical note): route the challenge to the model — low conversion → Hick/Fogg/friction; price resistance → anchoring/framing; urgency → scarcity/Zeigarnik; retention → endowment/switching-costs; onboarding → goal-gradient/IKEA/commitment — and state the ethical line for each use.
 16. Hold shared context in one versioned doc (source: marketingskills `product-marketing` SKILL.md; SEAM-3 closure candidate): 12-section capture (JTBD four-forces, verbatim customer language, anti-persona), auto-draftable from the codebase, version bump + changelog entry per substantive edit — every downstream mode reads it before drafting.
+17. Architect AI Defensibility Moats ("Beyond the Wrapper"):
+When evaluating or positioning an AI-first or developer product, audit against the **4-Layer Defensibility Moat Architecture** to verify the product is not vulnerable to foundation model commoditization:
+- **Layer 1: Workflow State & System of Record**:
+  - The tool cannot be a stateless API proxy or single-prompt completion feature.
+  - It must capture persistent context, project invariants, decision history, execution artifacts, and multi-user workflow state.
+  - Switching costs arise from the accumulated data and deep workflow integration, not from the model invocation.
+- **Layer 2: Proprietary Data Pipeline & Compound Feedback Loops**:
+  - Grounded domain context: AST / CodeGraph indexes, private schema representations, internal operational telemetry, or local environment awareness that public models cannot train on.
+  - Compound learning loop: User edits, explicit corrections, and accepted suggestions feed directly into local project memory, evals, and prompt calibration so performance compounds over time.
+- **Layer 3: Deterministic Evals & Enterprise Reliability Harness**:
+  - Commodity vs. Defensible: Prompts and raw completions are commodities; deterministic verification harnesses, automated regression test suites, syntax/schema validators, and safety gates (e.g. Vibeguard secret scanning, zero-leak boundary enforcement) are defensible.
+  - Multi-model routing: Dynamic routing across heterogeneous models (local SLM vs. frontier cloud) optimizing for cost, latency, and context window.
+- **Layer 4: Deep Integration Surface & Tool Ecosystem**:
+  - Ecosystem hooks: Native IDE plugins, git hooks, CI/CD pipeline actions, local daemon sidecars, and terminal tools.
+  - Extensibility platform: Support for modular plugins, custom skills, or MCP servers that turn the product into a platform with multi-sided network effects.
+18. Formulate the "Beyond the Wrapper" Positioning Narrative:
+- Contrast the fragile point-solution wrapper (*"just another prompt wrapper that breaks on the next model release"*) against the deep system (*"the deterministic orchestration engine with verified workflows and private context"*).
+- Frame the differentiator around **reliability, control, latency, and private context**, not raw model intelligence.
+- Answer the existential buyer question: *"What happens to your product when OpenAI/Google/Anthropic releases model version N+1?"* (The answer must be: *"Our product becomes faster, cheaper, and more accurate because model advances strengthen our orchestration rather than replacing our integration surface."*)
 
 ## Quality gate
 
@@ -39,9 +58,11 @@ A positioning statement: target segment, category frame, key differentiator, and
 - [ ] Validation test and metric defined.
 - [ ] PMF bar cleared (≥40% very-disappointed) before messaging refinement.
 - [ ] Top-2 personas narrowness-tested; 3 differentiated angles per persona with a starter pick.
- - [ ] Proof points carry observed numbers; no hype adjectives.
- - [ ] Research run in 3 modes with frequency×intensity synthesis; psych models routed by challenge with ethical lines; shared context doc versioned and read before drafting.
+- [ ] Proof points carry observed numbers; no hype adjectives.
+- [ ] Research run in 3 modes with frequency×intensity synthesis; psych models routed by challenge with ethical lines; shared context doc versioned and read before drafting.
 - [ ] Success metric named before any draft line written.
+- [ ] For AI/agentic products: 4-layer defensibility moat audited (Workflow State, Proprietary Data, Deterministic Evals, Integration Surface).
+- [ ] "Beyond the Wrapper" resilience question answered against frontier model updates (N+1 resilience).
 
 ## Routing
 

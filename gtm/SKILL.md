@@ -1,10 +1,10 @@
 ---
 name: gtm
-aliases: ["outbound", "cold-email", "lead-gen", "prospecting", "sales-handover", "lead-scoring", "list-building"]
-description: "Outbound GTM department: account and lead research, lead scoring with TAM and SAM sizing, cold email sequencing with deliverability, list building with hygiene and enrichment, and sales handover with context packets, routed through five modes. Use when asked to research target accounts, score leads, build a prospect list, run a cold outbound sequence, or hand off qualified pipeline to sales. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics)."
-argument-hint: "[research|score|outreach|list|handover]"
+aliases: ["outbound", "cold-email", "lead-gen", "prospecting", "sales-handover", "lead-scoring", "list-building", "discovery", "dev-to-buyer", "founder-sales"]
+description: "Outbound and developer GTM department: account research, lead scoring, cold email sequencing, list hygiene, sales handover, developer customer discovery (TAB), champion enablement, and founder-led sales, routed through nine modes. Use when asked to research target accounts, score leads, build a prospect list, run cold outbound, interview users via TAB, arm developer champions, or close early deals. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics)."
+argument-hint: "[research|score|outreach|list|handover|audit|discovery|dev-to-buyer|founder-sales]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,24 +12,24 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 37
-  aliases: ["outbound", "cold-email", "lead-gen", "prospecting", "sales-handover", "lead-scoring", "list-building"]
+  aliases: ["outbound", "cold-email", "lead-gen", "prospecting", "sales-handover", "lead-scoring", "list-building", "discovery", "dev-to-buyer", "founder-sales"]
   suggested_skills: ["growth", "content", "ops", "analytics"]
   hermes:
-    tags: ["gtm", "outbound", "prospecting", "lead-generation", "account-research", "lead-scoring", "tam-sam", "cold-email", "deliverability", "list-building", "enrichment", "sales-handover", "pipeline"]
+    tags: ["gtm", "outbound", "prospecting", "lead-generation", "account-research", "lead-scoring", "tam-sam", "cold-email", "deliverability", "list-building", "enrichment", "sales-handover", "pipeline", "customer-discovery", "tab", "dev-to-buyer", "founder-sales"]
     related_skills: ["growth", "content", "ops", "analytics"]
     suggested_skills: ["growth", "content", "ops", "analytics"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["growth", "content", "ops", "analytics"]
-    primary_triggers: ["research target accounts", "score leads", "TAM SAM sizing", "cold email sequence", "build a prospect list", "list hygiene", "sales handover", "outbound pipeline"]
+    primary_triggers: ["research target accounts", "score leads", "TAM SAM sizing", "cold email sequence", "build a prospect list", "list hygiene", "sales handover", "outbound pipeline", "customer discovery", "TAB interview", "market to devs sell to buyers", "founder sales"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
-# 📤 gtm — Outbound GTM Department
+# 📤 gtm — Outbound & Developer GTM Department
 
-One head skill for outbound go-to-market. Pipeline is built, not found: research the accounts, score the leads, sequence the outreach, keep the list clean, and hand over context sales can close. Every mode runs handsfree — defaults are stated inline, assumptions recorded in the deliverable, zero questions asked.
+One head skill for outbound and developer go-to-market. Pipeline is built, not found: discover the pain via technical advisory interviews, research the accounts, score the leads, sequence the outreach, keep the list clean, arm developer champions, coach founder-led sales, and hand over context sales can close. Every mode runs handsfree — defaults are stated inline, assumptions recorded in the deliverable, zero questions asked.
 
 ---
 
@@ -44,7 +44,10 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **outreach** | "cold email sequence", "outbound sequence", "follow-up emails", "breakup email" | Email sequences with deliverability, caps, and breakup | [references/outreach.md](references/outreach.md) |
 | **list** | "build a prospect list", "list hygiene", "enrich this list", "verify emails" | List building with CSV hygiene and enrichment verification | [references/list.md](references/list.md) |
 | **handover** | "hand off to sales", "sales handover", "qualified pipeline", "context packet" | Sales handover with a context packet, routed to ops | [references/handover.md](references/handover.md) |
-| **audit** | "audit gtm", "launch audit", "launch readiness", "messaging audit" | Launch-readiness audit (assets present, channels wired, payments flow) + messaging audit | [references/audit.md](references/audit.md) |
+| **audit** | "audit gtm", "launch audit", "launch readiness", "messaging audit", "anti-puffery audit" | Launch-readiness audit, developer quickstart audit, and anti-puffery verification | [references/audit.md](references/audit.md) |
+| **discovery** | "customer discovery", "TAB interview", "technical advisory board", "talk to users", "validate assumptions" | Developer customer discovery via Technical Advisory Board (TAB) | [references/discovery.md](references/discovery.md) |
+| **dev-to-buyer** | "market to devs", "sell to buyers", "champion enablement", "developer ROI", "free to enterprise" | Arming developer champions with ROI and compliance packets for executive buyers | [references/dev-to-buyer.md](references/dev-to-buyer.md) |
+| **founder-sales** | "founder sales", "close first deals", "sales objection", "demo script", "let me think about it" | Founder-led technical sales execution, discovery calls, and objection handling | [references/founder-sales.md](references/founder-sales.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
@@ -52,20 +55,23 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 ## When to Use
 
+- Discovering customer pain and validating ICP assumptions via Technical Advisory Board (TAB) interviews.
 - Researching target accounts and leads before outbound.
 - Scoring leads, sizing TAM/SAM, and prioritizing prospects.
 - Running a cold email sequence with follow-ups and breakup.
 - Building, cleaning, and enriching a prospect list.
+- Converting bottom-up developer usage into paid enterprise deals via champion enablement.
+- Coaching technical founders through live sales calls and handling commercial stalls.
 - Handing qualified pipeline to sales with full context.
 
 ### Anti-Triggers
 
 - Paid advertising campaigns → `paidads`.
-- Launch strategy and positioning → `growth` (gtm owns outbound execution; `growth` owns launch strategy).
-- Email copy craft and wording → `content` (gtm owns sequencing and timing; `content` owns the words).
-- Social-channel outreach → `smm`.
-- CRM setup and pipeline plumbing → `automation`.
-- Measuring campaign results → `analytics`.
+- High-level brand launch strategy and narrative positioning → `growth` (gtm owns outbound execution and developer sales; `growth` owns overarching launch strategy).
+- Email copy craft and wording → `content` (gtm owns sequencing, qualification, and timing; `content` owns the words).
+- Social-channel outreach and viral carousels → `smm`.
+- CRM setup and automated webhook plumbing → `automation`.
+- Deep web traffic analytics → `analytics`.
 
 ---
 
@@ -75,13 +81,17 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 | Question | Mode |
 |:---|:---|
+| 'What are real users experiencing, and is the pain validated?' | discovery |
 | 'Who are we going after, and what do we know about them?' | research |
 | 'Which leads matter most, and how big is the market?' | score |
-| 'What sequence goes out, when, and when do we stop?' | outreach |
 | 'Is the list clean, verified, and enriched?' | list |
-| 'What does sales need to close this?' | handover |
+| 'What sequence goes out, when, and when do we stop?' | outreach |
+| 'Developers love it, but how do we get the economic buyer to pay?' | dev-to-buyer |
+| 'How do I run the first sales call and handle objections?' | founder-sales |
+| 'What does sales need to close this pipeline?' | handover |
+| 'Is our messaging, launch assets, and developer quickstart ready?' | audit |
 
-Order: research → score → list → outreach → handover. Know the accounts, rank them, clean the list, sequence, then hand over.
+Order for zero-to-one: discovery → research → score → list → outreach → dev-to-buyer → founder-sales → handover. Validate the pain, find the accounts, rank them, clean the list, sequence, arm champions, close, then hand over.
 
 ### Metrics loop (post-handover measurement)
 
@@ -97,6 +107,7 @@ Run this loop on the outbound the modes above produce; deep analysis stays in `a
 
 ### Verification gate (every mode)
 
+- Ground truth loaded: `./.agents/context/product.md` and `./.agents/context/roadmap.md` read before any mode executes.
 - The ideal customer profile is stated before any account or lead is touched.
 - Every researched claim carries a source and a date; unverified fields are marked as assumptions.
 - Sending volumes respect caps and deliverability rules; every sequence ends in a breakup.
@@ -112,16 +123,19 @@ Run this loop on the outbound the modes above produce; deep analysis stays in `a
 
 ## Procedure
 
-1. **Intake.** establish the ideal customer profile, the offer, and the outbound goal before touching any account — outbound without an ICP is spam.
-2. **Resolve the mode.** Match the request against the mode table; exactly one mode. Ambiguous → default to research, state the assumption, proceed.
+1. **Context grounding.** Read `./.agents/context/product.md` and `./.agents/context/roadmap.md` to establish current ICP, validated claims, open assumptions, and the active "Now" move.
+2. **Resolve the mode.** Match the request against the mode table; exactly one mode. Ambiguous → default to discovery if assumptions unvalidated, else research.
 3. **Execute the mode playbook.** Load `references/<mode>.md` and follow its Intake → Deliverable → Procedure → Quality gate in order.
-4. **Gate and deliver.** Pass this file's Verification checklist plus the mode's quality gate, then deliver the artifact where sales expects it.
+4. **Gate and deliver.** Pass this file's Verification checklist plus the mode's quality gate, update `./.agents/context/product.md` and `./.agents/context/roadmap.md` if reality or assumptions changed, then deliver the artifact.
 
 ---
 
 ## Pitfalls
 
 - Outbound without a written ICP — every list looks good and none convert.
+- Pitching in discovery calls instead of listening to past behavior.
+- Asking developer champions to sell instead of arming them with executive ROI packets.
+- Giving a feature tour demo instead of showing the solution to their specific pain point.
 - Researching without sources and dates — stale intel kills first calls.
 - Scoring on gut instead of fit plus intent signals.
 - Sending without warm-up, caps, or breakup — burned domain, no replies.
@@ -134,7 +148,9 @@ Run this loop on the outbound the modes above produce; deep analysis stays in `a
 
 ## Verification
 
-- [ ] Ideal customer profile stated in one paragraph.
+- [ ] `./.agents/context/product.md` and `./.agents/context/roadmap.md` loaded as ground truth.
+- [ ] Ideal customer profile stated with explicit role and company profile.
+- [ ] Product claims carry `[validated]` vs `[assumption]` tags.
 - [ ] Researched claims sourced and dated; assumptions marked.
 - [ ] Scores trace to fit plus intent signals, not gut.
 - [ ] Sequence states volumes, caps, spacing, and a breakup step.

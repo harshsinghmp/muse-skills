@@ -447,4 +447,4 @@ After scaffolding, verify the project:
 12. **Quality Gates & Test Suite**: Run `bun test` inside the scaffolded workspace to confirm `tests/health.test.ts` passes cleanly.
 13. **Day-1 Secret Defense**: Verify `scripts/pre-commit.sh` exists and is executable.
 14. **Dynamic ADRs & Product DOX**: Check that `.agents/context/decisions.md` contains ADR-001 through ADR-006, and `.agents/context/product.md` reflects the interview scope.
-15. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status. Run `bun ~/.config/LIFEOS/runtime/TOOLS/SecretScan.ts .` to ensure compliance with the Vibeguard protocol.
+15. **Secret Defense**: Verify no secrets or credentials appear in `.env` or git status. Run `bun run secret-scan .` to ensure compliance with the Vibeguard protocol.

@@ -80,6 +80,7 @@ console.table(overflowing);
 - [ ] iOS safe area insets handled for fixed navigation bars and floating buttons.
 - [ ] Flex child containers contain `min-w-0` to avoid text blowout.
 - [ ] Tables and data grids wrapped in horizontal scroll containers on mobile.
+- [ ] Vertical component alignment verified: no developer components (terminal boxes, code grids) present on non-technical client sites.
 
 ## Sources
 

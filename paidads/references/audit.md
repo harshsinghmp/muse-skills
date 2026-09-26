@@ -2,7 +2,8 @@
 
 ## Intake
 
-- Account access / export or screenshots
+- Account access & partner delegation IDs documented in `.agents/context/accounts.md` (Meta Partner ID, Google Ads MCC CID)
+- Customer avatars & ICP targeting parameters in `.agents/brand/personas.md`
 - Time window (last 90 days default)
 - KPI baseline (target CPA/ROAS, historical)
 - Business changes in the window (pricing, offers, site)

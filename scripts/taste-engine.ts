@@ -4,7 +4,7 @@
  *
  * Captures recurring user steering, coding habits, and project constraints (N >= 2),
  * promotes verified invariants to the Global Invariant Atom Table (<=20 active atoms),
- * and syncs directly with LifeOS and DOX cognitive memory without third-party SaaS.
+ * and syncs directly with Muse and DOX cognitive memory without third-party SaaS.
  *
  * @license MIT
  */

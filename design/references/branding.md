@@ -9,7 +9,7 @@
 
 ## Deliverable
 
-`brand.md` (identity rules) + DTCG `design-tokens.json`: color system with roles, type pairing and scale, spacing/radius/elevation, imagery direction, voice principles, and do/don't rules.
+`.agents/brand/visual-identity.md`, `.agents/brand/voice.md`, and DTCG design tokens in `.agents/brand/tokens/` (or master `.agents/context/brand.md`): color system with roles, type pairing and scale, spacing/radius/elevation, imagery direction, voice principles, and do/don't rules.
 
 ## Procedure
 
@@ -19,7 +19,7 @@
 4. Define spacing, radius, and elevation scales to match the brand feel (sharp = technical, rounded = friendly).
 5. Set imagery direction: photography style, illustration rules, iconography weight.
 6. Write voice principles in 3–5 rules with good/bad example pairs. Ban AI-copy clichés (Elevate, Seamless, Unleash, Next-Gen, Delve), lorem placeholders, and fake-round data — plain specific copy with realistic detail.
-7. Emit brand.md + tokens.json; contrast-check every default text/background pair.
+7. Emit `.agents/brand/visual-identity.md`, `voice.md`, and tokens in `.agents/brand/tokens/`; contrast-check every default text/background pair.
 8. For reference-inspired identity explores, extract hierarchy/pacing/contrast principles only — never copy identity, assets, or copy; control and disclose closeness to the reference (keeper: mengto/generate-reference-inspired-brand-worlds).
 
 ## Quality gate
