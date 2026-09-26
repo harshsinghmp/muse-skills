@@ -1044,7 +1044,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
     });
 
-    test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
+    test("secretary references/dispatch.md comprehensively catalogs all 47 departments and Council leads", () => {
       const refPath = path.join(secretaryDir, "references", "dispatch.md");
       expect(fs.existsSync(refPath)).toBe(true);
       const ref = fs.readFileSync(refPath, "utf8");
@@ -1063,6 +1063,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("design");
       expect(ref).toContain("smm");
       expect(ref).toContain("devops");
+      expect(ref).toContain("crm");
       expect(ref).toContain("ops");
       expect(ref).toContain("code-review");
     });
@@ -1089,6 +1090,79 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("## 9. Sub-App Topology & Domain Map");
       expect(content).toContain("apps/<sub-app-1>/");
       expect(content).toContain("apps/<sub-app-2>/");
+    });
+  });
+
+  describe("11. Customer Relationship & Event-Driven Marketing Flows (crm)", () => {
+    const crmDir = path.join(REPO_ROOT, "crm");
+    const skillPath = path.join(crmDir, "SKILL.md");
+
+    test("crm SKILL.md registers all 7 modes in table and frontmatter", () => {
+      expect(fs.existsSync(skillPath)).toBe(true);
+      const content = fs.readFileSync(skillPath, "utf8");
+
+      expect(content).toContain('argument-hint: "[onboard|abandon|nurture|winback|deliverability|sms|contacts]"');
+      expect(content).toContain("priority: 47");
+      expect(content).toContain("category: agency-delivery");
+
+      const expectedModes = ["onboard", "abandon", "nurture", "winback", "deliverability", "sms", "contacts"];
+      for (const mode of expectedModes) {
+        expect(content).toContain(`| **${mode}** |`);
+        expect(content).toContain(`references/${mode}.md`);
+      }
+    });
+
+    test("all 7 mode reference documents exist with actionable playbooks and blueprints", () => {
+      const expectedModes = ["onboard", "abandon", "nurture", "winback", "deliverability", "sms", "contacts"];
+      for (const mode of expectedModes) {
+        const refPath = path.join(crmDir, "references", `${mode}.md`);
+        expect(fs.existsSync(refPath)).toBe(true);
+        const ref = fs.readFileSync(refPath, "utf8");
+        expect(ref.length).toBeGreaterThan(300);
+      }
+    });
+
+    test("onboard mode defines the 5-stage activation sequence", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "onboard.md"), "utf8");
+      expect(ref).toContain("The Canonical 5-Stage Onboarding Flow Architecture");
+      expect(ref).toContain("Send 1: The Instant Welcome & First Activation Win");
+      expect(ref).toContain("Time-to-Value < 15 minutes");
+    });
+
+    test("abandon mode defines cart, browse, and checkout recovery windows", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "abandon.md"), "utf8");
+      expect(ref).toContain("Trigger Architecture & Timing Intervals");
+      expect(ref).toContain("Touch 1: Helpful Concierge");
+      expect(ref).toContain("Touch 2: Social Proof & Urgency");
+      expect(ref).toContain("Touch 3: Final Call & Expiring Incentive");
+      expect(ref).toContain("E-Commerce Cart Recovery Flow");
+      expect(ref).toContain("SaaS Trial & Checkout Rescue Flow");
+    });
+
+    test("deliverability mode enforces SPF, DKIM, DMARC, and RFC 8058 one-click unsubscribe", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "deliverability.md"), "utf8");
+      expect(ref).toContain("SPF (Sender Policy Framework)");
+      expect(ref).toContain("DKIM (DomainKeys Identified Mail)");
+      expect(ref).toContain("DMARC (Domain-based Message Authentication, Reporting, and Conformance)");
+      expect(ref).toContain("RFC 8058 One-Click Unsubscribe");
+      expect(ref).toContain("4-Week Progressive IP & Domain Warming Schedule");
+    });
+
+    test("sms mode enforces TCPA consent, A2P 10DLC, and quiet hours", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "sms.md"), "utf8");
+      expect(ref).toContain("TCPA & CTIA Regulatory Compliance Guardrails");
+      expect(ref).toContain("Prior Express Written Consent");
+      expect(ref).toContain("A2P 10DLC Registration");
+      expect(ref).toContain("Quiet Hours Enforcement");
+      expect(ref).toContain("The Abandoned Cart / Checkout Recovery SMS");
+    });
+
+    test("contacts mode implements dynamic RFM segmentation and identity resolution", () => {
+      const ref = fs.readFileSync(path.join(crmDir, "references", "contacts.md"), "utf8");
+      expect(ref).toContain("The Unified Contact Schema");
+      expect(ref).toContain("Dynamic RFM Segmentation Matrix");
+      expect(ref).toContain("Identity Resolution & Deduplication Rules");
+      expect(ref).toContain("Right to Erasure (Forget Me)");
     });
   });
 });

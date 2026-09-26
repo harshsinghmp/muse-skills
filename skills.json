@@ -1469,6 +1469,35 @@
         "marketplace-operations"
       ],
       "scope": "local"
+    },
+    {
+      "name": "crm",
+      "description": "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain).",
+      "path": "crm/SKILL.md",
+      "version": "1.0.0",
+      "category": "agency-delivery",
+      "priority": 47,
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": [
+        "crm",
+        "flows",
+        "email",
+        "sms",
+        "lifecycle",
+        "customer-journey",
+        "klaviyo",
+        "resend",
+        "customer-io",
+        "deliverability",
+        "abandoned-cart",
+        "drip-campaign",
+        "onboarding",
+        "winback",
+        "segmentation"
+      ],
+      "suggested_skills": ["content", "webdev", "brand", "analytics", "growth", "accounts"],
+      "aliases": ["flows", "customer-flows", "lifecycle-flows", "email-flows", "retention-flows", "customer-journeys"],
+      "scope": "local"
     }
   ],
   "categories": [

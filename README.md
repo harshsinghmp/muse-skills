@@ -6,14 +6,14 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-5.26.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
+[![Skills Count](https://img.shields.io/badge/Skills-47%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-124%2F124%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
 
 ```bash
-# ⚡ Quick Start: Install all 46 skills globally in 1 command
+# ⚡ Quick Start: Install all 47 skills globally in 1 command
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Export slash commands & CLI runner for all your agent harnesses
@@ -24,7 +24,7 @@ bun run setup
 
 ## 🧭 Overview
 
-**Muse Skills** transforms vanilla AI coding assistants into an autonomous, senior full-service engineering team and digital agency. Built on the open `SKILL.md` RFC specification, it injects 46 production-grade departments—spanning full-stack engineering, motion design, growth hacking, client operations, and rigorous quality auditing—directly into your agent harness with zero runtime bloat, zero API lock-in, and zero credential leakage.
+**Muse Skills** transforms vanilla AI coding assistants into an autonomous, senior full-service engineering team and digital agency. Built on the open `SKILL.md` RFC specification, it injects 47 production-grade departments—spanning full-stack engineering, motion design, growth hacking, client operations, and rigorous quality auditing—directly into your agent harness with zero runtime bloat, zero API lock-in, and zero credential leakage.
 
 Unlike brittle system prompts or heavy wrapper frameworks, Muse Skills enforces **Progressive Disclosure**: agents read only what they need, execute structured mode playbooks, and verify every single claim against executable tests before declaring work complete.
 
@@ -63,8 +63,8 @@ flowchart TD
         Dispatcher --> NexusLead["🛡️ Nexus: Technical Director & Hardening Gate"]
     end
 
-    subgraph SkillLayer ["📦 46 Canonical Departments (Loaded On-Demand)"]
-        Sol --> EngSkills["webdev, database, devops, mobile, automation, new-project"]
+    subgraph SkillLayer ["📦 47 Canonical Departments (Loaded On-Demand)"]
+        Sol --> EngSkills["webdev, database, devops, mobile, automation, new-project, crm"]
         Jasper --> DesignSkills["design, animate, designscope, content, smm, seo"]
         Crew --> OpsSkills["brand, ops, client-comms, accounts, gtm, retain"]
         NexusLead --> QualitySkills["code-review, qa-launch, muse-security, gauntlet-loop, git"]
@@ -104,7 +104,7 @@ Each skill is completely self-contained within its own directory:
 
 ## 💼 Core Agency Divisions
 
-Muse Skills organizes 46 specialized capabilities into four internal agency divisions:
+Muse Skills organizes 47 specialized capabilities into four internal agency divisions:
 
 ### 1. 🏗️ Engineering & System Architecture
 High-performance application development, database design, and cloud infrastructure.
@@ -124,6 +124,7 @@ Award-winning user interfaces, design systems, and rich interactive web experien
 
 ### 3. 📈 Growth, Marketing & Operations
 End-to-end client acquisition, content generation, and agency delivery workflows.
+- **CRM & Automated Flows**: Audience segmentation, RFM scoring, welcome drips, cart recovery, and deliverability infrastructure ([`crm`](crm/README.md)).
 - **Brand & Client Lifecycle**: Client intake briefs, secure credential delegation, and offboarding ([`brand`](brand/README.md)).
 - **Organic Social & Video**: Social listening, viral content hooks, and multi-platform publishing ([`smm`](smm/README.md)).
 - **Search & AI Discovery (SEO/AEO)**: Keyword clustering, semantic search optimization, and AI answer engine readiness ([`seo`](seo/README.md)).
@@ -144,7 +145,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 ## 📦 Complete Skill Catalog
 
 <details open>
-<summary><b>📋 Browse All 46 Production Skills (Click to collapse/expand)</b></summary>
+<summary><b>📋 Browse All 47 Production Skills (Click to collapse/expand)</b></summary>
 <br/>
 
 | Skill | Description |
@@ -163,6 +164,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`content`](content/README.md) | Full content studio: SEO-aware blog posts, conversion copywriting, email sequences, video scripts, podcasts, and case studies across 8 modes. |
 | [`context-anchor`](context-anchor/README.md) | Drop a working reference anchor at any point in a session to prevent context drift, and park parallel client workstreams for instant switching. |
 | [`coupling-router`](coupling-router/README.md) | Coupling-aware architectural delegation, blast radius calculation, and shared-worktree lease arbitration for multi-agent workflows. |
+| [`crm`](crm/README.md) | Full customer relationship and marketing flow department: audience segmentation, RFM scoring, welcome onboarding, cart abandonment recovery, lead nurture journeys, winback, deliverability DNS (SPF/DKIM/DMARC), and SMS triggers across 7 modes. |
 | [`database`](database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 6 modes. |
 | [`dead-letter`](dead-letter/README.md) | Capture, triage, and quarantine failed tasks before they disappear, generating bounded retry packets or escalation questions. |
 | [`design`](design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, and visual storytelling across 10 modes. |
@@ -188,7 +190,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`research`](research/README.md) | Client-serving research department: user research, market sizing, competitive intelligence, and due-diligence entity dossiers across 3 modes. |
 | [`retain`](retain/README.md) | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, review asks, and churn-watch signals across 6 modes. |
 | [`sales-enablement`](sales-enablement/README.md) | Pre-sale sales enablement department: demo scripts, objection-handling handbooks, one-pagers, and sales playbooks across 4 modes. |
-| [`secretary`](secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 46 departments. |
+| [`secretary`](secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 47 departments. |
 | [`seo`](seo/README.md) | Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, and AI answer engine optimization across 7 modes. |
 | [`smm`](smm/README.md) | Full organic social department: platform strategy, editorial calendars, post writing, community management, viral carousel generation, and Postiz automation across 10 modes. |
 | [`telegram`](telegram/README.md) | Telegram messaging department: pure-bash bot alerts, approval boards via curl + jq, and Claude Code hook integration across 5 modes. |
@@ -204,7 +206,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 ### Option 1: Install Complete Suite (Recommended)
 
-Install all 46 skills globally in one command:
+Install all 47 skills globally in one command:
 
 ```bash
 npx skills add harshsinghmp/muse-skills

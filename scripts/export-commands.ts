@@ -52,6 +52,7 @@ const COUNCIL_LEADS: Record<string, string> = {
   smm: "Jasper (Creative Technologist & Growth Mastermind)",
   content: "Jasper (Creative Technologist & Growth Mastermind)",
   seo: "Jasper (Creative Technologist & Growth Mastermind)",
+  crm: "Sol & Jasper (CRM Architect & Retention Copywriter)",
   brand: "Jasper & Crew (Creative Technologist & Brand Strategy)",
   growth: "Jasper & Crew (Growth Mastermind & Operations)",
   animate: "Jasper (Creative Technologist & Growth Mastermind)",
