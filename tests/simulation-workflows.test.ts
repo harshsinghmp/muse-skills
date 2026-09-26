@@ -359,6 +359,20 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("Zero Password Ingestion");
     });
 
+    test("Sol: automation voice mode covers Retell AI, Bland AI, Twilio SIP, and sub-600ms latency", () => {
+      const autoSkill = fs.readFileSync(path.join(REPO_ROOT, "automation", "SKILL.md"), "utf8");
+      expect(autoSkill).toContain("| **voice** |");
+      expect(autoSkill).toContain("references/voice.md");
+      expect(autoSkill).toContain('argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"');
+
+      const voiceRef = fs.readFileSync(path.join(REPO_ROOT, "automation", "references", "voice.md"), "utf8");
+      expect(voiceRef).toContain("sub-600ms round-trip latency");
+      expect(voiceRef).toContain("Retell AI");
+      expect(voiceRef).toContain("Bland AI");
+      expect(voiceRef).toContain("Twilio Voice + Media Streams");
+      expect(voiceRef).toContain("Human Warm Transfer & Escalation Guardrails");
+    });
+
     test("Nexus: code-review boundary-governance strictly enforces the 5 checkpoints", () => {
       const govPath = path.join(REPO_ROOT, "code-review", "references", "boundary-governance.md");
       expect(fs.existsSync(govPath)).toBe(true);
