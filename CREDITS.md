@@ -8,7 +8,7 @@ All code within `muse-skills` is independently authored under the MIT License. W
 
 ## Attributions & Influences
 
-- **[Daniel Miessler](https://github.com/danielmiessler)** ([LifeOS](https://github.com/danielmiessler/LifeOS)): Influenced personal intent engineering, the strategic review cycle in `periodic-retreat`, and foundational concepts behind personal compass and assistant identity.
+- **[Daniel Miessler](https://github.com/danielmiessler)** ([LifeOS](https://github.com/danielmiessler/LifeOS)): Influenced personal intent engineering, the strategic review cycle in `periodic-retreat`, and foundational concepts behind personal vision and assistant identity.
 - **[Steve Schoger & Adam Wathan](https://refactoringui.com)** ([Refactoring UI](https://refactoringui.com)): Influenced the visual hierarchy heuristics, tactical typography scales, and spacing decision trees in `refactor-ui` and `designscope`.
 - **[Linus Torvalds & Linux Kernel Community](https://git.kernel.org)** ([Linux](https://git.kernel.org)): Influenced the uncompromising code quality invariants, anti-overengineering rules, and "taste" criteria in `code-review`.
 - **[Anthony Fu](https://github.com/antfu)** ([UnoCSS](https://github.com/unocss/unocss)): Influenced the high-performance utility-first styling architecture, Wind 4 presets, and instant compilation standards in `new-project` and `webdev`.

@@ -56,13 +56,13 @@ Agent execution resolves identity and rules through a strict two-tier cascade:
 - **`current.md`**: Living snapshot of verified shipped reality, live deliverables, and blockers.
 - **`roadmap.md`**: Project 30-90 day milestones and backlog.
 - **`brand.md` & `../brand/`**: Local voice, visual identity, and W3C DTCG tokens.
-- **`compass.md`** *(optional)*: Scoped True North and target milestones for client or venture-specific projects.
+- **`vision.md`** *(optional)*: Scoped vision, target milestones, and principles for client or venture-specific projects.
 
 ### Tier 2: Global Principal Baseline (`~/.agents/identity/`)
 When local project files do not specify an override, agents inherit baseline preferences from the user's global configuration:
 1. **`user.md`** (Principal Identity): Founder/developer background, strengths, and communication style.
 2. **`assistant.md`** (Assistant Stance & Council): Default delegation stance across Council Leads (**Sol**, **Jasper**, **Crew**, **Nexus**).
-3. **`compass.md`** (Life/Venture Compass): Long-term intent, Current State $\rightarrow$ True North trajectory, and core personal focus.
+3. **`vision.md`** (Strategic Vision & Trajectory): Long-term intent, Current Reality $\rightarrow$ Target Destination trajectory, 90-day focus, and core personal values.
 4. **`rules.md`** (Global Invariants): Machine-wide toolchain standards, zero-leak credential policies, and git conventions.
 
 *Rule: Closer docs always control local execution details. Never duplicate global life goals into a project repository.*
