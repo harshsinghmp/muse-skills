@@ -337,6 +337,34 @@ Custom billing engine for healthcare providers.
       const archiveFiles = readdirSync(join(target, ".agents/archive"));
       expect(archiveFiles.some((f) => f.startsWith("CLAUDE.legacy-"))).toBe(true);
     });
+
+    it("updateagents auto-wires Autonomous Secretary Protocol into AGENTS.md on first run and Day-N sync", () => {
+      const target = join(TEST_SANDBOX, "secretary-test");
+      mkdirSync(target, { recursive: true });
+
+      // 1. Scaffold on empty sandbox
+      const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target, "--scaffold"], { encoding: "utf8" });
+      expect(scaffoldRes.status).toBe(0);
+      const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
+      expect(agentsMd).toContain("<!-- muse-secretary-router:start -->");
+      expect(agentsMd).toContain("secretary:dispatch");
+      expect(agentsMd).toContain("Autonomous Agency Orchestration (Secretary Protocol)");
+
+      // 2. Simulate user custom AGENTS.md without secretary router
+      const customContent = "# My Custom Rules\n- Rule 1: Always test\n";
+      writeFileSync(join(target, "AGENTS.md"), customContent, "utf8");
+
+      // 3. Run updateagents sync
+      const syncRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
+      expect(syncRes.status).toBe(0);
+      expect(syncRes.stdout).toContain("Secretary Protocol: Auto-wired into AGENTS.md");
+
+      // 4. Verify custom rule preserved AND secretary router injected
+      const syncedContent = readFileSync(join(target, "AGENTS.md"), "utf8");
+      expect(syncedContent).toContain("Rule 1: Always test");
+      expect(syncedContent).toContain("<!-- muse-secretary-router:start -->");
+      expect(syncedContent).toContain("secretary:dispatch");
+    });
   });
 
   describe("Part D: handoff & gauntlet-loop Upgrades", () => {

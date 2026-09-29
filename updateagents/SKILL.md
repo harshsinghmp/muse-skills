@@ -192,7 +192,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
 2. **If NONE Found**:
    - Scaffold the entire fresh Agent Engine DOX architecture directly from `updateagents/templates/`.
    - Provision `.agents/` 9-folder tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
-   - Deploy lean root `AGENTS.md` router (<50 lines) and initialize `.agents/context/` files based on repository discovery.
+   - Deploy lean root `AGENTS.md` router (<85 lines) with Secretary Protocol auto-wired, and initialize `.agents/context/` files based on repository discovery.
 3. **If ANY Found (Custom Content Present)**:
    - Do NOT overwrite human work. Parse and extract custom sections:
      - Project Purpose / Scope → Merge into `.agents/context/product.md`
@@ -200,7 +200,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
      - Architectural Decisions / Rules / ADRs → Merge into `.agents/context/decisions.md`
      - In-flight tasks / active notes → Merge into `.agents/context/current.md`
    - Safely archive un-split legacy files to `.agents/archive/AGENTS.legacy-[timestamp].md` or `.agents/archive/CLAUDE.legacy-[timestamp].md`.
-   - Deploy lean root `AGENTS.md` DOX rail (<50 lines) pointing to the newly organized `.agents/` context files.
+   - Deploy lean root `AGENTS.md` DOX rail (<85 lines) with Secretary Protocol auto-wired, pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
 Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `updateagents/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
@@ -219,6 +219,9 @@ Record operational rules (Vibeguard, test gates, token usage) supported by actua
 
 ### Step 13b — Skill Authoring & Instruction Engineering (TDD Protocol)
 When authoring, scaffolding, or updating agent skills or behavioral guidance, enforce the TDD Skill Engineering Protocol: Red-Green-Refactor for agent instructions, baseline adversarial pressure testing, and anti-rationalization loophole closures (see [references/skill-authoring.md](references/skill-authoring.md)). When extracting recurring patterns into reusable skills via `bun scripts/extract-skill.ts`, all 4 Extraction Gates (Recurrence, Verification, Generalization, and TDD Engineering) must pass.
+
+### Step 13c — Auto-Wire Autonomous Secretary Protocol
+Ensure that root `AGENTS.md` carries the canonical Secretary Protocol router (`<!-- muse-secretary-router:start -->...<!-- muse-secretary-router:end -->`) so any agent harness automatically activates `secretary:dispatch` on first run or session start, triaging user intent across all 46 canonical Muse departments under the designated Council Lead (**Sol**, **Jasper**, **Crew**, **Nexus**).
 
 ### Step 14 — Synchronize Related Knowledge
 Propagate downstream effects (e.g. API changes affecting types and tests) when future agent behavior should change.
