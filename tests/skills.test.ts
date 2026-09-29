@@ -241,4 +241,49 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     expect(res.stdout).toContain("--onboard");
     expect(res.stdout).toContain("--global");
   });
+
+  test("stack.md Golden Stack Fence template exists with allowlist, blacklist, and Council Lead", () => {
+    const stackTemplatePath = path.join(
+      REPO_ROOT,
+      "skills/core-engine/updateagents/templates/.agents/context/stack.md",
+    );
+    expect(fs.existsSync(stackTemplatePath)).toBe(true);
+    const content = fs.readFileSync(stackTemplatePath, "utf8");
+    expect(content).toContain("Approved Tech Stack & Package Allowlist");
+    expect(content).toContain("Primary Council Lead");
+    expect(content).toContain("Approved Libraries (Allowlist)");
+    expect(content).toContain("Forbidden Dependencies (Blacklist)");
+    expect(content).toContain("Zero-Drift Dependency Invariant");
+  });
+
+  test("context index.md template references stack.md and global identity baseline", () => {
+    const indexTemplatePath = path.join(
+      REPO_ROOT,
+      "skills/core-engine/updateagents/templates/.agents/context/index.md",
+    );
+    const content = fs.readFileSync(indexTemplatePath, "utf8");
+    expect(content).toContain("stack.md");
+    expect(content).toContain("Global Identity Baseline");
+    expect(content).toContain("~/.agents/identity/");
+  });
+
+  test("updateagents CLI supports --stack-guard, --closeout, and --check flags", () => {
+    const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("--stack-guard");
+    expect(res.stdout).toContain("--closeout");
+    expect(res.stdout).toContain("--check");
+  });
+
+  test("checkStackDrift passes on clean repository", () => {
+    const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--stack-guard"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("Stack Drift Guard Passed");
+  });
 });
