@@ -281,10 +281,26 @@ export function exportAntigravityCommands(destDir: string, skills: SkillItem[]):
   return count;
 }
 
+export function exportSkills(targetDir: string, skills: SkillItem[]): number {
+  fs.mkdirSync(targetDir, { recursive: true });
+  let count = 0;
+
+  for (const skill of skills) {
+    const srcDir = path.join(REPO_ROOT, skill.name);
+    const destDir = path.join(targetDir, skill.name);
+    if (fs.existsSync(srcDir) && fs.statSync(srcDir).isDirectory()) {
+      fs.cpSync(srcDir, destDir, { recursive: true, force: true });
+      count++;
+    }
+  }
+
+  return count;
+}
+
 export function exportTerminalCli(binDest: string): void {
   fs.mkdirSync(path.dirname(binDest), { recursive: true });
   const scriptContent = `#!/usr/bin/env bash
-# muse — Universal Terminal CLI Runner for Muse Skills
+# museskills — Universal Terminal CLI Runner for Muse Skills
 set -euo pipefail
 
 SKILL="\${1:-secretary}"
@@ -292,9 +308,15 @@ MODE="\${2:-dispatch}"
 shift 2 2>/dev/null || true
 ARGS="\${*:-}"
 
-SKILL_DIR="\${HOME}/.agents/skills/\${SKILL}"
-if [ ! -d "\${SKILL_DIR}" ]; then
-  echo "❌ Skill '\${SKILL}' not found in \${SKILL_DIR}"
+# Search priority: Current project .agents/skills -> Global ~/.agents/skills
+SKILL_DIR=""
+if [ -d "./.agents/skills/\${SKILL}" ]; then
+  SKILL_DIR="./.agents/skills/\${SKILL}"
+elif [ -d "\${HOME}/.agents/skills/\${SKILL}" ]; then
+  SKILL_DIR="\${HOME}/.agents/skills/\${SKILL}"
+else
+  echo "❌ Skill '\${SKILL}' not found in ./.agents/skills/\${SKILL} or \${HOME}/.agents/skills/\${SKILL}"
+  echo "👉 Install skills globally via: curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash"
   exit 1
 fi
 
@@ -308,10 +330,20 @@ echo "📖 Reference: \${REF_FILE}"
 echo "---------------------------------------------------------"
 head -n 25 "\${REF_FILE}"
 echo "---------------------------------------------------------"
-echo "💡 To execute with an agent: 'bunx @harshsinghmp/muse-skills run \${SKILL} \${MODE}'"
+echo "💡 To execute with an agent: 'museskills \${SKILL} \${MODE}'"
 `;
 
   fs.writeFileSync(binDest, scriptContent, { mode: 0o755 });
+
+  // Optional: create legacy/shorthand 'muse' symlink if no conflicting binary exists
+  const legacyDest = path.join(path.dirname(binDest), "muse");
+  try {
+    if (!fs.existsSync(legacyDest)) {
+      fs.symlinkSync(binDest, legacyDest);
+    }
+  } catch {
+    // Ignore symlink failure if muse already exists or lacks permission
+  }
 }
 
 export function wireSecretaryIntoAgentsMd(targetAgentsMdPath: string): boolean {
@@ -336,77 +368,133 @@ ${marker}
   return true;
 }
 
-export function runSetup(workspaceRoot: string = process.cwd()): void {
-  console.log("🚀 [Muse Engine] Initializing Multi-Harness Command Exporter & Secretary Onboarding...\n");
+export interface SetupOptions {
+  workspaceRoot?: string;
+  installSkills?: boolean;
+  skillsDest?: string;
+  exportCommands?: boolean;
+  installCli?: boolean;
+  wireAgentsMd?: boolean;
+}
+
+export function runSetup(options: SetupOptions = {}): void {
+  const workspaceRoot = options.workspaceRoot || process.cwd();
+  const userHome = process.env.HOME || os.homedir();
   const skills = getSkills();
+
+  console.log("🚀 [Muse Engine] Initializing Multi-Harness Command Exporter & Onboarding...\n");
   console.log(`📦 Loaded ${skills.length} canonical Muse skills from skills.json`);
 
-  const userHome = process.env.HOME || os.homedir();
+  const doSkills = options.installSkills !== false;
+  const doCommands = options.exportCommands !== false;
+  const doCli = options.installCli !== false;
+  const doWire = options.wireAgentsMd !== false;
+
+  // 1. Install Skills
+  if (doSkills) {
+    const dest = options.skillsDest || path.join(userHome, ".agents", "skills");
+    const count = exportSkills(dest, skills);
+    console.log(`✅ Skills: Installed ${count} canonical departments → ${dest}`);
+  }
+
+  // 2. Export Slash Commands
   let totalCommands = 0;
+  if (doCommands) {
+    // OpenCode (Global & Workspace)
+    const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
+    const opencodeLocal = path.join(workspaceRoot, ".opencode", "commands");
+    if (fs.existsSync(path.dirname(opencodeGlobal))) {
+      const c = exportOpenCodeCommands(opencodeGlobal, skills);
+      console.log(`✅ OpenCode (Global): Exported ${c} commands → ${opencodeGlobal}`);
+      totalCommands += c;
+    }
+    if (fs.existsSync(path.join(workspaceRoot, ".opencode"))) {
+      const c = exportOpenCodeCommands(opencodeLocal, skills);
+      console.log(`✅ OpenCode (Local): Exported ${c} commands → ${opencodeLocal}`);
+      totalCommands += c;
+    }
 
-  // 1. OpenCode (Global & Workspace)
-  const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
-  const opencodeLocal = path.join(workspaceRoot, ".opencode", "commands");
-  if (fs.existsSync(path.dirname(opencodeGlobal))) {
-    const c = exportOpenCodeCommands(opencodeGlobal, skills);
-    console.log(`✅ OpenCode (Global): Exported ${c} commands → ${opencodeGlobal}`);
-    totalCommands += c;
-  }
-  if (fs.existsSync(path.join(workspaceRoot, ".opencode"))) {
-    const c = exportOpenCodeCommands(opencodeLocal, skills);
-    console.log(`✅ OpenCode (Local): Exported ${c} commands → ${opencodeLocal}`);
-    totalCommands += c;
-  }
+    // Antigravity / Gemini CLI (Global & Workspace)
+    const geminiGlobal = path.join(userHome, ".gemini", "commands");
+    const geminiLocal = path.join(workspaceRoot, ".gemini", "commands");
+    if (fs.existsSync(path.dirname(geminiGlobal))) {
+      const c = exportAntigravityCommands(geminiGlobal, skills);
+      console.log(`✅ Antigravity/Gemini (Global): Exported ${c} commands → ${geminiGlobal}`);
+      totalCommands += c;
+    }
+    if (fs.existsSync(path.join(workspaceRoot, ".gemini"))) {
+      const c = exportAntigravityCommands(geminiLocal, skills);
+      console.log(`✅ Antigravity/Gemini (Local): Exported ${c} commands → ${geminiLocal}`);
+      totalCommands += c;
+    }
 
-  // 2. Antigravity / Gemini CLI (Global & Workspace)
-  const geminiGlobal = path.join(userHome, ".gemini", "commands");
-  const geminiLocal = path.join(workspaceRoot, ".gemini", "commands");
-  if (fs.existsSync(path.dirname(geminiGlobal))) {
-    const c = exportAntigravityCommands(geminiGlobal, skills);
-    console.log(`✅ Antigravity/Gemini (Global): Exported ${c} commands → ${geminiGlobal}`);
-    totalCommands += c;
-  }
-  if (fs.existsSync(path.join(workspaceRoot, ".gemini"))) {
-    const c = exportAntigravityCommands(geminiLocal, skills);
-    console.log(`✅ Antigravity/Gemini (Local): Exported ${c} commands → ${geminiLocal}`);
-    totalCommands += c;
-  }
+    // Windsurf Workflows
+    const windsurfLocal = path.join(workspaceRoot, ".windsurf", "workflows");
+    if (fs.existsSync(path.join(workspaceRoot, ".windsurf"))) {
+      const c = exportWindsurfWorkflows(windsurfLocal, skills);
+      console.log(`✅ Windsurf: Exported ${c} workflows → ${windsurfLocal}`);
+      totalCommands += c;
+    }
 
-  // 3. Windsurf Workflows
-  const windsurfLocal = path.join(workspaceRoot, ".windsurf", "workflows");
-  if (fs.existsSync(path.join(workspaceRoot, ".windsurf"))) {
-    const c = exportWindsurfWorkflows(windsurfLocal, skills);
-    console.log(`✅ Windsurf: Exported ${c} workflows → ${windsurfLocal}`);
-    totalCommands += c;
-  }
-
-  // 4. Cursor Commands
-  const cursorLocal = path.join(workspaceRoot, ".cursor", "commands");
-  if (fs.existsSync(path.join(workspaceRoot, ".cursor"))) {
-    const c = exportCursorCommands(cursorLocal, skills);
-    console.log(`✅ Cursor: Exported ${c} commands → ${cursorLocal}`);
-    totalCommands += c;
-  }
-
-  // 5. Terminal CLI Runner
-  const cliDest = path.join(userHome, ".local", "bin", "muse");
-  exportTerminalCli(cliDest);
-  console.log(`✅ Universal CLI: Created 'muse' command runner → ${cliDest}`);
-
-  // 6. Wire Secretary into AGENTS.md
-  const globalAgentsMd = path.join(userHome, ".agents", "AGENTS.md");
-  const localAgentsMd = path.join(workspaceRoot, "AGENTS.md");
-
-  if (wireSecretaryIntoAgentsMd(globalAgentsMd)) {
-    console.log(`✅ Injected Secretary Dispatch Protocol into Global AGENTS.md (${globalAgentsMd})`);
-  }
-  if (wireSecretaryIntoAgentsMd(localAgentsMd)) {
-    console.log(`✅ Injected Secretary Dispatch Protocol into Local AGENTS.md (${localAgentsMd})`);
+    // Cursor Commands
+    const cursorLocal = path.join(workspaceRoot, ".cursor", "commands");
+    if (fs.existsSync(path.join(workspaceRoot, ".cursor"))) {
+      const c = exportCursorCommands(cursorLocal, skills);
+      console.log(`✅ Cursor: Exported ${c} commands → ${cursorLocal}`);
+      totalCommands += c;
+    }
   }
 
-  console.log(`\n🎉 Setup Complete: ${totalCommands} slash commands active across all harnesses!`);
+  // 3. Terminal CLI Runner (museskills)
+  if (doCli) {
+    const cliDest = path.join(userHome, ".local", "bin", "museskills");
+    exportTerminalCli(cliDest);
+    console.log(`✅ Universal CLI: Created 'museskills' command runner → ${cliDest}`);
+  }
+
+  // 4. Wire Secretary into AGENTS.md
+  if (doWire) {
+    const globalAgentsMd = path.join(userHome, ".agents", "AGENTS.md");
+    const localAgentsMd = path.join(workspaceRoot, "AGENTS.md");
+
+    if (wireSecretaryIntoAgentsMd(globalAgentsMd)) {
+      console.log(`✅ Injected Secretary Dispatch Protocol into Global AGENTS.md (${globalAgentsMd})`);
+    }
+    if (wireSecretaryIntoAgentsMd(localAgentsMd)) {
+      console.log(`✅ Injected Secretary Dispatch Protocol into Local AGENTS.md (${localAgentsMd})`);
+    }
+  }
+
+  console.log(`\n🎉 Setup Complete: Active across all detected harnesses!`);
 }
 
 if (import.meta.main) {
-  runSetup();
+  const args = process.argv.slice(2);
+  const opts: SetupOptions = {
+    installSkills: true,
+    exportCommands: true,
+    installCli: true,
+    wireAgentsMd: true,
+  };
+
+  if (args.includes("--skills-only")) {
+    opts.exportCommands = false;
+    opts.installCli = false;
+    opts.wireAgentsMd = false;
+  } else if (args.includes("--commands-only")) {
+    opts.installSkills = false;
+    opts.installCli = false;
+    opts.wireAgentsMd = false;
+  } else if (args.includes("--cli-only")) {
+    opts.installSkills = false;
+    opts.exportCommands = false;
+    opts.wireAgentsMd = false;
+  }
+
+  const destIdx = args.indexOf("--skills-dest");
+  if (destIdx !== -1 && args[destIdx + 1]) {
+    opts.skillsDest = path.resolve(args[destIdx + 1]);
+  }
+
+  runSetup(opts);
 }

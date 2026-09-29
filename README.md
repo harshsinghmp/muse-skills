@@ -16,7 +16,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (174 Slash Commands + 'muse' CLI — No Git Clone Required)
+# 🚀 Option B: Instant Remote Setup (Skills + 174 Slash Commands + 'museskills' CLI — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -43,7 +43,7 @@ Every skill follows the open `SKILL.md` specification: rich intent triggers, ste
 | **Context Amnesia**: Agents lose track of architecture, conventions, and past decisions between sessions. | **Persistent Cognitive Context**: `context-anchor` and `updateagents` preserve project truth, active constraints, and architectural invariants indefinitely. |
 | **Premature Victory**: Agents claim code works without running real tests, leaving broken builds behind. | **Automated Verification Gates**: Every workflow enforces executable test commands (`bun test`, `pytest`) before sign-off (Evidence over Claims). |
 | **Chaotic Releases**: Unformatted commits directly to production branches cause merge conflicts and regressions. | **Disciplined Release Flow**: The `git` skill automates semantic versioning, feature branches, and tag creation seamlessly. |
-| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, and terminal CLI (`muse`). |
+| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, and terminal CLI (`museskills`). |
 | **Messy Client Handoffs**: Scattered requirements, manual onboarding, and accidental credential leaks. | **End-to-End Agency Operations**: Dedicated skills for `brand` intake, `client-comms`, `accounts`, and `qa-launch` with zero credential leakage. |
 
 ---
@@ -56,7 +56,7 @@ Muse Skills operates on a **Progressive Disclosure** and **Autonomous Council Di
 flowchart TD
     subgraph Harness ["🤖 80+ Supported Agent Runtimes"]
         UserPrompt["User Goal / Prompt"] --> Dispatcher["🏛️ Universal Front Door (secretary:dispatch)"]
-        SlashCmd["Slash Commands (/webdev, /design, /muse)"] --> Dispatcher
+        SlashCmd["Slash Commands (/webdev, /design, /museskills)"] --> Dispatcher
     end
 
     subgraph Council ["👔 The Agency Council Leads"]
@@ -223,10 +223,10 @@ npx skills add harshsinghmp/muse-skills --scope project
 
 ### Option 2: Multi-Harness Slash Commands & Universal CLI
 
-Export native slash commands into your detected agent harnesses (`.opencode`, `.gemini`, `.cursor`, `.windsurf`) and register the universal `muse` CLI runner:
+Export native slash commands into your detected agent harnesses (`.opencode`, `.gemini`, `.cursor`, `.windsurf`) and register the universal `museskills` CLI runner:
 
 ```bash
-# Auto-detects harnesses, exports slash commands, and links ~/.local/bin/muse
+# Auto-detects harnesses, exports slash commands, and links ~/.local/bin/museskills
 bun run setup
 ```
 
@@ -234,7 +234,7 @@ Once installed, invoke any skill or mode directly in your agent:
 - `/webdev` or `/webdev:funnel`
 - `/design:uikit` or `/design:saas`
 - `/smm:carousel` or `/ops:obsidian`
-- Terminal CLI: `muse webdev` or `muse design:uikit`
+- Terminal CLI: `museskills webdev` or `museskills design:uikit`
 
 ### Option 3: Install Individual Skills
 
