@@ -92,7 +92,7 @@ Do NOT use this skill when:
 3. Consolidate: Merge overlapping scripts and replace multi-step hacks with canonical tooling.
 
 ### Step 3 — TELOS & Operating System Alignment
-1. Compare actual time and commit distribution against `telos.md` or `.agents/context/roadmap.md`.
+1. Compare actual time and commit distribution against `~/.agents/identity/vision.md` or `.agents/context/roadmap.md`.
 2. Score the 4 Core Agency Divisions (Sol, Jasper, Crew, Nexus) for capability balance.
 
 ### Step 4 — Next-Quarter OKR Formulation

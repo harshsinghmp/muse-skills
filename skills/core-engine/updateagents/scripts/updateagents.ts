@@ -175,17 +175,17 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
       "Proactive execution with independent verification (Council Leads: Sol, Jasper, Crew, Nexus)",
     );
 
-    console.log("\nStep 3: Life & Venture Compass (compass.md)");
+    console.log("\nStep 3: Strategic Vision & Trajectory (vision.md)");
     const currentState = await prompt(
-      "  📍 Current State (Active projects & bottlenecks)",
+      "  📍 Current Coordinates (Active projects & bottlenecks)",
       "Scaling core agency workflows and AI agent toolchain",
     );
-    const trueNorth = await prompt(
-      "  🧭 True North (1-Year Vision)",
+    const targetVision = await prompt(
+      "  🎯 Target Vision (1-Year Vision)",
       "Autonomous agency engineering engine with zero slop and verified deliverables",
     );
     const milestones = await prompt(
-      "  🎯 90-Day Trajectory (Top Milestones)",
+      "  🏁 90-Day Trajectory (Top Milestones)",
       "1. Production DOX engine release, 2. Universal skill suite test parity, 3. Multi-client context isolation",
     );
 
@@ -203,18 +203,18 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
 
     const userMd = `# 👤 Principal Identity & Working Style\n\n- **Name / Handle**: ${name}\n- **Domain Superpowers**: ${superpowers}\n- **Communication Style**: ${comms}\n`;
     const assistantMd = `# 🏛️ Assistant Persona & Agency Council\n\n- **Default Assistant Identity**: ${assistantName}\n- **Delegation Stance**: ${delegation}\n- **Council Leads**:\n  - **Sol**: Product Architect & Full-Stack Automator\n  - **Jasper**: Creative Technologist & Growth Mastermind\n  - **Crew**: Client Delivery Specialist & Operations\n  - **Nexus**: Technical Director & Hardening Gate\n`;
-    const compassMd = `# 🧭 Life & Venture Compass (Current State ➔ True North)\n\n## 1. Current State (Coordinates)\n${currentState}\n\n## 2. True North (1-Year Vision)\n${trueNorth}\n\n## 3. 90-Day Trajectory (Core Milestones)\n${milestones}\n\n## 4. Operating Values\n- **Evidence Before Claims**: Work is complete only after oracle verification.\n- **Zero Slop**: Ruthless clarity, no generic filler, no unmaintained dependencies.\n- **Additive & Safe**: Never clobber working systems or client files.\n`;
+    const visionMd = `# 🧭 Strategic Vision & Trajectory (Current Reality ➔ Target Vision)\n\n## 1. Current Coordinates (Reality)\n${currentState}\n\n## 2. Target Vision (1-Year Horizon)\n${targetVision}\n\n## 3. 90-Day Trajectory (Core Milestones)\n${milestones}\n\n## 4. Operating Values\n- **Evidence Before Claims**: Work is complete only after oracle verification.\n- **Zero Slop**: Ruthless clarity, no generic filler, no unmaintained dependencies.\n- **Additive & Safe**: Never clobber working systems or client files.\n`;
     const rulesMd = `# 🛡️ Global Machine Invariants & Toolchain Standards\n\n- **Toolchain**: ${toolchain}\n- **Security**: ${security}\n- **Git Protocol**: Atomic PRs, Meaningful Git Commit Protocol\n`;
 
     writeFileSync(join(destDir, "user.md"), userMd, "utf8");
     writeFileSync(join(destDir, "assistant.md"), assistantMd, "utf8");
-    writeFileSync(join(destDir, "compass.md"), compassMd, "utf8");
+    writeFileSync(join(destDir, "vision.md"), visionMd, "utf8");
     writeFileSync(join(destDir, "rules.md"), rulesMd, "utf8");
 
     console.log("\n✅ Global identity configured successfully in: ~/.agents/identity/");
     console.log("   • user.md         (Principal identity)");
     console.log("   • assistant.md    (Assistant stance & Council mapping)");
-    console.log("   • compass.md      (Current State ➔ True North ➔ 90-Day Milestones)");
+    console.log("   • vision.md       (Current Reality ➔ Target Vision ➔ 90-Day Milestones)");
     console.log("   • rules.md        (Machine invariants & security rules)");
     console.log("\nAll project workspaces will now automatically inherit these defaults!\n");
   } else {
@@ -226,14 +226,28 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
     const prjName = basename(targetDir);
     console.log(`Configuring project-scoped context for: ${prjName}\n`);
 
-    const choice = await prompt(
-      "Choose setup mode: [1] Inherit Global Identity, [2] Customize Project Context, [3] Do Later",
-      "1",
-    );
-    if (choice === "3") {
-      console.log("\n⏩ Project onboarding deferred. You can run 'bun updateagents.ts --onboard' anytime.");
-      rl.close();
-      return;
+    const globalUserFile = join(homedir(), ".agents/identity/user.md");
+    const hasGlobal = existsSync(globalUserFile);
+
+    let wantOverrides = false;
+    if (hasGlobal) {
+      console.log("  🧭 Global identity active: ~/.agents/identity/ (Automatically inherited)");
+      const overrideChoice = await prompt("Add project-specific overrides for this workspace? [y/N]", "n");
+      wantOverrides = overrideChoice.toLowerCase() === "y" || overrideChoice.toLowerCase() === "yes";
+      if (!wantOverrides) {
+        console.log("  ✅ Inheriting global identity defaults. Project DOX rail active.\n");
+        rl.close();
+        return;
+      }
+    } else {
+      console.log("  💡 Notice: Global identity not detected (~/.agents/identity/).");
+      const setupChoice = await prompt("Configure project-specific context now? [Y/n]", "y");
+      if (setupChoice.toLowerCase() === "n" || setupChoice.toLowerCase() === "no") {
+        console.log("\n⏩ Project onboarding deferred. You can run 'bun updateagents.ts --onboard' anytime.\n");
+        rl.close();
+        return;
+      }
+      wantOverrides = true;
     }
 
     let problem = "Fragmented agent instructions and context rot";
@@ -242,7 +256,7 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
     let currentReality = "Initial DOX engine scaffolded and verified";
     let milestones = "1. MVP stabilization, 2. Test coverage gate, 3. Production release";
 
-    if (choice === "2") {
+    if (wantOverrides) {
       problem = await prompt("  🎯 Core Problem Solved", problem);
       audience = await prompt("  👥 Target Audience / ICP", audience);
       wedge = await prompt("  ⚡ Defensible Wedge / Value Proposition", wedge);
