@@ -7,11 +7,14 @@
 #   --all               Install all 47 skills & native slash commands (default)
 #   --skills-only       Install 47 skills only
 #   --commands-only     Export slash commands only
+#   --sync-agents       Automatically run updateagents to modernize workspace context
 #   --project           Target current project (./.agents/skills) instead of global (~/.agents/skills)
 #   --global            Target global (~/.agents/skills)
 #   --non-interactive   Skip prompts and use defaults
 
 set -euo pipefail
+
+ORIGINAL_PWD="$(pwd)"
 
 # ─── Terminal Styling ────────────────────────────────────────────────────────
 BOLD="\033[1m"
@@ -63,12 +66,14 @@ read_input() {
 MODE="all"
 TARGET="global"
 IS_INTERACTIVE=true
+SYNC_FLAG=false
 
 for arg in "$@"; do
   case "$arg" in
     --all) MODE="all" ;;
     --skills-only) MODE="skills" ;;
     --commands-only) MODE="commands" ;;
+    --sync-agents) SYNC_FLAG=true ;;
     --project) TARGET="project" ;;
     --global) TARGET="global" ;;
     --non-interactive|-y) IS_INTERACTIVE=false ;;
@@ -120,7 +125,7 @@ trap cleanup EXIT INT TERM
 echo -e "\n📥 Fetching latest Muse Skills engine (ephemeral)..."
 git clone --depth 1 --quiet https://github.com/harshsinghmp/muse-skills.git "${TMP_DIR}"
 
-# ─── 5. Prepare Flags & Execute ──────────────────────────────────────────────
+# ─── 5. Prepare Flags & Execute Setup Engine ─────────────────────────────────
 EXPORT_ARGS=()
 
 if [ "$MODE" = "skills" ]; then
@@ -130,7 +135,7 @@ elif [ "$MODE" = "commands" ]; then
 fi
 
 if [ "$TARGET" = "project" ]; then
-  EXPORT_ARGS+=("--skills-dest" "$(pwd)/.agents/skills")
+  EXPORT_ARGS+=("--skills-dest" "${ORIGINAL_PWD}/.agents/skills")
 else
   EXPORT_ARGS+=("--skills-dest" "${HOME}/.agents/skills")
 fi
@@ -144,6 +149,39 @@ else
   npx ts-node scripts/export-commands.ts "${EXPORT_ARGS[@]}" 2>/dev/null || node -e "
     console.log('⚠️ Running in Node.js fallback mode.');
   "
+fi
+
+# ─── 6. Optional Agent Context Modernization (updateagents) ──────────────────
+DO_SYNC=false
+
+if [ "$SYNC_FLAG" = true ]; then
+  DO_SYNC=true
+elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
+  echo ""
+  echo -e "${BOLD}${BLUE}🧠 Agent Context & Repository Modernization${RESET}"
+  echo "----------------------------------------------------------------"
+  echo "Would you like to modernize your workspace's agent instructions via 'updateagents'?"
+  echo "  • Preserves 100% of your existing AGENTS.md rules & custom constraints"
+  echo "  • Upgrades to Progressive Disclosure DOX architecture (.agents/context/ & standards/)"
+  echo "  • Synchronizes 17 canonical engineering rulebooks from ai-ready templates"
+  echo "  • Wires the central Secretary agency router into your workspace"
+  echo ""
+  read_input "Run agent synchronization on current project now? [y/N] (default: n): " "n" SYNC_PROMPT
+
+  case "$SYNC_PROMPT" in
+    [yY]|[yY][eE][sS]) DO_SYNC=true ;;
+    *) DO_SYNC=false ;;
+  esac
+fi
+
+if [ "$DO_SYNC" = true ]; then
+  echo -e "\n⚡ ${CYAN}Running updateagents context synchronization (preserving all rules)...${RESET}\n"
+  if [ "${RUNTIME}" = "bun" ]; then
+    bun "${TMP_DIR}/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" || true
+  else
+    npx ts-node "${TMP_DIR}/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" 2>/dev/null || true
+  fi
+  echo -e "\n✅ ${GREEN}Agent context synchronized & rules preserved!${RESET}"
 fi
 
 echo -e "\n${GREEN}${BOLD}🎉 Installation complete!${RESET}"
