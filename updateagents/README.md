@@ -16,6 +16,7 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 - **🛠️ Smart DOX Retrofit**: If a workspace lacks the Progressive Disclosure DOX architecture, `updateagents` safely provisions the 9-folder `.agents/` container, migrates existing facts into `.agents/context/`, and archives legacy instruction files.
 - **🔄 Single Source of Truth**: Houses the master DOX templates (`updateagents/templates/`), synchronizing all 17 modular rulebooks (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and brand baselines with **zero duplicate templates**.
 - **📊 13-Asset AI Readiness Audit**: Evaluates repo maturity with Stage-0 Fast-Skip and CI gating (`--fail-under N`).
+- **🏛️ Autonomous Secretary Dispatch**: Automatically ensures that the root `AGENTS.md` carries the Secretary Protocol router (`secretary:dispatch`), guaranteeing autonomous triage across all 46 departments on first run or session start.
 - **🛡️ Synthetic Artifact Sanitization**: Strips proprietary IDE wrappers (`[[ORCA_RICH_MD]]`, Cursor markers) automatically via `--sanitize`.
 - **⚖️ Global Invariant Atom Table Telemetry**: Audits active global invariant atoms against the $\le 20$ atom attention cap to prevent model instruction fatigue and context bloat.
 - **📏 Compact Size Control**: Enforces concise instruction files (<5KB preferred, <10KB hard ceiling).

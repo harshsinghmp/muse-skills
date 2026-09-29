@@ -53,3 +53,10 @@ Load these relative modules on-demand when relevant to your active task:
 - 📐 [Semantic BEM CSS Conventions](./.agents/brand/bem-conventions.md) — Block-Element-Modifier class architecture and shallow depth rules.
 - ♿ [Accessibility (A11y) Baseline](./.agents/brand/a11y.md) — WCAG 2.2 AA non-negotiable mandates, contrast ratios, hit targets, and axe-core zero-tolerance.
 - 📖 [Durable Project Context Map](./.agents/context/index.md) — Product scope, architecture truth, current shipped state, decisions, and roadmap.
+
+<!-- muse-secretary-router:start -->
+## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
+- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md` or `.agents/skills/secretary/references/dispatch.md`).
+- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
+- **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
+<!-- muse-secretary-router:end -->
