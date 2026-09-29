@@ -13,11 +13,14 @@
 </div>
 
 ```bash
-# ⚡ Quick Start: Install all 47 skills globally in 1 command
+# ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Export slash commands & CLI runner for all your agent harnesses
-bun run setup
+# 🚀 Option B: Instant Remote Setup (174 Slash Commands + 'muse' CLI — No Git Clone Required)
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
+
+# 🛠️ Option C: Manual Setup (From Source)
+git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
 ```
 
 ---
