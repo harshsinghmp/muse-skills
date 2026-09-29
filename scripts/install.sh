@@ -196,9 +196,9 @@ fi
 if [ "$DO_SYNC" = true ]; then
   echo -e "\n⚡ ${CYAN}Running updateagents context synchronization (preserving all rules)...${RESET}\n"
   if [ "${RUNTIME}" = "bun" ]; then
-    bun "${TMP_DIR}/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" || true
+    bun "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" || true
   else
-    npx ts-node "${TMP_DIR}/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" 2>/dev/null || true
+    npx ts-node "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" 2>/dev/null || true
   fi
   echo -e "\n✅ ${GREEN}Agent context synchronized & rules preserved!${RESET}"
 fi
@@ -239,9 +239,9 @@ if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
 
   echo -e "\n⚡ ${CYAN}Launching new-project interactive scaffolder...${RESET}\n"
   if [ "${RUNTIME}" = "bun" ]; then
-    bun "${TMP_DIR}/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" || true
+    bun "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" || true
   else
-    npx ts-node "${TMP_DIR}/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" 2>/dev/null || true
+    npx ts-node "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" 2>/dev/null || true
   fi
   echo -e "\n✅ ${GREEN}New project scaffolded successfully at: ${RESOLVED_PROJECT_DIR}${RESET}"
 fi

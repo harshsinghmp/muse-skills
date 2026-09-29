@@ -14,7 +14,14 @@ import path from "node:path";
 import { exportAntigravityCommands, exportOpenCodeCommands, getSkills } from "./export-commands";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
-const DISPATCH_MD_PATH = path.join(REPO_ROOT, "secretary", "references", "dispatch.md");
+const DISPATCH_MD_PATH = path.join(
+  REPO_ROOT,
+  "skills",
+  "context-orchestration",
+  "secretary",
+  "references",
+  "dispatch.md",
+);
 
 const COUNCIL_LEADS: Record<string, string> = {
   webdev: "Sol",
@@ -67,7 +74,11 @@ const COUNCIL_LEADS: Record<string, string> = {
 };
 
 export function getModesForSkill(skillName: string): string[] {
-  const refDir = path.join(REPO_ROOT, skillName, "references");
+  const skills = getSkills();
+  const found = skills.find((s) => s.name === skillName);
+  const refDir = found
+    ? path.join(REPO_ROOT, path.dirname(found.path), "references")
+    : path.join(REPO_ROOT, skillName, "references");
   if (!fs.existsSync(refDir)) return [];
   return fs
     .readdirSync(refDir)

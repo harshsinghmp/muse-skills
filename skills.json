@@ -3,7 +3,7 @@
     {
       "name": "updatedocs",
       "description": "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates.",
-      "path": "updatedocs/SKILL.md",
+      "path": "skills/core-engine/updatedocs/SKILL.md",
       "version": "2.3.1",
       "category": "core-engine",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -26,7 +26,7 @@
     {
       "name": "updateagents",
       "description": "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards.",
-      "path": "updateagents/SKILL.md",
+      "path": "skills/core-engine/updateagents/SKILL.md",
       "version": "2.1.0",
       "category": "core-engine",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -62,7 +62,7 @@
     {
       "name": "git",
       "description": "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'.",
-      "path": "git/SKILL.md",
+      "path": "skills/core-engine/git/SKILL.md",
       "version": "1.0.1",
       "category": "core-engine",
       "tools": [
@@ -96,7 +96,7 @@
     {
       "name": "code-review",
       "description": "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review; (6) reviewing diffs that touch tests, specs, or snapshots to confirm the spec stayed authoritative and tests were never weakened to match broken behavior; (7) security review of a diff or module (OWASP-style control pass); (8) receiving or acting on code review feedback; (9) turning review findings into verified fixes.",
-      "path": "code-review/SKILL.md",
+      "path": "skills/quality-review/code-review/SKILL.md",
       "version": "1.3.0",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -123,7 +123,7 @@
     {
       "name": "new-project",
       "description": "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Client Intake Brief with post-scaffold agent onboarding), and Stage 6 (Closeout). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Atomic Payload website builder, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace.",
-      "path": "new-project/SKILL.md",
+      "path": "skills/core-engine/new-project/SKILL.md",
       "version": "2.6.0",
       "category": "core-engine",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -161,7 +161,7 @@
     {
       "name": "relay",
       "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
-      "path": "relay/SKILL.md",
+      "path": "skills/context-orchestration/relay/SKILL.md",
       "version": "2.2.1",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -185,7 +185,7 @@
     {
       "name": "context-anchor",
       "description": "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session.",
-      "path": "context-anchor/SKILL.md",
+      "path": "skills/context-orchestration/context-anchor/SKILL.md",
       "version": "1.1.1",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -207,7 +207,7 @@
     {
       "name": "gauntlet-loop",
       "description": "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md.",
-      "path": "gauntlet-loop/SKILL.md",
+      "path": "skills/quality-review/gauntlet-loop/SKILL.md",
       "version": "1.2.0",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -234,7 +234,7 @@
     {
       "name": "refactor",
       "description": "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through seven execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security).",
-      "path": "refactor/SKILL.md",
+      "path": "skills/design-interface/refactor/SKILL.md",
       "version": "1.2.0",
       "category": "design-interface",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "run_command"],
@@ -274,7 +274,7 @@
     {
       "name": "designscope",
       "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
-      "path": "designscope/SKILL.md",
+      "path": "skills/design-interface/designscope/SKILL.md",
       "version": "1.1.1",
       "category": "design-interface",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"],
@@ -303,7 +303,7 @@
     {
       "name": "coupling-router",
       "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, then analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Completion claims require verification receipts. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.",
-      "path": "coupling-router/SKILL.md",
+      "path": "skills/context-orchestration/coupling-router/SKILL.md",
       "version": "1.4.0",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -332,7 +332,7 @@
     {
       "name": "secretary",
       "description": "Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. On session launch or incoming work, triages user intent across 46 canonical agency departments, maps Council Leads (Sol, Jasper, Crew, Nexus), and selectively loads mode playbooks with minimal token overhead. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest.",
-      "path": "secretary/SKILL.md",
+      "path": "skills/context-orchestration/secretary/SKILL.md",
       "version": "1.5.0",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -363,7 +363,7 @@
     {
       "name": "evidence-ledger",
       "description": "Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only evidence-ledger.md per project tracking decisions (with options considered and evidence trail), client commitments (with deadlines and delivery proof), verified claims (with confidence taxonomy and receipts), and status facts (with blocker tracking). Six commands: /evidence onboard, /evidence status, /evidence decide, /evidence commit, /evidence audit, /evidence brief. Enforces the doctrine: 'No source, no claim. No verification path, no release.' Uses a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, empirical vs speculative classification, and automatic staleness detection.",
-      "path": "evidence-ledger/SKILL.md",
+      "path": "skills/context-orchestration/evidence-ledger/SKILL.md",
       "version": "2.0.0",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_search"],
@@ -392,7 +392,7 @@
     {
       "name": "dead-letter",
       "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix — with a findings ledger that deduplicates recurring sweeps and measures convergence.",
-      "path": "dead-letter/SKILL.md",
+      "path": "skills/quality-review/dead-letter/SKILL.md",
       "version": "1.5.0",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -420,7 +420,7 @@
     {
       "name": "pua",
       "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive—not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
-      "path": "pua/SKILL.md",
+      "path": "skills/quality-review/pua/SKILL.md",
       "version": "1.1.0",
       "category": "quality-review",
       "tools": [
@@ -455,7 +455,7 @@
     {
       "name": "coach",
       "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
-      "path": "coach/SKILL.md",
+      "path": "skills/reflection-maintenance/coach/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -480,7 +480,7 @@
     {
       "name": "audit",
       "description": "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md.",
-      "path": "audit/SKILL.md",
+      "path": "skills/quality-review/audit/SKILL.md",
       "version": "1.1.1",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
@@ -507,7 +507,7 @@
     {
       "name": "periodic-retreat",
       "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem. Generates quarterly-retreat.md.",
-      "path": "periodic-retreat/SKILL.md",
+      "path": "skills/reflection-maintenance/periodic-retreat/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -530,7 +530,7 @@
     {
       "name": "clean-system-cache",
       "description": "Cross-platform developer, designer, and browser cache cleaner for Windows, Linux, and macOS. Safely purges only unreferenced, dangling, and disposable caches from package managers (uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle, brew), IDEs and compilers (xcode, android, vscode, cursor, cypress), containers (docker, podman), creative suites (adobe media cache, photoshop temp, figma, blender, electron), and web browsers (chrome, chromium, brave, edge, firefox, zen, vivaldi, safari). Enforces active running session protection and strict cache-only isolation with zero external runtimes (pure Bash on POSIX, native CMD on Windows).",
-      "path": "clean-system-cache/SKILL.md",
+      "path": "skills/reflection-maintenance/clean-system-cache/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -588,7 +588,7 @@
     {
       "name": "humanize",
       "description": "Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. Trigger on 'humanize this text', 'make this read naturally', 'remove AI writing patterns', 'de-ai this article', 'audit this copy for chatbot slop', 'polish this prose', or whenever technical, documentation, blog, or marketing copy sounds robotic or template-driven.",
-      "path": "humanize/SKILL.md",
+      "path": "skills/quality-review/humanize/SKILL.md",
       "version": "2.0.0",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -615,7 +615,7 @@
     {
       "name": "animate",
       "description": "Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. Use when asked to animate something, add motion, build a transition, make a component feel alive, review/audit/improve existing motion, or find places that should animate. Defaults to Motion (motion.dev, formerly Framer Motion) for React and CSS for quick fixes; uses any animation library already present in the project first; GSAP, WebGL, and native-mobile (Reanimated/SwiftUI/Compose/Flutter) are loaded only on explicit request.",
-      "path": "animate/SKILL.md",
+      "path": "skills/design-interface/animate/SKILL.md",
       "version": "1.0.0",
       "category": "design-interface",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"],
@@ -652,7 +652,7 @@
     {
       "name": "design",
       "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes — routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
-      "path": "design/SKILL.md",
+      "path": "skills/agency-delivery/design/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": [
@@ -700,7 +700,7 @@
     {
       "name": "paidads",
       "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, budget pacing, and account audits — routed through ten modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
-      "path": "paidads/SKILL.md",
+      "path": "skills/agency-delivery/paidads/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -733,7 +733,7 @@
     {
       "name": "seo",
       "description": "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics).",
-      "path": "seo/SKILL.md",
+      "path": "skills/agency-delivery/seo/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -765,7 +765,7 @@
     {
       "name": "webdev",
       "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
-      "path": "webdev/SKILL.md",
+      "path": "skills/agency-delivery/webdev/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
       "tools": [
@@ -806,7 +806,7 @@
     {
       "name": "mobile",
       "description": "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization — routed through five modes. Use when asked to build, refactor, or ship mobile apps, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs).",
-      "path": "mobile/SKILL.md",
+      "path": "skills/agency-delivery/mobile/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_fetch", "grep_search"],
@@ -840,7 +840,7 @@
     {
       "name": "smm",
       "description": "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics — routed through ten modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content).",
-      "path": "smm/SKILL.md",
+      "path": "skills/agency-delivery/smm/SKILL.md",
       "version": "1.2.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -887,7 +887,7 @@
     {
       "name": "content",
       "description": "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads).",
-      "path": "content/SKILL.md",
+      "path": "skills/agency-delivery/content/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -917,7 +917,7 @@
     {
       "name": "analytics",
       "description": "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics).",
-      "path": "analytics/SKILL.md",
+      "path": "skills/agency-delivery/analytics/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_fetch", "grep_search"],
@@ -947,7 +947,7 @@
     {
       "name": "automation",
       "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics).",
-      "path": "automation/SKILL.md",
+      "path": "skills/agency-delivery/automation/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": [
@@ -986,7 +986,7 @@
     {
       "name": "devops",
       "description": "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git).",
-      "path": "devops/SKILL.md",
+      "path": "skills/agency-delivery/devops/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1018,7 +1018,7 @@
     {
       "name": "ops",
       "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
-      "path": "ops/SKILL.md",
+      "path": "skills/agency-delivery/ops/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -1063,7 +1063,7 @@
     {
       "name": "growth",
       "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits — routed through ten modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
-      "path": "growth/SKILL.md",
+      "path": "skills/agency-delivery/growth/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -1091,7 +1091,7 @@
     {
       "name": "qa-launch",
       "description": "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through four modes. Use when asked to QA a site before launch, verify a release candidate, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops).",
-      "path": "qa-launch/SKILL.md",
+      "path": "skills/agency-delivery/qa-launch/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -1120,7 +1120,7 @@
     {
       "name": "client-comms",
       "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth).",
-      "path": "client-comms/SKILL.md",
+      "path": "skills/agency-delivery/client-comms/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
@@ -1146,7 +1146,7 @@
     {
       "name": "gtm",
       "description": "Outbound and developer GTM department: account research, lead scoring, cold email sequencing, list hygiene, sales handover, developer customer discovery (TAB), champion enablement, and founder-led sales, routed through nine modes. Use when asked to research target accounts, score leads, build a prospect list, run cold outbound, interview users via TAB, arm developer champions, or close early deals. Not for paid ads (paidads), launch strategy (growth), email copy craft (content), social outreach (smm), CRM plumbing (automation), or metrics (analytics).",
-      "path": "gtm/SKILL.md",
+      "path": "skills/agency-delivery/gtm/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
@@ -1179,7 +1179,7 @@
     {
       "name": "incident-response",
       "description": "Live incident command: severity triage with first-15-minutes checklist, stop-the-bleeding mitigation playbooks for outage breach data-loss and perf-collapse, severity-linked status-page and client communication, and blameless postmortem with tracked actions, routed through four modes. Use when production is down, breached, losing data, or collapsing in performance. Not for planned QA (qa-launch), security audits (audit/code-review), routine client status (client-comms), or infra builds (devops).",
-      "path": "incident-response/SKILL.md",
+      "path": "skills/agency-delivery/incident-response/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1206,7 +1206,7 @@
     {
       "name": "database",
       "description": "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through six modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations.",
-      "path": "database/SKILL.md",
+      "path": "skills/agency-delivery/database/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1241,7 +1241,7 @@
     {
       "name": "telegram",
       "description": "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, or stand up a bot with a config-file token. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only).",
-      "path": "telegram/SKILL.md",
+      "path": "skills/agency-delivery/telegram/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content"],
@@ -1267,7 +1267,7 @@
     {
       "name": "research",
       "description": "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics).",
-      "path": "research/SKILL.md",
+      "path": "skills/agency-delivery/research/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "scope": "local",
@@ -1285,7 +1285,7 @@
     {
       "name": "sales-enablement",
       "description": "Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks — routed through four modes. Use when asked to write a sales demo script, draft objection-handling answers, build a one-pager or leave-behind, or assemble a sales playbook for a client's sales team. Not for proposals or deal terms (ops), outbound pipeline (gtm), or marketing content (content).",
-      "path": "sales-enablement/SKILL.md",
+      "path": "skills/agency-delivery/sales-enablement/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "scope": "local",
@@ -1295,7 +1295,7 @@
     {
       "name": "retain",
       "description": "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals — routed through six modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review or testimonial, win a referral or repeat purchase, or spot churn risk from usage drops or client silence. Not for churn strategy itself (growth retention mode) or status reporting (client-comms).",
-      "path": "retain/SKILL.md",
+      "path": "skills/agency-delivery/retain/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1319,7 +1319,7 @@
     {
       "name": "muse-security",
       "description": "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops).",
-      "path": "muse-security/SKILL.md",
+      "path": "skills/quality-review/muse-security/SKILL.md",
       "version": "1.0.0",
       "category": "quality-review",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1343,7 +1343,7 @@
     {
       "name": "accounts",
       "description": "Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. Use when asked to send or schedule an invoice, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev).",
-      "path": "accounts/SKILL.md",
+      "path": "skills/agency-delivery/accounts/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1368,7 +1368,7 @@
     {
       "name": "brand",
       "description": "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops).",
-      "path": "brand/SKILL.md",
+      "path": "skills/agency-delivery/brand/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
@@ -1411,7 +1411,7 @@
     {
       "name": "crm",
       "description": "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain).",
-      "path": "crm/SKILL.md",
+      "path": "skills/agency-delivery/crm/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
