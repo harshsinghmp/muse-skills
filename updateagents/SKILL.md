@@ -1,10 +1,10 @@
 ---
 name: updateagents
-aliases: ["sync-agents","update-memory","agent-sync"]
-description: "Synchronize AI-agent instructions and project context with the actual current state of the workspace. Identifies durable agent-relevant knowledge, enforces strict MuseMemory isolation, retrofits Progressive Disclosure DOX architecture, and synchronizes standards from the single template canon."
-argument-hint: "[sync-context|update-memory|sync-AGENTS]"
+aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
+description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards."
+argument-hint: "[sync|audit|sanitize|scaffold]"
 user-invocable: true
-version: 2.0.0
+version: 2.1.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: core-engine
 metadata:
   category: core-engine
   priority: 2
-  aliases: ["sync-agents","update-memory","agent-sync"]
+  aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
   suggested_skills: ["updatedocs","new-project","relay","context-anchor"]
   hermes:
-    tags: [memory, documentation, context, agents, workspace, synchronization, dox]
+    tags: [memory, documentation, context, agents, workspace, synchronization, dox, ai-ready, readiness, audit]
     related_skills: [updatedocs, new-project, relay, context-anchor]
     suggested_skills: [updatedocs, new-project, relay, context-anchor]
     requires_tools: [bash, view_file, write_to_file, grep_search]
   openclaw:
     category: core-engine
     suggested_skills: [updatedocs, new-project, relay, context-anchor]
-    primary_triggers: ["update agents","sync project context","update memory","sync AGENTS.md"]
+    primary_triggers: ["update agents","sync project context","update memory","sync AGENTS.md","make repo AI-ready","audit AI readiness"]
     requires_tools: [bash, view_file, write_to_file, grep_search]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -59,6 +59,17 @@ Use `updateagents` when:
 Do **not** run merely because files changed.
 
 Run when the change has a reasonable chance of affecting what future agents need to know.
+
+---
+
+## Modes
+
+| Mode | Focus | Key Output | Reference Document |
+| :--- | :--- | :--- | :--- |
+| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 17 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **`audit`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
+| **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
+| **`scaffold`** | Direct Day-0 provisioning of DOX container, AGENTS.md, .github templates, .env.example | Complete DOX rail & governance blueprints | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
 
 ---
 
@@ -136,12 +147,12 @@ bun path/to/updateagents/scripts/updateagents.ts [options]
 ```
 
 ### Step 0 — Stage-0 Fast-Skip Gate (Pre-Flight)
-Before performing deep inspection or delta generation, run the `ai-ready` fast-skip verification:
+Before performing deep inspection or delta generation, run the `updateagents` fast-skip verification:
 1. Verify `AGENTS.md` exists and is `<50 lines`.
 2. Verify `.agents/standards` and `.agents/context` exist and are populated.
 3. If instructions are already aligned with project reality:
    ```text
-   [ai-ready] Agent instructions and DOX container verified. Skipping pass.
+   [updateagents] Agent instructions and DOX container verified. Skipping pass.
    ```
    Exit immediately with 0 changes and zero token waste. Proceed only when structural drift or new project requirements are detected.
 
@@ -179,7 +190,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
 ### Step 8 — Check Existing Agent Files & Scaffolding Gate
 1. Check if any agent engine files exist (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.agents/`, etc.).
 2. **If NONE Found**:
-   - Scaffold the entire fresh Agent Engine DOX architecture directly from `ai-ready/templates/`.
+   - Scaffold the entire fresh Agent Engine DOX architecture directly from `updateagents/templates/`.
    - Provision `.agents/` 9-folder tree (`archive`, `artifacts`, `brand`, `context`, `goals`, `research`, `skills`, `standards`, `workflows`).
    - Deploy lean root `AGENTS.md` router (<50 lines) and initialize `.agents/context/` files based on repository discovery.
 3. **If ANY Found (Custom Content Present)**:
@@ -192,7 +203,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
    - Deploy lean root `AGENTS.md` DOX rail (<50 lines) pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `ai-ready/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
+Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `updateagents/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.

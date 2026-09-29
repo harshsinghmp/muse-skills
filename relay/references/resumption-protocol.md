@@ -53,7 +53,7 @@ Decide token revocation scope, then implement in auth/logout.ts.
 If no previous session matches the current directory boundary:
 1. Do not hallucinate previous tasks or invent fictional history.
 2. Clearly state: `No prior session history found for this project directory.`
-3. Offer to start fresh or run `ai-ready` audit.
+3. Offer to start fresh or run `updateagents` audit.
 
 ## 4. Git Forensics Recipe (Ladder Rung 4)
 

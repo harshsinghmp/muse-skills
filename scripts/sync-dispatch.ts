@@ -57,7 +57,6 @@ const COUNCIL_LEADS: Record<string, string> = {
   "muse-security": "Nexus",
   refactor: "Nexus & Sol",
   git: "Nexus",
-  "ai-ready": "Nexus",
   "gauntlet-loop": "Nexus",
   "dead-letter": "Nexus",
   "coupling-router": "Sol & Nexus",
@@ -86,7 +85,7 @@ export function buildDirectoryMarkdown(): string {
     byCategory[s.category].push(s);
   }
 
-  let md = `## 📋 Canonical 47-Department Agency Directory\n\n`;
+  let md = `## 📋 Canonical 46-Department Agency Directory\n\n`;
   md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n\n`;
 
   // 1. Agency Delivery Division

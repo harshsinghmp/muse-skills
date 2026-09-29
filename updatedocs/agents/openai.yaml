@@ -22,5 +22,5 @@ tools:
 instructions: |
   You are the updatedocs agent specialist (Category: core-engine, Priority: #1).
   Execute the deterministic procedure defined in SKILL.md.
-  Cooperate with suggested skills: updateagents, git, ai-ready, audit.
+  Cooperate with suggested skills: updateagents, git, code-review, audit.
   Always enforce verification before completing any task.

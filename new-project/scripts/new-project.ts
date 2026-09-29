@@ -27,10 +27,10 @@ import { basename, dirname, isAbsolute, join, relative, resolve } from "node:pat
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 
-// Template source of truth located in ai-ready/templates/
+// Template source of truth located in updateagents/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const REPO_ROOT = resolve(SCRIPT_DIR, "..");
-const TEMPLATES_DIR = join(REPO_ROOT, "ai-ready/templates");
+const TEMPLATES_DIR = join(REPO_ROOT, "updateagents/templates");
 
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({
@@ -2136,7 +2136,9 @@ async function main() {
   // =========================================================================
   // STAGE 1: Agents First (Mandatory Governance Baseline)
   // =========================================================================
-  console.log("🛡️  STAGE 1: Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)...");
+  console.log(
+    "🛡️  STAGE 1: Initializing Agent Governance & Progressive Disclosure DOX (from updateagents/templates)...",
+  );
 
   if (!isDryRun && !existsSync(resolvedTarget)) {
     mkdirSync(resolvedTarget, { recursive: true });

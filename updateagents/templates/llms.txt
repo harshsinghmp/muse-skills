@@ -20,4 +20,4 @@
 - `tests/`: test suite (`bun test`).
 
 ---
-Authored by `ai-ready --scaffold`; refine placeholders with real repository facts.
+Authored by `updateagents --scaffold`; refine placeholders with real repository facts.

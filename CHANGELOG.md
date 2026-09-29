@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [6.1.0] - 2026-09-29
+
+### Changed
+
+- **Consolidated AI-Readiness & Context Synchronization Engine (`updateagents` #42)**: Merged `ai-ready` into `updateagents`, establishing a single universal agent context synchronization and AI-readiness engine:
+  - Unified Day-0 scaffolding (`--scaffold`), Day-1 legacy retrofit, Day-N standards sync, and 13-asset AI-readiness auditing (`--audit`, `--fail-under`, `--json`) into `updateagents/scripts/updateagents.ts`.
+  - Migrated master DOX templates (`.agents/`, `AGENTS.md`, `Client-Intake/`, `llms.txt`, `.github/`, etc.) into `updateagents/templates/` as the single source of truth for both `updateagents` and `new-project`.
+  - Added synthetic ADE/IDE artifact sanitization mode (`--sanitize`) to unwrap proprietary wrappers (`ORCA_RICH_MD`, Cursor, Windsurf) across codebases.
+  - Reconciled catalog from 47 to 46 universal skills across `skills.json`, `llms.txt`, `README.md`, `AGENTS.md`, and test suites.
+  - Updated all downstream skill references (`new-project`, `git`, `updatedocs`, `audit`, `coupling-router`, `relay`, `secretary`) to route through `updateagents`.
+  - Streamlined `scripts/install.sh` and `scripts/export-commands.ts` with interactive updateagents execution and clean harness detection.
+
 ## [6.0.0] - 2026-09-27
 
 ### Added

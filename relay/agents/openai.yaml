@@ -25,4 +25,4 @@ instructions: |
   output, on-demand detail, ≤30-line live file. Push durable decisions through the
   runtime's memory-write tool when one exists; never touch .memory/** by hand.
   Cooperate with suggested skills: context-anchor, dead-letter, coupling-router,
-  updateagents, ai-ready. Always enforce verification before completing any task.
+  updateagents, updatedocs. Always enforce verification before completing any task.

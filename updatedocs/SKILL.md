@@ -16,15 +16,15 @@ metadata:
   category: core-engine
   priority: 1
   aliases: ["sync-docs","doc-sync","docs-audit"]
-  suggested_skills: ["updateagents","git","ai-ready","audit"]
+  suggested_skills: ["updateagents","git","code-review","audit"]
   hermes:
     tags: [documentation, sync, impact-analysis, changelog, architecture, audit, git, verification, dox, governance]
-    related_skills: [updateagents, git, ai-ready, audit]
-    suggested_skills: [updateagents, git, ai-ready, audit]
+    related_skills: [updateagents, git, code-review, audit]
+    suggested_skills: [updateagents, git, code-review, audit]
     requires_tools: [bash, view_file, write_to_file, replace_file_content, grep_search, find_by_name]
   openclaw:
     category: core-engine
-    suggested_skills: [updateagents, git, ai-ready, audit]
+    suggested_skills: [updateagents, git, code-review, audit]
     primary_triggers: ["update docs","sync documentation","audit documentation drift","verify readme"]
     requires_tools: [bash, view_file, write_to_file, replace_file_content, grep_search, find_by_name]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]

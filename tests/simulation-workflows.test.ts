@@ -1098,7 +1098,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
     });
 
-    test("secretary references/dispatch.md comprehensively catalogs all 47 departments and Council leads", () => {
+    test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
       const refPath = path.join(secretaryDir, "references", "dispatch.md");
       expect(fs.existsSync(refPath)).toBe(true);
       const ref = fs.readFileSync(refPath, "utf8");
@@ -1137,8 +1137,8 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(paidadsRef).toContain(".agents/brand/personas.md");
     });
 
-    test("ai-ready product template contains Sub-App Topology & Domain Map", () => {
-      const templatePath = path.join(REPO_ROOT, "ai-ready", "templates", ".agents", "context", "product.md");
+    test("updateagents product template contains Sub-App Topology & Domain Map", () => {
+      const templatePath = path.join(REPO_ROOT, "updateagents", "templates", ".agents", "context", "product.md");
       expect(fs.existsSync(templatePath)).toBe(true);
       const content = fs.readFileSync(templatePath, "utf8");
       expect(content).toContain("## 9. Sub-App Topology & Domain Map");

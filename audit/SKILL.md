@@ -17,15 +17,15 @@ metadata:
   category: reflection-maintenance
   priority: 18
   aliases: ["brain-audit","memory-audit","knowledge-audit"]
-  suggested_skills: ["updatedocs","updateagents","evidence-ledger","dead-letter","ai-ready","coach","periodic-retreat"]
+  suggested_skills: ["updatedocs","updateagents","evidence-ledger","dead-letter","coach","periodic-retreat"]
   hermes:
     tags: [knowledge-audit, memory-hygiene, link-integrity, docs-validation, dead-links, secret-scan, ref-integrity, remediation, routing]
-    related_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, ai-ready, coach, periodic-retreat]
-    suggested_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, ai-ready, coach, periodic-retreat]
+    related_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, coach, periodic-retreat]
+    suggested_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, coach, periodic-retreat]
     requires_tools: [bash, view_file, grep, glob, write_to_file, replace_file_content]
   openclaw:
     category: reflection-maintenance
-    suggested_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, ai-ready, coach, periodic-retreat]
+    suggested_skills: [updatedocs, updateagents, evidence-ledger, dead-letter, coach, periodic-retreat]
     primary_triggers: ["audit knowledge base","check markdown dead links","audit memory hygiene","brain audit","fix broken documentation links"]
     requires_tools: [bash, view_file, grep, glob, write_to_file, replace_file_content]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -107,7 +107,7 @@ Route findings to the skill that owns the fix. If a companion is not installed, 
 | Governance gaps in `AGENTS.md` or `.agents/standards/` | `updateagents` |
 | Unverifiable or unsourced claims discovered in documentation | `evidence-ledger` |
 | Repeated defect class suggesting a broken upstream process | `dead-letter` (retry packet) |
-| Audit surfaced repo-hygiene gaps (missing CI, templates, `.gitignore` guards) | `ai-ready` |
+| Audit surfaced repo-hygiene gaps (missing CI, templates, `.gitignore` guards) | `updateagents` (audit mode) |
 | Contradictions that are strategic decisions, not errors | `periodic-retreat` |
 | Session hygiene follow-up from audit findings | `coach` |
 
