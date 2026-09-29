@@ -12,6 +12,7 @@
  *   bun scripts/export-commands.ts --commands-only   # Export slash commands only
  */
 
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -430,4 +431,12 @@ if (import.meta.main) {
   }
 
   runSetup(opts);
+
+  if (args.includes("--onboard") || args.includes("--interview")) {
+    const isGlobal = !args.includes("--project");
+    const updateagentsScript = path.join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
+    spawnSync("bun", [updateagentsScript, "--onboard", isGlobal ? "--global" : ""].filter(Boolean), {
+      stdio: "inherit",
+    });
+  }
 }

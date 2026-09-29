@@ -26,7 +26,9 @@
 
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { basename, join, relative, resolve } from "node:path";
+import * as readline from "node:readline/promises";
 import { parseArgs } from "node:util";
 
 // Template source of truth located in updateagents/templates/
@@ -72,6 +74,9 @@ const { values, positionals } = parseArgs({
     audit: { type: "boolean", default: false },
     scaffold: { type: "boolean", short: "s", default: false },
     sanitize: { type: "boolean", default: false },
+    interview: { type: "boolean", default: false },
+    onboard: { type: "boolean", default: false },
+    global: { type: "boolean", default: false },
     "dry-run": { type: "boolean", default: false },
     "fail-under": { type: "string", default: "" },
     json: { type: "boolean", default: false },
@@ -92,6 +97,9 @@ Options:
   --audit          Audit 13 tracked assets, modern tools & synthetic artifacts (AI-readiness)
   -s, --scaffold   Scaffold missing Agent Engine assets (DOX container, AGENTS.md, .github templates, .env.example)
   --sanitize       Scan and unwrap synthetic ADE/IDE artifacts (ORCA_RICH_MD, Cursor, etc.)
+  --onboard        Run interactive identity onboarding interview (--global or --project)
+  --interview      Alias for --onboard
+  --global         Target global identity (~/.agents/identity/) instead of project context
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
   --dry-run        Simulate without writing files to disk
   --json           Output audit results in JSON format
@@ -106,15 +114,178 @@ const isForce = values.force || false;
 const isAudit = values.audit || false;
 const isScaffold = values.scaffold || false;
 const isSanitize = values.sanitize || false;
+const isOnboard = values.onboard || values.interview || false;
+const isGlobalScope = values.global || false;
 
 // Step 1: Establish Workspace Context & Boundaries
 const rawTarget = positionals[0] || ".";
 const workspaceDir = resolve(process.cwd(), rawTarget);
 
 // Guard: Prohibit traversing above current working directory unless explicitly passed
-if (!workspaceDir.startsWith(process.cwd()) && rawTarget === ".") {
+if (!workspaceDir.startsWith(process.cwd()) && rawTarget === "." && !isGlobalScope) {
   console.error("❌ Safety Violation: Cannot traverse above current working directory.");
   process.exit(1);
+}
+
+// =========================================================================
+// Interactive Onboarding Flow (Global ~/.agents/identity/ or Project Scoped)
+// =========================================================================
+export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): Promise<void> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  const prompt = async (query: string, defaultVal: string): Promise<string> => {
+    if (!process.stdin.isTTY) return defaultVal;
+    try {
+      const res = await rl.question(`${query} [${defaultVal}]: `);
+      return res.trim() ? res.trim() : defaultVal;
+    } catch {
+      return defaultVal;
+    }
+  };
+
+  console.log("\n============================================================");
+  console.log(
+    isGlobal
+      ? "🧭 GLOBAL PRINCIPAL ONBOARDING WIZARD (~/.agents/identity/)"
+      : "🧭 PROJECT-SCOPED CONTEXT ONBOARDING WIZARD (./.agents/context/)",
+  );
+  console.log("============================================================\n");
+
+  if (isGlobal) {
+    const destDir = join(homedir(), ".agents/identity");
+    if (!existsSync(destDir)) {
+      mkdirSync(destDir, { recursive: true });
+    }
+
+    console.log("Step 1: Principal Identity (user.md)");
+    const name = await prompt("  👤 Preferred Name / Handle", basename(homedir()));
+    const superpowers = await prompt(
+      "  ⚡ Core Superpowers (e.g. Full-Stack TypeScript, Systems)",
+      "Full-Stack Architecture, TypeScript, High-Performance Systems",
+    );
+    const comms = await prompt("  💬 Communication Style", "Concise, direct, evidence before claims");
+
+    console.log("\nStep 2: Assistant Persona & Council Stance (assistant.md)");
+    const assistantName = await prompt("  🤖 Primary Assistant Name", "Muse");
+    const delegation = await prompt(
+      "  🏛️ Delegation Stance",
+      "Proactive execution with independent verification (Council Leads: Sol, Jasper, Crew, Nexus)",
+    );
+
+    console.log("\nStep 3: Life & Venture Compass (compass.md)");
+    const currentState = await prompt(
+      "  📍 Current State (Active projects & bottlenecks)",
+      "Scaling core agency workflows and AI agent toolchain",
+    );
+    const trueNorth = await prompt(
+      "  🧭 True North (1-Year Vision)",
+      "Autonomous agency engineering engine with zero slop and verified deliverables",
+    );
+    const milestones = await prompt(
+      "  🎯 90-Day Trajectory (Top Milestones)",
+      "1. Production DOX engine release, 2. Universal skill suite test parity, 3. Multi-client context isolation",
+    );
+
+    console.log("\nStep 4: Machine Invariants & Toolchain (rules.md)");
+    const toolchain = await prompt(
+      "  ⚙️ Toolchain Invariants",
+      "Pinned to Bun runtime; modern CLI primacy (rg, fd, bat, eza)",
+    );
+    const security = await prompt(
+      "  🛡️ Security Baseline",
+      "Zero secret exposure (Vibeguard Protocol); pre-merge test & lint passing gates",
+    );
+
+    rl.close();
+
+    const userMd = `# 👤 Principal Identity & Working Style\n\n- **Name / Handle**: ${name}\n- **Domain Superpowers**: ${superpowers}\n- **Communication Style**: ${comms}\n`;
+    const assistantMd = `# 🏛️ Assistant Persona & Agency Council\n\n- **Default Assistant Identity**: ${assistantName}\n- **Delegation Stance**: ${delegation}\n- **Council Leads**:\n  - **Sol**: Product Architect & Full-Stack Automator\n  - **Jasper**: Creative Technologist & Growth Mastermind\n  - **Crew**: Client Delivery Specialist & Operations\n  - **Nexus**: Technical Director & Hardening Gate\n`;
+    const compassMd = `# 🧭 Life & Venture Compass (Current State ➔ True North)\n\n## 1. Current State (Coordinates)\n${currentState}\n\n## 2. True North (1-Year Vision)\n${trueNorth}\n\n## 3. 90-Day Trajectory (Core Milestones)\n${milestones}\n\n## 4. Operating Values\n- **Evidence Before Claims**: Work is complete only after oracle verification.\n- **Zero Slop**: Ruthless clarity, no generic filler, no unmaintained dependencies.\n- **Additive & Safe**: Never clobber working systems or client files.\n`;
+    const rulesMd = `# 🛡️ Global Machine Invariants & Toolchain Standards\n\n- **Toolchain**: ${toolchain}\n- **Security**: ${security}\n- **Git Protocol**: Atomic PRs, Meaningful Git Commit Protocol\n`;
+
+    writeFileSync(join(destDir, "user.md"), userMd, "utf8");
+    writeFileSync(join(destDir, "assistant.md"), assistantMd, "utf8");
+    writeFileSync(join(destDir, "compass.md"), compassMd, "utf8");
+    writeFileSync(join(destDir, "rules.md"), rulesMd, "utf8");
+
+    console.log("\n✅ Global identity configured successfully in: ~/.agents/identity/");
+    console.log("   • user.md         (Principal identity)");
+    console.log("   • assistant.md    (Assistant stance & Council mapping)");
+    console.log("   • compass.md      (Current State ➔ True North ➔ 90-Day Milestones)");
+    console.log("   • rules.md        (Machine invariants & security rules)");
+    console.log("\nAll project workspaces will now automatically inherit these defaults!\n");
+  } else {
+    const destDir = join(targetDir, ".agents/context");
+    if (!existsSync(destDir)) {
+      mkdirSync(destDir, { recursive: true });
+    }
+
+    const prjName = basename(targetDir);
+    console.log(`Configuring project-scoped context for: ${prjName}\n`);
+
+    const choice = await prompt(
+      "Choose setup mode: [1] Inherit Global Identity, [2] Customize Project Context, [3] Do Later",
+      "1",
+    );
+    if (choice === "3") {
+      console.log("\n⏩ Project onboarding deferred. You can run 'bun updateagents.ts --onboard' anytime.");
+      rl.close();
+      return;
+    }
+
+    let problem = "Fragmented agent instructions and context rot";
+    let audience = "Developers and Agency Teams";
+    let wedge = "Progressive disclosure context & autonomous delivery";
+    let currentReality = "Initial DOX engine scaffolded and verified";
+    let milestones = "1. MVP stabilization, 2. Test coverage gate, 3. Production release";
+
+    if (choice === "2") {
+      problem = await prompt("  🎯 Core Problem Solved", problem);
+      audience = await prompt("  👥 Target Audience / ICP", audience);
+      wedge = await prompt("  ⚡ Defensible Wedge / Value Proposition", wedge);
+      currentReality = await prompt("  📍 Current Shipped Reality", currentReality);
+      milestones = await prompt("  🏁 30-90 Day Target Milestones", milestones);
+    }
+    rl.close();
+
+    const productPath = join(destDir, "product.md");
+    if (existsSync(productPath)) {
+      let content = readFileSync(productPath, "utf8");
+      content = content
+        .replace(/\{\{PROJECT_NAME\}\}/g, prjName)
+        .replace(/\{\{PROBLEM_SOLVED\}\}/g, problem)
+        .replace(/\{\{TARGET_AUDIENCE\}\}/g, audience)
+        .replace(/\{\{VALUE_PROPOSITION\}\}/g, wedge);
+      writeFileSync(productPath, content, "utf8");
+    }
+
+    const currentPath = join(destDir, "current.md");
+    if (existsSync(currentPath)) {
+      let content = readFileSync(currentPath, "utf8");
+      content = content.replace(/\[High-level summary of active, verified functionality.*?\]/g, currentReality);
+      writeFileSync(currentPath, content, "utf8");
+    }
+
+    const roadmapPath = join(destDir, "roadmap.md");
+    if (existsSync(roadmapPath)) {
+      let content = readFileSync(roadmapPath, "utf8");
+      content += `\n\n## 🎯 Target Milestones (From Onboarding)\n${milestones}\n`;
+      writeFileSync(roadmapPath, content, "utf8");
+    }
+
+    console.log(`\n✅ Project context configured in: ${destDir}`);
+    console.log("   • product.md      (Project vision, ICP & wedge)");
+    console.log("   • current.md      (Shipped reality)");
+    console.log("   • roadmap.md      (Target milestones)\n");
+  }
+}
+
+if (isOnboard) {
+  await runOnboardingFlow(isGlobalScope, workspaceDir);
+  process.exit(0);
 }
 
 // HARD BOUNDARY ASSERTION
@@ -800,6 +971,16 @@ if (!hasAnyAgentFiles) {
   console.log(
     `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"} (standards: ${hasStandards ? "Yes" : "No"}, context: ${hasContext ? "Yes" : "No"})`,
   );
+}
+
+const globalIdentityDir = join(homedir(), ".agents/identity");
+const hasGlobalIdentity = existsSync(join(globalIdentityDir, "user.md"));
+if (!hasGlobalIdentity) {
+  console.log(
+    "  💡 Notice: Global identity not detected (~/.agents/identity/). Run 'bun updateagents.ts --onboard --global' or 'secretary:onboard' in chat to configure your principal profile.",
+  );
+} else {
+  console.log("  🧭 Global identity active: ~/.agents/identity/ (Cascade inherits baseline rules)");
 }
 
 // Step 3: Inspect Project Environment

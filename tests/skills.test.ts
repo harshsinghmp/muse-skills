@@ -202,3 +202,43 @@ describe("Invocation UX & conventions", () => {
     expect(res.stdout).toContain("perfect sync");
   });
 });
+
+describe("Two-Tier Identity Onboarding, Compass Convention & CREDITS.md Integrity (TDD)", () => {
+  test("root CREDITS.md exists and contains open-source attributions", () => {
+    const creditsPath = path.join(REPO_ROOT, "CREDITS.md");
+    expect(fs.existsSync(creditsPath)).toBe(true);
+    const content = fs.readFileSync(creditsPath, "utf8");
+    expect(content).toContain("Daniel Miessler");
+    expect(content).toContain("Refactoring UI");
+    expect(content).toContain("Linus Torvalds");
+    expect(content).toContain("Astro");
+    expect(content).toContain("UnoCSS");
+    expect(content).toContain("Bun");
+    expect(content).toContain("Biome");
+  });
+
+  test("updateagents AGENTS.md template encodes Two-Tier Identity Cascade and compass.md", () => {
+    const templatePath = path.join(REPO_ROOT, "skills/core-engine/updateagents/templates/AGENTS.md");
+    const content = fs.readFileSync(templatePath, "utf8");
+    expect(content).toContain("Two-Tier Identity & Context Resolution Cascade");
+    expect(content).toContain("~/.agents/identity/");
+    expect(content).toContain("compass.md");
+  });
+
+  test("updateagents and secretary onboard references exist", () => {
+    const updateagentsOnboard = path.join(REPO_ROOT, "skills/core-engine/updateagents/references/onboard.md");
+    const secretaryOnboard = path.join(REPO_ROOT, "skills/context-orchestration/secretary/references/onboard.md");
+    expect(fs.existsSync(updateagentsOnboard)).toBe(true);
+    expect(fs.existsSync(secretaryOnboard)).toBe(true);
+  });
+
+  test("updateagents CLI supports --onboard and --global flags", () => {
+    const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("--onboard");
+    expect(res.stdout).toContain("--global");
+  });
+});

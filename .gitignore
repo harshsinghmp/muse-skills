@@ -23,7 +23,8 @@ build/
 GEMINI.md
 .codex/
 /.agents/
-!ai-ready/templates/.agents/
+!skills/core-engine/updateagents/templates/.agents/
+!updateagents/templates/.agents/
 .codegraph/
 .crush/
 .omo/
