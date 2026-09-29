@@ -4,11 +4,11 @@
 #   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 #
 # Flags (for non-interactive / CI automation):
-#   --all               Install skills, slash commands, and 'museskills' CLI (default)
+#   --all               Install all 47 skills & native slash commands (default)
 #   --skills-only       Install 47 skills only
 #   --commands-only     Export slash commands only
-#   --cli-only          Install 'museskills' terminal CLI only
 #   --project           Target current project (./.agents/skills) instead of global (~/.agents/skills)
+#   --global            Target global (~/.agents/skills)
 #   --non-interactive   Skip prompts and use defaults
 
 set -euo pipefail
@@ -37,7 +37,7 @@ else
   exit 1
 fi
 
-# ─── 2. Interactive Input Helper (Reads /dev/tty even when piped via curl) ───
+# ─── 2. Interactive Input Helper (Reads /dev/tty even across curl pipes) ────
 read_input() {
   local prompt="$1"
   local default_val="$2"
@@ -69,7 +69,6 @@ for arg in "$@"; do
     --all) MODE="all" ;;
     --skills-only) MODE="skills" ;;
     --commands-only) MODE="commands" ;;
-    --cli-only) MODE="cli" ;;
     --project) TARGET="project" ;;
     --global) TARGET="global" ;;
     --non-interactive|-y) IS_INTERACTIVE=false ;;
@@ -78,27 +77,26 @@ done
 
 if [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
   echo -e "\n${BOLD}Select installation mode:${RESET}"
-  echo -e "  ${GREEN}1) Everything [Recommended]${RESET}"
-  echo "     → Installs all 47 Skills + Native Slash Commands + 'museskills' CLI"
+  echo -e "  ${GREEN}1) Everything (Skills + Native Slash Commands) [Recommended]${RESET}"
+  echo "     → Installs all 47 Skills + Native Slash Commands for detected IDEs"
+  echo "     → 100% agent & IDE native (zero PATH pollution, zero binaries)"
   echo "  2) All 47 Skills only"
-  echo "  3) Native Slash Commands only (for detected IDEs)"
-  echo "  4) 'museskills' Terminal CLI only"
-  echo "  5) Custom selection"
+  echo "     → Install skills to ~/.agents/skills/ (or project) for conversational use"
+  echo "  3) Native Slash Commands only"
+  echo "     → Export native slash commands for detected agent harnesses"
   echo ""
 
-  read_input "Choose an option [1-5] (default: 1): " "1" CHOICE
+  read_input "Choose an option [1-3] (default: 1): " "1" CHOICE
 
   case "$CHOICE" in
     1|"") MODE="all" ;;
     2) MODE="skills" ;;
     3) MODE="commands" ;;
-    4) MODE="cli" ;;
-    5) MODE="custom" ;;
     *) echo "Invalid option, defaulting to Everything."; MODE="all" ;;
   esac
 
   # Target directory prompt if installing skills
-  if [ "$MODE" = "all" ] || [ "$MODE" = "skills" ] || [ "$MODE" = "custom" ]; then
+  if [ "$MODE" = "all" ] || [ "$MODE" = "skills" ]; then
     echo -e "\n${BOLD}Where should skills be installed?${RESET}"
     echo -e "  ${GREEN}1) Global (~/.agents/skills)${RESET} — Available across all projects on your machine"
     echo "  2) Local project (./.agents/skills) — Scoped only to current working directory"
@@ -129,8 +127,6 @@ if [ "$MODE" = "skills" ]; then
   EXPORT_ARGS+=("--skills-only")
 elif [ "$MODE" = "commands" ]; then
   EXPORT_ARGS+=("--commands-only")
-elif [ "$MODE" = "cli" ]; then
-  EXPORT_ARGS+=("--cli-only")
 fi
 
 if [ "$TARGET" = "project" ]; then
@@ -151,5 +147,5 @@ else
 fi
 
 echo -e "\n${GREEN}${BOLD}🎉 Installation complete!${RESET}"
-echo -e "👉 Universal CLI runner: ${BOLD}museskills${RESET} (linked to ~/.local/bin/museskills)"
-echo -e "👉 Test anytime with:    ${BOLD}museskills --help${RESET} or ${BOLD}museskills crm onboard${RESET}"
+echo -e "👉 Your agent harnesses (OpenCode, Antigravity, Cursor, Windsurf) are ready."
+echo -e "👉 Start typing '/' in your agent to trigger any of the 47 departments!"
