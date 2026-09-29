@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented in this file.
 
+## [6.1.1] - 2026-09-29
+
+### Added
+
+- **Autonomous Secretary Protocol Auto-Wiring (`updateagents`)**:
+  - Enforced that `updateagents` automatically verifies and wires the canonical Secretary Protocol router (`secretary:dispatch`) into `AGENTS.md` across all runs: Day-0 scaffolding (`--scaffold`), Day-1 legacy retrofit, and Day-N context synchronization.
+  - Guarantees that any agent session automatically triggers `secretary:dispatch` on first run to orchestrate tasks across all 46 canonical Muse departments under the designated Council Lead (**Sol**, **Jasper**, **Crew**, **Nexus**).
+  - Updated master `updateagents/templates/AGENTS.md` with the Secretary router block.
+  - Adjusted Asset 1 audit line ceiling in `updateagents/scripts/updateagents.ts` and `updateagents/references/twelve-asset-matrix.md` to `<85 lines` to comfortably accommodate the Operating Constitution, turn invariants, and Secretary router.
+  - Synchronized internal project context files (`current.md`, `product.md`, `architecture.md`, `roadmap.md`) to full 46-skill parity.
+
 ## [6.1.0] - 2026-09-29
 
 ### Changed

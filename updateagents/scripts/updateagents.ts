@@ -34,7 +34,36 @@ const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 
 /** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
-const AGENTS_MD_MAX_LINES = 50;
+const AGENTS_MD_MAX_LINES = 85;
+
+export const SECRETARY_ROUTER_BLOCK = `<!-- muse-secretary-router:start -->
+## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
+- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **\`secretary:dispatch\`** (\`view_file ~/.agents/skills/secretary/references/dispatch.md\` or \`.agents/skills/secretary/references/dispatch.md\`).
+- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching \`references/<mode>.md\` before writing code.
+- **Verification Gate**: All work must pass the pre-merge contract (\`bun test\`, lint, zero secret exposure) before claiming completion.
+<!-- muse-secretary-router:end -->`;
+
+export function ensureSecretaryRouter(content: string): { updatedContent: string; modified: boolean } {
+  const routerStart = "<!-- muse-secretary-router:start -->";
+  const routerEnd = "<!-- muse-secretary-router:end -->";
+
+  if (content.includes(routerStart) && content.includes(routerEnd)) {
+    const startIndex = content.indexOf(routerStart);
+    const endIndex = content.indexOf(routerEnd) + routerEnd.length;
+    const existingBlock = content.substring(startIndex, endIndex);
+    if (existingBlock.trim() === SECRETARY_ROUTER_BLOCK.trim()) {
+      return { updatedContent: content, modified: false };
+    }
+    const updatedContent = content.substring(0, startIndex) + SECRETARY_ROUTER_BLOCK + content.substring(endIndex);
+    return { updatedContent, modified: true };
+  }
+
+  const separator = content.endsWith("\n\n") ? "" : content.endsWith("\n") ? "\n" : "\n\n";
+  return {
+    updatedContent: content + separator + SECRETARY_ROUTER_BLOCK + "\n",
+    modified: true,
+  };
+}
 
 // CLI Flags
 const { values, positionals } = parseArgs({
@@ -470,10 +499,25 @@ export function scaffoldAgentEngine(
   assertNotMemory(rootAgents);
   const srcAgents = join(TEMPLATES_DIR, "AGENTS.md");
   if (!existsSync(rootAgents) || force) {
-    if (!dry && existsSync(srcAgents)) cpSync(srcAgents, rootAgents);
+    if (!dry && existsSync(srcAgents)) {
+      const templateContent = readFileSync(srcAgents, "utf8");
+      const { updatedContent } = ensureSecretaryRouter(templateContent);
+      writeFileSync(rootAgents, updatedContent, "utf8");
+    }
     created.push("AGENTS.md");
   } else {
-    skipped.push("AGENTS.md");
+    if (!dry) {
+      const existing = readFileSync(rootAgents, "utf8");
+      const { updatedContent, modified } = ensureSecretaryRouter(existing);
+      if (modified) {
+        writeFileSync(rootAgents, updatedContent, "utf8");
+        created.push("AGENTS.md (Secretary Router auto-wired)");
+      } else {
+        skipped.push("AGENTS.md");
+      }
+    } else {
+      skipped.push("AGENTS.md");
+    }
   }
 
   // 5b. Deploy .mcp.json tool config if missing (asset 3)
@@ -904,9 +948,11 @@ if (!hasAnyAgentFiles) {
   assertNotMemory(rootAgentsPath);
   const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
   if (existsSync(railTemplate) && !isDryRun) {
-    cpSync(railTemplate, rootAgentsPath);
-    report.scaffolded.push("AGENTS.md");
-    console.log("  ✅ Deployed lean root AGENTS.md DOX rail");
+    const templateContent = readFileSync(railTemplate, "utf8");
+    const { updatedContent } = ensureSecretaryRouter(templateContent);
+    writeFileSync(rootAgentsPath, updatedContent, "utf8");
+    report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
+    console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
   }
 }
 
@@ -1030,21 +1076,33 @@ if (hasAnyAgentFiles) {
       // Deploy lean router
       const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
       if (existsSync(railTemplate)) {
-        cpSync(railTemplate, rootAgentsPath);
-        report.scaffolded.push("AGENTS.md (Lean DOX Rail)");
-        console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<50 lines)");
+        const templateContent = readFileSync(railTemplate, "utf8");
+        const { updatedContent } = ensureSecretaryRouter(templateContent);
+        writeFileSync(rootAgentsPath, updatedContent, "utf8");
+        report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
+        console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
       }
     } else {
-      report.preserved.push("AGENTS.md");
-      console.log("  ✅ Preserved existing AGENTS.md (managed DOX rail / curated content)");
+      const existing = readFileSync(rootAgentsPath, "utf8");
+      const { updatedContent, modified } = ensureSecretaryRouter(existing);
+      if (modified && !isDryRun) {
+        writeFileSync(rootAgentsPath, updatedContent, "utf8");
+        console.log("  🏛️ Secretary Protocol: Auto-wired into AGENTS.md for first-run autonomous dispatch");
+        report.scaffolded.push("AGENTS.md (Secretary Router Auto-Wired)");
+      } else {
+        report.preserved.push("AGENTS.md");
+        console.log("  ✅ Preserved existing AGENTS.md (managed DOX rail / curated content)");
+      }
     }
   } else {
     // Deploy lean router if missing
     const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
     if (existsSync(railTemplate) && !isDryRun) {
-      cpSync(railTemplate, rootAgentsPath);
-      report.scaffolded.push("AGENTS.md (Lean DOX Rail)");
-      console.log("  ✅ Deployed lean root AGENTS.md DOX rail");
+      const templateContent = readFileSync(railTemplate, "utf8");
+      const { updatedContent } = ensureSecretaryRouter(templateContent);
+      writeFileSync(rootAgentsPath, updatedContent, "utf8");
+      report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
+      console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
     }
   }
 
