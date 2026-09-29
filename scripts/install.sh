@@ -178,11 +178,11 @@ if [ "$ONBOARD_FLAG" = true ]; then
   DO_ONBOARD=true
 elif [ "$IS_INTERACTIVE" = true ] && [ ! -f "${HOME}/.agents/identity/user.md" ] && ([ -t 0 ] || [ -e /dev/tty ]); then
   echo ""
-  echo -e "${BOLD}${BLUE}🧭 Global Agent Identity & Compass Onboarding (~/.agents/identity/)${RESET}"
+  echo -e "${BOLD}${BLUE}🧭 Global Agent Identity & Vision Onboarding (~/.agents/identity/)${RESET}"
   echo "----------------------------------------------------------------"
-  echo "Would you like to initialize your Global Agent Identity & Compass?"
+  echo "Would you like to initialize your Global Agent Identity & Strategic Vision?"
   echo "  • Establishes principal superpowers, communication style, and assistant stance"
-  echo "  • Calibrates your Compass (Current State ➔ True North ➔ 90-Day Milestones)"
+  echo "  • Calibrates your Strategic Vision (Current State ➔ Target Vision ➔ 90-Day Milestones)"
   echo "  • Inherited by all projects automatically via Progressive Disclosure DOX"
   echo ""
   read_input "Run global identity onboarding now? [y/N] (default: n): " "n" ONBOARD_PROMPT

@@ -203,7 +203,7 @@ describe("Invocation UX & conventions", () => {
   });
 });
 
-describe("Two-Tier Identity Onboarding, Compass Convention & CREDITS.md Integrity (TDD)", () => {
+describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
   test("root CREDITS.md exists and contains open-source attributions", () => {
     const creditsPath = path.join(REPO_ROOT, "CREDITS.md");
     expect(fs.existsSync(creditsPath)).toBe(true);
@@ -217,12 +217,12 @@ describe("Two-Tier Identity Onboarding, Compass Convention & CREDITS.md Integrit
     expect(content).toContain("Biome");
   });
 
-  test("updateagents AGENTS.md template encodes Two-Tier Identity Cascade and compass.md", () => {
+  test("updateagents AGENTS.md template encodes Two-Tier Identity Cascade and vision.md", () => {
     const templatePath = path.join(REPO_ROOT, "skills/core-engine/updateagents/templates/AGENTS.md");
     const content = fs.readFileSync(templatePath, "utf8");
     expect(content).toContain("Two-Tier Identity & Context Resolution Cascade");
     expect(content).toContain("~/.agents/identity/");
-    expect(content).toContain("compass.md");
+    expect(content).toContain("vision.md");
   });
 
   test("updateagents and secretary onboard references exist", () => {

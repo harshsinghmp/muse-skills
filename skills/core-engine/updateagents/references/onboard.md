@@ -38,9 +38,9 @@ Runs when a developer first configures their agent ecosystem or executes global 
   - **Nexus**: Hardening gate, security audits, and regression testing.
 - **Autonomy Level**: Highly proactive (proceed with verified steps) vs. consultative (ask before every non-trivial step).
 
-#### Q3: Life & Venture Compass (`compass.md`)
-- **Current State**: Where you are today (active projects, primary business/learning bottlenecks, core focus).
-- **True North**: Your 1-year and 3-year vision of success.
+#### Q3: Strategic Vision & Trajectory (`vision.md`)
+- **Current Coordinates**: Where you are today (active projects, primary business/learning bottlenecks, core focus).
+- **Target Vision**: Your 1-year and 3-year vision of success.
 - **90-Day Trajectory**: Top 1–3 non-negotiable milestones to achieve this quarter.
 - **Operating Values**: Personal principles and non-negotiable standards (e.g. evidence before claims, zero slop, ruthless simplicity).
 
@@ -53,7 +53,7 @@ Runs when a developer first configures their agent ecosystem or executes global 
 ~/.agents/identity/
 ├── user.md                # Principal background & communication style
 ├── assistant.md           # Assistant persona & Council Lead delegation
-├── compass.md             # Current State ➔ True North ➔ 90-Day Milestones
+├── vision.md              # Current Reality ➔ Target Vision ➔ 90-Day Milestones
 └── rules.md               # Global machine invariants & security rules
 ```
 
@@ -63,18 +63,13 @@ Runs when a developer first configures their agent ecosystem or executes global 
 
 When `updateagents` runs in a new or existing repository, it evaluates if project context is initialized.
 
-### First-Run Decision Gate:
-```
-[1] Inherit Global Identity (Default & Instant)
-    ➔ Automatically inherits ~/.agents/identity/ for tone, rules, and assistant stance.
-    ➔ Seeds project context from repository facts without repeating personal questions.
-
-[2] Customize Project Context (5-minute guided interview)
-    ➔ Runs the 4 project-scoped questions below to populate ./.agents/context/*.
-
-[3] Skip / Do Later
-    ➔ Scaffolds template files with minimal placeholders and leaves run instructions.
-```
+### Silent Auto-Inheritance Protocol:
+1. **Global Identity Detected (`~/.agents/identity/`)**:
+   - **Silent Auto-Inheritance (Zero Interrogation)**: Baseline principal background, assistant persona, and global invariants are inherited automatically.
+   - **Optional Override Gate**: Asks only: *"Add project-specific overrides for this workspace? [y/N] (default: N)"*. If skipped, 0 questions are asked.
+2. **Global Identity Absent**:
+   - Logs an informative tip: *"Global identity not detected (~/.agents/identity/). Run 'updateagents --onboard --global' or 'secretary:onboard' anytime."*
+   - Operates with clean project defaults.
 
 ### Project Questionnaire:
 1. **Product Scope & ICP (`product.md`)**:

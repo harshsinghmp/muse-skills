@@ -8,7 +8,7 @@ The `onboard` mode equips the Secretary agent to lead an interactive, conversati
 
 When a user invokes `/onboard`, `secretary:onboard`, `setup identity`, or asks to configure their profile:
 1. **Determine Scope**:
-   - **Global Identity (`~/.agents/identity/`)**: Personal profile, assistant stance, compass, machine invariants.
+   - **Global Identity (`~/.agents/identity/`)**: Personal profile, assistant stance, strategic vision (`vision.md`), machine invariants.
    - **Project Context (`./.agents/context/`)**: Domain problem, ICP, current state, roadmap, project-specific stance.
 2. **Conduct the Interview Iteratively**:
    - Ask **one stage at a time** (or present grouped choices). Never dump 20 questions in a giant wall of text.
@@ -30,14 +30,14 @@ Output destination: `~/.agents/identity/user.md`
 
 Output destination: `~/.agents/identity/assistant.md`
 
-### Stage 3: The Compass (Current State ➔ True North)
-> *"Let's calibrate your compass (Current State ➔ True North):*
+### Stage 3: Strategic Vision & Trajectory (Current Reality ➔ Target Vision)
+> *"Let's calibrate your strategic vision (Current Reality ➔ Target Vision):*
 > 1. *Where are you right now? What are your active projects and biggest bottlenecks?*
-> 2. *What is your 1-year True North vision of success?*
+> 2. *What is your 1-year Target Vision of success?*
 > 3. *What are the top 1–3 non-negotiable milestones for the next 90 days?*
 > 4. *What are your core operating values (e.g. evidence before claims, ruthless simplicity)?"*
 
-Output destination: `~/.agents/identity/compass.md`
+Output destination: `~/.agents/identity/vision.md`
 
 ### Stage 4: Global Machine Rules
 > *"What are your machine-wide engineering rules? (e.g. default package manager: bun, zero secret exposure via Vibeguard, test pass required before PR)?"*
@@ -50,13 +50,12 @@ Output destination: `~/.agents/identity/rules.md`
 
 When run inside a repository:
 
-### Stage 1: First-Run Choice Gate
-Present the developer with 3 options:
-```markdown
-1. **Inherit Global Identity [Default]**: Uses your global ~/.agents/identity/ settings.
-2. **Customize Project Identity**: Run a 5-minute project-specific interview.
-3. **Do Later**: Scaffold templates with clear guidance on how to run later.
-```
+### Silent Global Inheritance Protocol
+If `~/.agents/identity/` exists on the machine:
+- **Do not ask generic setup questions**: The agent automatically grounds on the user profile, assistant stance, and global rules.
+- **Single Prompt**:
+  > *"Global identity detected (~/.agents/identity/). Inherited automatically. Would you like to add any project-specific overrides for this workspace? (e.g., custom client ICP, specific tech invariants, or press Enter to skip)"*
+- If the user skips or declines, proceed immediately with zero questions asked.
 
 ### Stage 2: Project Calibration (if customizing)
 1. **Product & ICP**: What core problem does this codebase solve, who is it for, and what is its defensible wedge? $\rightarrow$ Update `./.agents/context/product.md`.
