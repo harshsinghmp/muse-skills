@@ -16,15 +16,15 @@ metadata:
   category: core-engine
   priority: 3
   aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
-  suggested_skills: ["code-review","updatedocs","ai-ready","gauntlet-loop"]
+  suggested_skills: ["code-review","updatedocs","updateagents","gauntlet-loop"]
   hermes:
     tags: [git, github, release, pr, triage, branching, semver, workflow, devops, seo]
-    related_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
-    suggested_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
+    related_skills: [code-review, updatedocs, updateagents, gauntlet-loop]
+    suggested_skills: [code-review, updatedocs, updateagents, gauntlet-loop]
     requires_tools: [bash, run_command, view_file, write_to_file]
   openclaw:
     category: core-engine
-    suggested_skills: [code-review, updatedocs, ai-ready, gauntlet-loop]
+    suggested_skills: [code-review, updatedocs, updateagents, gauntlet-loop]
     primary_triggers: ["manage git workflow","triage issues","create PR","release project","cut release","run git","sync github seo","execute release lifecycle"]
     requires_tools: [bash, run_command, view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -146,8 +146,8 @@ Before executing any Git operations or staging commits, verify workspace reposit
 1. **Dynamic `.gitignore` Seeding**:
    ```bash
    if [ ! -f ".gitignore" ]; then
-     echo "🛡️ .gitignore missing. Seeding hardened Zero-Leakage template from ai-ready..."
-     TEMPLATE_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/ai-ready/templates/gitignore.template"
+     echo "🛡️ .gitignore missing. Seeding hardened Zero-Leakage template from updateagents..."
+     TEMPLATE_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/updateagents/templates/gitignore.template"
      if [ -f "$TEMPLATE_PATH" ]; then
        cp "$TEMPLATE_PATH" .gitignore
      else
@@ -346,7 +346,7 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
    - **Synthetic ADE/IDE Artifact Sweep**: Audit for and unwrap any synthetic ADE/IDE placeholders before release:
      ```bash
      if rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}; then
-       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun ai-ready/scripts/ai-ready.ts . --sanitize' before release."
+       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun updateagents/scripts/updateagents.ts . --sanitize' before release."
        exit 1
      fi
      ```

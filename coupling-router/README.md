@@ -71,7 +71,7 @@ bun <skill-dir>/coupling-router/scripts/worktree-lease.ts release   # delete lea
 
 | Active Skill | Co-Active Skill | Interaction | Conflict Resolution |
 | :--- | :--- | :--- | :--- |
-| **`ai-ready`** | `new-project` | Redundant | Suppress `new-project` Stage 0; `ai-ready` dominates. |
+| **`updateagents`** | `new-project` | Redundant | Suppress `new-project` Stage 0; `updateagents` dominates. |
 | **`code-review`** | Generic Refactors | Conflicting | Enforce Linus/Karpathy surgical diffs; silence broad refactor rules. |
 | **`git`** | Ad-Hoc VCS | Conflicting | Enforce strict dev-staging & Conventional Commits; suppress ad-hoc commits. |
 | **`refactor-ui`** | Generic CSS | Conflicting / Redundant | Enforce 11 UI heuristics & 5-state anti-slop; suppress decorative border clutter. |

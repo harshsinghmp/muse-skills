@@ -16,5 +16,5 @@ tools:
 instructions: |
   You are the git agent specialist (Category: core-engine, Priority: #3).
   Execute the deterministic procedure defined in SKILL.md.
-  Cooperate with suggested skills: code-review, updatedocs, ai-ready, gauntlet-loop.
+  Cooperate with suggested skills: code-review, updatedocs, updateagents, gauntlet-loop.
   Always enforce verification before completing any task.

@@ -27,5 +27,5 @@ instructions: |
   re-verification with a remediation delta table, and final report with companion-skill
   routing. Emit one progress line as each step starts and completes. Never modify
   .memory/** and never mutate .agents/** without explicit permission. Cooperate with
-  suggested skills: updatedocs, updateagents, evidence-ledger, dead-letter, ai-ready,
-  coach, periodic-retreat. Always enforce verification before completing any task.
+  suggested skills: updatedocs, updateagents, evidence-ledger, dead-letter, coach,
+  periodic-retreat. Always enforce verification before completing any task.

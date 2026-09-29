@@ -13,15 +13,15 @@ metadata:
   category: core-engine
   priority: 5
   aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-  suggested_skills: ["ai-ready","updateagents","updatedocs","git"]
+  suggested_skills: ["updateagents","updatedocs","git","code-review"]
   hermes:
     tags: [scaffolding, governance, project-os, architecture, nextjs, astro, instatic, expo, capacitor, nanostores, wordpress, dox, agent-engine, dox-engine]
-    related_skills: [ai-ready, updateagents, updatedocs, git]
-    suggested_skills: [ai-ready, updateagents, updatedocs, git]
+    related_skills: [updateagents, updatedocs, git, code-review]
+    suggested_skills: [updateagents, updatedocs, git, code-review]
     requires_tools: [bash, view_file, write_to_file]
   openclaw:
     category: core-engine
-    suggested_skills: [ai-ready, updateagents, updatedocs, git]
+    suggested_skills: [updateagents, updatedocs, git, code-review]
     primary_triggers: ["new-project","Agent Engine","DOX Engine","scaffold Project OS","initialize agent workspace"]
     requires_tools: [bash, view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -42,7 +42,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 [ 📖 Stage 5: Client Intake Brief ] ──► [ ✅ Stage 6: Closeout ]
 ```
 
-0. **Stage 0: AI-Ready Pre-Flight Gate**: Audits if root `AGENTS.md` and `.agents/` container already exist and pass `ai-ready` audit.
+0. **Stage 0: AI-Ready Pre-Flight Gate**: Audits if root `AGENTS.md` and `.agents/` container already exist and pass `updateagents` audit.
 1. **Stage 1: Purpose-First Root Prompt & Project Identity**: Initiates interactively by querying the foundational domain purpose before prompting for identity, mission, and scope.
 2. **Stage 2: Hierarchical Decision Tree**: Prunes irrelevant questions based on selected purpose across 6 branches (Static, Content, Ecommerce, WebApp, Mobile, Custom).
 3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Automatically wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
@@ -53,7 +53,7 @@ Interactive project creator and Project Operating System provisioner. Implements
 ## Audit routing
 
 new-project embeds audit at two stages:
-- **Stage 0** runs `ai-ready` — the 13-asset repository audit (see `ai-ready` skill)
+- **Stage 0** runs `updateagents --audit` — the 13-asset repository audit (see `updateagents` skill)
 - **Stage 6** runs the health check — `.agents/context/` sync verification
 
 For deeper audit of the scaffolded output, route to:

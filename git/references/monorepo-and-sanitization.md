@@ -13,8 +13,8 @@ When initializing a new repository or executing the `git` skill on a project:
 if [ ! -f ".gitignore" ]; then
   echo "🛡️ .gitignore missing. Seeding hardened Zero-Leakage template..."
   
-  # Copy from canonical ai-ready templates if available in ecosystem
-  TEMPLATE_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/ai-ready/templates/gitignore.template"
+  # Copy from canonical updateagents templates if available in ecosystem
+  TEMPLATE_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/updateagents/templates/gitignore.template"
   if [ -f "$TEMPLATE_PATH" ]; then
     cp "$TEMPLATE_PATH" .gitignore
   else
@@ -88,7 +88,7 @@ Verify that no editor metadata or rich markdown artifacts have overtaken origina
 # Audit for synthetic ADE/IDE wrappers
 rg -l "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}
 ```
-*Action*: If contaminated files are detected, unwrap them immediately via `bun ai-ready/scripts/ai-ready.ts . --sanitize`.
+*Action*: If contaminated files are detected, unwrap them immediately via `bun updateagents/scripts/updateagents.ts . --sanitize`.
 
 ### 3. Private Repo Visibility & License Sanity Check
 Before tagging and publishing release notes:

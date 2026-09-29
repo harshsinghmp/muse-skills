@@ -19,7 +19,7 @@ As repositories evolve, documentation and memory banks decay:
 
 - **🔁 Severity-Routed Remediation**: every finding gets an action class — `AUTO-REPAIR` (with logged evidence), `PROPOSE-DIFF` (gated on your approval), `REPORT-ONLY`, or `DEFER-ROUTE` to a companion skill.
 - **📶 Per-Step Progress Reporting**: one status line per pipeline step; Deep mode persists a progress log to `.agents/artifacts/` so long audits survive context loss.
-- **🤝 Companion-Skill Routing**: unresolved findings are routed to the skill that owns the fix (`updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`, `ai-ready`), with fallbacks when a companion is absent.
+- **🤝 Companion-Skill Routing**: unresolved findings are routed to the skill that owns the fix (`updatedocs`, `updateagents`, `evidence-ledger`, `dead-letter`), with fallbacks when a companion is absent.
 - **✅ Re-Verification & Certification**: failed checks re-run and produce a remediation delta table; hygiene is certified only when zero critical blockers remain.
 
 ---

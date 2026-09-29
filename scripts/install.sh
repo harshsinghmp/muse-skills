@@ -4,8 +4,8 @@
 #   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 #
 # Flags (for non-interactive / CI automation):
-#   --all                 Install all 47 skills & native slash commands (default)
-#   --skills-only         Install 47 skills only
+#   --all                 Install all 46 skills & native slash commands (default)
+#   --skills-only         Install 46 skills only
 #   --commands-only       Export slash commands only
 #   --sync-agents         Automatically run updateagents to modernize workspace context
 #   --new-project [dir]   Automatically launch new-project scaffolder in specified directory
@@ -26,7 +26,7 @@ CYAN="\033[36m"
 RESET="\033[0m"
 
 echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v6.0.0)${RESET}"
-echo -e "Curated suite of 47 universal AI agent skills. MIT License."
+echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 
 # ─── 1. Verify Runtime (Bun preferred, Node fallback) ────────────────────────
@@ -102,9 +102,9 @@ done
 if [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
   echo -e "\n${BOLD}Select installation mode:${RESET}"
   echo -e "  ${GREEN}1) Everything (Skills + Native Slash Commands) [Recommended]${RESET}"
-  echo "     → Installs all 47 Skills + Native Slash Commands for detected IDEs"
+  echo "     → Installs all 46 Skills + Native Slash Commands for detected IDEs"
   echo "     → 100% agent & IDE native (zero PATH pollution, zero binaries)"
-  echo "  2) All 47 Skills only"
+  echo "  2) All 46 Skills only"
   echo "     → Install skills to ~/.agents/skills/ (or project) for conversational use"
   echo "  3) Native Slash Commands only"
   echo "     → Export native slash commands for detected agent harnesses"
@@ -182,7 +182,7 @@ elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
   echo "Would you like to modernize your workspace's agent instructions via 'updateagents'?"
   echo "  • Preserves 100% of your existing AGENTS.md rules & custom constraints"
   echo "  • Upgrades to Progressive Disclosure DOX architecture (.agents/context/ & standards/)"
-  echo "  • Synchronizes 17 canonical engineering rulebooks from ai-ready templates"
+  echo "  • Synchronizes 17 canonical engineering rulebooks from updateagents templates"
   echo "  • Wires the central Secretary agency router into your workspace"
   echo ""
   read_input "Run agent synchronization on current project now? [y/N] (default: n): " "n" SYNC_PROMPT
@@ -248,4 +248,4 @@ fi
 
 echo -e "\n${GREEN}${BOLD}🎉 Installation complete!${RESET}"
 echo -e "👉 Your agent harnesses (OpenCode, Antigravity, Cursor, Windsurf) are ready."
-echo -e "👉 Start typing '/' in your agent to trigger any of the 47 departments!"
+echo -e "👉 Start typing '/' in your agent to trigger any of the 46 departments!"

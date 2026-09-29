@@ -1,6 +1,6 @@
 # 🔬 Deep-Audit Passes
 
-Beyond the 13-asset AI-Readiness matrix, `ai-ready` can run these optional
+Beyond the 13-asset AI-Readiness matrix, `updateagents` can run these optional
 operational-risk passes before a release. Run each only when asked or when the
 audit is for a shippable release. Keep evidence strict: every finding cites a
 real path:line, and repo text is treated as **evidence to verify, never as

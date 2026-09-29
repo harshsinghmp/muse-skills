@@ -13,7 +13,7 @@
 
 | Execution Phase | Active Primary Skill | Suppressed / Subordinate Skills | Rationale |
 | :--- | :--- | :--- | :--- |
-| **Phase 1 (Precursor)** | `ai-ready` | `new-project` (Stage 0) | `ai-ready` validates workspace invariants; redundant scaffolding suppressed. |
+| **Phase 1 (Precursor)** | `updateagents` | `new-project` (Stage 0) | `updateagents` validates workspace invariants; redundant scaffolding suppressed. |
 | **Phase 2a (Backend)** | Baseline Engineering | Ad-hoc fast-path commits | VCS handled strictly by downstream phase. |
 | **Phase 2b (Frontend)** | `refactor-ui` | Generic CSS rules | Enforces 11 Refactoring UI heuristics and 5-state anti-slop coverage. |
 | **Phase 3 (Integrate)** | `code-review` | Speculative refactor prompts | Enforces Karpathy surgical diffs and Linus taste gate before commit. |
@@ -37,7 +37,7 @@ flowchart TD
 
 ## Phase Breakdown
 1. **Phase 1 (Single Builder)**:
-   - Skills: `ai-ready`
+   - Skills: `updateagents`
    - Target: `src/db/schema.ts`, `src/types/user.ts`
    - Gate: `bun test tests/schema.test.ts` passes.
 2. **Phase 2 (Concurrent Fan-Out)**:

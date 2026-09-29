@@ -41,10 +41,10 @@ External dogfooding specifically exercises three cross-boundary capabilities:
 
 Execute these 8 chronological steps on the target repository. A step **passes** only when the output artifact exists, complies with stated line/token budgets, and required zero manual correction.
 
-### Step 1: Baseline AI-Readiness Audit (`ai-ready`) — ~3 min
+### Step 1: Baseline AI-Readiness Audit (`updateagents --audit`) — ~3 min
 
 ```bash
-bun <skills-dir>/ai-ready/scripts/ai-ready.ts --audit
+bun <skills-dir>/updateagents/scripts/updateagents.ts --audit
 ```
 
 - **Expect**: An objective compliance score (typically <13/13 on foreign client repos) and a gap analysis.

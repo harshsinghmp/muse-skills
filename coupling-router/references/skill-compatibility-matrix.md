@@ -22,8 +22,8 @@ Below is the pairwise compatibility matrix across standard agent skills:
 
 | Active Skill Candidate | Co-Active Candidate | Interaction | Conflict / Overlap Description | Deterministic Resolution |
 | :--- | :--- | :--- | :--- | :--- |
-| **`ai-ready`** | `new-project` | Redundant | Both attempt repository scaffolding and root context creation. | **Suppress `new-project` Stage 0**: `ai-ready` takes precedence as the single source of repository audit and readiness. |
-| **`ai-ready`** | `updateagents` | Synergistic | `ai-ready` verifies baseline readiness; `updateagents` synchronizes ongoing cognitive memory. | **Sequential**: Run `ai-ready` audit first; invoke `updateagents` only if memory drift is detected. |
+| **`updateagents`** | `new-project` | Redundant | Both attempt repository scaffolding and root context creation. | **Suppress `new-project` Stage 0**: `updateagents` takes precedence as the single source of repository audit and readiness. |
+| **`updateagents`** | `updateagents` | Synergistic | `updateagents` verifies baseline readiness; `updateagents` synchronizes ongoing cognitive memory. | **Sequential**: Run `updateagents` audit first; invoke `updateagents` only if memory drift is detected. |
 | **`code-review`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
 | **`git`** | Ad-Hoc VCS Prompts | Conflicting | Ad-hoc git prompts may attempt direct commits to `master` or unstructured messages. `git` enforces strict dev-branch staging and Conventional Commits. | **Suppress Ad-Hoc**: Route all VCS actions strictly through `git` lifecycle. Silence conflicting direct-commit instructions. |
 | **`refactor-ui`** | Generic CSS / Styling Skills | Conflicting / Redundant | Generic UI prompts introduce decorative border clutter and arbitrary hex colors, violating Refactoring UI heuristics. | **Suppress Generic UI**: Enforce `refactor-ui` 11 heuristics and 5-state anti-slop coverage. |
@@ -52,7 +52,7 @@ When conflicting instructions arise, skills must yield according to the followin
                             ▼
 ┌────────────────────────────────────────────────────────┐
 │ Tier 3: Architecture & Context Engines                 │
-│ (coupling-router, ai-ready, agent-engine)              │
+│ (coupling-router, updateagents, agent-engine)          │
 └───────────────────────────┬────────────────────────────┘
                             │ Dominates task routing & scaffolding
                             ▼
@@ -90,7 +90,7 @@ Before an orchestrator spawns subagents or begins a complex task, it applies the
    Record the resolved skill configuration in `ROUTING_PLAN.md`:
    ```markdown
    ### Active Skill Configuration (MVSS)
-   - **Task Phase 1**: `ai-ready` (Primary) [Suppressed: `new-project`]
+   - **Task Phase 1**: `updateagents` (Primary) [Suppressed: `new-project`]
    - **Task Phase 2**: `refactor-ui` (Primary UI) [Suppressed: generic styling]
    - **Task Phase 3**: `code-review` (Quality Gate)
    - **Task Phase 4**: `git` (VCS Lifecycle)
