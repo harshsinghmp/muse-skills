@@ -14,7 +14,7 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 - **🔒 HARD BOUNDARY — MuseMemory (`.memory/**`)**: The `.memory/` directory is exclusively owned and managed by MuseMemory. `updateagents` **never** reads, writes, modifies, deletes, or validates `.memory/**`.
 - **🌐 Workspace-Scoped**: Operates strictly within the current working directory. Never traverses above the workspace.
 - **🛠️ Smart DOX Retrofit**: If a workspace lacks the Progressive Disclosure DOX architecture, `updateagents` safely provisions the 9-folder `.agents/` container, migrates existing facts into `.agents/context/`, and archives legacy instruction files.
-- **🔄 Single Source of Truth**: Houses the master DOX templates (`updateagents/templates/`), synchronizing all 17 modular rulebooks (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and brand baselines with **zero duplicate templates**.
+- **🔄 Single Source of Truth**: Houses the master DOX templates (`updateagents/templates/`), synchronizing all 19 modular rulebooks (including modern WordPress, fintech gateways, boundary governance, client reporting, motion diagrams, negative anti-patterns, and visual inspection) and brand baselines with **zero duplicate templates**.
 - **📊 13-Asset AI Readiness Audit**: Evaluates repo maturity with Stage-0 Fast-Skip and CI gating (`--fail-under N`).
 - **🏛️ Autonomous Secretary Dispatch**: Automatically ensures that the root `AGENTS.md` carries the Secretary Protocol router (`secretary:dispatch`), guaranteeing autonomous triage across all 46 departments on first run or session start.
 - **🛡️ Synthetic Artifact Sanitization**: Strips proprietary IDE wrappers (`[[ORCA_RICH_MD]]`, Cursor markers) automatically via `--sanitize`.
@@ -86,7 +86,7 @@ Updated Agent Context
 6. **Determine Targets**: Targets smallest correct scope.
 7. **Preserve Existing Knowledge**: Protects intentional human notes and ADRs.
 8. **DOX Scaffolding & Context Placement**: Checks existing agent files, scaffolds if absent, and merges custom content into context files without clobbering.
-9. **Standards Synchronization**: Syncs all 17 rulebooks from `updateagents/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and displays the Invariant Atom Table telemetry.
+9. **Standards Synchronization**: Syncs all 19 rulebooks from `updateagents/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, motion diagrams, negative anti-patterns, and visual inspection) and displays the Invariant Atom Table telemetry.
 10. **Capture Commands**: Verifies commands against actual package scripts.
 11. **Capture Architecture**: Documents system boundaries and data flows.
 12. **Capture Sources of Truth**: Explicitly records authoritative files.
