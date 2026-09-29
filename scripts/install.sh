@@ -68,6 +68,7 @@ MODE="all"
 TARGET="global"
 IS_INTERACTIVE=true
 SYNC_FLAG=false
+ONBOARD_FLAG=false
 DO_NEW_PROJECT_FLAG=false
 NEW_PROJECT_ARG=""
 
@@ -77,6 +78,7 @@ while [ $# -gt 0 ]; do
     --skills-only) MODE="skills"; shift ;;
     --commands-only) MODE="commands"; shift ;;
     --sync-agents) SYNC_FLAG=true; shift ;;
+    --onboard) ONBOARD_FLAG=true; shift ;;
     --new-project)
       DO_NEW_PROJECT_FLAG=true
       if [ $# -gt 1 ] && [[ "$2" != --* ]]; then
@@ -168,6 +170,36 @@ else
   npx ts-node scripts/export-commands.ts "${EXPORT_ARGS[@]}" 2>/dev/null || node -e "
     console.log('⚠️ Running in Node.js fallback mode.');
   "
+fi
+
+# ─── 5.5 Optional Global Identity Onboarding ─────────────────────────────────
+DO_ONBOARD=false
+if [ "$ONBOARD_FLAG" = true ]; then
+  DO_ONBOARD=true
+elif [ "$IS_INTERACTIVE" = true ] && [ ! -f "${HOME}/.agents/identity/user.md" ] && ([ -t 0 ] || [ -e /dev/tty ]); then
+  echo ""
+  echo -e "${BOLD}${BLUE}🧭 Global Agent Identity & Compass Onboarding (~/.agents/identity/)${RESET}"
+  echo "----------------------------------------------------------------"
+  echo "Would you like to initialize your Global Agent Identity & Compass?"
+  echo "  • Establishes principal superpowers, communication style, and assistant stance"
+  echo "  • Calibrates your Compass (Current State ➔ True North ➔ 90-Day Milestones)"
+  echo "  • Inherited by all projects automatically via Progressive Disclosure DOX"
+  echo ""
+  read_input "Run global identity onboarding now? [y/N] (default: n): " "n" ONBOARD_PROMPT
+
+  case "$ONBOARD_PROMPT" in
+    [yY]|[yY][eE][sS]) DO_ONBOARD=true ;;
+    *) DO_ONBOARD=false ;;
+  esac
+fi
+
+if [ "$DO_ONBOARD" = true ]; then
+  echo -e "\n⚡ ${CYAN}Launching Global Identity Onboarding Wizard...${RESET}\n"
+  if [ "${RUNTIME}" = "bun" ]; then
+    bun "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" --onboard --global || true
+  else
+    npx ts-node "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" --onboard --global 2>/dev/null || true
+  fi
 fi
 
 # ─── 6. Optional Agent Context Modernization (updateagents) ──────────────────

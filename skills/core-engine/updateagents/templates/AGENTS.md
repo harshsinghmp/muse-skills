@@ -27,6 +27,18 @@
 
 ---
 
+## 🧭 Two-Tier Identity & Context Resolution Cascade
+
+Agent execution strictly resolves context through a two-tier cascade:
+1. **Local Project Scope (`./.agents/context/` & optional `./.agents/identity/`)**:
+   - Primary authority for domain problem, ICP, architecture, tech stack invariants, and sprint milestones (`product.md`, `architecture.md`, `current.md`, `roadmap.md`).
+   - Closer docs always govern local execution details.
+2. **Global Principal Baseline (`~/.agents/identity/`)**:
+   - Fallback authority for principal profile (`user.md`), default Council Lead delegation (`assistant.md`), strategic life/venture trajectory (`compass.md`), and global machine invariants (`rules.md`).
+   - If local project context does not specify an override, inherit global preferences seamlessly without duplicating global goals into the project tree.
+
+---
+
 ## 📚 Standards & Detailed Protocols (Progressive Disclosure)
 Load these relative modules on-demand when relevant to your active task:
 

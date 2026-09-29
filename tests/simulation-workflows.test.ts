@@ -1185,7 +1185,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("session-router");
       expect(content).toContain("| **dispatch** |");
       expect(content).toContain("references/dispatch.md");
-      expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|audit]"');
+      expect(content).toContain('argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|onboard|audit]"');
     });
 
     test("secretary references/dispatch.md comprehensively catalogs all 46 departments and Council leads", () => {
