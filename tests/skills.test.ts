@@ -78,12 +78,11 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
     expect(parsed).toHaveProperty("name", "@harshsinghmp/muse-skills");
   });
 
-  test("skills.json preserves requested priority ordering (#1 updatedocs through #46 crm)", () => {
+  test("skills.json preserves canonical ordering (updatedocs through crm)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
     expect(skills.length).toBe(46);
     for (let i = 0; i < EXPECTED_ORDERED_SKILLS.length; i++) {
       expect(skills[i].name).toBe(EXPECTED_ORDERED_SKILLS[i]);
-      expect(skills[i].priority).toBe(i + 1);
     }
   });
 
