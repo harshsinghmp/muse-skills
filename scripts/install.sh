@@ -4,13 +4,14 @@
 #   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 #
 # Flags (for non-interactive / CI automation):
-#   --all               Install all 47 skills & native slash commands (default)
-#   --skills-only       Install 47 skills only
-#   --commands-only     Export slash commands only
-#   --sync-agents       Automatically run updateagents to modernize workspace context
-#   --project           Target current project (./.agents/skills) instead of global (~/.agents/skills)
-#   --global            Target global (~/.agents/skills)
-#   --non-interactive   Skip prompts and use defaults
+#   --all                 Install all 47 skills & native slash commands (default)
+#   --skills-only         Install 47 skills only
+#   --commands-only       Export slash commands only
+#   --sync-agents         Automatically run updateagents to modernize workspace context
+#   --new-project [dir]   Automatically launch new-project scaffolder in specified directory
+#   --project             Target current project (./.agents/skills) instead of global (~/.agents/skills)
+#   --global              Target global (~/.agents/skills)
+#   --non-interactive     Skip prompts and use defaults
 
 set -euo pipefail
 
@@ -67,16 +68,34 @@ MODE="all"
 TARGET="global"
 IS_INTERACTIVE=true
 SYNC_FLAG=false
+DO_NEW_PROJECT_FLAG=false
+NEW_PROJECT_ARG=""
 
-for arg in "$@"; do
-  case "$arg" in
-    --all) MODE="all" ;;
-    --skills-only) MODE="skills" ;;
-    --commands-only) MODE="commands" ;;
-    --sync-agents) SYNC_FLAG=true ;;
-    --project) TARGET="project" ;;
-    --global) TARGET="global" ;;
-    --non-interactive|-y) IS_INTERACTIVE=false ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --all) MODE="all"; shift ;;
+    --skills-only) MODE="skills"; shift ;;
+    --commands-only) MODE="commands"; shift ;;
+    --sync-agents) SYNC_FLAG=true; shift ;;
+    --new-project)
+      DO_NEW_PROJECT_FLAG=true
+      if [ $# -gt 1 ] && [[ "$2" != --* ]]; then
+        NEW_PROJECT_ARG="$2"
+        shift 2
+      else
+        NEW_PROJECT_ARG="./my-agent-app"
+        shift
+      fi
+      ;;
+    --new-project=*)
+      DO_NEW_PROJECT_FLAG=true
+      NEW_PROJECT_ARG="${1#*=}"
+      shift
+      ;;
+    --project) TARGET="project"; shift ;;
+    --global) TARGET="global"; shift ;;
+    --non-interactive|-y) IS_INTERACTIVE=false; shift ;;
+    *) shift ;;
   esac
 done
 
@@ -158,7 +177,7 @@ if [ "$SYNC_FLAG" = true ]; then
   DO_SYNC=true
 elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
   echo ""
-  echo -e "${BOLD}${BLUE}🧠 Agent Context & Repository Modernization${RESET}"
+  echo -e "${BOLD}${BLUE}🧠 Agent Context & Repository Modernization (updateagents)${RESET}"
   echo "----------------------------------------------------------------"
   echo "Would you like to modernize your workspace's agent instructions via 'updateagents'?"
   echo "  • Preserves 100% of your existing AGENTS.md rules & custom constraints"
@@ -182,6 +201,49 @@ if [ "$DO_SYNC" = true ]; then
     npx ts-node "${TMP_DIR}/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" 2>/dev/null || true
   fi
   echo -e "\n✅ ${GREEN}Agent context synchronized & rules preserved!${RESET}"
+fi
+
+# ─── 7. Optional New Project Scaffolding (new-project) ───────────────────────
+DO_NEW_PROJECT=false
+NEW_PROJECT_DIR=""
+
+if [ "$DO_NEW_PROJECT_FLAG" = true ]; then
+  DO_NEW_PROJECT=true
+  NEW_PROJECT_DIR="${NEW_PROJECT_ARG:-./my-agent-app}"
+elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
+  echo ""
+  echo -e "${BOLD}${BLUE}🚀 Purpose-First Project Scaffolding (new-project)${RESET}"
+  echo "----------------------------------------------------------------"
+  echo "Would you like to scaffold a new project to start afresh with 'new-project'?"
+  echo "  • Purpose-First decision engine (Next.js 16, Astro, Expo, WordPress, HTML)"
+  echo "  • Complete Agent Engine DOX rail (AGENTS.md, .agents/ standards & context)"
+  echo "  • Modern design tokens (wide-gamut OKLCH + clamp) & client intake brief"
+  echo ""
+  read_input "Scaffold a new project now? [y/N] (default: n): " "n" NEW_PROJECT_PROMPT
+
+  case "$NEW_PROJECT_PROMPT" in
+    [yY]|[yY][eE][sS])
+      DO_NEW_PROJECT=true
+      read_input "Enter target directory for the new project (default: ./my-agent-app): " "./my-agent-app" NEW_PROJECT_DIR
+      ;;
+    *) DO_NEW_PROJECT=false ;;
+  esac
+fi
+
+if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
+  if [[ "$NEW_PROJECT_DIR" = /* ]]; then
+    RESOLVED_PROJECT_DIR="$NEW_PROJECT_DIR"
+  else
+    RESOLVED_PROJECT_DIR="${ORIGINAL_PWD}/${NEW_PROJECT_DIR}"
+  fi
+
+  echo -e "\n⚡ ${CYAN}Launching new-project interactive scaffolder...${RESET}\n"
+  if [ "${RUNTIME}" = "bun" ]; then
+    bun "${TMP_DIR}/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" || true
+  else
+    npx ts-node "${TMP_DIR}/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" 2>/dev/null || true
+  fi
+  echo -e "\n✅ ${GREEN}New project scaffolded successfully at: ${RESOLVED_PROJECT_DIR}${RESET}"
 fi
 
 echo -e "\n${GREEN}${BOLD}🎉 Installation complete!${RESET}"
