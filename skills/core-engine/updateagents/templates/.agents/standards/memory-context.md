@@ -53,10 +53,11 @@ Agent execution resolves identity and rules through a strict two-tier cascade:
 ### Tier 1: Local Project Scope (`./.agents/context/` & `./.agents/identity/`)
 - **`product.md`**: Project domain, ICP, problem statement, and competitive wedge.
 - **`architecture.md`**: Local directory layout, component anatomy, data stores, and ports.
+- **`stack.md`**: Golden Stack Fence, package allowlist, forbidden blacklist, and Primary Council Lead.
 - **`current.md`**: Living snapshot of verified shipped reality, live deliverables, and blockers.
 - **`roadmap.md`**: Project 30-90 day milestones and backlog.
-- **`brand.md` & `../brand/`**: Local voice, visual identity, and W3C DTCG tokens.
-- **`vision.md`** *(optional)*: Scoped vision, target milestones, and principles for client or venture-specific projects.
+- **`brand.md` & `../brand/`**: Local voice, visual identity, customer personas, and W3C DTCG tokens.
+- **`vision.md`** *(optional)*: Scoped product vision, target destination, and sprint principles.
 
 ### Tier 2: Global Principal Baseline (`~/.agents/identity/`)
 When local project files do not specify an override, agents inherit baseline preferences from the user's global configuration:
@@ -64,6 +65,7 @@ When local project files do not specify an override, agents inherit baseline pre
 2. **`assistant.md`** (Assistant Stance & Council): Default delegation stance across Council Leads (**Sol**, **Jasper**, **Crew**, **Nexus**).
 3. **`vision.md`** (Strategic Vision & Trajectory): Long-term intent, Current Reality $\rightarrow$ Target Destination trajectory, 90-day focus, and core personal values.
 4. **`rules.md`** (Global Invariants): Machine-wide toolchain standards, zero-leak credential policies, and git conventions.
+5. **`stack.md`** (Host Toolchain Inventory): Host operating system, detected runtimes (`bun`, `node`), and installed modern CLI set (`rg`, `fd`, `bat`, `eza`).
 
 *Rule: Closer docs always control local execution details. Never duplicate global life goals into a project repository.*
 
