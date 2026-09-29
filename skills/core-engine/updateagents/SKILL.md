@@ -66,7 +66,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 
 | Mode | Focus | Key Output | Reference Document |
 | :--- | :--- | :--- | :--- |
-| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 17 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 19 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
 | **`audit`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of DOX container, AGENTS.md, .github templates, .env.example | Complete DOX rail & governance blueprints | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
@@ -203,7 +203,7 @@ Lazy file creation: never scaffold context files speculatively; create only on c
    - Deploy lean root `AGENTS.md` DOX rail (<85 lines) with Secretary Protocol auto-wired, pointing to the newly organized `.agents/` context files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize `.agents/standards/` (all 17 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and `.agents/brand/` baseline tokens directly from `updateagents/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
+Synchronize `.agents/standards/` (all 19 modular rulebooks, including modern WordPress, fintech gateways, boundary governance, client reporting, motion diagrams, negative anti-patterns, and visual inspection) and `.agents/brand/` baseline tokens directly from `updateagents/templates/`. Never touch or overwrite `.agents/context/*` custom facts or project source files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.

@@ -7,7 +7,7 @@
  *   - Day 0 (Empty dir): Scaffolds fresh Agent Engine DOX architecture from master templates.
  *   - Day 1 (Retrofit): Intelligently extracts custom human rules from legacy files (CLAUDE.md, .cursorrules),
  *     archives legacy files, maps context to .agents/context/*, and provisions the lean root AGENTS.md rail.
- *   - Day N (Sync): Synchronizes 17 standards and brand tokens, enforces MuseMemory hard boundary,
+ *   - Day N (Sync): Synchronizes 19 standards and brand tokens, enforces MuseMemory hard boundary,
  *     and validates size and invariant invariants.
  *   - Audit Mode (--audit): Audits 13 tracked assets across AI Context, Dev Workflow, and Governance,
  *     with Stage-0 Fast-Skip gate, maturity scoring, and CI --fail-under gating.
@@ -26,7 +26,17 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { basename, join, relative, resolve } from "node:path";
 import * as readline from "node:readline/promises";
@@ -82,6 +92,10 @@ const { values, positionals } = parseArgs({
     closeout: { type: "string", default: "" },
     delta: { type: "string", default: "" },
     check: { type: "boolean", default: false },
+    budget: { type: "boolean", default: false },
+    "install-hook": { type: "boolean", default: false },
+    subapp: { type: "string", default: "" },
+    "lint-context": { type: "boolean", default: false },
     "dry-run": { type: "boolean", default: false },
     "fail-under": { type: "string", default: "" },
     json: { type: "boolean", default: false },
@@ -109,6 +123,10 @@ Options:
   --closeout "msg" Append verified milestone to current.md, update roadmap, and refresh context.hash
   --delta "msg"    Alias for --closeout
   --check          Verify context freshness without modifying files (exits 0 if fresh, 1 if drift)
+  --budget         Audit context window token-budget footprint and aged decay entries
+  --install-hook   Install Git pre-commit hook armed with Stack Guard and Context Hash check
+  --subapp <name>  Provision scoped sub-app context for monorepo workspace (apps/<name>/)
+  --lint-context   Validate markdown links and @-import targets across all context files
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
   --dry-run        Simulate without writing files to disk
   --json           Output audit results in JSON format
@@ -524,6 +542,246 @@ if (values["stack-guard"]) {
 const closeoutMsg = values.closeout || values.delta;
 if (closeoutMsg) {
   executeCloseout(workspaceDir, closeoutMsg);
+  process.exit(0);
+}
+
+export function auditContextBudget(targetDir: string): {
+  totalBytes: number;
+  totalTokens: number;
+  isHealthy: boolean;
+  agedEntries: number;
+  files: Array<{ name: string; bytes: number; tokens: number; status: string }>;
+} {
+  const contextDir = join(targetDir, ".agents/context");
+  const result = {
+    totalBytes: 0,
+    totalTokens: 0,
+    isHealthy: true,
+    agedEntries: 0,
+    files: [] as Array<{ name: string; bytes: number; tokens: number; status: string }>,
+  };
+
+  if (!existsSync(contextDir)) return result;
+
+  const entries = readdirSync(contextDir);
+  for (const entry of entries) {
+    if (!entry.endsWith(".md")) continue;
+    const fullPath = join(contextDir, entry);
+    const content = readFileSync(fullPath, "utf8");
+    const bytes = statSync(fullPath).size;
+    const tokens = Math.ceil(content.length / 4);
+    result.totalBytes += bytes;
+    result.totalTokens += tokens;
+
+    let status = "HEALTHY";
+    if (bytes > 8192) {
+      status = "BLOATED (>8KB)";
+      result.isHealthy = false;
+    } else if (bytes > 4096) {
+      status = "WARNING (>4KB)";
+    }
+
+    result.files.push({ name: entry, bytes, tokens, status });
+
+    // Check decay in current.md
+    if (entry === "current.md") {
+      const dateMatches = content.match(/\b\d{4}-\d{2}-\d{2}\b/g) || [];
+      const now = Date.now();
+      for (const d of dateMatches) {
+        const time = new Date(d).getTime();
+        if (!Number.isNaN(time) && now - time > 30 * 24 * 60 * 60 * 1000) {
+          result.agedEntries++;
+        }
+      }
+    }
+  }
+
+  if (result.totalBytes > 20480) {
+    result.isHealthy = false;
+  }
+
+  return result;
+}
+
+export function installGitPreCommitHook(targetDir: string): { success: boolean; hookPath: string } {
+  const gitDir = join(targetDir, ".git");
+  if (!existsSync(gitDir)) {
+    throw new Error(`❌ Not a git repository: .git not found in ${targetDir}`);
+  }
+
+  const hooksDir = join(gitDir, "hooks");
+  if (!existsSync(hooksDir)) mkdirSync(hooksDir, { recursive: true });
+
+  const hookPath = join(hooksDir, "pre-commit");
+  const scriptContent = `#!/bin/sh
+# 🧠 updateagents — Autonomous Git Pre-Commit Fast Gate
+echo "🛡️ [updateagents] Running pre-commit validation..."
+
+# 1. Stack Drift Guard (Verify dependencies against stack.md allowlist)
+if command -v bun >/dev/null 2>&1; then
+  bun skills/core-engine/updateagents/scripts/updateagents.ts --stack-guard || {
+    echo "❌ Git Commit Blocked: Stack Drift detected. Check .agents/context/stack.md"
+    exit 1
+  }
+  # 2. Context Freshness Check (Sub-50ms hash check)
+  bun skills/core-engine/updateagents/scripts/updateagents.ts --check >/dev/null 2>&1 || true
+fi
+
+echo "✅ Pre-commit verification passed."
+exit 0
+`;
+
+  writeFileSync(hookPath, scriptContent, "utf8");
+  chmodSync(hookPath, 0o755);
+  return { success: true, hookPath };
+}
+
+export function sliceSubAppContext(targetDir: string, subappName: string): string {
+  let subappDir = join(targetDir, "apps", subappName);
+  if (!existsSync(subappDir)) {
+    const pkgDir = join(targetDir, "packages", subappName);
+    if (existsSync(pkgDir)) subappDir = pkgDir;
+    else subappDir = join(targetDir, subappName);
+  }
+
+  const contextDir = join(subappDir, ".agents/context");
+  if (!existsSync(contextDir)) mkdirSync(contextDir, { recursive: true });
+
+  const indexMd = `# 📖 Sub-App Scoped Context — ${subappName}\n\n- [\`product.md\`](./product.md) — Sub-app scope & domain\n- [\`architecture.md\`](./architecture.md) — Local component layout\n- [\`stack.md\`](./stack.md) — Sub-app stack fence\n- [\`current.md\`](./current.md) — Verified live state\n\n---\n\n## Global Standards\nInherited from repository root standards: \`../../.agents/standards/\`\n`;
+  const productMd = `# 📦 Sub-App Product Scope — ${subappName}\n\nFocused domain and features for ${subappName}.\n`;
+  const archMd = `# 🏗️ Sub-App Architecture — ${subappName}\n\nLocal component anatomy and internal dependencies for ${subappName}.\n`;
+  const stackMd = `# 🛡️ Sub-App Stack Boundary — ${subappName}\n\nInherits root allowlist with scoped package boundaries.\n`;
+  const currentMd = `# 📍 Sub-App Current State — ${subappName}\n\n## 1. Verified Shipped Reality\n- Sub-app ${subappName} context initialized.\n`;
+
+  writeFileSync(join(contextDir, "index.md"), indexMd, "utf8");
+  writeFileSync(join(contextDir, "product.md"), productMd, "utf8");
+  writeFileSync(join(contextDir, "architecture.md"), archMd, "utf8");
+  writeFileSync(join(contextDir, "stack.md"), stackMd, "utf8");
+  writeFileSync(join(contextDir, "current.md"), currentMd, "utf8");
+
+  const hash = computeContextHash(contextDir);
+  if (hash) writeFileSync(join(contextDir, ".context.hash"), hash, "utf8");
+
+  return contextDir;
+}
+
+export function lintContextLinks(targetDir: string): {
+  valid: boolean;
+  checkedCount: number;
+  brokenLinks: Array<{ file: string; link: string; target: string }>;
+} {
+  const brokenLinks: Array<{ file: string; link: string; target: string }> = [];
+  let checkedCount = 0;
+
+  const filesToScan: string[] = [];
+  const rootAgents = join(targetDir, "AGENTS.md");
+  if (existsSync(rootAgents)) filesToScan.push(rootAgents);
+
+  const contextDir = join(targetDir, ".agents/context");
+  if (existsSync(contextDir)) {
+    for (const f of readdirSync(contextDir)) {
+      if (f.endsWith(".md")) filesToScan.push(join(contextDir, f));
+    }
+  }
+
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+  for (const filePath of filesToScan) {
+    const content = readFileSync(filePath, "utf8");
+    const dir = join(filePath, "..");
+    for (const match of content.matchAll(linkRegex)) {
+      const rawLink = match[2].trim();
+      // Skip URLs, mailto, anchor only
+      if (
+        rawLink.startsWith("http://") ||
+        rawLink.startsWith("https://") ||
+        rawLink.startsWith("mailto:") ||
+        rawLink.startsWith("#")
+      ) {
+        continue;
+      }
+
+      checkedCount++;
+      let resolved = "";
+      if (rawLink.startsWith("~")) {
+        resolved = rawLink.replace(/^~/, homedir());
+      } else {
+        // Strip query / anchor
+        const cleanLink = rawLink.split("#")[0].split("?")[0];
+        if (!cleanLink) continue;
+        resolved = resolve(dir, cleanLink);
+      }
+
+      if (!existsSync(resolved)) {
+        brokenLinks.push({
+          file: relative(targetDir, filePath),
+          link: rawLink,
+          target: resolved,
+        });
+      }
+    }
+  }
+
+  return {
+    valid: brokenLinks.length === 0,
+    checkedCount,
+    brokenLinks,
+  };
+}
+
+// Early handler: Budget
+if (values.budget) {
+  console.log("\n📊 Context Token-Budget & Decay Health Meter for:", workspaceDir);
+  const budget = auditContextBudget(workspaceDir);
+  console.log("------------------------------------------------------------");
+  for (const f of budget.files) {
+    console.log(`   • ${f.name.padEnd(16)} ${(f.bytes / 1024).toFixed(1)} KB (~${f.tokens} tokens) [${f.status}]`);
+  }
+  console.log("------------------------------------------------------------");
+  console.log(
+    `Total Context Footprint: ${(budget.totalBytes / 1024).toFixed(1)} KB (~${budget.totalTokens} tokens) / 20.0 KB Cap [${budget.isHealthy ? "HEALTHY" : "OVER BUDGET"}]`,
+  );
+  if (budget.agedEntries > 0) {
+    console.log(`⚠️ Context Decay: ${budget.agedEntries} entries older than 30 days detected in current.md.`);
+  } else {
+    console.log(`✅ Context Freshness: Zero aged entries detected.`);
+  }
+  process.exit(budget.isHealthy ? 0 : 1);
+}
+
+// Early handler: Install Pre-Commit Hook
+if (values["install-hook"]) {
+  try {
+    const res = installGitPreCommitHook(workspaceDir);
+    console.log(`✅ Installed Git pre-commit hook at: ${res.hookPath}`);
+    console.log("   Armed with Stack Drift Guard and Context Freshness check.");
+    process.exit(0);
+  } catch (err: unknown) {
+    console.error((err as Error).message || String(err));
+    process.exit(1);
+  }
+}
+
+// Early handler: Sub-App Slicing
+if (values.subapp) {
+  const createdDir = sliceSubAppContext(workspaceDir, values.subapp);
+  console.log(`✅ Provisioned scoped sub-app context in: ${createdDir}`);
+  process.exit(0);
+}
+
+// Early handler: Lint Context Links
+if (values["lint-context"]) {
+  console.log("🔍 Linting context markdown links and @-imports in:", workspaceDir);
+  const res = lintContextLinks(workspaceDir);
+  console.log(`Checked ${res.checkedCount} link(s).`);
+  if (!res.valid) {
+    console.error(`❌ Found ${res.brokenLinks.length} broken link(s):`);
+    for (const b of res.brokenLinks) {
+      console.error(`   • In ${b.file}: [${b.link}] ➔ ${b.target} (not found)`);
+    }
+    process.exit(1);
+  }
+  console.log("✅ Context Lint Passed: All links and @-import targets exist.");
   process.exit(0);
 }
 

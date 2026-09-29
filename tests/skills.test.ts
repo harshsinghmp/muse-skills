@@ -286,4 +286,81 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     expect(res.status).toBe(0);
     expect(res.stdout).toContain("Stack Drift Guard Passed");
   });
+
+  test("anti-patterns.md and visual-inspection.md standards templates exist with required invariants", () => {
+    const standardsDir = path.join(REPO_ROOT, "skills/core-engine/updateagents/templates/.agents/standards");
+    const antiPatternsPath = path.join(standardsDir, "anti-patterns.md");
+    const visualInspectionPath = path.join(standardsDir, "visual-inspection.md");
+
+    expect(fs.existsSync(antiPatternsPath)).toBe(true);
+    expect(fs.existsSync(visualInspectionPath)).toBe(true);
+
+    const antiPatterns = fs.readFileSync(antiPatternsPath, "utf8");
+    expect(antiPatterns).toContain("Negative Constraints & Architectural Anti-Patterns");
+    expect(antiPatterns).toContain("Universal Agent Anti-Patterns");
+    expect(antiPatterns).toContain("Verification Gate Before Commit");
+
+    const visual = fs.readFileSync(visualInspectionPath, "utf8");
+    expect(visual).toContain("Visual Context & Multimodal UI Verification");
+    expect(visual).toContain("Screenshot Storage Invariant");
+    expect(visual).toContain("./.agents/brand/screenshots/");
+  });
+
+  test("updateagents CLI supports --budget, --install-hook, --subapp, and --lint-context flags", () => {
+    const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("--budget");
+    expect(res.stdout).toContain("--install-hook");
+    expect(res.stdout).toContain("--subapp");
+    expect(res.stdout).toContain("--lint-context");
+  });
+
+  test("lintContextLinks passes on repository context", () => {
+    const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--lint-context"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(res.status).toBe(0);
+    expect(res.stdout).toContain("Context Lint Passed");
+  });
+
+  test("auditContextBudget, installGitPreCommitHook, and sliceSubAppContext work in sandbox", () => {
+    const tempDir = fs.mkdtempSync(path.join(REPO_ROOT, "tmp-test-suite-"));
+    try {
+      fs.mkdirSync(path.join(tempDir, "apps/web-portal"), { recursive: true });
+
+      // 1. Test sliceSubAppContext
+      const sliceRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updateagents/scripts/updateagents.ts", tempDir, "--subapp", "web-portal"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(sliceRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, "apps/web-portal/.agents/context/index.md"))).toBe(true);
+
+      // 2. Test auditContextBudget on subapp
+      const budgetRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updateagents/scripts/updateagents.ts", path.join(tempDir, "apps/web-portal"), "--budget"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(budgetRes.status).toBe(0);
+      expect(budgetRes.stdout).toContain("HEALTHY");
+
+      // 3. Test installGitPreCommitHook
+      fs.mkdirSync(path.join(tempDir, ".git"), { recursive: true });
+      const hookRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updateagents/scripts/updateagents.ts", tempDir, "--install-hook"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(hookRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, ".git/hooks/pre-commit"))).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
