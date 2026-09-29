@@ -4,9 +4,9 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
-const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "updateagents/templates");
-const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "new-project/scripts/new-project.ts");
-const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "updateagents/scripts/updateagents.ts");
+const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
+const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
+const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
 const TEST_SANDBOX = join("/tmp", "agent-engine-test-sandbox-" + Date.now());
 
 describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
@@ -369,20 +369,26 @@ Custom billing engine for healthcare providers.
 
   describe("Part D: handoff & gauntlet-loop Upgrades", () => {
     it("handoff contains session resumption and zero .claude references", () => {
-      const handoffContent = readFileSync(join(REPO_ROOT, "relay/SKILL.md"), "utf8");
+      const handoffContent = readFileSync(join(REPO_ROOT, "skills/context-orchestration/relay/SKILL.md"), "utf8");
       expect(handoffContent).toContain("Inbound Session Resumption");
       expect(handoffContent).toContain("where were we");
       expect(handoffContent).toContain("directory-boundary");
       expect(handoffContent).not.toContain(".claude/");
-      expect(existsSync(join(REPO_ROOT, "relay/references/resumption-protocol.md"))).toBe(true);
+      expect(existsSync(join(REPO_ROOT, "skills/context-orchestration/relay/references/resumption-protocol.md"))).toBe(
+        true,
+      );
     });
 
     it("gauntlet-loop contains 'The Bar is the Whole Trick' and blind A/B critique", () => {
-      const gauntletContent = readFileSync(join(REPO_ROOT, "gauntlet-loop/SKILL.md"), "utf8");
+      const gauntletContent = readFileSync(join(REPO_ROOT, "skills/quality-review/gauntlet-loop/SKILL.md"), "utf8");
       expect(gauntletContent).toContain("The Bar is the Whole Trick");
       expect(gauntletContent).toContain("Blind A/B");
       expect(gauntletContent).toContain("Prompt Synthesizer Mode");
-      expect(existsSync(join(REPO_ROOT, "gauntlet-loop/references/bar-selection-and-blind-critique.md"))).toBe(true);
+      expect(
+        existsSync(
+          join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/bar-selection-and-blind-critique.md"),
+        ),
+      ).toBe(true);
     });
   });
 

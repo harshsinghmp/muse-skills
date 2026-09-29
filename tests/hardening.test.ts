@@ -12,7 +12,14 @@ import path from "node:path";
 const ROOT = path.resolve(import.meta.dir, "..");
 const SKILLS_JSON_PATH = path.join(ROOT, "skills.json");
 const LLMS_TXT_PATH = path.join(ROOT, "llms.txt");
-const LEASE_SCRIPT = path.join(ROOT, "coupling-router", "scripts", "worktree-lease.ts");
+const LEASE_SCRIPT = path.join(
+  ROOT,
+  "skills",
+  "context-orchestration",
+  "coupling-router",
+  "scripts",
+  "worktree-lease.ts",
+);
 const LEASE_PATH = path.join(ROOT, ".agents", "artifacts", "WORKTREE-LEASE.md");
 
 interface Skill {
@@ -147,7 +154,7 @@ describe("Worktree lease gate (coupling-router/scripts/worktree-lease.ts)", () =
   });
 
   test("new-project generator writes no static placeholder secrets (audit F1)", () => {
-    const src = fs.readFileSync("new-project/scripts/new-project.ts", "utf8");
+    const src = fs.readFileSync(path.join(ROOT, "skills/core-engine/new-project/scripts/new-project.ts"), "utf8");
     expect(src).not.toMatch(/supersecret/);
   });
 
