@@ -2,15 +2,14 @@
 /**
  * export-commands.ts — Universal Multi-Harness Command Exporter & Onboarding Engine
  *
- * Scans all 46 canonical Muse skills + sub-modes from skills.json, and exports
- * first-class slash commands into detected agent harnesses (OpenCode, Antigravity,
- * Cursor, Windsurf, Claude Code, Aider, Hermes) and terminal CLI wrappers (~/.local/bin/muse).
+ * Scans all 47 canonical Muse skills + sub-modes from skills.json, and exports
+ * first-class native slash commands into detected agent harnesses (OpenCode, Antigravity,
+ * Cursor, Windsurf, Claude Code, Aider, Hermes).
  *
  * Usage:
- *   bun scripts/export-commands.ts --setup           # Auto-detect harnesses, export commands & wire Secretary into AGENTS.md
- *   bun scripts/export-commands.ts --harness opencode # Export only for OpenCode
- *   bun scripts/export-commands.ts --global          # Export to user global configs (~/.config/opencode, ~/.gemini)
- *   bun scripts/export-commands.ts --local           # Export to current workspace (.opencode, .gemini, .cursor, .windsurf)
+ *   bun scripts/export-commands.ts --setup           # Auto-detect harnesses, install skills & export commands
+ *   bun scripts/export-commands.ts --skills-only     # Install skills only
+ *   bun scripts/export-commands.ts --commands-only   # Export slash commands only
  */
 
 import fs from "node:fs";
@@ -297,55 +296,6 @@ export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   return count;
 }
 
-export function exportTerminalCli(binDest: string): void {
-  fs.mkdirSync(path.dirname(binDest), { recursive: true });
-  const scriptContent = `#!/usr/bin/env bash
-# museskills — Universal Terminal CLI Runner for Muse Skills
-set -euo pipefail
-
-SKILL="\${1:-secretary}"
-MODE="\${2:-dispatch}"
-shift 2 2>/dev/null || true
-ARGS="\${*:-}"
-
-# Search priority: Current project .agents/skills -> Global ~/.agents/skills
-SKILL_DIR=""
-if [ -d "./.agents/skills/\${SKILL}" ]; then
-  SKILL_DIR="./.agents/skills/\${SKILL}"
-elif [ -d "\${HOME}/.agents/skills/\${SKILL}" ]; then
-  SKILL_DIR="\${HOME}/.agents/skills/\${SKILL}"
-else
-  echo "❌ Skill '\${SKILL}' not found in ./.agents/skills/\${SKILL} or \${HOME}/.agents/skills/\${SKILL}"
-  echo "👉 Install skills globally via: curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash"
-  exit 1
-fi
-
-REF_FILE="\${SKILL_DIR}/references/\${MODE}.md"
-if [ ! -f "\${REF_FILE}" ]; then
-  REF_FILE="\${SKILL_DIR}/SKILL.md"
-fi
-
-echo "🏛️ [Muse Engine] Activating \${SKILL}:\${MODE}..."
-echo "📖 Reference: \${REF_FILE}"
-echo "---------------------------------------------------------"
-head -n 25 "\${REF_FILE}"
-echo "---------------------------------------------------------"
-echo "💡 To execute with an agent: 'museskills \${SKILL} \${MODE}'"
-`;
-
-  fs.writeFileSync(binDest, scriptContent, { mode: 0o755 });
-
-  // Optional: create legacy/shorthand 'muse' symlink if no conflicting binary exists
-  const legacyDest = path.join(path.dirname(binDest), "muse");
-  try {
-    if (!fs.existsSync(legacyDest)) {
-      fs.symlinkSync(binDest, legacyDest);
-    }
-  } catch {
-    // Ignore symlink failure if muse already exists or lacks permission
-  }
-}
-
 export function wireSecretaryIntoAgentsMd(targetAgentsMdPath: string): boolean {
   if (!fs.existsSync(targetAgentsMdPath)) return false;
 
@@ -373,7 +323,6 @@ export interface SetupOptions {
   installSkills?: boolean;
   skillsDest?: string;
   exportCommands?: boolean;
-  installCli?: boolean;
   wireAgentsMd?: boolean;
 }
 
@@ -387,7 +336,6 @@ export function runSetup(options: SetupOptions = {}): void {
 
   const doSkills = options.installSkills !== false;
   const doCommands = options.exportCommands !== false;
-  const doCli = options.installCli !== false;
   const doWire = options.wireAgentsMd !== false;
 
   // 1. Install Skills
@@ -445,14 +393,7 @@ export function runSetup(options: SetupOptions = {}): void {
     }
   }
 
-  // 3. Terminal CLI Runner (museskills)
-  if (doCli) {
-    const cliDest = path.join(userHome, ".local", "bin", "museskills");
-    exportTerminalCli(cliDest);
-    console.log(`✅ Universal CLI: Created 'museskills' command runner → ${cliDest}`);
-  }
-
-  // 4. Wire Secretary into AGENTS.md
+  // 3. Wire Secretary into AGENTS.md
   if (doWire) {
     const globalAgentsMd = path.join(userHome, ".agents", "AGENTS.md");
     const localAgentsMd = path.join(workspaceRoot, "AGENTS.md");
@@ -473,21 +414,14 @@ if (import.meta.main) {
   const opts: SetupOptions = {
     installSkills: true,
     exportCommands: true,
-    installCli: true,
     wireAgentsMd: true,
   };
 
   if (args.includes("--skills-only")) {
     opts.exportCommands = false;
-    opts.installCli = false;
     opts.wireAgentsMd = false;
   } else if (args.includes("--commands-only")) {
     opts.installSkills = false;
-    opts.installCli = false;
-    opts.wireAgentsMd = false;
-  } else if (args.includes("--cli-only")) {
-    opts.installSkills = false;
-    opts.exportCommands = false;
     opts.wireAgentsMd = false;
   }
 
