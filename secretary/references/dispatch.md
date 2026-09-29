@@ -13,12 +13,12 @@ Every routed task is governed by one of four specialized Council Leads:
 | **Sol**<br>*(Product Architect & Full-Stack Automator)* | Next.js, React, Astro, APIs, database architectures, serverless runtimes, Workers, schema design, AI pipelines, and performance tuning. | `webdev`, `database`, `devops`, `mobile`, `automation`, `telegram` |
 | **Jasper**<br>*(Creative Technologist & Growth Mastermind)* | Awwwards-level UI/UX, GSAP/SVG motion, viral social media hooks, 6-slide carousels, SEO/AEO search visibility, brand tokens, and high-conversion copywriting. | `design`, `smm`, `content`, `seo`, `brand`, `growth`, `animate`, `designscope` |
 | **Crew**<br>*(Operations Lead & Client Delivery Specialist)* | Client onboarding, proposals, SOWs, milestone pacing, Obsidian knowledge vaults, gateway reconciliation, tax compliance, retention loops, and multi-client isolation. | `ops`, `accounts`, `client-comms`, `retain`, `gtm`, `sales-enablement`, `paidads` |
-| **Nexus**<br>*(Technical Director & Quality Review Head)* | Non-negotiable hardening gate: security vulnerability scanning, Linus-style rigorous code reviews, automated pre-flight testing, incident triage, and zero-leak credential hygiene. | `code-review`, `audit`, `qa-launch`, `muse-security`, `refactor`, `pua`, `git`, `ai-ready` |
+| **Nexus**<br>*(Technical Director & Quality Review Head)* | Non-negotiable hardening gate: security vulnerability scanning, Linus-style rigorous code reviews, automated pre-flight testing, incident triage, and zero-leak credential hygiene. | `code-review`, `audit`, `qa-launch`, `muse-security`, `refactor`, `pua`, `git`, `updateagents` |
 
 ---
 
 <!-- agency-directory:start -->
-## 📋 Canonical 47-Department Agency Directory
+## 📋 Canonical 46-Department Agency Directory
 
 When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.
 
@@ -70,10 +70,9 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
 | **`updatedocs`** | Project-wide documentation synchronization, drift detection, and governance engine. | **Sol** |
-| **`updateagents`** | Synchronize AI-agent instructions and project context with the actual current state of the workspace. | **Nexus** |
+| **`updateagents`** | Universal agent context synchronization and repository AI-readiness engine. | **Nexus** |
 | **`git`** | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. | **Nexus** |
 | **`new-project`** | Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. | **Sol** |
-| **`ai-ready`** | Comprehensive repository AI-readiness auditor and scaffolding engine. | **Nexus** |
 
 ---
 

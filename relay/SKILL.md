@@ -16,15 +16,15 @@ metadata:
   category: context-orchestration
   priority: 6
   aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
-  suggested_skills: ["context-anchor","dead-letter","coupling-router","updateagents","ai-ready"]
+  suggested_skills: ["context-anchor","dead-letter","coupling-router","updateagents"]
   hermes:
     tags: [subagents, handoff, resume, orchestration, context, governance, reliability, ambient-continuity, session-state, git-forensics]
-    related_skills: [context-anchor, dead-letter, coupling-router, updateagents, ai-ready]
-    suggested_skills: [context-anchor, dead-letter, coupling-router, updateagents, ai-ready]
+    related_skills: [context-anchor, dead-letter, coupling-router, updateagents]
+    suggested_skills: [context-anchor, dead-letter, coupling-router, updateagents]
     requires_tools: [bash, view_file, write_to_file]
   openclaw:
     category: context-orchestration
-    suggested_skills: [context-anchor, dead-letter, coupling-router, updateagents, ai-ready]
+    suggested_skills: [context-anchor, dead-letter, coupling-router, updateagents]
     primary_triggers: ["where were we","resume","pick up where I left off","handoff to subagent","create context packet","dispatch worker","self-handoff","continue the last session","new conversation in this workspace"]
     requires_tools: [bash, view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -90,7 +90,7 @@ On workspace entry, resolve prior state by climbing the ladder; stop at the firs
 2. **Memory recall** — query the runtime's session-memory tool (e.g. `memory_sessions` / `memory_recall`), strictly filtered to this directory boundary.
 3. **Project context** — `.agents/context/current.md` and `.agents/context/index.md` (maintained by `updateagents` conventions).
 4. **Git forensics** — reconstruct from the repository itself (recipe in [references/resumption-protocol.md](references/resumption-protocol.md)); after reconstructing, **write HANDOFF.md immediately** so the next agent never digs again.
-5. **Cold start** — declare honestly: `No prior session history found for this project directory.` Never invent history. Offer the `ai-ready` audit.
+5. **Cold start** — declare honestly: `No prior session history found for this project directory.` Never invent history. Offer the `updateagents` audit.
 
 ### The Live Handoff File (`.agents/artifacts/HANDOFF.md`)
 

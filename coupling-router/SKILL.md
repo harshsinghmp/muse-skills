@@ -42,7 +42,7 @@ metadata:
 Execute this skill when:
 1. **Planning Multi-Agent Delegation**: You have a task list or project plan with 2 or more subtasks.
 2. **Auditing Skill-Stack Compatibility**: Multiple agent skills are installed or active, risking prompt contradictions, overlapping triggers, or token budget exhaustion.
-3. **Enforcing Minimal Viable Skill Set (MVSS)**: Trimming secondary/redundant skills when a primary dominant skill (e.g., `ai-ready`, `git`, `refactor-ui`, `code-review`) already covers the execution scope.
+3. **Enforcing Minimal Viable Skill Set (MVSS)**: Trimming secondary/redundant skills when a primary dominant skill (e.g., `updateagents`, `git`, `refactor-ui`, `code-review`) already covers the execution scope.
 4. **Preventing Merge Collisions**: Multiple files or modules share mutable state, type contracts, or lifecycle flows.
 5. **Deciding Concurrency Strategy**: Resolving whether to spawn subagents concurrently in parallel or pipeline them sequentially.
 6. **Complex Refactors**: Multi-layer changes spanning database schemas, API controllers, and frontend clients.
@@ -94,8 +94,7 @@ Do NOT use this skill when:
 
 | Active Skill Candidate | Co-Active Candidate | Interaction | Conflict / Overlap Description | Deterministic Resolution |
 | :--- | :--- | :--- | :--- | :--- |
-| **`ai-ready`** | `new-project` | Redundant | Both attempt repository scaffolding and root context creation. | **Suppress `new-project` Stage 0**: `ai-ready` takes precedence as the single source of repository audit and readiness. |
-| **`ai-ready`** | `updateagents` | Synergistic | `ai-ready` verifies baseline readiness; `updateagents` synchronizes ongoing cognitive memory. | **Sequential**: Run `ai-ready` audit first; invoke `updateagents` only if memory drift is detected. |
+| **`updateagents`** | `new-project` | Synergistic | `updateagents` audits and synchronizes context; `new-project` provisions stack code. | **Sequential**: Run `updateagents` to audit/prepare context before or after scaffolding. |
 | **`code-review`** | Generic Refactor Skills | Conflicting | Generic refactor prompts encourage speculative code reorganization, whereas Linus/Karpathy demands surgical, minimal diffs. | **Override with Linus**: Linus/Karpathy surgical diff rule dominates. Disallow broad refactoring outside stated task scope. |
 | **`git`** | Ad-Hoc VCS Prompts | Conflicting | Ad-hoc git prompts may attempt direct commits to `master` or unstructured messages. `git` enforces strict dev-branch staging and Conventional Commits. | **Suppress Ad-Hoc**: Route all VCS actions strictly through `git` lifecycle. Silence conflicting direct-commit instructions. |
 | **`refactor-ui`** | Generic CSS / Styling Skills | Conflicting / Redundant | Generic UI prompts introduce decorative border clutter and arbitrary hex colors, violating Refactoring UI heuristics. | **Suppress Generic UI**: Enforce `refactor-ui` 11 heuristics and 5-state anti-slop coverage. |
@@ -107,7 +106,7 @@ Do NOT use this skill when:
 ```
 Tier 1: Governance & Verification (secretary, evidence-ledger, gauntlet-loop)
    └── Tier 2: Review & Correctness Doctrine (code-review / Karpathy)
-         └── Tier 3: Architecture & Context Engines (coupling-router, ai-ready, agent-engine)
+         └── Tier 3: Architecture & Context Engines (coupling-router, updateagents, new-project)
                └── Tier 4: Domain Implementation Specialists (refactor-ui, designscope, updatedocs, git)
                      └── Tier 5: Ad-Hoc / Generic Prompts (Suppressed when higher tiers active)
 ```
@@ -133,7 +132,7 @@ Full contract, takeover rules, and the collision repair ladder: `references/work
 3. **Resolve Contradictory Directives**:
    - If an instruction contradiction exists (e.g. broad speculative refactoring vs surgical diff discipline), enforce the higher precedence tier and silence the subordinate rule.
 4. **Select Minimal Viable Skill Set (MVSS)**:
-   - Suppress redundant secondary skills (e.g., suppress `new-project` Stage 0 if `ai-ready` is active; suppress generic styling if `refactor-ui` is active).
+   - Suppress redundant secondary skills (e.g., suppress `new-project` Stage 0 if `updateagents --audit` is active; suppress generic styling if `refactor-ui` is active).
 5. **Enforce Token Budget Gate**:
    - Ensure the total active skill prompt footprint remains $\le 6,000$ tokens ($\le 3$ active skills per subagent context).
    - Prune auxiliary skills into staged sequential handoffs if the token budget is exceeded.

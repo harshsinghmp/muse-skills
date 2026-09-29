@@ -75,7 +75,6 @@ const COUNCIL_LEADS: Record<string, string> = {
   "muse-security": "Nexus (Technical Director & Security Gate)",
   refactor: "Nexus & Sol (Technical Director & Senior Architect)",
   git: "Nexus (Technical Director & Release Governor)",
-  "ai-ready": "Nexus (Technical Director & Repository Architecture)",
   "gauntlet-loop": "Nexus (Technical Director & Adversarial Challenge)",
   "dead-letter": "Nexus (Technical Director & Error Triage)",
   "coupling-router": "Sol & Nexus (Technical Director & Architecture)",

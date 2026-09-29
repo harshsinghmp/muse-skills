@@ -14,7 +14,9 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 - **🔒 HARD BOUNDARY — MuseMemory (`.memory/**`)**: The `.memory/` directory is exclusively owned and managed by MuseMemory. `updateagents` **never** reads, writes, modifies, deletes, or validates `.memory/**`.
 - **🌐 Workspace-Scoped**: Operates strictly within the current working directory. Never traverses above the workspace.
 - **🛠️ Smart DOX Retrofit**: If a workspace lacks the Progressive Disclosure DOX architecture, `updateagents` safely provisions the 9-folder `.agents/` container, migrates existing facts into `.agents/context/`, and archives legacy instruction files.
-- **🔄 Single Source of Truth**: Pulls updated universal standards (`.agents/standards/`) and brand baselines directly from `ai-ready/templates/` (17 modular standards, including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) with **zero duplicate templates**.
+- **🔄 Single Source of Truth**: Houses the master DOX templates (`updateagents/templates/`), synchronizing all 17 modular rulebooks (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and brand baselines with **zero duplicate templates**.
+- **📊 13-Asset AI Readiness Audit**: Evaluates repo maturity with Stage-0 Fast-Skip and CI gating (`--fail-under N`).
+- **🛡️ Synthetic Artifact Sanitization**: Strips proprietary IDE wrappers (`[[ORCA_RICH_MD]]`, Cursor markers) automatically via `--sanitize`.
 - **⚖️ Global Invariant Atom Table Telemetry**: Audits active global invariant atoms against the $\le 20$ atom attention cap to prevent model instruction fatigue and context bloat.
 - **📏 Compact Size Control**: Enforces concise instruction files (<5KB preferred, <10KB hard ceiling).
 
@@ -26,20 +28,31 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 ```
 "update agents.md"
 "sync project agent context"
+"make repo AI-ready"
+"audit repository readiness"
 "retrofit this project with the DOX architecture"
 "refresh agent rules and standards"
 ```
 
 ### Direct CLI Execution
 ```bash
-# Run in the current working directory
+# Run context synchronization in current working directory
 bun path/to/updateagents/scripts/updateagents.ts
+
+# Audit 13 tracked assets for repository AI-readiness
+bun path/to/updateagents/scripts/updateagents.ts --audit
+
+# Gate CI on minimum readiness score (exits 1 if score < 12)
+bun path/to/updateagents/scripts/updateagents.ts --audit --fail-under 12
+
+# Scan and sanitize synthetic ADE/IDE artifacts
+bun path/to/updateagents/scripts/updateagents.ts --sanitize
+
+# Directly scaffold missing Agent Engine assets
+bun path/to/updateagents/scripts/updateagents.ts --scaffold
 
 # Run in simulation mode without writing files
 bun path/to/updateagents/scripts/updateagents.ts --dry-run
-
-# Run on a specific target project
-bun path/to/updateagents/scripts/updateagents.ts /path/to/project
 ```
 
 ---
@@ -72,7 +85,7 @@ Updated Agent Context
 6. **Determine Targets**: Targets smallest correct scope.
 7. **Preserve Existing Knowledge**: Protects intentional human notes and ADRs.
 8. **DOX Scaffolding & Context Placement**: Checks existing agent files, scaffolds if absent, and merges custom content into context files without clobbering.
-9. **Standards Synchronization**: Syncs all 17 rulebooks from `ai-ready/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and displays the Invariant Atom Table telemetry.
+9. **Standards Synchronization**: Syncs all 17 rulebooks from `updateagents/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, and motion diagrams) and displays the Invariant Atom Table telemetry.
 10. **Capture Commands**: Verifies commands against actual package scripts.
 11. **Capture Architecture**: Documents system boundaries and data flows.
 12. **Capture Sources of Truth**: Explicitly records authoritative files.

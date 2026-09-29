@@ -62,10 +62,10 @@ FAIL=0
 [ -f ".gitignore" ] && (rg -q "^\.e\[n\]v" .gitignore 2>/dev/null || grep -qE "^\.e\[n\]v" .gitignore) && [ -f ".env.example" ] && ((PASS++)) || ((FAIL++))
 
 if [ "$PASS" -eq 12 ]; then
-  echo "[ai-ready] Repository is AI-ready (13/13). Skipping pass."
+  echo "[updateagents] Repository is AI-ready (13/13). Skipping pass."
   exit 0
 else
-  echo "[ai-ready] Repository score: $PASS/12. Remediation required."
+  echo "[updateagents] Repository score: $PASS/12. Remediation required."
   exit 1
 fi
 ```
@@ -77,7 +77,7 @@ fi
 When the Fast-Skip check succeeds (`PASS == 12`):
 1. **Single Line Output**: The agent must output only:
    ```text
-   [ai-ready] Repository is AI-ready (13/13). Skipping pass.
+   [updateagents] Repository is AI-ready (13/13). Skipping pass.
    ```
 2. **Immediate Turn Termination / Next Task**: The agent immediately moves to the user's primary feature request or command.
 3. **No Retrospective Analysis**: Do not explain why the files are compliant, do not re-list the file paths, and do not congratulate the user. Silence is efficiency.

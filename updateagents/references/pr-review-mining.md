@@ -1,6 +1,6 @@
 # 🔍 PR Review Mining Protocol
 
-This reference describes how `ai-ready` mines merged Pull Requests to discover implicit conventions and codify them into explicit agent instructions.
+This reference describes how `updateagents` mines merged Pull Requests to discover implicit conventions and codify them into explicit agent instructions.
 
 ---
 

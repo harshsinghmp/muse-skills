@@ -4,8 +4,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
-const AI_READY_TEMPLATES = join(REPO_ROOT, "ai-ready/templates");
-const AI_READY_SCRIPT = join(REPO_ROOT, "ai-ready/scripts/ai-ready.ts");
+const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "updateagents/templates");
 const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "new-project/scripts/new-project.ts");
 const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "updateagents/scripts/updateagents.ts");
 const TEST_SANDBOX = join("/tmp", "agent-engine-test-sandbox-" + Date.now());
@@ -20,19 +19,19 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     rmSync(TEST_SANDBOX, { recursive: true, force: true });
   });
 
-  describe("Part A: ai-ready as Canonical Home of Agent Engine", () => {
-    it("ai-ready/templates exists and houses master templates", () => {
-      expect(existsSync(AI_READY_TEMPLATES)).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, "AGENTS.md"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, "gitignore.template"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/standards"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/brand"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/context"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
+  describe("Part A: updateagents as Canonical Home of Agent Engine", () => {
+    it("updateagents/templates exists and houses master templates", () => {
+      expect(existsSync(UPDATEAGENTS_TEMPLATES)).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "gitignore.template"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/standards"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/brand"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/context"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
 
-    it("ai-ready/templates contains all 17 modular standards including backend-wordpress.md", () => {
-      const standardsDir = join(AI_READY_TEMPLATES, ".agents/standards");
+    it("updateagents/templates contains all 17 modular standards including backend-wordpress.md", () => {
+      const standardsDir = join(UPDATEAGENTS_TEMPLATES, ".agents/standards");
       const files = readdirSync(standardsDir);
       expect(files.length).toBe(17);
       expect(files).toContain("backend-wordpress.md");
@@ -54,14 +53,14 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(techContent).toContain("Direction 4: Modern WordPress");
     });
 
-    it("ai-ready CLI script supports --audit and --scaffold", () => {
+    it("updateagents CLI script supports --audit and --scaffold", () => {
       // 1. Audit on empty sandbox should report missing assets
-      const auditRes = spawnSync("bun", [AI_READY_SCRIPT, TEST_SANDBOX, "--audit"], { encoding: "utf8" });
+      const auditRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, TEST_SANDBOX, "--audit"], { encoding: "utf8" });
       expect(auditRes.status).toBe(0);
       expect(auditRes.stdout).toContain("AI-READY AUDIT REPORT");
 
       // 2. Scaffold on sandbox should provision the full Agent Engine
-      const scaffoldRes = spawnSync("bun", [AI_READY_SCRIPT, TEST_SANDBOX, "--scaffold"], { encoding: "utf8" });
+      const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, TEST_SANDBOX, "--scaffold"], { encoding: "utf8" });
       expect(scaffoldRes.status).toBe(0);
       expect(scaffoldRes.stdout).toContain("Agent Engine successfully provisioned");
 
@@ -73,7 +72,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
   });
 
   describe("Part B: new-project Framework Creation & Intent-First Configurator", () => {
-    it("new-project copies Agent Engine from ai-ready/templates and supports wordpress archetype", () => {
+    it("new-project copies Agent Engine from updateagents/templates and supports wordpress archetype", () => {
       const target = join(TEST_SANDBOX, "wp-agency");
       const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
         encoding: "utf8",
@@ -81,7 +80,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       expect(res.status).toBe(0);
       expect(res.stdout).toContain(
-        "Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)",
+        "Initializing Agent Governance & Progressive Disclosure DOX (from updateagents/templates)",
       );
       expect(res.stdout).toContain("Archetype:          WORDPRESS");
       expect(res.stdout).toContain("Synced: ./.agents/standards/ (17 standards, including WordPress)");
@@ -937,7 +936,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetNoCache, "start-here.md"))).toBe(false);
     }, 15000);
 
-    it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
+    it("verifies zero personal details or agency leaks remain in updateagents/templates", () => {
       const prohibited = ["Harsh", "harshsinghmp", "Agency Council", "Kameli", "/home/harsh", "~/.config/LIFEOS"];
 
       function scanDir(dir: string) {
@@ -955,7 +954,7 @@ Custom billing engine for healthcare providers.
         }
       }
 
-      scanDir(AI_READY_TEMPLATES);
+      scanDir(UPDATEAGENTS_TEMPLATES);
     });
   });
 
