@@ -29,8 +29,17 @@ import { parseArgs } from "node:util";
 
 // Template source of truth located in updateagents/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
-const REPO_ROOT = resolve(SCRIPT_DIR, "..");
-const TEMPLATES_DIR = join(REPO_ROOT, "updateagents/templates");
+const REPO_ROOT = resolve(SCRIPT_DIR, "../../..");
+function resolveTemplatesDir(): string {
+  const sibling = join(SCRIPT_DIR, "../updateagents/templates");
+  if (existsSync(sibling)) return sibling;
+  const fromRepo = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
+  if (existsSync(fromRepo)) return fromRepo;
+  const legacy = join(REPO_ROOT, "updateagents/templates");
+  if (existsSync(legacy)) return legacy;
+  return sibling;
+}
+const TEMPLATES_DIR = resolveTemplatesDir();
 
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({

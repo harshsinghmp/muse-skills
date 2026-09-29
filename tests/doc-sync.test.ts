@@ -15,9 +15,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
-const SCRIPT_PATH = join(REPO_ROOT, "new-project/scripts/new-project.ts");
-const SKILL_PATH = join(REPO_ROOT, "new-project/SKILL.md");
-const README_PATH = join(REPO_ROOT, "new-project/README.md");
+const SCRIPT_PATH = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
+const SKILL_PATH = join(REPO_ROOT, "skills/core-engine/new-project/SKILL.md");
+const README_PATH = join(REPO_ROOT, "skills/core-engine/new-project/README.md");
 
 /** Values declared in the script's help text: `-c, --cms <cms>  CMS: a | b | ...` */
 function extractScriptDeclaredCms(source: string): string[] {
