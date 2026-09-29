@@ -160,7 +160,7 @@
     },
     {
       "name": "relay",
-      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
+      "description": "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost \u2014 even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts.",
       "path": "skills/context-orchestration/relay/SKILL.md",
       "version": "2.2.1",
       "category": "context-orchestration",
@@ -233,7 +233,7 @@
     },
     {
       "name": "refactor",
-      "description": "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through seven execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security).",
+      "description": "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency \u2014 routed through seven execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security).",
       "path": "skills/design-interface/refactor/SKILL.md",
       "version": "1.2.0",
       "category": "design-interface",
@@ -273,7 +273,7 @@
     },
     {
       "name": "designscope",
-      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
+      "description": "Analyze any visual source \u2014 image, website URL, or Figma file \u2014 to extract its structured design system \u2014 a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
       "path": "skills/design-interface/designscope/SKILL.md",
       "version": "1.1.1",
       "category": "design-interface",
@@ -391,7 +391,7 @@
     },
     {
       "name": "dead-letter",
-      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix — with a findings ledger that deduplicates recurring sweeps and measures convergence.",
+      "description": "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix \u2014 with a findings ledger that deduplicates recurring sweeps and measures convergence.",
       "path": "skills/quality-review/dead-letter/SKILL.md",
       "version": "1.5.0",
       "category": "quality-review",
@@ -419,7 +419,7 @@
     },
     {
       "name": "pua",
-      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive—not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
+      "description": "Put your AI on a Performance Improvement Plan. Forces exhaustive problem-solving with Western big-tech performance culture rhetoric and structured debugging. Trigger when: (1) task failed 2+ times or stuck tweaking same approach; (2) about to say 'I cannot', suggest manual work, or blame environment without verifying; (3) being passive\u2014not searching, not reading source, just waiting; (4) user frustration: 'try harder', 'stop giving up', 'figure it out', 'again???', or similar. Also for complex debugging, env issues, config/deployment failures. All task types: code, config, research, writing, deployment, infra, API. Do NOT trigger on first-attempt failures or when a known fix is executing.",
       "path": "skills/quality-review/pua/SKILL.md",
       "version": "1.1.0",
       "category": "quality-review",
@@ -651,7 +651,7 @@
     },
     {
       "name": "design",
-      "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes — routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
+      "description": "Full website design department: creates original visual design from a brief, idea, or reference \u2014 UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes \u2014 routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
       "path": "skills/agency-delivery/design/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -699,7 +699,7 @@
     },
     {
       "name": "paidads",
-      "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, budget pacing, and account audits — routed through ten modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
+      "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic \u2014 plus cross-channel retargeting, budget pacing, and account audits \u2014 routed through ten modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
       "path": "skills/agency-delivery/paidads/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -732,7 +732,7 @@
     },
     {
       "name": "seo",
-      "description": "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics).",
+      "description": "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits \u2014 routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics).",
       "path": "skills/agency-delivery/seo/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -764,7 +764,7 @@
     },
     {
       "name": "webdev",
-      "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
+      "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits \u2014 routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
       "path": "skills/agency-delivery/webdev/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
@@ -805,7 +805,7 @@
     },
     {
       "name": "mobile",
-      "description": "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization — routed through five modes. Use when asked to build, refactor, or ship mobile apps, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs).",
+      "description": "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), progressive web apps, and app store optimization \u2014 routed through five modes. Use when asked to build, refactor, or ship mobile apps, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs).",
       "path": "skills/agency-delivery/mobile/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -839,7 +839,7 @@
     },
     {
       "name": "smm",
-      "description": "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics — routed through ten modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content).",
+      "description": "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics \u2014 routed through ten modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content).",
       "path": "skills/agency-delivery/smm/SKILL.md",
       "version": "1.2.0",
       "category": "agency-delivery",
@@ -886,7 +886,7 @@
     },
     {
       "name": "content",
-      "description": "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads).",
+      "description": "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization \u2014 routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads).",
       "path": "skills/agency-delivery/content/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -916,7 +916,7 @@
     },
     {
       "name": "analytics",
-      "description": "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics).",
+      "description": "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization \u2014 routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics).",
       "path": "skills/agency-delivery/analytics/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -946,7 +946,7 @@
     },
     {
       "name": "automation",
-      "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics).",
+      "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents \u2014 routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics).",
       "path": "skills/agency-delivery/automation/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -985,7 +985,7 @@
     },
     {
       "name": "devops",
-      "description": "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git).",
+      "description": "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response \u2014 routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git).",
       "path": "skills/agency-delivery/devops/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1017,7 +1017,7 @@
     },
     {
       "name": "ops",
-      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) \u2014 routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
       "path": "skills/agency-delivery/ops/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
@@ -1062,7 +1062,7 @@
     },
     {
       "name": "growth",
-      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits — routed through ten modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
+      "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits \u2014 routed through ten modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
       "path": "skills/agency-delivery/growth/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1090,7 +1090,7 @@
     },
     {
       "name": "qa-launch",
-      "description": "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through four modes. Use when asked to QA a site before launch, verify a release candidate, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops).",
+      "description": "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release-gate checklist with Block-or-Ship verdict, and post-fix regression \u2014 routed through four modes. Use when asked to QA a site before launch, verify a release candidate, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops).",
       "path": "skills/agency-delivery/qa-launch/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1119,7 +1119,7 @@
     },
     {
       "name": "client-comms",
-      "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth).",
+      "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake \u2014 routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth).",
       "path": "skills/agency-delivery/client-comms/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1205,7 +1205,7 @@
     },
     {
       "name": "database",
-      "description": "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through six modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations.",
+      "description": "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring \u2014 handles Postgres, MySQL, MSSQL, and SQLite through six modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations.",
       "path": "skills/agency-delivery/database/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1240,7 +1240,7 @@
     },
     {
       "name": "telegram",
-      "description": "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, or stand up a bot with a config-file token. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only).",
+      "description": "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert \u2192 ack \u2192 dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, or stand up a bot with a config-file token. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only).",
       "path": "skills/agency-delivery/telegram/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1266,7 +1266,7 @@
     },
     {
       "name": "research",
-      "description": "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics).",
+      "description": "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers \u2014 routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics).",
       "path": "skills/agency-delivery/research/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1284,7 +1284,7 @@
     },
     {
       "name": "sales-enablement",
-      "description": "Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks — routed through four modes. Use when asked to write a sales demo script, draft objection-handling answers, build a one-pager or leave-behind, or assemble a sales playbook for a client's sales team. Not for proposals or deal terms (ops), outbound pipeline (gtm), or marketing content (content).",
+      "description": "Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks \u2014 routed through four modes. Use when asked to write a sales demo script, draft objection-handling answers, build a one-pager or leave-behind, or assemble a sales playbook for a client's sales team. Not for proposals or deal terms (ops), outbound pipeline (gtm), or marketing content (content).",
       "path": "skills/agency-delivery/sales-enablement/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1294,7 +1294,7 @@
     },
     {
       "name": "retain",
-      "description": "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals — routed through six modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review or testimonial, win a referral or repeat purchase, or spot churn risk from usage drops or client silence. Not for churn strategy itself (growth retention mode) or status reporting (client-comms).",
+      "description": "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals \u2014 routed through six modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review or testimonial, win a referral or repeat purchase, or spot churn risk from usage drops or client silence. Not for churn strategy itself (growth retention mode) or status reporting (client-comms).",
       "path": "skills/agency-delivery/retain/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1318,7 +1318,7 @@
     },
     {
       "name": "muse-security",
-      "description": "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops).",
+      "description": "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails \u2014 routed through six modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops).",
       "path": "skills/quality-review/muse-security/SKILL.md",
       "version": "1.0.0",
       "category": "quality-review",
@@ -1342,7 +1342,7 @@
     },
     {
       "name": "accounts",
-      "description": "Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. Use when asked to send or schedule an invoice, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev).",
+      "description": "Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance \u2014 routed through six modes. Use when asked to send or schedule an invoice, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev).",
       "path": "skills/agency-delivery/accounts/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1367,7 +1367,7 @@
     },
     {
       "name": "brand",
-      "description": "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops).",
+      "description": "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding \u2014 routed through eight modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops).",
       "path": "skills/agency-delivery/brand/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
@@ -1410,7 +1410,7 @@
     },
     {
       "name": "crm",
-      "description": "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain).",
+      "description": "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers \u2014 routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain).",
       "path": "skills/agency-delivery/crm/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
