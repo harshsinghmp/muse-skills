@@ -4,7 +4,7 @@ aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-re
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
 argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -87,7 +87,7 @@ Do **NOT** use this skill for:
 | `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
-| `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit" | History audit (branch hygiene, commit-message compliance, merge-state, doc-sync) | `audit.md` |
+| `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit", "gitignore audit" | History, secret exposure, and .gitignore wildcard trap/cache audit | `audit.md` + `exposure-audit.md` + `gitignore-audit.md` |
 
 Token rule: in a mode, load only the references in its row — never the full set.
 
@@ -100,6 +100,7 @@ Run before reporting completion:
 - [ ] `bun test` passes with ≥1 updated test file
 - [ ] No secrets in staged files (scan `sk-*`, `ghp_*`)
 - [ ] Commit message follows Conventional Commits `<type>(<scope>): <subject>`
+- [ ] .gitignore passes wildcard trap and index cache audit (`gitignore-audit.ts --audit && --check-tracked`)
 - [ ] PR description includes test-evidence refs and deploy notes
 - [ ] Changelog entry added (not under `### Unreleased` alone)
 - [ ] `.agents/artifacts/WORKTREE-LEASE.md` released (if held)
@@ -184,6 +185,14 @@ EOF
      fi
    fi
    ```
+
+3. **`.gitignore` Wildcard Trap & Tracked Index Cache Audit**:
+   Audit `.gitignore` rules for negative parent directory exclusion traps (`dir/` pruning `!dir/file`) and index cache leaks:
+   ```bash
+   bun skills/core-engine/git/scripts/gitignore-audit.ts --audit
+   bun skills/core-engine/git/scripts/gitignore-audit.ts --check-tracked
+   ```
+   If parent traps exist, automatically fix them with `bun skills/core-engine/git/scripts/gitignore-audit.ts --fix`.
 
 ### Phase 1: Issue Intake & Anti-Slop Triage
 1. View issue details using GitHub CLI:

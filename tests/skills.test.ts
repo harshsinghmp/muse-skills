@@ -2069,4 +2069,66 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("🐙 git skill: gitignore-audit CLI detects parent directory traps and audits tracked-ignored files", () => {
+    const scriptPath = "skills/core-engine/git/scripts/gitignore-audit.ts";
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "git-ignore-test-"));
+
+    try {
+      const gitignorePath = path.join(tempDir, ".gitignore");
+      const badContent = `
+# Faulty gitignore with parent directory trap
+logs/
+!logs/important.log
+dist
+build/
+`;
+      fs.writeFileSync(gitignorePath, badContent, "utf8");
+
+      // 1. Audit detects the parent directory trap and missing trailing slash
+      const auditRes = spawnSync("bun", [scriptPath, "--audit", gitignorePath, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(auditRes.status).toBe(1);
+      const auditData = JSON.parse(auditRes.stdout);
+      expect(auditData.isValid).toBe(false);
+      expect(auditData.violations.some((v: { type: string }) => v.type === "parent-directory-trap")).toBe(true);
+      expect(auditData.violations.some((v: { type: string }) => v.type === "missing-trailing-slash")).toBe(true);
+
+      // 2. Auto-fix rewrites logs/ to logs/*
+      const fixRes = spawnSync("bun", [scriptPath, "--fix", gitignorePath, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(fixRes.status).toBe(0);
+      const fixData = JSON.parse(fixRes.stdout);
+      expect(fixData.fixed).toBe(true);
+
+      const fixedContent = fs.readFileSync(gitignorePath, "utf8");
+      expect(fixedContent).toContain("logs/*");
+      expect(fixedContent).toContain("!logs/important.log");
+
+      // 3. Re-audit has no fatal parent-directory-trap errors
+      const reAuditRes = spawnSync("bun", [scriptPath, "--audit", gitignorePath, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(reAuditRes.status).toBe(0);
+      const reAuditData = JSON.parse(reAuditRes.stdout);
+      expect(reAuditData.isValid).toBe(true);
+      expect(reAuditData.violations.some((v: { type: string }) => v.type === "parent-directory-trap")).toBe(false);
+
+      // 4. Tracked files check works on clean repo
+      const trackedRes = spawnSync("bun", [scriptPath, "--check-tracked", REPO_ROOT, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(trackedRes.status).toBe(0);
+      const trackedData = JSON.parse(trackedRes.stdout);
+      expect(trackedData.count).toBe(0);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
