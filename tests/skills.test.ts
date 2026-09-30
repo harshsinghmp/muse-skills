@@ -422,6 +422,47 @@ describe("Invocation UX & conventions", () => {
     } finally {
       if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
     }
+
+    // Verify Asset Weight, CLS, and a11y documentation
+    expect(content).toContain("Asset Weight Budget & Cumulative Layout Shift (CLS) Immunization");
+    expect(content).toContain("The Zero-CLS Layout Contract");
+    expect(content).toContain("Accessible Semantic Keyboard & Focus Invariants (WCAG 2.1 AA)");
+    expect(content).toContain("The Zero-Clickable-`<div>` Ban");
+
+    // Test --audit-media and --audit-a11y CLI capabilities
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "designscope-test-"));
+    const badCodePath = path.join(tempDir, "bad-ui.tsx");
+    fs.writeFileSync(
+      badCodePath,
+      `export function BadComponent() {
+        return (
+          <div onClick={() => console.log('click')}>
+            <img src="/hero.png" />
+            <button className="outline-none">Click me</button>
+          </div>
+        );
+      }`,
+      "utf8",
+    );
+
+    const mediaRes = spawnSync("bun", [scriptPath, "--audit-media", tempDir, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(mediaRes.status).toBe(0);
+    const mediaReport = JSON.parse(mediaRes.stdout);
+    expect(mediaReport.violations.some((v: { type: string }) => v.type === "cls-dimension")).toBe(true);
+
+    const a11yRes = spawnSync("bun", [scriptPath, "--audit-a11y", tempDir, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(a11yRes.status).toBe(0);
+    const a11yReport = JSON.parse(a11yRes.stdout);
+    expect(a11yReport.violations.some((v: { type: string }) => v.type === "clickable-div")).toBe(true);
+    expect(a11yReport.violations.some((v: { type: string }) => v.type === "suppressed-outline")).toBe(true);
+
+    fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
   test("accounts client-pnl mode and token-ledger CLI attribute AI compute costs", () => {
