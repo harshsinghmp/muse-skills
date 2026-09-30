@@ -738,6 +738,50 @@ describe("Invocation UX & conventions", () => {
     }
   });
 
+  test("devops hosting mode and docker-audit CLI enforce multi-stage builds and layer cache order", () => {
+    const hostingPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/hosting.md");
+    expect(fs.existsSync(hostingPath)).toBe(true);
+    const content = fs.readFileSync(hostingPath, "utf8");
+    expect(content).toContain("Multi-Stage Zero-DevDep Docker Pattern & Layer Cache Invariant");
+    expect(content).toContain("Deterministic Layer Cache Ordering");
+    expect(content).toContain("Mandatory `.dockerignore`");
+
+    const scriptPath = "skills/agency-delivery/devops/scripts/docker-audit.ts";
+
+    // Test --scaffold
+    const scaffoldRes = spawnSync("bun", [scriptPath, "--scaffold", "bun"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(scaffoldRes.status).toBe(0);
+    expect(scaffoldRes.stdout).toContain("FROM oven/bun:1 AS base");
+    expect(scaffoldRes.stdout).toContain("FROM base AS deps");
+    expect(scaffoldRes.stdout).toContain("FROM oven/bun:1-slim AS runner");
+    expect(scaffoldRes.stdout).toContain("USER bun");
+
+    // Test --audit on bad Dockerfile (cache invalidation order: COPY . . before install)
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "devops-docker-test-"));
+    try {
+      const dockerfile = path.join(tempDir, "Dockerfile");
+      fs.writeFileSync(
+        dockerfile,
+        'FROM node:20\nWORKDIR /app\nCOPY . .\nRUN npm install\nCMD ["npm", "start"]\n',
+        "utf8",
+      );
+      const auditRes = spawnSync("bun", [scriptPath, "--audit", dockerfile, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(auditRes.status).toBe(0);
+      const report = JSON.parse(auditRes.stdout);
+      expect(report.safe).toBe(false);
+      expect(report.violations.some((v: { type: string }) => v.type === "cache-invalidation")).toBe(true);
+      expect(report.violations.some((v: { type: string }) => v.type === "missing-dockerignore")).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
     const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
     expect(fs.existsSync(protoPath)).toBe(true);
