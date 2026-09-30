@@ -704,6 +704,30 @@ describe("Invocation UX & conventions", () => {
       expect(expressRes.status).toBe(0);
       expect(expressRes.stdout).toContain("Express.js Health Check & Graceful Termination Handler");
       expect(expressRes.stdout).toContain("SIGTERM");
+
+      // Verify Credential Vaulting, Asset Versioning, and Handover standards
+      expect(content).toContain("Shared Credential & MFA Vaulting Standard");
+      expect(content).toContain("Canonical Asset Versioning & Remote WIP Push Invariant");
+      expect(content).toContain("Post-Launch Handover Package Protocol");
+
+      const handoverRes = spawnSync(
+        "bun",
+        [scriptPath, "--scaffold-handover", "Beta Client", "--domain", "https://beta.com"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(handoverRes.status).toBe(0);
+      expect(handoverRes.stdout).toContain("Client Project Handover Package — Beta Client");
+      expect(handoverRes.stdout).toContain("Recorded Loom Walkthrough Video");
+      expect(handoverRes.stdout).toContain("https://beta.com");
+
+      // Test --audit-assets CLI
+      const assetAuditRes = spawnSync("bun", [scriptPath, "--audit-assets", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(assetAuditRes.status).toBe(0);
+      const assetAudit = JSON.parse(assetAuditRes.stdout);
+      expect(assetAudit.totalScanned).toBeGreaterThan(0);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
