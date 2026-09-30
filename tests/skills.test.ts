@@ -710,4 +710,92 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("updatedocs CLI supports --audit, --check, --env-audit, --link-lint, and client handoffs", () => {
+    const helpRes = spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("updatedocs — Documentation Synchronization");
+    expect(helpRes.stdout).toContain("--env-audit");
+    expect(helpRes.stdout).toContain("--link-lint");
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "muse-updatedocs-"));
+    try {
+      // 1. Setup mock repo in tempDir
+      fs.writeFileSync(
+        path.join(tempDir, "package.json"),
+        JSON.stringify({ name: "mock-app", dependencies: { "lucide-react": "^1.0.0" } }),
+        "utf8",
+      );
+      fs.writeFileSync(path.join(tempDir, ".env.example"), "DATABASE_URL=postgres://...\nAPI_KEY=xxx\n", "utf8");
+      fs.mkdirSync(path.join(tempDir, "src"), { recursive: true });
+      fs.writeFileSync(
+        path.join(tempDir, "src/index.ts"),
+        "const db = process.env.DATABASE_URL;\nconst secret = process.env.API_KEY;\n",
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(tempDir, "README.md"),
+        '# Mock App\n\nEnv: DATABASE_URL, API_KEY\n\n```json\n{"status": "ok"}\n```\n[Valid Link](#mock-app)\n',
+        "utf8",
+      );
+
+      // 2. Test --env-audit
+      const envRes = spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--env-audit"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(envRes.status).toBe(0);
+      expect(envRes.stdout).toContain("Env Var Health Score:        100%");
+
+      // 3. Test --link-lint
+      const linkRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--link-lint"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(linkRes.status).toBe(0);
+      expect(linkRes.stdout).toContain("Link Integrity Score:        100%");
+
+      // 4. Test --client-manual
+      const manualRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--client-manual"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(manualRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, "CLIENT_HANDOFF.md"))).toBe(true);
+
+      // 5. Test --credits-sync
+      const creditsRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--credits-sync"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(creditsRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, "CREDITS.md"))).toBe(true);
+      expect(fs.readFileSync(path.join(tempDir, "CREDITS.md"), "utf8")).toContain("lucide-react");
+
+      // 6. Test --audit & fast-skip
+      const auditRes = spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--audit"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(auditRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, ".docs.hash"))).toBe(true);
+
+      // Fast-skip on unchanged docs
+      const fastSkipRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--fast-skip"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(fastSkipRes.status).toBe(0);
+      expect(fastSkipRes.stdout).toContain("Fast-path exit: Zero documentation drift detected");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
