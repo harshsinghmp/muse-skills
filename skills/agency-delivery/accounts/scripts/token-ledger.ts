@@ -109,6 +109,135 @@ export function generateClientComputeReport(ledgerFile: string, clientId: string
   };
 }
 
+export interface BudgetCheckResult {
+  clientId: string;
+  windowHours: number;
+  maxBudgetUsd: number;
+  currentSpendUsd: number;
+  remainingBudgetUsd: number;
+  percentUsed: number;
+  status: "OK" | "WARNING" | "EXCEEDED";
+  circuitBreakerTripped: boolean;
+  recentEntriesCount: number;
+}
+
+export function checkClientBudget(
+  ledgerFile: string,
+  clientId: string,
+  maxBudgetUsd = 100.0,
+  windowHours = 24,
+): BudgetCheckResult {
+  let entries: TokenEntry[] = [];
+  if (fs.existsSync(ledgerFile)) {
+    try {
+      const all: TokenEntry[] = JSON.parse(fs.readFileSync(ledgerFile, "utf8"));
+      entries = all.filter((e) => e.clientId.toLowerCase() === clientId.toLowerCase());
+    } catch {
+      entries = [];
+    }
+  }
+
+  const windowStart = new Date(Date.now() - windowHours * 60 * 60 * 1000).toISOString();
+  const windowEntries = entries.filter((e) => e.timestamp >= windowStart);
+
+  const currentSpendUsd = windowEntries.reduce((acc, e) => acc + (e.billableUsd || e.costUsd || 0), 0);
+  const percentUsed = maxBudgetUsd > 0 ? (currentSpendUsd / maxBudgetUsd) * 100 : 0;
+
+  let status: "OK" | "WARNING" | "EXCEEDED" = "OK";
+  if (percentUsed >= 100) {
+    status = "EXCEEDED";
+  } else if (percentUsed >= 85) {
+    status = "WARNING";
+  }
+
+  return {
+    clientId,
+    windowHours,
+    maxBudgetUsd: Number(maxBudgetUsd.toFixed(2)),
+    currentSpendUsd: Number(currentSpendUsd.toFixed(2)),
+    remainingBudgetUsd: Number(Math.max(0, maxBudgetUsd - currentSpendUsd).toFixed(2)),
+    percentUsed: Number(percentUsed.toFixed(1)),
+    status,
+    circuitBreakerTripped: status === "EXCEEDED",
+    recentEntriesCount: windowEntries.length,
+  };
+}
+
+export interface ContextMessage {
+  role: string;
+  content: string;
+}
+
+export interface PruneResult {
+  prunedMessages: ContextMessage[];
+  originalCount: number;
+  prunedCount: number;
+  estimatedTokens: number;
+}
+
+export function pruneContextHistory(messages: ContextMessage[], maxTokens = 4000): PruneResult {
+  const estimateTokens = (text: string) => Math.ceil((text || "").length / 4);
+
+  const totalTokens = messages.reduce((acc, m) => acc + estimateTokens(m.content), 0);
+  if (totalTokens <= maxTokens || messages.length <= 2) {
+    return {
+      prunedMessages: messages,
+      originalCount: messages.length,
+      prunedCount: 0,
+      estimatedTokens: totalTokens,
+    };
+  }
+
+  const hasSystem = messages[0]?.role === "system";
+  const systemMsg = hasSystem ? messages[0] : null;
+  const conversationTurns = hasSystem ? messages.slice(1) : [...messages];
+
+  let availableBudget = maxTokens;
+  if (systemMsg) {
+    availableBudget -= estimateTokens(systemMsg.content);
+  }
+
+  const retainedTurns: ContextMessage[] = [];
+  let currentTurnTokens = 0;
+
+  // Traverse newest to oldest
+  for (let i = conversationTurns.length - 1; i >= 0; i--) {
+    const msg = conversationTurns[i];
+    const cost = estimateTokens(msg.content);
+    if (currentTurnTokens + cost <= availableBudget || retainedTurns.length === 0) {
+      retainedTurns.unshift(msg);
+      currentTurnTokens += cost;
+    } else {
+      break;
+    }
+  }
+
+  const prunedCount = conversationTurns.length - retainedTurns.length;
+  const prunedMessages: ContextMessage[] = [];
+
+  if (systemMsg) {
+    prunedMessages.push(systemMsg);
+  }
+
+  if (prunedCount > 0) {
+    prunedMessages.push({
+      role: "system",
+      content: `[Context Pruned: ${prunedCount} older conversation turns collapsed to preserve sliding window token budget. System instructions and active state preserved.]`,
+    });
+  }
+
+  prunedMessages.push(...retainedTurns);
+
+  const finalTokens = prunedMessages.reduce((acc, m) => acc + estimateTokens(m.content), 0);
+
+  return {
+    prunedMessages,
+    originalCount: messages.length,
+    prunedCount,
+    estimatedTokens: finalTokens,
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const defaultLedger = path.join(process.cwd(), ".agents/context/token-ledger.json");
@@ -150,9 +279,63 @@ if (import.meta.main) {
       console.log(`  Billable to Client: $${report.totalBillableComputeUsd.toFixed(2)}`);
       console.log(`  Agency Compute Net Profit: $${report.marginProfitUsd.toFixed(2)}`);
     }
+  } else if (args.includes("--check-budget")) {
+    const idx = args.indexOf("--check-budget");
+    const clientId = args[idx + 1];
+    const maxBudget = parseFloat(args[idx + 2] || "100");
+    const windowHoursIdx = args.indexOf("--window-hours");
+    const windowHours = windowHoursIdx !== -1 ? parseFloat(args[windowHoursIdx + 1] || "24") : 24;
+
+    if (!clientId) {
+      console.error("Error: --check-budget requires <clientId> [maxBudgetUsd]");
+      process.exit(1);
+    }
+
+    const check = checkClientBudget(defaultLedger, clientId, maxBudget, windowHours);
+    if (args.includes("--json")) {
+      console.log(JSON.stringify(check, null, 2));
+    } else {
+      console.log(`\n⏱️ Sliding Window Token Budget Check: ${clientId}`);
+      console.log(`  Window: Last ${check.windowHours} hours`);
+      console.log(`  Allocated Budget: $${check.maxBudgetUsd.toFixed(2)}`);
+      console.log(`  Current Rolling Spend: $${check.currentSpendUsd.toFixed(2)} (${check.percentUsed}%)`);
+      console.log(`  Remaining Budget: $${check.remainingBudgetUsd.toFixed(2)}`);
+      console.log(`  Status: [${check.status}]`);
+      if (check.circuitBreakerTripped) {
+        console.log(`  🚨 CIRCUIT BREAKER TRIPPED: HALT_EXCEEDED_TOKEN_BUDGET. Autonomous tasks paused.`);
+      }
+    }
+  } else if (args.includes("--prune-context")) {
+    const idx = args.indexOf("--prune-context");
+    const filePath = args[idx + 1];
+    const maxTokensIdx = args.indexOf("--max-tokens");
+    const maxTokens = maxTokensIdx !== -1 ? parseInt(args[maxTokensIdx + 1] || "4000", 10) : 4000;
+
+    if (!filePath || !fs.existsSync(filePath)) {
+      console.error("Error: --prune-context requires a valid JSON file containing messages array");
+      process.exit(1);
+    }
+
+    try {
+      const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      const messages = Array.isArray(parsed) ? parsed : parsed.messages || [];
+      const result = pruneContextHistory(messages, maxTokens);
+      if (args.includes("--json")) {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        console.log(`\n✂️ Context Window Governor:`);
+        console.log(`  Original Turns: ${result.originalCount}`);
+        console.log(`  Retained Turns: ${result.prunedMessages.length}`);
+        console.log(`  Pruned Older Turns: ${result.prunedCount}`);
+        console.log(`  Estimated Tokens: ~${result.estimatedTokens}`);
+      }
+    } catch (err) {
+      console.error(`Error pruning context: ${err}`);
+      process.exit(1);
+    }
   } else {
     console.log(
-      "Usage: bun token-ledger.ts --record <clientId> <model> <inTokens> <outTokens> [task] | --report <clientId>",
+      "Usage: bun token-ledger.ts --record <clientId> <model> <inTokens> <outTokens> [task] | --report <clientId> | --check-budget <clientId> [maxBudgetUsd] | --prune-context <file.json> [--max-tokens <tokens>]",
     );
   }
 }
