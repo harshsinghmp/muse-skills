@@ -51,7 +51,55 @@ Working API endpoints / schema changes with validation at boundaries, auth enfor
   - *Mass Assignment Prevention*: Always validate requests against strict DTO / Zod schemas; never pass raw request bodies directly to database updates or inserts.
   - *Security Audit Escalation*: For full vulnerability assessments, CVE triage, or cloud WAF infrastructure audits, invoke the external `muse-security` skill.
 
+---
+
+## 🛡️ Webhook Guardian & Idempotency Architecture (Stripe, Shopify, External APIs)
+
+External webhooks (payments, CRM leads, e-commerce orders) require an adversarial, failure-resistant pattern to eliminate duplicate charges, lost events, and timing attacks:
+
+### 1. The 5-Pillar Webhook Contract
+1. **Raw Body Preservation**: Never parse the request body with `json()` or `bodyParser` before signature verification. The raw byte Buffer must be verified against the provider's signature header (`stripe-signature`, `x-shopify-hmac-sha256`).
+2. **Constant-Time Cryptographic Verification**: Validate webhook signatures using `crypto.timingSafeEqual` with the provider's official signing secret to prevent timing attacks.
+3. **Atomic Idempotency De-duplication**:
+   - Check if `eventId` exists in an atomic store (Postgres `webhook_events` table or Redis `SETNX webhook:{id} EX 86400`).
+   - If already recorded as `PROCESSED`, immediately return `HTTP 200 OK` with `{ status: "duplicate", eventId }`. Do NOT re-execute mutations.
+4. **Immediate ACK & Asynchronous Worker Offloading**:
+   - Webhook providers (Stripe, Shopify) enforce strict 3-5 second timeouts. Acknowledge HTTP 200 within 1,000ms.
+   - Offload heavy tasks (email sending, third-party API sync, PDF invoice generation) to a background queue or worker task.
+5. **Poison Message Isolation & DLQ Routing**:
+   - If payload processing fails due to non-transient errors (e.g. malformed JSON or invalid schema), record failure details and quarantine the event to prevent eternal retry storms.
+
+```typescript
+// Canonical Idempotent Webhook Pattern
+export async function handleWebhook(rawBody: Buffer, signature: string, secret: string) {
+  // 1. Verify cryptographic signature
+  const event = verifyWebhookSignature(rawBody, signature, secret);
+
+  // 2. Atomic claim via DB transaction or Redis lock
+  const claimed = await db.transaction(async (tx) => {
+    const existing = await tx.query.webhookEvents.findFirst({ where: eq(webhookEvents.id, event.id) });
+    if (existing) return false;
+    await tx.insert(webhookEvents).values({ id: event.id, status: "PROCESSING", createdAt: new Date() });
+    return true;
+  });
+
+  if (!claimed) return { status: 200, message: "Duplicate event acknowledged" };
+
+  // 3. Process business logic (or enqueue)
+  try {
+    await processEventPayload(event);
+    await db.update(webhookEvents).set({ status: "COMPLETED" }).where(eq(webhookEvents.id, event.id));
+    return { status: 200, message: "Processed" };
+  } catch (err) {
+    await db.update(webhookEvents).set({ status: "FAILED", error: String(err) }).where(eq(webhookEvents.id, event.id));
+    throw err; // Trigger provider retry for transient errors
+  }
+}
+```
+
+---
+
 ## Sources
 
-
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+

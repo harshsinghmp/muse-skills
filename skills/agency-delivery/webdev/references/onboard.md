@@ -92,3 +92,28 @@ When asked to orient or trace an execution path:
 - [ ] Traced execution paths quote exact file paths and method names.
 - [ ] Architectural boundaries clearly separate presentation from persistence.
 - [ ] Output is strictly informative and descriptive (no unsolicited code edits or review judgements).
+
+---
+
+## 🛡️ The Brownfield Shield & Zero-Modernization Boundary
+
+Agencies inherit established, brownfield codebases: WordPress/PHP sites, legacy Create-React-App repositories, CommonJS projects, and older Node/Python apps. When an AI agent enters a brownfield repository, it is prone to modernizing dependencies or syntax unsolicitedly. 
+
+Enforce the **Brownfield Shield**:
+
+### 1. Legacy Stack Classification & Marker Detection
+| Legacy Marker | Subsystem | Invariant Protection |
+|:---|:---|:---|
+| `wp-content/`, `functions.php`, `wp-config.php` | WordPress / PHP | Do NOT replace PHP with Node or headless Next.js unless in project SOW. Do NOT update WordPress core or plugins without backup. |
+| CommonJS `require()` / `module.exports` | Node / Build | Do NOT convert files to ESM `import/export`. Retain CommonJS module resolution. |
+| `react-scripts`, Create-React-App, Webpack 4/5 | Frontend Build | Do NOT swap build tools to Vite/Turbopack unless contracted. Preserve existing polyfills and webpack aliases. |
+| React 16.x–17.x Class Components | React UI | Do NOT mass-refactor working class components into functional hooks. Modify only the targeted bug or lifecycle. |
+| Pages Router (`pages/_app.tsx`, `pages/api/`) | Next.js | Do NOT migrate pages to App Router (`app/`) in a feature PR. Maintain Pages Router conventions. |
+
+### 2. The 5 Zero-Modernization Directives
+1. **Never Change Package Manager**: If `package-lock.json` exists, use `npm`. If `yarn.lock` exists, use `yarn`. Never casually introduce `bun` or `pnpm` into client repos.
+2. **Match Existing Indentation & Code Idiom**: If the client repo uses 4 spaces and semicolons, match 4 spaces and semicolons. Do not run an unconfigured linter that re-formats 200 files.
+3. **Respect Pinned Toolchains**: If `engines.node` specifies `"18.x"`, do not use Node 22 features (e.g. native fetch edge cases or new crypto methods).
+4. **Zero Collateral Refactoring**: When fixing a bug in `legacy-cart.js`, do not modernize unrelated utility methods in the same file. Keep the diff minimal and surgical.
+5. **No Speculative Dependency Upgrades**: Never run `npm update` or bump major versions of libraries without an explicit migration ticket.
+

@@ -294,6 +294,44 @@ describe("Invocation UX & conventions", () => {
     expect(changelogRes.stdout).toContain("Staging Deployment Update");
     expect(changelogRes.stdout).toContain("New & Visual Updates");
   });
+
+  test("webdev backend and onboard modes encode webhook guardian and brownfield shield", () => {
+    const backendPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/backend.md");
+    const onboardPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/onboard.md");
+    expect(fs.existsSync(backendPath)).toBe(true);
+    expect(fs.existsSync(onboardPath)).toBe(true);
+
+    const backendContent = fs.readFileSync(backendPath, "utf8");
+    expect(backendContent).toContain("Webhook Guardian & Idempotency Architecture");
+    expect(backendContent).toContain("Raw Body Preservation");
+    expect(backendContent).toContain("crypto.timingSafeEqual");
+    expect(backendContent).toContain("Atomic Idempotency De-duplication");
+
+    const onboardContent = fs.readFileSync(onboardPath, "utf8");
+    expect(onboardContent).toContain("The Brownfield Shield & Zero-Modernization Boundary");
+    expect(onboardContent).toContain("Never Change Package Manager");
+    expect(onboardContent).toContain("Zero Collateral Refactoring");
+  });
+
+  test("webdev CLI supports --brownfield-scan and --webhook-scaffold", () => {
+    const scriptPath = "skills/agency-delivery/webdev/scripts/webdev.ts";
+    const scanRes = spawnSync("bun", [scriptPath, "--brownfield-scan"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(scanRes.status).toBe(0);
+    expect(scanRes.stdout).toContain("Brownfield Environment Scan");
+    expect(scanRes.stdout).toContain("Classification");
+
+    const scaffoldRes = spawnSync("bun", [scriptPath, "--webhook-scaffold", "stripe"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(scaffoldRes.status).toBe(0);
+    expect(scaffoldRes.stdout).toContain("handleStripeWebhook");
+    expect(scaffoldRes.stdout).toContain("stripe.webhooks.constructEvent");
+    expect(scaffoldRes.stdout).toContain("Duplicate event ignored");
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
