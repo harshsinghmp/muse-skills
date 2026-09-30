@@ -1660,6 +1660,125 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       const successData = JSON.parse(successRes.stdout);
       expect(successData.ghostTask).toBe(false);
       expect(successData.success).toBe(true);
+
+      // 8. Observation Masking — offloads >=15 lines to disk and returns 2-line receipt
+      const longOutput = Array.from({ length: 25 }, (_, i) => `log line ${i}: test step execution passed`).join("\n");
+      const maskRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--mask-output",
+          "--cmd",
+          "bun test",
+          "--raw",
+          longOutput,
+          "--exit",
+          "0",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(maskRes.status).toBe(0);
+      const maskData = JSON.parse(maskRes.stdout);
+      expect(maskData.masked).toBe(true);
+      expect(maskData.receipt).toContain("[OBSERVATION MASKED]: 25 lines offloaded to");
+      expect(fs.existsSync(path.join(tempDir, maskData.logPath))).toBe(true);
+
+      // 9. Prompt-Cache-Aware Partitioning — creates static prefix and dynamic tail
+      const partRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--partition",
+          "--workstream",
+          "billing-migration",
+          "--next",
+          "src/billing.ts:1 — finalize invoices",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(partRes.status).toBe(0);
+      const partData = JSON.parse(partRes.stdout);
+      expect(partData.success).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".agents/anchor-static.md"))).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".agents/anchor-dynamic.md"))).toBe(true);
+      const staticContent = fs.readFileSync(path.join(tempDir, ".agents/anchor-static.md"), "utf8");
+      expect(staticContent).toContain("# Invariant Anchor State (Cache-Stable Prefix)");
+
+      // 10. Deadlock Breaker — halts on 3 consecutive failures and supports rollback
+      spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--record-outcome",
+          "--cmd",
+          "bun test",
+          "--success",
+          "false",
+          "--summary",
+          "Failure 1",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--record-outcome",
+          "--cmd",
+          "bun test",
+          "--success",
+          "false",
+          "--summary",
+          "Failure 2",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      const deadlockRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--record-outcome",
+          "--cmd",
+          "bun test",
+          "--success",
+          "false",
+          "--summary",
+          "Failure 3",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(deadlockRes.status).toBe(1);
+      const deadlockData = JSON.parse(deadlockRes.stdout);
+      expect(deadlockData.deadlockDetected).toBe(true);
+      expect(deadlockData.consecutiveFailures).toBe(3);
+
+      // Verify rollback resets failure streak
+      const rollbackRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--rollback", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(rollbackRes.status).toBe(0);
+      const rollbackData = JSON.parse(rollbackRes.stdout);
+      expect(rollbackData.rolledBack).toBe(true);
+
+      const checkAfterRollback = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--deadlock-check", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(checkAfterRollback.status).toBe(0);
+      const checkData = JSON.parse(checkAfterRollback.stdout);
+      expect(checkData.deadlockDetected).toBe(false);
+      expect(checkData.consecutiveFailures).toBe(0);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

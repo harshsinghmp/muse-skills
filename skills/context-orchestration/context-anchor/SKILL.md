@@ -2,9 +2,9 @@
 name: context-anchor
 aliases: ["anchor","session-anchor","working-reference","park","switch-task"]
 description: "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session."
-argument-hint: "[anchor|park|switch|pin|verify|checkpoint]"
+argument-hint: "[anchor|park|switch|pin|verify|mask|partition|rollback]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -18,14 +18,14 @@ metadata:
   aliases: ["anchor","session-anchor","working-reference","park","switch-task"]
   suggested_skills: ["relay","updateagents","dead-letter","audit"]
   hermes:
-    tags: [context, memory, state, session, focus, anchor, workstreams, reliability, confidentiality]
+    tags: [context, memory, state, session, focus, anchor, workstreams, reliability, confidentiality, caching, deadlock]
     related_skills: [relay, updateagents, dead-letter, audit]
     suggested_skills: [relay, updateagents, dead-letter, audit]
     requires_tools: [view_file, write_to_file]
   openclaw:
     category: context-orchestration
     suggested_skills: [relay, updateagents, dead-letter, audit]
-    primary_triggers: ["drop anchor","save working reference","checkpoint context","prevent context drift","park this workstream","switch workstream","list anchors","pin attention context","verify task"]
+    primary_triggers: ["drop anchor","save working reference","checkpoint context","prevent context drift","park this workstream","switch workstream","list anchors","pin attention context","verify task","mask tool output","partition anchor","check deadlock","rollback anchor"]
     requires_tools: [view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -34,7 +34,13 @@ metadata:
 
 Drop a compact working reference in `<project-root>/.agents/` to prevent cascading context drift, and park parallel client workstreams under named anchors so an agency can switch lanes mid-session and resume instantly.
 
-v1.2.0 positions this skill as the **intra-session focus layer**: anchors capture working state *within* sessions and park *parallel workstreams*; cross-session continuity belongs to `handoff` (`.agents/artifacts/HANDOFF.md`). Incorporates **AST Attention Pinning** ([references/ast-pinning-guide.md](references/ast-pinning-guide.md)) to combat orientation burn and **Attention Hygiene & Ghost Task Verification** ([references/attention-hygiene.md](references/attention-hygiene.md)) to prevent the ContextEcho effect. The layering contract between them is normative — see [references/layering-protocol.md](references/layering-protocol.md).
+v1.3.0 positions this skill as the **intra-session focus and cache-stability layer**: anchors capture working state *within* sessions and park *parallel workstreams*; cross-session continuity belongs to `handoff` (`.agents/artifacts/HANDOFF.md`). Incorporates:
+- **AST Attention Pinning** ([references/ast-pinning-guide.md](references/ast-pinning-guide.md)) to combat orientation burn.
+- **Attention Hygiene & Ghost Task Verification** ([references/attention-hygiene.md](references/attention-hygiene.md)) to prevent the ContextEcho effect.
+- **Observation Masking & Output Hashing** ([references/observation-masking.md](references/observation-masking.md)) to prevent log flooding.
+- **Prompt-Cache-Aware Anchor Partitioning** ([references/prompt-cache-partitioning.md](references/prompt-cache-partitioning.md)) to maximize prefix cache hits.
+- **Deadlock Breaker & Toxic Retry Rollback** ([references/deadlock-breaker.md](references/deadlock-breaker.md)) to break 3-strike failure loops.
+The layering contract between them is normative — see [references/layering-protocol.md](references/layering-protocol.md).
 
 ---
 
@@ -108,6 +114,11 @@ Precedence on conflict: `HANDOFF.md` wins for cross-session truth; the active an
 | `bun anchor.ts --list` | List active and parked workstreams | Structured status table |
 | `bun anchor.ts --pin <file:symbol>` | AST Attention Pinning (≤30 lines) | Verbatim contract pinned to anchor |
 | `bun anchor.ts --verify` | Ghost Task Verification | Disk & git evidence validation |
+| `bun anchor.ts --mask-output` | Observation Masking (≥15 lines) | Lossless `.agents/artifacts/.logs/` & 2-line receipt |
+| `bun anchor.ts --partition` | Prompt-Cache-Aware Partitioning | Static prefix (`anchor-static.md`) & dynamic tail |
+| `bun anchor.ts --record-outcome` | Outcome & Streak Tracking | Updates `.agents/artifacts/.anchor_streak.json` |
+| `bun anchor.ts --deadlock-check` | Toxic Retry Detection | Halts on $\ge 3$ consecutive failures |
+| `bun anchor.ts --rollback` | Automated Workspace Rollback | Reverts git workspace to clean anchor state |
 
 ---
 
@@ -174,6 +185,23 @@ Before declaring a task complete or resuming a session, verify physical ground t
   3. Git Diff / Commit Check confirms non-zero code modifications in git.
 - If any invariant fails, execution halts with a `GHOST TASK DETECTED` receipt, forcing actual code implementation before proceeding.
 
+### Step 9: Observation Masking (Combating Context Drowning)
+When running verbose test, lint, or build commands:
+- Never flood the prompt with $>15$ lines of raw tool output.
+- Run `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --mask-output --cmd "<command>" --raw "<output>" --exit <code>` ([references/observation-masking.md](references/observation-masking.md)).
+- Full logs are offloaded to `.agents/artifacts/.logs/<cmd>-<hash>.log` and replaced in context with a 2-line structured receipt.
+
+### Step 10: Prompt-Cache-Aware Partitioning (Prefix Hit Maximization)
+To avoid busting prompt caches across consecutive turns:
+- Run `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --partition` ([references/prompt-cache-partitioning.md](references/prompt-cache-partitioning.md)).
+- Isolates immutable rules and AST pins to `.agents/anchor-static.md` (deterministic prefix) while routing timestamps, next actions, and receipts to `.agents/anchor-dynamic.md` (ephemeral tail), achieving 90%+ prompt cache hit rates.
+
+### Step 11: Deadlock Breaker & Toxic Retry Rollback (Breaking Failure Loops)
+When encountering persistent test or build failures:
+- Record outcomes via `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --record-outcome --cmd "<command>" --success <bool>` ([references/deadlock-breaker.md](references/deadlock-breaker.md)).
+- If $\ge 3$ consecutive failures occur, `anchor.ts --deadlock-check` flags `DEADLOCK DETECTED`.
+- Execute `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback` to revert uncommitted workspace churn, discard toxic retry memory, and restart from the last verified anchor state.
+
 ---
 
 ## Client-Confidentiality Guard
@@ -194,6 +222,9 @@ Anchors capture raw working context and may be committed, synced, or read by con
 - **Stale Anchor Trust**: Never resume from an anchor that fails the freshness check without re-derivation.
 - **Ghost Tasks**: Claiming completion without running `--verify` causes hallucinated progress and phantom code.
 - **Orientation Burn**: Re-reading entire service files repeatedly rather than pinning critical AST interfaces.
+- **Cache Prefix Invalidation**: Putting dynamic timestamps at the head of static anchors breaks prompt caching on every turn.
+- **Toxic Retry Deadlocks**: Looping on consecutive failures without running `--rollback` clutters context with broken hypotheses.
+- **Log Flooding**: Dumping $>15$ lines of raw tool logs instead of using observation masking drowns critical attention.
 - **Confidentiality Leak**: An anchor is an artifact; write it as if the client will read it — because they might.
 - **Parallel File Drift**: Two files claiming current state (`anchor.md` and `HANDOFF.md`) is a bug, not a backup — resolve via the layering protocol, never by maintaining both as truth.
 
@@ -205,6 +236,9 @@ Anchors capture raw working context and may be committed, synced, or read by con
 - Confirm Next Action points to an exact concrete file and line number.
 - Confirm AST Attention Pins adhere to the ≤30 lines cap and have comment header source grounding.
 - Confirm Ghost Task Verification (`--verify`) passes with physical disk and git diff evidence.
+- Confirm Observation Masking (`--mask-output`) offloads verbose outputs ($\ge 15$ lines) to `.agents/artifacts/.logs/`.
+- Confirm Prompt Cache Partitioning (`--partition`) maintains clean static/dynamic separation.
+- Confirm Deadlock Breaker (`--deadlock-check` / `--rollback`) halts on 3 consecutive failures.
 - Confirm the header carries `workstream:` and `branch:` for freshness checking.
 - Confirm re-entry used the ≤3-line budget and the freshness check ran.
 - Confirm no client-identifying or secret material under NDA scope.
