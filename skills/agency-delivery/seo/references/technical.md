@@ -34,6 +34,11 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
       - Refuse RFC 1918 private ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), loopback (`127.0.0.1`), link-local metadata (`169.254.169.254`), and RFC 6598 carrier-grade NAT space (`100.64.0.0/10`).
       - Sanitize all crawl cache paths against directory traversal attempts (`../`), and validate outbound HTTP proxy endpoints before dispatch.
 
+17. **Trailing-Slash Normalization & BreadcrumbList Schema**:
+    - Enforce strict trailing-slash consistency across sitemaps, internal links, and canonical tags to eliminate split link equity and duplicate content penalties.
+    - Audit directory URLs with `bun seo/scripts/breadcrumb-schema.ts --audit <file>` and normalize incoming links via `--normalize`.
+    - Automatically provision Schema.org `BreadcrumbList` JSON-LD mirroring the URL path hierarchy (`bun seo/scripts/breadcrumb-schema.ts --breadcrumb <url>`).
+
 ## Quality gate
 
 - [ ] Crawl and index state measured, not assumed.
@@ -46,6 +51,8 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
  - [ ] i18n edges covered (self-ref verified, sitemap split before 50MB, `<html lang>` correct, no thin locales); IA delivered as tree + nav-zone map + URL-pattern table with breadcrumb alignment.
 - [ ] Sitemap passes health (honest lastmod, canonical-only, no conflicts).
 - [ ] Redirects flattened, verified, logged, with rollback snapshot approved.
+- [ ] Trailing slash policy strictly consistent across canonicals, sitemaps, and internal links.
+- [ ] Schema.org BreadcrumbList JSON-LD validated on all deep pages.
 
 ## Render-verify via real browser (optional — dev-browser CLI, new tool, OSS, never assumed)
 

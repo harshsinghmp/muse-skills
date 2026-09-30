@@ -4,7 +4,7 @@ aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic
 description: "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics)."
 argument-hint: "[technical|onpage|content|local|links|aeo|audit]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 25
-  aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic-search", "link-building", "local-seo"]
+  aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic-search", "link-building", "local-seo", "breadcrumbs", "url-normalizer"]
   suggested_skills: ["content", "analytics", "webdev", "evidence-ledger"]
   hermes:
-    tags: ["seo", "aeo", "geo", "answer-engine-optimization", "organic-search", "technical-seo", "on-page", "local-seo", "link-building", "backlinks", "crawlability", "indexing", "sitemap", "robots", "structured-data", "schema-org", "ai-search", "llm-citations", "e-e-a-t", "serp"]
+    tags: ["seo", "aeo", "geo", "answer-engine-optimization", "organic-search", "technical-seo", "on-page", "local-seo", "link-building", "backlinks", "crawlability", "indexing", "sitemap", "robots", "structured-data", "schema-org", "ai-search", "llm-citations", "e-e-a-t", "serp", "breadcrumbs", "trailing-slash"]
     related_skills: ["content", "analytics", "webdev", "evidence-ledger"]
     suggested_skills: ["content", "analytics", "webdev", "evidence-ledger"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["content", "analytics", "webdev", "evidence-ledger"]
-    primary_triggers: ["improve seo", "technical seo", "on-page optimization", "local seo", "link building", "answer engine optimization", "aeo", "geo", "rank on google", "site audit", "indexing issues", "ai overviews", "chatgpt visibility", "perplexity"]
+    primary_triggers: ["improve seo", "technical seo", "on-page optimization", "local seo", "link building", "answer engine optimization", "aeo", "geo", "rank on google", "site audit", "indexing issues", "ai overviews", "chatgpt visibility", "perplexity", "breadcrumb schema", "trailing slash normalizer", "breadcrumb json-ld"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -39,7 +39,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
-| **technical** | "technical seo", "crawlability", "indexing issues", "site architecture" | Crawl, render, index, canonical, sitemap, robots, hreflang | [references/technical.md](references/technical.md) |
+| **technical** | "technical seo", "crawlability", "indexing issues", "site architecture", "trailing slash", "breadcrumbs" | Crawl, render, index, canonical, sitemap, robots, hreflang, trailing-slash normalizer, breadcrumb schema | [references/technical.md](references/technical.md) |
 | **onpage** | "on-page seo", "optimize this page", "title tags", "internal linking" | Title/meta/H-structure, internal links, schema, snippet optimization | [references/onpage.md](references/onpage.md) |
 | **content** | "seo content strategy", "keyword research", "topic clusters", "content brief" | Keyword/topic universe → clusters → briefs (content writes them) | [references/content.md](references/content.md) |
 | **local** | "local seo", "google business profile", "maps ranking", "nap consistency" | GBP, local citations, NAP, local landing pages | [references/local.md](references/local.md) |
