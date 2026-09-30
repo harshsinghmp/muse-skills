@@ -76,6 +76,25 @@ opened resources, `TODO: handle error`, nonexistent import path, timeout
 without abort/cleanup, unreleased pooled connection. Review what the AI
 did NOT generate (missing error paths), not just the diff.
 
+---
+
+## 🏛️ Anti-Drift Architecture & Duplicate Utility Guard
+
+AI coding agents optimize locally and frequently introduce "invisible agent debt": duplicate helper functions, fragmented state patterns, and collateral file mutations.
+
+### The 3 Anti-Drift Invariants
+1. **Zero Duplicate Helpers**:
+   - Before writing or accepting a utility function (`cn`, `formatDate`, `slugify`, `debounce`, `truncate`, `fetchWithRetry`), check `@/lib/utils` or `src/utils/`.
+   - If an existing function provides equivalent capability, the agent MUST import the existing utility. Writing parallel duplicates is an automatic Gate Blocker.
+2. **Zero Parallel Abstractions**:
+   - Never introduce competing architectural mechanisms (e.g. adding Axios when `fetcher.ts` exists; adding Redux/Zustand when React Context/NanoStores is established; adding a new CSS-in-JS library when UnoCSS/Tailwind is configured).
+   - Inward-only dependency discipline: feature modules import core utilities; core utilities never import feature code.
+3. **Refactor Scope Boundary (The Rule of 3 Files)**:
+   - When resolving an assigned issue or bug, the diff must remain strictly scoped to the target component and its immediate test file.
+   - Touching $>3$ unrelated files or modifying global theme/middleware files outside the task specification automatically halts the loop for Nexus review.
+
+---
+
 ## Judge Pattern (paired-judge + ratchet)
 
 (sources: `alchaincyf/darwin-skill` judge/ratchet legs + `bjgreenberg/senior-engineering-partner` `evals/` + `references/skill-self-improvement.md` — judge pattern only, MIT/Apache-2.0; single-supplier ENRICH, no optimizer CREATE)
