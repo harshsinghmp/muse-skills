@@ -671,6 +671,73 @@ describe("Invocation UX & conventions", () => {
     }
   });
 
+  test("seo onpage mode and og-audit CLI enforce OpenGraph metadata and detect placeholder cards", () => {
+    const onpagePath = path.join(REPO_ROOT, "skills/agency-delivery/seo/references/onpage.md");
+    expect(fs.existsSync(onpagePath)).toBe(true);
+    const content = fs.readFileSync(onpagePath, "utf8");
+    expect(content).toContain("OpenGraph & Social Share Preview Invariant");
+    expect(content).toContain("Strictly ban any `og:image` pointing to unverified placeholder URLs");
+
+    const scriptPath = "skills/agency-delivery/seo/scripts/og-audit.ts";
+
+    // Test --generate-meta
+    const metaRes = spawnSync(
+      "bun",
+      [
+        scriptPath,
+        "--generate-meta",
+        "--title",
+        "Test Product",
+        "--desc",
+        "High quality agency platform",
+        "--url",
+        "https://example.com/product",
+        "--image",
+        "https://example.com/product/og.png",
+      ],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(metaRes.status).toBe(0);
+    expect(metaRes.stdout).toContain('property="og:title" content="Test Product"');
+    expect(metaRes.stdout).toContain('name="twitter:card" content="summary_large_image"');
+
+    // Test --audit
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "seo-og-test-"));
+    try {
+      const goodHtml = path.join(tempDir, "index.html");
+      fs.writeFileSync(
+        goodHtml,
+        '<html><head><meta property="og:title" content="Clean" /><meta property="og:image" content="https://cdn.agency.com/og.webp" /><meta name="twitter:card" content="summary_large_image" /></head><body></body></html>',
+        "utf8",
+      );
+      const goodRes = spawnSync("bun", [scriptPath, "--audit", goodHtml, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(goodRes.status).toBe(0);
+      const goodReport = JSON.parse(goodRes.stdout);
+      expect(goodReport.safe).toBe(true);
+      expect(goodReport.violations.length).toBe(0);
+
+      const placeholderHtml = path.join(tempDir, "bad.html");
+      fs.writeFileSync(
+        placeholderHtml,
+        '<html><head><meta property="og:title" content="Bad" /><meta property="og:image" content="https://example.com/placeholder.png" /><meta name="twitter:card" content="summary_large_image" /></head><body></body></html>',
+        "utf8",
+      );
+      const badRes = spawnSync("bun", [scriptPath, "--audit", placeholderHtml, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(badRes.status).toBe(0);
+      const badReport = JSON.parse(badRes.stdout);
+      expect(badReport.safe).toBe(false);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "placeholder-image")).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
     const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
     expect(fs.existsSync(protoPath)).toBe(true);

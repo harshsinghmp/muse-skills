@@ -29,6 +29,9 @@ Per-page optimization spec: title (≤ 60 chars, front-loaded), meta description
 13. **Templated Metadata & Programmatic Clutter Audit**:
     - Audit bulk-generated title tags and meta descriptions for robotic boilerplate patterns (e.g. `{City} {Service} - Best {Service} in {City} Reviews`). Formulaic metadata lacking page-specific value triggers algorithmic unhelpful-content suppression.
     - Require programmatic pages to inject dynamic, entity-grounded differentiating parameters (e.g. specific local inventory counts, verified pricing ranges, unique local customer verbatims) rather than static Mad-Libs text strings.
+14. **OpenGraph & Social Share Preview Invariant**:
+    - Every public-facing page must declare complete OpenGraph and Twitter card metadata: `og:title`, `og:description`, `og:url` (canonical production URL), `og:image` (1200x630px aspect ratio 1.91:1, absolute URL, <300kB), `og:image:width`, `og:image:height`, `og:image:alt`, and `twitter:card` set to `summary_large_image`.
+    - Strictly ban any `og:image` pointing to unverified placeholder URLs (`example.com`, `placeholder.png`, `localhost`).
 
 ## Quality gate
 
