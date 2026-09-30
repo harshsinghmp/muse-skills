@@ -4,7 +4,7 @@ aliases: ["code-review-linus-torvalds-style","linus-review","rigorous-review"]
 description: "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review; (6) reviewing diffs that touch tests, specs, or snapshots to confirm the spec stayed authoritative and tests were never weakened to match broken behavior; (7) security review of a diff or module (OWASP-style control pass); (8) receiving or acting on code review feedback; (9) turning review findings into verified fixes."
 argument-hint: "[diff|hotfix|audit|contract|security|receive|fix]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -51,7 +51,7 @@ change* — review depth scales with blast radius. Load only the listed referenc
 | **hotfix** | "quick review", "one-liner review", "is this safe to merge" | Single-hunk changes: correctness + surgical-diff + tests-only; skips architectural themes | nothing extra |
 | **audit** | "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over a whole module, not one diff; discovers the project's own conventions (test runner, standards docs, error conventions) before judging | [references/themes.md](references/themes.md) + [references/cross-file-invariants.md](references/cross-file-invariants.md) + [references/agreement-review.md](references/agreement-review.md) |
 | **contract** | "review the API change", "is this breaking" | API/ABI stability only: signatures, return semantics, error conventions | Quick Reference table below |
-| **security** | "security review", "check this for vulnerabilities", "OWASP pass" | Numbered control pass (SEC-01..10) over a diff or module; evidence-first findings, threat-model/differential/fix-verification discipline | [references/security-controls.md](references/security-controls.md) + [references/security-process.md](references/security-process.md) |
+| **security** | "security review", "check this for vulnerabilities", "OWASP pass" | Numbered control pass (SEC-01..13) over a diff or module; evidence-first findings, threat-model/differential/fix-verification discipline, and EDR/runtime safety | [references/security-controls.md](references/security-controls.md) + [references/security-process.md](references/security-process.md) + [references/edr-and-execution-safety.md](references/edr-and-execution-safety.md) |
 | **receive** | "review feedback arrived", "act on review comments" | Incoming feedback: verify → implement/rebut/ask per item; anti-sycophancy; risk-gating | [references/receiving-feedback.md](references/receiving-feedback.md) |
 | **fix** | "fix the review findings", "apply REVIEW.md", "fix and re-review" | Findings ledger → test-first fixes, one commit per finding, skip ledger for blind-risk items, re-review until convergence | [references/fixing-findings.md](references/fixing-findings.md) |
 | **multi** | "multi-reviewer review", "parallel review", "independent passes", "dedup findings" | Run N independent dimension-scoped passes, dedup by root cause, calibrate severity onto one scale, emit ONE consolidated report | [references/multi-reviewer.md](references/multi-reviewer.md) |
@@ -348,6 +348,13 @@ src/db.ts:9 / NI — `tmp` shadows outer loop var / rename to `cursor`
 - [ ] Test-Spec Integrity: Zero test/spec edits weakening expected behavior; spec changes reviewed as spec changes
 ```
 
+### Senior Auditor & EDR Safety CLI Tooling
+
+- **Audit EDR & Execution Safety**: `bun skills/quality-review/code-review/scripts/code-review.ts --audit-edr-safety [path] [--json]`
+- **Audit Runtime Pitfalls**: `bun skills/quality-review/code-review/scripts/code-review.ts --audit-runtime-pitfalls [path] [--json]`
+- **Audit Conventional Comments**: `bun skills/quality-review/code-review/scripts/code-review.ts --audit-conventional-comments <file.md> [--json]`
+- **Audit Lockfile Supply Chain**: `bun skills/quality-review/code-review/scripts/code-review.ts --audit-lockfile [path] [--json]`
+
 ---
 
 ## Pitfalls
@@ -392,12 +399,14 @@ Run this before handing the review over:
 - [ ] No finding without a demonstrating execution (forcing-violation proof); no `low`-confident Reject
 - [ ] Anti-patterns checked as debugging leads: when a known anti-pattern (e.g. silent error swallow, spec-weakening) appears, use it as a *lead* to find the underlying defect, not as the finding itself
 - [ ] CONSTRAINTS floor held: no lowered-bar green (suppressions, weakened asserts, edited thresholds flagged as regression)
+- [ ] Code passes EDR and runtime safety audit (`code-review.ts --audit-edr-safety && --audit-runtime-pitfalls`)
+- [ ] Review findings follow Conventional Comments standard (`code-review.ts --audit-conventional-comments`)
 
 ## Audit routing
 
 code-review has a built-in `audit` mode (cross-file invariants + data-structure focus). Route deeper audits to:
 - **UI/component audit** → `refactor-ui` audit mode (scored UI report, WCAG 2.2)
-- **Security control pass** → `code-review` `security` mode (SEC-01..10 numbered controls)
+- **Security control pass** → `code-review` `security` mode (SEC-01..13 numbered controls)
 - **Analytics audit** → `analytics` audit mode (events firing, definitions match)
 - **Content-quality audit** → `content` audit mode (anti-slop scan, fact verification)
 - **Database audit** → `database` audit mode (query + performance)

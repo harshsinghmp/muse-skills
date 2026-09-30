@@ -2131,4 +2131,72 @@ build/
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("🐧 code-review skill: senior auditor CLI audits EDR safety, runtime pitfalls, and Conventional Comments", () => {
+    const scriptPath = "skills/quality-review/code-review/scripts/code-review.ts";
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "code-review-test-"));
+
+    try {
+      // 1. EDR Safety Audit catches dynamic eval and /tmp script drops
+      const badScript = path.join(tempDir, "unsafe.ts");
+      fs.writeFileSync(
+        badScript,
+        'const result = eval("2 + 2");\nfs.writeFileSync("/tmp/payload.sh", "#!/bin/sh\\necho hi");\n',
+        "utf8",
+      );
+      const edrRes = spawnSync("bun", [scriptPath, "--audit-edr-safety", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(edrRes.status).toBe(1);
+      const edrData = JSON.parse(edrRes.stdout);
+      expect(edrData.passed).toBe(false);
+      expect(edrData.violations.some((v: { type: string }) => v.type === "dynamic-code-eval")).toBe(true);
+      expect(edrData.violations.some((v: { type: string }) => v.type === "tmp-script-drop")).toBe(true);
+
+      // 2. Runtime pitfalls audit catches Math.random() in token generation and float currency math
+      const tokenScript = path.join(tempDir, "token-service.ts");
+      fs.writeFileSync(
+        tokenScript,
+        "export function generateToken() {\n  return Math.random().toString(36);\n}\nconst fee = price * 0.15;\n",
+        "utf8",
+      );
+      const runtimeRes = spawnSync("bun", [scriptPath, "--audit-runtime-pitfalls", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(runtimeRes.status).toBe(1);
+      const runtimeData = JSON.parse(runtimeRes.stdout);
+      expect(runtimeData.passed).toBe(false);
+      expect(runtimeData.violations.some((v: { type: string }) => v.type === "weak-pseudo-random")).toBe(true);
+      expect(runtimeData.violations.some((v: { type: string }) => v.type === "float-currency-math")).toBe(true);
+
+      // 3. Conventional Comments Audit
+      const reviewDoc = path.join(tempDir, "REVIEW.md");
+      fs.writeFileSync(
+        reviewDoc,
+        "- blocker: Database transaction missing rollback handler on error.\n- nitpick: Rename variable to improve clarity.\n- Please rewrite this whole function.\n",
+        "utf8",
+      );
+      const commentRes = spawnSync("bun", [scriptPath, "--audit-conventional-comments", reviewDoc, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      const commentData = JSON.parse(commentRes.stdout);
+      expect(commentData.totalComments).toBe(3);
+      expect(commentData.compliantComments).toBe(2);
+      expect(commentData.nonCompliant.length).toBe(1);
+
+      // 4. Lockfile audit checks package-lock.json in repo
+      const lockRes = spawnSync("bun", [scriptPath, "--audit-lockfile", "package.json", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(lockRes.status).toBe(0);
+      const lockData = JSON.parse(lockRes.stdout);
+      expect(lockData.passed).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
