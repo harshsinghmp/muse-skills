@@ -45,7 +45,7 @@
       "name": "updateagents",
       "description": "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards.",
       "path": "skills/core-engine/updateagents/SKILL.md",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "category": "core-engine",
       "tools": [
         "bash",
