@@ -67,3 +67,21 @@ Before executing `gh pr create` or requesting review, subject the changeset to a
 3. **Async Race Conditions & Ordering**:
    - *Question*: "What happens when two concurrent requests hit this logic within 5 milliseconds of each other?"
    - *Check*: Audit database transaction isolation, optimistic locking, idempotent webhook keys, and eliminate check-then-act race windows.
+
+---
+
+## 10. The Pre-Flight Context & Doc Sync Gate (Zero Token Waste Invariant)
+
+Before staging git changes, cutting branches, or opening pull requests, the agent must execute the **Pre-Flight Synchronization Gate** to ensure repository context and documentation remain in lockstep without squandering token budget:
+
+1. **Context & Doc Freshness Audit (`--preflight-check`)**:
+   - Verify whether `updateagents` (system prompt context, stack guard, memory boundaries) and `updatedocs` (README, APIs, changelog, .docs.hash) were already synchronized in the preceding turn or current message.
+   - If both receipts exist and are fresh (`CACHE_HIT`), skip execution entirely. This eliminates 10,000–30,000 tokens of redundant AST traversal and context compaction per git cycle.
+
+2. **Ordered Execution Sequence (`--preflight-run`)**:
+   - If drift is detected or receipts are missing:
+     1. Run `updateagents` first to reconcile cognitive rules, memory boundaries, and golden stack constraints.
+     2. Run `updatedocs` second to synchronize documentation, release notes, and environment variables.
+     3. Stage minimal documentation and context deltas alongside feature code.
+     4. Record fresh receipts in `.agents/artifacts/` before staging commits.
+

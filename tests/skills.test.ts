@@ -1442,4 +1442,53 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("git pre-flight gate CLI supports --preflight-check and --preflight-run with token-saving skip", () => {
+    const helpRes = spawnSync("bun", ["skills/core-engine/git/scripts/git-preflight.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("git-preflight — Git Pre-Flight Context & Doc Freshness Gate");
+    expect(helpRes.stdout).toContain("--preflight-check");
+    expect(helpRes.stdout).toContain("--preflight-run");
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "muse-git-preflight-"));
+    try {
+      // 1. Initial check on unrecorded tempDir (should report sync required, exit 1)
+      const checkRes = spawnSync(
+        "bun",
+        ["skills/core-engine/git/scripts/git-preflight.ts", tempDir, "--preflight-check", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(checkRes.status).toBe(1);
+      const checkData = JSON.parse(checkRes.stdout);
+      expect(checkData.canSkip).toBe(false);
+
+      // 2. Run preflight (should succeed and write receipts)
+      const runRes = spawnSync(
+        "bun",
+        ["skills/core-engine/git/scripts/git-preflight.ts", tempDir, "--preflight-run", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(runRes.status).toBe(0);
+      const runData = JSON.parse(runRes.stdout);
+      expect(runData.success).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".agents/artifacts/.context_fresh"))).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".agents/artifacts/.docs_fresh"))).toBe(true);
+
+      // 3. Second check immediately after run (should be CACHE_HIT, exit 0)
+      const secondCheckRes = spawnSync(
+        "bun",
+        ["skills/core-engine/git/scripts/git-preflight.ts", tempDir, "--preflight-check", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(secondCheckRes.status).toBe(0);
+      const secondCheckData = JSON.parse(secondCheckRes.stdout);
+      expect(secondCheckData.canSkip).toBe(true);
+      expect(secondCheckData.reason).toContain("CACHE_HIT");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });

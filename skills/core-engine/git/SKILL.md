@@ -4,7 +4,7 @@ aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-re
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
 argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history]"
 user-invocable: true
-version: 1.0.1
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -94,6 +94,7 @@ Token rule: in a mode, load only the references in its row — never the full se
 ## Verification
 
 Run before reporting completion:
+- [ ] Pre-flight context and documentation freshness verified (`CACHE_HIT` or synchronized)
 - [ ] Target branch exists (or was created) from `dev`
 - [ ] Current branch ≠ `master` (commits to master forbidden)
 - [ ] `bun test` passes with ≥1 updated test file
@@ -141,9 +142,15 @@ Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 
 ## Procedure
 
-### Phase 0: Workspace Security & Dynamic `.gitignore` Initialization
-Before executing any Git operations or staging commits, verify workspace repository hygiene:
-1. **Dynamic `.gitignore` Seeding**:
+### Phase 0: Pre-Flight Context & Doc Sync Gate, Dynamic `.gitignore` & Workspace Security
+Before executing any Git operations or staging commits, verify context synchronization and repository hygiene:
+
+1. **Pre-Flight Context & Doc Freshness Gate (Zero Token Waste)**:
+   - Check if `updateagents` and `updatedocs` are already fresh from the current turn or last message (`bun skills/core-engine/git/scripts/git-preflight.ts --preflight-check`).
+   - If fresh (`CACHE_HIT`), skip execution immediately to avoid burning 10,000–30,000 tokens on redundant passes.
+   - If drift is detected, run `bun skills/core-engine/git/scripts/git-preflight.ts --preflight-run` to synchronize context (`updateagents`) first, then documentation (`updatedocs`), and record cache receipts before staging commits.
+
+2. **Dynamic `.gitignore` Seeding**:
    ```bash
    if [ ! -f ".gitignore" ]; then
      echo "🛡️ .gitignore missing. Seeding hardened Zero-Leakage template from updateagents..."
