@@ -832,6 +832,57 @@ describe("Invocation UX & conventions", () => {
     }
   });
 
+  test("content studio frontmatter-guard CLI detects YAML mapping separator collisions and auto-fixes them", () => {
+    const scriptPath = "skills/agency-delivery/content/scripts/frontmatter-guard.ts";
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "content-fm-"));
+
+    try {
+      const badFile = path.join(tempDir, "post-bad.md");
+      const badContent = `---
+title: System Architecture: Deep Dive into Micro-frontends
+description: The 80: 20 rule in modern software
+author: Jane Doe
+tags: [ai, dev]
+---
+# Content here
+`;
+      fs.writeFileSync(badFile, badContent, "utf8");
+
+      // Test --lint with --json
+      const lintRes = spawnSync("bun", [scriptPath, "--lint", badFile, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(lintRes.status).toBe(1);
+      const lintReport = JSON.parse(lintRes.stdout);
+      expect(lintReport.filesScanned).toBe(1);
+      expect(lintReport.totalIssues).toBeGreaterThan(0);
+      expect(lintReport.results[0].issues.some((i: { field: string }) => i.field === "title")).toBe(true);
+
+      // Test --fix
+      const fixRes = spawnSync("bun", [scriptPath, "--fix", badFile], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(fixRes.status).toBe(0);
+      expect(fixRes.stdout).toContain("Fixed");
+
+      // Verify file content was fixed
+      const fixedContent = fs.readFileSync(badFile, "utf8");
+      expect(fixedContent).toContain('title: "System Architecture: Deep Dive into Micro-frontends"');
+      expect(fixedContent).toContain('description: "The 80: 20 rule in modern software"');
+
+      // Now --lint should pass
+      const reLintRes = spawnSync("bun", [scriptPath, "--lint", badFile], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(reLintRes.status).toBe(0);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("seo onpage mode and og-audit CLI enforce OpenGraph metadata and detect placeholder cards", () => {
     const onpagePath = path.join(REPO_ROOT, "skills/agency-delivery/seo/references/onpage.md");
     expect(fs.existsSync(onpagePath)).toBe(true);
