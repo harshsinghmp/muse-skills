@@ -2,9 +2,9 @@
 name: secretary
 aliases: ["secretary-controller","staff-controller","approval-gate","agency-dispatcher","chief-of-staff","session-router"]
 description: "Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. On session launch or incoming work, triages user intent across 46 canonical agency departments, maps Council Leads (Sol, Jasper, Crew, Nexus), and selectively loads mode playbooks with minimal token overhead. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest."
-argument-hint: "[dispatch|socratic|staff-work|wave|ledger|handoff|onboard|audit]"
+argument-hint: "[dispatch|orchestration|socratic|staff-work|wave|ledger|handoff|onboard|audit]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -15,14 +15,14 @@ metadata:
   aliases: ["secretary-controller","staff-controller","approval-gate","agency-dispatcher","chief-of-staff","session-router"]
   suggested_skills: ["evidence-ledger","coupling-router","gauntlet-loop","code-review"]
   hermes:
-    tags: [staff-work, executive-brief, approval-gate, governance, decision-memo, evidence, hash-approval, socratic-lens, adversarial-review, dissent-preservation, teachback, two-stage-review, replan, handover, wave-dispatch, task-ledger, handoff-harvest, dispatch, agency-directory, onboarding]
+    tags: [staff-work, executive-brief, approval-gate, governance, decision-memo, evidence, hash-approval, socratic-lens, adversarial-review, dissent-preservation, teachback, two-stage-review, replan, handover, wave-dispatch, task-ledger, handoff-harvest, dispatch, agency-directory, onboarding, orchestration]
     related_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
     suggested_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
   openclaw:
     category: context-orchestration
     suggested_skills: [evidence-ledger, coupling-router, gauntlet-loop, code-review]
-    primary_triggers: ["prepare staff packet","executive memo","request approval hash","socratic review","dispatch subagent with teachback","review delegated work","replan invalidated plan","orient briefing","session handover","dispatch wave","task ledger status","agency dispatch","session launch","triage request","onboard identity","setup agent profile"]
+    primary_triggers: ["prepare staff packet","executive memo","request approval hash","socratic review","dispatch subagent with teachback","review delegated work","replan invalidated plan","orient briefing","session handover","dispatch wave","task ledger status","agency dispatch","session launch","triage request","onboard identity","setup agent profile","morning briefing"]
     requires_tools: [bash, view_file, write_to_file, replace_file_content]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -38,6 +38,7 @@ metadata:
 | Mode | Purpose | Reference Document |
 | :--- | :--- | :--- |
 | **dispatch** | Universal Agency Department Directory, intent triage, Council Lead assignment, and progressive disclosure routing. | `references/dispatch.md` |
+| **orchestration** | Autonomous Delegation Protocol, Typed JSON Message Bus, Fast-Path Triage, Morning Briefing, and Multi-Skill Composition. | `references/orchestration.md` |
 | **onboard** | Interactive Principal & Project Identity Interview (Global `~/.agents/identity/` or Project Scoped `./.agents/context/`). | `references/onboard.md` |
 | **socratic** | Socratic Adversarial Stress-Testing, 3-prong devil's advocate challenge, and dissent preservation. | `references/socratic-adversarial-gate.md` |
 | **staff-work** | Completed Staff Work doctrine, decision memos, frozen evidence verification, and cryptographic hash approval gates. | `references/staff-work-doctrine.md` |
