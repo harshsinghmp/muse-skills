@@ -359,6 +359,31 @@ describe("Invocation UX & conventions", () => {
       if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
     }
   });
+
+  test("accounts client-pnl mode and token-ledger CLI attribute AI compute costs", () => {
+    const pnlPath = path.join(REPO_ROOT, "skills/agency-delivery/accounts/references/client-pnl.md");
+    expect(fs.existsSync(pnlPath)).toBe(true);
+    const content = fs.readFileSync(pnlPath, "utf8");
+    expect(content).toContain("The Client AI Compute & Token Ledger Protocol");
+    expect(content).toContain("Per-Client Token Attribution Rule");
+    expect(content).toContain("Compute Budget Guardrails");
+
+    const scriptPath = "skills/agency-delivery/accounts/scripts/token-ledger.ts";
+    try {
+      const recordRes = spawnSync(
+        "bun",
+        [scriptPath, "--record", "client-acme", "claude-3-7-sonnet", "100000", "20000", "Build Checkout API"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(recordRes.status).toBe(0);
+      expect(recordRes.stdout).toContain("Recorded AI Compute for Client: client-acme");
+      expect(recordRes.stdout).toContain("Billable to Client");
+    } finally {
+      if (fs.existsSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"))) {
+        fs.unlinkSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"));
+      }
+    }
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
