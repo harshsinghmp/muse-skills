@@ -653,7 +653,7 @@
       "name": "design",
       "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, and interactive 3D web scenes — routed through eleven modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
       "path": "skills/agency-delivery/design/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "agency-delivery",
       "tools": [
         "bash",

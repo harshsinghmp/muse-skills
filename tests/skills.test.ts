@@ -1783,4 +1783,80 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("🎨 design skill: brand immersion & asset scaffolding engine", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "brand-assets-test-"));
+    try {
+      // 1. Initial audit should fail on empty project
+      const auditFailRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/design/scripts/brand-assets.ts", "--project-dir", tempDir, "--audit", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(auditFailRes.status).toBe(1);
+      const auditFailData = JSON.parse(auditFailRes.stdout);
+      expect(auditFailData.score).toBeLessThan(100);
+      expect(auditFailData.pass).toBe(false);
+
+      // 2. Full scaffold creates css, favicon svg, and site.webmanifest
+      const scaffoldRes = spawnSync(
+        "bun",
+        [
+          "skills/agency-delivery/design/scripts/brand-assets.ts",
+          "--project-dir",
+          tempDir,
+          "--scaffold",
+          "--name",
+          "Acme Corp",
+          "--short-name",
+          "Acme",
+          "--primary-color",
+          "#4f46e5",
+          "--theme-color",
+          "#0f172a",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(scaffoldRes.status).toBe(0);
+      const scaffoldData = JSON.parse(scaffoldRes.stdout);
+      expect(scaffoldData.success).toBe(true);
+      expect(scaffoldData.filesCreated.length).toBe(3);
+
+      // Verify files exist on disk and have expected contents
+      const cssPath = path.join(tempDir, "styles/brand-immersion.css");
+      const faviconPath = path.join(tempDir, "public/favicon.svg");
+      const manifestPath = path.join(tempDir, "public/site.webmanifest");
+
+      expect(fs.existsSync(cssPath)).toBe(true);
+      expect(fs.existsSync(faviconPath)).toBe(true);
+      expect(fs.existsSync(manifestPath)).toBe(true);
+
+      const cssContent = fs.readFileSync(cssPath, "utf8");
+      expect(cssContent).toContain("::selection");
+      expect(cssContent).toContain(":focus-visible");
+      expect(cssContent).toContain("scrollbar-width");
+
+      const faviconContent = fs.readFileSync(faviconPath, "utf8");
+      expect(faviconContent).toContain("prefers-color-scheme: dark");
+      expect(faviconContent).toContain("<svg");
+
+      const manifestContent = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+      expect(manifestContent.name).toBe("Acme Corp");
+      expect(manifestContent.short_name).toBe("Acme");
+
+      // 3. Post-scaffold audit should pass with 100/100
+      const auditPassRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/design/scripts/brand-assets.ts", "--project-dir", tempDir, "--audit", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(auditPassRes.status).toBe(0);
+      const auditPassData = JSON.parse(auditPassRes.stdout);
+      expect(auditPassData.score).toBe(100);
+      expect(auditPassData.pass).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
