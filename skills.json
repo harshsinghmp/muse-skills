@@ -6,14 +6,7 @@
       "path": "skills/core-engine/updatedocs/SKILL.md",
       "version": "2.4.0",
       "category": "core-engine",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "documentation",
         "sync",
@@ -26,19 +19,8 @@
         "dox",
         "governance"
       ],
-      "suggested_skills": [
-        "updateagents",
-        "new-project",
-        "git",
-        "code-review"
-      ],
-      "aliases": [
-        "docs-sync",
-        "doc-sync",
-        "documentation-sync",
-        "doc-update",
-        "docs-update"
-      ],
+      "suggested_skills": ["updateagents", "new-project", "git", "code-review"],
+      "aliases": ["docs-sync", "doc-sync", "documentation-sync", "doc-update", "docs-update"],
       "scope": "global"
     },
     {
@@ -47,14 +29,7 @@
       "path": "skills/core-engine/updateagents/SKILL.md",
       "version": "2.2.0",
       "category": "core-engine",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "agent-sync",
         "context-sync",
@@ -71,11 +46,7 @@
         "repository-audit",
         "fast-skip-gate"
       ],
-      "suggested_skills": [
-        "updatedocs",
-        "new-project",
-        "relay"
-      ],
+      "suggested_skills": ["updatedocs", "new-project", "relay"],
       "aliases": [
         "agent-sync",
         "sync-agents",
@@ -118,19 +89,8 @@
         "anti-slop",
         "release-lifecycle"
       ],
-      "suggested_skills": [
-        "code-review",
-        "updatedocs",
-        "devops",
-        "qa-launch"
-      ],
-      "aliases": [
-        "git-flow",
-        "git-lifecycle",
-        "github-workflow",
-        "git-workflow",
-        "github-release"
-      ],
+      "suggested_skills": ["code-review", "updatedocs", "devops", "qa-launch"],
+      "aliases": ["git-flow", "git-lifecycle", "github-workflow", "git-workflow", "github-release"],
       "scope": "local"
     },
     {
@@ -139,14 +99,7 @@
       "path": "skills/quality-review/code-review/SKILL.md",
       "version": "1.3.0",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "code-review",
         "linus-torvalds",
@@ -163,19 +116,8 @@
         "memory-safety",
         "concurrency"
       ],
-      "suggested_skills": [
-        "git",
-        "webdev",
-        "audit",
-        "pua"
-      ],
-      "aliases": [
-        "review",
-        "code-review-skill",
-        "linus-style-review",
-        "rigorous-review",
-        "torvalds-review"
-      ],
+      "suggested_skills": ["git", "webdev", "audit", "pua"],
+      "aliases": ["review", "code-review-skill", "linus-style-review", "rigorous-review", "torvalds-review"],
       "scope": "local"
     },
     {
@@ -184,14 +126,7 @@
       "path": "skills/core-engine/new-project/SKILL.md",
       "version": "2.7.0",
       "category": "core-engine",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "new-project",
         "project-creation",
@@ -219,20 +154,8 @@
         "project-os",
         "agents-first"
       ],
-      "suggested_skills": [
-        "webdev",
-        "design",
-        "devops",
-        "updatedocs"
-      ],
-      "aliases": [
-        "project-scaffold",
-        "scaffold",
-        "create-project",
-        "init-project",
-        "agent-engine",
-        "dox-engine"
-      ],
+      "suggested_skills": ["webdev", "design", "devops", "updatedocs"],
+      "aliases": ["project-scaffold", "scaffold", "create-project", "init-project", "agent-engine", "dox-engine"],
       "scope": "local"
     },
     {
@@ -241,14 +164,7 @@
       "path": "skills/context-orchestration/relay/SKILL.md",
       "version": "2.2.1",
       "category": "context-orchestration",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "relay",
         "handoff",
@@ -262,18 +178,8 @@
         "cross-session",
         "state-source-ladder"
       ],
-      "suggested_skills": [
-        "secretary",
-        "context-anchor",
-        "coupling-router"
-      ],
-      "aliases": [
-        "handoff",
-        "session-handoff",
-        "context-handoff",
-        "agent-handoff",
-        "resume-session"
-      ],
+      "suggested_skills": ["secretary", "context-anchor", "coupling-router"],
+      "aliases": ["handoff", "session-handoff", "context-handoff", "agent-handoff", "resume-session"],
       "scope": "global"
     },
     {
@@ -282,13 +188,7 @@
       "path": "skills/context-orchestration/context-anchor/SKILL.md",
       "version": "1.1.1",
       "category": "context-orchestration",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "context-anchor",
         "anchor",
@@ -300,17 +200,8 @@
         "context-drift",
         "named-anchors"
       ],
-      "suggested_skills": [
-        "relay",
-        "secretary",
-        "coupling-router"
-      ],
-      "aliases": [
-        "anchor",
-        "focus-anchor",
-        "park-workstream",
-        "context-park"
-      ],
+      "suggested_skills": ["relay", "secretary", "coupling-router"],
+      "aliases": ["anchor", "focus-anchor", "park-workstream", "context-park"],
       "scope": "global"
     },
     {
@@ -319,13 +210,7 @@
       "path": "skills/quality-review/gauntlet-loop/SKILL.md",
       "version": "1.3.0",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "gauntlet-loop",
         "gauntlet",
@@ -342,18 +227,8 @@
         "score-plateau",
         "regression"
       ],
-      "suggested_skills": [
-        "code-review",
-        "webdev",
-        "coupling-router",
-        "dead-letter"
-      ],
-      "aliases": [
-        "gauntlet",
-        "quality-gauntlet",
-        "improvement-loop",
-        "agent-loop"
-      ],
+      "suggested_skills": ["code-review", "webdev", "coupling-router", "dead-letter"],
+      "aliases": ["gauntlet", "quality-gauntlet", "improvement-loop", "agent-loop"],
       "scope": "global"
     },
     {
@@ -362,14 +237,7 @@
       "path": "skills/design-interface/refactor/SKILL.md",
       "version": "1.2.0",
       "category": "design-interface",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "run_command"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "run_command"],
       "tags": [
         "refactor",
         "refactor-ui",
@@ -389,13 +257,7 @@
         "ui-sweep",
         "polish"
       ],
-      "suggested_skills": [
-        "design",
-        "designscope",
-        "animate",
-        "code-review",
-        "database"
-      ],
+      "suggested_skills": ["design", "designscope", "animate", "code-review", "database"],
       "aliases": [
         "refactor-ui",
         "refactoring",
@@ -415,14 +277,7 @@
       "path": "skills/design-interface/designscope/SKILL.md",
       "version": "1.2.0",
       "category": "design-interface",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "web_fetch"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"],
       "tags": [
         "designscope",
         "design-scope",
@@ -441,17 +296,8 @@
         "element-copy",
         "generative-prompt"
       ],
-      "suggested_skills": [
-        "design",
-        "refactor-ui",
-        "animate"
-      ],
-      "aliases": [
-        "design_scope",
-        "designscope",
-        "extract_design",
-        "visual_design_analysis"
-      ],
+      "suggested_skills": ["design", "refactor-ui", "animate"],
+      "aliases": ["design_scope", "designscope", "extract_design", "visual_design_analysis"],
       "scope": "local"
     },
     {
@@ -460,14 +306,7 @@
       "path": "skills/context-orchestration/coupling-router/SKILL.md",
       "version": "1.4.0",
       "category": "context-orchestration",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "coupling-router",
         "coupling",
@@ -486,18 +325,8 @@
         "verification-receipts",
         "worktree-lease"
       ],
-      "suggested_skills": [
-        "relay",
-        "secretary",
-        "dead-letter",
-        "pua"
-      ],
-      "aliases": [
-        "coupling_router",
-        "couplingrouter",
-        "dependency-router",
-        "task-router"
-      ],
+      "suggested_skills": ["relay", "secretary", "dead-letter", "pua"],
+      "aliases": ["coupling_router", "couplingrouter", "dependency-router", "task-router"],
       "scope": "global"
     },
     {
@@ -506,14 +335,7 @@
       "path": "skills/context-orchestration/secretary/SKILL.md",
       "version": "1.6.0",
       "category": "context-orchestration",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "secretary",
         "staff-work",
@@ -534,18 +356,8 @@
         "task-ledger",
         "session-handover"
       ],
-      "suggested_skills": [
-        "evidence-ledger",
-        "coupling-router",
-        "relay",
-        "dead-letter"
-      ],
-      "aliases": [
-        "staff-work",
-        "approval-gate",
-        "executive-brief",
-        "delegation-controller"
-      ],
+      "suggested_skills": ["evidence-ledger", "coupling-router", "relay", "dead-letter"],
+      "aliases": ["staff-work", "approval-gate", "executive-brief", "delegation-controller"],
       "scope": "global"
     },
     {
@@ -554,14 +366,7 @@
       "path": "skills/context-orchestration/evidence-ledger/SKILL.md",
       "version": "2.0.0",
       "category": "context-orchestration",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "web_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_search"],
       "tags": [
         "evidence-ledger",
         "evidence",
@@ -580,17 +385,8 @@
         "append-only",
         "multi-client"
       ],
-      "suggested_skills": [
-        "secretary",
-        "coupling-router",
-        "updatedocs"
-      ],
-      "aliases": [
-        "evidence",
-        "claim-tracking",
-        "source-tracking",
-        "confidence-ledger"
-      ],
+      "suggested_skills": ["secretary", "coupling-router", "updatedocs"],
+      "aliases": ["evidence", "claim-tracking", "source-tracking", "confidence-ledger"],
       "scope": "global"
     },
     {
@@ -599,14 +395,7 @@
       "path": "skills/quality-review/dead-letter/SKILL.md",
       "version": "1.5.0",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "dead-letter",
         "failure-capture",
@@ -624,18 +413,8 @@
         "findings-ledger",
         "convergence"
       ],
-      "suggested_skills": [
-        "pua",
-        "coupling-router",
-        "secretary",
-        "evidence-ledger"
-      ],
-      "aliases": [
-        "dead_letter",
-        "failure_capture",
-        "blocked-task",
-        "retry-handler"
-      ],
+      "suggested_skills": ["pua", "coupling-router", "secretary", "evidence-ledger"],
+      "aliases": ["dead_letter", "failure_capture", "blocked-task", "retry-handler"],
       "scope": "global"
     },
     {
@@ -669,17 +448,8 @@
         "try-harder",
         "figure-it-out"
       ],
-      "suggested_skills": [
-        "dead-letter",
-        "coupling-router",
-        "code-review"
-      ],
-      "aliases": [
-        "pip",
-        "performance-improvement-plan",
-        "exhaustive-debugging",
-        "performance-plan"
-      ],
+      "suggested_skills": ["dead-letter", "coupling-router", "code-review"],
+      "aliases": ["pip", "performance-improvement-plan", "exhaustive-debugging", "performance-plan"],
       "scope": "global"
     },
     {
@@ -688,13 +458,7 @@
       "path": "skills/reflection-maintenance/coach/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "coach",
         "daily-checkin",
@@ -709,17 +473,8 @@
         "invariants",
         "secrets-scrubbed"
       ],
-      "suggested_skills": [
-        "periodic-retreat",
-        "dead-letter",
-        "evidence-ledger"
-      ],
-      "aliases": [
-        "daily-coach",
-        "standup",
-        "effort-check",
-        "reflective-checkin"
-      ],
+      "suggested_skills": ["periodic-retreat", "dead-letter", "evidence-ledger"],
+      "aliases": ["daily-coach", "standup", "effort-check", "reflective-checkin"],
       "scope": "global"
     },
     {
@@ -728,14 +483,7 @@
       "path": "skills/quality-review/audit/SKILL.md",
       "version": "1.1.1",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "find_by_name"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [
         "audit",
         "knowledge-hygiene",
@@ -752,17 +500,8 @@
         "companion-skill-routing",
         "brain-audit-report"
       ],
-      "suggested_skills": [
-        "updatedocs",
-        "evidence-ledger",
-        "coach"
-      ],
-      "aliases": [
-        "knowledge-audit",
-        "memory-audit",
-        "doc-audit",
-        "integrity-audit"
-      ],
+      "suggested_skills": ["updatedocs", "evidence-ledger", "coach"],
+      "aliases": ["knowledge-audit", "memory-audit", "doc-audit", "integrity-audit"],
       "scope": "global"
     },
     {
@@ -771,13 +510,7 @@
       "path": "skills/reflection-maintenance/periodic-retreat/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "periodic-retreat",
         "quarterly-retreat",
@@ -790,17 +523,8 @@
         "strategic-alignment",
         "next-quarter"
       ],
-      "suggested_skills": [
-        "coach",
-        "audit",
-        "updatedocs"
-      ],
-      "aliases": [
-        "quarterly",
-        "retreat",
-        "strategic-retreat",
-        "quarterly-review"
-      ],
+      "suggested_skills": ["coach", "audit", "updatedocs"],
+      "aliases": ["quarterly", "retreat", "strategic-retreat", "quarterly-review"],
       "scope": "global"
     },
     {
@@ -809,14 +533,7 @@
       "path": "skills/reflection-maintenance/clean-system-cache/SKILL.md",
       "version": "1.0.0",
       "category": "reflection-maintenance",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "clean-system-cache",
         "cache-cleaner",
@@ -864,16 +581,8 @@
         "session-protection",
         "cache-only"
       ],
-      "suggested_skills": [
-        "coach",
-        "periodic-retreat"
-      ],
-      "aliases": [
-        "clean-cache",
-        "cache-cleaner",
-        "system-cache",
-        "purge-cache"
-      ],
+      "suggested_skills": ["coach", "periodic-retreat"],
+      "aliases": ["clean-cache", "cache-cleaner", "system-cache", "purge-cache"],
       "scope": "global"
     },
     {
@@ -882,13 +591,7 @@
       "path": "skills/quality-review/humanize/SKILL.md",
       "version": "2.0.0",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "humanize",
         "prose-humanization",
@@ -905,17 +608,8 @@
         "prose-polishing",
         "chatbot-slop"
       ],
-      "suggested_skills": [
-        "content",
-        "code-review",
-        "updatedocs"
-      ],
-      "aliases": [
-        "humanize_text",
-        "de_ai",
-        "remove_ai_writing",
-        "prose_humanizer"
-      ],
+      "suggested_skills": ["content", "code-review", "updatedocs"],
+      "aliases": ["humanize_text", "de_ai", "remove_ai_writing", "prose_humanizer"],
       "scope": "global"
     },
     {
@@ -924,14 +618,7 @@
       "path": "skills/design-interface/animate/SKILL.md",
       "version": "1.0.0",
       "category": "design-interface",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search",
-        "web_fetch"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"],
       "tags": [
         "animate",
         "animation",
@@ -958,19 +645,8 @@
         "native-mobile",
         "react"
       ],
-      "suggested_skills": [
-        "design",
-        "refactor-ui",
-        "designscope",
-        "code-review"
-      ],
-      "aliases": [
-        "animation",
-        "motion-design",
-        "ui-animation",
-        "add-motion",
-        "animate_this"
-      ],
+      "suggested_skills": ["design", "refactor-ui", "designscope", "code-review"],
+      "aliases": ["animation", "motion-design", "ui-animation", "add-motion", "animate_this"],
       "scope": "local"
     },
     {
@@ -1009,12 +685,7 @@
         "narrative-arc",
         "data-storytelling"
       ],
-      "suggested_skills": [
-        "refactor-ui",
-        "designscope",
-        "animate",
-        "new-project"
-      ],
+      "suggested_skills": ["refactor-ui", "designscope", "animate", "new-project"],
       "aliases": [
         "web-design",
         "ui-design",
@@ -1032,15 +703,7 @@
       "path": "skills/agency-delivery/paidads/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "paidads",
         "paid-ads",
@@ -1063,19 +726,8 @@
         "tracking-pixels",
         "ad-campaigns"
       ],
-      "suggested_skills": [
-        "analytics",
-        "content",
-        "smm",
-        "evidence-ledger"
-      ],
-      "aliases": [
-        "paid-ads",
-        "advertising",
-        "google-ads",
-        "meta-ads",
-        "ad-campaigns"
-      ],
+      "suggested_skills": ["analytics", "content", "smm", "evidence-ledger"],
+      "aliases": ["paid-ads", "advertising", "google-ads", "meta-ads", "ad-campaigns"],
       "scope": "local"
     },
     {
@@ -1084,15 +736,7 @@
       "path": "skills/agency-delivery/seo/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "seo",
         "search-engine-optimization",
@@ -1114,26 +758,15 @@
         "seo-audit",
         "keyword-strategy"
       ],
-      "suggested_skills": [
-        "content",
-        "analytics",
-        "webdev",
-        "evidence-ledger"
-      ],
-      "aliases": [
-        "search-engine-optimization",
-        "seo-audit",
-        "technical-seo",
-        "local-seo",
-        "aeo"
-      ],
+      "suggested_skills": ["content", "analytics", "webdev", "evidence-ledger"],
+      "aliases": ["search-engine-optimization", "seo-audit", "technical-seo", "local-seo", "aeo"],
       "scope": "local"
     },
     {
       "name": "webdev",
       "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
       "path": "skills/agency-delivery/webdev/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "agency-delivery",
       "tools": [
         "bash",
@@ -1166,19 +799,8 @@
         "ecommerce-platforms",
         "cms-platforms"
       ],
-      "suggested_skills": [
-        "new-project",
-        "code-review",
-        "gauntlet-loop",
-        "relay"
-      ],
-      "aliases": [
-        "web-development",
-        "frontend-dev",
-        "backend-dev",
-        "fullstack-dev",
-        "web-engineering"
-      ],
+      "suggested_skills": ["new-project", "code-review", "gauntlet-loop", "relay"],
+      "aliases": ["web-development", "frontend-dev", "backend-dev", "fullstack-dev", "web-engineering"],
       "scope": "local"
     },
     {
@@ -1187,14 +809,7 @@
       "path": "skills/agency-delivery/mobile/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_fetch", "grep_search"],
       "tags": [
         "mobile",
         "mobile-app",
@@ -1218,19 +833,8 @@
         "ios-app",
         "android-app"
       ],
-      "suggested_skills": [
-        "new-project",
-        "webdev",
-        "design",
-        "code-review"
-      ],
-      "aliases": [
-        "mobile-apps",
-        "ios",
-        "android",
-        "react-native",
-        "flutter"
-      ],
+      "suggested_skills": ["new-project", "webdev", "design", "code-review"],
+      "aliases": ["mobile-apps", "ios", "android", "react-native", "flutter"],
       "scope": "local"
     },
     {
@@ -1239,15 +843,7 @@
       "path": "skills/agency-delivery/smm/SKILL.md",
       "version": "1.2.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "smm",
         "social-media-marketing",
@@ -1276,12 +872,7 @@
         "tiktok-carousel",
         "instagram-carousel"
       ],
-      "suggested_skills": [
-        "content",
-        "design",
-        "analytics",
-        "paidads"
-      ],
+      "suggested_skills": ["content", "design", "analytics", "paidads"],
       "aliases": [
         "social-media",
         "organic-social",
@@ -1299,15 +890,7 @@
       "path": "skills/agency-delivery/content/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "content",
         "content-studio",
@@ -1327,19 +910,8 @@
         "content-writing",
         "ai-slop-removal"
       ],
-      "suggested_skills": [
-        "seo",
-        "design",
-        "humanize",
-        "smm"
-      ],
-      "aliases": [
-        "content-studio",
-        "copywriting",
-        "content-creation",
-        "blog-writing",
-        "content-marketing"
-      ],
+      "suggested_skills": ["seo", "design", "humanize", "smm"],
+      "aliases": ["content-studio", "copywriting", "content-creation", "blog-writing", "content-marketing"],
       "scope": "local"
     },
     {
@@ -1348,14 +920,7 @@
       "path": "skills/agency-delivery/analytics/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_fetch", "grep_search"],
       "tags": [
         "analytics",
         "data-analytics",
@@ -1375,19 +940,8 @@
         "event-tracking",
         "marketing-performance"
       ],
-      "suggested_skills": [
-        "seo",
-        "paidads",
-        "webdev",
-        "growth"
-      ],
-      "aliases": [
-        "analytics",
-        "data-analytics",
-        "measurement",
-        "dashboards",
-        "kpi"
-      ],
+      "suggested_skills": ["seo", "paidads", "webdev", "growth"],
+      "aliases": ["analytics", "data-analytics", "measurement", "dashboards", "kpi"],
       "scope": "local"
     },
     {
@@ -1425,19 +979,8 @@
         "third-party-integrations",
         "prompt-design"
       ],
-      "suggested_skills": [
-        "webdev",
-        "analytics",
-        "devops",
-        "new-project"
-      ],
-      "aliases": [
-        "automation",
-        "workflow-automation",
-        "ai-agents",
-        "chatbot",
-        "rag-pipeline"
-      ],
+      "suggested_skills": ["webdev", "analytics", "devops", "new-project"],
+      "aliases": ["automation", "workflow-automation", "ai-agents", "chatbot", "rag-pipeline"],
       "scope": "local"
     },
     {
@@ -1446,14 +989,7 @@
       "path": "skills/agency-delivery/devops/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "devops",
         "infrastructure",
@@ -1475,20 +1011,8 @@
         "reversible",
         "wrangler"
       ],
-      "suggested_skills": [
-        "git",
-        "webdev",
-        "automation",
-        "code-review"
-      ],
-      "aliases": [
-        "infrastructure",
-        "deployment",
-        "ci-cd",
-        "hosting",
-        "security-hardening",
-        "wrangler"
-      ],
+      "suggested_skills": ["git", "webdev", "automation", "code-review"],
+      "aliases": ["infrastructure", "deployment", "ci-cd", "hosting", "security-hardening", "wrangler"],
       "scope": "local"
     },
     {
@@ -1497,13 +1021,7 @@
       "path": "skills/agency-delivery/ops/SKILL.md",
       "version": "1.2.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "ops",
         "operations",
@@ -1528,13 +1046,7 @@
         "knowledge-management",
         "pkm"
       ],
-      "suggested_skills": [
-        "relay",
-        "context-anchor",
-        "secretary",
-        "evidence-ledger",
-        "git"
-      ],
+      "suggested_skills": ["relay", "context-anchor", "secretary", "evidence-ledger", "git"],
       "aliases": [
         "agency-ops",
         "client-ops",
@@ -1554,15 +1066,7 @@
       "path": "skills/agency-delivery/growth/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "growth",
         "strategy",
@@ -1580,19 +1084,8 @@
         "growth-strategy",
         "scaling-strategy"
       ],
-      "suggested_skills": [
-        "analytics",
-        "content",
-        "paidads",
-        "seo"
-      ],
-      "aliases": [
-        "growth-strategy",
-        "scaling",
-        "positioning",
-        "pricing-strategy",
-        "product-launch"
-      ],
+      "suggested_skills": ["analytics", "content", "paidads", "seo"],
+      "aliases": ["growth-strategy", "scaling", "positioning", "pricing-strategy", "product-launch"],
       "scope": "local"
     },
     {
@@ -1601,13 +1094,7 @@
       "path": "skills/agency-delivery/qa-launch/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "qa-launch",
         "qa",
@@ -1626,19 +1113,8 @@
         "release-candidate",
         "post-fix"
       ],
-      "suggested_skills": [
-        "webdev",
-        "mobile",
-        "refactor-ui",
-        "devops"
-      ],
-      "aliases": [
-        "qa",
-        "quality-assurance",
-        "launch-qa",
-        "pre-launch-qa",
-        "release-gate"
-      ],
+      "suggested_skills": ["webdev", "mobile", "refactor-ui", "devops"],
+      "aliases": ["qa", "quality-assurance", "launch-qa", "pre-launch-qa", "release-gate"],
       "scope": "local"
     },
     {
@@ -1647,13 +1123,7 @@
       "path": "skills/agency-delivery/client-comms/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
         "client-comms",
         "client-communication",
@@ -1669,17 +1139,8 @@
         "client-feedback",
         "feedback-intake"
       ],
-      "suggested_skills": [
-        "ops",
-        "growth",
-        "analytics"
-      ],
-      "aliases": [
-        "client-communication",
-        "client-status",
-        "client-handover",
-        "client-feedback"
-      ],
+      "suggested_skills": ["ops", "growth", "analytics"],
+      "aliases": ["client-communication", "client-status", "client-handover", "client-feedback"],
       "scope": "local"
     },
     {
@@ -1688,15 +1149,7 @@
       "path": "skills/agency-delivery/gtm/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "web_search",
-        "web_fetch",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [
         "gtm",
         "go-to-market",
@@ -1719,18 +1172,8 @@
         "prospect-list",
         "qualified-pipeline"
       ],
-      "suggested_skills": [
-        "growth",
-        "content",
-        "ops",
-        "analytics"
-      ],
-      "aliases": [
-        "go-to-market",
-        "outbound-gtm",
-        "lead-generation",
-        "cold-outreach"
-      ],
+      "suggested_skills": ["growth", "content", "ops", "analytics"],
+      "aliases": ["go-to-market", "outbound-gtm", "lead-generation", "cold-outreach"],
       "scope": "local"
     },
     {
@@ -1739,14 +1182,7 @@
       "path": "skills/agency-delivery/incident-response/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "incident-response",
         "incident-command",
@@ -1763,21 +1199,8 @@
         "data-loss",
         "perf-collapse"
       ],
-      "suggested_skills": [
-        "devops",
-        "webdev",
-        "mobile",
-        "client-comms",
-        "qa-launch"
-      ],
-      "aliases": [
-        "incident",
-        "incident-command",
-        "oncall",
-        "severity-triage",
-        "postmortem",
-        "incident-management"
-      ],
+      "suggested_skills": ["devops", "webdev", "mobile", "client-comms", "qa-launch"],
+      "aliases": ["incident", "incident-command", "oncall", "severity-triage", "postmortem", "incident-management"],
       "scope": "local"
     },
     {
@@ -1786,14 +1209,7 @@
       "path": "skills/agency-delivery/database/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "database",
         "sql",
@@ -1818,18 +1234,8 @@
         "read-only",
         "query-execution"
       ],
-      "suggested_skills": [
-        "webdev",
-        "devops",
-        "qa-launch"
-      ],
-      "aliases": [
-        "db",
-        "database-skill",
-        "sql-query",
-        "db-performance",
-        "db-tuning"
-      ],
+      "suggested_skills": ["webdev", "devops", "qa-launch"],
+      "aliases": ["db", "database-skill", "sql-query", "db-performance", "db-tuning"],
       "scope": "local"
     },
     {
@@ -1838,12 +1244,7 @@
       "path": "skills/agency-delivery/telegram/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content"],
       "tags": [
         "telegram",
         "bot",
@@ -1859,18 +1260,8 @@
         "claude-code-hook",
         "bash"
       ],
-      "suggested_skills": [
-        "automation",
-        "coupling-router",
-        "sentry",
-        "user-onboarding"
-      ],
-      "aliases": [
-        "tg",
-        "telegram-bot",
-        "telegram-skill",
-        "telegram-notify"
-      ],
+      "suggested_skills": ["automation", "coupling-router", "sentry", "user-onboarding"],
+      "aliases": ["tg", "telegram-bot", "telegram-skill", "telegram-notify"],
       "scope": "local"
     },
     {
@@ -1880,14 +1271,7 @@
       "version": "1.0.0",
       "category": "agency-delivery",
       "scope": "local",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "research",
         "user-research",
@@ -1905,24 +1289,8 @@
       "version": "1.0.0",
       "category": "agency-delivery",
       "scope": "local",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
-      "tags": [
-        "sales",
-        "sales-enablement",
-        "demo",
-        "objection-handling",
-        "one-pager",
-        "playbook",
-        "pitch",
-        "closing"
-      ]
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
+      "tags": ["sales", "sales-enablement", "demo", "objection-handling", "one-pager", "playbook", "pitch", "closing"]
     },
     {
       "name": "retain",
@@ -1930,14 +1298,7 @@
       "path": "skills/agency-delivery/retain/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "retention",
         "check-in",
@@ -1951,20 +1312,8 @@
         "renewal",
         "churn-watch"
       ],
-      "suggested_skills": [
-        "growth",
-        "client-comms",
-        "ops",
-        "analytics"
-      ],
-      "aliases": [
-        "retention-loop",
-        "client-retention",
-        "renewals",
-        "qbr",
-        "review-ask",
-        "referrals"
-      ],
+      "suggested_skills": ["growth", "client-comms", "ops", "analytics"],
+      "aliases": ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals"],
       "scope": "local"
     },
     {
@@ -1973,14 +1322,7 @@
       "path": "skills/quality-review/muse-security/SKILL.md",
       "version": "1.0.0",
       "category": "quality-review",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "security",
         "cve",
@@ -1994,22 +1336,8 @@
         "zero-secret",
         "quality-gate"
       ],
-      "suggested_skills": [
-        "code-review",
-        "devops",
-        "webdev",
-        "incident-response",
-        "evidence-ledger"
-      ],
-      "aliases": [
-        "security",
-        "secops",
-        "cve",
-        "waf",
-        "vulnerability-audit",
-        "sast",
-        "clawsec"
-      ],
+      "suggested_skills": ["code-review", "devops", "webdev", "incident-response", "evidence-ledger"],
+      "aliases": ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "clawsec"],
       "scope": "local"
     },
     {
@@ -2018,14 +1346,7 @@
       "path": "skills/agency-delivery/accounts/SKILL.md",
       "version": "1.1.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "finance",
         "invoicing",
@@ -2040,22 +1361,8 @@
         "vat",
         "financial-audit"
       ],
-      "suggested_skills": [
-        "ops",
-        "retain",
-        "client-comms",
-        "growth",
-        "gtm",
-        "webdev"
-      ],
-      "aliases": [
-        "finance",
-        "invoicing",
-        "billing",
-        "bookkeeping",
-        "cfo",
-        "agency-accounts"
-      ],
+      "suggested_skills": ["ops", "retain", "client-comms", "growth", "gtm", "webdev"],
+      "aliases": ["finance", "invoicing", "billing", "bookkeeping", "cfo", "agency-accounts"],
       "scope": "local"
     },
     {
@@ -2064,14 +1371,7 @@
       "path": "skills/agency-delivery/brand/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "brand",
         "onboarding",
@@ -2093,15 +1393,7 @@
         "fba",
         "logistics"
       ],
-      "suggested_skills": [
-        "design",
-        "webdev",
-        "content",
-        "paidads",
-        "ops",
-        "client-comms",
-        "accounts"
-      ],
+      "suggested_skills": ["design", "webdev", "content", "paidads", "ops", "client-comms", "accounts"],
       "aliases": [
         "brand-onboarding",
         "client-intake",
@@ -2122,14 +1414,7 @@
       "path": "skills/agency-delivery/crm/SKILL.md",
       "version": "1.0.0",
       "category": "agency-delivery",
-      "tools": [
-        "bash",
-        "view_file",
-        "write_to_file",
-        "replace_file_content",
-        "run_command",
-        "grep_search"
-      ],
+      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
         "crm",
         "flows",
@@ -2147,22 +1432,8 @@
         "winback",
         "segmentation"
       ],
-      "suggested_skills": [
-        "content",
-        "webdev",
-        "brand",
-        "analytics",
-        "growth",
-        "accounts"
-      ],
-      "aliases": [
-        "flows",
-        "customer-flows",
-        "lifecycle-flows",
-        "email-flows",
-        "retention-flows",
-        "customer-journeys"
-      ],
+      "suggested_skills": ["content", "webdev", "brand", "analytics", "growth", "accounts"],
+      "aliases": ["flows", "customer-flows", "lifecycle-flows", "email-flows", "retention-flows", "customer-journeys"],
       "scope": "local"
     }
   ],

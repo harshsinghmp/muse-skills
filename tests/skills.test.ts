@@ -314,7 +314,7 @@ describe("Invocation UX & conventions", () => {
     expect(onboardContent).toContain("Zero Collateral Refactoring");
   });
 
-  test("webdev CLI supports --brownfield-scan and --webhook-scaffold", () => {
+  test("webdev CLI supports --brownfield-scan, --webhook-scaffold, --form-shield-scaffold, --migration-check, and --edge-scan", () => {
     const scriptPath = "skills/agency-delivery/webdev/scripts/webdev.ts";
     const scanRes = spawnSync("bun", [scriptPath, "--brownfield-scan"], {
       encoding: "utf8",
@@ -332,6 +332,69 @@ describe("Invocation UX & conventions", () => {
     expect(scaffoldRes.stdout).toContain("handleStripeWebhook");
     expect(scaffoldRes.stdout).toContain("stripe.webhooks.constructEvent");
     expect(scaffoldRes.stdout).toContain("Duplicate event ignored");
+
+    // Test form shield scaffold
+    const formShieldRes = spawnSync("bun", [scriptPath, "--form-shield-scaffold", "turnstile"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(formShieldRes.status).toBe(0);
+    expect(formShieldRes.stdout).toContain("website_url_hp");
+    expect(formShieldRes.stdout).toContain("turnstileToken");
+    expect(formShieldRes.stdout).toContain("challenges.cloudflare.com/turnstile/v0/siteverify");
+
+    // Test migration check
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "webdev-test-"));
+    const safeSqlPath = path.join(tempDir, "safe_migration.sql");
+    fs.writeFileSync(safeSqlPath, "ALTER TABLE users ADD COLUMN bio TEXT DEFAULT '';", "utf8");
+    const safeRes = spawnSync("bun", [scriptPath, "--migration-check", safeSqlPath], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(safeRes.status).toBe(0);
+    expect(safeRes.stdout).toContain("SAFE (Expand-Contract Compliant)");
+
+    const riskySqlPath = path.join(tempDir, "risky_migration.sql");
+    fs.writeFileSync(riskySqlPath, "DROP TABLE old_leads; ALTER TABLE users DROP COLUMN legacy_id;", "utf8");
+    const riskyRes = spawnSync("bun", [scriptPath, "--migration-check", riskySqlPath], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(riskyRes.status).toBe(1);
+    expect(riskyRes.stdout).toContain("RISKY");
+    expect(riskyRes.stdout).toContain("DROP TABLE");
+    expect(riskyRes.stdout).toContain("DROP COLUMN");
+
+    // Test edge scan
+    const edgeScanRes = spawnSync("bun", [scriptPath, "--edge-scan", "skills/agency-delivery/webdev"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(edgeScanRes.status).toBe(0);
+    expect(edgeScanRes.stdout).toContain("Edge Runtime Boundary Scan");
+
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  test("webdev cms, backend, and migrations reference modes encode CMS cohesion, spam shield, and non-destructive migrations", () => {
+    const cmsPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/cms.md");
+    const backendPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/backend.md");
+    const migrationsPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/migrations.md");
+
+    const cmsContent = fs.readFileSync(cmsPath, "utf8");
+    expect(cmsContent).toContain("The CMS-First Cohesion Invariant");
+    expect(cmsContent).toContain("Zero Hardcoding & CMS Cohesion");
+    expect(cmsContent).toContain("Pre-Execution User Escalation Gate");
+
+    const backendContent = fs.readFileSync(backendPath, "utf8");
+    expect(backendContent).toContain("Form Spam Defense & Lead Flood Protection");
+    expect(backendContent).toContain("Zero-Friction Client CAPTCHA (Cloudflare Turnstile)");
+    expect(backendContent).toContain("Edge vs. Node Runtime Boundary Guard");
+
+    const migrationsContent = fs.readFileSync(migrationsPath, "utf8");
+    expect(migrationsContent).toContain("The Non-Destructive Database Migration Protocol");
+    expect(migrationsContent).toContain("Phase 1: Expand (Additive Only)");
+    expect(migrationsContent).toContain("Phase 3: Contract (Deprecate & Drop)");
   });
 
   test("designscope token-extraction mode and token_fence CLI enforce design token fence and bracket filter", () => {
