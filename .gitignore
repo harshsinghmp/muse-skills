@@ -60,6 +60,8 @@ coverage/
 tmp/
 temp/
 *.tmp
+.docs.hash
+.context.hash
 
 # Skill-specific
 skills-lock.json
