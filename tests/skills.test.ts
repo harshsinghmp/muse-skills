@@ -437,6 +437,34 @@ describe("Invocation UX & conventions", () => {
       if (fs.existsSync(tempHtml)) fs.unlinkSync(tempHtml);
     }
   });
+
+  test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
+    const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
+    expect(fs.existsSync(protoPath)).toBe(true);
+    const content = fs.readFileSync(protoPath, "utf8");
+    expect(content).toContain("Anti-Drift Architecture & Duplicate Utility Guard");
+    expect(content).toContain("Zero Duplicate Helpers");
+    expect(content).toContain("Refactor Scope Boundary (The Rule of 3 Files)");
+
+    const scriptPath = "skills/quality-review/gauntlet-loop/scripts/anti-drift.ts";
+    const tempDir = fs.mkdtempSync(path.join(REPO_ROOT, "tmp-test-drift-"));
+    try {
+      fs.writeFileSync(path.join(tempDir, "a.ts"), "export function cn(...args: any[]) { return ''; }\n", "utf8");
+      fs.writeFileSync(path.join(tempDir, "b.ts"), "export function cn(...inputs: any[]) { return ''; }\n", "utf8");
+
+      const dupRes = spawnSync("bun", [scriptPath, "--scan-duplicates", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(dupRes.status).toBe(0);
+      const report = JSON.parse(dupRes.stdout);
+      expect(report.isPassing).toBe(false);
+      expect(report.duplicateCount).toBe(1);
+      expect(report.duplicates[0].functionName).toBe("cn");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
