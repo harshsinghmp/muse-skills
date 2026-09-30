@@ -4,7 +4,7 @@ aliases: ["finance", "invoicing", "billing", "bookkeeping", "cfo", "agency-accou
 description: "Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. Use when asked to send or schedule an invoice, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev)."
 argument-hint: "[invoicing|bookkeeping|client-pnl|cashflow|tax-compliance|audit]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]

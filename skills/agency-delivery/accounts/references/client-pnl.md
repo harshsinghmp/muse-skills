@@ -40,6 +40,29 @@ A Client P&L Scorecard with Gross Margin percentage, EHR realization rate, and r
    - **Vulnerable (Low Margin, Low Friction)**: Friendly but underpriced. Implement 15–20% rate increase at contract renewal.
    - **Drains (Low Margin, High Friction)**: Scope creepers, late payers, emergency culture. Prepare offboarding or double pricing to create natural exit.
 
+---
+
+## 🤖 The Client AI Compute & Token Ledger Protocol
+
+Agentic software development introduces variable, unbudgeted LLM inference costs (e.g. running continuous Claude/Sonnet, o1, or Gemini loops). Leaving AI tokens unmetered rapidly erodes fixed-price project and retainer margins:
+
+### 1. The Per-Client Token Attribution Rule
+Every autonomous agent execution, code generation spike, or verification loop must record token consumption against the designated `client_id`:
+$$\text{Project Net Margin} = \text{Billed Fee} - (\text{Contractor Costs} + \text{Internal Labor} + \text{Dedicated AI Compute})$$
+
+### 2. Standard Model Cost Basis & Management Markup
+| Model Family | Blended Rate / 1M Tokens (Input / Output) | Billable Multiplier | Rationale |
+|:---|:---|:---|:---|
+| **Claude 3.7 / 3.5 Sonnet** | $3.00 / $15.00 | Cost + 20% | Primary coding engine; billed directly to client compute pool. |
+| **Claude 3.5 Haiku / Gemini Flash** | $0.25 / $1.25 | Absorbed in Retainer | Lightweight triage, routing, and git summarization. |
+| **OpenAI o1 / Claude 3 Opus** | $15.00 / $60.00 | Cost + 25% | Deep architecture reviews, complex algorithm spikes, and security proofs. |
+
+### 3. Compute Budget Guardrails
+- **Per-Task Ceiling**: No automated agent task may consume more than $20 in inference tokens without explicit human-in-the-loop approval.
+- **Client Monthly Invoicing**: Output an itemized `AI_COMPUTE_BILLING.md` attached to monthly retainer invoices, itemizing tasks executed, tokens burned, and infrastructure value delivered.
+
+---
+
 ## Quality gate
 
 - [ ] All direct contractor, API, and dedicated infrastructure costs assigned directly to the client ledger before calculating gross profit.
