@@ -1407,14 +1407,37 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       expect(auditRes.status).toBe(0);
       expect(fs.existsSync(path.join(tempDir, ".docs.hash"))).toBe(true);
 
-      // Fast-skip on unchanged docs
-      const fastSkipRes = spawnSync(
+      // 7. Test --client-changelog
+      const changelogPath = path.join(tempDir, "CLIENT_CHANGELOG.md");
+      const changelogRes = spawnSync(
         "bun",
-        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--fast-skip"],
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, `--client-changelog=${changelogPath}`],
         { encoding: "utf8", cwd: REPO_ROOT },
       );
-      expect(fastSkipRes.status).toBe(0);
-      expect(fastSkipRes.stdout).toContain("Fast-path exit: Zero documentation drift detected");
+      expect(changelogRes.status).toBe(0);
+      expect(fs.existsSync(changelogPath)).toBe(true);
+      expect(fs.readFileSync(changelogPath, "utf8")).toContain("Client Delivery Release Notes");
+
+      // 8. Test --html-report
+      const htmlReportPath = path.join(tempDir, "CLIENT_WORK_REPORT.html");
+      const htmlRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, `--html-report=${htmlReportPath}`],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(htmlRes.status).toBe(0);
+      expect(fs.existsSync(htmlReportPath)).toBe(true);
+      expect(fs.readFileSync(htmlReportPath, "utf8")).toContain("Executive Delivery Report");
+
+      // 9. Test --check-freshness
+      const freshRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--check-freshness"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(freshRes.status).toBe(0);
+      expect(freshRes.stdout).toContain("Documentation Freshness Gate");
+      expect(freshRes.stdout).toContain("CACHE_HIT");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

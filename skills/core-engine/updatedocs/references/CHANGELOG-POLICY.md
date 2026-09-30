@@ -85,3 +85,27 @@ To prevent flat, low-signal changelog descriptions, every released version and u
    - On forges without native compare URLs (e.g. self-hosted GitLab instances with differing paths), use the forge's documented equivalent or omit the link rather than fabricating a URL.
 7. **Release Divider**:
    - Terminate every released version section with a horizontal rule (`---`).
+
+---
+
+## 5. Client Business Changelog & Executive Work Report Standard
+
+When delivering software to non-technical stakeholders, agency clients, or executive product managers, raw git commit hashes and developer jargon must never be presented directly.
+
+1. **Client Translation Gate (`CLIENT_CHANGELOG.md`)**:
+   - Technical commits (`feat(auth): PKCE OAuth2 verification`, `fix(sql): N+1 query batching`) must be automatically translated into business value statements (`Enhanced customer login security with encrypted authorization tokens`, `Optimized page loading performance and database speed`).
+   - Group entries into:
+     - 🌟 **New Features & Capabilities**
+     - ⚡ **Performance & Efficiency Enhancements**
+     - 🛡️ **Security, Privacy & Reliability Upgrades**
+     - 🔧 **Refinements & Quality Polish**
+   - Automatically redact internal ticket IDs (`PROJ-123`), staging URLs, and developer tokens (`bun updatedocs.ts --client-changelog`).
+
+2. **Self-Contained Executive HTML Work Report (`CLIENT_WORK_REPORT.html`)**:
+   - Deliver single-file, offline-accessible HTML reports containing executive summaries, quality gate status meters, deliverable checklists, and next steps (`bun updatedocs.ts --html-report`).
+   - Zero external CDN dependencies or trackers, ensuring complete privacy and client confidentiality.
+
+3. **Token-Saving Freshness Invariant (`--check-freshness`)**:
+   - To prevent token waste and redundant doc generation in multi-agent sessions, execution must check the freshness cache (`.agents/artifacts/.docs_fresh`).
+   - If no codebase or documentation files have drifted since the last verified turn or commit, docs generation skips immediately with 0 changes and 0 token burn.
+
