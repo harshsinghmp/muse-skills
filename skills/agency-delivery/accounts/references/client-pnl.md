@@ -61,6 +61,20 @@ $$\text{Project Net Margin} = \text{Billed Fee} - (\text{Contractor Costs} + \te
 - **Per-Task Ceiling**: No automated agent task may consume more than $20 in inference tokens without explicit human-in-the-loop approval.
 - **Client Monthly Invoicing**: Output an itemized `AI_COMPUTE_BILLING.md` attached to monthly retainer invoices, itemizing tasks executed, tokens burned, and infrastructure value delivered.
 
+### 4. Sliding Window Token Budget & Context Window Governor Standard
+
+Autonomous multi-agent workflows and multi-turn developer sessions can rapidly cascade into exponential token burn if prompt context bloats without pruning:
+
+#### Mandatory Invariants:
+1. **Sliding Time-Window Budget & Circuit-Breaker**:
+   - AI compute expenses must be evaluated against a rolling 24-hour sliding window per client.
+   - **Warning Threshold (85%)**: When rolling 24h spend reaches 85% of allocated client budget, alert the principal/account lead with a projected burn-out ETA.
+   - **Hard Circuit-Breaker (100%)**: At 100% budget consumption, the agent harness trips `HALT_EXCEEDED_TOKEN_BUDGET`. Autonomous subagents are suspended immediately until explicit human re-authorization or client retainer top-up.
+2. **Context Window Pruning & Compaction Invariant**:
+   - Agents must monitor context utilization (e.g. `[Context: ~X% used]`).
+   - In long conversations, enforce FIFO sliding window message pruning: preserve the system prompt, root instructions, and durable memory anchors (`USER.md`, `CURRENT.md`), while compacting intermediate verbose tool execution logs and scratchpad tokens before context exceeds 70%.
+   - Raw tool output logs older than 3 turns must be summarized or truncated to avoid quadratic token cost spikes.
+
 ---
 
 ## Quality gate
