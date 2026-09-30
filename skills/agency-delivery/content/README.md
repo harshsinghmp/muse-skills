@@ -25,7 +25,7 @@ Record a podcast episode outline with broadcast engineering standards, or run a 
 | Mode | Request it with | Deliverable |
 |:---|:---|:---|
 | **blog** | SEO blog post or article | Blog: intent-matched, SEO-aware articles from a keyword brief. |
-| **copy** | website / landing page copy | Copy: hero, feature, and CTA copy built around one action. |
+| **copy** | website / landing page copy | Copy: hero, feature, and CTA copy built around one action, with frontmatter syntax protection. |
 | **email** | email campaign or sequence | Email: sequences and campaigns with one action per send. |
 | **video** | video script | Video: hook, structure, and shot direction for the target platform. |
 | **case-study** | customer case study | Case study: a before/after customer story with real numbers and a quote. |

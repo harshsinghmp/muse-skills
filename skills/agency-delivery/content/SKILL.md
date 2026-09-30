@@ -4,7 +4,7 @@ aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video
 description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
 argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -15,14 +15,14 @@ metadata:
   aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial"]
   suggested_skills: ["seo", "design", "humanize", "smm"]
   hermes:
-    tags: ["content", "blog", "copywriting", "email", "video", "podcast", "case-study", "humanize", "seo-writing", "landing-page", "newsletter", "editorial", "prose"]
+    tags: ["content", "blog", "copywriting", "email", "video", "podcast", "case-study", "humanize", "seo-writing", "landing-page", "newsletter", "editorial", "prose", "frontmatter-guard", "yaml-linter"]
     related_skills: ["seo", "design", "humanize", "smm"]
     suggested_skills: ["seo", "design", "humanize", "smm"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["seo", "design", "humanize", "smm"]
-    primary_triggers: ["write a blog post", "landing page copy", "email sequence", "video script", "podcast script", "podcast episode", "case study", "humanize this", "remove AI writing", "content calendar writing"]
+    primary_triggers: ["write a blog post", "landing page copy", "email sequence", "video script", "podcast script", "podcast episode", "case study", "humanize this", "remove AI writing", "content calendar writing", "lint frontmatter", "fix frontmatter", "yaml frontmatter error"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -42,7 +42,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
 | **blog** | "blog post", "article", "pillar page", "write an SEO article" | SEO-aware blog post from a keyword brief and search intent | [references/blog.md](references/blog.md) |
-| **copy** | "landing page copy", "website copy", "product copy", "hero copy" | Conversion-focused website, landing, and product copy | [references/copy.md](references/copy.md) |
+| **copy** | "landing page copy", "website copy", "product copy", "hero copy" | Conversion-focused website, landing, and product copy with frontmatter syntax protection | [references/copy.md](references/copy.md) & [references/frontmatter-guard.md](references/frontmatter-guard.md) |
 | **email** | "email sequence", "welcome email", "newsletter", "lifecycle email" | Lifecycle and campaign email sequences | [references/email.md](references/email.md) |
 | **video** | "video script", "youtube script", "explainer video", "reel script", "heyframes" | Video creation & editing: short-form Reels/Shorts/TikTok, long-form YouTube essays, HeyFrames reframing/clipping, hooks, and shot direction | [references/video.md](references/video.md) |
 | **podcast** | "podcast", "podcast script", "show notes", "guest interview", "podcast episode" | Full podcast lifecycle: show concept, guest prep, interview & solo scripting, audio specs (-16 LUFS), show notes, and chaptering | [references/podcast.md](references/podcast.md) |
@@ -107,6 +107,10 @@ Rule: no piece ships without a named reader, one action, and at least one verifi
 - **Generate Structured Schema**: `bun skills/agency-delivery/content/scripts/aeo-schema.ts --generate-schema <faq|article|organization> [--title "..." --author "..."]`
 - **Audit Quotability & Schema**: `bun skills/agency-delivery/content/scripts/aeo-schema.ts --audit-quotability <file.md> [--json]`
 
+### Frontmatter Syntax Guard & Sanitizer Tooling
+
+- **Lint Frontmatter**: `bun skills/agency-delivery/content/scripts/frontmatter-guard.ts --lint <path> [--json]`
+- **Auto-Fix Frontmatter**: `bun skills/agency-delivery/content/scripts/frontmatter-guard.ts --fix <path>`
 
 ---
 
@@ -137,6 +141,7 @@ Rule: no piece ships without a named reader, one action, and at least one verifi
 - [ ] Every claim traceable to a fact or source.
 - [ ] No inflated significance language.
 - [ ] Humanize pass run on any AI-drafted text.
+- [ ] Frontmatter syntax verified (`frontmatter-guard.ts --lint`) with colons, curly braces, and symbols properly quoted in YAML frontmatter.
 - [ ] One primary CTA per piece.
 - [ ] Structure and length match the format.
 - [ ] Internal links / references included where relevant (SEO modes).
