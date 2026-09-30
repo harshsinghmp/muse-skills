@@ -607,6 +607,364 @@ if (!customElements.get("${widgetName}")) {
 `;
 }
 
+export interface AntiFoucOptions {
+  storageKey?: string;
+  themeClass?: string;
+  defaultTheme?: "system" | "dark" | "light";
+}
+
+export function generateAntiFoucScript(opts?: AntiFoucOptions): { inlineJs: string; htmlTag: string } {
+  const storageKey = opts?.storageKey || "theme";
+  const themeClass = opts?.themeClass || "dark";
+  const defaultTheme = opts?.defaultTheme || "system";
+
+  const inlineJs = `(function(){try{var k='${storageKey}',c='${themeClass}',d='${defaultTheme}';var s=localStorage.getItem(k);var m=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s===c||(!s&&d==='dark')||(!s&&d==='system'&&m)){document.documentElement.classList.add(c);}else{document.documentElement.classList.remove(c);}}catch(e){}})();`;
+
+  const htmlTag = `<script>\n  ${inlineJs}\n</script>`;
+  return { inlineJs, htmlTag };
+}
+
+export interface FontMetricOverride {
+  fontFamily: string;
+  fallbackFont: string;
+  sizeAdjust: string;
+  ascentOverride: string;
+  descentOverride: string;
+  lineGapOverride: string;
+  css: string;
+}
+
+const PRESET_FONT_METRICS: Record<
+  string,
+  { sizeAdjust: string; ascentOverride: string; descentOverride: string; lineGapOverride: string; fallbackFont: string }
+> = {
+  inter: {
+    sizeAdjust: "107.5%",
+    ascentOverride: "89.6%",
+    descentOverride: "22.4%",
+    lineGapOverride: "0%",
+    fallbackFont: "Arial",
+  },
+  roboto: {
+    sizeAdjust: "100.0%",
+    ascentOverride: "92.8%",
+    descentOverride: "24.4%",
+    lineGapOverride: "0%",
+    fallbackFont: "Arial",
+  },
+  poppins: {
+    sizeAdjust: "98.5%",
+    ascentOverride: "105.0%",
+    descentOverride: "35.0%",
+    lineGapOverride: "9.8%",
+    fallbackFont: "Arial",
+  },
+  geist: {
+    sizeAdjust: "102.0%",
+    ascentOverride: "94.0%",
+    descentOverride: "26.0%",
+    lineGapOverride: "0%",
+    fallbackFont: "Arial",
+  },
+  playfair: {
+    sizeAdjust: "108.0%",
+    ascentOverride: "107.0%",
+    descentOverride: "28.0%",
+    lineGapOverride: "0%",
+    fallbackFont: "Times New Roman",
+  },
+  "playfair display": {
+    sizeAdjust: "108.0%",
+    ascentOverride: "107.0%",
+    descentOverride: "28.0%",
+    lineGapOverride: "0%",
+    fallbackFont: "Times New Roman",
+  },
+  montserrat: {
+    sizeAdjust: "96.5%",
+    ascentOverride: "96.8%",
+    descentOverride: "25.1%",
+    lineGapOverride: "0%",
+    fallbackFont: "Arial",
+  },
+  "open sans": {
+    sizeAdjust: "102.0%",
+    ascentOverride: "106.9%",
+    descentOverride: "29.3%",
+    lineGapOverride: "0%",
+    fallbackFont: "Arial",
+  },
+};
+
+export function generateFontMetricOverrides(fontFamily = "Inter", fallbackChoice?: string): FontMetricOverride {
+  const key = fontFamily.trim().toLowerCase();
+  const preset = PRESET_FONT_METRICS[key];
+  const fallbackFont = fallbackChoice || preset?.fallbackFont || (key.includes("serif") ? "Times New Roman" : "Arial");
+  const sizeAdjust = preset?.sizeAdjust || "100.0%";
+  const ascentOverride = preset?.ascentOverride || "95.0%";
+  const descentOverride = preset?.descentOverride || "25.0%";
+  const lineGapOverride = preset?.lineGapOverride || "0%";
+
+  const css = `/* Zero-CLS Fallback Font Metric Overrides for ${fontFamily} */
+@font-face {
+  font-family: '${fontFamily}-Fallback';
+  src: local('${fallbackFont}');
+  ascent-override: ${ascentOverride};
+  descent-override: ${descentOverride};
+  line-gap-override: ${lineGapOverride};
+  size-adjust: ${sizeAdjust};
+}
+
+:root {
+  --font-${key.replace(/\s+/g, "-")}: '${fontFamily}', '${fontFamily}-Fallback', ${fallbackFont}, sans-serif;
+}`;
+
+  return {
+    fontFamily,
+    fallbackFont,
+    sizeAdjust,
+    ascentOverride,
+    descentOverride,
+    lineGapOverride,
+    css,
+  };
+}
+
+export function generatePrintStylesheet(): string {
+  return `/**
+ * 🖨️ Agency Clean Print-to-PDF Stylesheet
+ * Strips interactive chrome, resets backgrounds to pure white, and prevents page splits on cards.
+ */
+@media print {
+  *, *::before, *::after {
+    background: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+    size: auto;
+  }
+
+  /* 1. Eliminate Interactive Chrome */
+  header, nav, footer, aside,
+  [role="navigation"], [role="banner"],
+  .cookie-banner, .toast, .modal, .chat-widget,
+  .no-print, [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  /* 2. Page Break Hygiene */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  p, blockquote, pre, table, figure, img, .card, tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 3. Expand External URLs */
+  a[href^="http"]:not([href*="javascript:"])::after {
+    content: " (" attr(href) ")";
+    font-size: 80%;
+    color: #4b5563 !important;
+    word-break: break-all;
+  }
+
+  /* 4. Table Formatting */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  th, td {
+    border: 1px solid #d1d5db !important;
+    padding: 6px 10px !important;
+  }
+}`;
+}
+
+export function generateAnchorScrollPadding(headerHeight = "4.5rem"): string {
+  return `/**
+ * ⚓ Sticky/Fixed Navbar Anchor Scroll Offset
+ * Prevents anchor targets (#hash) from scrolling underneath sticky headers.
+ */
+:root {
+  --header-height: ${headerHeight};
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height, ${headerHeight}) + 0.75rem);
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}`;
+}
+
+export interface HydrationPolishAuditReport {
+  score: number;
+  passed: boolean;
+  pass: boolean;
+  checks: {
+    antiFoucHeadScript: boolean;
+    fontMetricOverrides: boolean;
+    printStylesheet: boolean;
+    anchorScrollPadding: boolean;
+  };
+  details: string[];
+}
+
+export function auditHydrationPolish(targetDir = process.cwd()): HydrationPolishAuditReport {
+  const checks = {
+    antiFoucHeadScript: false,
+    fontMetricOverrides: false,
+    printStylesheet: false,
+    anchorScrollPadding: false,
+  };
+  const details: string[] = [];
+
+  function scan(dir: string) {
+    if (!fs.existsSync(dir)) return;
+    try {
+      const entries = fs.readdirSync(dir);
+      for (const entry of entries) {
+        if (entry === "node_modules" || entry === ".git" || entry === "dist" || entry === ".agents") continue;
+        const full = path.join(dir, entry);
+        try {
+          const st = fs.statSync(full);
+          if (st.isDirectory()) {
+            scan(full);
+          } else {
+            const ext = path.extname(entry).toLowerCase();
+            if ([".html", ".astro", ".tsx", ".jsx", ".vue", ".svelte"].includes(ext)) {
+              const content = fs.readFileSync(full, "utf8");
+              if (
+                (content.includes("localStorage.getItem") && content.includes("classList.add")) ||
+                content.includes("theme-hydrator") ||
+                content.includes("prefers-color-scheme")
+              ) {
+                checks.antiFoucHeadScript = true;
+              }
+            }
+            if ([".css", ".scss", ".astro", ".tsx", ".jsx", ".html"].includes(ext)) {
+              const content = fs.readFileSync(full, "utf8");
+              if (content.includes("size-adjust") || content.includes("ascent-override")) {
+                checks.fontMetricOverrides = true;
+              }
+              if (content.includes("@media print")) {
+                checks.printStylesheet = true;
+              }
+              if (content.includes("scroll-padding-top") || content.includes("scroll-padding")) {
+                checks.anchorScrollPadding = true;
+              }
+            }
+          }
+        } catch {
+          // Ignore inaccessible files
+        }
+      }
+    } catch {
+      // Ignore inaccessible directories
+    }
+  }
+
+  scan(targetDir);
+
+  let score = 0;
+  if (checks.antiFoucHeadScript) {
+    score += 25;
+    details.push("✅ Anti-FOUC inline blocking theme hydrator found");
+  } else {
+    details.push("⚠️ Missing Anti-FOUC blocking head script (risks dark/light white flash)");
+  }
+
+  if (checks.fontMetricOverrides) {
+    score += 25;
+    details.push("✅ Zero-CLS font metric overrides (size-adjust/ascent-override) found");
+  } else {
+    details.push("⚠️ Missing font metric overrides for system fallbacks (risks CLS on font swap)");
+  }
+
+  if (checks.printStylesheet) {
+    score += 25;
+    details.push("✅ Clean print-to-PDF (@media print) stylesheet detected");
+  } else {
+    details.push("⚠️ Missing @media print stylesheet (prints navbars, dark backgrounds, broken cards)");
+  }
+
+  if (checks.anchorScrollPadding) {
+    score += 25;
+    details.push("✅ Sticky navbar anchor scroll offset (scroll-padding-top) configured");
+  } else {
+    details.push("⚠️ Missing scroll-padding-top on html (anchor clicks scroll under fixed headers)");
+  }
+
+  const passed = score === 100;
+  return {
+    score,
+    passed,
+    pass: passed,
+    checks,
+    details,
+  };
+}
+
+export function scaffoldHydrationPolishSuite(
+  targetDir = process.cwd(),
+  opts?: { fontFamily?: string; headerHeight?: string; storageKey?: string },
+): { cssPath: string; hydratorPath: string; filesCreated: string[] } {
+  let stylesDir = path.join(targetDir, "styles");
+  if (fs.existsSync(path.join(targetDir, "src/styles"))) {
+    stylesDir = path.join(targetDir, "src/styles");
+  } else if (fs.existsSync(path.join(targetDir, "styles"))) {
+    stylesDir = path.join(targetDir, "styles");
+  }
+  if (!fs.existsSync(stylesDir)) {
+    fs.mkdirSync(stylesDir, { recursive: true });
+  }
+
+  const publicDir = fs.existsSync(path.join(targetDir, "public")) ? path.join(targetDir, "public") : targetDir;
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+
+  const fontOverride = generateFontMetricOverrides(opts?.fontFamily || "Inter");
+  const printCss = generatePrintStylesheet();
+  const anchorCss = generateAnchorScrollPadding(opts?.headerHeight || "4.5rem");
+
+  const combinedCss = `/**
+ * ⚡ Webdev Hydration & Typography Polish Suite
+ * Generated by muse-skills webdev engine.
+ */
+
+${fontOverride.css}
+
+${anchorCss}
+
+${printCss}
+`;
+
+  const cssPath = path.join(stylesDir, "hydration-polish.css");
+  fs.writeFileSync(cssPath, combinedCss, "utf8");
+
+  const { htmlTag } = generateAntiFoucScript({ storageKey: opts?.storageKey || "theme" });
+  const hydratorPath = path.join(publicDir, "theme-hydrator.html");
+  fs.writeFileSync(hydratorPath, htmlTag, "utf8");
+
+  return {
+    cssPath,
+    hydratorPath,
+    filesCreated: [cssPath, hydratorPath],
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -698,9 +1056,69 @@ if (import.meta.main) {
     const idx = args.indexOf("--widget-scaffold");
     const name = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "muse-client-widget";
     console.log(scaffoldIsolatedWidget(name));
+  } else if (args.includes("--anti-fouc-scaffold")) {
+    const idx = args.indexOf("--anti-fouc-scaffold");
+    const key = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "theme";
+    const res = generateAntiFoucScript({ storageKey: key });
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(res.htmlTag);
+    }
+  } else if (args.includes("--font-metric-override")) {
+    const idx = args.indexOf("--font-metric-override");
+    const family = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "Inter";
+    const fallback = args[idx + 2] && !args[idx + 2].startsWith("-") ? args[idx + 2] : undefined;
+    const res = generateFontMetricOverrides(family, fallback);
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(res.css);
+    }
+  } else if (args.includes("--print-css-scaffold")) {
+    const css = generatePrintStylesheet();
+    if (isJson) {
+      console.log(JSON.stringify({ css }, null, 2));
+    } else {
+      console.log(css);
+    }
+  } else if (args.includes("--anchor-offset-scaffold")) {
+    const idx = args.indexOf("--anchor-offset-scaffold");
+    const height = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "4.5rem";
+    const css = generateAnchorScrollPadding(height);
+    if (isJson) {
+      console.log(JSON.stringify({ css }, null, 2));
+    } else {
+      console.log(css);
+    }
+  } else if (args.includes("--polish-audit")) {
+    const idx = args.indexOf("--polish-audit");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = auditHydrationPolish(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n✨ Front-End Hydration & Polish Audit: ${target}`);
+      console.log(`  Score: ${report.score}/100 (${report.passed ? "PASS" : "WARN"})`);
+      for (const d of report.details) {
+        console.log(`  ${d}`);
+      }
+    }
+    process.exit(report.passed ? 0 : 1);
+  } else if (args.includes("--scaffold-polish-suite")) {
+    const idx = args.indexOf("--scaffold-polish-suite");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const res = scaffoldHydrationPolishSuite(target);
+    if (isJson) {
+      console.log(JSON.stringify({ success: true, ...res }, null, 2));
+    } else {
+      console.log(`\n✨ Hydration & Polish Suite Scaffolded in ${target}:`);
+      console.log(`  CSS:      ${res.cssPath}`);
+      console.log(`  Hydrator: ${res.hydratorPath}`);
+    }
   } else {
     console.log(
-      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]] [--check-pooling [dir]] [--presigned-upload-scaffold <s3|r2>] [--widget-scaffold [name]]",
+      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]] [--check-pooling [dir]] [--presigned-upload-scaffold <s3|r2>] [--widget-scaffold [name]] [--anti-fouc-scaffold [key]] [--font-metric-override [family] [fallback]] [--print-css-scaffold] [--anchor-offset-scaffold [height]] [--polish-audit [dir]] [--scaffold-polish-suite [dir]]",
     );
   }
 }

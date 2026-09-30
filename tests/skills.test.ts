@@ -1859,4 +1859,94 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("🛠️ webdev skill: hydration polish suite (anti-FOUC, zero-CLS, print styles, anchor offset)", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "webdev-polish-test-"));
+    try {
+      // 1. Initial audit on empty project should fail with < 100 score
+      const auditFailRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--polish-audit", tempDir, "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(auditFailRes.status).toBe(1);
+      const auditFailData = JSON.parse(auditFailRes.stdout);
+      expect(auditFailData.score).toBeLessThan(100);
+      expect(auditFailData.pass).toBe(false);
+
+      // 2. Individual CLI generators verify exact contracts
+      const foucRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--anti-fouc-scaffold", "app-theme", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(foucRes.status).toBe(0);
+      const foucData = JSON.parse(foucRes.stdout);
+      expect(foucData.inlineJs).toContain("app-theme");
+      expect(foucData.htmlTag).toContain("<script>");
+
+      const fontRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--font-metric-override", "Inter", "Arial", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(fontRes.status).toBe(0);
+      const fontData = JSON.parse(fontRes.stdout);
+      expect(fontData.sizeAdjust).toBe("107.5%");
+      expect(fontData.ascentOverride).toBe("89.6%");
+      expect(fontData.css).toContain("@font-face");
+
+      const printRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--print-css-scaffold", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(printRes.status).toBe(0);
+      const printData = JSON.parse(printRes.stdout);
+      expect(printData.css).toContain("@media print");
+      expect(printData.css).toContain("page-break-inside: avoid");
+
+      const anchorRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--anchor-offset-scaffold", "5rem", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(anchorRes.status).toBe(0);
+      const anchorData = JSON.parse(anchorRes.stdout);
+      expect(anchorData.css).toContain("scroll-padding-top");
+
+      // 3. Full scaffold suite writes styles and hydrator
+      const scaffoldRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--scaffold-polish-suite", tempDir, "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(scaffoldRes.status).toBe(0);
+      const scaffoldData = JSON.parse(scaffoldRes.stdout);
+      expect(scaffoldData.success).toBe(true);
+      expect(scaffoldData.filesCreated.length).toBe(2);
+
+      const cssPath = path.join(tempDir, "styles/hydration-polish.css");
+      const hydratorPath = path.join(tempDir, "theme-hydrator.html");
+      expect(fs.existsSync(cssPath)).toBe(true);
+      expect(fs.existsSync(hydratorPath)).toBe(true);
+
+      // 4. Post-scaffold audit passes with 100/100
+      const auditPassRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--polish-audit", tempDir, "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(auditPassRes.status).toBe(0);
+      const auditPassData = JSON.parse(auditPassRes.stdout);
+      expect(auditPassData.score).toBe(100);
+      expect(auditPassData.pass).toBe(true);
+      expect(auditPassData.checks.antiFoucHeadScript).toBe(true);
+      expect(auditPassData.checks.fontMetricOverrides).toBe(true);
+      expect(auditPassData.checks.printStylesheet).toBe(true);
+      expect(auditPassData.checks.anchorScrollPadding).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
