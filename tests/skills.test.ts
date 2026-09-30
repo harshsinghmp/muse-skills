@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -673,6 +674,38 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       expect(archiveRes.status).toBe(0);
       expect(archiveRes.stdout).toContain("Archived 1 milestone");
       expect(fs.existsSync(path.join(tempDir, ".agents/archive/milestones"))).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  test("new-project provisions CONTENT_MAP.md and supports --cms-contract", () => {
+    const blueprintDoc = fs.readFileSync(
+      path.join(REPO_ROOT, "skills/core-engine/new-project/references/integration-blueprints.md"),
+      "utf8",
+    );
+    expect(blueprintDoc).toContain("Zero-Hardcoded-Strings CMS Hand-Off Blueprint");
+    expect(blueprintDoc).toContain("CONTENT_MAP.md");
+
+    const templateContentMap = path.join(
+      REPO_ROOT,
+      "skills/core-engine/updateagents/templates/.agents/brand/CONTENT_MAP.md",
+    );
+    expect(fs.existsSync(templateContentMap)).toBe(true);
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "muse-cms-contract-"));
+    try {
+      const res = spawnSync(
+        "bun",
+        ["skills/core-engine/new-project/scripts/new-project.ts", tempDir, "--cms-contract"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(res.status).toBe(0);
+      const generatedMap = path.join(tempDir, ".agents/brand/CONTENT_MAP.md");
+      expect(fs.existsSync(generatedMap)).toBe(true);
+      const content = fs.readFileSync(generatedMap, "utf8");
+      expect(content).toContain("Zero-Hardcoded-Strings Invariant");
+      expect(content).toContain("Content Mapping Matrix");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
