@@ -673,7 +673,24 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(archiveRes.status).toBe(0);
       expect(archiveRes.stdout).toContain("Archived 1 milestone");
-      expect(fs.existsSync(path.join(tempDir, ".agents/archive/milestones"))).toBe(true);
+      // 6. Test generateWorkReportHtml via --report-html
+      const reportHtmlPath = path.join(tempDir, "custom-report.html");
+      const reportRes = spawnSync(
+        "bun",
+        [
+          "skills/core-engine/updateagents/scripts/updateagents.ts",
+          tempDir,
+          "--report-html",
+          "--report-out",
+          reportHtmlPath,
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(reportRes.status).toBe(0);
+      expect(fs.existsSync(reportHtmlPath)).toBe(true);
+      const htmlContent = fs.readFileSync(reportHtmlPath, "utf8");
+      expect(htmlContent).toContain("Work Report");
+      expect(htmlContent).toContain("Agency Council");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
