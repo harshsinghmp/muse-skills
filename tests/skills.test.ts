@@ -1491,4 +1491,177 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("context-anchor CLI supports --drop, --park, --switch, --list, --pin, and --verify (ghost task detection)", () => {
+    const helpRes = spawnSync("bun", ["skills/context-orchestration/context-anchor/scripts/anchor.ts", "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("anchor.ts — Context Anchor Engine");
+    expect(helpRes.stdout).toContain("--drop");
+    expect(helpRes.stdout).toContain("--park");
+    expect(helpRes.stdout).toContain("--switch");
+    expect(helpRes.stdout).toContain("--pin");
+    expect(helpRes.stdout).toContain("--verify");
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "muse-anchor-test-"));
+    try {
+      // 1. Drop anchor
+      const dropRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--drop",
+          "--workstream",
+          "billing-engine",
+          "--next",
+          "src/billing/service.ts:42 — implement Stripe payment intent",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(dropRes.status).toBe(0);
+      const dropData = JSON.parse(dropRes.stdout);
+      expect(dropData.success).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".agents/anchor.md"))).toBe(true);
+
+      const anchorContent = fs.readFileSync(path.join(tempDir, ".agents/anchor.md"), "utf8");
+      expect(anchorContent).toContain("workstream: billing-engine");
+      expect(anchorContent.split("\n").filter((l) => l.trim().length > 0).length).toBeLessThanOrEqual(15);
+
+      // 2. Park workstream
+      const parkRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--park",
+          "client-acme-flow",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(parkRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, ".agents/anchors/client-acme-flow.md"))).toBe(true);
+
+      // 3. List anchors
+      const listRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--list", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(listRes.status).toBe(0);
+      const listData = JSON.parse(listRes.stdout);
+      expect(listData.length).toBeGreaterThanOrEqual(2);
+      expect(
+        listData.some((a: { slug: string; type: string }) => a.slug === "billing-engine" && a.type === "active"),
+      ).toBe(true);
+      expect(
+        listData.some((a: { slug: string; type: string }) => a.slug === "client-acme-flow" && a.type === "parked"),
+      ).toBe(true);
+
+      // 4. Switch workstream
+      const switchRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--switch",
+          "client-acme-flow",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(switchRes.status).toBe(0);
+      const switchData = JSON.parse(switchRes.stdout);
+      expect(switchData.success).toBe(true);
+      expect(switchData.slug).toBe("client-acme-flow");
+      expect(switchData.reEntryBlock).toContain("resuming client-acme-flow");
+
+      // 5. AST Attention Pinning
+      fs.mkdirSync(path.join(tempDir, "src/auth"), { recursive: true });
+      fs.writeFileSync(
+        path.join(tempDir, "src/auth/types.ts"),
+        `export interface SessionEnvelope {\n  sessionId: string;\n  userId: string;\n  roles: string[];\n  expiresAt: number;\n}\n\nexport function verifySession(token: string): boolean {\n  return token.length > 0;\n}\n`,
+      );
+
+      const pinRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--pin",
+          "src/auth/types.ts:SessionEnvelope",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(pinRes.status).toBe(0);
+      const pinData = JSON.parse(pinRes.stdout);
+      expect(pinData.success).toBe(true);
+      expect(pinData.pinSnippet).toContain("// [PIN: src/auth/types.ts#L1-L6]");
+      expect(pinData.pinSnippet).toContain("export interface SessionEnvelope");
+
+      // Verify active anchor contains pinned section
+      const updatedAnchor = fs.readFileSync(path.join(tempDir, ".agents/anchor.md"), "utf8");
+      expect(updatedAnchor).toContain("## Pinned Attention Context");
+      expect(updatedAnchor).toContain("// [PIN: src/auth/types.ts#L1-L6]");
+
+      // 6. Ghost Task Verification — failure on non-existent file
+      spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--drop",
+          "--next",
+          "src/phantom/service.ts:99 — do phantom work",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      const ghostRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--verify", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(ghostRes.status).toBe(1);
+      const ghostData = JSON.parse(ghostRes.stdout);
+      expect(ghostData.ghostTask).toBe(true);
+      expect(ghostData.reason).toContain("does not exist on disk");
+
+      // 7. Ghost Task Verification — success when file exists and has git modifications
+      spawnSync("git", ["init"], { cwd: tempDir });
+      fs.mkdirSync(path.join(tempDir, "src/real"), { recursive: true });
+      fs.writeFileSync(path.join(tempDir, "src/real/code.ts"), "export const verified = true;\n");
+      spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--drop",
+          "--next",
+          "src/real/code.ts:1 — implement verified task",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      // Touch file after anchor drop
+      fs.appendFileSync(path.join(tempDir, "src/real/code.ts"), "// verified modification\n");
+
+      const successRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--verify", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(successRes.status).toBe(0);
+      const successData = JSON.parse(successRes.stdout);
+      expect(successData.ghostTask).toBe(false);
+      expect(successData.success).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });

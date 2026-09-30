@@ -60,6 +60,34 @@ npx skills add harshsinghmp/muse-skills --skill context-anchor
 
 ---
 
+## 🛠️ CLI Engine (`anchor.ts`)
+
+`context-anchor` ships with a standalone CLI engine in `scripts/anchor.ts`:
+
+```bash
+# Drop a <=15-line focus micro-anchor
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --drop \
+  --workstream "feature-auth" \
+  --next "src/auth/service.ts:45 — implement JWT token verification"
+
+# Park active workstream to named anchor
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --park "client-acme-redesign"
+
+# Switch workstreams (auto-parks active context and restores target with freshness check)
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --switch "client-acme-redesign"
+
+# List all active and parked workstream anchors
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --list
+
+# Pin verbatim AST interface/type contract (<=30 lines) to avoid orientation burn
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --pin "src/auth/types.ts:SessionEnvelope"
+
+# Verify physical disk & git evidence before claiming task complete (Ghost Task Detection)
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --verify
+```
+
+---
+
 ## 📦 Anchor Format
 
 ```markdown
@@ -77,13 +105,21 @@ Client: <codename or "internal">
 
 ## Next Action
 - [ ] `path/to/file.ts:line` — [Exact atomic action]
+
+## Pinned Attention Context
+```typescript
+// [PIN: src/auth/types.ts#L14-L24]
+export interface SessionEnvelope { ... }
+```
 ```
 
 ---
 
 ## ⚖️ Rules & Best Practices
 
-- **Zero Filler**: Every line must be load-bearing; anchors stay ≤15 lines.
+- **Zero Filler**: Every line must be load-bearing; anchors stay ≤15 lines (excluding pinned block).
+- **AST Attention Pinning**: Pin critical interfaces (`--pin`) to prevent the U-shaped attention drop; never dump full 800-line service files.
+- **Ghost Task Verification**: Verify ground truth (`--verify`) via physical file existence, mtime, and git diff before claiming work is complete.
 - **Concrete Over Vague**: Exact file paths and line numbers (`src/auth/jwt.ts:42`).
 - **Decisions Include "Why"**: Capture rationale so future agents don't revert them.
 - **Include Ruled-Out Paths**: Prevent repeating failed experiments.
@@ -106,4 +142,6 @@ Client: <codename or "internal">
 
 - [Sample Anchor](examples/sample-anchor.md) — the default focus anchor with re-entry block.
 - [Sample Workstream Anchor](examples/sample-workstream-anchor.md) — parking, switching, and listing client lanes.
+- [AST Pinning Guide](references/ast-pinning-guide.md) — combating orientation burn & attention degradation.
+- [Attention Hygiene & Context Sinks](references/attention-hygiene.md) — preventing ContextEcho and ghost tasks.
 - [Layering Protocol](references/layering-protocol.md) — the normative anchor ↔ HANDOFF.md contract.
