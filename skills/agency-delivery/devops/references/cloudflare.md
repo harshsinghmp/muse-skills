@@ -201,6 +201,25 @@ For home servers, Proxmox VE, TrueNAS SCALE, Home Assistant, and local Ollama in
      - **Human Access**: Require GitHub / Google OAuth + Email One-Time PIN (OTP).
      - **Agent / API Access**: Generate Cloudflare **Service Tokens** (`CF-Access-Client-Id` and `CF-Access-Client-Secret`) so remote agents can securely query local LLMs/APIs without public exposure.
 
+### 6. Cloudflare OS Living Deliverables & Ephemeral Client Review Tunnels
+
+Traditional client handoffs rely on static design links, video walkthroughs, or premature staging deployments. The **Living Deliverables** pattern introduces instant edge preview sandboxes running via local `workerd` execution coupled with ephemeral Cloudflare Quick Tunnels:
+
+1. **Local Edge Execution (`workerd` Runtime)**:
+   - Scaffolds a lightweight Worker envelope (`worker.ts` + `wrangler.jsonc`) in `.agents/deliverables/<slug>/`.
+   - Runs full-fidelity edge code locally via Miniflare/workerd with zero cloud deployment friction.
+2. **Ephemeral Quick Tunnels with Token Gating**:
+   - Tunnels local preview ports through `cloudflared tunnel --url http://localhost:<port>` to produce an instant public preview URL (`https://<hash>.trycloudflare.com/?review_token=<token>`).
+   - Requests without valid `review_token` are rejected with HTTP 401.
+   - Enforces automated TTL expiration (default: 48 hours) returning HTTP 410 Gone post-expiry.
+3. **Interactive Client Review Overlay**:
+   - Injects a non-destructive floating banner into HTML responses with client codename and expiration countdown.
+   - Embeds responsive viewport switch buttons: Mobile (390px), Tablet (820px), and Desktop (100%).
+   - Ingests structured client feedback via `POST /__deliverable/feedback`.
+4. **CLI Automation**:
+   - Scaffolding: `bun devops/scripts/living-deliverable.ts --scaffold <slug> --client <codename> --target-port 3000`
+   - Expiry check: `bun devops/scripts/living-deliverable.ts --check-expiry <slug>`
+
 ## Quality gate
 
 - [ ] SSL/TLS configured as Full (Strict). Flexible mode strictly forbidden.
@@ -211,6 +230,8 @@ For home servers, Proxmox VE, TrueNAS SCALE, Home Assistant, and local Ollama in
 - [ ] Origin ingress ports (80/443) closed on homelab/origin when using Zero Trust tunnels.
 - [ ] Ephemeral quick tunnels (`try.cloudflare.com`) restricted to temporary dev/QA sessions.
 - [ ] Homelab admin dashboards protected by Cloudflare Access policies (OAuth/OTP/Service Tokens).
+- [ ] Living deliverable review tokens verified with 401 rejection on unauthorized access.
+- [ ] Living deliverable TTL expiration verified with 410 Gone post-expiry.
 
 ## Sources
 
