@@ -587,6 +587,26 @@ describe("Invocation UX & conventions", () => {
       const urlReport = JSON.parse(urlRes.stdout);
       expect(urlReport.isClean).toBe(false);
       expect(urlReport.violations.length).toBeGreaterThanOrEqual(4);
+
+      // Verify Graceful Shutdown & Liveness Probe Standard
+      expect(content).toContain("Graceful Shutdown & Liveness Probe Standard");
+      expect(content).toContain("Dual Liveness & Readiness Probes");
+
+      const nextRes = spawnSync("bun", [scriptPath, "--scaffold-health", "nextjs"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(nextRes.status).toBe(0);
+      expect(nextRes.stdout).toContain("Next.js App Router Health Check Endpoint");
+      expect(nextRes.stdout).toContain("/api/health/route.ts");
+
+      const expressRes = spawnSync("bun", [scriptPath, "--scaffold-health", "express"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(expressRes.status).toBe(0);
+      expect(expressRes.stdout).toContain("Express.js Health Check & Graceful Termination Handler");
+      expect(expressRes.stdout).toContain("SIGTERM");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

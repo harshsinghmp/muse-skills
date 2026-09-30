@@ -4,7 +4,7 @@ aliases: ["agency-ops", "client-operations", "project-management", "proposals", 
 description: "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
 argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|legal|audit]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
