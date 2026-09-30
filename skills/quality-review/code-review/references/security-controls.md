@@ -20,10 +20,13 @@ explanation is checklist-theater, not review.
 | SEC-08 | Rate limiting & abuse | Unthrottled expensive endpoints, missing brute-force protection |
 | SEC-09 | Error handling & disclosure | Stack traces or internals leaking to clients, silent swallowing of auth failures |
 | SEC-10 | Dependency & supply chain | Known-vulnerable versions, unpinned dependencies, unreviewed post-install scripts |
+| SEC-11 | Runtime execution & EDR safety | Dynamic code evaluation (`eval`), inline packed Base64, `/tmp` script execution, interactive shell spawning |
+| SEC-12 | Webhook & token cryptography | Unverified webhook signatures, `Math.random()` in tokens, unpinned algorithms (`alg: none`) |
+| SEC-13 | Concurrency & resource leaks | Dangling DB transactions, TOCTOU file races, uncleaned event listeners, ReDoS regexes |
 
 Placement rules still apply from the main skill: checks belong at access-grant time,
 not consumption time (Theme 4). A control pass that finds nothing must say so
-explicitly — "SEC-01..10: no findings" — silence is not evidence of a pass.
+explicitly — "SEC-01..13: no findings" — silence is not evidence of a pass.
 
 ## Report shape
 
