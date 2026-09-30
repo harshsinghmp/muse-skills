@@ -30,7 +30,7 @@ Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero T
 | **security** | security hardening | Security: least privilege, headers, secrets, and dependency hygiene. |
 | **monitoring** | monitoring & alerting | Monitoring: metrics, logs, traces, and alerts that are actionable. |
 | **incident** | incident response / postmortem | Incident: stabilize first, then a blameless postmortem with tracked actions. |
-| **cloudflare** | cloudflare edge, workers & pages | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, and Wrangler CLI. |
+| **cloudflare** | cloudflare edge, workers, pages & living deliverables | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, Wrangler CLI, and living deliverables with workerd preview containers. |
 
 ## How it works
 

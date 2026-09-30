@@ -994,6 +994,71 @@ tags: [ai, dev]
     }
   });
 
+  test("devops cloudflare mode and living-deliverable CLI scaffold workerd preview containers and client review links", () => {
+    const cfRefPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/cloudflare.md");
+    expect(fs.existsSync(cfRefPath)).toBe(true);
+    const content = fs.readFileSync(cfRefPath, "utf8");
+    expect(content).toContain("Cloudflare OS Living Deliverables & Ephemeral Client Review Tunnels");
+    expect(content).toContain("`workerd` Runtime");
+    expect(content).toContain("Ephemeral Quick Tunnels with Token Gating");
+
+    const scriptPath = "skills/agency-delivery/devops/scripts/living-deliverable.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("Cloudflare OS Living Deliverables Engine");
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "muse-deliverable-test-"));
+    try {
+      const scaffoldRes = spawnSync(
+        "bun",
+        [
+          scriptPath,
+          tempDir,
+          "--scaffold",
+          "client-preview-flow",
+          "--client",
+          "ACME-Corp",
+          "--target-port",
+          "3000",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(scaffoldRes.status).toBe(0);
+      const data = JSON.parse(scaffoldRes.stdout);
+      expect(data.success).toBe(true);
+      expect(data.metadata.client).toBe("ACME-Corp");
+      expect(data.metadata.token).toBeDefined();
+      expect(data.metadata.token.length).toBe(32);
+      expect(data.metadata.expired).toBe(false);
+
+      const deliverableDir = path.join(tempDir, ".agents/deliverables/client-preview-flow");
+      expect(fs.existsSync(path.join(deliverableDir, "metadata.json"))).toBe(true);
+      expect(fs.existsSync(path.join(deliverableDir, "wrangler.jsonc"))).toBe(true);
+      expect(fs.existsSync(path.join(deliverableDir, "worker.ts"))).toBe(true);
+
+      const workerCode = fs.readFileSync(path.join(deliverableDir, "worker.ts"), "utf8");
+      expect(workerCode).toContain("REVIEW_TOKEN");
+      expect(workerCode).toContain("Mobile (390px)");
+      expect(workerCode).toContain("/__deliverable/feedback");
+
+      const expiryRes = spawnSync(
+        "bun",
+        [scriptPath, tempDir, "--check-expiry", "client-preview-flow", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(expiryRes.status).toBe(0);
+      const expiryData = JSON.parse(expiryRes.stdout);
+      expect(expiryData.expired).toBe(false);
+      expect(expiryData.hoursRemaining).toBeGreaterThanOrEqual(47);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
     const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
     expect(fs.existsSync(protoPath)).toBe(true);
