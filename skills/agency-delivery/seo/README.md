@@ -24,7 +24,7 @@ Make our competitor comparison page citable by ChatGPT and Perplexity.
 
 | Mode | Request it with | Deliverable |
 |:---|:---|:---|
-| **technical** | technical crawl/index/render health | Technical SEO: crawl, render, index, canonical, sitemap, robots, hreflang. |
+| **technical** | technical crawl/index/render health | Technical SEO: crawl, render, index, canonical, sitemap, robots, hreflang, trailing-slash normalizer, breadcrumb schema. |
 | **onpage** | optimize a specific page or template | On-page: titles, meta, headings, internal links, structured data, snippet quality. |
 | **content** | keyword research and ranking content briefs | Content strategy: keyword universe, topic clusters, briefs handed to content. |
 | **local** | local/maps visibility work | Local SEO: GBP optimization, citations, NAP consistency, local pages. |

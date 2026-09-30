@@ -950,6 +950,70 @@ tags: [ai, dev]
     }
   });
 
+  test("seo technical mode and breadcrumb-schema CLI generate BreadcrumbList JSON-LD and normalize trailing slashes", () => {
+    const techPath = path.join(REPO_ROOT, "skills/agency-delivery/seo/references/technical.md");
+    expect(fs.existsSync(techPath)).toBe(true);
+    const content = fs.readFileSync(techPath, "utf8");
+    expect(content).toContain("Trailing-Slash Normalization & BreadcrumbList Schema");
+    expect(content).toContain("breadcrumb-schema.ts");
+
+    const scriptPath = "skills/agency-delivery/seo/scripts/breadcrumb-schema.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("Breadcrumb JSON-LD & Trailing-Slash Normalizer");
+
+    // 1. Breadcrumb JSON-LD Generation
+    const bcRes = spawnSync(
+      "bun",
+      [scriptPath, "--breadcrumb", "https://agency.com/services/web-dev/ecommerce/", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(bcRes.status).toBe(0);
+    const bcData = JSON.parse(bcRes.stdout);
+    expect(bcData["@type"]).toBe("BreadcrumbList");
+    expect(bcData.itemListElement.length).toBe(4);
+    expect(bcData.itemListElement[0].name).toBe("Home");
+    expect(bcData.itemListElement[1].name).toBe("Services");
+    expect(bcData.itemListElement[2].name).toBe("Web Dev");
+    expect(bcData.itemListElement[3].name).toBe("Ecommerce");
+    expect(bcData.itemListElement[3].item).toBe("https://agency.com/services/web-dev/ecommerce/");
+
+    // 2. Trailing Slash Normalization
+    const normRes = spawnSync(
+      "bun",
+      [scriptPath, "--normalize", "http://AGENCY.com/services//web-dev", "--trailing-slash", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(normRes.status).toBe(0);
+    const normData = JSON.parse(normRes.stdout);
+    expect(normData.normalized).toBe("https://agency.com/services/web-dev/");
+
+    // 3. Trailing Slash Policy Audit
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "seo-bc-test-"));
+    try {
+      const urlFile = path.join(tempDir, "urls.txt");
+      fs.writeFileSync(
+        urlFile,
+        "https://agency.com/services/\nhttps://agency.com/about\nhttps://agency.com/contact/\n",
+        "utf8",
+      );
+      const auditRes = spawnSync("bun", [scriptPath, "--audit", urlFile, "--trailing-slash", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      const auditData = JSON.parse(auditRes.stdout);
+      expect(auditData.consistent).toBe(false);
+      expect(auditData.violations.length).toBe(1);
+      expect(auditData.violations[0].url).toBe("https://agency.com/about");
+      expect(auditData.violations[0].expected).toBe("https://agency.com/about/");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("devops hosting mode and docker-audit CLI enforce multi-stage builds and layer cache order", () => {
     const hostingPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/hosting.md");
     expect(fs.existsSync(hostingPath)).toBe(true);
