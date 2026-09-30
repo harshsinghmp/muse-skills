@@ -7,7 +7,9 @@
  *   bun webdev.ts --webhook-scaffold <stripe|shopify|generic>
  */
 
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import net from "node:net";
 import path from "node:path";
 
 export interface BrownfieldReport {
@@ -965,6 +967,218 @@ ${printCss}
   };
 }
 
+export function checkPortAvailability(
+  port: number,
+): Promise<{ port: number; available: boolean; pid?: number; processName?: string }> {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.once("error", (err: NodeJS.ErrnoException) => {
+      if (err.code === "EADDRINUSE") {
+        let pid: number | undefined;
+        let processName: string | undefined;
+        try {
+          const lsof = spawnSync("lsof", ["-i", `:${port}`, "-t"], { encoding: "utf8" });
+          if (lsof.status === 0 && lsof.stdout.trim()) {
+            pid = Number.parseInt(lsof.stdout.trim().split("\n")[0], 10);
+            const ps = spawnSync("ps", ["-p", String(pid), "-o", "comm="], { encoding: "utf8" });
+            if (ps.status === 0) processName = ps.stdout.trim();
+          }
+        } catch {
+          // Ignore lsof failure
+        }
+        resolve({ port, available: false, pid, processName });
+      } else {
+        resolve({ port, available: false });
+      }
+    });
+    server.once("listening", () => {
+      server.close(() => {
+        resolve({ port, available: true });
+      });
+    });
+    server.listen(port);
+  });
+}
+
+export async function releasePort(
+  port: number,
+): Promise<{ port: number; released: boolean; pid?: number; message: string }> {
+  const status = await checkPortAvailability(port);
+  if (status.available) {
+    return { port, released: true, message: `Port ${port} is already free.` };
+  }
+  if (!status.pid) {
+    return { port, released: false, message: `Port ${port} is in use, but PID could not be determined.` };
+  }
+  try {
+    process.kill(status.pid, "SIGTERM");
+    return {
+      port,
+      released: true,
+      pid: status.pid,
+      message: `Process ${status.pid} (${status.processName || "unknown"}) terminated via SIGTERM.`,
+    };
+  } catch (err) {
+    try {
+      process.kill(status.pid, "SIGKILL");
+      return { port, released: true, pid: status.pid, message: `Process ${status.pid} force killed via SIGKILL.` };
+    } catch {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      return {
+        port,
+        released: false,
+        pid: status.pid,
+        message: `Failed to terminate PID ${status.pid}: ${errMsg}`,
+      };
+    }
+  }
+}
+
+export interface PackageHealthResult {
+  name: string;
+  valid: boolean;
+  isHallucination: boolean;
+  isTyposquat: boolean;
+  reason?: string;
+  suggestedFix?: string;
+}
+
+const HALLUCINATED_PACKAGE_MAP: Record<string, string> = {
+  "drizzle-orm-pg": "drizzle-orm pg",
+  "drizzle-orm-postgres": "drizzle-orm pg",
+  "drizzle-orm-mysql": "drizzle-orm mysql2",
+  "drizzle-orm-sqlite": "drizzle-orm better-sqlite3",
+  "react-query-v5": "@tanstack/react-query",
+  "tanstack-query-v5": "@tanstack/react-query",
+  "prisma-client-js": "@prisma/client",
+  "next-auth-v5": "next-auth@beta",
+  "tailwind-css": "tailwindcss",
+  "shadcn-ui": "shadcn",
+  "framer-motion-v11": "motion",
+  "framer-motion-v12": "motion",
+};
+
+const KNOWN_TYPOSQUATS: Record<string, string> = {
+  "cross-env-js": "cross-env",
+  lodahs: "lodash",
+  expresss: "express",
+  reactt: "react",
+  zodd: "zod",
+  "chalk-js": "chalk",
+  axois: "axios",
+};
+
+export function verifyPackageHealth(packageName: string): PackageHealthResult {
+  const clean = packageName.trim().toLowerCase();
+
+  // 1. Hallucination probe
+  if (HALLUCINATED_PACKAGE_MAP[clean]) {
+    return {
+      name: packageName,
+      valid: false,
+      isHallucination: true,
+      isTyposquat: false,
+      reason: `Package '${packageName}' is a known hallucinated compound package.`,
+      suggestedFix: `Install '${HALLUCINATED_PACKAGE_MAP[clean]}' instead.`,
+    };
+  }
+
+  // 2. Typosquat probe
+  if (KNOWN_TYPOSQUATS[clean]) {
+    return {
+      name: packageName,
+      valid: false,
+      isHallucination: false,
+      isTyposquat: true,
+      reason: `Package '${packageName}' matches known malicious typosquat of '${KNOWN_TYPOSQUATS[clean]}'.`,
+      suggestedFix: `Install genuine '${KNOWN_TYPOSQUATS[clean]}' instead.`,
+    };
+  }
+
+  // 3. Regex heuristics: disallow unvetted version suffixes like pkg-v5, pkg-v4
+  if (/-v\d+$/.test(clean) && !clean.startsWith("@")) {
+    return {
+      name: packageName,
+      valid: false,
+      isHallucination: true,
+      isTyposquat: false,
+      reason: `Package '${packageName}' appears to be a hallucinated version-suffixed name.`,
+      suggestedFix: `Install '${clean.replace(/-v\d+$/, "")}' with version tag (e.g. ${clean.replace(/-v\d+$/, "")}@latest).`,
+    };
+  }
+
+  return {
+    name: packageName,
+    valid: true,
+    isHallucination: false,
+    isTyposquat: false,
+  };
+}
+
+export interface SsrBoundaryReport {
+  filesScanned: number;
+  violations: Array<{
+    file: string;
+    line: number;
+    globalUsed: string;
+    snippet: string;
+    fix: string;
+  }>;
+}
+
+export function scanSsrBoundaries(targetDir = process.cwd()): SsrBoundaryReport {
+  const violations: SsrBoundaryReport["violations"] = [];
+  let filesScanned = 0;
+
+  function scan(dir: string) {
+    if (!fs.existsSync(dir)) return;
+    try {
+      const entries = fs.readdirSync(dir);
+      for (const entry of entries) {
+        if (entry === "node_modules" || entry === ".git" || entry === "dist" || entry === ".agents") continue;
+        const full = path.join(dir, entry);
+        try {
+          const st = fs.statSync(full);
+          if (st.isDirectory()) {
+            scan(full);
+          } else {
+            const ext = path.extname(entry).toLowerCase();
+            if ([".tsx", ".jsx", ".astro"].includes(ext)) {
+              filesScanned++;
+              const lines = fs.readFileSync(full, "utf8").split("\n");
+              let insideClientOnlyHook = false;
+              for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes("useEffect(") || line.includes("useLayoutEffect(")) {
+                  insideClientOnlyHook = true;
+                }
+                if (insideClientOnlyHook && line.includes("})")) {
+                  insideClientOnlyHook = false;
+                }
+                if (!insideClientOnlyHook) {
+                  const match = line.match(/\b(window|document|localStorage|sessionStorage)\.[a-zA-Z0-9_]+/);
+                  if (match && !line.includes("typeof window") && !line.includes("typeof document")) {
+                    violations.push({
+                      file: path.relative(targetDir, full),
+                      line: i + 1,
+                      globalUsed: match[1],
+                      snippet: line.trim(),
+                      fix: `Quarantine inside useEffect() or wrap with 'if (typeof ${match[1]} !== "undefined")'`,
+                    });
+                  }
+                }
+              }
+            }
+          }
+        } catch {}
+      }
+    } catch {}
+  }
+
+  scan(targetDir);
+  return { filesScanned, violations };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -1116,9 +1330,73 @@ if (import.meta.main) {
       console.log(`  CSS:      ${res.cssPath}`);
       console.log(`  Hydrator: ${res.hydratorPath}`);
     }
+  } else if (args.includes("--port-check")) {
+    const defaultPorts = [3000, 4321, 5173, 8080];
+    const results = await Promise.all(defaultPorts.map((p) => checkPortAvailability(p)));
+    if (isJson) {
+      console.log(JSON.stringify({ ports: results }, null, 2));
+    } else {
+      console.log("\n🔌 Development Port Status Probe:");
+      for (const r of results) {
+        if (r.available) {
+          console.log(`  Port ${r.port}: ✅ FREE`);
+        } else {
+          console.log(
+            `  Port ${r.port}: ❌ OCCUPIED (PID: ${r.pid || "unknown"}, Comm: ${r.processName || "unknown"})`,
+          );
+        }
+      }
+    }
+  } else if (args.includes("--port-clean")) {
+    const idx = args.indexOf("--port-clean");
+    const portNum = Number.parseInt(args[idx + 1], 10);
+    if (!portNum || Number.isNaN(portNum)) {
+      console.error("Error: Please provide a valid port number (e.g. 3000)");
+      process.exit(1);
+    }
+    const res = await releasePort(portNum);
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🔌 Port Release Result: ${res.message}`);
+    }
+  } else if (args.includes("--verify-package")) {
+    const idx = args.indexOf("--verify-package");
+    const pkg = args[idx + 1];
+    if (!pkg) {
+      console.error("Error: Please provide a package name (e.g. drizzle-orm)");
+      process.exit(1);
+    }
+    const res = verifyPackageHealth(pkg);
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n📦 Package Verification: ${pkg}`);
+      console.log(`  Status: ${res.valid ? "✅ VALID" : "❌ REJECTED"}`);
+      if (!res.valid) {
+        console.log(`  Reason: ${res.reason}`);
+        if (res.suggestedFix) console.log(`  Fix:    ${res.suggestedFix}`);
+      }
+    }
+    process.exit(res.valid ? 0 : 1);
+  } else if (args.includes("--ssr-boundary-scan")) {
+    const idx = args.indexOf("--ssr-boundary-scan");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = scanSsrBoundaries(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n🌐 SSR Hydration Boundary Scan: ${target}`);
+      console.log(`  Files Scanned: ${report.filesScanned}`);
+      console.log(`  Violations Found: ${report.violations.length}`);
+      for (const v of report.violations) {
+        console.log(`    - ⚠️ [${v.file}:${v.line}] Accessed '${v.globalUsed}': ${v.snippet} (Fix: ${v.fix})`);
+      }
+    }
+    process.exit(report.violations.length === 0 ? 0 : 1);
   } else {
     console.log(
-      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]] [--check-pooling [dir]] [--presigned-upload-scaffold <s3|r2>] [--widget-scaffold [name]] [--anti-fouc-scaffold [key]] [--font-metric-override [family] [fallback]] [--print-css-scaffold] [--anchor-offset-scaffold [height]] [--polish-audit [dir]] [--scaffold-polish-suite [dir]]",
+      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]] [--check-pooling [dir]] [--presigned-upload-scaffold <s3|r2>] [--widget-scaffold [name]] [--anti-fouc-scaffold [key]] [--font-metric-override [family] [fallback]] [--print-css-scaffold] [--anchor-offset-scaffold [height]] [--polish-audit [dir]] [--scaffold-polish-suite [dir]] [--port-check] [--port-clean <port>] [--verify-package <name>] [--ssr-boundary-scan [dir]]",
     );
   }
 }

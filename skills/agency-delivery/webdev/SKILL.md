@@ -4,7 +4,7 @@ aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstac
 description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
 argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|deploy|audit]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -15,14 +15,14 @@ metadata:
   aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
   suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
   hermes:
-    tags: ["web-development", "frontend", "backend", "fullstack", "fullstack-guardian", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript", "anti-fouc", "zero-cls", "print-css", "anchor-offset"]
+    tags: ["web-development", "frontend", "backend", "fullstack", "fullstack-guardian", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript", "anti-fouc", "zero-cls", "print-css", "anchor-offset", "port-sanitizer", "typosquat-guard", "ssr-boundary"]
     related_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
-    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "fullstack-guardian", "spec-miner", "reverse engineer", "responsiveness-check", "audit mobile responsiveness", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse", "wordpress pro", "elementor", "react native expert", "anti-fouc", "dark mode flash", "zero cls font", "print stylesheet", "anchor scroll offset"]
+    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "fullstack-guardian", "spec-miner", "reverse engineer", "responsiveness-check", "audit mobile responsiveness", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse", "wordpress pro", "elementor", "react native expert", "anti-fouc", "dark mode flash", "zero cls font", "print stylesheet", "anchor scroll offset", "clean port", "port in use", "verify package", "ssr boundary check"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -110,6 +110,10 @@ A change is not done until the gate is green. If no gate exists, say so and add 
 | `bun webdev.ts --anchor-offset-scaffold [height]` | Generate sticky/fixed navbar anchor scroll offset | `html { scroll-padding-top: ... }` prevents title clipping |
 | `bun webdev.ts --polish-audit [dir]` | Audit target codebase for hydration and polish standards | Structured scorecard (0-100) with remediation steps |
 | `bun webdev.ts --scaffold-polish-suite [dir]` | Scaffold complete CSS and HTML hydrator suite | `styles/hydration-polish.css` and `theme-hydrator.html` |
+| `bun webdev.ts --port-check` | Probe dev server ports (3000, 4321, 5173, 8080) | Identifies port occupancy and associated PIDs |
+| `bun webdev.ts --port-clean <port>` | Cleanly release occupied dev port | Terminates orphaned zombie process (`SIGTERM` → `SIGKILL`) |
+| `bun webdev.ts --verify-package <name>` | Audit dependency against hallucinated/typosquatted names | Protects package integrity before `bun add` |
+| `bun webdev.ts --ssr-boundary-scan [dir]` | Scan codebase for top-level browser global violations | Catches `window is not defined` and hydration errors |
 
 ### Sourcing rule
 
@@ -155,5 +159,8 @@ primary source; defaults here are fallbacks. Record which URLs were used.
 - [ ] Zero-CLS `@font-face` metric overrides configured for web font system fallbacks.
 - [ ] Clean `@media print` stylesheet active (interactive chrome stripped, ink-safe).
 - [ ] `scroll-padding-top` declared on root `<html>` matching sticky/fixed navigation header.
+- [ ] Dev ports probed and subprocess zombies cleared before starting server.
+- [ ] Dependencies vetted against typosquats and hallucinated compound packages.
+- [ ] SSR boundaries verified (no unquarantined top-level browser globals).
 - [ ] Interactive elements keyboard-navigable and labeled (default, not afterthought).
 - [ ] Mode-specific gate in the loaded reference passed.

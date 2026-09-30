@@ -66,6 +66,24 @@ bun skills/agency-delivery/webdev/scripts/webdev.ts --polish-audit ./my-app
 bun skills/agency-delivery/webdev/scripts/webdev.ts --scaffold-polish-suite ./my-app
 ```
 
+## Technical Resilience Suite
+
+The `webdev` CLI includes utilities to prevent subprocess zombie port-locking, dependency typosquatting, and SSR hydration crashes:
+
+```bash
+# Probe dev ports (3000, 4321, 5173, 8080) for active occupancy
+bun skills/agency-delivery/webdev/scripts/webdev.ts --port-check
+
+# Release occupied dev port by cleanly terminating orphaned zombie processes
+bun skills/agency-delivery/webdev/scripts/webdev.ts --port-clean 3000
+
+# Verify package safety against hallucinated or typosquatted package names
+bun skills/agency-delivery/webdev/scripts/webdev.ts --verify-package drizzle-orm
+
+# Scan codebase for unquarantined top-level browser globals (window, localStorage)
+bun skills/agency-delivery/webdev/scripts/webdev.ts --ssr-boundary-scan ./src
+```
+
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.

@@ -1949,4 +1949,73 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  test("🛠️ webdev skill: technical resilience (port probe, package guard, SSR boundary scan)", () => {
+    // 1. Port probe checks default ports
+    const portRes = spawnSync("bun", ["skills/agency-delivery/webdev/scripts/webdev.ts", "--port-check", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(portRes.status).toBe(0);
+    const portData = JSON.parse(portRes.stdout);
+    expect(Array.isArray(portData.ports)).toBe(true);
+    expect(portData.ports.length).toBeGreaterThanOrEqual(4);
+
+    // 2. Package verification handles genuine, hallucinated, and typosquatted dependencies
+    const validPkgRes = spawnSync(
+      "bun",
+      ["skills/agency-delivery/webdev/scripts/webdev.ts", "--verify-package", "drizzle-orm", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(validPkgRes.status).toBe(0);
+    const validPkgData = JSON.parse(validPkgRes.stdout);
+    expect(validPkgData.valid).toBe(true);
+
+    const hallucinatedPkgRes = spawnSync(
+      "bun",
+      ["skills/agency-delivery/webdev/scripts/webdev.ts", "--verify-package", "drizzle-orm-pg", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(hallucinatedPkgRes.status).toBe(1);
+    const hallucinatedPkgData = JSON.parse(hallucinatedPkgRes.stdout);
+    expect(hallucinatedPkgData.valid).toBe(false);
+    expect(hallucinatedPkgData.isHallucination).toBe(true);
+    expect(hallucinatedPkgData.suggestedFix).toContain("drizzle-orm pg");
+
+    const typosquatPkgRes = spawnSync(
+      "bun",
+      ["skills/agency-delivery/webdev/scripts/webdev.ts", "--verify-package", "lodahs", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(typosquatPkgRes.status).toBe(1);
+    const typosquatPkgData = JSON.parse(typosquatPkgRes.stdout);
+    expect(typosquatPkgData.valid).toBe(false);
+    expect(typosquatPkgData.isTyposquat).toBe(true);
+
+    // 3. SSR boundary scan catches unquarantined window access
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ssr-boundary-test-"));
+    try {
+      fs.writeFileSync(
+        path.join(tempDir, "BadComponent.tsx"),
+        "export function BadComponent() {\n  const width = window.innerWidth;\n  return <div>{width}</div>;\n}\n",
+      );
+      fs.writeFileSync(
+        path.join(tempDir, "GoodComponent.tsx"),
+        "export function GoodComponent() {\n  useEffect(() => {\n    const width = window.innerWidth;\n  }, []);\n  return <div>OK</div>;\n}\n",
+      );
+
+      const ssrRes = spawnSync(
+        "bun",
+        ["skills/agency-delivery/webdev/scripts/webdev.ts", "--ssr-boundary-scan", tempDir, "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(ssrRes.status).toBe(1);
+      const ssrData = JSON.parse(ssrRes.stdout);
+      expect(ssrData.violations.length).toBe(1);
+      expect(ssrData.violations[0].globalUsed).toBe("window");
+      expect(ssrData.violations[0].file).toContain("BadComponent.tsx");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
