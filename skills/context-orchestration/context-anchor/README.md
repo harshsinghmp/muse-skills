@@ -84,6 +84,21 @@ bun skills/context-orchestration/context-anchor/scripts/anchor.ts --pin "src/aut
 
 # Verify physical disk & git evidence before claiming task complete (Ghost Task Detection)
 bun skills/context-orchestration/context-anchor/scripts/anchor.ts --verify
+
+# Observation Masking: offload verbose command outputs (>=15 lines) to disk & emit 2-line receipt
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --mask-output \
+  --cmd "bun test" --raw "$OUTPUT" --exit 0
+
+# Prompt-Cache-Aware Partitioning: split into static prefix and dynamic tail
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --partition
+
+# Outcome streak tracking & Deadlock detection (halts on >=3 consecutive failures)
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --record-outcome \
+  --cmd "bun test" --success false --summary "AssertionError on line 42"
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --deadlock-check
+
+# Automated Rollback: revert uncommitted churn to clean anchor state
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback
 ```
 
 ---
@@ -144,4 +159,7 @@ export interface SessionEnvelope { ... }
 - [Sample Workstream Anchor](examples/sample-workstream-anchor.md) — parking, switching, and listing client lanes.
 - [AST Pinning Guide](references/ast-pinning-guide.md) — combating orientation burn & attention degradation.
 - [Attention Hygiene & Context Sinks](references/attention-hygiene.md) — preventing ContextEcho and ghost tasks.
+- [Observation Masking Guide](references/observation-masking.md) — preventing context drowning via structured receipts.
+- [Prompt-Cache Partitioning](references/prompt-cache-partitioning.md) — maximizing prefix cache hits with two-tier topology.
+- [Deadlock Breaker & Toxic Retry Rollback](references/deadlock-breaker.md) — 3-strike failure limit and automated state reset.
 - [Layering Protocol](references/layering-protocol.md) — the normative anchor ↔ HANDOFF.md contract.
