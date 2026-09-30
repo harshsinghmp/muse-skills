@@ -1,6 +1,6 @@
 # 🐙 Git Skill — Autonomous End-to-End Release & GitHub Lifecycle Engine
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](package.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](#)
 
@@ -20,7 +20,7 @@ The **`git`** skill enforces an uncompromising engineering workflow:
 
 ### Key Highlights
 
-- **Dynamic `.gitignore` Seeding**: Automatically detects missing `.gitignore` files and seeds hardened Zero-Leakage baselines (ignoring `.worktrees/`, `.env*`, and agent artifacts).
+- **Dynamic `.gitignore` Seeding & Wildcard Trap Audit**: Automatically detects missing `.gitignore` files, seeds hardened Zero-Leakage baselines, identifies negative parent directory traps (`dir/` pruning `!dir/file`), and untracks cached index leaks via `gitignore-audit.ts`.
 - **Worktree Parallel Lanes**: Recommended feature lanes under `.worktrees/` for concurrent multi-agent development and protecting active dev servers (`bun dev`, Vite) from branch switching churn.
 - **9-Tier Anti-Slop Triage**: Automatically classify issues (`actionable-bug`, `actionable-feature`, `duplicate`, `generated-slop`, etc.) before writing code.
 - **Strict 4-Phase Branch Model**: Protects `master` (production). All work stems from `dev` (`staging`), merges to `dev`, stages via `release/vX.Y.Z`, and back-merges after release.
