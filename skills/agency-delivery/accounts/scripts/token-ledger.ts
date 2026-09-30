@@ -238,6 +238,58 @@ export function pruneContextHistory(messages: ContextMessage[], maxTokens = 4000
   };
 }
 
+export interface RetainerStatusResult {
+  clientId: string;
+  monthlyAllowanceUsd: number;
+  consumedUsd: number;
+  percentUsed: number;
+  status: "HEALTHY" | "OVERAGE_WARNING" | "OVERAGE_EXCEEDED";
+  autoNotice?: string;
+}
+
+export function checkRetainerStatus(
+  ledgerFile: string,
+  clientId: string,
+  monthlyAllowanceUsd = 1000.0,
+): RetainerStatusResult {
+  let entries: TokenEntry[] = [];
+  if (fs.existsSync(ledgerFile)) {
+    try {
+      const all: TokenEntry[] = JSON.parse(fs.readFileSync(ledgerFile, "utf8"));
+      entries = all.filter((e) => e.clientId.toLowerCase() === clientId.toLowerCase());
+    } catch {
+      entries = [];
+    }
+  }
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const mtdEntries = entries.filter((e) => e.timestamp >= monthStart);
+
+  const consumedUsd = mtdEntries.reduce((acc, e) => acc + (e.billableUsd || e.costUsd || 0), 0);
+  const percentUsed = monthlyAllowanceUsd > 0 ? (consumedUsd / monthlyAllowanceUsd) * 100 : 0;
+
+  let status: "HEALTHY" | "OVERAGE_WARNING" | "OVERAGE_EXCEEDED" = "HEALTHY";
+  let autoNotice: string | undefined;
+
+  if (percentUsed >= 100) {
+    status = "OVERAGE_EXCEEDED";
+    autoNotice = `Hi ${clientId}, your monthly retainer compute allowance ($${monthlyAllowanceUsd.toFixed(2)}) has reached 100% capacity ($${consumedUsd.toFixed(2)}). To maintain momentum on active sprint tasks, please approve an overage block or schedule a renewal true-up.`;
+  } else if (percentUsed >= 80) {
+    status = "OVERAGE_WARNING";
+    autoNotice = `Hi ${clientId}, courtesy heads-up: your monthly retainer compute utilization is at ${percentUsed.toFixed(1)}% ($${consumedUsd.toFixed(2)} of $${monthlyAllowanceUsd.toFixed(2)}). Active development continues on track.`;
+  }
+
+  return {
+    clientId,
+    monthlyAllowanceUsd: Number(monthlyAllowanceUsd.toFixed(2)),
+    consumedUsd: Number(consumedUsd.toFixed(2)),
+    percentUsed: Number(percentUsed.toFixed(1)),
+    status,
+    autoNotice,
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const defaultLedger = path.join(process.cwd(), ".agents/context/token-ledger.json");
@@ -305,6 +357,26 @@ if (import.meta.main) {
         console.log(`  🚨 CIRCUIT BREAKER TRIPPED: HALT_EXCEEDED_TOKEN_BUDGET. Autonomous tasks paused.`);
       }
     }
+  } else if (args.includes("--retainer-status")) {
+    const idx = args.indexOf("--retainer-status");
+    const clientId = args[idx + 1];
+    const allowance = parseFloat(args[idx + 2] || "1000");
+    if (!clientId) {
+      console.error("Error: --retainer-status requires <clientId> [monthlyAllowanceUsd]");
+      process.exit(1);
+    }
+    const retainer = checkRetainerStatus(defaultLedger, clientId, allowance);
+    if (args.includes("--json")) {
+      console.log(JSON.stringify(retainer, null, 2));
+    } else {
+      console.log(`\n📈 Monthly Retainer Meter: ${clientId}`);
+      console.log(`  Allowance: $${retainer.monthlyAllowanceUsd.toFixed(2)}`);
+      console.log(`  Consumed MTD: $${retainer.consumedUsd.toFixed(2)} (${retainer.percentUsed}%)`);
+      console.log(`  Status: [${retainer.status}]`);
+      if (retainer.autoNotice) {
+        console.log(`  📢 Notice: "${retainer.autoNotice}"`);
+      }
+    }
   } else if (args.includes("--prune-context")) {
     const idx = args.indexOf("--prune-context");
     const filePath = args[idx + 1];
@@ -335,7 +407,7 @@ if (import.meta.main) {
     }
   } else {
     console.log(
-      "Usage: bun token-ledger.ts --record <clientId> <model> <inTokens> <outTokens> [task] | --report <clientId> | --check-budget <clientId> [maxBudgetUsd] | --prune-context <file.json> [--max-tokens <tokens>]",
+      "Usage: bun token-ledger.ts --record <clientId> <model> <inTokens> <outTokens> [task] | --report <clientId> | --check-budget <clientId> [maxBudgetUsd] | --retainer-status <clientId> [allowanceUsd] | --prune-context <file.json> [--max-tokens <tokens>]",
     );
   }
 }
