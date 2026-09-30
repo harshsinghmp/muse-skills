@@ -4,7 +4,7 @@ aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd
 description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
 argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -94,6 +94,12 @@ Rule: the simplest target that meets the SLA. Cargo-culting Kubernetes for a bro
 - Release/versioning/tag workflow → `git` (its release lifecycle).
 - Secrets-scanning and SAST in the pipeline → `code-review`.
 - Deploy step automation inside an existing system → `automation`.
+
+### Dockerfile & Container Optimization Tooling
+
+- **Audit Dockerfile**: `bun skills/agency-delivery/devops/scripts/docker-audit.ts --audit [Dockerfile|dir] [--json]`
+- **Scaffold Hardened Dockerfile**: `bun skills/agency-delivery/devops/scripts/docker-audit.ts --scaffold <nextjs|node|bun>`
+
 
 ---
 

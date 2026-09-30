@@ -74,6 +74,21 @@ Upgrades step 8 (provision hosting as code): the infra rebuilds from a PR, not m
 - **FinOps Lifecycle Gates.** Right-size from actuals (requests/limits from p95 usage, not guesses); autoscale down to zero where the platform allows; automated storage lifecycle transitions: Standard → Nearline (30d) → Coldline (90d) → Archive (365d); budget auto-stoppers at 50%, 90%, and 100% of forecasted burn.
 - **HCL tag block.** Every billable resource carries `env`, `owner`, `cost-center` — untagged apply fails review.
 
+## 🐳 Multi-Stage Zero-DevDep Docker Pattern & Layer Cache Invariant
+
+Unoptimized container builds cause multi-gigabyte images, invalidate build caches on every commit, and leak build compilers into production runtimes. All Dockerfiles must adhere to:
+
+1. **Multi-Stage Build Pipeline**:
+   - Compiling stage (`FROM ... AS builder`): Contains devDependencies, TypeScript compilers, and build tools.
+   - Minimal runner stage (`FROM ... AS runner`): Contains only production runtime files and dependencies (`--production` / `--omit=dev`).
+2. **Deterministic Layer Cache Ordering**:
+   - ALWAYS copy `package.json` and lockfiles (`bun.lock`, `package-lock.json`, `pnpm-lock.yaml`) and execute install BEFORE copying application source code (`COPY . .`).
+   - Modifying a source code file must NEVER trigger a full `npm install` layer invalidation.
+3. **Mandatory `.dockerignore`**:
+   - Every containerized project must check in a `.dockerignore` file excluding: `node_modules/`, `.git/`, `.env*`, `dist/`, `.next/`, `coverage/`, and cache directories.
+4. **Non-Root Runtime User**:
+   - The production runner stage MUST declare an explicit non-root user (`USER node` or `USER nonroot`) rather than executing as PID 1 root.
+
 ## Quality gate
 
 - [ ] Target chosen from the ladder with rationale.
