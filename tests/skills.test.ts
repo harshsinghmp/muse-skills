@@ -288,6 +288,12 @@ describe("Invocation UX & conventions", () => {
     expect(feedbackContent).toContain("Make it pop");
     expect(feedbackContent).toContain("Strict Anti-Drift Boundary");
     expect(feedbackContent).toContain("The Typed Feedback Translation Contract");
+    expect(feedbackContent).toContain("The Diplomatic Scope Shield & Script Matrix");
+    expect(feedbackContent).toContain("Just One Quick Tweak");
+    expect(feedbackContent).toContain("The Blocking Asset Ghosting Sequence");
+    expect(feedbackContent).toContain("Stakeholder Contradiction Freeze Protocol");
+    expect(feedbackContent).toContain("Direct-Ping Boundary Reinforcement");
+    expect(feedbackContent).toContain("Post-Launch Bug Warranty vs Paid Retainer SLA");
 
     const statusContent = fs.readFileSync(statusPath, "utf8");
     expect(statusContent).toContain("Automated Non-Technical Client Changelog Protocol");
@@ -317,6 +323,24 @@ describe("Invocation UX & conventions", () => {
     expect(changelogRes.status).toBe(0);
     expect(changelogRes.stdout).toContain("Staging Deployment Update");
     expect(changelogRes.stdout).toContain("New & Visual Updates");
+
+    // Test --draft-pushback CLI
+    const tweakRes = spawnSync("bun", [scriptPath, "--draft-pushback", "quick-tweak", "--client", "Alpha Co"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(tweakRes.status).toBe(0);
+    expect(tweakRes.stdout).toContain("Alpha Co");
+    expect(tweakRes.stdout).toContain("Change Order");
+
+    const contradictionRes = spawnSync(
+      "bun",
+      [scriptPath, "--draft-pushback", "contradiction", "--details", "Hero CTA placement"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(contradictionRes.status).toBe(0);
+    expect(contradictionRes.stdout).toContain("Hero CTA placement");
+    expect(contradictionRes.stdout).toContain("frozen development");
   });
 
   test("webdev backend and onboard modes encode webhook guardian and brownfield shield", () => {

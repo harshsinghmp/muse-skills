@@ -153,6 +153,38 @@ export function generateClientChangelog(commits: string[], stagingUrl = "https:/
   ].join("\n");
 }
 
+export function draftPushback(
+  scenario:
+    | "quick-tweak"
+    | "ghosting-day3"
+    | "ghosting-day7"
+    | "ghosting-day14"
+    | "contradiction"
+    | "direct-ping"
+    | "warranty",
+  clientName = "Client",
+  details = "the requested item",
+): string {
+  switch (scenario) {
+    case "quick-tweak":
+      return `Hi ${clientName}, we would love to incorporate this! Because this touches our core data flow / layout structure beyond the active milestone agreement, we’ve logged it in our backlog. We can either swap it with an existing lower-priority feature to keep our planned launch on track, or quote it as a quick Change Order ($X / +Y days). Let us know which direction you prefer!`;
+    case "ghosting-day3":
+      return `Hi ${clientName}, just checking in on the outstanding items (${details}). Our team is ready to proceed with the next milestone as soon as these are uploaded to our shared workspace. Let us know if you need any help with these!`;
+    case "ghosting-day7":
+      return `Hi ${clientName}, gentle heads-up regarding the pending assets (${details}). Because development is currently blocked, our target launch date will shift day-for-day to preserve delivery quality. We look forward to receiving these so we can re-accelerate.`;
+    case "ghosting-day14":
+      return `Hi ${clientName}, formal update: active development on this sprint has been paused to release dedicated engineering capacity. Once the required assets (${details}) are ready, we will schedule a new restart kickoff (typically 3–5 business days lead time).`;
+    case "contradiction":
+      return `Hi ${clientName}, we received conflicting directions regarding ${details}. To preserve your sprint budget and avoid throwaway work, we have temporarily frozen development on this component until you confirm the unified direction in writing.`;
+    case "direct-ping":
+      return `Hi ${clientName}, thanks for flagging this! To ensure your request is tracked, prioritized, and tested against our staging build, I’ve routed it to our central sprint board. Please post all requests in the main project channel so the entire team stays aligned.`;
+    case "warranty":
+      return `Hi ${clientName}, the 30-day post-launch warranty window concluded on schedule. We would be delighted to investigate and resolve ${details} under our ongoing monthly Maintenance & Support SLA or a dedicated sprint block.`;
+    default:
+      return `Hi ${clientName}, thank you for your note regarding ${details}. We have logged this with the project team.`;
+  }
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   if (args.includes("--translate-feedback")) {
@@ -178,6 +210,21 @@ if (import.meta.main) {
         console.log(`    - ${ac}`);
       }
     }
+  } else if (args.includes("--draft-pushback")) {
+    const idx = args.indexOf("--draft-pushback");
+    const scenario = (args[idx + 1] || "quick-tweak") as
+      | "quick-tweak"
+      | "ghosting-day3"
+      | "ghosting-day7"
+      | "ghosting-day14"
+      | "contradiction"
+      | "direct-ping"
+      | "warranty";
+    const clientIdx = args.indexOf("--client");
+    const client = clientIdx !== -1 ? args[clientIdx + 1] : "Acme Corp";
+    const detailsIdx = args.indexOf("--details");
+    const details = detailsIdx !== -1 ? args[detailsIdx + 1] : "requested revisions";
+    console.log(draftPushback(scenario, client, details));
   } else if (args.includes("--changelog")) {
     const idx = args.indexOf("--changelog");
     const ref = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "HEAD~5..HEAD";
@@ -200,6 +247,8 @@ if (import.meta.main) {
     }
     console.log(generateClientChangelog(commits, stagingUrl));
   } else {
-    console.log("Usage: bun client-comms.ts --translate-feedback '<text>' | --changelog [since-ref]");
+    console.log(
+      "Usage: bun client-comms.ts --translate-feedback '<text>' | --draft-pushback <scenario> [--client <name>] | --changelog [since-ref]",
+    );
   }
 }
