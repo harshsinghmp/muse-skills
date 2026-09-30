@@ -698,13 +698,14 @@ describe("Invocation UX & conventions", () => {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
 
-    // Verify 3 Resilience & Hygiene Gates in protocol
-    expect(content).toContain("The 3 Resilience & Hygiene Quality Gates");
+    // Verify 4 Resilience & Hygiene Gates in protocol
+    expect(content).toContain("The 4 Resilience & Hygiene Quality Gates");
     expect(content).toContain("The Loud Failure Invariant (Zero Swallowed Errors)");
     expect(content).toContain("The Deterministic Testing Standard (Zero Flaky Sleeps)");
     expect(content).toContain("The Zero-Redundancy Dependency Diet");
+    expect(content).toContain("The Client-Side Hydration & Timezone Desync Shield");
 
-    // Test --scan-silent-catches, --scan-flaky-tests, and --audit-deps
+    // Test --scan-silent-catches, --scan-flaky-tests, --audit-deps, and --scan-hydration-risks
     const tempDir2 = fs.mkdtempSync(path.join(os.tmpdir(), "gauntlet-resilience-"));
     try {
       // 1. Silent catch test
@@ -750,6 +751,21 @@ describe("Invocation UX & conventions", () => {
       const depReport = JSON.parse(depRes.stdout);
       expect(depReport.violations.length).toBe(3);
       expect(depReport.violations.some((v: { package: string }) => v.package === "axios")).toBe(true);
+
+      // 4. Hydration risk test
+      fs.writeFileSync(
+        path.join(tempDir2, "component.tsx"),
+        "export function Header() { return <div>{new Date().toLocaleDateString()}</div>; }\n",
+        "utf8",
+      );
+      const hydRes = spawnSync("bun", [scriptPath, "--scan-hydration-risks", tempDir2, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(hydRes.status).toBe(0);
+      const hydReport = JSON.parse(hydRes.stdout);
+      expect(hydReport.violations.length).toBe(1);
+      expect(hydReport.violations[0].pattern).toContain("new Date().toLocaleDateString()");
     } finally {
       fs.rmSync(tempDir2, { recursive: true, force: true });
     }

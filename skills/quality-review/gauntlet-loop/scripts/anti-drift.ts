@@ -277,6 +277,66 @@ export function auditRedundantDependencies(pkgPath: string): DependencyDietRepor
   return { packageJsonPath: pkgPath, violations };
 }
 
+export interface HydrationViolation {
+  file: string;
+  line: number;
+  pattern: string;
+  reason: string;
+  fix: string;
+}
+
+export interface HydrationReport {
+  scannedFiles: number;
+  violations: HydrationViolation[];
+}
+
+export function scanHydrationRisks(targetDir = process.cwd()): HydrationReport {
+  let scannedFiles = 0;
+  const violations: HydrationViolation[] = [];
+  const textExts = [".tsx", ".jsx", ".astro"];
+
+  function walk(current: string) {
+    if (!fs.existsSync(current)) return;
+    const stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      if (
+        current.includes("node_modules") ||
+        current.includes(".git") ||
+        current.includes("dist") ||
+        current.includes(".next")
+      )
+        return;
+      for (const item of fs.readdirSync(current)) {
+        walk(path.join(current, item));
+      }
+    } else if (textExts.some((ext) => current.endsWith(ext))) {
+      scannedFiles++;
+      const content = fs.readFileSync(current, "utf8");
+      const lines = content.split("\n");
+
+      lines.forEach((lineText, idx) => {
+        if (
+          /\bnew\s+Date\(\)\.to(?:Locale(?:Date|Time)?String|String)\(\)/.test(lineText) ||
+          /\bMath\.random\(\)/.test(lineText)
+        ) {
+          if (!lineText.includes("suppressHydrationWarning") && !content.includes("suppressHydrationWarning")) {
+            violations.push({
+              file: current,
+              line: idx + 1,
+              pattern: lineText.trim(),
+              reason: "Unsuppressed client-dependent date/random value in SSR component markup.",
+              fix: "Add suppressHydrationWarning to element or use a two-pass mounted useEffect pattern.",
+            });
+          }
+        }
+      });
+    }
+  }
+
+  walk(targetDir);
+  return { scannedFiles, violations };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -364,9 +424,27 @@ if (import.meta.main) {
         }
       }
     }
+  } else if (args.includes("--scan-hydration-risks")) {
+    const idx = args.indexOf("--scan-hydration-risks");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = scanHydrationRisks(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n💧 Client-Side Hydration Risk Audit: ${target}`);
+      console.log(`  Scanned Files: ${report.scannedFiles}`);
+      console.log(`  Hydration Risks: ${report.violations.length}`);
+      if (report.violations.length === 0) {
+        console.log(`  ✅ Clean! Zero unsuppressed hydration risks detected.`);
+      } else {
+        for (const v of report.violations) {
+          console.log(`    - ⚠️  ${v.file}:${v.line} -> ${v.pattern} (Fix: ${v.fix})`);
+        }
+      }
+    }
   } else {
     console.log(
-      "Usage: bun anti-drift.ts [--scan-duplicates [dir]] [--check-scope [since-ref]] [--scan-silent-catches [dir]] [--scan-flaky-tests [dir]] [--audit-deps [package.json]]",
+      "Usage: bun anti-drift.ts [--scan-duplicates [dir]] [--check-scope [since-ref]] [--scan-silent-catches [dir]] [--scan-flaky-tests [dir]] [--audit-deps [package.json]] [--scan-hydration-risks [dir]]",
     );
   }
 }
