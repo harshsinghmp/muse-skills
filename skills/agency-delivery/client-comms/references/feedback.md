@@ -72,9 +72,41 @@ When processing client review notes, generate a structured contract before dispa
 
 ---
 
+## 🛡️ The Diplomatic Scope Shield & Script Matrix
+
+Client feedback frequently conceals scope creep, direct-ping boundary breaches, or internal stakeholder conflicts. Use these verified scripts:
+
+### 1. "Just One Quick Tweak" DM Scope Shield
+When a client requests out-of-scope work in DMs or Slack threads:
+> *"We’d love to incorporate this! Because this touches our core data flow / layout structure beyond the active Milestone 1 agreement, we’ve logged it in our backlog. We can either swap it with an existing lower-priority feature to keep our Friday launch on track, or quote it as a quick Change Order ($X / +Y days). Let us know which direction you prefer!"*
+
+### 2. The Blocking Asset Ghosting Sequence
+When engineering velocity stalls waiting for client-provided assets (copy, credentials, photography):
+- **Day 3 (Gentle Reminder)**: List missing assets explicitly with instructions on where to upload.
+- **Day 7 (Milestone Impact Notice)**: Notify client that project completion shifts day-for-day: *"Because development is blocked on [assets], our target launch moves from Oct 12 to Oct 16 to maintain quality."*
+- **Day 14 (Project Pause & Capacity Reallocation)**: Formal freeze notice: *"Development is officially paused to release active engineering capacity. Once assets are provided, we will schedule a new restart kickoff (typically 3–5 business days lead time)."*
+
+### 3. Stakeholder Contradiction Freeze Protocol
+When multiple client stakeholders provide contradictory feedback (e.g. CEO vs Marketing Lead in Figma or Slack):
+1. **Immediate Freeze**: Instantly freeze active development on the disputed component.
+2. **Notification to Primary Signer**: *"Stakeholder A requested X while Stakeholder B requested Y. To preserve your budget and prevent rework, development on this section is paused until you confirm the unified direction in writing."*
+
+### 4. Direct-Ping Boundary Reinforcement
+When clients bypass the PM to ping junior developers directly:
+> *"Hey [Client], thanks for flagging this! To make sure your request is tracked, prioritized, and tested against our staging build, I’ve routed this to our central sprint board. Please post all requests in #project-feed so the whole team stays aligned."*
+
+### 5. Post-Launch Bug Warranty vs Paid Retainer SLA
+When clients report issues months after launch:
+- **Within 30 Days**: Free remediation of reproducible bugs violating the signed SOW acceptance criteria.
+- **Post-30 Days**: *"The 30-day warranty window concluded on [Date]. We’d be delighted to investigate and resolve this under our monthly Maintenance & Support SLA or a one-off sprint block."*
+
+---
+
 ## Quality Gate
 
 - [ ] Every client remark has an explicit `ACCEPTED`, `DECLINED`, or `CLARIFY` verdict.
 - [ ] Every `ACCEPTED` item has an Anti-Drift Boundary locking unaffected files.
 - [ ] Declines cite architectural, performance, or scope trade-offs, never excuses.
+- [ ] Conflicting stakeholder requests routed to the Stakeholder Contradiction Freeze protocol.
 - [ ] Client response contains zero internal developer jargon or LLM tool names.
+
