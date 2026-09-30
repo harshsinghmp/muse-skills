@@ -948,7 +948,7 @@
       "name": "automation",
       "description": "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics).",
       "path": "skills/agency-delivery/automation/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "agency-delivery",
       "tools": [
         "bash",
