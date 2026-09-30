@@ -201,6 +201,57 @@ describe("Invocation UX & conventions", () => {
     expect(res.status).toBe(0);
     expect(res.stdout).toContain("perfect sync");
   });
+
+  test("secretary/references/orchestration.md exists and encodes delegation, fast-path, and message contracts", () => {
+    const orchPath = path.join(REPO_ROOT, "skills/context-orchestration/secretary/references/orchestration.md");
+    expect(fs.existsSync(orchPath)).toBe(true);
+    const content = fs.readFileSync(orchPath, "utf8");
+    expect(content).toContain("Sub-Token Heuristic Fast-Path");
+    expect(content).toContain("Dynamic Confidence-Scored Semantic Router");
+    expect(content).toContain("Typed JSON Schema Message Bus");
+    expect(content).toContain("TaskContract");
+    expect(content).toContain("TeachbackResponse");
+    expect(content).toContain("ReviewVerdict");
+    expect(content).toContain("Blast-Radius Scoring & Reversible Git Checkpoints");
+    expect(content).toContain("Morning Briefing & Session Wakeup Protocol");
+  });
+
+  test("secretary CLI supports --triage, --briefing, and --switch flags", () => {
+    const scriptPath = "skills/context-orchestration/secretary/scripts/secretary.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("--triage");
+    expect(helpRes.stdout).toContain("--briefing");
+    expect(helpRes.stdout).toContain("--switch");
+    expect(helpRes.stdout).toContain("--checkpoint");
+
+    // Test triage fast-path
+    const triageRes = spawnSync("bun", [scriptPath, "--triage", "checkout with stripe payments"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(triageRes.status).toBe(0);
+    expect(triageRes.stdout).toContain("FAST-PATH");
+    expect(triageRes.stdout).toContain("webdev");
+    expect(triageRes.stdout).toContain("funnel");
+
+    // Test switch mode
+    const switchRes = spawnSync("bun", [scriptPath, "--switch", "smm:carousel"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(switchRes.status).toBe(0);
+    expect(switchRes.stdout).toContain("Mode Hot-Swapped Successfully");
+    expect(switchRes.stdout).toContain("Jasper");
+
+    // Test morning briefing
+    const briefRes = spawnSync("bun", [scriptPath, "--briefing"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(briefRes.status).toBe(0);
+    expect(briefRes.stdout).toContain("Secretary Morning Briefing");
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
