@@ -4,7 +4,7 @@ aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video
 description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
 argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -101,6 +101,12 @@ Rule: no piece ships without a named reader, one action, and at least one verifi
 - Keyword briefs and intent → `seo` (content mode).
 - Layout the copy lives in → `design` (ui mode).
 - Post-AI-slop editorial pass → `humanize` (or content's humanize mode).
+
+### AEO Schema & Quotability Tooling
+
+- **Generate Structured Schema**: `bun skills/agency-delivery/content/scripts/aeo-schema.ts --generate-schema <faq|article|organization> [--title "..." --author "..."]`
+- **Audit Quotability & Schema**: `bun skills/agency-delivery/content/scripts/aeo-schema.ts --audit-quotability <file.md> [--json]`
+
 
 ---
 

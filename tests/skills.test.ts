@@ -572,6 +572,59 @@ describe("Invocation UX & conventions", () => {
     }
   });
 
+  test("content studio aeo-schema CLI generates JSON-LD and audits AEO quotability", () => {
+    const scriptPath = "skills/agency-delivery/content/scripts/aeo-schema.ts";
+
+    // Test --generate-schema faq
+    const faqRes = spawnSync(
+      "bun",
+      [scriptPath, "--generate-schema", "faq", "--title", "What is Muse?", "--desc", "Autonomous agency orchestrator."],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(faqRes.status).toBe(0);
+    expect(faqRes.stdout).toContain('"@type": "FAQPage"');
+    expect(faqRes.stdout).toContain("What is Muse?");
+    expect(faqRes.stdout).toContain("Autonomous agency orchestrator.");
+
+    // Test --audit-quotability
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "content-aeo-"));
+    try {
+      const goodFile = path.join(tempDir, "good.md");
+      fs.writeFileSync(
+        goodFile,
+        '# Muse Overview\n\n<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article"}</script>\n\n## Architecture\nMuse coordinates autonomous agency agents across specialized divisions with strict verification.\n',
+        "utf8",
+      );
+      const goodRes = spawnSync("bun", [scriptPath, "--audit-quotability", goodFile, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(goodRes.status).toBe(0);
+      const goodReport = JSON.parse(goodRes.stdout);
+      expect(goodReport.hasSchema).toBe(true);
+      expect(goodReport.score).toBe(100);
+      expect(goodReport.violations.length).toBe(0);
+
+      const badFile = path.join(tempDir, "bad.md");
+      fs.writeFileSync(
+        badFile,
+        "# Unoptimized Blog\n\n## Section One\nThis is a dangling pronoun sentence that fails standalone quotability.\n",
+        "utf8",
+      );
+      const badRes = spawnSync("bun", [scriptPath, "--audit-quotability", badFile, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(badRes.status).toBe(0);
+      const badReport = JSON.parse(badRes.stdout);
+      expect(badReport.hasSchema).toBe(false);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "dangling-pronoun")).toBe(true);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "missing-schema")).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
     const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
     expect(fs.existsSync(protoPath)).toBe(true);
