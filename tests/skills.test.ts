@@ -569,6 +569,62 @@ describe("Invocation UX & conventions", () => {
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
+
+    // Verify 3 Resilience & Hygiene Gates in protocol
+    expect(content).toContain("The 3 Resilience & Hygiene Quality Gates");
+    expect(content).toContain("The Loud Failure Invariant (Zero Swallowed Errors)");
+    expect(content).toContain("The Deterministic Testing Standard (Zero Flaky Sleeps)");
+    expect(content).toContain("The Zero-Redundancy Dependency Diet");
+
+    // Test --scan-silent-catches, --scan-flaky-tests, and --audit-deps
+    const tempDir2 = fs.mkdtempSync(path.join(os.tmpdir(), "gauntlet-resilience-"));
+    try {
+      // 1. Silent catch test
+      fs.writeFileSync(
+        path.join(tempDir2, "silent.ts"),
+        "export function fetchData() { try { return fetch('/api'); } catch (e) {} }\n",
+        "utf8",
+      );
+      const catchRes = spawnSync("bun", [scriptPath, "--scan-silent-catches", tempDir2, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(catchRes.status).toBe(0);
+      const catchReport = JSON.parse(catchRes.stdout);
+      expect(catchReport.violations.length).toBeGreaterThanOrEqual(1);
+
+      // 2. Flaky test sleep test
+      fs.writeFileSync(
+        path.join(tempDir2, "flaky.test.ts"),
+        "test('flaky', async () => { await sleep(2000); page.waitForTimeout(1000); });\n",
+        "utf8",
+      );
+      const flakyRes = spawnSync("bun", [scriptPath, "--scan-flaky-tests", tempDir2, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(flakyRes.status).toBe(0);
+      const flakyReport = JSON.parse(flakyRes.stdout);
+      expect(flakyReport.violations.length).toBe(2);
+
+      // 3. Dependency diet test
+      const badPkgPath = path.join(tempDir2, "package.json");
+      fs.writeFileSync(
+        badPkgPath,
+        JSON.stringify({ dependencies: { "is-odd": "^3.0.1", axios: "^1.6.0", moment: "^2.30.1" } }, null, 2),
+        "utf8",
+      );
+      const depRes = spawnSync("bun", [scriptPath, "--audit-deps", badPkgPath, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(depRes.status).toBe(0);
+      const depReport = JSON.parse(depRes.stdout);
+      expect(depReport.violations.length).toBe(3);
+      expect(depReport.violations.some((v: { package: string }) => v.package === "axios")).toBe(true);
+    } finally {
+      fs.rmSync(tempDir2, { recursive: true, force: true });
+    }
   });
 });
 

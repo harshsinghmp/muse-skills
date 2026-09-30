@@ -102,3 +102,35 @@ AI coding agents optimize locally and frequently introduce "invisible agent debt
 - **Paired same-judge**: when two candidates compete, score both with the *same* judge and prompt — absolute scores are triage-only (which advances), never proof of quality; odd-N majority settles disagreements.
 - **Keep/revert ratchet**: every accepted round is a git checkpoint; a regressing round reverts to the previous checkpoint instead of patching forward — the bar only ratchets up, never drifts down to meet the candidate.
 - **Evals regression suite**: persist real misses as replayable scenarios; re-run the suite per round with an LLM-judge plus per-model baselines so a fixed defect stays fixed. Self-improvement of the loop itself stays consent-gated and ledger-recorded — never silent.
+
+---
+
+## 🛡️ The 3 Resilience & Hygiene Quality Gates
+
+Before any round or PR is accepted through the Gauntlet, it must pass three automated hygiene checks:
+
+### 1. The Loud Failure Invariant (Zero Swallowed Errors)
+- **Anti-Pattern**: `try { ... } catch {}` or `catch (err) { /* ignore */ }`. Silent error swallowing causes blank white screens for clients while telemetry tools (Sentry, Datadog) report zero errors.
+- **Invariant**:
+  - Every caught exception must either:
+    1. Log structured diagnostics (`console.error('[Module] Action failed:', err)`),
+    2. Be reported to error telemetry,
+    3. Be re-thrown (`throw err`) for upstream boundaries, or
+    4. Explicitly transition the UI to a friendly, actionable error state.
+
+### 2. The Deterministic Testing Standard (Zero Flaky Sleeps)
+- **Anti-Pattern**: Inserting arbitrary timer pauses (`await sleep(1000)`, `setTimeout(..., 2000)`, `page.waitForTimeout(3000)`) in test files to "wait for async network responses or DOM renders".
+- **Invariant**:
+  - Arbitrary sleeps are strictly prohibited in tests.
+  - Asynchronous waits must be deterministic:
+    - DOM element polling: `await page.waitForSelector('.selector')` or `waitFor(() => expect(...).toBeInTheDocument())`.
+    - Polling assertions: `await expect.poll(() => fetchStatus()).toBe('READY')`.
+    - Network interception: `await page.waitForResponse(url)`.
+
+### 3. The Zero-Redundancy Dependency Diet
+- **Anti-Pattern**: Introducing heavyweight third-party npm packages when native Web Standards, standard libraries, or already-installed modules provide identical functionality.
+- **Invariant**:
+  - Reject trivial micro-packages (`is-odd`, `is-even`, `left-pad`, `is-number`).
+  - Reject obsolete HTTP clients (`axios`, `request`, `superagent`) when standard WHATWG `fetch` is native in Node 18+, Bun, and browsers.
+  - Reject legacy utilities (`querystring` -> use `URLSearchParams`; `moment` -> use `Intl` or `date-fns`; `rimraf`/`mkdirp` -> use `fs.rmSync`/`fs.mkdirSync`).
+
