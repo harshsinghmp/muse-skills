@@ -292,10 +292,48 @@ When a bespoke dimension is mathematically required for hero layouts or dynamic 
 
 ---
 
+## ⚡ Asset Weight Budget & Cumulative Layout Shift (CLS) Immunization
+
+Uncompressed, oversized media assets and unconstrained image tags destroy Core Web Vitals (Largest Contentful Paint, Cumulative Layout Shift):
+
+### 1. Asset Weight Budget (<250kB)
+- **Hard Threshold**: No single image or video asset on initial page load may exceed 250kB.
+- **Modern Next-Gen Formats**: All raster photography must be served in WebP or AVIF formats. Legacy `.png` and `.jpg` exceeding 100kB must be converted or routed through an automated optimizer (Next.js `<Image />`, Astro `<Image />`, or Cloudflare Images).
+- **Vector Icons**: Logos and interface icons must be lightweight inline SVGs or optimized sprite sheets (<10kB), not PNG bitmaps.
+
+### 2. The Zero-CLS Layout Contract
+- Every `<img>`, `<picture>`, and `<video>` tag must reserve its rendered geometry in the DOM before network bytes arrive:
+  - **Explicit Dimensions**: Always specify `width={...}` and `height={...}` attributes matching the intrinsic aspect ratio.
+  - **CSS Aspect Ratio**: Apply `aspect-video` (16:9), `aspect-square` (1:1), or `aspect-[W/H]` so parent containers do not collapse to 0px height during image loading.
+
+---
+
+## ♿ Accessible Semantic Keyboard & Focus Invariants (WCAG 2.1 AA)
+
+AI-generated interfaces frequently introduce accessibility traps that fail automated screen readers and keyboard navigation:
+
+### 1. The Zero-Clickable-`<div>` Ban
+- Interactive elements must use semantic HTML tags (`<button>` or `<a href="...">`).
+- If an interactive custom component is constructed from non-button elements:
+  - It MUST carry `role="button"`.
+  - It MUST carry `tabIndex={0}` to enter the keyboard tab sequence.
+  - It MUST implement both `onClick` and `onKeyDown` handlers responding to `Enter` (key code 13) and `Space` (key code 32).
+
+### 2. 2px Focus Ring Guarantee
+- **Never Suppress Outline Nakedly**: Utility classes like `outline-none` or `focus:outline-none` are strictly prohibited unless accompanied by a replacement high-contrast focus indicator:
+  - Standard focus ring: `focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary`
+- **WCAG 2.1 AA Contrast**:
+  - Normal text (<18pt / <24px regular): Minimum 4.5:1 contrast against surface background.
+  - Large text (>=18pt or >=14pt bold): Minimum 3:1 contrast against surface background.
+  - Active UI controls & focus indicators: Minimum 3:1 contrast against adjacent background.
+
+---
+
 ## Golden rule
 
 > A short and honest system is better than a long and invented one.
 
 If you only identified 4 colors with confidence, report 4 colors. Don't fill to 10 "because
 there usually are 10". The consumer of the `design.md` trusts what you document.
+
 
