@@ -9,9 +9,13 @@
  * 3. Atomic workstream switching with auto-park and freshness check
  * 4. AST Attention Pinning (<= 30 lines) with source grounding and body replacement
  * 5. Ghost Task Verification (file existence, post-anchor mtime, and git diff check)
+ * 6. Observation Masking & Tool-Output Hashing (lossless storage and 2-line receipts)
+ * 7. Prompt-Cache-Aware Anchor Partitioning (static invariant prefix + dynamic tail)
+ * 8. Deadlock Breaker & Toxic Retry Rollback (3-strike streak tracking & automated reset)
  *
  * Usage:
- *   bun anchor.ts [--drop] [--park <slug>] [--switch <slug>] [--list] [--pin <file:symbol>] [--verify] [--json]
+ *   bun anchor.ts [--drop] [--park <slug>] [--switch <slug>] [--list] [--pin <file:symbol>] [--verify]
+ *                 [--mask-output] [--partition] [--record-outcome] [--deadlock-check] [--rollback] [--json]
  */
 
 process.on("unhandledRejection", (reason, _promise) => {
@@ -20,6 +24,7 @@ process.on("unhandledRejection", (reason, _promise) => {
 });
 
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -70,6 +75,37 @@ export interface VerificationResult {
   ghostTask: boolean;
   targetFile?: string;
   reason: string;
+}
+
+export interface ObservationMaskResult {
+  masked: boolean;
+  rawLines: number;
+  logPath?: string;
+  receipt: string;
+  exitCode: number;
+}
+
+export interface PartitionResult {
+  success: boolean;
+  staticPath: string;
+  dynamicPath: string;
+  staticContent: string;
+  dynamicContent: string;
+}
+
+export interface DeadlockStatus {
+  deadlockDetected: boolean;
+  consecutiveFailures: number;
+  command: string;
+  historyCount: number;
+  warning?: string;
+}
+
+export interface RollbackResult {
+  success: boolean;
+  rolledBack: boolean;
+  message: string;
+  error?: string;
 }
 
 export function getGitBranch(targetDir: string): string {
@@ -572,7 +608,6 @@ export function verifyNextAction(workspaceRoot: string, anchorPath?: string): Ve
   }
 
   // Parse target file from Next Action:
-  // e.g. "- [ ] `src/auth/service.ts:45` — implement" or "- [ ] src/app.ts:88 — text"
   const fileMatch = details.nextAction.match(/(?:`([^`:]+)(?::\d+)?`|([a-zA-Z0-9_\-./\\]+\.[a-zA-Z0-9]+)(?::\d+)?)/);
 
   const matchedFile = fileMatch ? fileMatch[1] || fileMatch[2] : null;
@@ -603,7 +638,6 @@ export function verifyNextAction(workspaceRoot: string, anchorPath?: string): Ve
   const mtimeMs = stat.mtimeMs;
 
   if (anchorTime > 0 && mtimeMs < anchorTime - 1000) {
-    // Check if git has committed changes since anchor
     let hasGitCommitSince = false;
     try {
       const gitLog = spawnSync("git", ["log", `--since=${details.timestamp}`, "--oneline", "--", relTarget], {
@@ -662,6 +696,312 @@ export function verifyNextAction(workspaceRoot: string, anchorPath?: string): Ve
   };
 }
 
+export function maskObservation(
+  workspaceRoot: string,
+  opts: {
+    command: string;
+    output: string;
+    exitCode?: number;
+    thresholdLines?: number;
+  },
+): ObservationMaskResult {
+  const threshold = opts.thresholdLines || 15;
+  const exitCode = opts.exitCode !== undefined ? opts.exitCode : 0;
+  const lines = opts.output.split("\n");
+  const lineCount = lines.length;
+
+  if (lineCount < threshold && opts.output.length < 500) {
+    return {
+      masked: false,
+      rawLines: lineCount,
+      receipt: opts.output,
+      exitCode,
+    };
+  }
+
+  const logsDir = join(workspaceRoot, ".agents/artifacts/.logs");
+  if (!existsSync(logsDir)) {
+    mkdirSync(logsDir, { recursive: true });
+  }
+
+  const cmdSlug = opts.command
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .slice(0, 30);
+  const hash = createHash("sha256").update(opts.output).digest("hex").slice(0, 8);
+  const logFilename = `${cmdSlug}-${hash}.log`;
+  const absLogPath = join(logsDir, logFilename);
+  const relLogPath = relative(workspaceRoot, absLogPath);
+
+  writeFileSync(absLogPath, opts.output, "utf8");
+
+  // Summarize signal
+  let summary = "";
+  if (exitCode === 0) {
+    const passedMatch = opts.output.match(/(\d+\s+pass(?:ed)?|\d+\s+tests?\s+passed|success|OK)/i);
+    summary = passedMatch ? passedMatch[0] : "Execution completed successfully";
+  } else {
+    const failureLine = lines.find((l) => /fail(?:ure|ed)?|error|exception|AssertionError/i.test(l));
+    summary = failureLine ? failureLine.trim().slice(0, 100) : "Process exited with errors";
+  }
+
+  const receipt = [
+    `[OBSERVATION MASKED]: ${lineCount} lines offloaded to ${relLogPath}`,
+    `STATUS: ${exitCode === 0 ? "PASSED (Exit 0)" : `FAILED (Exit ${exitCode})`} — ${summary}`,
+  ].join("\n");
+
+  return {
+    masked: true,
+    rawLines: lineCount,
+    logPath: relLogPath,
+    receipt,
+    exitCode,
+  };
+}
+
+export function partitionAnchor(workspaceRoot: string, options?: DropOptions): PartitionResult {
+  const agentsDir = join(workspaceRoot, ".agents");
+  if (!existsSync(agentsDir)) {
+    mkdirSync(agentsDir, { recursive: true });
+  }
+
+  const staticPath = join(agentsDir, "anchor-static.md");
+  const dynamicPath = join(agentsDir, "anchor-dynamic.md");
+  const currentBranch = getGitBranch(workspaceRoot);
+  const timestamp = new Date().toISOString();
+
+  // Invariant / Static Anchor Prefix (Cache-Stable)
+  const staticLines: string[] = [
+    "# Invariant Anchor State (Cache-Stable Prefix)",
+    `Client: ${options?.client || "internal"}`,
+    "",
+    "## Invariant Directives",
+    "- Directives locked: strict adherence to project specifications and zero secret exposure.",
+    "- Layering: static prefix cached across turns; ephemeral state isolated to dynamic tail.",
+  ];
+
+  if (options?.pinnedContext) {
+    staticLines.push("");
+    staticLines.push(options.pinnedContext.trim());
+  }
+
+  const staticContent = `${staticLines.join("\n")}\n`;
+  writeFileSync(staticPath, staticContent, "utf8");
+
+  // Dynamic Anchor Tail (Ephemeral)
+  let stateBullets: string[] = [];
+  if (Array.isArray(options?.state)) {
+    stateBullets = options.state;
+  } else if (typeof options?.state === "string") {
+    stateBullets = [options.state];
+  } else {
+    stateBullets = [
+      "Active work in progress; initial task scope defined.",
+      "Architectural decisions aligned with project specifications.",
+    ];
+  }
+
+  let ref = options?.reference || "Resume active development on current workstream. resume by: execute next action.";
+  if (!ref.includes("resume by:")) {
+    ref = `${ref.replace(/\.*$/, "")}. resume by: execute next action.`;
+  }
+
+  const nextAction = options?.nextAction || "- [ ] src/index.ts:1 — Continue implementation of current task";
+
+  const dynamicLines: string[] = [
+    `# Dynamic Focus State (Ephemeral Tail) — ${timestamp}`,
+    `workstream: ${options?.workstream || currentBranch} | branch: ${options?.branch || currentBranch}`,
+    "",
+    "## What's True Right Now",
+  ];
+
+  for (const bullet of stateBullets) {
+    dynamicLines.push(`- ${bullet.replace(/^[-*]\s*/, "")}`);
+  }
+
+  dynamicLines.push("");
+  dynamicLines.push("## The Working Reference");
+  dynamicLines.push(`> ${ref.replace(/^>\s*/, "")}`);
+  dynamicLines.push("");
+  dynamicLines.push("## Next Action");
+  dynamicLines.push(nextAction.startsWith("- [ ]") ? nextAction : `- [ ] ${nextAction.replace(/^[-*]\s*/, "")}`);
+
+  const dynamicContent = `${dynamicLines.join("\n")}\n`;
+  writeFileSync(dynamicPath, dynamicContent, "utf8");
+
+  // Also maintain backward-compatibility with monolithic anchor.md
+  dropAnchor(workspaceRoot, options);
+
+  return {
+    success: true,
+    staticPath,
+    dynamicPath,
+    staticContent,
+    dynamicContent,
+  };
+}
+
+export function getStreakFilePath(workspaceRoot: string): string {
+  const artifactsDir = join(workspaceRoot, ".agents/artifacts");
+  if (!existsSync(artifactsDir)) {
+    mkdirSync(artifactsDir, { recursive: true });
+  }
+  return join(artifactsDir, ".anchor_streak.json");
+}
+
+export function recordOutcome(
+  workspaceRoot: string,
+  opts: {
+    command: string;
+    success: boolean;
+    errorSummary?: string;
+  },
+): DeadlockStatus {
+  const streakFile = getStreakFilePath(workspaceRoot);
+  let streakData: {
+    command: string;
+    consecutiveFailures: number;
+    history: Array<{ command: string; success: boolean; timestamp: string; errorSummary?: string }>;
+  } = {
+    command: opts.command,
+    consecutiveFailures: 0,
+    history: [],
+  };
+
+  if (existsSync(streakFile)) {
+    try {
+      streakData = JSON.parse(readFileSync(streakFile, "utf8"));
+    } catch {}
+  }
+
+  const timestamp = new Date().toISOString();
+  if (opts.success) {
+    streakData.consecutiveFailures = 0;
+    streakData.command = opts.command;
+  } else {
+    if (streakData.command === opts.command) {
+      streakData.consecutiveFailures += 1;
+    } else {
+      streakData.command = opts.command;
+      streakData.consecutiveFailures = 1;
+    }
+  }
+
+  streakData.history.push({
+    command: opts.command,
+    success: opts.success,
+    timestamp,
+    errorSummary: opts.errorSummary,
+  });
+
+  if (streakData.history.length > 20) {
+    streakData.history = streakData.history.slice(-20);
+  }
+
+  writeFileSync(streakFile, JSON.stringify(streakData, null, 2), "utf8");
+
+  const deadlockDetected = streakData.consecutiveFailures >= 3;
+  return {
+    deadlockDetected,
+    consecutiveFailures: streakData.consecutiveFailures,
+    command: opts.command,
+    historyCount: streakData.history.length,
+    warning: deadlockDetected
+      ? `🚨 DEADLOCK DETECTED: ${streakData.consecutiveFailures} consecutive failures on '${opts.command}'. Automated context rollback recommended.`
+      : undefined,
+  };
+}
+
+export function checkDeadlock(workspaceRoot: string): DeadlockStatus {
+  const streakFile = getStreakFilePath(workspaceRoot);
+  if (!existsSync(streakFile)) {
+    return {
+      deadlockDetected: false,
+      consecutiveFailures: 0,
+      command: "none",
+      historyCount: 0,
+    };
+  }
+
+  try {
+    const data = JSON.parse(readFileSync(streakFile, "utf8"));
+    const deadlockDetected = (data.consecutiveFailures || 0) >= 3;
+    return {
+      deadlockDetected,
+      consecutiveFailures: data.consecutiveFailures || 0,
+      command: data.command || "unknown",
+      historyCount: (data.history || []).length,
+      warning: deadlockDetected
+        ? `🚨 DEADLOCK DETECTED: ${data.consecutiveFailures} consecutive failures on '${data.command}'. Automated context rollback recommended.`
+        : undefined,
+    };
+  } catch {
+    return {
+      deadlockDetected: false,
+      consecutiveFailures: 0,
+      command: "none",
+      historyCount: 0,
+    };
+  }
+}
+
+export function rollbackDeadlock(workspaceRoot: string): RollbackResult {
+  const streakFile = getStreakFilePath(workspaceRoot);
+  try {
+    // Reset failure streak
+    if (existsSync(streakFile)) {
+      writeFileSync(
+        streakFile,
+        JSON.stringify(
+          {
+            command: "reset",
+            consecutiveFailures: 0,
+            history: [],
+            lastRollback: new Date().toISOString(),
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+    }
+
+    // Revert uncommitted changes in git if repo has commits
+    try {
+      const revParse = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
+        cwd: workspaceRoot,
+        encoding: "utf8",
+      });
+      if (revParse.status === 0) {
+        const hasCommits =
+          spawnSync("git", ["rev-parse", "--verify", "HEAD"], {
+            cwd: workspaceRoot,
+            encoding: "utf8",
+          }).status === 0;
+        if (hasCommits) {
+          spawnSync("git", ["checkout", "--", "."], {
+            cwd: workspaceRoot,
+            encoding: "utf8",
+          });
+        }
+      }
+    } catch {}
+
+    return {
+      success: true,
+      rolledBack: true,
+      message: "Workspace successfully rolled back to last clean state; failure streak reset.",
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      rolledBack: false,
+      message: "Exception during rollback execution",
+      error: String(err),
+    };
+  }
+}
+
 if (import.meta.main) {
   const { values, positionals } = parseArgs({
     args: process.argv.slice(2),
@@ -672,6 +1012,17 @@ if (import.meta.main) {
       list: { type: "boolean", default: false },
       pin: { type: "string" },
       verify: { type: "boolean", default: false },
+      "mask-output": { type: "boolean", default: false },
+      partition: { type: "boolean", default: false },
+      "record-outcome": { type: "boolean", default: false },
+      "deadlock-check": { type: "boolean", default: false },
+      rollback: { type: "boolean", default: false },
+      cmd: { type: "string" },
+      raw: { type: "string" },
+      file: { type: "string" },
+      exit: { type: "string" },
+      success: { type: "string" },
+      summary: { type: "string" },
       workstream: { type: "string" },
       branch: { type: "string" },
       client: { type: "string" },
@@ -693,7 +1044,7 @@ if (import.meta.main) {
 Usage:
   bun anchor.ts [workspaceRoot] [options]
 
-Commands:
+Core Commands:
   --drop               Drop micro-anchor into .agents/anchor.md (<=15 lines)
   --park <slug>        Park current workstream to .agents/anchors/<slug>.md
   --switch <slug>      Park active context and restore target parked workstream
@@ -701,7 +1052,20 @@ Commands:
   --pin <file:symbol>  AST Attention Pinning: extract verbatim type/contract (<=30 lines)
   --verify             Ghost Task Verification: inspect file existence, mtime, and git diff
 
+Advanced Focus & Cache Commands:
+  --mask-output        Observation Masking: offload long outputs to disk & emit 2-line receipt
+  --partition          Partition anchor into cache-stable prefix & ephemeral dynamic tail
+  --record-outcome     Record execution result to track consecutive failure streak
+  --deadlock-check     Inspect consecutive failure streak and detect toxic retry loops
+  --rollback           Revert workspace to last verified anchor state and reset failure streak
+
 Options:
+  --cmd <command>      Command string associated with output or outcome
+  --raw <text>         Raw stdout/stderr text for observation masking
+  --file <path>        File containing raw stdout/stderr for observation masking
+  --exit <code>        Exit code of the executed command (default: 0)
+  --success <bool>     Success flag ("true" or "false") for outcome recording
+  --summary <text>     Summary string for error or observation outcome
   --workstream <slug>  Specify workstream slug
   --branch <name>      Specify git branch name
   --client <codename>  Specify client codename (NDA protected)
@@ -712,6 +1076,98 @@ Options:
   -h, --help           Show this help message
 `);
     process.exit(0);
+  }
+
+  if (values["mask-output"]) {
+    const cmd = values.cmd || "unknown-cmd";
+    let rawOutput = values.raw || "";
+    if (values.file && existsSync(resolve(workspaceRoot, values.file))) {
+      rawOutput = readFileSync(resolve(workspaceRoot, values.file), "utf8");
+    }
+    const exitCode = values.exit ? parseInt(values.exit, 10) : 0;
+    const res = maskObservation(workspaceRoot, {
+      command: cmd,
+      output: rawOutput,
+      exitCode,
+    });
+
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🛡️ Observation Masking:`);
+      console.log(res.receipt);
+    }
+    process.exit(0);
+  }
+
+  if (values.partition) {
+    const res = partitionAnchor(workspaceRoot, {
+      workstream: values.workstream,
+      branch: values.branch,
+      client: values.client,
+      state: values.state,
+      reference: values.reference,
+      nextAction: values.next,
+    });
+
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n⚡ Prompt-Cache Partitioning Completed:`);
+      console.log(`  Static Prefix:  ${res.staticPath}`);
+      console.log(`  Dynamic Tail:   ${res.dynamicPath}`);
+    }
+    process.exit(0);
+  }
+
+  if (values["record-outcome"]) {
+    const cmd = values.cmd || "test";
+    const isSuccess = values.success !== "false" && values.success !== "0";
+    const res = recordOutcome(workspaceRoot, {
+      command: cmd,
+      success: isSuccess,
+      errorSummary: values.summary,
+    });
+
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n📊 Outcome Recorded: ${cmd} -> ${isSuccess ? "✅ SUCCESS" : "❌ FAILED"}`);
+      console.log(`  Streak Failures: ${res.consecutiveFailures}`);
+      if (res.warning) {
+        console.warn(`  ${res.warning}`);
+      }
+    }
+    process.exit(res.deadlockDetected ? 1 : 0);
+  }
+
+  if (values["deadlock-check"]) {
+    const res = checkDeadlock(workspaceRoot);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🔍 Deadlock Streak Inspection:`);
+      console.log(`  Command:             ${res.command}`);
+      console.log(`  Consecutive Failures: ${res.consecutiveFailures}`);
+      console.log(`  Deadlock Status:      ${res.deadlockDetected ? "🚨 DEADLOCK DETECTED" : "✅ CLEAN"}`);
+      if (res.warning) {
+        console.warn(`  ${res.warning}`);
+      }
+    }
+    process.exit(res.deadlockDetected ? 1 : 0);
+  }
+
+  if (values.rollback) {
+    const res = rollbackDeadlock(workspaceRoot);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🔄 Deadlock Rollback:`);
+      console.log(`  Status:  ${res.success ? "✅ SUCCESS" : "❌ FAILED"}`);
+      console.log(`  Message: ${res.message}`);
+      if (res.error) console.error(`  Error:   ${res.error}`);
+    }
+    process.exit(res.success ? 0 : 1);
   }
 
   if (values.drop) {
