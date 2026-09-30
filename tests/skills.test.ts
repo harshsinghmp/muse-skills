@@ -1014,6 +1014,67 @@ tags: [ai, dev]
     }
   });
 
+  test("smm carousel mode and aspect-ratio-guard CLI enforce 9:16 vs 1:1 and mobile UI safe zones", () => {
+    const carouselPath = path.join(REPO_ROOT, "skills/agency-delivery/smm/references/carousel.md");
+    expect(fs.existsSync(carouselPath)).toBe(true);
+    const content = fs.readFileSync(carouselPath, "utf8");
+    expect(content).toContain("Aspect Ratio Enforcement & Mobile UI Safe Zone Guard");
+    expect(content).toContain("aspect-ratio-guard.ts");
+
+    const scriptPath = "skills/agency-delivery/smm/scripts/aspect-ratio-guard.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("SMM Aspect Ratio & Safe Zone Validator");
+
+    // 1. Valid 9:16 for TikTok
+    const validTiktokRes = spawnSync(
+      "bun",
+      [scriptPath, "--width", "1080", "--height", "1920", "--platform", "tiktok", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(validTiktokRes.status).toBe(0);
+    const validTiktokData = JSON.parse(validTiktokRes.stdout);
+    expect(validTiktokData.valid).toBe(true);
+    expect(validTiktokData.ratioType).toBe("9:16");
+
+    // 2. Invalid 1:1 for TikTok (must fail)
+    const invalidTiktokRes = spawnSync(
+      "bun",
+      [scriptPath, "--width", "1080", "--height", "1080", "--platform", "tiktok", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(invalidTiktokRes.status).toBe(1);
+    const invalidTiktokData = JSON.parse(invalidTiktokRes.stdout);
+    expect(invalidTiktokData.valid).toBe(false);
+    expect(invalidTiktokData.ratioType).toBe("1:1");
+
+    // 3. Valid 1:1 for Instagram Feed
+    const validFeedRes = spawnSync(
+      "bun",
+      [scriptPath, "--width", "1080", "--height", "1080", "--platform", "instagram-feed", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(validFeedRes.status).toBe(0);
+    const validFeedData = JSON.parse(validFeedRes.stdout);
+    expect(validFeedData.valid).toBe(true);
+    expect(validFeedData.ratioType).toBe("1:1");
+
+    // 4. Safe zone calculator
+    const szRes = spawnSync(
+      "bun",
+      [scriptPath, "--safe-zone", "--height", "1920", "--platform", "tiktok", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(szRes.status).toBe(0);
+    const szData = JSON.parse(szRes.stdout);
+    expect(szData.platform).toBe("tiktok");
+    expect(szData.topForbiddenZone).toContain("15%");
+    expect(szData.bottomForbiddenZone).toContain("20%");
+  });
+
   test("devops hosting mode and docker-audit CLI enforce multi-stage builds and layer cache order", () => {
     const hostingPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/hosting.md");
     expect(fs.existsSync(hostingPath)).toBe(true);
