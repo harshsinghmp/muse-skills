@@ -337,6 +337,228 @@ export function scanHydrationRisks(targetDir = process.cwd()): HydrationReport {
   return { scannedFiles, violations };
 }
 
+export interface CmsCohesionViolation {
+  file: string;
+  line: number;
+  snippet: string;
+  reason: string;
+  recommendation: string;
+}
+
+export interface CmsCohesionReport {
+  cmsDetected: boolean;
+  cmsType?: string;
+  scannedFiles: number;
+  violations: CmsCohesionViolation[];
+}
+
+export function detectProjectCms(targetDir = process.cwd()): { detected: boolean; type?: string } {
+  const pkgPath = path.join(targetDir, "package.json");
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+      const allDeps: Record<string, string> = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+      if (allDeps.payload || Object.keys(allDeps).some((k) => k.startsWith("@payloadcms/"))) {
+        return { detected: true, type: "Payload CMS" };
+      }
+      if (
+        allDeps["@wordpress/scripts"] ||
+        allDeps.wordpress ||
+        Object.keys(allDeps).some((k) => k.startsWith("@wordpress/"))
+      ) {
+        return { detected: true, type: "WordPress" };
+      }
+      if (allDeps["@measured/puck"]) {
+        return { detected: true, type: "Puck Visual Builder" };
+      }
+      if (allDeps.sanity || Object.keys(allDeps).some((k) => k.startsWith("@sanity/"))) {
+        return { detected: true, type: "Sanity" };
+      }
+      if (allDeps.strapi || Object.keys(allDeps).some((k) => k.startsWith("@strapi/"))) {
+        return { detected: true, type: "Strapi" };
+      }
+      if (allDeps.emdash) {
+        return { detected: true, type: "Emdash" };
+      }
+      if (allDeps.contentful) {
+        return { detected: true, type: "Contentful" };
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (
+    fs.existsSync(path.join(targetDir, "payload.config.ts")) ||
+    fs.existsSync(path.join(targetDir, "payload.config.js"))
+  ) {
+    return { detected: true, type: "Payload CMS" };
+  }
+  if (
+    fs.existsSync(path.join(targetDir, "sanity.config.ts")) ||
+    fs.existsSync(path.join(targetDir, "sanity.config.js"))
+  ) {
+    return { detected: true, type: "Sanity" };
+  }
+  if (
+    fs.existsSync(path.join(targetDir, "puck.config.tsx")) ||
+    fs.existsSync(path.join(targetDir, "puck.config.jsx"))
+  ) {
+    return { detected: true, type: "Puck Visual Builder" };
+  }
+  if (fs.existsSync(path.join(targetDir, "wp-config.php"))) {
+    return { detected: true, type: "WordPress" };
+  }
+
+  return { detected: false };
+}
+
+export function scanCmsCohesion(targetDir = process.cwd(), forceCmsCheck = false): CmsCohesionReport {
+  const cmsInfo = detectProjectCms(targetDir);
+  const cmsDetected = forceCmsCheck || cmsInfo.detected;
+  let scannedFiles = 0;
+  const violations: CmsCohesionViolation[] = [];
+
+  if (!cmsDetected) {
+    return { cmsDetected: false, scannedFiles: 0, violations: [] };
+  }
+
+  const textExts = [".tsx", ".jsx", ".astro", ".vue"];
+
+  function walk(current: string) {
+    if (!fs.existsSync(current)) return;
+    const stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      if (
+        current.includes("node_modules") ||
+        current.includes(".git") ||
+        current.includes("dist") ||
+        current.includes(".next") ||
+        current.includes("tests") ||
+        current.includes("__tests__")
+      )
+        return;
+      for (const item of fs.readdirSync(current)) {
+        walk(path.join(current, item));
+      }
+    } else if (textExts.some((ext) => current.endsWith(ext))) {
+      scannedFiles++;
+      const content = fs.readFileSync(current, "utf8");
+      const lines = content.split("\n");
+
+      lines.forEach((lineText, idx) => {
+        // Inline style check
+        if (/style=\{\{\s*[^}]*(?:#[0-9a-fA-F]{3,8}|\b\d+px\b)[^}]*\}\}/.test(lineText)) {
+          violations.push({
+            file: path.relative(process.cwd(), current),
+            line: idx + 1,
+            snippet: lineText.trim(),
+            reason: "Inline style bypasses CMS styling fields and globals.css tokens.",
+            recommendation: "Move style to CMS design tokens, globals.css, or CMS custom CSS field.",
+          });
+        }
+
+        // Hardcoded long copy in JSX
+        const tagTextMatch = />([^<{][^<]{60,})</.exec(lineText);
+        if (tagTextMatch && !lineText.includes("http://") && !lineText.includes("https://")) {
+          violations.push({
+            file: path.relative(process.cwd(), current),
+            line: idx + 1,
+            snippet: tagTextMatch[1].trim().slice(0, 70),
+            reason: `Hardcoded user-facing copy (>60 chars) detected when ${cmsInfo.type || "CMS"} is active.`,
+            recommendation: "Extract static text to CMS collection field, global schema, or page builder block.",
+          });
+        }
+      });
+    }
+  }
+
+  walk(targetDir);
+  return {
+    cmsDetected: true,
+    cmsType: cmsInfo.type,
+    scannedFiles,
+    violations,
+  };
+}
+
+export interface DeployVerificationReport {
+  url: string;
+  status: number;
+  statusText: string;
+  ok: boolean;
+  latencyMs: number;
+  error?: string;
+}
+
+export async function verifyDeployUrl(
+  url: string,
+  options: { timeoutMs?: number; expectedStatus?: number } = {},
+): Promise<DeployVerificationReport> {
+  const timeoutMs = options.timeoutMs ?? 10000;
+  const expectedStatus = options.expectedStatus ?? 200;
+  const startTime = Date.now();
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    const res = await fetch(url, {
+      method: "GET",
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Muse-Skills-Gauntlet-Deploy-Verifier/1.0",
+      },
+    });
+    clearTimeout(timer);
+
+    const latencyMs = Date.now() - startTime;
+    const text = await res.text();
+
+    const crashSignatures = [
+      "Application error: a client-side exception has occurred",
+      "Internal Server Error",
+      "502 Bad Gateway",
+      "Unhandled Runtime Error",
+    ];
+
+    let ok = res.status === expectedStatus;
+    let error: string | undefined;
+
+    if (ok) {
+      for (const sig of crashSignatures) {
+        if (text.includes(sig)) {
+          ok = false;
+          error = `Page returned HTTP ${res.status} but body contains crash signature: "${sig}"`;
+          break;
+        }
+      }
+    } else {
+      error = `Expected HTTP ${expectedStatus} but received HTTP ${res.status} (${res.statusText})`;
+    }
+
+    return {
+      url,
+      status: res.status,
+      statusText: res.statusText,
+      ok,
+      latencyMs,
+      error,
+    };
+  } catch (err: unknown) {
+    const latencyMs = Date.now() - startTime;
+    const isAbort = err instanceof Error && err.name === "AbortError";
+    return {
+      url,
+      status: 0,
+      statusText: "Connection Failed",
+      ok: false,
+      latencyMs,
+      error: isAbort ? `Request timed out after ${timeoutMs}ms` : err instanceof Error ? err.message : String(err),
+    };
+  }
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -442,9 +664,55 @@ if (import.meta.main) {
         }
       }
     }
+  } else if (args.includes("--scan-cms-cohesion")) {
+    const idx = args.indexOf("--scan-cms-cohesion");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const force = args.includes("--force");
+    const report = scanCmsCohesion(target, force);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n🧩 CMS-Cohesion & Hardcoded Copy Audit: ${target}`);
+      console.log(
+        `  CMS Active: ${report.cmsDetected ? `✅ YES (${report.cmsType ?? "Detected"})` : "ℹ️  NO (No CMS detected)"}`,
+      );
+      console.log(`  Scanned Files: ${report.scannedFiles}`);
+      console.log(`  Cohesion Violations: ${report.violations.length}`);
+      if (report.violations.length === 0) {
+        console.log(`  ✅ Clean! Zero hardcoded copy or inline styling violations.`);
+      } else {
+        for (const v of report.violations) {
+          console.log(`    - ⚠️  ${v.file}:${v.line} -> ${v.snippet} (${v.reason})`);
+          console.log(`         Fix: ${v.recommendation}`);
+        }
+      }
+    }
+  } else if (args.includes("--verify-deploy")) {
+    const idx = args.indexOf("--verify-deploy");
+    const url = args[idx + 1];
+    if (!url) {
+      console.error("Error: --verify-deploy requires a URL argument");
+      process.exit(1);
+    }
+    const statusIdx = args.indexOf("--expected-status");
+    const expectedStatus = statusIdx !== -1 && args[statusIdx + 1] ? Number.parseInt(args[statusIdx + 1], 10) : 200;
+    const timeoutIdx = args.indexOf("--timeout");
+    const timeoutMs = timeoutIdx !== -1 && args[timeoutIdx + 1] ? Number.parseInt(args[timeoutIdx + 1], 10) : 10000;
+
+    const report = await verifyDeployUrl(url, { expectedStatus, timeoutMs });
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n🚀 Verified Deploy Gate Audit: ${url}`);
+      console.log(`  Status: ${report.status} (${report.statusText})`);
+      console.log(`  Latency: ${report.latencyMs}ms`);
+      console.log(
+        `  Verdict: ${report.ok ? "✅ VERIFIED (Preview Healthy & Accessible)" : `❌ FAILED (${report.error})`}`,
+      );
+    }
   } else {
     console.log(
-      "Usage: bun anti-drift.ts [--scan-duplicates [dir]] [--check-scope [since-ref]] [--scan-silent-catches [dir]] [--scan-flaky-tests [dir]] [--audit-deps [package.json]] [--scan-hydration-risks [dir]]",
+      "Usage: bun anti-drift.ts [--scan-duplicates [dir]] [--check-scope [since-ref]] [--scan-silent-catches [dir]] [--scan-flaky-tests [dir]] [--audit-deps [package.json]] [--scan-hydration-risks [dir]] [--scan-cms-cohesion [dir] [--force]] [--verify-deploy <url> [--expected-status <status>]]",
     );
   }
 }

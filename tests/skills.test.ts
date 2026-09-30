@@ -970,14 +970,16 @@ describe("Invocation UX & conventions", () => {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
 
-    // Verify 4 Resilience & Hygiene Gates in protocol
-    expect(content).toContain("The 4 Resilience & Hygiene Quality Gates");
+    // Verify 6 Resilience & Hygiene Gates in protocol
+    expect(content).toContain("The 6 Resilience & Hygiene Quality Gates");
     expect(content).toContain("The Loud Failure Invariant (Zero Swallowed Errors)");
     expect(content).toContain("The Deterministic Testing Standard (Zero Flaky Sleeps)");
     expect(content).toContain("The Zero-Redundancy Dependency Diet");
     expect(content).toContain("The Client-Side Hydration & Timezone Desync Shield");
+    expect(content).toContain("The CMS-Cohesion & Hardcoded Copy Linter");
+    expect(content).toContain("The Verified Deploy Gate (Zero Unverified Preview Claims)");
 
-    // Test --scan-silent-catches, --scan-flaky-tests, --audit-deps, and --scan-hydration-risks
+    // Test --scan-silent-catches, --scan-flaky-tests, --audit-deps, --scan-hydration-risks, --scan-cms-cohesion, and --verify-deploy
     const tempDir2 = fs.mkdtempSync(path.join(os.tmpdir(), "gauntlet-resilience-"));
     try {
       // 1. Silent catch test
@@ -1038,6 +1040,32 @@ describe("Invocation UX & conventions", () => {
       const hydReport = JSON.parse(hydRes.stdout);
       expect(hydReport.violations.length).toBe(1);
       expect(hydReport.violations[0].pattern).toContain("new Date().toLocaleDateString()");
+
+      // 5. CMS-Cohesion test
+      fs.writeFileSync(path.join(tempDir2, "payload.config.ts"), "export default { collections: [] };\n", "utf8");
+      fs.writeFileSync(
+        path.join(tempDir2, "Landing.tsx"),
+        "export function Hero() { return <div style={{ color: '#ff0000', fontSize: '16px' }}><p>Welcome to our world-class digital agency where we build custom software that scales across continents effortlessly.</p></div>; }\n",
+        "utf8",
+      );
+      const cmsRes = spawnSync("bun", [scriptPath, "--scan-cms-cohesion", tempDir2, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(cmsRes.status).toBe(0);
+      const cmsReport = JSON.parse(cmsRes.stdout);
+      expect(cmsReport.cmsDetected).toBe(true);
+      expect(cmsReport.violations.length).toBeGreaterThanOrEqual(1);
+
+      // 6. Deploy verification test
+      const deployRes = spawnSync("bun", [scriptPath, "--verify-deploy", "https://example.com", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(deployRes.status).toBe(0);
+      const deployReport = JSON.parse(deployRes.stdout);
+      expect(deployReport.ok).toBe(true);
+      expect(deployReport.status).toBe(200);
     } finally {
       fs.rmSync(tempDir2, { recursive: true, force: true });
     }

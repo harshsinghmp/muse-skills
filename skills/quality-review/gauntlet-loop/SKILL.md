@@ -4,7 +4,7 @@ aliases: ["gauntlet","quality-loop","verification-loop"]
 description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
 argument-hint: "[gauntlet|quality-loop|refine]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -108,6 +108,8 @@ This is a **checkpoint, not a controller** — it surfaces findings for the agen
 When evaluating web endpoints or frontend components:
 - **Security Headers (OWASP)**: CSP, HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`.
 - **Responsive Viewports**: Tested at `375px` (mobile), `768px` (tablet), `1280px` (desktop) for zero horizontal scrollbar overflow (`scrollWidth === innerWidth`).
+- **CMS-Cohesion & Hardcoded Copy Gate**: When CMS/page builder is detected, ensure all editable marketing copy and customizable styles live inside CMS collections/globals/tokens. Hardcoded text blocks (>60 chars) or inline CSS bypassing tokens must be flagged (`bun anti-drift.ts --scan-cms-cohesion`).
+- **Verified Deploy Gate**: Before marking any web delivery task complete, verify the preview/staging URL returns HTTP 200 without runtime fatal exceptions (`bun anti-drift.ts --verify-deploy <url>`).
 
 ---
 
@@ -201,3 +203,5 @@ Before declaring gauntlet completion:
 4. [ ] Web applications pass security header audit (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy).
 5. [ ] Multi-viewport visual check passes at 375px, 768px, and 1280px with zero horizontal overflow.
 6. [ ] `ACCEPTANCE_PACKET.md` is generated with final verification receipts.
+7. [ ] CMS-Cohesion audit passes when a CMS or visual page builder is present.
+8. [ ] Live deployment preview is verified with HTTP 200 response receipt.
