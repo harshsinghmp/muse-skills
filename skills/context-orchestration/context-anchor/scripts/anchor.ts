@@ -1002,10 +1002,217 @@ export function rollbackDeadlock(workspaceRoot: string): RollbackResult {
   }
 }
 
+export interface TaskStashResult {
+  success: boolean;
+  taskId: string;
+  stashPath: string;
+  branch: string;
+  modifiedFiles: string[];
+  goal: string;
+  nextStep: string;
+  timestamp: string;
+  error?: string;
+}
+
+export interface TaskUnstashResult {
+  success: boolean;
+  taskId: string;
+  goal: string;
+  nextStep: string;
+  branch: string;
+  reEntryBrief: string;
+  error?: string;
+}
+
+export interface ContextHealthResult {
+  healthy: boolean;
+  activeAnchor: string | null;
+  activeStashes: number;
+  stashSlugs: string[];
+  recommendations: string[];
+}
+
+export function stashTask(
+  workspaceRoot: string,
+  options: {
+    taskId: string;
+    goal?: string;
+    nextStep?: string;
+    openLoops?: string[];
+  },
+): TaskStashResult {
+  try {
+    const stashDir = resolve(workspaceRoot, ".agents", "artifacts", "task-stashes");
+    if (!existsSync(stashDir)) {
+      mkdirSync(stashDir, { recursive: true });
+    }
+
+    const taskId = options.taskId.replace(/[^a-zA-Z0-9_-]/g, "-").toLowerCase();
+    const stashPath = resolve(stashDir, `${taskId}.json`);
+
+    let branch = "unknown";
+    const modifiedFiles: string[] = [];
+    try {
+      const bRes = spawnSync("git", ["branch", "--show-current"], {
+        cwd: workspaceRoot,
+        encoding: "utf8",
+      });
+      if (bRes.status === 0 && bRes.stdout.trim()) {
+        branch = bRes.stdout.trim();
+      }
+
+      const sRes = spawnSync("git", ["status", "--porcelain"], {
+        cwd: workspaceRoot,
+        encoding: "utf8",
+      });
+      if (sRes.status === 0 && sRes.stdout) {
+        for (const line of sRes.stdout.split("\n")) {
+          const trimmed = line.trim();
+          if (trimmed) modifiedFiles.push(trimmed);
+        }
+      }
+    } catch {}
+
+    const payload = {
+      taskId,
+      goal: options.goal || "Active build specification task",
+      nextStep: options.nextStep || "Resume next concrete action",
+      openLoops: options.openLoops || [],
+      branch,
+      modifiedFiles,
+      timestamp: new Date().toISOString(),
+    };
+
+    writeFileSync(stashPath, JSON.stringify(payload, null, 2), "utf8");
+
+    return {
+      success: true,
+      taskId,
+      stashPath,
+      branch,
+      modifiedFiles,
+      goal: payload.goal,
+      nextStep: payload.nextStep,
+      timestamp: payload.timestamp,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      taskId: options.taskId,
+      stashPath: "",
+      branch: "unknown",
+      modifiedFiles: [],
+      goal: options.goal || "",
+      nextStep: options.nextStep || "",
+      timestamp: new Date().toISOString(),
+      error: String(err),
+    };
+  }
+}
+
+export function unstashTask(workspaceRoot: string, taskId: string): TaskUnstashResult {
+  try {
+    const cleanId = taskId.replace(/[^a-zA-Z0-9_-]/g, "-").toLowerCase();
+    const stashPath = resolve(workspaceRoot, ".agents", "artifacts", "task-stashes", `${cleanId}.json`);
+
+    if (!existsSync(stashPath)) {
+      return {
+        success: false,
+        taskId,
+        goal: "",
+        nextStep: "",
+        branch: "",
+        reEntryBrief: "",
+        error: `No task stash found for '${taskId}' at ${stashPath}`,
+      };
+    }
+
+    const payload = JSON.parse(readFileSync(stashPath, "utf8"));
+
+    const brief = [
+      `⚓ RESUMED TASK STASH: ${payload.taskId}`,
+      `  🎯 Goal:      ${payload.goal}`,
+      `  🌿 Branch:    ${payload.branch}`,
+      `  🚀 Next Step: ${payload.nextStep}`,
+      payload.modifiedFiles?.length
+        ? `  📝 Uncommitted Files (${payload.modifiedFiles.length}):\n${payload.modifiedFiles.map((f: string) => `     - ${f}`).join("\n")}`
+        : "  📝 Uncommitted Files: None",
+    ].join("\n");
+
+    return {
+      success: true,
+      taskId: payload.taskId,
+      goal: payload.goal,
+      nextStep: payload.nextStep,
+      branch: payload.branch,
+      reEntryBrief: brief,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      taskId,
+      goal: "",
+      nextStep: "",
+      branch: "",
+      reEntryBrief: "",
+      error: String(err),
+    };
+  }
+}
+
+export function checkContextHealth(workspaceRoot: string): ContextHealthResult {
+  const recommendations: string[] = [];
+  const anchorPath = resolve(workspaceRoot, ".agents", "anchor.md");
+  let activeAnchor: string | null = null;
+
+  if (existsSync(anchorPath)) {
+    try {
+      activeAnchor = readFileSync(anchorPath, "utf8");
+    } catch {}
+  } else {
+    recommendations.push("No active .agents/anchor.md found. Drop one via '--drop' to ground agent attention.");
+  }
+
+  const stashDir = resolve(workspaceRoot, ".agents", "artifacts", "task-stashes");
+  const stashSlugs: string[] = [];
+  if (existsSync(stashDir)) {
+    try {
+      const files = readdirSync(stashDir).filter((f) => f.endsWith(".json"));
+      for (const f of files) {
+        stashSlugs.push(f.replace(/\.json$/, ""));
+      }
+    } catch {}
+  }
+
+  if (stashSlugs.length > 3) {
+    recommendations.push(
+      `High task stash accumulation (${stashSlugs.length} stashes). Clear completed stashes to prevent stale context.`,
+    );
+  }
+
+  const contextDir = resolve(workspaceRoot, ".agents", "context");
+  if (!existsSync(contextDir)) {
+    recommendations.push(".agents/context/ directory is missing. Run 'updateagents' to seed project context.");
+  }
+
+  return {
+    healthy: recommendations.length === 0,
+    activeAnchor: activeAnchor ? activeAnchor.slice(0, 100) : null,
+    activeStashes: stashSlugs.length,
+    stashSlugs,
+    recommendations,
+  };
+}
+
 if (import.meta.main) {
   const { values, positionals } = parseArgs({
     args: process.argv.slice(2),
     options: {
+      "stash-task": { type: "string" },
+      "unstash-task": { type: "string" },
+      "health-check": { type: "boolean", default: false },
+      goal: { type: "string" },
+      "next-step": { type: "string" },
       drop: { type: "boolean", default: false },
       park: { type: "string" },
       switch: { type: "string" },
@@ -1052,6 +1259,11 @@ Core Commands:
   --pin <file:symbol>  AST Attention Pinning: extract verbatim type/contract (<=30 lines)
   --verify             Ghost Task Verification: inspect file existence, mtime, and git diff
 
+Interruption Recovery & Health Commands:
+  --stash-task <slug>  Stash active in-flight task with goal, completed steps, and git status
+  --unstash-task <slug> Restore stashed task and emit structured recovery context
+  --health-check       Scan context health (anchor age, stash accumulation, context dir)
+
 Advanced Focus & Cache Commands:
   --mask-output        Observation Masking: offload long outputs to disk & emit 2-line receipt
   --partition          Partition anchor into cache-stable prefix & ephemeral dynamic tail
@@ -1060,6 +1272,8 @@ Advanced Focus & Cache Commands:
   --rollback           Revert workspace to last verified anchor state and reset failure streak
 
 Options:
+  --goal <text>        Goal description for task stashing
+  --next-step <text>   Next immediate step for task stashing
   --cmd <command>      Command string associated with output or outcome
   --raw <text>         Raw stdout/stderr text for observation masking
   --file <path>        File containing raw stdout/stderr for observation masking
@@ -1076,6 +1290,57 @@ Options:
   -h, --help           Show this help message
 `);
     process.exit(0);
+  }
+
+  if (values["stash-task"]) {
+    const slug = values["stash-task"];
+    const res = stashTask(workspaceRoot, {
+      taskId: slug,
+      goal: values.goal,
+      nextStep: values["next-step"] || values.next,
+    });
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n📦 In-Flight Task Stashed: ${res.taskId} → ${res.stashPath}`);
+      console.log(`  Goal: ${res.goal}`);
+      console.log(`  Next Step: ${res.nextStep}`);
+      console.log(`  Uncommitted Files: ${res.modifiedFiles.length}`);
+    }
+    process.exit(res.success ? 0 : 1);
+  }
+
+  if (values["unstash-task"]) {
+    const slug = values["unstash-task"];
+    const res = unstashTask(workspaceRoot, slug);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      if (!res.success) {
+        console.error(`\n❌ Unstash failed: ${res.error}`);
+        process.exit(1);
+      }
+      console.log(`\n📦 Stashed Task Recovered: ${slug}`);
+      console.log(res.reEntryBrief);
+    }
+    process.exit(res.success ? 0 : 1);
+  }
+
+  if (values["health-check"]) {
+    const res = checkContextHealth(workspaceRoot);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🩺 Context Health Check: ${res.healthy ? "✅ HEALTHY" : "⚠️ ATTENTION NEEDED"}`);
+      console.log(`  Active Stashes: ${res.activeStashes} (${res.stashSlugs.join(", ") || "none"})`);
+      if (res.recommendations.length > 0) {
+        console.log(`  Recommendations:`);
+        for (const r of res.recommendations) {
+          console.log(`    - ${r}`);
+        }
+      }
+    }
+    process.exit(res.healthy ? 0 : 1);
   }
 
   if (values["mask-output"]) {

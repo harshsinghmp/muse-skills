@@ -186,7 +186,7 @@
       "name": "context-anchor",
       "description": "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session.",
       "path": "skills/context-orchestration/context-anchor/SKILL.md",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [

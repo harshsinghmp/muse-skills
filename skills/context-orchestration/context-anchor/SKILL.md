@@ -2,9 +2,9 @@
 name: context-anchor
 aliases: ["anchor","session-anchor","working-reference","park","switch-task"]
 description: "Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. The intra-session focus layer that folds into handoff's HANDOFF.md for cross-session continuity. Use when switching tasks, parking a client workstream, or refocusing mid-session."
-argument-hint: "[anchor|park|switch|pin|verify|mask|partition|rollback]"
+argument-hint: "[anchor|park|switch|pin|verify|mask|partition|rollback|stash|unstash|health]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -25,7 +25,7 @@ metadata:
   openclaw:
     category: context-orchestration
     suggested_skills: [relay, updateagents, dead-letter, audit]
-    primary_triggers: ["drop anchor","save working reference","checkpoint context","prevent context drift","park this workstream","switch workstream","list anchors","pin attention context","verify task","mask tool output","partition anchor","check deadlock","rollback anchor"]
+    primary_triggers: ["drop anchor","save working reference","checkpoint context","prevent context drift","park this workstream","switch workstream","list anchors","pin attention context","verify task","mask tool output","partition anchor","check deadlock","rollback anchor","stash task","unstash task","context health check"]
     requires_tools: [view_file, write_to_file]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -34,7 +34,9 @@ metadata:
 
 Drop a compact working reference in `<project-root>/.agents/` to prevent cascading context drift, and park parallel client workstreams under named anchors so an agency can switch lanes mid-session and resume instantly.
 
-v1.3.0 positions this skill as the **intra-session focus and cache-stability layer**: anchors capture working state *within* sessions and park *parallel workstreams*; cross-session continuity belongs to `handoff` (`.agents/artifacts/HANDOFF.md`). Incorporates:
+v1.4.0 positions this skill as the **intra-session focus, interruption recovery, and cache-stability layer**: anchors capture working state *within* sessions and park *parallel workstreams*; cross-session continuity belongs to `handoff` (`.agents/artifacts/HANDOFF.md`). Incorporates:
+- **Task Interruption Stashing & Resumption** ([references/task-interruption-and-recovery.md](references/task-interruption-and-recovery.md)) to checkpoint in-flight execution during human interrupts.
+- **Context Health Gauge** to proactively detect stale anchors, high stash accumulation, and missing context directories.
 - **AST Attention Pinning** ([references/ast-pinning-guide.md](references/ast-pinning-guide.md)) to combat orientation burn.
 - **Attention Hygiene & Ghost Task Verification** ([references/attention-hygiene.md](references/attention-hygiene.md)) to prevent the ContextEcho effect.
 - **Observation Masking & Output Hashing** ([references/observation-masking.md](references/observation-masking.md)) to prevent log flooding.
