@@ -515,6 +515,35 @@ describe("Invocation UX & conventions", () => {
     expect(switchRes.stdout).toContain("5-Line Cross-Client Context Switch Handover");
     expect(switchRes.stdout).toContain("client-alpha");
     expect(switchRes.stdout).toContain("client-beta");
+
+    // Verify Staging vs Production URL Contamination Firewall
+    expect(content).toContain("Staging vs. Production URL Contamination Firewall");
+    expect(content).toContain("The Dual-Environment URL Invariant");
+
+    // Test --check-urls CLI
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ops-url-test-"));
+    try {
+      const contaminatedPath = path.join(tempDir, "config.ts");
+      fs.writeFileSync(
+        contaminatedPath,
+        `export const API = "http://localhost:3000/api";
+         export const STAGING_URL = "https://app.staging.client.com";
+         export const TUNNEL = "https://abc.ngrok-free.app";
+         export const STRIPE_KEY = "pk_test_51Mz000000000000000000000";`,
+        "utf8",
+      );
+
+      const urlRes = spawnSync("bun", [scriptPath, "--check-urls", tempDir, "--env", "prod", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(urlRes.status).toBe(0);
+      const urlReport = JSON.parse(urlRes.stdout);
+      expect(urlReport.isClean).toBe(false);
+      expect(urlReport.violations.length).toBeGreaterThanOrEqual(4);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
   });
 
   test("qa-launch regression mode and visual-audit CLI verify multi-viewport safety", () => {

@@ -133,7 +133,26 @@ Before an agent switches between client workspaces or executes tasks, it must en
 
 ---
 
-## 6. Portfolio Capacity Planning & Little's Law
+## 6. Staging vs. Production URL Contamination Firewall
+
+Accidental environment pollution occurs when developers copy configurations, database dumps, environment variables, or hardcoded link strings:
+- Staging or test environments accidentally query production databases or fire live webhooks/emails to real clients.
+- Production deployments ship containing broken staging URLs (`staging.client.com`, `http://localhost:3000`, `ngrok-free.app`) or test gateway credentials (`pk_test_...`).
+
+### The Dual-Environment URL Invariant:
+1. **Staging Environment Guard**:
+   - Staging `.env` files must NEVER contain live production credentials (`sk_live_...`, production database URIs).
+   - Mock or sandbox all third-party outbound integrations (Stripe Test Mode, Mailgun sandbox, Twilio test credentials).
+2. **Production Release Guard**:
+   - Production bundles, static HTML, and API route files must contain zero staging references:
+     - No `localhost:[0-9]+` or `127.0.0.1` links.
+     - No `*.staging.*`, `*.dev.*`, or `*.test.*` endpoints.
+     - No `*.ngrok*.app` tunnels.
+     - No test keys (`sk_test_...`, `pk_test_...`).
+
+---
+
+## 7. Portfolio Capacity Planning & Little's Law
 
 1. **Capacity Tracking**: Size capacity before selling more work:
    $$\text{Utilization} = \frac{\text{Committed Booked Hours (Delivery + Retainer + Admin)}}{\text{Available Hours per Period}}$$
@@ -145,13 +164,15 @@ Before an agent switches between client workspaces or executes tasks, it must en
 
 ---
 
-## 7. Quality Gate
+## 8. Quality Gate
 
 - [ ] Per-client workspaces strictly isolated under `~/Projects/<client_brand>/`; zero cross-client file bleed.
 - [ ] Local `.memory/` store exists at client root with active `CURRENT.md`.
 - [ ] Global memory anchored at `~/.memory` via `musememory` with zero client data or secrets.
 - [ ] Sub-app topology table defined in `.agents/context/product.md` with explicit domain and dev port mapping.
 - [ ] Sub-apps maintain isolated `.env` configurations; zero backend database keys leaked to static frontends.
+- [ ] Staging vs. Production URL Contamination Firewall verified (`multi-client.ts --check-urls`).
 - [ ] The 5-Checkpoint Cross-Client Context Firewall enforced on every engagement switch with a 5-line log.
 - [ ] Utilization ratio computed per period; $>85\%$ slots flagged and rebalanced.
 - [ ] Secret scan passes clean (`bun run secret-scan`).
+
