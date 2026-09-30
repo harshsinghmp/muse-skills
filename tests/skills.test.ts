@@ -332,6 +332,33 @@ describe("Invocation UX & conventions", () => {
     expect(scaffoldRes.stdout).toContain("stripe.webhooks.constructEvent");
     expect(scaffoldRes.stdout).toContain("Duplicate event ignored");
   });
+
+  test("designscope token-extraction mode and token_fence CLI enforce design token fence and bracket filter", () => {
+    const tokenExtPath = path.join(REPO_ROOT, "skills/design-interface/designscope/references/token-extraction.md");
+    expect(fs.existsSync(tokenExtPath)).toBe(true);
+    const content = fs.readFileSync(tokenExtPath, "utf8");
+    expect(content).toContain("The Design Token Fence & Strict Arbitrary Bracket Filter");
+    expect(content).toContain("The 4-Tier Token Snapping Invariant");
+    expect(content).toContain("The Fluid Typography & Spacing Fallback");
+
+    const scriptPath = "skills/design-interface/designscope/scripts/token_fence.ts";
+    const tempFile = path.join(REPO_ROOT, "tmp-test-bracket.html");
+    try {
+      fs.writeFileSync(tempFile, '<div class="w-[375px] bg-[#1e293b] p-[17px] rounded-[7px]">Test</div>', "utf8");
+      const res = spawnSync("bun", [scriptPath, "--scan", tempFile, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(res.status).toBe(0);
+      const report = JSON.parse(res.stdout);
+      expect(report.totalViolations).toBeGreaterThanOrEqual(4);
+      expect(report.violations.some((v: { category: string }) => v.category === "color")).toBe(true);
+      expect(report.violations.some((v: { category: string }) => v.category === "dimension")).toBe(true);
+      expect(report.violations.some((v: { category: string }) => v.category === "radius")).toBe(true);
+    } finally {
+      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+    }
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
