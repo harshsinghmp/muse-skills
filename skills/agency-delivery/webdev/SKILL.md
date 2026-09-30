@@ -4,7 +4,7 @@ aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstac
 description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
 argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|deploy|audit]"
 user-invocable: true
-version: 1.4.0
+version: 1.5.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -15,14 +15,14 @@ metadata:
   aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
   suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
   hermes:
-    tags: ["web-development", "frontend", "backend", "fullstack", "fullstack-guardian", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript"]
+    tags: ["web-development", "frontend", "backend", "fullstack", "fullstack-guardian", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress", "api", "rest", "graphql", "database", "orm", "ecommerce", "cms", "performance", "core-web-vitals", "accessibility", "wcag", "migrations", "nextjs", "react", "astro", "nodejs", "typescript", "anti-fouc", "zero-cls", "print-css", "anchor-offset"]
     related_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["new-project", "code-review", "gauntlet-loop", "relay"]
-    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "fullstack-guardian", "spec-miner", "reverse engineer", "responsiveness-check", "audit mobile responsiveness", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse", "wordpress pro", "elementor", "react native expert"]
+    primary_triggers: ["build a web app", "frontend work", "backend api", "fullstack", "fullstack-guardian", "spec-miner", "reverse engineer", "responsiveness-check", "audit mobile responsiveness", "ecommerce site", "cms integration", "web performance", "accessibility fix", "site migration", "lighthouse", "wordpress pro", "elementor", "react native expert", "anti-fouc", "dark mode flash", "zero cls font", "print stylesheet", "anchor scroll offset"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name", "run_command"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -38,7 +38,7 @@ One head skill for web engineering. The stack is whatever the project already us
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
-| **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki", "developer homepage", "developer landing page" | Component/page implementation against design spec, including developer 7-block architecture | [references/frontend.md](references/frontend.md) |
+| **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki", "developer homepage", "developer landing page", "anti-fouc", "zero-cls" | Component/page implementation against design spec, including developer 7-block architecture, anti-FOUC hydrator, and zero-CLS font fallbacks | [references/frontend.md](references/frontend.md) & [references/hydration-polish.md](references/hydration-polish.md) |
 | **backend** | "api design", "endpoint", "database schema", "auth flow", "cli-developer" | APIs, data models, integrations, auth, and CLI developer tooling | [references/backend.md](references/backend.md) |
 | **fullstack** | "fullstack feature", "end-to-end build", "ship the feature", "fullstack-guardian" | Full-feature build with Three-Perspective Security Architecture (Frontend, Backend, Security): data → API → UI → verified | [references/fullstack.md](references/fullstack.md) |
 | **ecommerce** | "ecommerce", "checkout", "product catalog", "cart", "payment gateway" | Catalog, cart, checkout, payments, post-purchase flows | [references/ecommerce.md](references/ecommerce.md) |
@@ -100,6 +100,17 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 A change is not done until the gate is green. If no gate exists, say so and add the minimal one.
 
+### CLI Engine Commands (`webdev.ts`)
+
+| Command | Action | Output / Target |
+|:---|:---|:---|
+| `bun webdev.ts --anti-fouc-scaffold [key]` | Generate synchronous inline blocking hydrator script | Injected into `<head>` to prevent theme white flash |
+| `bun webdev.ts --font-metric-override <font> [base]` | Generate zero-CLS `@font-face` metric overrides | Matches fallback x-height/ascent/descent to web font |
+| `bun webdev.ts --print-css-scaffold` | Generate `@media print` clean stylesheet | Strips chrome, resets background, formats tables/cards |
+| `bun webdev.ts --anchor-offset-scaffold [height]` | Generate sticky/fixed navbar anchor scroll offset | `html { scroll-padding-top: ... }` prevents title clipping |
+| `bun webdev.ts --polish-audit [dir]` | Audit target codebase for hydration and polish standards | Structured scorecard (0-100) with remediation steps |
+| `bun webdev.ts --scaffold-polish-suite [dir]` | Scaffold complete CSS and HTML hydrator suite | `styles/hydration-polish.css` and `theme-hydrator.html` |
+
 ### Sourcing rule
 
 When the user provides reference URLs (docs, examples, prior art) — fetch, read, and follow them as the
@@ -140,5 +151,9 @@ primary source; defaults here are fallbacks. Record which URLs were used.
 - [ ] No new dependencies added unless justified against installed alternatives.
 - [ ] The project's own verification gate (build/test/lint) ran green.
 - [ ] All changes follow existing repo patterns (imports, naming, structure).
+- [ ] Anti-FOUC blocking head script present in `<head>` (zero theme flash on refresh).
+- [ ] Zero-CLS `@font-face` metric overrides configured for web font system fallbacks.
+- [ ] Clean `@media print` stylesheet active (interactive chrome stripped, ink-safe).
+- [ ] `scroll-padding-top` declared on root `<html>` matching sticky/fixed navigation header.
 - [ ] Interactive elements keyboard-navigable and labeled (default, not afterthought).
 - [ ] Mode-specific gate in the loaded reference passed.

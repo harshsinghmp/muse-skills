@@ -42,6 +42,30 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 
 Chain: `prototype` → `spec` → `implement` → `qa-launch` gate. Visual prototyping lives in `design`.
 
+## Hydration & Polish Suite
+
+The `webdev` CLI includes tools to generate anti-FOUC theme hydrators, zero-CLS font metric overrides, `@media print` clean stylesheets, and sticky navbar anchor scroll padding:
+
+```bash
+# Generate inline blocking script for root <head> to eliminate theme flickering
+bun skills/agency-delivery/webdev/scripts/webdev.ts --anti-fouc-scaffold
+
+# Generate @font-face fallback metric overrides to prevent Cumulative Layout Shift
+bun skills/agency-delivery/webdev/scripts/webdev.ts --font-metric-override Inter Arial
+
+# Generate ink-safe print-to-PDF stylesheet
+bun skills/agency-delivery/webdev/scripts/webdev.ts --print-css-scaffold
+
+# Generate sticky navigation anchor scroll offset rule
+bun skills/agency-delivery/webdev/scripts/webdev.ts --anchor-offset-scaffold 5rem
+
+# Audit project directory for front-end polish standards (0-100 score)
+bun skills/agency-delivery/webdev/scripts/webdev.ts --polish-audit ./my-app
+
+# Scaffold complete hydration & polish suite into target project
+bun skills/agency-delivery/webdev/scripts/webdev.ts --scaffold-polish-suite ./my-app
+```
+
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
