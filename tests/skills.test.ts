@@ -1830,6 +1830,57 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       const checkData = JSON.parse(checkAfterRollback.stdout);
       expect(checkData.deadlockDetected).toBe(false);
       expect(checkData.consecutiveFailures).toBe(0);
+
+      // 10. Interruption Recovery & Task Stashing
+      const stashRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--stash-task",
+          "billing-migration",
+          "--goal",
+          "Migrate user auth to JWT",
+          "--next-step",
+          "Verify JWT signature middleware",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(stashRes.status).toBe(0);
+      const stashData = JSON.parse(stashRes.stdout);
+      expect(stashData.taskId).toBe("billing-migration");
+      expect(stashData.goal).toBe("Migrate user auth to JWT");
+      expect(stashData.nextStep).toBe("Verify JWT signature middleware");
+      expect(fs.existsSync(path.join(tempDir, ".agents/artifacts/task-stashes/billing-migration.json"))).toBe(true);
+
+      // 11. Unstash Task
+      const unstashRes = spawnSync(
+        "bun",
+        [
+          "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+          tempDir,
+          "--unstash-task",
+          "billing-migration",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(unstashRes.status).toBe(0);
+      const unstashData = JSON.parse(unstashRes.stdout);
+      expect(unstashData.success).toBe(true);
+      expect(unstashData.reEntryBrief).toContain("Migrate user auth to JWT");
+      expect(unstashData.reEntryBrief).toContain("Verify JWT signature middleware");
+
+      // 12. Context Health Check
+      const healthRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--health-check", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      const healthData = JSON.parse(healthRes.stdout);
+      expect(healthData.activeStashes).toBe(1);
+      expect(healthData.stashSlugs).toContain("billing-migration");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
