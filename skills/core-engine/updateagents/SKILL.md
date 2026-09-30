@@ -4,7 +4,7 @@ aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready",
 description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards."
 argument-hint: "[sync|audit|sanitize|scaffold]"
 user-invocable: true
-version: 2.1.0
+version: 2.2.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
