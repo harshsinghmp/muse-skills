@@ -518,8 +518,12 @@ describe("Invocation UX & conventions", () => {
     expect(content).toContain("The Client AI Compute & Token Ledger Protocol");
     expect(content).toContain("Per-Client Token Attribution Rule");
     expect(content).toContain("Compute Budget Guardrails");
+    expect(content).toContain("Sliding Window Token Budget & Context Window Governor Standard");
+    expect(content).toContain("Sliding Time-Window Budget & Circuit-Breaker");
+    expect(content).toContain("Context Window Pruning & Compaction Invariant");
 
     const scriptPath = "skills/agency-delivery/accounts/scripts/token-ledger.ts";
+    const tempContextFile = path.join(REPO_ROOT, "tmp-test-context.json");
     try {
       const recordRes = spawnSync(
         "bun",
@@ -529,9 +533,55 @@ describe("Invocation UX & conventions", () => {
       expect(recordRes.status).toBe(0);
       expect(recordRes.stdout).toContain("Recorded AI Compute for Client: client-acme");
       expect(recordRes.stdout).toContain("Billable to Client");
+
+      // Test --check-budget CLI
+      const budgetOkRes = spawnSync("bun", [scriptPath, "--check-budget", "client-acme", "10.00", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(budgetOkRes.status).toBe(0);
+      const budgetOk = JSON.parse(budgetOkRes.stdout);
+      expect(budgetOk.status).toBe("OK");
+      expect(budgetOk.circuitBreakerTripped).toBe(false);
+
+      const budgetExceededRes = spawnSync("bun", [scriptPath, "--check-budget", "client-acme", "0.20", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(budgetExceededRes.status).toBe(0);
+      const budgetExceeded = JSON.parse(budgetExceededRes.stdout);
+      expect(budgetExceeded.status).toBe("EXCEEDED");
+      expect(budgetExceeded.circuitBreakerTripped).toBe(true);
+
+      // Test --prune-context CLI
+      const sampleMessages = [
+        { role: "system", content: "You are an autonomous agency assistant." },
+        { role: "user", content: `Turn 1: ${"a".repeat(400)}` },
+        { role: "assistant", content: `Turn 1 reply: ${"b".repeat(800)}` },
+        { role: "user", content: `Turn 2: ${"c".repeat(400)}` },
+        { role: "assistant", content: `Turn 2 reply: ${"d".repeat(800)}` },
+        { role: "user", content: "Turn 3 latest prompt: please summarize." },
+      ];
+      fs.writeFileSync(tempContextFile, JSON.stringify(sampleMessages), "utf8");
+
+      const pruneRes = spawnSync(
+        "bun",
+        [scriptPath, "--prune-context", tempContextFile, "--max-tokens", "300", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(pruneRes.status).toBe(0);
+      const pruneData = JSON.parse(pruneRes.stdout);
+      expect(pruneData.prunedCount).toBeGreaterThan(0);
+      expect(pruneData.prunedMessages[0].role).toBe("system");
+      expect(pruneData.prunedMessages.some((m: { content: string }) => m.content.includes("[Context Pruned:"))).toBe(
+        true,
+      );
     } finally {
       if (fs.existsSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"))) {
         fs.unlinkSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"));
+      }
+      if (fs.existsSync(tempContextFile)) {
+        fs.unlinkSync(tempContextFile);
       }
     }
   });
