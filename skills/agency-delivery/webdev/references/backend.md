@@ -136,7 +136,58 @@ Modern deployment targets (Cloudflare Workers, Vercel Edge, Fastly Compute, Netl
 
 ---
 
+## 🗄️ Singleton Connection Pool & Serverless Starvation Guard
+
+In serverless and auto-scaling container environments (Vercel, AWS Lambda, Cloudflare Workers), naive database client instantiation (`new Pool()`, `new PrismaClient()`, or `postgres()`) inside individual request handlers opens a new database connection on every incoming request or cold start. Under traffic spikes, this exhausts Postgres connection limits within seconds (`FATAL: remaining connection slots are reserved for non-replication superuser connections`).
+
+### Mandatory Connection Invariants:
+1. **Module Singleton Pattern**: Database clients MUST be instantiated once at module scope or cached on `globalThis` in development:
+   ```typescript
+   // lib/db.ts - Singleton Database Client
+   import { PrismaClient } from "@prisma/client";
+
+   const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+   export const db = globalForPrisma.prisma || new PrismaClient();
+   if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+   ```
+2. **Serverless Connection Pooling / Proxy**: When connecting to Postgres from serverless environments, ALWAYS connect through a transaction pooler (PgBouncer, Supabase Pooler port 6543, or Neon serverless connection string with `?pgbouncer=true` or WebSockets `@neondatabase/serverless`).
+
+---
+
+## 🛡️ Atomic Multi-Table Transaction Invariant
+
+When executing mutations that span across 2 or more database tables (e.g. creating an organization + creating the owner user, or creating an order + creating line items + decrementing inventory), operations MUST NOT be executed as standalone sequential queries:
+
+### Mandatory Transaction Rule:
+- All multi-table writes MUST be executed inside an explicit database transaction block (`db.transaction(async (tx) => { ... })`).
+- If any operation or external verification fails, the entire transaction MUST abort and roll back automatically.
+- Never perform long-running external HTTP network calls inside the open database transaction lock window; prepare payloads first, execute the DB transaction, then trigger asynchronous webhooks/emails.
+
+---
+
+## 📦 Hardened Direct-to-Storage Presigned Upload Standard
+
+Never proxy large client file uploads through Node.js/SSR server memory (`multipart/form-data` parse buffers exhaust container RAM and freeze event loops). All uploads must follow the **Direct-to-Storage Presigned Standard**:
+
+1. **Client requests presigned URL**: Client sends target filename, size, and MIME type to API endpoint.
+2. **Strict MIME & Size Gate**: Server rejects any MIME type outside the explicit allowlist (`image/jpeg`, `image/png`, `image/webp`, `application/pdf`) and rejects files exceeding the budget ceiling (default 10MB).
+3. **Sanitized UUID Storage Key**: Server generates a random UUID key (`uploads/YYYY-MM-DD/${crypto.randomUUID()}.${ext}`). Never allow user-submitted filenames to define the S3/R2 storage path.
+4. **Short TTL**: Presigned PUT URL expires in 15 minutes.
+
+---
+
+## 🔁 Idempotent Webhook Processing Standard
+
+Third-party webhooks (Stripe, Shopify, LemonSqueezy) retry requests on network timeouts or 5xx responses. Handlers must be strictly idempotent to prevent duplicate order fulfillment or double charging:
+
+1. **Event Deduplication Cache**: Check incoming `event.id` against an idempotency table or Redis key with a 24-hour TTL before executing side-effects.
+2. **Early 200 Ack for Duplicates**: If `event.id` was already processed, immediately return `HTTP 200 OK` with `{ received: true, duplicate: true }`.
+3. **Timestamp Skew Gate**: Verify that the webhook header timestamp is within 5 minutes of current server time to block replay attacks.
+
+---
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+
 

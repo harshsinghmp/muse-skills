@@ -413,8 +413,204 @@ export function scanEdgeRuntimeBoundaries(targetPath = process.cwd()): EdgeScanR
   };
 }
 
+export interface PoolingViolation {
+  file: string;
+  line: number;
+  pattern: string;
+  message: string;
+  fix: string;
+}
+
+export interface PoolingReport {
+  filesScanned: number;
+  violations: PoolingViolation[];
+  safe: boolean;
+}
+
+export function checkConnectionPooling(targetPath = process.cwd()): PoolingReport {
+  let filesScanned = 0;
+  const violations: PoolingViolation[] = [];
+
+  function walk(current: string) {
+    if (!fs.existsSync(current)) return;
+    const stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      if (current.includes("node_modules") || current.includes(".git") || current.includes(".agents")) return;
+      for (const item of fs.readdirSync(current)) {
+        walk(path.join(current, item));
+      }
+    } else if (/\.(ts|tsx|js|jsx|mjs)$/.test(current)) {
+      filesScanned++;
+      const content = fs.readFileSync(current, "utf8");
+      const lines = content.split("\n");
+
+      const isRouteOrHandler =
+        /(?:api|routes|handlers|endpoints)[/\\]/.test(current) ||
+        /export\s+(?:async\s+)?function\s+(?:GET|POST|PUT|DELETE|PATCH|handler)\b/.test(content);
+
+      if (isRouteOrHandler) {
+        lines.forEach((lineText, idx) => {
+          if (/\bnew\s+(?:Pool|Client|PrismaClient)\s*\(/.test(lineText)) {
+            if (!content.includes("globalThis") && !content.includes("prisma || new")) {
+              violations.push({
+                file: current,
+                line: idx + 1,
+                pattern: lineText.trim(),
+                message: "Direct unpooled DB client instantiated inside route handler.",
+                fix: "Use a global singleton or pooled connection proxy (e.g. PgBouncer / Neon connection string).",
+              });
+            }
+          }
+        });
+      }
+    }
+  }
+
+  walk(targetPath);
+  return {
+    filesScanned,
+    violations,
+    safe: violations.length === 0,
+  };
+}
+
+export function scaffoldPresignedUpload(provider: "s3" | "r2" = "s3"): string {
+  const service = provider === "r2" ? "Cloudflare R2" : "AWS S3";
+  const envPrefix = provider === "r2" ? "R2" : "AWS";
+  const bucketEnv = provider === "r2" ? "R2_BUCKET_NAME" : "S3_BUCKET_NAME";
+
+  return `// Hardened Direct-to-Storage Presigned Upload Handler (${service})
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import crypto from "node:crypto";
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION || "auto",
+  endpoint: process.env.${provider === "r2" ? "R2_ENDPOINT" : "S3_ENDPOINT"},
+  credentials: {
+    accessKeyId: process.env.${envPrefix}_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.${envPrefix}_SECRET_ACCESS_KEY!,
+  },
+});
+
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+  "application/pdf",
+]);
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB strict ceiling
+
+export async function generatePresignedUploadUrl(filename: string, contentType: string, sizeBytes: number) {
+  if (!ALLOWED_MIME_TYPES.has(contentType)) {
+    throw new Error(\`Forbidden MIME type: \${contentType}. Only safe documents and images are permitted.\`);
+  }
+  if (sizeBytes > MAX_FILE_SIZE_BYTES) {
+    throw new Error(\`File size \${sizeBytes} exceeds maximum allowed budget (\${MAX_FILE_SIZE_BYTES} bytes).\`);
+  }
+
+  // Prevent path traversal and filename collision via sanitized UUID key
+  const ext = filename.split(".").pop()?.replace(/[^a-zA-Z0-9]/g, "") || "bin";
+  const objectKey = \`uploads/\${new Date().toISOString().split("T")[0]}/\${crypto.randomUUID()}.\${ext}\`;
+
+  const command = new PutObjectCommand({
+    Bucket: process.env.${bucketEnv}!,
+    Key: objectKey,
+    ContentType: contentType,
+  });
+
+  // Short 15-minute lease
+  const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 900 });
+
+  return {
+    uploadUrl,
+    objectKey,
+    publicUrl: \`\${process.env.PUBLIC_ASSET_CDN_URL}/\${objectKey}\`,
+  };
+}
+`;
+}
+
+export function scaffoldIsolatedWidget(widgetName = "muse-client-widget"): string {
+  const className = widgetName
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join("");
+
+  return `// Isolated Embeddable Web Component using Shadow DOM
+// Guarantees zero style bleed into host websites (WordPress, Shopify, Webflow)
+class ${className} extends HTMLElement {
+  constructor() {
+    super();
+    // 1. Attach open Shadow DOM to isolate CSS specificity
+    const shadow = this.attachShadow({ mode: "open" });
+
+    // 2. Encapsulated Styles (zero leak to or from host page)
+    const style = document.createElement("style");
+    style.textContent = \`
+      :host {
+        all: initial;
+        font-family: system-ui, -apple-system, sans-serif;
+        box-sizing: border-box;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 2147483647;
+      }
+      *, *::before, *::after {
+        box-sizing: inherit;
+      }
+      .widget-container {
+        background: #ffffff;
+        color: #111827;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        max-width: 360px;
+        border: 1px solid #e5e7eb;
+      }
+      .widget-btn {
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .widget-btn:hover {
+        background: #1d4ed8;
+      }
+    \`;
+
+    // 3. Encapsulated Template
+    const container = document.createElement("div");
+    container.className = "widget-container";
+    container.innerHTML = \`
+      <div style="font-weight: 600; margin-bottom: 8px;">Agency Embedded Widget</div>
+      <p style="font-size: 14px; color: #4b5563; margin-bottom: 12px;">
+        Isolated Shadow DOM element immunized from host CSS rules.
+      </p>
+      <button class="widget-btn">Interactive Action</button>
+    \`;
+
+    shadow.appendChild(style);
+    shadow.appendChild(container);
+  }
+}
+
+if (!customElements.get("${widgetName}")) {
+  customElements.define("${widgetName}", ${className});
+}
+`;
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
+  const isJson = args.includes("--json");
+
   if (args.includes("--brownfield-scan")) {
     const idx = args.indexOf("--brownfield-scan");
     const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
@@ -476,9 +672,35 @@ if (import.meta.main) {
     } else {
       console.log("  ✅ Zero Edge runtime boundary violations detected.");
     }
+  } else if (args.includes("--check-pooling")) {
+    const idx = args.indexOf("--check-pooling");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = checkConnectionPooling(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n🗄️ Database Connection Pooling Check: ${target}`);
+      console.log(`  Files Scanned: ${report.filesScanned}`);
+      console.log(
+        `  Status: ${report.safe ? "✅ SAFE (Singleton / Pooled)" : "❌ RISKY (Unpooled Instantiations Detected)"}`,
+      );
+      if (!report.safe) {
+        for (const v of report.violations) {
+          console.log(`    - ⚠️  [${v.file}:${v.line}] ${v.message} (Fix: ${v.fix})`);
+        }
+      }
+    }
+  } else if (args.includes("--presigned-upload-scaffold")) {
+    const idx = args.indexOf("--presigned-upload-scaffold");
+    const provider = (args[idx + 1] === "r2" ? "r2" : "s3") as "s3" | "r2";
+    console.log(scaffoldPresignedUpload(provider));
+  } else if (args.includes("--widget-scaffold")) {
+    const idx = args.indexOf("--widget-scaffold");
+    const name = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "muse-client-widget";
+    console.log(scaffoldIsolatedWidget(name));
   } else {
     console.log(
-      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]]",
+      "Usage: bun webdev.ts [--brownfield-scan [dir]] [--webhook-scaffold <stripe|shopify|generic>] [--form-shield-scaffold [provider]] [--migration-check <file>] [--edge-scan [dir]] [--check-pooling [dir]] [--presigned-upload-scaffold <s3|r2>] [--widget-scaffold [name]]",
     );
   }
 }

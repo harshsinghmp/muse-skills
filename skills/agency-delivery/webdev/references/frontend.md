@@ -72,6 +72,17 @@ When implementing developer tools, technical SaaS, or open-source homepages, con
 - AI-aesthetic ban + split rule: no generic purple gradients, rounded-2xl-everything, stock grids, or shadow-heavy cards — spacing-scale, type hierarchy, and brand tokens instead; split files past ~200 lines. Source: `addyosmani/agent-skills` (`frontend-ui-engineering`).
 - Design judgments route to `design`/`refactor-ui`; motion/canvas discipline routes to `animate`.
 
+## 🧩 Isolated Widget Standard (Shadow DOM & CSS Scoping for Embeddables)
+
+When developing client lead capture widgets, chat bubbles, review modals, or micro-frontends intended to be embedded on third-party host sites (WordPress, Shopify, Webflow):
+
+1. **Shadow DOM Encapsulation**: Embeddable widgets MUST render inside a Shadow Root (`element.attachShadow({ mode: 'open' })`). This physically walls off CSS inheritance, preventing host styles from mutating widget typography or buttons, and preventing widget rules from breaking host navigation.
+2. **CSS Reset Inside Shadow Root**: Include `:host { all: initial; }` at the root of the shadow stylesheet to reset any inherited properties.
+3. **No Global ID or Class Collisions**: If Shadow DOM cannot be used (e.g. legacy script constraints), prefix all CSS classes with a distinct agency namespace (`.muse-embed-*` / `.agency-widget-*`) and use CSS Modules. Never target bare elements (`div`, `p`, `button`) globally.
+
+---
+
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+
