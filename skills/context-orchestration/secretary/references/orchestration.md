@@ -171,3 +171,38 @@ Secretary **never** duplicates the responsibilities of companion skills. It dele
 | **Adversarial Hardening** | `gauntlet-loop` | "The Bar is the Whole Trick" blind critique |
 | **Multi-Client Isolation** | `ops:multi-client` | Sub-app workspace air-gapping rules |
 | **Persistent Claim Ledger** | `evidence-ledger` | Append to `.agents/context/evidence-ledger.md` |
+
+---
+
+## 8. Follow-The-Sun Twilight Handover Protocol
+
+Distributed, multi-continent agencies must eliminate the 24-hour "dead cycle" latency loop where ambiguous questions stall progress overnight. At the end of every regional shift (e.g. Asia/Europe shift transition or Europe/Americas handover), Secretary emits a structured 3-part Twilight Handover Brief:
+
+### The 3-Checkpoint Twilight Handover Contract:
+1. **What Shipped & Verified**: Exact commit hashes, pull requests, preview URLs, and passing test evidence generated during the departing shift.
+2. **Blockers & Explicit Clarifications**: Concrete, unambiguous questions formulated with options so the client or incoming team can answer with a single keypress rather than triggering another 24-hour clarification loop.
+3. **Next Shift Priority Queue**: Exactly one active ticket ready to be pulled immediately without waiting for synchronous standup calls.
+
+---
+
+## 9. Global Timezone Overlap & Regional Holiday Invariant
+
+Cross-border agency operations span multiple timezones (e.g. UTC-8 to UTC+8). Secretary calculates synchronization windows and protects against calendar drift:
+
+### Core Operating Windows & Divergence Alerts:
+1. **The Golden Overlap Window**: Identifies the 2–3 hour sweet spot between client and engineering timezones (e.g. London 1:00 PM – 4:00 PM GMT / New York 8:00 AM – 11:00 AM EST) reserved strictly for high-fidelity decisions and client demos.
+2. **Daylight Saving Time (DST) Divergence Sentinel**: Tracks staggered seasonal DST shifts (US shifting 2 weeks before Europe; Australia shifting opposite) to prevent dropped client meetings and mis-scheduled automated deployment crons.
+3. **Asymmetric Regional Holiday Shield**: Cross-references local statutory and bank holidays (US, UK, EU, Indian, and Australian calendars) before committing sprint milestone delivery dates.
+
+---
+
+## 10. The 3-Tier Founder Unblocking Delegation Matrix
+
+Agency founders must never become a bottleneck for routine technical and operational execution. Secretary routes decisions through three autonomous tiers:
+
+| Tier | Scope & Impact | Governing Authority | Escalation SLA |
+| :--- | :--- | :--- | :--- |
+| **Tier 1: Autonomous** | Bugfixes, responsive design adjustments, linting, standard dependencies, content updates | Council Leads (**Sol**, **Jasper**, **Crew**, **Nexus**) execute immediately without prior sign-off | 0 min (Immediate) |
+| **Tier 2: Operations Sign-Off** | Minor UI redesigns, scope tweaks within 10% budget, third-party vendor integrations, staging releases | PM / Secretary / Operations Lead review and approve | ≤ 4 hours |
+| **Tier 3: Founder-Only** | Core system architecture rewrites, contractual scope alterations, pricing changes > $5,000, production emergency rollbacks | Founder / Principal explicit approval required | Same-day priority queue |
+

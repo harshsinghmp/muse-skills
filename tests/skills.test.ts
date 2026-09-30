@@ -215,6 +215,9 @@ describe("Invocation UX & conventions", () => {
     expect(content).toContain("ReviewVerdict");
     expect(content).toContain("Blast-Radius Scoring & Reversible Git Checkpoints");
     expect(content).toContain("Morning Briefing & Session Wakeup Protocol");
+    expect(content).toContain("Follow-The-Sun Twilight Handover Protocol");
+    expect(content).toContain("Global Timezone Overlap & Regional Holiday Invariant");
+    expect(content).toContain("The 3-Tier Founder Unblocking Delegation Matrix");
   });
 
   test("secretary CLI supports --triage, --briefing, and --switch flags", () => {
@@ -252,6 +255,26 @@ describe("Invocation UX & conventions", () => {
     });
     expect(briefRes.status).toBe(0);
     expect(briefRes.stdout).toContain("Secretary Morning Briefing");
+
+    // Test twilight handover
+    const handoverRes = spawnSync("bun", [scriptPath, "--twilight-handover", "Asia/Europe:Americas"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(handoverRes.status).toBe(0);
+    expect(handoverRes.stdout).toContain("Follow-The-Sun Twilight Handover Brief");
+    expect(handoverRes.stdout).toContain("Asia/Europe");
+    expect(handoverRes.stdout).toContain("Americas");
+
+    // Test timezone overlap
+    const overlapRes = spawnSync("bun", [scriptPath, "--check-overlap", "EST:IST"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(overlapRes.status).toBe(0);
+    expect(overlapRes.stdout).toContain("Global Timezone Overlap Analysis");
+    expect(overlapRes.stdout).toContain("EST");
+    expect(overlapRes.stdout).toContain("IST");
   });
 
   test("client-comms feedback and status modes encode translation matrix and client changelogs", () => {

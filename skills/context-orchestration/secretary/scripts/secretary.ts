@@ -288,6 +288,90 @@ export function createCheckpoint(
   };
 }
 
+export function generateTwilightHandover(
+  fromShift: string,
+  toShift: string,
+  whatShipped: string[] = ["Production feature commit merged", "All verification tests green"],
+  blockers: string[] = ["None. Full async autonomy preserved."],
+  nextShiftPriority = "Pick up next sprint user story from active backlog",
+): string {
+  const dateStr = new Date().toISOString();
+  return `## 🌅 Follow-The-Sun Twilight Handover Brief
+- **From Shift**: ${fromShift}
+- **To Shift**: ${toShift}
+- **Handover Timestamp**: ${dateStr}
+
+### 1. What Shipped & Verified
+${whatShipped.map((s) => `- ✅ ${s}`).join("\n")}
+
+### 2. Blockers & Explicit Clarifications
+${blockers.map((b) => `- ⚠️ ${b}`).join("\n")}
+
+### 3. Next Shift Priority Queue
+- 🎯 **Primary Focus**: ${nextShiftPriority}
+- *Protocol*: Proceed asynchronously. Avoid synchronous meeting traps unless explicit Tier-3 escalation is flagged.
+`;
+}
+
+export interface TimezoneOverlap {
+  clientTz: string;
+  teamTz: string;
+  overlapHours: number;
+  sweetSpotWindow: string;
+  recommendation: string;
+}
+
+export function checkTimezoneOverlap(clientTz: string, teamTz: string): TimezoneOverlap {
+  const normClient = clientTz.toUpperCase();
+  const normTeam = teamTz.toUpperCase();
+
+  const offsets: Record<string, number> = {
+    PST: -8,
+    PDT: -7,
+    EST: -5,
+    EDT: -4,
+    UTC: 0,
+    GMT: 0,
+    BST: 1,
+    CET: 1,
+    CEST: 2,
+    IST: 5.5,
+    SGT: 8,
+    AEST: 10,
+    AEDT: 11,
+  };
+
+  const clientOffset = offsets[normClient] ?? -5;
+  const teamOffset = offsets[normTeam] ?? 5.5;
+  const diffHours = Math.abs(clientOffset - teamOffset);
+
+  let overlapHours = 0;
+  let sweetSpot = "Async-first communication required (zero comfortable overlap)";
+  let recommendation = "Enforce rigorous Follow-The-Sun Twilight Handovers; eliminate synchronous standup meetings.";
+
+  if (diffHours <= 3) {
+    overlapHours = 5;
+    sweetSpot = "High overlap window (9:00 AM - 2:00 PM)";
+    recommendation = "Ample synchronous availability. Protect deep-work focus blocks.";
+  } else if (diffHours <= 6) {
+    overlapHours = 3;
+    sweetSpot = "Golden Overlap Window (1:00 PM - 4:00 PM client time / morning team time)";
+    recommendation = "Reserve 2-hour window strictly for high-fidelity decisions and client demos.";
+  } else if (diffHours <= 11) {
+    overlapHours = 1.5;
+    sweetSpot = "Twilight sync window (8:00 AM - 9:30 AM client / evening team)";
+    recommendation = "Timebox synchronous sync to max 15 mins. Use async PR receipts for all status updates.";
+  }
+
+  return {
+    clientTz: normClient,
+    teamTz: normTeam,
+    overlapHours,
+    sweetSpotWindow: sweetSpot,
+    recommendation,
+  };
+}
+
 // CLI Execution
 if (import.meta.main) {
   const { values, positionals } = parseArgs({
@@ -297,6 +381,8 @@ if (import.meta.main) {
       briefing: { type: "boolean", default: false },
       switch: { type: "string", default: "" },
       checkpoint: { type: "string", default: "" },
+      "twilight-handover": { type: "string", default: "" },
+      "check-overlap": { type: "string", default: "" },
       help: { type: "boolean", short: "h", default: false },
     },
     allowPositionals: true,
@@ -362,6 +448,28 @@ Options:
       console.error((err as Error).message || String(err));
       process.exit(1);
     }
+  }
+
+  if (values["twilight-handover"]) {
+    const shiftParts = values["twilight-handover"].split(":");
+    const fromShift = shiftParts[0] || "Asia/Europe Shift";
+    const toShift = shiftParts[1] || "Americas Shift";
+    console.log(generateTwilightHandover(fromShift, toShift));
+    process.exit(0);
+  }
+
+  if (values["check-overlap"]) {
+    const tzParts = values["check-overlap"].split(":");
+    const clientTz = tzParts[0] || "EST";
+    const teamTz = tzParts[1] || "IST";
+    const overlap = checkTimezoneOverlap(clientTz, teamTz);
+    console.log(`\n🌐 Global Timezone Overlap Analysis:`);
+    console.log(`   • Client Timezone : ${overlap.clientTz}`);
+    console.log(`   • Team Timezone   : ${overlap.teamTz}`);
+    console.log(`   • Overlap Hours   : ${overlap.overlapHours} hours`);
+    console.log(`   • Sweet Spot      : ${overlap.sweetSpotWindow}`);
+    console.log(`   • Recommendation  : ${overlap.recommendation}`);
+    process.exit(0);
   }
 
   console.log("📑 Secretary ready. Use --help to view available commands.");
