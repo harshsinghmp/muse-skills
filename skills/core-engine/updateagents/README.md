@@ -52,6 +52,27 @@ bun path/to/updateagents/scripts/updateagents.ts --sanitize
 # Directly scaffold missing Agent Engine assets
 bun path/to/updateagents/scripts/updateagents.ts --scaffold
 
+# Context Token-Budget & Decay Health Meter
+bun path/to/updateagents/scripts/updateagents.ts --budget
+
+# Install Git Pre-Commit Hook (Stack Guard + Freshness Check)
+bun path/to/updateagents/scripts/updateagents.ts --install-hook
+
+# Provision Monorepo Sub-App Context
+bun path/to/updateagents/scripts/updateagents.ts --subapp <name>
+
+# Lint Context Markdown Links & @-imports
+bun path/to/updateagents/scripts/updateagents.ts --lint-context
+
+# Compile standards into .cursor/rules/*.mdc and .github/copilot-instructions.md
+bun path/to/updateagents/scripts/updateagents.ts --sync-ide
+
+# Validate standards against installed package.json dependencies
+bun path/to/updateagents/scripts/updateagents.ts --lint-rules
+
+# Archive completed historical milestones (>14d) into .agents/archive/milestones/
+bun path/to/updateagents/scripts/updateagents.ts --archive-sprints
+
 # Run in simulation mode without writing files
 bun path/to/updateagents/scripts/updateagents.ts --dry-run
 ```

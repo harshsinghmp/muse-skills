@@ -316,15 +316,39 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     expect(res.stdout).toContain("--install-hook");
     expect(res.stdout).toContain("--subapp");
     expect(res.stdout).toContain("--lint-context");
+    expect(res.stdout).toContain("--sync-ide");
+    expect(res.stdout).toContain("--lint-rules");
+    expect(res.stdout).toContain("--archive-sprints");
   });
 
-  test("lintContextLinks passes on repository context", () => {
+  test("anti-patterns.md contains code-fenced Anti-Deltas", () => {
+    const antiPatternsPath = path.join(
+      REPO_ROOT,
+      "skills/core-engine/updateagents/templates/.agents/standards/anti-patterns.md",
+    );
+    const content = fs.readFileSync(antiPatternsPath, "utf8");
+    expect(content).toContain("Anti-Delta: Client-Side Data Fetching vs Server Component");
+    expect(content).toContain("Anti-Delta: Unsized Image vs Layout-Stable Media");
+    expect(content).toContain("Anti-Delta: Unvalidated Payload vs Structured Zod Envelope");
+    expect(content).toContain("Anti-Delta: SQL Injection vs Parameterized Queries");
+    expect(content).toContain("// ❌ DON'T:");
+    expect(content).toContain("// ✅ DO:");
+  });
+
+  test("lintContextLinks and lintRulesAgainstDependencies pass on repository context", () => {
     const res = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--lint-context"], {
       encoding: "utf8",
       cwd: REPO_ROOT,
     });
     expect(res.status).toBe(0);
     expect(res.stdout).toContain("Context Lint Passed");
+
+    const rulesRes = spawnSync("bun", ["skills/core-engine/updateagents/scripts/updateagents.ts", "--lint-rules"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(rulesRes.status).toBe(0);
+    expect(rulesRes.stdout).toContain("Rule-to-Dependency Lint Passed");
   });
 
   test("auditContextBudget, installGitPreCommitHook, and sliceSubAppContext work in sandbox", () => {
@@ -359,6 +383,32 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(hookRes.status).toBe(0);
       expect(fs.existsSync(path.join(tempDir, ".git/hooks/pre-commit"))).toBe(true);
+
+      // 4. Test syncIdeAdapters
+      const ideRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updateagents/scripts/updateagents.ts", tempDir, "--sync-ide"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(ideRes.status).toBe(0);
+      expect(fs.existsSync(path.join(tempDir, ".cursor/rules/frontend-nextjs.mdc"))).toBe(true);
+      expect(fs.existsSync(path.join(tempDir, ".github/copilot-instructions.md"))).toBe(true);
+
+      // 5. Test archiveHistoricalSprints
+      fs.mkdirSync(path.join(tempDir, ".agents/context"), { recursive: true });
+      fs.writeFileSync(
+        path.join(tempDir, ".agents/context/current.md"),
+        "## 1. Live Reality\n- Task\n\n## 2. Verified Shipped Reality\n1. **Aged Item** (2025-01-01):\n   - Old work\n",
+        "utf8",
+      );
+      const archiveRes = spawnSync(
+        "bun",
+        ["skills/core-engine/updateagents/scripts/updateagents.ts", tempDir, "--archive-sprints"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(archiveRes.status).toBe(0);
+      expect(archiveRes.stdout).toContain("Archived 1 milestone");
+      expect(fs.existsSync(path.join(tempDir, ".agents/archive/milestones"))).toBe(true);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
