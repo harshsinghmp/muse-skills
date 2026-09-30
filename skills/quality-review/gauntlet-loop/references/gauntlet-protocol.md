@@ -105,9 +105,9 @@ AI coding agents optimize locally and frequently introduce "invisible agent debt
 
 ---
 
-## 🛡️ The 4 Resilience & Hygiene Quality Gates
+## 🛡️ The 6 Resilience & Hygiene Quality Gates
 
-Before any round or PR is accepted through the Gauntlet, it must pass four automated hygiene checks:
+Before any round or PR is accepted through the Gauntlet, it must pass six automated hygiene checks:
 
 ### 1. The Loud Failure Invariant (Zero Swallowed Errors)
 - **Anti-Pattern**: `try { ... } catch {}` or `catch (err) { /* ignore */ }`. Silent error swallowing causes blank white screens for clients while telemetry tools (Sentry, Datadog) report zero errors.
@@ -141,5 +141,20 @@ Before any round or PR is accepted through the Gauntlet, it must pass four autom
   2. Use a two-pass mounted pattern (`const [mounted, setMounted] = useState(false); useEffect(() => setMounted(true), []); if (!mounted) return <Skeleton />`).
   3. Or add `suppressHydrationWarning` on the specific HTML node containing localized timestamps.
   4. Or format timestamps on the server using an explicit UTC timezone string inside a semantic `<time dateTime={isoString}>` tag.
+
+### 5. The CMS-Cohesion & Hardcoded Copy Linter
+- **Anti-Pattern**: Hardcoding static marketing copy, headings, testimonials, pricing, or media URLs directly into frontend components (`.tsx`, `.jsx`, `.astro`, `.vue`) when a Content Management System (CMS) or visual page builder is present in the repository (e.g. WordPress + Page Builder, Payload CMS, Emdash, Aria Builder, Sanity, Strapi, Contentful, Ghost, Keystone, or Puck Visual Builder). This fractures the project architecture, locks non-technical agency clients out of their own content, and generates endless "can you change this sentence" engineering tickets.
+- **Invariant**:
+  1. **CMS-First Data Flow**: Whenever a CMS is present, all user-facing copy, labels, features, and assets must be modeled and sourced through CMS collections, globals, or block schemas.
+  2. **Styling & Token Placement**: Custom CSS or JavaScript must use designated token systems (`globals.css`, Tailwind theme tokens, or the CMS/Page Builder's native Custom CSS/JS code injection areas). Ad-hoc inline CSS styles that bypass the design system are prohibited.
+  3. **Founder Alert Gate**: If a requested feature or layout cannot be modeled cleanly inside the active CMS schema or page builder, the agent MUST notify the user/founder before writing code outside the CMS to agree on the architectural deviation.
+
+### 6. The Verified Deploy Gate (Zero Unverified Preview Claims)
+- **Anti-Pattern**: Declaring a deployment or delivery complete because a build runner exited with code 0 or a preview URL was printed in terminal logs, without verifying that the deployed endpoint actually serves HTTP 200 without runtime fatal exceptions. Many builds pass statically but immediately crash on edge functions due to missing environment variables.
+- **Invariant**:
+  1. **HTTP 200 Verification**: Before declaring a task or deployment complete, the agent or automated gate must ping the deployed preview or staging URL via HTTP GET/HEAD.
+  2. **Runtime Exception Check**: The response must return HTTP 200 and be audited for runtime crash signatures (e.g. "Application error: a client-side exception has occurred", "500 Internal Server Error", "502 Bad Gateway").
+  3. **Evidence Requirement**: The status code, verified URL, and latency receipt must be logged in the acceptance record.
+
 
 
