@@ -384,6 +384,33 @@ describe("Invocation UX & conventions", () => {
       }
     }
   });
+
+  test("ops multi-client mode and multi-client CLI verify boundaries and context switches", () => {
+    const multiClientPath = path.join(REPO_ROOT, "skills/agency-delivery/ops/references/multi-client.md");
+    expect(fs.existsSync(multiClientPath)).toBe(true);
+    const content = fs.readFileSync(multiClientPath, "utf8");
+    expect(content).toContain("Two-Tier Memory Isolation Standard");
+    expect(content).toContain("The 5-Checkpoint Cross-Client Context Firewall");
+    expect(content).toContain("The 5-Line Context Switch Audit Log");
+
+    const scriptPath = "skills/agency-delivery/ops/scripts/multi-client.ts";
+    const boundaryRes = spawnSync("bun", [scriptPath, "--verify-boundary", REPO_ROOT, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(boundaryRes.status).toBe(0);
+    const report = JSON.parse(boundaryRes.stdout);
+    expect(report.scannedFilesCount).toBeGreaterThan(0);
+
+    const switchRes = spawnSync("bun", [scriptPath, "--switch-context", "client-alpha", "client-beta"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(switchRes.status).toBe(0);
+    expect(switchRes.stdout).toContain("5-Line Cross-Client Context Switch Handover");
+    expect(switchRes.stdout).toContain("client-alpha");
+    expect(switchRes.stdout).toContain("client-beta");
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
