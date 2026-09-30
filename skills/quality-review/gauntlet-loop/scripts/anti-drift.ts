@@ -102,12 +102,188 @@ export function checkRefactorScope(sinceRef = "HEAD~1"): { fileCount: number; fi
   return { fileCount, files, exceedsLimit };
 }
 
+export interface SilentCatchViolation {
+  file: string;
+  line: number;
+  snippet: string;
+  recommendation: string;
+}
+
+export interface SilentCatchReport {
+  scannedFiles: number;
+  violations: SilentCatchViolation[];
+}
+
+export function scanSilentCatches(targetDir = process.cwd()): SilentCatchReport {
+  let scannedFiles = 0;
+  const violations: SilentCatchViolation[] = [];
+
+  function walk(current: string) {
+    if (!fs.existsSync(current)) return;
+    const stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      if (
+        current.includes("node_modules") ||
+        current.includes(".git") ||
+        current.includes("dist") ||
+        current.includes(".next")
+      )
+        return;
+      const files = fs.readdirSync(current);
+      for (const f of files) walk(path.join(current, f));
+    } else if (/\.(ts|tsx|js|jsx)$/.test(current)) {
+      scannedFiles++;
+      const content = fs.readFileSync(current, "utf8");
+
+      // Regex to find catch blocks
+      const catchRegex = /catch\s*(?:\([^)]*\))?\s*\{([^}]*)\}/gs;
+      let match = catchRegex.exec(content);
+      while (match !== null) {
+        const body = match[1]
+          .replace(/\/\/[^\n]*/g, "")
+          .replace(/\/\*.*?\*\//gs, "")
+          .trim();
+        const hasLog = /console\.(?:error|warn|info)|logger\.|reportError|captureException/i.test(match[1]);
+        const hasThrow = /\bthrow\b/.test(body);
+        const hasReturn = /\breturn\b/.test(body);
+
+        if (body.length === 0 || (!hasLog && !hasThrow && !hasReturn)) {
+          // Calculate line number
+          const prefix = content.slice(0, match.index);
+          const lineNum = prefix.split("\n").length;
+          violations.push({
+            file: path.relative(process.cwd(), current),
+            line: lineNum,
+            snippet: match[0].slice(0, 60).replace(/\n/g, " "),
+            recommendation: "Log error to console/telemetry, rethrow, or return an explicit fallback.",
+          });
+        }
+        match = catchRegex.exec(content);
+      }
+    }
+  }
+
+  walk(targetDir);
+  return { scannedFiles, violations };
+}
+
+export interface FlakyTestViolation {
+  file: string;
+  line: number;
+  pattern: string;
+  recommendation: string;
+}
+
+export interface FlakyTestReport {
+  scannedTestFiles: number;
+  violations: FlakyTestViolation[];
+}
+
+export function scanFlakyTestSleeps(targetDir = process.cwd()): FlakyTestReport {
+  let scannedTestFiles = 0;
+  const violations: FlakyTestViolation[] = [];
+
+  function walk(current: string) {
+    if (!fs.existsSync(current)) return;
+    const stat = fs.statSync(current);
+    if (stat.isDirectory()) {
+      if (current.includes("node_modules") || current.includes(".git") || current.includes("dist")) return;
+      const files = fs.readdirSync(current);
+      for (const f of files) walk(path.join(current, f));
+    } else if (
+      /\.(test|spec)\.(ts|tsx|js|jsx)$/.test(current) ||
+      current.includes("/tests/") ||
+      current.includes("/test/")
+    ) {
+      if (/\.(ts|tsx|js|jsx)$/.test(current)) {
+        scannedTestFiles++;
+        const content = fs.readFileSync(current, "utf8");
+        const lines = content.split("\n");
+
+        lines.forEach((lineText, idx) => {
+          if (/waitForTimeout\s*\(/.test(lineText)) {
+            violations.push({
+              file: path.relative(process.cwd(), current),
+              line: idx + 1,
+              pattern: "page.waitForTimeout()",
+              recommendation: "Replace arbitrary timer wait with page.waitForSelector() or expect.poll().",
+            });
+          }
+          if (/\b(?:await\s+)?sleep\s*\(\d+\)/.test(lineText)) {
+            violations.push({
+              file: path.relative(process.cwd(), current),
+              line: idx + 1,
+              pattern: "sleep(N)",
+              recommendation: "Replace arbitrary timer sleep with deterministic polling or assertion timeout.",
+            });
+          }
+        });
+      }
+    }
+  }
+
+  walk(targetDir);
+  return { scannedTestFiles, violations };
+}
+
+export interface DependencyViolation {
+  package: string;
+  reason: string;
+  replacement: string;
+}
+
+export interface DependencyDietReport {
+  packageJsonPath: string;
+  violations: DependencyViolation[];
+}
+
+const REDUNDANT_DEPS: Record<string, { reason: string; replacement: string }> = {
+  "is-odd": { reason: "Trivial micro-package", replacement: "Native (n % 2 !== 0)" },
+  "is-even": { reason: "Trivial micro-package", replacement: "Native (n % 2 === 0)" },
+  "left-pad": { reason: "Trivial micro-package", replacement: "Native String.prototype.padStart()" },
+  "is-number": { reason: "Trivial micro-package", replacement: "Native typeof n === 'number'" },
+  axios: { reason: "Redundant HTTP client", replacement: "Standard native fetch() in Node 18+ and Bun" },
+  "node-fetch": { reason: "Redundant fetch polyfill", replacement: "Standard native fetch() in Node 18+ and Bun" },
+  moment: { reason: "Heavyweight legacy datetime library", replacement: "Native Intl API or lightweight date-fns" },
+  querystring: { reason: "Deprecated legacy Node module", replacement: "Standard URLSearchParams" },
+  rimraf: {
+    reason: "Legacy filesystem helper",
+    replacement: "Native fs.rmSync(path, { recursive: true, force: true })",
+  },
+  mkdirp: { reason: "Legacy directory helper", replacement: "Native fs.mkdirSync(path, { recursive: true })" },
+};
+
+export function auditRedundantDependencies(pkgPath: string): DependencyDietReport {
+  const violations: DependencyViolation[] = [];
+  if (!fs.existsSync(pkgPath)) return { packageJsonPath: pkgPath, violations };
+
+  try {
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+    const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+
+    for (const [name, meta] of Object.entries(REDUNDANT_DEPS)) {
+      if (allDeps[name]) {
+        violations.push({
+          package: name,
+          reason: meta.reason,
+          replacement: meta.replacement,
+        });
+      }
+    }
+  } catch {
+    // Ignore invalid JSON
+  }
+
+  return { packageJsonPath: pkgPath, violations };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
+  const isJson = args.includes("--json");
+
   if (args.includes("--scan-duplicates")) {
     const idx = args.indexOf("--scan-duplicates");
     const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
-    const isJson = args.includes("--json");
     const report = scanDuplicateUtilities(target);
 
     if (isJson) {
@@ -134,7 +310,63 @@ if (import.meta.main) {
     console.log(
       `  Limit Exceeded (>3 files): ${res.exceedsLimit ? "⚠️ YES (Escalate to Nexus)" : "✅ NO (Within Scope)"}`,
     );
+  } else if (args.includes("--scan-silent-catches")) {
+    const idx = args.indexOf("--scan-silent-catches");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = scanSilentCatches(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n📢 Loud Failure & Silent Catch Audit: ${target}`);
+      console.log(`  Scanned Files: ${report.scannedFiles}`);
+      console.log(`  Silent Catches: ${report.violations.length}`);
+      if (report.violations.length === 0) {
+        console.log(`  ✅ Clean! Zero silent error-swallowing catch blocks.`);
+      } else {
+        for (const v of report.violations) {
+          console.log(`    - ❌ ${v.file}:${v.line} -> ${v.snippet} (Fix: ${v.recommendation})`);
+        }
+      }
+    }
+  } else if (args.includes("--scan-flaky-tests")) {
+    const idx = args.indexOf("--scan-flaky-tests");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const report = scanFlakyTestSleeps(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n⏱️ Deterministic Test Sleep Audit: ${target}`);
+      console.log(`  Scanned Test Files: ${report.scannedTestFiles}`);
+      console.log(`  Flaky Sleeps: ${report.violations.length}`);
+      if (report.violations.length === 0) {
+        console.log(`  ✅ Clean! Zero arbitrary sleeps detected in test files.`);
+      } else {
+        for (const v of report.violations) {
+          console.log(`    - ⚠️  ${v.file}:${v.line} -> ${v.pattern} (Fix: ${v.recommendation})`);
+        }
+      }
+    }
+  } else if (args.includes("--audit-deps")) {
+    const idx = args.indexOf("--audit-deps");
+    const target =
+      args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : path.join(process.cwd(), "package.json");
+    const report = auditRedundantDependencies(target);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n📦 Dependency Diet Audit: ${target}`);
+      console.log(`  Redundant Packages: ${report.violations.length}`);
+      if (report.violations.length === 0) {
+        console.log(`  ✅ Clean! Zero redundant platform-duplicating dependencies detected.`);
+      } else {
+        for (const v of report.violations) {
+          console.log(`    - ⚠️  Package '${v.package}': ${v.reason} (Replace with: ${v.replacement})`);
+        }
+      }
+    }
   } else {
-    console.log("Usage: bun anti-drift.ts --scan-duplicates [dir] | --check-scope [since-ref]");
+    console.log(
+      "Usage: bun anti-drift.ts [--scan-duplicates [dir]] [--check-scope [since-ref]] [--scan-silent-catches [dir]] [--scan-flaky-tests [dir]] [--audit-deps [package.json]]",
+    );
   }
 }
