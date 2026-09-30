@@ -4,7 +4,7 @@ aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstac
 description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
 argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|deploy|audit]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
