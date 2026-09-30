@@ -1,45 +1,72 @@
-# status — Client status report: progress, blockers, next steps, in client language.
+# status — Client status report: progress, blockers, next steps, and staging changelogs.
 
 ## Intake
 
 - What shipped since last update, what is in flight, blockers and owners
-- Upcoming milestones and dates
-- Client's preferred channel and cadence
-- Default stack: Looker Studio for client-facing reports/dashboards; generic open-source fallback otherwise.
+- Git log or PR summaries from the release period
+- Upcoming milestones and client review dates
+- Client's preferred channel (Slack, email, Loom, or Looker Studio dashboard)
 
 ## Deliverable
 
-Status update in the client's language: shipped, in-flight, blocked (with owner + need), next — no internal jargon, no tool names, every claim verifiable.
+1. **Client Status Report**: Executive summary in client language: outcomes shipped, in-flight focus, blocked items (with single clear need), and upcoming milestone dates.
+2. **Non-Technical Staging Changelog**: Developer commits translated into business outcomes, categorized by Visual Enhancements, Fixes & Polish, and Performance & Stability.
+
+---
+
+## 🗞️ Automated Non-Technical Client Changelog Protocol
+
+Clients and marketing stakeholders do not understand technical git logs (e.g. `fix(checkout): adjust z-index: 50 on modal overlay and fix hydration mismatch`). All client-facing release notes must pass through the **Jargon Sanitizer**:
+
+### Jargon Sanitizer Rules
+1. **Never Show Hashes or Commit IDs**: Strip commit SHAs, PR numbers, branch names, and AST terminology.
+2. **Translate Mechanism into User Benefit**:
+   - `refactor(db): add index on orders.customer_id` → *"Accelerated order history loading speeds by up to 4x."*
+   - `fix(a11y): add aria-expanded to mobile nav hamburger` → *"Improved mobile menu accessibility and touch responsiveness."*
+   - `feat(stripe): implement webhook idempotency key cache` → *"Hardened checkout payment security to prevent any duplicate card charges."*
+3. **Structured Grouping**:
+   - 🌟 **New Features & Visual Updates**: Direct changes visible to end-users and marketing teams.
+   - 🛠️ **Improvements & Bug Fixes**: Resolved edge cases, fixed layout bugs, and visual alignment polish.
+   - ⚡ **Performance & Reliability**: Speed boosts, security protections, and uptime safeguards.
+
+### Standard Client Changelog Format
+```markdown
+### 🚀 Staging Deployment Update — [Client Project Name] (Version 1.4.0)
+
+**Preview URL**: https://staging.clientdomain.com
+**Review Period**: March 30, 2026
+
+#### 🌟 New & Visual Updates
+- **Refreshed Mobile Navigation**: Updated the mobile menu with smoother open/close animations and prominent contact buttons.
+- **Hero Banner Spacing**: Polished layout spacing across mobile screens so your core headline and primary CTA are immediately visible without scrolling.
+
+#### 🛠️ Polish & Fixes
+- **Contact Form Validation**: Clearer error indicators when an email address is mistyped, making it easier for leads to submit inquiries.
+- **Image Display Stability**: Resolved a minor flicker issue when quickly toggling between product gallery images.
+
+#### ⚡ Performance & Security
+- **Faster Page Load**: Optimized asset delivery, reducing initial mobile load time by ~0.8s on 4G connections.
+- **Secure Payment Processing**: Strengthened checkout protection against network interruptions.
+
+**What We Need From You**:
+- Please test the contact form on mobile staging and confirm headline copy before Friday 3:00 PM EST.
+```
+
+---
 
 ## Procedure
 
-1. Lead with outcomes shipped, not activity performed.
-2. State blockers with owner and the single thing needed — never a blocker without a need.
-3. Name next steps with dates; flag date risk early with options, not surprises.
-4. Metrics only from `analytics`-verified numbers; never estimate in a status.
-5. Open with an exec summary (top-3 wins, top-3 risks, continuity check vs last update) and cut audience-adapted versions from it.
-6. Follow the narrative spine: KPIs-vs-targets, then channel breakdown, then wins, then root-caused misses — with tiered depth (headline, detail, appendix).
-7. Run QBRs on a 45-60 min agenda ending in owned action items with dates.
-8. Solo: the status update is also your own continuity record — keep a copy per client even when the client never asks.
-9. Pre-read briefs carry attendee posture (cold/warm/active/hostile), talking points ranked and tied to facts, and 1-3 what-NOT-to-dos for this meeting.
-10. Verify before explaining: check the claim against the diff, test output, artifact, or observed metric first; label inference as inference, never as verified (keeper: mengto/audit-verify-explain-grade-5).
-11. Explain in grade-5 shape — What changed / Why it matters / How to verify — short sentences, terms defined, caveats kept visible (keeper: mengto/audit-verify-explain-grade-5).
+1. **Lead with Outcomes Shipped**: Start with the business needle moved, not internal activity.
+2. **Sanitize Technical Commits**: Parse raw commits into the three non-technical changelog categories.
+3. **State Blockers with Needs**: Every blocker must state who owns it and the single specific decision or asset needed from the client.
+4. **Dates with Early Risk Flags**: Never deliver surprises; flag date adjustments at least 72 hours in advance with 2 feasible options.
+5. **Verified Claims Only**: Every performance number or conversion metric must be grounded in real analytics or staging tests.
 
-## Quality gate
+---
 
-- [ ] Zero internal jargon or tool names.
-- [ ] Every blocker names an owner and a need.
-- [ ] Dates stated; risks flagged with options.
-- [ ] Exec summary leads (top-3 wins/risks, continuity check) with audience-adapted cuts.
-- [ ] Narrative follows KPI-to-channel-to-wins-to-root-caused-misses spine with tiered depth.
-- [ ] QBR agenda 45-60 min; every action owned with a date.
-- [ ] Pre-read brief has postures, fact-tied talking points, and what-NOT-to-dos.
-- [ ] Revision updates use audit shape — safe changes / moved-with-destination / kept-inline / flagged, each naming exact what + where (keeper: 99rebels/skill-polisher).
+## Quality Gate
 
-## Routing
-
-- Numbers and dashboards → `analytics`; internal resourcing → `ops`.
-
-## Sources
-
-Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+- [ ] Zero technical jargon, library names, or commit SHAs in client notes.
+- [ ] Grouped into New/Visual, Polish/Fixes, and Performance/Security.
+- [ ] Contains live staging URL and specific client action items with deadlines.
+- [ ] Every blocker names an owner and a single unblocking need.

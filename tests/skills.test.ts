@@ -252,6 +252,48 @@ describe("Invocation UX & conventions", () => {
     expect(briefRes.status).toBe(0);
     expect(briefRes.stdout).toContain("Secretary Morning Briefing");
   });
+
+  test("client-comms feedback and status modes encode translation matrix and client changelogs", () => {
+    const feedbackPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/feedback.md");
+    const statusPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/status.md");
+    expect(fs.existsSync(feedbackPath)).toBe(true);
+    expect(fs.existsSync(statusPath)).toBe(true);
+
+    const feedbackContent = fs.readFileSync(feedbackPath, "utf8");
+    expect(feedbackContent).toContain("The Non-Technical Feedback Translation Matrix");
+    expect(feedbackContent).toContain("Make it pop");
+    expect(feedbackContent).toContain("Strict Anti-Drift Boundary");
+    expect(feedbackContent).toContain("The Typed Feedback Translation Contract");
+
+    const statusContent = fs.readFileSync(statusPath, "utf8");
+    expect(statusContent).toContain("Automated Non-Technical Client Changelog Protocol");
+    expect(statusContent).toContain("Jargon Sanitizer Rules");
+  });
+
+  test("client-comms CLI supports --translate-feedback and --changelog", () => {
+    const scriptPath = "skills/agency-delivery/client-comms/scripts/client-comms.ts";
+    const res = spawnSync(
+      "bun",
+      [scriptPath, "--translate-feedback", "The mobile header feels clunky and make it pop", "--json"],
+      {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      },
+    );
+    expect(res.status).toBe(0);
+    const parsed = JSON.parse(res.stdout);
+    expect(parsed.translation.intent).toBeDefined();
+    expect(parsed.translation.antiDriftBoundary).toContain("Do NOT");
+    expect(parsed.assignedLead).toBeDefined();
+
+    const changelogRes = spawnSync("bun", [scriptPath, "--changelog"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(changelogRes.status).toBe(0);
+    expect(changelogRes.stdout).toContain("Staging Deployment Update");
+    expect(changelogRes.stdout).toContain("New & Visual Updates");
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
