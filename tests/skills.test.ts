@@ -1063,11 +1063,10 @@ tags: [ai, dev]
     expect(validFeedData.ratioType).toBe("1:1");
 
     // 4. Safe zone calculator
-    const szRes = spawnSync(
-      "bun",
-      [scriptPath, "--safe-zone", "--height", "1920", "--platform", "tiktok", "--json"],
-      { encoding: "utf8", cwd: REPO_ROOT },
-    );
+    const szRes = spawnSync("bun", [scriptPath, "--safe-zone", "--height", "1920", "--platform", "tiktok", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
     expect(szRes.status).toBe(0);
     const szData = JSON.parse(szRes.stdout);
     expect(szData.platform).toBe("tiktok");
@@ -1141,14 +1140,88 @@ tags: [ai, dev]
         "https://agency.com/pricing?utm_source=nav\nhttps://google.com?utm_source=newsletter&utm_medium=email&utm_campaign=launch\n",
         "utf8",
       );
-      const auditRes = spawnSync(
-        "bun",
-        [scriptPath, "--audit", urlFile, "--site-host", "agency.com", "--json"],
-        { encoding: "utf8", cwd: REPO_ROOT },
-      );
+      const auditRes = spawnSync("bun", [scriptPath, "--audit", urlFile, "--site-host", "agency.com", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
       const auditData = JSON.parse(auditRes.stdout);
       expect(auditData.internalUtmTraps).toBe(1);
       expect(auditData.invalid).toBeGreaterThanOrEqual(1);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  test("automation integrations mode and webhook-guard CLI enforce inbound byte ceiling and scaffold receivers", () => {
+    const integrationsPath = path.join(REPO_ROOT, "skills/agency-delivery/automation/references/integrations.md");
+    expect(fs.existsSync(integrationsPath)).toBe(true);
+    const content = fs.readFileSync(integrationsPath, "utf8");
+    expect(content).toContain("Webhook Inbound Byte-Size Ceiling (Payload Limiter)");
+    expect(content).toContain("webhook-guard.ts");
+
+    const scriptPath = "skills/agency-delivery/automation/scripts/webhook-guard.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("Webhook Payload Byte-Size Limiter & Receiver Guard");
+
+    // 1. Scaffold Bun handler
+    const scaffoldRes = spawnSync("bun", [scriptPath, "--scaffold", "bun", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(scaffoldRes.status).toBe(0);
+    const scaffoldData = JSON.parse(scaffoldRes.stdout);
+    expect(scaffoldData.runtime).toBe("bun");
+    expect(scaffoldData.code).toContain("MAX_BYTES");
+    expect(scaffoldData.code).toContain("status: 413");
+    expect(scaffoldData.code).toContain("Buffer.concat(chunks)");
+
+    // 2. Numeric byte check (allowed)
+    const allowedCheck = spawnSync("bun", [scriptPath, "--check-bytes", "500000", "--max-bytes", "1000000", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(allowedCheck.status).toBe(0);
+    const allowedData = JSON.parse(allowedCheck.stdout);
+    expect(allowedData.allowed).toBe(true);
+    expect(allowedData.size).toBe(500000);
+
+    // 3. Numeric byte check (exceeded -> exit 1)
+    const exceededCheck = spawnSync(
+      "bun",
+      [scriptPath, "--check-bytes", "1500000", "--max-bytes", "1000000", "--json"],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(exceededCheck.status).toBe(1);
+    const exceededData = JSON.parse(exceededCheck.stdout);
+    expect(exceededData.allowed).toBe(false);
+    expect(exceededData.error).toContain("HTTP 413 Payload Too Large");
+
+    // 4. Test file check
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "automation-webhook-test-"));
+    try {
+      const testFile = path.join(tempDir, "oversized.json");
+      const buffer = Buffer.alloc(1500000, 0x61); // 1.5MB
+      fs.writeFileSync(testFile, buffer);
+
+      const fileExceeded = spawnSync("bun", [scriptPath, "--test-file", testFile, "--max-bytes", "1048576", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(fileExceeded.status).toBe(1);
+      const fileExceededData = JSON.parse(fileExceeded.stdout);
+      expect(fileExceededData.allowed).toBe(false);
+
+      const fileAllowed = spawnSync("bun", [scriptPath, "--test-file", testFile, "--max-bytes", "2000000", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(fileAllowed.status).toBe(0);
+      const fileAllowedData = JSON.parse(fileAllowed.stdout);
+      expect(fileAllowedData.allowed).toBe(true);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -1249,11 +1322,10 @@ tags: [ai, dev]
       expect(workerCode).toContain("Mobile (390px)");
       expect(workerCode).toContain("/__deliverable/feedback");
 
-      const expiryRes = spawnSync(
-        "bun",
-        [scriptPath, tempDir, "--check-expiry", "client-preview-flow", "--json"],
-        { encoding: "utf8", cwd: REPO_ROOT },
-      );
+      const expiryRes = spawnSync("bun", [scriptPath, tempDir, "--check-expiry", "client-preview-flow", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
       expect(expiryRes.status).toBe(0);
       const expiryData = JSON.parse(expiryRes.stdout);
       expect(expiryData.expired).toBe(false);

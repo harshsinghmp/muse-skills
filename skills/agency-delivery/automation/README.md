@@ -28,7 +28,7 @@ Build a support chatbot grounded in our help docs with evaluation tests.
 | **chatbot** | chatbot / assistant | Chatbot: a retrieval-grounded assistant with escalation to humans. |
 | **agents** | AI agent | Agents: bounded tool-using agents with guardrails and traceability. |
 | **rag** | RAG pipeline | RAG: retrieval + grounded generation with citations and evaluation. |
-| **integrations** | API / webhook integration | Integrations: reliable API/webhook connections with auth and error handling. |
+| **integrations** | API / webhook integration | Integrations: reliable API/webhook connections with auth, payload byte-size limiter, and error handling. |
 | **prompt** | prompt engineering / evals | Prompt: engineered, versioned, and evaluated prompts. |
 
 ### Specialized References

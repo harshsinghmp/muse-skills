@@ -22,6 +22,9 @@ A working integration: authenticated API calls or webhook handlers, field mappin
 6. Verify webhook signatures; validate and sanitize inbound payloads.
 7. Verify HMAC against the raw request bytes (never re-serialized JSON); acknowledge 2xx after durable accept and process async.
 8. Log sync results and provide a re-sync path for failures.
+9. Enforce Webhook Inbound Byte-Size Ceiling (Payload Limiter):
+   - Enforce upfront `Content-Length` validation and streaming byte counters (default: 1MB / 1,048,576 bytes) to reject oversized payloads with HTTP 413 Payload Too Large before JSON parsing or memory exhaustion (OOM).
+   - Scaffolding: `bun automation/scripts/webhook-guard.ts --scaffold bun`.
 
 ## Quality gate
 
@@ -30,6 +33,7 @@ A working integration: authenticated API calls or webhook handlers, field mappin
 - [ ] Secrets in a secret store; OAuth refresh handled.
 - [ ] Rate-limit backoff and error retries present.
 - [ ] Webhook signatures verified; inputs validated.
+- [ ] Webhook inbound byte limit enforced (HTTP 413 on payload > 1MB) with raw buffer preservation for HMAC.
 - [ ] Re-sync path exists.
 
 ## Sources
