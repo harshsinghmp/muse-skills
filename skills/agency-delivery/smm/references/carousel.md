@@ -121,11 +121,22 @@ Publish the validated 6-slide carousel simultaneously to feed:
 
 ---
 
+### 6. Aspect Ratio Enforcement & Mobile UI Safe Zone Guard
+Asset dimension mismatches (e.g. delivering 1:1 square assets to 9:16 vertical feeds, or 9:16 to LinkedIn carousels) cause severe algorithmic penalties, letterboxing, or cut-off text.
+- **Aspect Ratio Guard CLI**:
+  - Validate image dimensions: `bun smm/scripts/aspect-ratio-guard.ts --width 1080 --height 1920 --platform tiktok`
+  - Scan directory: `bun smm/scripts/aspect-ratio-guard.ts --dir ./carousel-assets --platform tiktok`
+  - Calculate safe zones: `bun smm/scripts/aspect-ratio-guard.ts --safe-zone --height 1920`
+- **Safe Zone Rule**: For 9:16 mobile feeds (TikTok / Reels / Shorts), maintain a strict clear area: top 15% (avoid status bar/account badge) and bottom 20% (avoid caption, audio title, and interaction buttons).
+
+---
+
 ## Quality Gate Checklist
 
 - [ ] All 6 slides strictly follow the 6-slide narrative arc (Hook → Problem → Agitation → Solution → Feature → CTA).
-- [ ] Aspect ratio is strictly 9:16 (768×1376), encoded as JPG.
-- [ ] Bottom 20% safe zone is completely free of text or logos.
+- [ ] Aspect ratio is strictly 9:16 (768×1376 or 1080×1920), encoded as JPG.
+- [ ] Aspect ratio validated via `aspect-ratio-guard` CLI against target platform preset (9:16 for TikTok/Reels, 1:1 or 4:5 for Feed).
+- [ ] Bottom 20% and top 15% safe zones are completely free of text or logos.
 - [ ] Slides 2–6 visually inherit styling from Slide 1 via image-to-image reference conditioning.
 - [ ] Auto-trending music enabled (`auto_add_music=true`) for TikTok algorithmic ranking.
 - [ ] Credentials strictly loaded from environment variables (`GEMINI_API_KEY`, `UPLOADPOST_TOKEN`).
