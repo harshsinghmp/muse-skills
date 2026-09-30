@@ -411,6 +411,32 @@ describe("Invocation UX & conventions", () => {
     expect(switchRes.stdout).toContain("client-alpha");
     expect(switchRes.stdout).toContain("client-beta");
   });
+
+  test("qa-launch regression mode and visual-audit CLI verify multi-viewport safety", () => {
+    const regrPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/references/regression.md");
+    expect(fs.existsSync(regrPath)).toBe(true);
+    const content = fs.readFileSync(regrPath, "utf8");
+    expect(content).toContain("Multi-Viewport Visual Regression & Layout Overflow Protocol");
+    expect(content).toContain("The 3-Tier Viewport Verification Standard");
+    expect(content).toContain("Zero Horizontal Layout Shift (X-Overflow)");
+
+    const scriptPath = "skills/agency-delivery/qa-launch/scripts/visual-audit.ts";
+    const tempHtml = path.join(REPO_ROOT, "tmp-test-overflow.html");
+    try {
+      fs.writeFileSync(tempHtml, '<div class="w-[600px] z-[99999]"><button class="h-4">Click</button></div>', "utf8");
+      const res = spawnSync("bun", [scriptPath, "--check-markup", tempHtml, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(res.status).toBe(0);
+      const report = JSON.parse(res.stdout);
+      expect(report.isPassing).toBe(false);
+      expect(report.totalDefects).toBeGreaterThanOrEqual(2);
+      expect(report.defects.some((d: { severity: string }) => d.severity === "BLOCKING")).toBe(true);
+    } finally {
+      if (fs.existsSync(tempHtml)) fs.unlinkSync(tempHtml);
+    }
+  });
 });
 
 describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention & CREDITS.md Integrity (TDD)", () => {
