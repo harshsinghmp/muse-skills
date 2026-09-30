@@ -270,9 +270,32 @@ offers. If none is available, sample from the highest-resolution view and mark t
 
 ---
 
+## 🛡️ The Design Token Fence & Strict Arbitrary Bracket Filter
+
+When translating Figma designs, UI mockups, or screenshots into frontend code, AI agents routinely hallucinate arbitrary Tailwind/CSS bracket values (e.g. `w-[347px]`, `text-[#334155]`, `p-[17px]`, `rounded-[7px]`). This creates severe layout brittleness, breaks theme switching, and destroys responsiveness.
+
+### The 4-Tier Token Snapping Invariant
+Never emit raw pixel brackets when a system token or standard scale step exists:
+
+| Raw Hallucination | Failure Mode | Snapped Design Token | Rationale |
+|:---|:---|:---|:---|
+| `text-[#1e293b]`, `bg-[#f8fafc]` | Hardcoded color bypassing dark mode & brand palette | `text-foreground`, `text-slate-800`, `bg-background` | Theme token preserves contrast & dark mode |
+| `w-[375px]`, `w-[720px]` | Fixed pixel width causing horizontal overflow on mobile | `max-w-xs`, `max-w-screen-md`, `w-full max-w-sm` | Fluid container prevents viewport clipping |
+| `p-[17px]`, `gap-[13px]`, `mt-[23px]` | Arbitrary spacing breaking 4pt/8pt rhythm | `p-4` (16px) or `p-5` (20px), `gap-3` (12px), `mt-6` (24px) | Snapping to standard spacing scale restores grid harmony |
+| `rounded-[7px]`, `rounded-[11px]` | Micro-misalignments in corner radius | `rounded-md` (6px/8px) or `rounded-lg` (8px/12px) | Preserves visual consistency across form controls |
+| `text-[17px]`, `text-[26px]` | Rigid font sizes failing mobile readability | `text-base` (16px) or `text-lg` (18px), `text-2xl` (24px) | Preserves standard modular typographic scale |
+
+### The Fluid Typography & Spacing Fallback
+When a bespoke dimension is mathematically required for hero layouts or dynamic aspect ratios, use fluid `clamp()` tokens rather than static pixel widths:
+- Fluid headline: `text-[clamp(1.75rem,4vw+1rem,3.5rem)]`
+- Fluid section padding: `py-[clamp(3rem,6vw+1rem,7rem)]`
+
+---
+
 ## Golden rule
 
 > A short and honest system is better than a long and invented one.
 
 If you only identified 4 colors with confidence, report 4 colors. Don't fill to 10 "because
 there usually are 10". The consumer of the `design.md` trusts what you document.
+
