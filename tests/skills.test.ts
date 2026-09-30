@@ -623,6 +623,26 @@ describe("Invocation UX & conventions", () => {
       expect(pruneData.prunedMessages.some((m: { content: string }) => m.content.includes("[Context Pruned:"))).toBe(
         true,
       );
+
+      // Verify invoicing reference standards
+      const invoicePath = path.join(REPO_ROOT, "skills/agency-delivery/accounts/references/invoicing.md");
+      expect(fs.existsSync(invoicePath)).toBe(true);
+      const invoiceContent = fs.readFileSync(invoicePath, "utf8");
+      expect(invoiceContent).toContain("The Deposit-Before-Code Invariant");
+      expect(invoiceContent).toContain("7-Day Deemed Acceptance Clause");
+      expect(invoiceContent).toContain("Automated Retainer Overage Meter");
+      expect(invoiceContent).toContain("Cross-Border Tax Zero-Rating & Withholding Shield");
+
+      // Test --retainer-status CLI
+      const retainerRes = spawnSync("bun", [scriptPath, "--retainer-status", "client-acme", "100.00", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(retainerRes.status).toBe(0);
+      const retainerData = JSON.parse(retainerRes.stdout);
+      expect(retainerData.status).toBeDefined();
+      expect(retainerData.percentUsed).toBeDefined();
+      expect(retainerData.monthlyAllowanceUsd).toBe(100);
     } finally {
       if (fs.existsSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"))) {
         fs.unlinkSync(path.join(REPO_ROOT, ".agents/context/token-ledger.json"));

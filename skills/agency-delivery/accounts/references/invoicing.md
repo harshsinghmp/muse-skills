@@ -39,9 +39,18 @@ A formatted, statutory-compliant invoice specification (Markdown/CSV), digital p
    - **T+7 Days (Delivery Notice)**: *"Hi [Client], Invoice #INV-XXXX is 7 days past due. Per our Master Services Agreement, active project staging deployments and sprint milestones are queued to pause if unpaid by T+10. Please settle today to keep momentum on schedule."*
    - **T+14 Days (Hard Delivery Pause)**: *"Hi [Client], work on project [Name] is temporarily suspended until outstanding Invoice #INV-XXXX is cleared. Once payment is confirmed, development resumes within 24 hours."*
 
+4. **The Deposit-Before-Code Invariant & Deemed Acceptance Standards**:
+   - **The Deposit-Before-Code Invariant**: Hard prohibition against writing or committing production code before upfront deposit settlement. If a client requests immediate kickoff before wire clearance, require instant payment via credit card or Virtual Account / UPI payment link.
+   - **7-Day Deemed Acceptance Clause**: SOWs and milestone invoices must include the statutory clause: *"Upon delivery to staging, client has 7 business days to provide reproducible defect reports. In the absence of written reports within 7 business days, the deliverable is legally deemed approved and final milestone balance is due."*
+   - **Automated Retainer Overage Meter**: When monthly retainer consumption reaches 80% of contracted hours or compute budget, emit an automated overage alert with approval for an additional hour block.
+   - **Cross-Border Tax Zero-Rating & Withholding Shield**: Ensure all international invoices carry statutory export notation (e.g. *"Export of Services under LUT without payment of IGST"* or *"EU Reverse Charge VAT"*). Collect Tax Residency Certificate (TRC) and Form 10F/W-8BEN to block surprise foreign tax deductions at source.
+
 ## Quality gate
 
 - [ ] Upfront deposit invoice cleared before any creative or engineering delivery starts.
+- [ ] 7-day deemed acceptance clause included on all milestone invoices.
+- [ ] Retainer overage meter monitored at 80% warning threshold.
+- [ ] Cross-border export zero-rating notation verified (LUT / reverse charge).
 - [ ] Invoice contains unique sequential ID, issuance date, due date, and full tax identifiers.
 - [ ] Digital payment link provided alongside wire details.
 - [ ] Payment terms set to Net 7 or Net 14 (Net 30 carries financing fee).
