@@ -32,9 +32,36 @@ Content model (types, fields, validation), CMS integration with typed frontend q
    - Implement webhooks (`publish_post`, `save_post`) triggering on-demand Incremental Static Regeneration (ISR) or cache tag purges.
    - Enforce Redis Object Caching for database query transient caching.
 
+## 🏛️ The CMS-First Cohesion Invariant (Universal Rule)
+
+Whenever a Content Management System (CMS) or Visual Page Builder is present in the project stack, the agency adheres to the **CMS-First Cohesion Invariant**:
+
+### 1. Zero Hardcoding & CMS Cohesion
+- **Dynamic Content & Sections**: All pages, sections, marketing copy, media assets, navigation links, and configurable component options must be defined and created inside the CMS schema or visual builder fields.
+- **Client Editability**: Non-technical clients must be able to edit, reorder, add, or disable sections directly through the CMS/builder interface without developer intervention or touching code.
+- **Universal Builder & CMS Coverage**: Applies to any headless or coupled stack configured in the repository context (`.agents/context/stack.md`):
+  - *WordPress*: Elementor, Gutenberg Block Patterns / FSE, Bricks Builder, ACF Pro flexible content.
+  - *Astro*: Emdash, Aria Builder, Decap/Tina CMS, Content Collections with CMS schemas.
+  - *Next.js / SolidJS*: Payload CMS, Sanity, Strapi, Storyblok, Contentful.
+  - *React*: Puck Visual Builder, Builder.io, Plasmic.
+
+### 2. Styling, Tokens & Custom Code Scoping
+- **Central Design Tokens**: Global design tokens (OKLCH color palettes, fluid typography `clamp()`, spacing scales) reside in the central stylesheet (`globals.css` / `tokens.css`) or the CMS/builder's global theme style kit.
+- **Builder CSS/JS Placement**: When styling custom widgets, templates, or page sections within visual builders (Elementor, Puck, Aria Builder), styles must be placed inside the page builder's designated custom CSS/JS fields or component-scoped style modules — never scattered as arbitrary inline styles or disconnected ad-hoc style sheets.
+- **Token Class Reuse**: Reuse atomic utility classes and CSS variables generated from central tokens inside the builder settings rather than hardcoding arbitrary pixel values or hex codes.
+
+### 3. Pre-Execution User Escalation Gate
+- If a requested feature, layout, or capability **cannot** be implemented natively inside the CMS or visual builder:
+  1. **Stop & Alert**: The agent must explicitly halt and notify the user *before* writing code.
+  2. **Present Technical Trade-off**: Explain why the CMS/builder cannot accommodate the feature (e.g. lack of field primitives, severe builder DOM performance degradation, complex server-side streaming requirement).
+  3. **Offer Clean Architectural Alternatives**: Present the proposed code-level bypass (custom micro-app, headless API route, or shortcode bridge) and await explicit confirmation before proceeding.
+
 ## Quality gate
 
 - [ ] Content types modeled for reuse (components, not one-offs).
+- [ ] CMS-First Cohesion verified: all editable content and sections wired to CMS fields/schemas.
+- [ ] Styles and tokens adhere to global tokens or builder custom CSS sections; no hardcoded styling bypass.
+- [ ] Pre-execution escalation triggered if any feature requires escaping CMS/builder boundaries.
 - [ ] Frontend queries typed.
 - [ ] Preview works at real routes.
 - [ ] Import verified by count + spot-check.

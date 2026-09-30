@@ -25,6 +25,8 @@ Working API endpoints / schema changes with validation at boundaries, auth enfor
 - [ ] Input validated at the boundary (schema or equivalent).
 - [ ] DB constraints back the app-level rules.
 - [ ] AuthZ enforced per resource, not per route.
+- [ ] Contact/lead forms protected by 4-layer anti-spam (Honeypot + Turnstile + Zod + Rate Limiting).
+- [ ] Edge runtime boundaries verified: zero Node stdlib (`node:fs`, `node:child_process`) or native C++ binaries in edge routes.
 - [ ] Failure paths return proper status codes and safe errors (no internals leaked) — worded for non-technical callers (what happened, why, what to do).
 - [ ] Tests exercise real paths.
 
@@ -96,6 +98,41 @@ export async function handleWebhook(rawBody: Buffer, signature: string, secret: 
   }
 }
 ```
+
+---
+
+## 🛑 Form Spam Defense & Lead Flood Protection
+
+Agency client websites, contact forms, and lead funnels are targeted by high-frequency automated bots that burn webhook credits (Zapier/Make), pollute CRM pipelines, and trigger email blacklisting. All forms must deploy the **4-Layer Anti-Spam Barrier**:
+
+### 1. The 4-Layer Form Defense Stack
+1. **Zero-Friction Client CAPTCHA (Cloudflare Turnstile)**:
+   - Embed `<Turnstile sitekey={KEY} />` on client submission.
+   - Verify server-side via `POST https://challenges.cloudflare.com/turnstile/v0/siteverify` using `crypto.timingSafeEqual` or JSON validation before touching database or notifications.
+2. **Invisible Honeypot Trap**:
+   - Render an input with `name="website_url_hp"`, `tabIndex="-1"`, `aria-hidden="true"`, and `display: none`.
+   - If populated, bots automated fill filled it. Return immediate fake success (`{ success: true }`) without processing, alerting, or storing.
+3. **Strict Boundary Zod Sanitization**:
+   - Enforce minimum/maximum string lengths (e.g. name 2–60 chars, message 10–2,000 chars).
+   - Strip raw HTML tags, script injection patterns, and validate email syntax against known disposable temporary email providers.
+4. **IP Sliding-Window Rate Limiting**:
+   - Rate limit requests per IP (e.g. max 5 submissions per 15 minutes) using Redis, Cloudflare KV, or memory store to mitigate distributed volumetric floods.
+
+---
+
+## ⚡ Edge vs. Node Runtime Boundary Guard
+
+Modern deployment targets (Cloudflare Workers, Vercel Edge, Fastly Compute, Netlify Edge) execute within isolated V8 JavaScript runtimes rather than standard Node.js runtime environments:
+
+### 1. Forbidden Primitives in Edge Runtime
+- **Node.js Core Modules**: Never import `node:fs`, `node:child_process`, `node:net`, `node:tls`, `node:os`, or `node:worker_threads`.
+- **Native C++ Binaries**: Never depend on packages requiring Node-API / `node-gyp` native binaries (e.g. `bcrypt`, `sharp`, `canvas`, `sqlite3`).
+  - *Password Hashing*: Replace `bcrypt` with `bcryptjs` or Web Crypto API (`crypto.subtle`).
+  - *Image Processing*: Replace `sharp` with WebAssembly image pipelines or Cloudflare/Vercel Image Optimization APIs.
+  - *Database Drivers*: Use HTTP/WebSocket edge drivers (Neon serverless `@neondatabase/serverless`, Turso `@libsql/client`, Prisma Accelerate, or Supabase `supabase-js`).
+
+### 2. Mandatory Edge Invariant
+- Any file declaring `export const runtime = 'edge'` or running on Cloudflare Workers / Fastly must rely strictly on standard WHATWG APIs: `fetch`, `Request`, `Response`, `Headers`, `URL`, `crypto.subtle`, `TextEncoder`, and Streams.
 
 ---
 
