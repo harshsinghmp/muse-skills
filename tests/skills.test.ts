@@ -373,6 +373,44 @@ describe("Invocation UX & conventions", () => {
     expect(edgeScanRes.status).toBe(0);
     expect(edgeScanRes.stdout).toContain("Edge Runtime Boundary Scan");
 
+    // Test check pooling
+    const unpooledFile = path.join(tempDir, "api/route.ts");
+    fs.mkdirSync(path.join(tempDir, "api"), { recursive: true });
+    fs.writeFileSync(
+      unpooledFile,
+      "export async function GET() { const pool = new Pool(); return Response.json({ ok: true }); }",
+      "utf8",
+    );
+    const poolRes = spawnSync("bun", [scriptPath, "--check-pooling", tempDir, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(poolRes.status).toBe(0);
+    const poolReport = JSON.parse(poolRes.stdout);
+    expect(poolReport.safe).toBe(false);
+    expect(poolReport.violations.length).toBe(1);
+    expect(poolReport.violations[0].message).toContain("Direct unpooled DB client");
+
+    // Test presigned upload scaffold
+    const presignedRes = spawnSync("bun", [scriptPath, "--presigned-upload-scaffold", "s3"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(presignedRes.status).toBe(0);
+    expect(presignedRes.stdout).toContain("PutObjectCommand");
+    expect(presignedRes.stdout).toContain("ALLOWED_MIME_TYPES");
+    expect(presignedRes.stdout).toContain("MAX_FILE_SIZE_BYTES");
+
+    // Test widget scaffold
+    const widgetRes = spawnSync("bun", [scriptPath, "--widget-scaffold", "client-feedback-widget"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(widgetRes.status).toBe(0);
+    expect(widgetRes.stdout).toContain('attachShadow({ mode: "open" })');
+    expect(widgetRes.stdout).toContain("ClientFeedbackWidget");
+    expect(widgetRes.stdout).toContain("all: initial");
+
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
@@ -380,6 +418,7 @@ describe("Invocation UX & conventions", () => {
     const cmsPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/cms.md");
     const backendPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/backend.md");
     const migrationsPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/migrations.md");
+    const frontendPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/frontend.md");
 
     const cmsContent = fs.readFileSync(cmsPath, "utf8");
     expect(cmsContent).toContain("The CMS-First Cohesion Invariant");
@@ -390,6 +429,13 @@ describe("Invocation UX & conventions", () => {
     expect(backendContent).toContain("Form Spam Defense & Lead Flood Protection");
     expect(backendContent).toContain("Zero-Friction Client CAPTCHA (Cloudflare Turnstile)");
     expect(backendContent).toContain("Edge vs. Node Runtime Boundary Guard");
+    expect(backendContent).toContain("Singleton Connection Pool & Serverless Starvation Guard");
+    expect(backendContent).toContain("Atomic Multi-Table Transaction Invariant");
+    expect(backendContent).toContain("Hardened Direct-to-Storage Presigned Upload Standard");
+    expect(backendContent).toContain("Idempotent Webhook Processing Standard");
+
+    const frontendContent = fs.readFileSync(frontendPath, "utf8");
+    expect(frontendContent).toContain("Isolated Widget Standard (Shadow DOM & CSS Scoping for Embeddables)");
 
     const migrationsContent = fs.readFileSync(migrationsPath, "utf8");
     expect(migrationsContent).toContain("The Non-Destructive Database Migration Protocol");
