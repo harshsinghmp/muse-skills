@@ -162,6 +162,21 @@ Accidental environment pollution occurs when developers copy configurations, dat
    Turns a blocked milestone into an empirical calendar date, not a subjective guess.
 3. **Dynamic Re-sequencing**: When a new engagement lands, re-compute utilization, reschedule the lowest-priority-at-risk milestone first, and notify the affected client before the deadline passes.
 
+## 7.5. Graceful Shutdown & Liveness Probe Standard
+
+Production web applications, microservices, and background queue workers must never crash or terminate abruptly during rolling deploys or container restarts:
+
+### Mandatory Service Lifecycle Invariants:
+1. **Dual Liveness & Readiness Probes (`/api/health`)**:
+   - `/api/health/live`: Fast, lightweight HTTP 200 ping confirming the Node/Bun process event loop is responsive.
+   - `/api/health/ready`: Deep dependency check verifying active connectivity to database, Redis cache, and message queues. If dependencies fail, return `HTTP 503 Service Unavailable` to prevent load balancers from routing customer traffic to the failing instance.
+2. **Graceful Termination Handlers (`SIGTERM` / `SIGINT`)**:
+   - Listen for termination signals (`process.on('SIGTERM', ...)`).
+   - Stop accepting new incoming HTTP requests immediately.
+   - Wait up to 30 seconds for in-flight requests and background transactions to finish.
+   - Close database pools and message queues before calling `process.exit(0)`.
+   - Force kill with `process.exit(1)` only if in-flight work exceeds the 30-second shutdown timeout.
+
 ---
 
 ## 8. Quality Gate

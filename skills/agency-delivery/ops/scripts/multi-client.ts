@@ -224,6 +224,97 @@ export function verifyEnvironmentUrls(
   };
 }
 
+export function scaffoldHealthCheck(framework: "express" | "nextjs" | "generic" = "nextjs"): string {
+  if (framework === "express") {
+    return `// Express.js Health Check & Graceful Termination Handler
+import express, { Request, Response } from "express";
+
+const app = express();
+let isShuttingDown = false;
+
+// 1. Liveness Probe (process is alive)
+app.get("/api/health/live", (req: Request, res: Response) => {
+  if (isShuttingDown) {
+    return res.status(503).json({ status: "shutting_down" });
+  }
+  res.status(200).json({ status: "alive", uptime: process.uptime() });
+});
+
+// 2. Readiness Probe (dependencies healthy)
+app.get("/api/health/ready", async (req: Request, res: Response) => {
+  if (isShuttingDown) {
+    return res.status(503).json({ status: "shutting_down" });
+  }
+  try {
+    // Check DB / Cache connection
+    // await db.query('SELECT 1');
+    res.status(200).json({ status: "ready", timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(503).json({ status: "unhealthy", error: String(err) });
+  }
+});
+
+// 3. Graceful Termination Handler
+const server = app.listen(process.env.PORT || 3000);
+
+const shutdown = (signal: string) => {
+  console.log(\`Received \${signal}. Initiating graceful shutdown...\`);
+  isShuttingDown = true;
+
+  server.close(() => {
+    console.log("HTTP server closed. Releasing resources...");
+    // Close DB pool or queue workers here
+    process.exit(0);
+  });
+
+  // Force shutdown if cleanup hangs past 30 seconds
+  setTimeout(() => {
+    console.error("Graceful shutdown timeout exceeded. Force exiting.");
+    process.exit(1);
+  }, 30000).unref();
+};
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
+`;
+  }
+
+  return `// Next.js App Router Health Check Endpoint (app/api/health/route.ts)
+import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const probeType = searchParams.get("type") || "live";
+
+  if (probeType === "live") {
+    return NextResponse.json({
+      status: "alive",
+      uptime: process.uptime(),
+      memoryRssBytes: process.memoryUsage().rss,
+    });
+  }
+
+  // Deep readiness probe
+  try {
+    // Verify database connectivity
+    // await db.execute(sql\`SELECT 1\`);
+    return NextResponse.json({
+      status: "ready",
+      database: "connected",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { status: "unhealthy", error: error instanceof Error ? error.message : "Service Unavailable" },
+      { status: 503 },
+    );
+  }
+}
+`;
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -273,9 +364,13 @@ if (import.meta.main) {
         process.exit(1);
       }
     }
+  } else if (args.includes("--scaffold-health")) {
+    const idx = args.indexOf("--scaffold-health");
+    const framework = (args[idx + 1] || "nextjs") as "express" | "nextjs" | "generic";
+    console.log(scaffoldHealthCheck(framework));
   } else {
     console.log(
-      "Usage: bun multi-client.ts [--verify-boundary [dir]] [--switch-context <fromClient> <toClient>] [--check-urls [dir] [--env prod|staging]]",
+      "Usage: bun multi-client.ts [--verify-boundary [dir]] [--switch-context <fromClient> <toClient>] [--check-urls [dir] [--env prod|staging]] [--scaffold-health <nextjs|express>]",
     );
   }
 }
