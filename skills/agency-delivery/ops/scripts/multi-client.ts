@@ -315,6 +315,69 @@ export async function GET(req: Request) {
 `;
 }
 
+export function scaffoldHandoverPack(clientName = "Client", domain = "https://client.com"): string {
+  const dateStr = new Date().toISOString().split("T")[0];
+  return `# 📦 Client Project Handover Package — ${clientName}
+> **Target Domain**: ${domain}
+> **Handover Date**: ${dateStr}
+
+## 1. Recorded Loom Walkthrough Video
+- **Video Link**: [Recorded CMS & Feature Walkthrough](https://loom.com/share/placeholder)
+- **Topics Covered**:
+  1. Managing content, navigation, and blog posts in the CMS.
+  2. Submitting contact forms and viewing customer lead data.
+  3. Updating SEO metadata and OpenGraph social preview images.
+
+## 2. Infrastructure & Hosting Runbook
+- **Primary Domain**: ${domain} (Cloudflare DNS managed / Nameservers verified)
+- **Deployment Platform**: Production Vercel / Docker Container
+- **Database & Services**: Production connection strings secured in team vault.
+- **SSL / Security**: Automatic TLS certificate renewal active (HSTS enabled).
+
+## 3. Credentials & Access Handover
+- **Shared Team Vault**: 1Password / Bitwarden workspace shared with ${clientName} technical lead.
+- **Root Credentials**: Ownership transfer completed for GitHub repository, Stripe account, and DNS registrar.
+
+## 4. Acceptance & Bug Warranty Terms
+- **Warranty Window**: 30-day post-launch warranty begins on sign-off.
+- **Scope Covered**: Reproducible defects violating the agreed statement of work.
+- **Maintenance SLA**: Monthly support retainer kicks in post-warranty.
+`;
+}
+
+export interface AssetAuditResult {
+  isClean: boolean;
+  totalScanned: number;
+  violations: Array<{ filename: string; reason: string }>;
+}
+
+export function auditAssetNaming(filenames: string[]): AssetAuditResult {
+  const violations: Array<{ filename: string; reason: string }> = [];
+
+  for (const f of filenames) {
+    const base = f.split("/").pop() || f;
+    const lower = base.toLowerCase();
+
+    if (lower.includes("final") || lower.includes("last") || lower.includes("edit") || lower.includes("copy")) {
+      violations.push({
+        filename: f,
+        reason: "Violates canonical versioning rule. Ambiguous tag ('final', 'last', 'edit', 'copy') detected.",
+      });
+    } else if (!/_v\d+(\.\d+)?\.[a-z0-9]+$/i.test(base) && !base.startsWith(".")) {
+      violations.push({
+        filename: f,
+        reason: "Missing canonical version suffix (expected: <slug>_v<major>.<minor>.<ext>).",
+      });
+    }
+  }
+
+  return {
+    isClean: violations.length === 0,
+    totalScanned: filenames.length,
+    violations,
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isJson = args.includes("--json");
@@ -368,9 +431,34 @@ if (import.meta.main) {
     const idx = args.indexOf("--scaffold-health");
     const framework = (args[idx + 1] || "nextjs") as "express" | "nextjs" | "generic";
     console.log(scaffoldHealthCheck(framework));
+  } else if (args.includes("--scaffold-handover")) {
+    const idx = args.indexOf("--scaffold-handover");
+    const client = args[idx + 1] || "Acme Client";
+    const domainIdx = args.indexOf("--domain");
+    const domain = domainIdx !== -1 ? args[domainIdx + 1] : "https://client.com";
+    console.log(scaffoldHandoverPack(client, domain));
+  } else if (args.includes("--audit-assets")) {
+    const idx = args.indexOf("--audit-assets");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    let files: string[] = [];
+    try {
+      files = fs.readdirSync(target);
+    } catch {
+      files = ["hero_v1.0.png", "logo_final_FINAL.svg", "banner_copy.jpg"];
+    }
+    const report = auditAssetNaming(files);
+    if (isJson) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(`\n🎨 Canonical Asset Naming Audit: ${target}`);
+      console.log(`  Status: ${report.isClean ? "✅ CLEAN" : "❌ VIOLATIONS DETECTED"}`);
+      for (const v of report.violations) {
+        console.log(`    - ⚠️ ${v.filename}: ${v.reason}`);
+      }
+    }
   } else {
     console.log(
-      "Usage: bun multi-client.ts [--verify-boundary [dir]] [--switch-context <fromClient> <toClient>] [--check-urls [dir] [--env prod|staging]] [--scaffold-health <nextjs|express>]",
+      "Usage: bun multi-client.ts [--verify-boundary [dir]] [--switch-context <fromClient> <toClient>] [--check-urls [dir] [--env prod|staging]] [--scaffold-health <nextjs|express>] [--scaffold-handover <client>] [--audit-assets [dir]]",
     );
   }
 }

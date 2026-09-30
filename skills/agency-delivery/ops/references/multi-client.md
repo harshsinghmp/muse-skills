@@ -177,6 +177,38 @@ Production web applications, microservices, and background queue workers must ne
    - Close database pools and message queues before calling `process.exit(0)`.
    - Force kill with `process.exit(1)` only if in-flight work exceeds the 30-second shutdown timeout.
 
+## 7.6. Shared Credential & MFA Vaulting Standard
+
+Production credentials must never depend on an individual stakeholder's personal device:
+
+### Mandatory Credential Invariants:
+1. **Ban on Personal Phone SMS/Authenticator 2FA**:
+   - Production services (Vercel, AWS, Cloudflare, Stripe, GitHub, DNS) must not route 2FA to a single founder's or client CEO's personal smartphone.
+   - All shared credentials must reside in an agency team password manager (1Password or Bitwarden) with shared TOTP authentication.
+2. **Emergency Break-Glass Seeds**:
+   - For all root accounts, store recovery backup codes inside an encrypted, access-audited break-glass vault with multi-party access.
+
+## 7.7. Canonical Asset Versioning & Remote WIP Push Invariant
+
+Prevent asset chaos and contractor work abandonment in distributed teams:
+
+### Mandatory Asset & Git Invariants:
+1. **Canonical Asset Path & Version Schema**:
+   - Assets must follow the immutable pattern: `<project>/assets/<category>/<asset-slug>_v<major>.<minor>.<ext>`
+   - Complete ban on synthetic or ambiguous naming: `final.png`, `FINAL_v2.pdf`, `new_banner_edit.jpg`.
+2. **Contractor Daily Remote WIP Push Rule**:
+   - Remote contractors and subagents must commit and push all in-progress work to a remote feature branch (`feat/*` or `wip/*`) at the end of every working day.
+   - Zero billable hours may be approved for code residing solely on a contractor's local laptop.
+
+## 7.8. Post-Launch Handover Package Protocol
+
+Every client delivery must conclude with a standardized self-serve handover package to eliminate perpetual support pings:
+
+### Handover Package Deliverables:
+1. **Recorded Loom Video Walkthrough**: 5–10 minute recorded walkthrough showing client editors how to update copy, publish blog posts, and modify CMS fields.
+2. **DNS & Hosting Runbook**: Documented nameservers, SSL renewals, registrar ownership, and environment variable descriptions.
+3. **Formal Acceptance Sign-Off**: Written confirmation of deliverable receipt triggering the 30-day bug warranty countdown.
+
 ---
 
 ## 8. Quality Gate
