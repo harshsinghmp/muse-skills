@@ -1075,6 +1075,85 @@ tags: [ai, dev]
     expect(szData.bottomForbiddenZone).toContain("20%");
   });
 
+  test("analytics tracking mode and utm-sanitizer CLI build canonical URLs and scrub PII", () => {
+    const trackingPath = path.join(REPO_ROOT, "skills/agency-delivery/analytics/references/tracking.md");
+    expect(fs.existsSync(trackingPath)).toBe(true);
+    const content = fs.readFileSync(trackingPath, "utf8");
+    expect(content).toContain("UTM Parameter Hygiene & Anti-Fragmentation Standards");
+    expect(content).toContain("utm-sanitizer.ts");
+
+    const scriptPath = "skills/agency-delivery/analytics/scripts/utm-sanitizer.ts";
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("UTM Tag Sanitizer & Campaign Link Builder");
+
+    // 1. Build canonical campaign URL
+    const buildRes = spawnSync(
+      "bun",
+      [
+        scriptPath,
+        "--build",
+        "--url",
+        "https://agency.com/services",
+        "--source",
+        "LinkedIn",
+        "--medium",
+        "Organic-Social",
+        "--campaign",
+        "Q4 Growth",
+        "--json",
+      ],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(buildRes.status).toBe(0);
+    const buildData = JSON.parse(buildRes.stdout);
+    expect(buildData.url).toBe(
+      "https://agency.com/services?utm_source=linkedin&utm_medium=organic-social&utm_campaign=q4-growth",
+    );
+
+    // 2. Sanitize raw URL with casing issues and PII leak
+    const sanitizeRes = spawnSync(
+      "bun",
+      [
+        scriptPath,
+        "--sanitize",
+        "https://agency.com/page?utm_source=Twitter &utm_medium=Social_Post&email=ceo@client.com",
+        "--json",
+      ],
+      { encoding: "utf8", cwd: REPO_ROOT },
+    );
+    expect(sanitizeRes.status).toBe(0);
+    const sanitizeData = JSON.parse(sanitizeRes.stdout);
+    expect(sanitizeData.strippedPii).toContain("email=ceo@client.com");
+    expect(sanitizeData.sanitizedUrl).not.toContain("ceo@client.com");
+    expect(sanitizeData.cleanUtms.utm_source).toBe("twitter");
+    expect(sanitizeData.cleanUtms.utm_medium).toBe("social-post");
+
+    // 3. Audit file with internal UTM link trap
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "analytics-utm-test-"));
+    try {
+      const urlFile = path.join(tempDir, "links.txt");
+      fs.writeFileSync(
+        urlFile,
+        "https://agency.com/pricing?utm_source=nav\nhttps://google.com?utm_source=newsletter&utm_medium=email&utm_campaign=launch\n",
+        "utf8",
+      );
+      const auditRes = spawnSync(
+        "bun",
+        [scriptPath, "--audit", urlFile, "--site-host", "agency.com", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      const auditData = JSON.parse(auditRes.stdout);
+      expect(auditData.internalUtmTraps).toBe(1);
+      expect(auditData.invalid).toBeGreaterThanOrEqual(1);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("devops hosting mode and docker-audit CLI enforce multi-stage builds and layer cache order", () => {
     const hostingPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/hosting.md");
     expect(fs.existsSync(hostingPath)).toBe(true);
