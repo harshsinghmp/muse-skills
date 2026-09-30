@@ -24,7 +24,7 @@ Audit our signup funnel, find the drop-off, and run a CRO test on the pricing pa
 
 | Mode | Request it with | Deliverable |
 |:---|:---|:---|
-| **tracking** | analytics/event tracking setup | Tracking: a decision-driven event plan, implemented and verified live. |
+| **tracking** | analytics/event tracking setup | Tracking: a decision-driven event plan, UTM parameter sanitizer, implemented and verified live. |
 | **dashboards** | KPI dashboard | Dashboards: a KPI view designed for the decisions its audience makes. |
 | **attribution** | marketing attribution | Attribution: channel contribution with honest limits, not last-click alone. |
 | **reporting** | performance reporting | Reporting: recurring performance reports that end in decisions. |

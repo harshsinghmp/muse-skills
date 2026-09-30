@@ -4,7 +4,7 @@ aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attributio
 description: "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through five modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics)."
 argument-hint: "[tracking|dashboards|attribution|reporting|cro]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 30
-  aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attribution", "cro", "reporting"]
+  aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attribution", "cro", "reporting", "utm-sanitizer", "utm-builder"]
   suggested_skills: ["seo", "paidads", "webdev", "growth"]
   hermes:
-    tags: ["analytics", "tracking", "ga4", "events", "dashboards", "kpis", "attribution", "reporting", "cro", "experimentation", "ab-testing", "funnels", "conversion"]
+    tags: ["analytics", "tracking", "ga4", "events", "dashboards", "kpis", "attribution", "reporting", "cro", "experimentation", "ab-testing", "funnels", "conversion", "utm", "utm-sanitizer"]
     related_skills: ["seo", "paidads", "webdev", "growth"]
     suggested_skills: ["seo", "paidads", "webdev", "growth"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["seo", "paidads", "webdev", "growth"]
-    primary_triggers: ["set up analytics", "event tracking", "build a dashboard", "attribution", "marketing report", "increase conversions", "cro audit", "kpi dashboard"]
+    primary_triggers: ["set up analytics", "event tracking", "build a dashboard", "attribution", "marketing report", "increase conversions", "cro audit", "kpi dashboard", "utm sanitizer", "utm tag normalizer", "campaign link builder"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -39,7 +39,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
-| **tracking** | "set up tracking", "GA4 events", "GTM", "event tracking", "tag setup", "dream funnel", "developer funnel", "telemetry" | Event/tag plan, DREAM developer adoption telemetry, and live verification | [references/tracking.md](references/tracking.md) |
+| **tracking** | "set up tracking", "GA4 events", "GTM", "event tracking", "tag setup", "dream funnel", "developer funnel", "telemetry", "utm tags" | Event/tag plan, DREAM developer adoption telemetry, UTM parameter sanitizer, and live verification | [references/tracking.md](references/tracking.md) |
 | **dashboards** | "build a dashboard", "looker studio", "kpi dashboard", "reporting view", "ndr", "net developer retention", "developer metrics" | KPI and Net Developer Retention (NDR) dashboards built for a decision-making audience | [references/dashboards.md](references/dashboards.md) |
 | **attribution** | "attribution", "which channel converts", "marketing mix", "hero channel" | Multi-touch attribution and channel contribution analysis | [references/attribution.md](references/attribution.md) |
 | **reporting** | "marketing report", "monthly report", "performance report", "client report" | Recurring performance reports that end in decisions | [references/reporting.md](references/reporting.md) |

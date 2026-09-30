@@ -41,6 +41,11 @@ When instrumenting developer tools, APIs, open-source libraries, or CLI agents, 
 9. Enforce Zero-Leak Telemetry Protocol (Vibeguard Protocol):
 - Never capture, transmit, or store source code, environment variables, API tokens (`sk-*`, `ghp_*`), database URLs, local file paths with usernames, or PII.
 - Only transmit anonymized metadata: hashed machine ID, OS platform, package version, command duration, and sanitized error categories.
+10. Enforce UTM Parameter Hygiene & Anti-Fragmentation Standards:
+- **Canonical Lowercase & Slugification**: Always lowercase and hyphenate `utm_source`, `utm_medium`, and `utm_campaign` to prevent GA4 channel fragmentation into `(Other)`.
+- **Standard GA4 Mediums**: Enforce recognized mediums (`cpc`, `organic`, `organic-social`, `paidsocial`, `email`, `referral`).
+- **Zero Internal UTMs**: Strictly ban UTM parameters on internal site navigation (resets sessions and overwrites user attribution).
+- **PII Scrubbing**: Automatically scrub user emails, phone numbers, and auth tokens from URL search parameters (`utm-sanitizer.ts`).
 
 ## Quality gate
 
@@ -52,6 +57,7 @@ When instrumenting developer tools, APIs, open-source libraries, or CLI agents, 
 - [ ] For developer tools: DREAM adoption stages mapped (Discover, Research, Evaluate, Adopt, Monetize).
 - [ ] TTFV (Time to First Value) latency instrumented with < 15 minute target.
 - [ ] Telemetry sanitization verified: zero source code, secrets, or PII transmitted.
+- [ ] Campaign URLs sanitized via `utm-sanitizer` CLI: strictly lowercased, standard mediums, zero internal UTM traps, zero PII query leaks.
 
 ## Sources
 
