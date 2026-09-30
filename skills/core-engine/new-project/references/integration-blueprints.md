@@ -113,3 +113,30 @@ owns authoring + scheduling, the scheduler owns channel delivery.
 | Stripe / Razorpay / Medusa webhooks (signed verify) | `SKILL.md` Stage 3 — the HMAC-signing pattern above mirrors these |
 | Docker compose for Postgres/Redis | `SKILL.md` Stage 3 / `scripts/new-project.ts` (`--db=postgres`, Medusa) |
 | Vibeguard pre-commit secret defense | `SKILL.md` Stage 3 — keep in `.env.example`, never commit raw tokens |
+
+---
+
+## 5. Zero-Hardcoded-Strings CMS Hand-Off Blueprint (`CONTENT_MAP.md`)
+
+Web agency clients demand editable content without calling developers or touching Git. Hardcoding marketing copy into `.astro` or `.tsx` templates is strictly prohibited.
+
+### 1. The Schema-First Component Invariant
+- **Rule**: Every UI section (Hero, Features, Pricing, Testimonials, FAQ) must ingest copy from a typed schema:
+  - Astro: Content Collections via `getEntry()` or `getCollection()` from `src/content/`
+  - Next.js / Payload: Typed collections (`src/collections/Pages.ts`) or structured data (`src/data/site-copy.json`)
+  - Plain HTML: Data-driven template attributes (`data-copy-key="..."`) backed by a JSON dictionary
+
+### 2. The `CONTENT_MAP.md` Contract
+In Stage 5 of `new-project`, generate `.agents/brand/CONTENT_MAP.md` providing non-technical clients and copywriters with a directory of all editable copy:
+
+```markdown
+# 🗺️ Client Content Map: [Project Name]
+
+| UI Component | Visual Location | Content File / CMS Collection | Editable Fields |
+|:---|:---|:---|:---|
+| **Hero** | Top fold of Landing Page | \`src/content/pages/home.json\` | \`headline\`, \`subheadline\`, \`primaryCta.label\`, \`primaryCta.url\` |
+| **Features** | 3-Column Grid below Hero | \`src/content/features/*.md\` | \`title\`, \`description\`, \`icon\`, \`badge\` |
+| **Pricing** | Pricing Comparison Table | \`src/content/pricing.json\` | \`plans[].name\`, \`plans[].price\`, \`plans[].features[]\` |
+| **Testimonials**| Social Proof Carousel | \`src/content/testimonials/*.md\` | \`quote\`, \`authorName\`, \`authorRole\`, \`avatarUrl\` |
+| **Footer** | Global Page Bottom | \`src/data/navigation.json\` | \`copyrightNotice\`, \`legalLinks[]\`, \`socialHandles[]\` |
+```

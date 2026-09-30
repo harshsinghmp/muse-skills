@@ -4,7 +4,7 @@ aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
 description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Client Intake Brief with post-scaffold agent onboarding), and Stage 6 (Closeout). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Atomic Payload website builder, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
 argument-hint: "[scaffold|new-project|Agent-Engine|DOX-Engine]"
 user-invocable: true
-version: 2.6.0
+version: 2.7.0
 author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
@@ -243,6 +243,7 @@ The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled wi
 **Durable DOX Closeout (engine-run at scaffold)**:
 - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
 - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
+- Provisions `.agents/brand/CONTENT_MAP.md` establishing the Zero-Hardcoded-Strings CMS Hand-Off Blueprint (mapping UI components to content files or CMS collections for non-technical client editing).
 - Records initial shipped state in `.agents/context/current.md` and `.agents/context/architecture.md`.
 
 **Poka-Yoke Architectural Scaffolding Contracts**:

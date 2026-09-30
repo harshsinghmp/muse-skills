@@ -86,6 +86,7 @@ const { values, positionals } = parseArgs({
     auth: { type: "string" }, // better-auth | supabase | authjs | custom | none
     "custom-auth": { type: "string" },
     deploy: { type: "string" }, // cloudflare | docker | vercel | custom | none
+    "cms-contract": { type: "boolean", default: false },
     "skip-install": { type: "boolean", default: false },
     "no-cache": { type: "boolean", default: false },
     latest: { type: "boolean", default: false },
@@ -143,6 +144,7 @@ Options:
       --db <database>           Database: supabase | neon | postgres | sqlite | custom | none
       --auth <auth>             Authentication: better-auth | supabase | authjs | custom | none
       --deploy <target>         Deployment: cloudflare | docker | vercel | custom | none
+      --cms-contract            Generate .agents/brand/CONTENT_MAP.md zero-hardcoded-strings client copy contract
       --skip-install            Skip bun install during execution
       --no-cache                Always fetch latest upstream templates & bypass cache
       --latest                  Pin dependencies to latest upstream releases
@@ -160,6 +162,32 @@ const isNonInteractive = values["non-interactive"] || false;
 const skipInstall = values["skip-install"] || false;
 const noCache = values["no-cache"] || false;
 const useLatest = values.latest || false;
+
+if (values["cms-contract"] && !values.intent && !values.framework && !values.preset && !values.name) {
+  const targetDir = positionals[0]
+    ? resolve(process.cwd(), positionals[0])
+    : values.path
+      ? resolve(process.cwd(), values.path)
+      : process.cwd();
+  const brandDir = join(targetDir, ".agents", "brand");
+  if (!existsSync(brandDir) && !isDryRun) {
+    mkdirSync(brandDir, { recursive: true });
+  }
+  const contentMapPath = join(brandDir, "CONTENT_MAP.md");
+  const pName = basename(targetDir);
+  const contentMapSrc = join(TEMPLATES_DIR, ".agents/brand/CONTENT_MAP.md");
+  let content = "";
+  if (existsSync(contentMapSrc)) {
+    content = readFileSync(contentMapSrc, "utf8").replaceAll("{{PROJECT_NAME}}", pName);
+  } else {
+    content = `# 🗺️ Client Content Map: ${pName}\n\n> **Zero-Hardcoded-Strings Invariant**: Hardcoding marketing copy into UI templates is strictly prohibited.\n`;
+  }
+  if (!isDryRun) {
+    writeFileSync(contentMapPath, content, "utf8");
+  }
+  console.log(`✅ Provisioned: ${contentMapPath} (Zero-Hardcoded-Strings CMS Contract)`);
+  process.exit(0);
+}
 
 async function ask(rl: ReturnType<typeof createInterface>, question: string, defaultVal: string = ""): Promise<string> {
   const suffix = defaultVal ? ` [${defaultVal}]: ` : ": ";
@@ -2319,6 +2347,7 @@ async function main() {
       "messaging.md",
       "visual-identity.md",
       "social-hooks.md",
+      "CONTENT_MAP.md",
     ];
     for (const bf of brandFiles) {
       const src = join(brandSrc, bf);
@@ -6395,6 +6424,7 @@ input, button, textarea, select {
 - **Authentication**: ${config.auth.toUpperCase()}${config.customAuth ? ` (${config.customAuth})` : ""}
 - Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
 - Client intake brief provisioned at \`./Client-Intake/00-Intake-Brief.md\`.
+- Client content map provisioned at \`./.agents/brand/CONTENT_MAP.md\` (zero-hardcoded-strings contract).
 - Intake docs are produced by the AI agent from the brief after employee answers.
 
 ## 2. Live Deliverables & Key Artifacts
