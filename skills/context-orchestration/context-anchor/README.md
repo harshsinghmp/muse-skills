@@ -99,6 +99,16 @@ bun skills/context-orchestration/context-anchor/scripts/anchor.ts --deadlock-che
 
 # Automated Rollback: revert uncommitted churn to clean anchor state
 bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback
+
+# Interruption Recovery: Stash active in-flight task during urgent human interrupts
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --stash-task "api-refactor" \
+  --goal "Migrate user auth to JWT" --next-step "Implement token refresh route"
+
+# Resumption: Restore stashed task state and emit structured recovery context
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --unstash-task "api-refactor"
+
+# Context Health Gauge: Proactively detect stale anchors and stash accumulation
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --health-check
 ```
 
 ---
@@ -135,6 +145,8 @@ export interface SessionEnvelope { ... }
 - **Zero Filler**: Every line must be load-bearing; anchors stay ≤15 lines (excluding pinned block).
 - **AST Attention Pinning**: Pin critical interfaces (`--pin`) to prevent the U-shaped attention drop; never dump full 800-line service files.
 - **Ghost Task Verification**: Verify ground truth (`--verify`) via physical file existence, mtime, and git diff before claiming work is complete.
+- **Task Interruption Stashing**: Before context-switching to handle urgent interrupts, stash active goals and completed steps (`--stash-task`) to ensure zero context loss.
+- **Context Health Monitoring**: Regularly run `--health-check` to audit anchor age, prune task stashes, and verify context directories.
 - **Concrete Over Vague**: Exact file paths and line numbers (`src/auth/jwt.ts:42`).
 - **Decisions Include "Why"**: Capture rationale so future agents don't revert them.
 - **Include Ruled-Out Paths**: Prevent repeating failed experiments.
@@ -157,6 +169,7 @@ export interface SessionEnvelope { ... }
 
 - [Sample Anchor](examples/sample-anchor.md) — the default focus anchor with re-entry block.
 - [Sample Workstream Anchor](examples/sample-workstream-anchor.md) — parking, switching, and listing client lanes.
+- [Task Interruption & Recovery](references/task-interruption-and-recovery.md) — mid-task checkpointing, task stashes, and health gauge.
 - [AST Pinning Guide](references/ast-pinning-guide.md) — combating orientation burn & attention degradation.
 - [Attention Hygiene & Context Sinks](references/attention-hygiene.md) — preventing ContextEcho and ghost tasks.
 - [Observation Masking Guide](references/observation-masking.md) — preventing context drowning via structured receipts.
