@@ -105,9 +105,9 @@ AI coding agents optimize locally and frequently introduce "invisible agent debt
 
 ---
 
-## 🛡️ The 3 Resilience & Hygiene Quality Gates
+## 🛡️ The 4 Resilience & Hygiene Quality Gates
 
-Before any round or PR is accepted through the Gauntlet, it must pass three automated hygiene checks:
+Before any round or PR is accepted through the Gauntlet, it must pass four automated hygiene checks:
 
 ### 1. The Loud Failure Invariant (Zero Swallowed Errors)
 - **Anti-Pattern**: `try { ... } catch {}` or `catch (err) { /* ignore */ }`. Silent error swallowing causes blank white screens for clients while telemetry tools (Sentry, Datadog) report zero errors.
@@ -133,4 +133,13 @@ Before any round or PR is accepted through the Gauntlet, it must pass three auto
   - Reject trivial micro-packages (`is-odd`, `is-even`, `left-pad`, `is-number`).
   - Reject obsolete HTTP clients (`axios`, `request`, `superagent`) when standard WHATWG `fetch` is native in Node 18+, Bun, and browsers.
   - Reject legacy utilities (`querystring` -> use `URLSearchParams`; `moment` -> use `Intl` or `date-fns`; `rimraf`/`mkdirp` -> use `fs.rmSync`/`fs.mkdirSync`).
+
+### 4. The Client-Side Hydration & Timezone Desync Shield
+- **Anti-Pattern**: Directly calling `new Date().toLocaleDateString()`, `new Date().toLocaleString()`, `Date.now()`, or `Math.random()` inside JSX markup rendered on server. The server renders UTC while client browser renders local timezone, causing React hydration mismatch errors, layout jumping, and broken event listeners.
+- **Invariant**:
+  1. Never render unsuppressed client-dependent date/time or random strings in SSR JSX.
+  2. Use a two-pass mounted pattern (`const [mounted, setMounted] = useState(false); useEffect(() => setMounted(true), []); if (!mounted) return <Skeleton />`).
+  3. Or add `suppressHydrationWarning` on the specific HTML node containing localized timestamps.
+  4. Or format timestamps on the server using an explicit UTC timezone string inside a semantic `<time dateTime={isoString}>` tag.
+
 
