@@ -2,6 +2,52 @@
 
 All notable changes to this project are documented in this file.
 
+## [7.0.0] - 2026-10-01
+
+### Added
+
+- **Autonomous Agent-to-Agent Negotiation & Concurrency Leases (`secretary` v1.8.0)** (#204): `acquireLease`, `releaseLease`, and `verifyHandoffPacket` primitives enabling zero-human multi-agent coordination with SHA-256 evidence approval gates and handoff verification receipts.
+- **Tri-Vector Autonomous Agency Coach (`coach`)** (#210): Structured daily standups, async scope checks, client digest automation, and founder vitality audits across Team, Client, and Founder vectors with five dedicated reference playbooks (`team.md`, `client.md`, `founder.md`, `audit.md`, `effort-rubric.md`).
+- **Toxic Loop Circuit Breaker (`dead-letter`)** (#206): Automatic circuit-trip on ≥2 identical failure signatures, Precondition Delta gate, Vibeguard zero-credential sanitization, and atomic POSIX rename writes for corrupted-state protection.
+- **Receipt-or-Rejection Gate (`pua`)** (#207): Verbatim CLI receipt requirement, Ghost File Probe (`fs.existsSync`), Churn-to-Signal ratio guardrail (≤ 1.5; > 3.0 = halt), and banned sycophancy phrase scan with 3-line diagnosis format.
+- **Automated Purge Register & Founder Vitality ADE (`periodic-retreat` v1.1.0)** (#208): 4-phase strategic retreat facilitation — forensic retrospective with git churn heatmap, `bunx knip` dead-export purge register, Automate/Delegate/Eliminate vitality framework, and binary OKR contracts with Monday Launchpad Packet.
+- **AST Code-Shield Pipeline & Cadence Burstiness (`humanize` v1.1.0)** (#209): 3-pass stash pipeline (fenced code, inline backticks, frontmatter, tables, URLs) preserving code blocks through humanization; cadence dispersion metric (σ ≥ 5.0); bullet density fence (≤ 40%); em-dash budget (≤ 1 per 500w); technical jargon whitelist.
+- **AEO 18-Token Quotability & AI Crawler Auditor (`seo` v1.3.0)** (#205): 18-token standalone quotability enforcement for AI-indexed headings, `robots.txt` crawler segregation auditor, and AEO content density gate.
+- **Wave 2 Senior Auditor Engine (`code-review` v1.6.0)** (#202): Edge/SSR pitfall detection, React lifecycle dropper scanning, and `--audit-all` mode completing all 13 security controls.
+- **PR Convention Miner & Guidelines Synthesizer (`git` v1.3.0)** (#203): Automated synthesis of repository PR conventions from git history into enforced commit guidelines (`pr-convention-miner.ts`).
+- **Context Health Gauge & Task Stashing (`context-anchor` v1.4.0)** (#189): Task interruption stashing, real-time context budget metering, deadlock breaker engine, and observation masking.
+- **Workerd Preview Containers (`devops` v1.2.0)** (#190): Cloudflare `workerd` isolated execution environment scaffolding for living deliverable review links.
+- **Webhook Payload Byte-Size Limiter (`automation` v1.1.0)** (#194): Payload size validation and receiver guard for all webhook endpoints.
+- **Canonical UTM Builder & PII Scrubber (`analytics` v1.1.0)** (#193): UTM parameter builder with case normalization and automatic PII redaction.
+- **9:16 Aspect-Ratio Guard & Mobile Safe-Zone Calculator (`smm` v1.3.0)** (#192): Enforces mobile-first aspect ratios and UI safe-zone calculations for all social media assets.
+- **Breadcrumb JSON-LD Generator & Trailing-Slash Normalizer (`seo` v1.2.0)** (#191): Structured data generation for breadcrumb navigation and canonical trailing-slash enforcement.
+- **EDR & Runtime Safety Auditor (`code-review` v1.4.0)** (#188): SEC-11..13 controls — memory exhaustion guards, uncapped regex backtracking detection, dependency integrity verification.
+- **Gitignore Wildcard Parent Trap & Tracked Index Cache Auditor (`git` v1.2.0)** (#187): Detects and patches gitignore entries accidentally ignoring parent directories; audits stale tracked-file index cache.
+- **Frontmatter-Guard Build Crash Sanitizer (`content` v1.2.0)** (#186): Pre-commit YAML mapping protector preventing frontmatter-induced static-site build crashes.
+- **Anti-FOUC Hydrator, Zero-CLS Font Metrics & Print Stylesheet (`webdev`)** (#184): Client-side hydration anti-FOUC patterns, Cumulative Layout Shift (CLS) elimination for custom fonts, and print-optimized stylesheet scaffolding.
+- **Brand Immersion Tokens & Adaptive Favicon (`design`)** (#183): Dynamic favicon generation from brand tokens with aesthetic asset scaffolding.
+- **CMS-Cohesion Linter & Verified Deploy Gate (`gauntlet-loop`)** (#178): Pre-deploy CMS cohesion audit and deterministic deploy gate with verified receipt.
+- **Deposit-Before-Code & Deemed Acceptance Standard (`accounts`)** (#177): Enforces deposit receipts before code delivery and automatic deemed acceptance triggers.
+- **Shared Credential Vaulting & Client Handover Package (`ops`)** (#176): Structured credential vaulting per client and standardized handover package generation.
+- **Diplomatic Scope Shield & Pushback Matrix (`client-comms`)** (#175): Scope creep defense playbook with escalation-tier pushback response matrix.
+- **Follow-the-Sun Twilight Handover (`secretary`)** (#174): Timezone-aware twilight handover engine with overlap window detection across 4 hemispheres.
+- **Sliding Token Budget Governor (`accounts`)** (#173): Sliding-window AI compute token attribution and context budget enforcement per client project.
+
+### Changed
+
+- **`updatedocs` v2.6.0** (#197): Zero-runtime-env repository support with enhanced `findFiles` exclusion patterns for environments without local `.env` configuration.
+- **`code-review` v1.5.0** (#196): Scanner hardening, test-file exclusions, and comment-block filtering reducing false-positive audit results.
+- **`new-project`** (#200): Official Razorpay SDK client wired in place of mock order endpoint; `crypto.randomUUID()` for cryptographically secure order IDs (#195).
+- **Cross-skill relative link harmonization** (#199): All nested `README.md` catalogs and cross-skill relative links normalized and verified.
+
+### Fixed
+
+- **Validate script path** (#198): Corrected `validate-memory-file.sh` invocation path; anchored `.gitignore` build directories; resolved Biome linter warnings.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v6.2.0...v7.0.0
+
+---
+
 ## [6.1.1] - 2026-09-29
 
 ### Added
