@@ -2587,6 +2587,37 @@ build/
       expect(lockRes.status).toBe(0);
       const lockData = JSON.parse(lockRes.stdout);
       expect(lockData.passed).toBe(true);
+
+      // 5. Exclusions & Comment Filtering: .venv directories and comments ignored
+      const venvDir = path.join(tempDir, ".venv");
+      fs.mkdirSync(venvDir, { recursive: true });
+      fs.writeFileSync(path.join(venvDir, "trojan.sh"), '#!/bin/sh\neval "bad"\n', "utf8");
+
+      const cleanDir = path.join(tempDir, "clean");
+      fs.mkdirSync(cleanDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(cleanDir, "docs.ts"),
+        "// Math.random() is mentioned in documentation\n/* eval() in comment */\nexport const ok = 1;\n",
+        "utf8",
+      );
+
+      const venvEdrRes = spawnSync("bun", [scriptPath, "--audit-edr-safety", cleanDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(venvEdrRes.status).toBe(0);
+      const venvEdrData = JSON.parse(venvEdrRes.stdout);
+      expect(venvEdrData.passed).toBe(true);
+      expect(venvEdrData.violations.length).toBe(0);
+
+      const commentRuntimeRes = spawnSync("bun", [scriptPath, "--audit-runtime-pitfalls", cleanDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(commentRuntimeRes.status).toBe(0);
+      const commentRuntimeData = JSON.parse(commentRuntimeRes.stdout);
+      expect(commentRuntimeData.passed).toBe(true);
+      expect(commentRuntimeData.violations.length).toBe(0);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
