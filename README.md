@@ -25,41 +25,10 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ---
 
-## 🆕 What's New in v7.1.0 & v7.0.0
+## 🆕 What's New in v7.1.0
 
-> **65 PRs, 189 automated tests, 502 commits, 0 dead-letter failures.** The full Q3 reflection, quality hardening, and agent orchestration suite.
-
-### 🌟 New in v7.1.0 (Agency Reflection & Quality Gate Release)
-- **Tri-Vector Autonomous Agency Coach** — `coach` v1.1.0 (#210) delivers structured daily standups, scope checks, and founder audits across Team, Client, and Founder vectors with `coach.ts` CLI.
-- **Toxic Loop Circuit Breaker** — `dead-letter` (#206) trips automatically on ≥2 identical failure signatures, preventing infinite retry storms with atomic POSIX-safe record writes.
-- **Receipt-or-Rejection Gate** — `pua` (#207) enforces verbatim CLI receipt verification, Ghost File Probe (`fs.existsSync`), Churn-to-Signal ratio guardrails (≤ 1.5), and banned sycophancy phrase detection.
-- **Automated Purge Register & Founder Vitality ADE** — `periodic-retreat` v1.1.0 (#208) integrates `bunx knip` for dead-export detection, zombie dependency eviction, and a 4-phase Monday Launchpad OKR packet.
-- **AST Code-Shield Pipeline** — `humanize` v1.1.0 (#209) adds a 3-pass stash pipeline (fenced code, inline backticks, frontmatter, tables, URLs) preserving code blocks through humanization with cadence dispersion (σ ≥ 5.0).
-- **Git Convention Miner Merge Filter** — `git` (#203) filters merge commits (`--no-merges`) for accurate convention mining across repositories.
-
-### 🤖 Autonomous Agent Intelligence (v7.0.0)
-- **Agent-to-Agent Negotiation** — `secretary` v1.8.0 ships `acquireLease`, `releaseLease`, and `verifyHandoffPacket`: autonomous multi-agent concurrency control without human intervention.
-- **Context Health Gauge** — `context-anchor` v1.4.0 adds task interruption stashing, deadlock breaking, and prompt-cache partitioning with real-time context budget metering.
-
-### 🛡️ Quality & Security Hardening (v7.0.0)
-- **Wave 2 Senior Auditor Engine** — `code-review` v1.6.0 adds Edge/SSR pitfall detection, React lifecycle dropper scanning, and `--audit-all` mode across all 13 security controls.
-- **EDR & Runtime Safety Auditor** — `code-review` v1.4.0 ships SEC-11..13 controls: memory exhaustion guards, uncapped regex backtracking detection, and dependency integrity verification.
-
-### 🔍 Developer Discovery & AEO (v7.0.0)
-- **18-Token Quotability Engine** — `seo` v1.3.0 enforces 18-token standalone quotability for every AI-indexed heading, robots.txt AI crawler auditing, and AEO content density gates.
-- **PR Convention Miner** — `git` v1.3.0 automatically synthesizes repository PR conventions from history into enforced commit guidelines.
-- **Gitignore Wildcard Parent Trap** — `git` v1.2.0 detects and patches gitignore entries that accidentally ignore parent directories.
-
-### ⚙️ Infrastructure, Design & Delivery (v7.0.0)
-- **Zero-Runtime-Env Support** — `updatedocs` v2.6.0 handles repositories with no local environment variables, with enhanced `findFiles` exclusion patterns.
-- **Webhook Payload Limiter** — `automation` v1.1.0 adds byte-size validation and receiver guards for all webhook endpoints.
-- **Workerd Preview Containers** — `devops` v1.2.0 scaffolds Cloudflare `workerd` isolated execution environments for living deliverable review links.
-- **UTM Builder & PII Scrubber** — `analytics` v1.1.0 ships a canonical UTM builder with case normalization and automatic PII redaction.
-- **Brand Immersion Tokens** — `design` adds adaptive favicon generation, aesthetic asset scaffolding, and brand immersion token injection.
-- **Frontmatter-Guard Build Crash Sanitizer** — `content` v1.2.0 prevents YAML mapping errors from crashing static-site builds with a pre-commit frontmatter guard.
-- **9:16 Aspect-Ratio Guard** — `smm` v1.3.0 enforces mobile-first aspect ratios and safe-zone calculations for all social media assets.
-
-**Full changelog**: [CHANGELOG.md](CHANGELOG.md) | [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases/tag/v7.1.0)
+Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 189 verified tests.
+See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---
 
