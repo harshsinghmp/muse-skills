@@ -23,7 +23,7 @@ import { dirname, join } from "node:path";
 const LEASE_PATH = join(".agents", "artifacts", "WORKTREE-LEASE.md");
 const WINDOW_MIN = 30;
 
-type Verdict = "ACQUIRE" | "HELD" | "DEFER" | "TAKEOVER";
+export type Verdict = "ACQUIRE" | "HELD" | "DEFER" | "TAKEOVER";
 
 interface LeaseInfo {
   owner: string | null;

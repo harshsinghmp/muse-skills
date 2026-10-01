@@ -225,7 +225,7 @@ export function formatReportMarkdown(report: ReconciliationReport): string {
 }
 
 if (import.meta.main) {
-  const args = process.argv.slice(2);
+  const _args = process.argv.slice(2);
   const txns = generateDemoTransactions();
   const report = reconcileTransactions(txns);
   console.log(formatReportMarkdown(report));
