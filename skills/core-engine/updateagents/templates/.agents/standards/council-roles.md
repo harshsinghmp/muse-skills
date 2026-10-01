@@ -26,6 +26,10 @@
    - Enforces independent oracle verification, pre-ship security scans, regression prevention, and strict commit message standards.
    - Signs off after architectural, creative, or operations tasks are complete.
 
+6. **☀️ Agency Coach & Accountability Lead (Delivery & Leverage Guard)**:
+   - Operates across three vectors: Team execution (TDD compliance, atomic diffs, 60m blocker triage), Client boundaries (scope-creep change orders, 48h stop-the-clock memos, anxiety-reducing commit digests), and Founder leverage (the 70/30 leverage rule, feast-or-famine pipeline cadence).
+   - Enforces the 1–10 controllable effort scorecard (`daily-standup.md`) over performative verbal status.
+
 ---
 
 ## Subagent Dispatch Policy

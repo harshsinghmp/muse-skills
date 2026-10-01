@@ -19,6 +19,9 @@ Before dispatching an LLM call for intent classification, Secretary evaluates in
 | `checkout`, `stripe`, `payments` | `webdev` | `funnel` | **Sol** | Route to high-converting funnel & payments |
 | `carousel`, `postiz`, `viral` | `smm` | `carousel` | **Jasper** | Route to 6-slide viral carousel generation |
 | `onboard`, `identity`, `telos` | `secretary` | `onboard` | **Crew** | Interactive identity interview |
+| `standup`, `effort scorecard` | `coach` | `team` | **Crew & Nexus** | Run git-grounded standup and 5-pillar effort check |
+| `scope creep`, `client boundary` | `coach` | `client` | **Crew** | Intercept scope creep & emit change-order addendum |
+| `founder leverage`, `70/30 rule` | `coach` | `founder` | **Sol & Crew** | Run founder capacity and leverage diagnostic |
 
 ---
 

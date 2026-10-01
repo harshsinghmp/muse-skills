@@ -454,9 +454,9 @@
     },
     {
       "name": "coach",
-      "description": "Daily reflective check-in and effort scorecard for developers and AI agents. Evaluates controllable inputs (tests written, diffs kept minimal, invariants respected, secrets scrubbed) on a 1-10 effort rubric rather than fluctuating external outcomes. Generates daily-standup.md.",
+      "description": "Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across three operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md.",
       "path": "skills/reflection-maintenance/coach/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "reflection-maintenance",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
@@ -471,10 +471,21 @@
         "tests-written",
         "minimal-diffs",
         "invariants",
-        "secrets-scrubbed"
+        "secrets-scrubbed",
+        "agency-coach",
+        "client-boundaries",
+        "founder-leverage"
       ],
-      "suggested_skills": ["periodic-retreat", "dead-letter", "evidence-ledger"],
-      "aliases": ["daily-coach", "standup", "effort-check", "reflective-checkin"],
+      "suggested_skills": ["periodic-retreat", "dead-letter", "evidence-ledger", "client-comms"],
+      "aliases": [
+        "daily-coach",
+        "standup",
+        "effort-check",
+        "reflective-checkin",
+        "agency-coach",
+        "executive-coach",
+        "delivery-coach"
+      ],
       "scope": "global"
     },
     {
