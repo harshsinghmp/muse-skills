@@ -4,7 +4,7 @@ aliases: ["secretary-controller","staff-controller","approval-gate","agency-disp
 description: "Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. On session launch or incoming work, triages user intent across 46 canonical agency departments, maps Council Leads (Sol, Jasper, Crew, Nexus), and selectively loads mode playbooks with minimal token overhead. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest."
 argument-hint: "[dispatch|orchestration|socratic|staff-work|wave|ledger|handoff|onboard|audit]"
 user-invocable: true
-version: 1.7.0
+version: 1.8.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]

