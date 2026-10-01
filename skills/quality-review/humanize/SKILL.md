@@ -122,11 +122,11 @@ Lock the following invariants—**never alter or fabricate**:
 4. Restore natural variety to sentence lengths and structures without manufacturing artificial variance.
 5. Format headings in clean sentence case. Ensure list items are genuinely parallel and scannable.
 
-### Step 5: File & Markdown Safety Protocol
-When operating on files:
-* Strictly preserve YAML frontmatter, markdown tables, URLs, and code fences.
-* Never convert code, configuration, or structured data into prose.
-* Generate reviewable, minimal diffs.
+### Step 5: Structural AST Code-Shield & Rhythm Dispersion Protocol
+When operating on markdown or technical files, enforce [references/ast-shield-and-cadence.md](references/ast-shield-and-cadence.md):
+1. **The 3-Pass Stash Pipeline**: Stash fenced code blocks, inline backtick literals, frontmatter, markdown tables, and URLs into temporary tokens (`{{SHIELD_XX}}`) before editing; restore verbatim afterwards with byte-parity checks.
+2. **Cadence Dispersion Audit**: Ensure sentence-length standard deviation $\sigma \ge 5.0$ words per section. If $\sigma < 4.0$, break up metronomic 15-word AI sentences by mixing punchy short clauses ($\le 8$ words) with compound explanations ($\ge 20$ words).
+3. **Density Fences**: Keep bullet points under 40% of narrative text; cap em-dashes at $\le 1$ per 500 words; enforce technical jargon false-positive whitelist (*"seamless database failover"* is valid).
 
 ---
 
@@ -145,9 +145,11 @@ When operating on files:
 
 ### Final Quality Gate Checklist
 Before marking work complete, verify every dimension:
+* [ ] **AST Shield Byte Parity**: All code blocks, inline literals, frontmatter headers, and tables were preserved 100% without character mutations.
+* [ ] **Cadence Burstiness**: Paragraphs avoid metronomic drone; sentence-length dispersion achieves natural variety ($\sigma \ge 5.0$).
 * [ ] **Factual Fidelity**: All metrics, names, citations, and causal relationships match the source exactly.
 * [ ] **Voice Retention**: The author's unique stance, perspective, and tone are intact.
-* [ ] **Information Density**: Every sentence delivers substantive information; generic filler is gone.
+* [ ] **Information Density & Bullet Cap**: Bullets comprise $\le 40\%$ of narrative copy; generic filler is eliminated.
 * [ ] **Structural Cleanliness**: No redundant summary conclusions, phantom debates, or repetitive introductory throat-clearing.
 * [ ] **Portability Passed**: Sentences describe this exact project, feature, or topic, not generic platitudes.
 * [ ] **Diff Minimality**: Only sentences requiring editorial intervention were changed; strong human prose was untouched.
@@ -160,6 +162,7 @@ When called in audit mode, output a structured findings table:
 | *Binary Contrast* | *"It's not just a tool, it's a movement"* | Formulaic framing device | State the actual product capability directly |
 
 ### References & Deeper Context
+* [`references/ast-shield-and-cadence.md`](references/ast-shield-and-cadence.md) — 3-pass token stash pipeline, cadence dispersion formula ($\sigma \ge 5.0$), and density fences.
 * [`references/patterns.md`](references/patterns.md) — Comprehensive 30+ pattern anti-slop taxonomy with before/after examples.
 * [`references/style-guide.md`](references/style-guide.md) — Medium-specific voice calibrations (docs, marketing, scientific, social).
 * [`references/verification.md`](references/verification.md) — Quality gates, optional scoring, and file/repository verification practices.
