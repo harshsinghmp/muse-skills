@@ -275,6 +275,55 @@ describe("Invocation UX & conventions", () => {
     expect(overlapRes.stdout).toContain("Global Timezone Overlap Analysis");
     expect(overlapRes.stdout).toContain("EST");
     expect(overlapRes.stdout).toContain("IST");
+
+    // Test agent concurrency lease acquire, conflict detection, and release
+    const leaseDir = fs.mkdtempSync(path.join(os.tmpdir(), "agent-lease-test-"));
+    try {
+      const acquireRes1 = spawnSync(
+        "bun",
+        [scriptPath, leaseDir, "--lease-acquire", "agent-sol:src/api/auth.ts,src/models/user.ts"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(acquireRes1.status).toBe(0);
+      expect(acquireRes1.stdout).toContain("Lease Acquired");
+
+      // Conflict: agent-jasper tries to acquire same file
+      const acquireRes2 = spawnSync(
+        "bun",
+        [scriptPath, leaseDir, "--lease-acquire", "agent-jasper:src/models/user.ts"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(acquireRes2.status).toBe(1);
+      expect(acquireRes2.stdout).toContain("CONFLICT");
+
+      // Release lease
+      const releaseRes = spawnSync("bun", [scriptPath, leaseDir, "--lease-release", "agent-sol"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(releaseRes.status).toBe(0);
+      expect(releaseRes.stdout).toContain("Lease Released");
+
+      // Verify handoff packet
+      const packetJson = JSON.stringify({
+        packetId: "pkt-001",
+        fromAgent: "agent-sol",
+        toAgent: "agent-jasper",
+        phaseCompleted: "backend-schema",
+        exportedArtifacts: ["src/models/user.ts"],
+        checksum: "sha256-abc12345",
+        verificationEvidence: "bun test passed with 100% assertions",
+        status: "READY",
+      });
+      const handoffRes = spawnSync("bun", [scriptPath, leaseDir, "--verify-handoff", packetJson], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(handoffRes.status).toBe(0);
+      expect(handoffRes.stdout).toContain("Handoff Packet Verified");
+    } finally {
+      fs.rmSync(leaseDir, { recursive: true, force: true });
+    }
   });
 
   test("client-comms feedback and status modes encode translation matrix and client changelogs", () => {

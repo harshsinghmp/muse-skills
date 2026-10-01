@@ -206,3 +206,39 @@ Agency founders must never become a bottleneck for routine technical and operati
 | **Tier 2: Operations Sign-Off** | Minor UI redesigns, scope tweaks within 10% budget, third-party vendor integrations, staging releases | PM / Secretary / Operations Lead review and approve | ≤ 4 hours |
 | **Tier 3: Founder-Only** | Core system architecture rewrites, contractual scope alterations, pricing changes > $5,000, production emergency rollbacks | Founder / Principal explicit approval required | Same-day priority queue |
 
+---
+
+## 11. Autonomous Agent-to-Agent Negotiation & Concurrency Leases
+
+When multiple specialized autonomous agents collaborate concurrently (e.g. backend architect Sol, frontend UI Jasper, and review head Nexus), Secretary prevents race conditions and state drift via explicit lease and handoff protocols:
+
+### A. Concurrency File Leases (`--lease-acquire`, `--lease-release`, `--lease-status`)
+1. **Exclusive Lock Granularity**: Before an agent begins modifying a file or subapp directory, it must acquire an exclusive lease (`agentId:file1,file2`).
+2. **Conflict Prevention**: If a peer agent attempts to acquire an active, non-expired lease, Secretary immediately aborts with a structured `CONFLICT` exit code.
+3. **Time-To-Live (TTL)**: Leases automatically expire after 1 hour (configurable) to prevent orphaned locks when subagent tasks fail.
+
+```bash
+# Acquire lease
+bun skills/context-orchestration/secretary/scripts/secretary.ts [path] --lease-acquire "agent-sol:src/api/auth.ts,src/models/user.ts"
+
+# Check active leases
+bun skills/context-orchestration/secretary/scripts/secretary.ts [path] --lease-status
+
+# Release lease on completion
+bun skills/context-orchestration/secretary/scripts/secretary.ts [path] --lease-release "agent-sol"
+```
+
+### B. Typed Inter-Agent Handoff Verification (`--verify-handoff`)
+When Agent A completes a phase (e.g. database schema) and hands over to Agent B (e.g. API frontend), it produces an immutable, cryptographically verifiable `HandoffPacket`:
+
+```bash
+bun skills/context-orchestration/secretary/scripts/secretary.ts [path] --verify-handoff packet.json
+```
+
+Required invariants:
+- Non-empty `packetId`, `fromAgent`, `toAgent`, `phaseCompleted`.
+- Non-empty array of `exportedArtifacts`.
+- Cryptographic `checksum` digest for delivered artifacts.
+- Empirical `verificationEvidence` proof (passing test suite receipt).
+
+

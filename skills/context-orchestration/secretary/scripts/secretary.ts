@@ -11,7 +11,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -372,6 +372,147 @@ export function checkTimezoneOverlap(clientTz: string, teamTz: string): Timezone
   };
 }
 
+export interface AgentLease {
+  agentId: string;
+  files: string[];
+  acquiredAt: string;
+  expiresAt: string;
+  purpose: string;
+}
+
+export interface LeaseManagerResult {
+  success: boolean;
+  message: string;
+  activeLeases: AgentLease[];
+  conflicts?: string[];
+}
+
+export interface HandoffPacket {
+  packetId: string;
+  fromAgent: string;
+  toAgent: string;
+  phaseCompleted: string;
+  exportedArtifacts: string[];
+  checksum: string;
+  verificationEvidence: string;
+  status: "READY" | "VERIFIED" | "REJECTED";
+}
+
+export interface NegotiationContract {
+  negotiationId: string;
+  initiatorAgent: string;
+  targetAgent: string;
+  interfaceOrSchema: string;
+  sharedResources: string[];
+  status: "PROPOSED" | "COUNTERED" | "AGREED" | "REJECTED";
+  terms: Record<string, unknown>;
+  createdAt: string;
+}
+
+function getLeasesFilePath(targetDir: string): string {
+  const artifactsDir = join(targetDir, ".agents", "artifacts");
+  if (!existsSync(artifactsDir)) {
+    mkdirSync(artifactsDir, { recursive: true });
+  }
+  return join(artifactsDir, "agent-leases.json");
+}
+
+export function loadActiveLeases(targetDir: string): AgentLease[] {
+  const filePath = getLeasesFilePath(targetDir);
+  if (!existsSync(filePath)) return [];
+  try {
+    const raw = readFileSync(filePath, "utf8");
+    const leases: AgentLease[] = JSON.parse(raw);
+    const now = Date.now();
+    return leases.filter((l) => new Date(l.expiresAt).getTime() > now);
+  } catch {
+    return [];
+  }
+}
+
+export function saveActiveLeases(targetDir: string, leases: AgentLease[]): void {
+  const filePath = getLeasesFilePath(targetDir);
+  writeFileSync(filePath, JSON.stringify(leases, null, 2), "utf8");
+}
+
+export function acquireLease(
+  targetDir: string,
+  agentId: string,
+  files: string[],
+  purpose: string = "feature-build",
+  ttlSeconds: number = 3600,
+): LeaseManagerResult {
+  const currentLeases = loadActiveLeases(targetDir);
+  const conflicts: string[] = [];
+
+  for (const requestedFile of files) {
+    for (const lease of currentLeases) {
+      if (lease.agentId !== agentId && lease.files.includes(requestedFile)) {
+        conflicts.push(`File '${requestedFile}' is locked by ${lease.agentId} until ${lease.expiresAt}`);
+      }
+    }
+  }
+
+  if (conflicts.length > 0) {
+    return {
+      success: false,
+      message: `CONFLICT: Cannot acquire lease. ${conflicts.join("; ")}`,
+      activeLeases: currentLeases,
+      conflicts,
+    };
+  }
+
+  const now = new Date();
+  const expires = new Date(now.getTime() + ttlSeconds * 1000);
+
+  const updatedLeases = currentLeases.filter((l) => l.agentId !== agentId);
+  const newLease: AgentLease = {
+    agentId,
+    files,
+    acquiredAt: now.toISOString(),
+    expiresAt: expires.toISOString(),
+    purpose,
+  };
+  updatedLeases.push(newLease);
+  saveActiveLeases(targetDir, updatedLeases);
+
+  return {
+    success: true,
+    message: `Lease Acquired: ${agentId} holds lock on ${files.length} files until ${expires.toISOString()}`,
+    activeLeases: updatedLeases,
+  };
+}
+
+export function releaseLease(targetDir: string, agentId: string): LeaseManagerResult {
+  const currentLeases = loadActiveLeases(targetDir);
+  const remaining = currentLeases.filter((l) => l.agentId !== agentId);
+  saveActiveLeases(targetDir, remaining);
+
+  return {
+    success: true,
+    message: `Lease Released: All locks held by ${agentId} have been removed.`,
+    activeLeases: remaining,
+  };
+}
+
+export function verifyHandoffPacket(packet: Partial<HandoffPacket>): { verified: boolean; errors: string[] } {
+  const errors: string[] = [];
+  if (!packet.packetId) errors.push("Missing packetId");
+  if (!packet.fromAgent) errors.push("Missing fromAgent");
+  if (!packet.toAgent) errors.push("Missing toAgent");
+  if (!packet.phaseCompleted) errors.push("Missing phaseCompleted");
+  if (!Array.isArray(packet.exportedArtifacts) || packet.exportedArtifacts.length === 0) {
+    errors.push("Missing or empty exportedArtifacts list");
+  }
+  if (!packet.checksum) errors.push("Missing checksum digest");
+  if (!packet.verificationEvidence) errors.push("Missing verificationEvidence proof");
+
+  return {
+    verified: errors.length === 0,
+    errors,
+  };
+}
+
 // CLI Execution
 if (import.meta.main) {
   const { values, positionals } = parseArgs({
@@ -383,6 +524,10 @@ if (import.meta.main) {
       checkpoint: { type: "string", default: "" },
       "twilight-handover": { type: "string", default: "" },
       "check-overlap": { type: "string", default: "" },
+      "lease-acquire": { type: "string", default: "" },
+      "lease-release": { type: "string", default: "" },
+      "lease-status": { type: "boolean", default: false },
+      "verify-handoff": { type: "string", default: "" },
       help: { type: "boolean", short: "h", default: false },
     },
     allowPositionals: true,
@@ -398,11 +543,15 @@ Usage:
   bun secretary.ts [targetPath] [options]
 
 Options:
-  --triage "<prompt>"    Fast-path triage & confidence-scored intent routing
-  --briefing             Generate 5-line executive Morning Briefing
-  --switch <dept:mode>   Hot-swap active council lead and reference mode
-  --checkpoint <taskId>  Create reversible git checkpoint tag for high blast-radius work
-  -h, --help             Show this help message
+  --triage "<prompt>"       Fast-path triage & confidence-scored intent routing
+  --briefing                Generate 5-line executive Morning Briefing
+  --switch <dept:mode>      Hot-swap active council lead and reference mode
+  --checkpoint <taskId>     Create reversible git checkpoint tag for high blast-radius work
+  --lease-acquire <id:f1,f2> Acquire exclusive file lease for subagent
+  --lease-release <id>      Release all active leases held by subagent
+  --lease-status            Display active agent file leases
+  --verify-handoff <json>   Verify structured inter-agent handoff packet
+  -h, --help                Show this help message
 `);
     process.exit(0);
   }
@@ -470,6 +619,70 @@ Options:
     console.log(`   • Sweet Spot      : ${overlap.sweetSpotWindow}`);
     console.log(`   • Recommendation  : ${overlap.recommendation}`);
     process.exit(0);
+  }
+
+  if (values["lease-acquire"]) {
+    const raw = values["lease-acquire"];
+    const parts = raw.split(":");
+    const agentId = parts[0] || "agent-unknown";
+    const files = (parts[1] || "")
+      .split(",")
+      .map((f) => f.trim())
+      .filter(Boolean);
+    const res = acquireLease(targetDir, agentId, files);
+    if (res.success) {
+      console.log(`✅ ${res.message}`);
+      process.exit(0);
+    } else {
+      console.log(`❌ ${res.message}`);
+      process.exit(1);
+    }
+  }
+
+  if (values["lease-release"]) {
+    const agentId = values["lease-release"];
+    const res = releaseLease(targetDir, agentId);
+    console.log(`✅ ${res.message}`);
+    process.exit(0);
+  }
+
+  if (values["lease-status"]) {
+    const leases = loadActiveLeases(targetDir);
+    console.log(`\n📋 Active Agent Concurrency Leases: ${leases.length}`);
+    for (const l of leases) {
+      console.log(`   • [${l.agentId}] Purpose: ${l.purpose} | Expires: ${l.expiresAt}`);
+      for (const f of l.files) {
+        console.log(`     - ${f}`);
+      }
+    }
+    process.exit(0);
+  }
+
+  if (values["verify-handoff"]) {
+    const target = values["verify-handoff"];
+    let packet: Partial<HandoffPacket> = {};
+    try {
+      if (existsSync(target)) {
+        packet = JSON.parse(readFileSync(target, "utf8"));
+      } else {
+        packet = JSON.parse(target);
+      }
+    } catch {
+      console.log("❌ Failed to parse handoff packet JSON.");
+      process.exit(1);
+    }
+
+    const res = verifyHandoffPacket(packet);
+    if (res.verified) {
+      console.log(`✅ Handoff Packet Verified: [${packet.packetId}] ${packet.fromAgent} → ${packet.toAgent}`);
+      console.log(`   • Phase Completed: ${packet.phaseCompleted}`);
+      console.log(`   • Artifacts: ${(packet.exportedArtifacts || []).join(", ")}`);
+      process.exit(0);
+    } else {
+      console.log(`❌ Handoff Packet Rejected:`);
+      for (const err of res.errors) console.log(`   - ${err}`);
+      process.exit(1);
+    }
   }
 
   console.log("📑 Secretary ready. Use --help to view available commands.");
