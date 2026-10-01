@@ -506,9 +506,9 @@
     },
     {
       "name": "periodic-retreat",
-      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, deprecated system purges, Wheel of Life alignment, and next-quarter OKR handoffs across the agency & engineering ecosystem. Generates quarterly-retreat.md.",
+      "description": "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, dead-code purges via automated scan, founder vitality & purpose alignment, and binary next-quarter OKRs with Monday launchpads across the agency ecosystem. Generates quarterly-retreat.md.",
       "path": "skills/reflection-maintenance/periodic-retreat/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "reflection-maintenance",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
