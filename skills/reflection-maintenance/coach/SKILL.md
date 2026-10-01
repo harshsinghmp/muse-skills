@@ -45,7 +45,7 @@ Execute this skill when:
 ### Anti-Triggers
 Do NOT use this skill when:
 - Conducting long-term quarterly reviews (use [`periodic-retreat`](../periodic-retreat/SKILL.md)).
-- Triaging an immediate active bug or test failure (use [`systematic-debugging`](../pua/SKILL.md)).
+- Triaging an immediate active bug or test failure (use [`systematic-debugging`](../../quality-review/pua/SKILL.md)).
 
 ---
 

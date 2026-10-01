@@ -39,4 +39,4 @@ Build a React Native inventory app with offline barcode scanning.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

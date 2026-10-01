@@ -1,7 +1,7 @@
 # 🐙 Git Skill — Autonomous End-to-End Release & GitHub Lifecycle Engine
 
 [![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](package.json)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../../LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](#)
 
 > **Autonomous, vendor-neutral Git and GitHub release orchestrator.** Replaces fragmented, manual scripts with a deterministic 11-phase pipeline: 9-tier anti-slop issue triage, strict 4-phase branching, automated doc sync, GitHub SEO tuning, production release cuts, and branch cleanup.

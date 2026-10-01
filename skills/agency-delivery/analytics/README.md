@@ -39,4 +39,4 @@ Audit our signup funnel, find the drop-off, and run a CRO test on the pricing pa
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

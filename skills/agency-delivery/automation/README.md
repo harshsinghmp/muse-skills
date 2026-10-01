@@ -44,4 +44,4 @@ Build a support chatbot grounded in our help docs with evaluation tests.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

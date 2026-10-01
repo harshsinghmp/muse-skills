@@ -41,4 +41,4 @@ Make our competitor comparison page citable by ChatGPT and Perplexity.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

@@ -47,4 +47,4 @@ Research these ten target accounts and score the leads against our ICP.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

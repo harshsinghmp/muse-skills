@@ -42,4 +42,4 @@ The client wants three extra pages — triage the change request before we agree
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)
