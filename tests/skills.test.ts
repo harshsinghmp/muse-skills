@@ -326,6 +326,97 @@ describe("Invocation UX & conventions", () => {
     }
   });
 
+  test("coach skill implements tri-vector architecture (team, client, founder, audit) and CLI engine", () => {
+    const coachDir = path.join(REPO_ROOT, "skills/reflection-maintenance/coach");
+    const skillPath = path.join(coachDir, "SKILL.md");
+    const scriptPath = path.join(coachDir, "scripts/coach.ts");
+    const teamRef = path.join(coachDir, "references/team.md");
+    const clientRef = path.join(coachDir, "references/client.md");
+    const founderRef = path.join(coachDir, "references/founder.md");
+    const auditRef = path.join(coachDir, "references/audit.md");
+
+    expect(fs.existsSync(skillPath)).toBe(true);
+    expect(fs.existsSync(scriptPath)).toBe(true);
+    expect(fs.existsSync(teamRef)).toBe(true);
+    expect(fs.existsSync(clientRef)).toBe(true);
+    expect(fs.existsSync(founderRef)).toBe(true);
+    expect(fs.existsSync(auditRef)).toBe(true);
+
+    // Verify references encode canonical 50 pain point solutions
+    const teamContent = fs.readFileSync(teamRef, "utf8");
+    expect(teamContent).toContain("Laundry-List Standups");
+    expect(teamContent).toContain("The Silent Blocker Epidemic");
+    expect(teamContent).toContain("TDD Seam Gate");
+    expect(teamContent).toContain("Atomic Diff Ceiling");
+
+    const clientContent = fs.readFileSync(clientRef, "utf8");
+    expect(clientContent).toContain("Scope Creep");
+    expect(clientContent).toContain("Stop-the-Clock Memo");
+    expect(clientContent).toContain("Proactive Evidence Digest");
+    expect(clientContent).toContain("Shared DoD Protocol");
+
+    const founderContent = fs.readFileSync(founderRef, "utf8");
+    expect(founderContent).toContain("Founder as Chief Firefighter");
+    expect(founderContent).toContain("Feast-or-Famine Revenue Rollercoaster");
+    expect(founderContent).toContain("Enforce the 70/30 Leverage Invariant");
+    expect(founderContent).toContain("Operator Leverage Diagnostic");
+
+    // CLI execution tests
+    const helpRes = spawnSync("bun", [scriptPath, "--help"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(helpRes.status).toBe(0);
+    expect(helpRes.stdout).toContain("--standup");
+    expect(helpRes.stdout).toContain("--client-digest");
+    expect(helpRes.stdout).toContain("--scope-check");
+    expect(helpRes.stdout).toContain("--founder-audit");
+    expect(helpRes.stdout).toContain("--audit");
+
+    // Test --standup mode
+    const standupRes = spawnSync("bun", [scriptPath, "--standup", "--json"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(standupRes.status).toBe(0);
+    const standupData = JSON.parse(standupRes.stdout);
+    expect(standupData.totalScore).toBeGreaterThanOrEqual(1);
+    expect(standupData.totalScore).toBeLessThanOrEqual(10);
+    expect(["Mastery", "Solid", "Mediocre", "Needs Work"]).toContain(standupData.tier);
+
+    // Test --client-digest mode
+    const digestRes = spawnSync("bun", [scriptPath, "--client-digest"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(digestRes.status).toBe(0);
+    expect(digestRes.stdout).toContain("Milestone Progress Digest");
+    expect(digestRes.stdout).toContain("What Shipped & Verified");
+
+    // Test --scope-check mode
+    const scopeRes = spawnSync("bun", [scriptPath, "--scope-check", "We need a complete redesign and custom animation", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(scopeRes.status).toBe(0);
+    const scopeData = JSON.parse(scopeRes.stdout);
+    expect(scopeData.isOutScope).toBe(true);
+    expect(scopeData.responseTemplate).toContain("Phase 2");
+
+    // Test --founder-audit mode
+    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(founderRes.status).toBe(0);
+    const founderData = JSON.parse(founderRes.stdout);
+    expect(founderData.highLeveragePercentage).toBe(70);
+    expect(founderData.compliant).toBe(true);
+
+    // Test --audit mode
+    const auditRes = spawnSync("bun", [scriptPath, "--audit"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(auditRes.status).toBe(0);
+    expect(auditRes.stdout).toContain("passed audit with zero defects");
+
+    // Test secretary triage fast-path integration for coach
+    const secScript = "skills/context-orchestration/secretary/scripts/secretary.ts";
+    const triageCoachRes = spawnSync("bun", [secScript, "--triage", "run daily standup effort scorecard"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(triageCoachRes.status).toBe(0);
+    expect(triageCoachRes.stdout).toContain("coach");
+    expect(triageCoachRes.stdout).toContain("team");
+  });
+
   test("client-comms feedback and status modes encode translation matrix and client changelogs", () => {
     const feedbackPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/feedback.md");
     const statusPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/status.md");

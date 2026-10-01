@@ -120,6 +120,24 @@ const FAST_PATH_RULES: Array<{
     mode: "orchestration",
     reason: "Morning executive orientation match",
   },
+  {
+    regex: /standup|daily\s+standup|effort\s+scorecard|eod\s+check-?in/i,
+    department: "coach",
+    mode: "team",
+    reason: "Daily standup and controllable effort check-in match",
+  },
+  {
+    regex: /scope\s+creep|change\s+order|client\s+boundary|client\s+digest/i,
+    department: "coach",
+    mode: "client",
+    reason: "Client boundary and change-order defense match",
+  },
+  {
+    regex: /founder\s+leverage|70\/30\s+rule|founder\s+bottleneck/i,
+    department: "coach",
+    mode: "founder",
+    reason: "Founder leverage diagnostic match",
+  },
 ];
 
 export interface TriageResult {
