@@ -57,12 +57,16 @@ export interface CommitAuditResult {
 export function mineGitConventions(repoPath: string, limit: number = 100): MinedConventions {
   const targetDir = fs.existsSync(repoPath) ? repoPath : process.cwd();
 
-  // Run git log with delimiter
+  // Run git log with delimiter (skipping merge commits)
   // Field delimiter: 0x1f (Unit Separator), Record delimiter: 0x1e (Record Separator)
-  const gitLogRes = spawnSync("git", ["log", `-n${limit}`, "--format=%H%x1f%s%x1f%b%x1f%an%x1f%ad%x1e"], {
-    cwd: targetDir,
-    encoding: "utf8",
-  });
+  const gitLogRes = spawnSync(
+    "git",
+    ["log", "--no-merges", `-n${limit}`, "--format=%H%x1f%s%x1f%b%x1f%an%x1f%ad%x1e"],
+    {
+      cwd: targetDir,
+      encoding: "utf8",
+    },
+  );
 
   const rawOutput = gitLogRes.stdout || "";
   const rawRecords = rawOutput.split("\x1e").filter((r) => r.trim().length > 0);
