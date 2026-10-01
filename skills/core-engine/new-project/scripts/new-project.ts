@@ -4786,65 +4786,18 @@ export function initFastrrCheckout(options: { cartId: string; amount: number; us
         console.log("  ✅ Auto-wired: `./src/lib/fastrr.ts` (Fastrr 1-click checkout)");
       } else if (config.ecommerce === "razorpay") {
         const razorpayClient = `/**
- * 💳 Razorpay Payment Checkout Integration Helper
+ * 💳 Razorpay Official SDK Client Instance
+ * Documentation: https://razorpay.com/docs/api
  */
-export function openRazorpayModal(options: { orderId: string; amount: number; name: string }) {
-  if (typeof window === 'undefined') return;
-  console.log('[Razorpay] Opening payment modal for order:', options.orderId);
-}
+import Razorpay from 'razorpay';
+
+export const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || '',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
+});
 `;
         writeFileSync(join(libDir, "razorpay.ts"), razorpayClient, "utf8");
-
-        if (config.framework === "nextjs") {
-          const razorpayApiDir = join(resolvedTarget, "src", "app", "api", "payment", "razorpay");
-          mkdirSync(razorpayApiDir, { recursive: true });
-          writeFileSync(
-            join(razorpayApiDir, "route.ts"),
-            `import { NextResponse } from 'next/server';
-import crypto from 'node:crypto';
-
-export async function POST(req: Request) {
-  try {
-    const { amount, currency = 'INR' } = await req.json();
-    return NextResponse.json({
-      id: 'order_' + crypto.randomUUID().slice(0, 8),
-      amount: amount || 50000,
-      currency,
-      status: 'created',
-    });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
-`,
-            "utf8",
-          );
-        } else if (config.framework === "astro") {
-          const apiDir = join(resolvedTarget, "src", "pages", "api", "payment");
-          mkdirSync(apiDir, { recursive: true });
-          writeFileSync(
-            join(apiDir, "razorpay.ts"),
-            `import type { APIRoute } from 'astro';
-import crypto from 'node:crypto';
-
-export const POST: APIRoute = async ({ request }) => {
-  try {
-    const { amount, currency = 'INR' } = await request.json();
-    return new Response(JSON.stringify({
-      id: 'order_' + crypto.randomUUID().slice(0, 8),
-      amount: amount || 50000,
-      currency,
-      status: 'created',
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
-  }
-};
-`,
-            "utf8",
-          );
-        }
-        console.log("  ✅ Auto-wired: `./src/lib/razorpay.ts` and payment order endpoint (Razorpay)");
+        console.log("  ✅ Auto-wired: `./src/lib/razorpay.ts` (Razorpay SDK client)");
       }
     }
 
