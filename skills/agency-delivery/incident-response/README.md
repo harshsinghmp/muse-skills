@@ -38,4 +38,4 @@ Draft the status page update for this SEV-1 outage.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

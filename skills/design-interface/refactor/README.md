@@ -42,4 +42,4 @@ Zero-dependency Bun verification scripts:
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

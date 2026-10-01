@@ -58,7 +58,7 @@ The layering contract between them is normative — see [references/layering-pro
 ### Anti-Triggers
 
 - **Cross-session continuity**: the always-current boundary file is `handoff`'s `.agents/artifacts/HANDOFF.md` — do not duplicate it here. Anchor → fold → flush happens at session close (Step 6).
-- Long-term quarterly reviews: use [`periodic-retreat`](../periodic-retreat/SKILL.md).
+- Long-term quarterly reviews: use [`periodic-retreat`](../../reflection-maintenance/periodic-retreat/SKILL.md).
 
 ---
 
@@ -212,7 +212,7 @@ Anchors capture raw working context and may be committed, synced, or read by con
 
 1. **Codename rule**: when an NDA applies, `Client:` carries a codename — never legal names, never contract terms, never pricing.
 2. **No secrets**: tokens, credentials, and `.env` values never enter an anchor (same rule as every suite artifact).
-3. **Close-out hygiene**: archive client anchors to `.agents/archive/` or delete them at project end; stale client anchors left behind are knowledge-hygiene defects the [`audit`](../audit/SKILL.md) skill will flag as orphans.
+3. **Close-out hygiene**: archive client anchors to `.agents/archive/` or delete them at project end; stale client anchors left behind are knowledge-hygiene defects the [`audit`](../../quality-review/audit/SKILL.md) skill will flag as orphans.
 
 ---
 

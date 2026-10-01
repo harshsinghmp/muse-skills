@@ -44,4 +44,4 @@ Plan the go-to-market launch for our new product with a full funnel map.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

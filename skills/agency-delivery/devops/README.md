@@ -41,4 +41,4 @@ Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero T
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

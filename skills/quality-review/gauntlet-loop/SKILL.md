@@ -51,7 +51,7 @@ Execute this skill when:
 Do NOT use this skill when:
 - The task is a trivial one-liner fix or typo correction (use direct editing).
 - The task is exploratory research without a concrete deliverable (use research subagent).
-- Task dependencies are heavily coupled and unsplit (run [`coupling-router`](../coupling-router/SKILL.md) first).
+- Task dependencies are heavily coupled and unsplit (run [`coupling-router`](../../context-orchestration/coupling-router/SKILL.md) first).
 
 ---
 

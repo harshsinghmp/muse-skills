@@ -44,4 +44,4 @@ Audit our Meta ads account — CPMs doubled this quarter.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)
