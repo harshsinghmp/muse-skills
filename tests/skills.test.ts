@@ -1063,6 +1063,136 @@ tags: [ai, dev]
     }
   });
 
+  test("seo aeo mode and aeo-audit CLI evaluate 18-token quotability and robots.txt crawler segregation", () => {
+    const aeoRefPath = path.join(REPO_ROOT, "skills/agency-delivery/seo/references/aeo.md");
+    expect(fs.existsSync(aeoRefPath)).toBe(true);
+    const content = fs.readFileSync(aeoRefPath, "utf8");
+    expect(content).toContain("aeo-audit.ts");
+    expect(content).toContain("18-token");
+
+    const scriptPath = "skills/agency-delivery/seo/scripts/aeo-audit.ts";
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "aeo-audit-test-"));
+    try {
+      // 1. Audit high-quality AEO markdown content
+      const goodMd = path.join(tempDir, "high-aeo.md");
+      fs.writeFileSync(
+        goodMd,
+        `# Cloud Infrastructure Architecture
+
+Cloud Architecture is defined as a unified system that delivers distributed edge computing across global regions.
+Author: Harsh Singh. Published by Agency Engineering.
+
+## Database Migration Strategy
+PostgreSQL schema changes require dual-write validation and zero-downtime table locking guards during active client traffic.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Cloud Infrastructure Architecture"
+}
+</script>
+`,
+        "utf8",
+      );
+
+      const goodRes = spawnSync("bun", [scriptPath, "--audit", goodMd, "--json", "--extract-quotables"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(goodRes.status).toBe(0);
+      const goodReport = JSON.parse(goodRes.stdout);
+      expect(goodReport.score).toBeGreaterThanOrEqual(70);
+      expect(goodReport.metrics.first100WordsHasDefinition).toBe(true);
+      expect(goodReport.metrics.hasStructuredSchema).toBe(true);
+      expect(goodReport.metrics.hasAuthorAttribution).toBe(true);
+      expect(goodReport.quotables.length).toBeGreaterThan(0);
+
+      // 2. Audit low-quality markdown content (dangling pronoun, no schema, missing definition)
+      const badMd = path.join(tempDir, "low-aeo.md");
+      fs.writeFileSync(
+        badMd,
+        `# Random Thoughts
+
+Welcome to this website. We have some information here about random things that you might want to look at today.
+
+## Feature Overview
+It provides a great way to do things without any extra thinking or effort.
+`,
+        "utf8",
+      );
+
+      const badRes = spawnSync("bun", [scriptPath, "--audit", badMd, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(badRes.status).toBe(1);
+      const badReport = JSON.parse(badRes.stdout);
+      expect(badReport.score).toBeLessThan(70);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "dangling-pronoun")).toBe(true);
+      expect(badReport.violations.some((v: { type: string }) => v.type === "missing-schema")).toBe(true);
+
+      // 3. Audit Robots.txt with safe AI Search crawler allowance
+      const safeRobots = path.join(tempDir, "safe-robots.txt");
+      fs.writeFileSync(
+        safeRobots,
+        `User-agent: *
+Disallow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+`,
+        "utf8",
+      );
+
+      const safeRobotsRes = spawnSync("bun", [scriptPath, "--robots-check", safeRobots, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(safeRobotsRes.status).toBe(0);
+      const safeRobotsReport = JSON.parse(safeRobotsRes.stdout);
+      expect(safeRobotsReport.isSafeForAiSearch).toBe(true);
+      expect(safeRobotsReport.allowedSearchBots).toContain("OAI-SearchBot");
+      expect(safeRobotsReport.allowedSearchBots).toContain("PerplexityBot");
+      expect(safeRobotsReport.blockedTrainingBots).toContain("GPTBot");
+
+      // 4. Audit Robots.txt with dangerous blanket disallow blocking AI search bots
+      const dangerousRobots = path.join(tempDir, "dangerous-robots.txt");
+      fs.writeFileSync(
+        dangerousRobots,
+        `User-agent: *
+Disallow: /
+`,
+        "utf8",
+      );
+
+      const dangerousRobotsRes = spawnSync("bun", [scriptPath, "--robots-check", dangerousRobots, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(dangerousRobotsRes.status).toBe(1);
+      const dangerousRobotsReport = JSON.parse(dangerousRobotsRes.stdout);
+      expect(dangerousRobotsReport.isSafeForAiSearch).toBe(false);
+      expect(dangerousRobotsReport.blockedSearchBots.length).toBeGreaterThan(0);
+      expect(dangerousRobotsReport.warnings.some((w: string) => w.includes("blanket"))).toBe(true);
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("smm carousel mode and aspect-ratio-guard CLI enforce 9:16 vs 1:1 and mobile UI safe zones", () => {
     const carouselPath = path.join(REPO_ROOT, "skills/agency-delivery/smm/references/carousel.md");
     expect(fs.existsSync(carouselPath)).toBe(true);
