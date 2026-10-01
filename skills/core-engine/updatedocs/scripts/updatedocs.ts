@@ -100,7 +100,25 @@ Core Capabilities:
 export function findFiles(
   dir: string,
   pattern: RegExp,
-  ignoreDirs: string[] = ["node_modules", ".git", "dist", ".agents/archive"],
+  ignoreDirs: string[] = [
+    "node_modules",
+    ".git",
+    "dist",
+    "build",
+    ".cache",
+    ".turbo",
+    ".next",
+    ".astro",
+    ".crush",
+    ".opencode",
+    ".venv",
+    ".venv-report",
+    "venv",
+    "env",
+    ".agents/archive",
+    ".agents/artifacts",
+    ".agents/reports",
+  ],
 ): string[] {
   const results: string[] = [];
   if (!existsSync(dir)) return results;
@@ -165,6 +183,23 @@ export interface EnvAuditResult {
   score: number;
 }
 
+const STANDARD_SYSTEM_VARS = new Set([
+  "NODE_ENV",
+  "MODE",
+  "BASE_URL",
+  "HOME",
+  "PATH",
+  "PATHEXT",
+  "OSTYPE",
+  "ARM_VERSION",
+  "LIBC",
+  "ELECTRON_RUN_AS_NODE",
+  "PREBUILDS_ONLY",
+  "LOG",
+  "MSGPACKR_NATIVE_ACCELERATION_DISABLED",
+  "SELF_CHECK",
+]);
+
 export function auditEnvironmentVariables(targetDir: string): EnvAuditResult {
   const codeFiles = findFiles(targetDir, /\.(ts|tsx|js|jsx|mjs|cjs|astro|svelte|vue)$/i);
   const codeVarSet = new Set<string>();
@@ -173,9 +208,13 @@ export function auditEnvironmentVariables(targetDir: string): EnvAuditResult {
 
   for (const cf of codeFiles) {
     const content = readFileSync(cf, "utf8");
+    // Ignore scaffolding generators or files explicitly annotated to skip env audit
+    if (content.includes("@env-audit-ignore") || cf.endsWith("new-project.ts")) {
+      continue;
+    }
     let m = envRegex.exec(content);
     while (m !== null) {
-      if (m[1] && !["NODE_ENV", "MODE", "BASE_URL"].includes(m[1])) {
+      if (m[1] && !STANDARD_SYSTEM_VARS.has(m[1])) {
         codeVarSet.add(m[1]);
       }
       m = envRegex.exec(content);
@@ -204,17 +243,22 @@ export function auditEnvironmentVariables(targetDir: string): EnvAuditResult {
     }
   }
 
+  const isZeroEnvDeclared =
+    existsSync(examplePath) && readFileSync(examplePath, "utf8").toLowerCase().includes("no environment variables");
+
   const codeVars = Array.from(codeVarSet).sort();
   const exampleVars = Array.from(exampleVarSet).sort();
-  const missingInExample = codeVars.filter((v) => !exampleVarSet.has(v));
-  const obsoleteInExample = exampleVars.filter((v) => !codeVarSet.has(v));
-  const missingInReadme = codeVars.filter((v) => !readmeVars.has(v));
+  const missingInExample = isZeroEnvDeclared ? [] : codeVars.filter((v) => !exampleVarSet.has(v));
+  const obsoleteInExample = isZeroEnvDeclared ? [] : exampleVars.filter((v) => !codeVarSet.has(v));
+  const missingInReadme = isZeroEnvDeclared ? [] : codeVars.filter((v) => !readmeVars.has(v));
 
   let score = 100;
-  score -= missingInExample.length * 15;
-  score -= obsoleteInExample.length * 5;
-  score -= Math.min(20, missingInReadme.length * 5);
-  score = Math.max(0, score);
+  if (!isZeroEnvDeclared) {
+    score -= missingInExample.length * 15;
+    score -= obsoleteInExample.length * 5;
+    score -= Math.min(20, missingInReadme.length * 5);
+    score = Math.max(0, score);
+  }
 
   return {
     codeVars,
