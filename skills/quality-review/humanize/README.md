@@ -99,6 +99,7 @@ Before changing a suspected tell, verify:
 
 ## 📚 Disclosed Reference Guides
 
+- [`references/ast-shield-and-cadence.md`](references/ast-shield-and-cadence.md) — 3-pass token stash pipeline, cadence dispersion formula ($\sigma \ge 5.0$), and density fences.
 - [`references/patterns.md`](references/patterns.md) — Comprehensive 30+ pattern anti-slop taxonomy with before/after examples.
 - [`references/style-guide.md`](references/style-guide.md) — Medium-specific voice calibrations (technical docs, marketing copy, executive briefs, blogs).
 - [`references/verification.md`](references/verification.md) — Quality gates, verification checklists, and audit procedures.

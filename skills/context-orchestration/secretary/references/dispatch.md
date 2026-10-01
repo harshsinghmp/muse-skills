@@ -104,7 +104,7 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 | Department | Purpose & Invariant | Council Lead |
 | :--- | :--- | :--- |
-| **`coach`** | Daily reflective check-in and effort scorecard for developers and AI agents. | **Crew** |
+| **`coach`** | Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. | **Crew** |
 | **`periodic-retreat`** | Quarterly personal and project strategic retreat facilitator. | **Sol & Crew** |
 | **`clean-system-cache`** | Cross-platform developer, designer, and browser cache cleaner for Windows, Linux, and macOS. | **Sol** |
 <!-- agency-directory:end -->

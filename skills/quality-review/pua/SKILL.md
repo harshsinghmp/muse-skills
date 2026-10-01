@@ -255,15 +255,18 @@ follow the escalation order. The core procedure above is enough to start without
 
 ## Verification & Dignified Exit
 
-### Verification Criteria
-Before declaring any task complete:
-1. **Executed command receipts**: Real CLI, test, curl, or build command output pasted into response.
-2. **Zero hand-waving**: Every claimed fix verified directly in runtime/DOM/build logs.
-3. **Proactive extension check**: Confirmed adjacent files/modules are not vulnerable to the same defect.
+### Verification Criteria (Receipts Before Claims)
+Before declaring any task complete, verify against `references/receipt-verification.md`:
+1. **Executed command receipts**: Real CLI, test, curl, or build command output pasted verbatim into response (exit code 0 confirmed).
+2. **Ghost file existence probe**: Every file path, script, or config referenced in the response physically exists on disk (`fs.existsSync`). Non-existent paths instantly downgrade to Unsatisfactory (Red).
+3. **Anti-thrashing churn check**: Churn-to-signal ratio $\le 1.5$. No cosmetic modifications across unrelated files while leaving root bugs untouched.
+4. **Anti-sycophancy check**: Zero apologetic groveling (*"I apologize for the oversight"*); all failure reviews open with observed CLI output, root cause, and next hypothesis.
+5. **Zero hand-waving**: Every claimed fix verified directly in runtime/DOM/build logs.
+6. **Proactive extension check**: Confirmed adjacent files/modules are not vulnerable to the same defect.
 
 ### Dignified Exit (When 7-Point Checklist Exhausted)
 If all 7 points of the checklist are completed and the problem is genuinely blocked by external hard factors:
-1. Verified facts discovered via tools.
+1. Verified facts discovered via tools with verbatim command receipts.
 2. Eliminated hypotheses and why they failed.
 3. Narrowed scope of the remaining unknowns.
 4. Actionable next directions and exact handoff instructions.
