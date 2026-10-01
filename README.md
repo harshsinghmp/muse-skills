@@ -25,7 +25,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ---
 
-## 🆕 What's New in v7.1.0
+## 🆕 What's New
 
 Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 189 verified tests.
 See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
