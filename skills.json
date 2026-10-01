@@ -734,7 +734,7 @@
       "name": "seo",
       "description": "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics).",
       "path": "skills/agency-delivery/seo/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [

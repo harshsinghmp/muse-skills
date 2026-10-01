@@ -47,6 +47,19 @@ AEO plan: entity definition fixes (about/schema/sameAs), fact-extraction restruc
     - Track prompt results across: Perplexity, ChatGPT Search, Google Gemini/AI Overviews, Microsoft Copilot, Claude, and Grok.
     - Inspect server access logs to confirm crawl hits by `OAI-SearchBot`, `Claude-SearchBot`, `PerplexityBot`.
 
+## Tooling & Verification CLI
+
+The `seo:aeo` mode is backed by `skills/agency-delivery/seo/scripts/aeo-audit.ts`:
+- **Content Citability Audit**:
+  ```bash
+  bun skills/agency-delivery/seo/scripts/aeo-audit.ts --audit <file|dir> [--extract-quotables] [--json]
+  ```
+- **Robots.txt AI Retrieval Crawler Verification**:
+  ```bash
+  bun skills/agency-delivery/seo/scripts/aeo-audit.ts --robots-check <robots.txt> [--json]
+  ```
+Evaluates 18-token standalone quotability, answer-first definition in the opening 100 words, Schema entity linkage, and verifies that `OAI-SearchBot`, `PerplexityBot`, and `Claude-Web` are never blocked by blanket wildcard disallows.
+
 ## Quality gate
 
 - [ ] Baseline prompt set exists and is repeatable across the 6-platform matrix.

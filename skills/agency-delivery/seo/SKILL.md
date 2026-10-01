@@ -4,7 +4,7 @@ aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic
 description: "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics)."
 argument-hint: "[technical|onpage|content|local|links|aeo|audit]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -107,6 +107,10 @@ AI engines cite what they can parse as entities and facts: clear entity definiti
 - **Audit OpenGraph & Social Cards**: `bun skills/agency-delivery/seo/scripts/og-audit.ts --audit [dir|file] [--json]`
 - **Generate OpenGraph Tags**: `bun skills/agency-delivery/seo/scripts/og-audit.ts --generate-meta [--title "..." --desc "..." --url "..." --image "..."]`
 
+### AEO & AI Crawler Citability Tooling
+
+- **Audit Content Citability**: `bun skills/agency-delivery/seo/scripts/aeo-audit.ts --audit <file|dir> [--extract-quotables] [--json]`
+- **Audit Robots.txt for AI Search Retrieval**: `bun skills/agency-delivery/seo/scripts/aeo-audit.ts --robots-check <robots.txt> [--json]`
 
 ---
 
