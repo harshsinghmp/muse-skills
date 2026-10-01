@@ -40,4 +40,4 @@ Run the QBR from this transcript and ask for a review at the close.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

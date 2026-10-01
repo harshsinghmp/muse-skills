@@ -69,7 +69,7 @@ In **review / improve / audit / find**, load `references/review-checklist.md` an
 ### Anti-Triggers
 
 - Building a *component* (toast, drawer, dropdown, command menu) rather than an animation → that is a UI-library decision, not motion.
-- Pure **layout/visual design** without motion → [`refactor-ui`](../refactor-ui/SKILL.md).
+- Pure **layout/visual design** without motion → [`refactor`](../refactor/SKILL.md).
 - Extracting a **design system / design tokens** → [`designscope`](../designscope/SKILL.md).
 - Native mobile animation is **explicit-ask-only**; do not reach for `references/mobile.md` unless the user names a mobile platform.
 

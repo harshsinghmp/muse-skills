@@ -43,4 +43,4 @@ Record a podcast episode outline with broadcast engineering standards, or run a 
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

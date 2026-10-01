@@ -63,4 +63,4 @@ bun skills/agency-delivery/design/scripts/brand-assets.ts --project-dir ./my-app
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

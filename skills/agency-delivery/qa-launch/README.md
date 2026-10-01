@@ -38,4 +38,4 @@ QA the release candidate and give me a Block-or-Ship verdict.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

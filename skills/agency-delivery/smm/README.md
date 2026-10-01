@@ -48,4 +48,4 @@ Design an influencer and UGC program to launch our new skincare line.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

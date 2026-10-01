@@ -47,4 +47,4 @@ Structure our Obsidian client vault with wikilinks, callouts, and frontmatter pr
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)

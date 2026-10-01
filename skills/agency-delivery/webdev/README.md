@@ -93,4 +93,4 @@ bun skills/agency-delivery/webdev/scripts/webdev.ts --ssr-boundary-scan ./src
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../../../LICENSE)
