@@ -2,9 +2,9 @@
 name: git
 aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-release"]
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
-argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history]"
+argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history|audit|mine]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -88,6 +88,7 @@ Do **NOT** use this skill for:
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
 | `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit", "gitignore audit" | History, secret exposure, and .gitignore wildcard trap/cache audit | `audit.md` + `exposure-audit.md` + `gitignore-audit.md` |
+| `mine` | "mine conventions", "extract PR rules", "audit commit", "synthesize guidelines" | `convention-mining.md` |
 
 Token rule: in a mode, load only the references in its row — never the full set.
 

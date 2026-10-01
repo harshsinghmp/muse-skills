@@ -2524,6 +2524,54 @@ build/
     }
   });
 
+  test("🐙 git skill: pr-convention-miner CLI mines commits, synthesizes conventions, and audits commit messages", () => {
+    const scriptPath = "skills/core-engine/git/scripts/pr-convention-miner.ts";
+
+    // 1. Mine conventions from local repo
+    const mineRes = spawnSync("bun", [scriptPath, "--mine", REPO_ROOT, "--limit", "20", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(mineRes.status).toBe(0);
+    const mineData = JSON.parse(mineRes.stdout);
+    expect(mineData.totalCommitsAnalyzed).toBeGreaterThan(0);
+    expect(mineData.conventionalPercentage).toBeGreaterThan(80);
+    expect(mineData.topTypes.length).toBeGreaterThan(0);
+    expect(mineData.recommendedTemplate).toContain("<type>");
+
+    // 2. Synthesize conventions markdown
+    const synthRes = spawnSync("bun", [scriptPath, "--synthesize", REPO_ROOT], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(synthRes.status).toBe(0);
+    expect(synthRes.stdout).toContain("Mined Git & PR Conventions");
+    expect(synthRes.stdout).toContain("Dominant Commit Pattern");
+
+    // 3. Audit valid and invalid commit messages
+    const validCommit =
+      "feat(git): add automated pr convention miner\n\nWhy:\nTeams need automated convention extraction.\n\nWhat:\nAdd miner script.\n\nVerification:\nTests pass.\n";
+    const auditValidRes = spawnSync("bun", [scriptPath, "--audit-commit", validCommit, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(auditValidRes.status).toBe(0);
+    const validData = JSON.parse(auditValidRes.stdout);
+    expect(validData.passed).toBe(true);
+    expect(validData.type).toBe("feat");
+    expect(validData.scope).toBe("git");
+
+    const invalidCommit = "fixed some stuff and updated docs";
+    const auditInvalidRes = spawnSync("bun", [scriptPath, "--audit-commit", invalidCommit, "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(auditInvalidRes.status).toBe(1);
+    const invalidData = JSON.parse(auditInvalidRes.stdout);
+    expect(invalidData.passed).toBe(false);
+    expect(invalidData.violations.length).toBeGreaterThan(0);
+  });
+
   test("🐧 code-review skill: senior auditor CLI audits EDR safety, runtime pitfalls, and Conventional Comments", () => {
     const scriptPath = "skills/quality-review/code-review/scripts/code-review.ts";
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "code-review-test-"));
