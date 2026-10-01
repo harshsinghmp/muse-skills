@@ -4801,12 +4801,13 @@ export function openRazorpayModal(options: { orderId: string; amount: number; na
           writeFileSync(
             join(razorpayApiDir, "route.ts"),
             `import { NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 
 export async function POST(req: Request) {
   try {
     const { amount, currency = 'INR' } = await req.json();
     return NextResponse.json({
-      id: 'order_' + Math.random().toString(36).substring(2, 9),
+      id: 'order_' + crypto.randomUUID().slice(0, 8),
       amount: amount || 50000,
       currency,
       status: 'created',
@@ -4824,12 +4825,13 @@ export async function POST(req: Request) {
           writeFileSync(
             join(apiDir, "razorpay.ts"),
             `import type { APIRoute } from 'astro';
+import crypto from 'node:crypto';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { amount, currency = 'INR' } = await request.json();
     return new Response(JSON.stringify({
-      id: 'order_' + Math.random().toString(36).substring(2, 9),
+      id: 'order_' + crypto.randomUUID().slice(0, 8),
       amount: amount || 50000,
       currency,
       status: 'created',
