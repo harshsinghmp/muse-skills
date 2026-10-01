@@ -48,6 +48,30 @@ export interface LockfileAuditReport {
   passed: boolean;
 }
 
+export interface EdgeSsrPitfallsReport {
+  scannedFiles: number;
+  violations: CodeReviewFinding[];
+  passed: boolean;
+}
+
+export interface LifecycleScriptsReport {
+  packageJson: string;
+  lifecycleHooksFound: string[];
+  violations: CodeReviewFinding[];
+  passed: boolean;
+}
+
+export interface AllAuditsReport {
+  targetPath: string;
+  edr: EdrSafetyReport;
+  runtimePitfalls: RuntimePitfallsReport;
+  edgeSsr: EdgeSsrPitfallsReport;
+  lifecycleScripts: LifecycleScriptsReport;
+  lockfile: LockfileAuditReport;
+  passed: boolean;
+  totalViolations: number;
+}
+
 const DEFAULT_IGNORED_DIRS = new Set([
   "node_modules",
   ".git",
@@ -378,9 +402,234 @@ export function auditLockfile(lockfilePath: string): LockfileAuditReport {
 
   return {
     lockfile: lockfilePath,
-    totalDependencies,
+    totalDependencies: totalDependencies,
     suspiciousRegistries,
     passed: suspiciousRegistries.length === 0,
+  };
+}
+
+/**
+ * Audit code for Edge runtime and SSR boundary pitfalls.
+ */
+export function auditEdgeSsrPitfalls(targetPath: string): EdgeSsrPitfallsReport {
+  const violations: CodeReviewFinding[] = [];
+  const files = walkDir(targetPath, [".ts", ".tsx", ".js", ".jsx", ".mjs"]);
+
+  const unsupportedEdgeModules = new Set([
+    "fs",
+    "node:fs",
+    "child_process",
+    "node:child_process",
+    "net",
+    "node:net",
+    "tls",
+    "node:tls",
+    "dns",
+    "node:dns",
+    "dgram",
+    "node:dgram",
+    "cluster",
+    "node:cluster",
+    "v8",
+    "node:v8",
+    "vm",
+    "node:vm",
+  ]);
+
+  for (const file of files) {
+    if (file.includes(".test.") || file.includes(".spec.") || file.includes("/tests/")) {
+      continue;
+    }
+
+    let content = "";
+    try {
+      content = fs.readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+
+    const lines = content.split("\n");
+    const isClientFile = /['"]use client['"]/.test(content);
+    const isEdgeFile =
+      /export\s+const\s+runtime\s*=\s*['"]edge['"]/.test(content) ||
+      /runtime:\s*['"]edge['"]/.test(content) ||
+      /\/edge\//i.test(file) ||
+      /\/workers?\//i.test(file) ||
+      /(^|[/\\])(worker|middleware)\.[jt]sx?$/i.test(file);
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+      const lineNum = i + 1;
+
+      if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*") || trimmed.startsWith("#")) {
+        continue;
+      }
+
+      // 1. Edge runtime unsupported Node built-in imports
+      if (isEdgeFile) {
+        const importMatch = line.match(/(?:import\s+.*?from\s+['"]|require\s*\(\s*['"])(node:[a-z_]+|[a-z_]+)['"]/);
+        if (importMatch && unsupportedEdgeModules.has(importMatch[1])) {
+          violations.push({
+            file,
+            line: lineNum,
+            type: "edge-unsupported-node-builtin",
+            severity: "error",
+            message: `Node.js built-in module '${importMatch[1]}' is not supported in the Edge Runtime (Cloudflare Workers / Vercel Edge).`,
+            snippet: line.trim(),
+          });
+        }
+      }
+
+      // 2. SSR browser global leakage (window, document, localStorage, sessionStorage, navigator)
+      if (!isClientFile) {
+        const browserGlobalMatch = line.match(/\b(window|document|localStorage|sessionStorage|navigator)\./);
+        if (browserGlobalMatch) {
+          const matchedGlobal = browserGlobalMatch[1];
+          const hasGuardOnLine =
+            /typeof\s+(window|document)\s*!==\s*['"]undefined['"]/.test(line) || /typeof\s+globalThis\b/.test(line);
+          const prevLine = i > 0 ? lines[i - 1].trim() : "";
+          const hasGuardOnPrevLine = /if\s*\(\s*typeof\s+(window|document)\s*!==\s*['"]undefined['"]\s*\)/.test(
+            prevLine,
+          );
+
+          if (!hasGuardOnLine && !hasGuardOnPrevLine) {
+            violations.push({
+              file,
+              line: lineNum,
+              type: "ssr-window-leakage",
+              severity: "warning",
+              message: `Direct access to browser global '${matchedGlobal}' without typeof window !== 'undefined' guard will crash during Server-Side Rendering (SSR).`,
+              snippet: line.trim(),
+            });
+          }
+        }
+      }
+
+      // 3. Raw unescaped HTML injection
+      if (
+        /dangerouslySetInnerHTML\s*=\s*\{\s*\{\s*__html:/.test(line) ||
+        /\.innerHTML\s*=/.test(line) ||
+        /v-html\s*=/.test(line)
+      ) {
+        if (!line.includes("DOMPurify") && !line.includes("sanitize")) {
+          violations.push({
+            file,
+            line: lineNum,
+            type: "raw-html-injection",
+            severity: "warning",
+            message:
+              "Unescaped HTML injection via dangerouslySetInnerHTML / innerHTML introduces Cross-Site Scripting (XSS) risks unless sanitized with DOMPurify.",
+            snippet: line.trim(),
+          });
+        }
+      }
+    }
+  }
+
+  return {
+    scannedFiles: files.length,
+    violations,
+    passed: violations.filter((v) => v.severity === "error").length === 0,
+  };
+}
+
+/**
+ * Audit package.json lifecycle scripts for dropper / malicious command execution.
+ */
+export function auditLifecycleScripts(targetPath: string): LifecycleScriptsReport {
+  let pkgPath = targetPath;
+  if (fs.existsSync(targetPath) && fs.statSync(targetPath).isDirectory()) {
+    pkgPath = path.join(targetPath, "package.json");
+  }
+
+  const violations: CodeReviewFinding[] = [];
+  const hooksFound: string[] = [];
+
+  if (!fs.existsSync(pkgPath)) {
+    return {
+      packageJson: pkgPath,
+      lifecycleHooksFound: [],
+      violations: [],
+      passed: true,
+    };
+  }
+
+  try {
+    const raw = fs.readFileSync(pkgPath, "utf8");
+    const json = JSON.parse(raw) as { scripts?: Record<string, string> };
+    const scripts = json.scripts ?? {};
+
+    const riskyHooks = new Set(["preinstall", "install", "postinstall", "prepublish", "prepublishOnly", "prepare"]);
+
+    for (const [hook, cmd] of Object.entries(scripts)) {
+      if (!riskyHooks.has(hook)) continue;
+      hooksFound.push(hook);
+
+      const isSuspicious =
+        /\b(curl|wget)\b/i.test(cmd) ||
+        /\|\s*(ba)?sh\b/i.test(cmd) ||
+        /\|\s*powershell\b/i.test(cmd) ||
+        /\bbash\s+-c\b/i.test(cmd) ||
+        /\bsh\s+-c\b/i.test(cmd) ||
+        /\beval\b/i.test(cmd) ||
+        /\bpowershell\b.*?-(enc|EncodedCommand)/i.test(cmd) ||
+        /\bcertutil\b/i.test(cmd);
+
+      if (isSuspicious) {
+        violations.push({
+          file: pkgPath,
+          line: 1,
+          type: "suspicious-lifecycle-script",
+          severity: "error",
+          message: `Lifecycle hook '${hook}' executes shell dropper command (${cmd}); high-risk supply-chain attack vector.`,
+          snippet: `"${hook}": "${cmd}"`,
+        });
+      }
+    }
+  } catch {
+    // Ignore JSON parsing or read errors
+  }
+
+  return {
+    packageJson: pkgPath,
+    lifecycleHooksFound: hooksFound,
+    violations,
+    passed: violations.filter((v) => v.severity === "error").length === 0,
+  };
+}
+
+/**
+ * Run consolidated audit across all dimensions.
+ */
+export function auditAll(targetPath: string): AllAuditsReport {
+  const edr = auditEdrSafety(targetPath);
+  const runtimePitfalls = auditRuntimePitfalls(targetPath);
+  const edgeSsr = auditEdgeSsrPitfalls(targetPath);
+  const lifecycleScripts = auditLifecycleScripts(targetPath);
+  const lockfilePath = fs.existsSync(path.join(targetPath, "package-lock.json"))
+    ? path.join(targetPath, "package-lock.json")
+    : path.join(targetPath, "package.json");
+  const lockfile = auditLockfile(lockfilePath);
+
+  const totalViolations =
+    edr.violations.length +
+    runtimePitfalls.violations.length +
+    edgeSsr.violations.length +
+    lifecycleScripts.violations.length +
+    lockfile.suspiciousRegistries.length;
+
+  const passed = edr.passed && runtimePitfalls.passed && edgeSsr.passed && lifecycleScripts.passed && lockfile.passed;
+
+  return {
+    targetPath,
+    edr,
+    runtimePitfalls,
+    edgeSsr,
+    lifecycleScripts,
+    lockfile,
+    passed,
+    totalViolations,
   };
 }
 
@@ -435,6 +684,51 @@ if (import.meta.main) {
     process.exit(res.passed ? 0 : 1);
   }
 
+  if (args.includes("--audit-edge-ssr")) {
+    const idx = args.indexOf("--audit-edge-ssr");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const res = auditEdgeSsrPitfalls(target);
+
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🌐 Edge Runtime & SSR Pitfalls Audit: ${target}`);
+      console.log(`  Scanned Files: ${res.scannedFiles}`);
+      if (res.violations.length === 0) {
+        console.log("  ✅ Zero Edge/SSR runtime pitfalls detected.");
+      } else {
+        for (const v of res.violations) {
+          const icon = v.severity === "error" ? "❌" : "⚠️";
+          console.log(`  ${icon} [${v.type}] ${v.file}:${v.line} — ${v.message}`);
+          if (v.snippet) console.log(`     Snippet: ${v.snippet}`);
+        }
+      }
+    }
+    process.exit(res.passed ? 0 : 1);
+  }
+
+  if (args.includes("--audit-lifecycle-scripts")) {
+    const idx = args.indexOf("--audit-lifecycle-scripts");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "package.json";
+    const res = auditLifecycleScripts(target);
+
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n📦 Package Lifecycle Scripts Audit: ${res.packageJson}`);
+      console.log(`  Hooks Inspected: ${res.lifecycleHooksFound.join(", ") || "none"}`);
+      if (res.violations.length === 0) {
+        console.log("  ✅ Zero suspicious dropper lifecycle scripts detected.");
+      } else {
+        for (const v of res.violations) {
+          console.log(`  ❌ [${v.type}] ${v.message}`);
+          if (v.snippet) console.log(`     Snippet: ${v.snippet}`);
+        }
+      }
+    }
+    process.exit(res.passed ? 0 : 1);
+  }
+
   if (args.includes("--audit-conventional-comments")) {
     const idx = args.indexOf("--audit-conventional-comments");
     const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "";
@@ -480,7 +774,26 @@ if (import.meta.main) {
     process.exit(res.passed ? 0 : 1);
   }
 
+  if (args.includes("--audit-all")) {
+    const idx = args.indexOf("--audit-all");
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const res = auditAll(target);
+
+    if (isJson) {
+      console.log(JSON.stringify(res, null, 2));
+    } else {
+      console.log(`\n🔍 Consolidated Senior Auditor Suite: ${target}`);
+      console.log(`  EDR Safety:         ${res.edr.passed ? "✅ PASS" : "❌ FAIL"}`);
+      console.log(`  Runtime Pitfalls:   ${res.runtimePitfalls.passed ? "✅ PASS" : "❌ FAIL"}`);
+      console.log(`  Edge/SSR Pitfalls:  ${res.edgeSsr.passed ? "✅ PASS" : "❌ FAIL"}`);
+      console.log(`  Lifecycle Scripts:  ${res.lifecycleScripts.passed ? "✅ PASS" : "❌ FAIL"}`);
+      console.log(`  Lockfile Audit:     ${res.lockfile.passed ? "✅ PASS" : "❌ FAIL"}`);
+      console.log(`  Total Violations:   ${res.totalViolations}`);
+    }
+    process.exit(res.passed ? 0 : 1);
+  }
+
   console.log(
-    "Usage: bun code-review.ts [--audit-edr-safety [path]] [--audit-runtime-pitfalls [path]] [--audit-conventional-comments <file>] [--audit-lockfile [path]] [--json]",
+    "Usage: bun code-review.ts [--audit-edr-safety [path]] [--audit-runtime-pitfalls [path]] [--audit-edge-ssr [path]] [--audit-lifecycle-scripts [path]] [--audit-conventional-comments <file>] [--audit-lockfile [path]] [--audit-all [path]] [--json]",
   );
 }

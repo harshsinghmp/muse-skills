@@ -48,6 +48,18 @@ Enterprise EDR systems and cloud security monitors inspect process trees, memory
 - **Vulnerability**: Calling asynchronous functions without `await` or `.catch()` causes unhandled rejections that terminate Node.js runtime processes.
 - **Invariant**: Every Promise must be explicitly awaited or bound to a rejection handler.
 
+### Rule 9: Edge Runtime Node.js Built-In Isolation
+- **Vulnerability**: Importing Node.js built-ins (`fs`, `child_process`, `net`, `tls`, `dns`, `cluster`, `v8`, `vm`) in Cloudflare Workers, Vercel Edge, or edge middleware throws fatal runtime exceptions upon initialization.
+- **Invariant**: Edge runtime modules (`export const runtime = "edge"` or worker entry points) must strictly use Web Standard APIs (`fetch`, `crypto`, `Streams`).
+
+### Rule 10: Server-Side Rendering (SSR) Browser Global Leakage
+- **Vulnerability**: Direct access to browser globals (`window`, `document`, `localStorage`, `sessionStorage`, `navigator`) during React Server Components / SSR execution crashes page rendering with `ReferenceError: window is not defined`.
+- **Invariant**: Browser globals must either be confined to `"use client"` modules or guarded with `typeof window !== "undefined"`.
+
+### Rule 11: Supply Chain Lifecycle Script Droppers
+- **Vulnerability**: Malicious npm packages execute dropper commands (`curl`, `wget`, `bash -c`, `sh -c`, `powershell`, piping to shell) inside `preinstall`, `install`, or `postinstall` hooks.
+- **Invariant**: Package scripts must never execute remote shell droppers or unvetted binary downloaders during installation.
+
 ---
 
 ## 3. Conventional Comments Standard
@@ -73,9 +85,19 @@ bun skills/quality-review/code-review/scripts/code-review.ts --audit-edr-safety 
 # 2. Audit runtime pitfalls (Math.random, floating-point math, eval, floating promises)
 bun skills/quality-review/code-review/scripts/code-review.ts --audit-runtime-pitfalls [path]
 
-# 3. Audit Conventional Comments compliance in a review document or PR body
+# 3. Audit Edge runtime and SSR boundary violations (Node built-ins, window leakage)
+bun skills/quality-review/code-review/scripts/code-review.ts --audit-edge-ssr [path]
+
+# 4. Audit package.json lifecycle scripts for dropper / malicious command execution
+bun skills/quality-review/code-review/scripts/code-review.ts --audit-lifecycle-scripts [path]
+
+# 5. Audit Conventional Comments compliance in a review document or PR body
 bun skills/quality-review/code-review/scripts/code-review.ts --audit-conventional-comments <file.md>
 
-# 4. Audit lockfiles for poisoned or non-standard package registry URLs
+# 6. Audit lockfiles for poisoned or non-standard package registry URLs
 bun skills/quality-review/code-review/scripts/code-review.ts --audit-lockfile [path]
+
+# 7. Run consolidated audit across all 5 dimensions
+bun skills/quality-review/code-review/scripts/code-review.ts --audit-all [path]
 ```
+
