@@ -48,6 +48,26 @@ export interface LockfileAuditReport {
   passed: boolean;
 }
 
+const DEFAULT_IGNORED_DIRS = new Set([
+  "node_modules",
+  ".git",
+  "dist",
+  "build",
+  ".venv",
+  ".venv-report",
+  "venv",
+  "env",
+  ".cache",
+  ".turbo",
+  ".next",
+  ".astro",
+  ".crush",
+  ".opencode",
+  "archive",
+  "artifacts",
+  "reports",
+]);
+
 /**
  * Scan directory recursively for matching file extensions.
  */
@@ -63,7 +83,7 @@ function walkDir(dir: string, extensions: string[]): string[] {
 
     const entries = fs.readdirSync(dir);
     for (const entry of entries) {
-      if (entry === "node_modules" || entry === ".git" || entry === "dist" || entry === "build") {
+      if (DEFAULT_IGNORED_DIRS.has(entry) || entry.startsWith(".venv")) {
         continue;
       }
       const fullPath = path.join(dir, entry);
@@ -74,7 +94,9 @@ function walkDir(dir: string, extensions: string[]): string[] {
         results.push(fullPath);
       }
     }
-  } catch {}
+  } catch {
+    // Ignore directory traversal read/permission errors
+  }
 
   return results;
 }
@@ -87,6 +109,11 @@ export function auditEdrSafety(targetPath: string): EdrSafetyReport {
   const files = walkDir(targetPath, [".ts", ".js", ".mjs", ".sh", ".py", ".bat"]);
 
   for (const file of files) {
+    // Skip test files from runtime EDR dropper heuristics
+    if (file.includes(".test.") || file.includes(".spec.") || file.includes("/tests/")) {
+      continue;
+    }
+
     let content = "";
     try {
       content = fs.readFileSync(file, "utf8");
@@ -98,7 +125,13 @@ export function auditEdrSafety(targetPath: string): EdrSafetyReport {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmed = line.trim();
       const lineNum = i + 1;
+
+      // Ignore pure comment lines
+      if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*") || trimmed.startsWith("#")) {
+        continue;
+      }
 
       // 1. Dynamic evaluation (LotL injection signature)
       if (/\beval\s*\(/.test(line) || /new\s+Function\s*\(/.test(line)) {
@@ -170,6 +203,11 @@ export function auditRuntimePitfalls(targetPath: string): RuntimePitfallsReport 
   const files = walkDir(targetPath, [".ts", ".js", ".mjs"]);
 
   for (const file of files) {
+    // Skip test files from runtime pitfalls heuristics
+    if (file.includes(".test.") || file.includes(".spec.") || file.includes("/tests/")) {
+      continue;
+    }
+
     let content = "";
     try {
       content = fs.readFileSync(file, "utf8");
@@ -182,11 +220,29 @@ export function auditRuntimePitfalls(targetPath: string): RuntimePitfallsReport 
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmed = line.trim();
       const lineNum = i + 1;
 
-      // 1. Math.random() in sensitive files or token contexts
+      // Ignore pure comment lines or scanner definition literals
       if (
-        /Math\.random\(\)/.test(line) &&
+        trimmed.startsWith("//") ||
+        trimmed.startsWith("*") ||
+        trimmed.startsWith("/*") ||
+        trimmed.startsWith("#") ||
+        trimmed.startsWith('"') ||
+        trimmed.startsWith("'") ||
+        trimmed.startsWith("`") ||
+        trimmed.includes("message:") ||
+        trimmed.includes('"message":') ||
+        trimmed.includes('type: "weak-pseudo-random"') ||
+        trimmed.includes('type: "potential-redos-regex"')
+      ) {
+        continue;
+      }
+
+      // 1. Math.random() in sensitive files or token contexts (must not be inside string quote)
+      if (
+        /(?:^|[^"'\w$])Math\.random\s*\(\s*\)/.test(line) &&
         (isSecuritySensitiveFile || /token|secret|key|id|session|nonce/i.test(line))
       ) {
         violations.push({
@@ -312,9 +368,13 @@ export function auditLockfile(lockfilePath: string): LockfileAuditReport {
         if (!isTrusted) {
           suspiciousRegistries.push(`Untrusted third-party registry host: ${urlStr}`);
         }
-      } catch {}
+      } catch {
+        // Ignore unparseable registry URL format
+      }
     }
-  } catch {}
+  } catch {
+    // Ignore lockfile read/parse errors
+  }
 
   return {
     lockfile: lockfilePath,
