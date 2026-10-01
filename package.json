@@ -65,7 +65,7 @@
     "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
     "secret-scan": "bun scripts/secret-scan.ts",
-    "validate": "bash updateagents/scripts/validate-memory-file.sh",
+    "validate": "bash skills/core-engine/updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && ruff check scripts/",
     "type-check": "bunx --bun tsc --noEmit"
   },
