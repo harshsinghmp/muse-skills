@@ -7,11 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [7.2.0] - 2026-10-03
 
 ### Added
 
 - **GitHub Scaffolding, Instruction Migration & CLAUDE.md Shim (`updateagents` v2.3.0)** (#211): New `github-scaffold.ts` shared renderer for `CHANGELOG.md`, `.github/` community files (CONTRIBUTING, SECURITY, SUPPORT, CODE_OF_CONDUCT, GOVERNANCE, FAQ) and stack-detected workflow templates (Node/Bun, Python, Composer) that never emit passing placeholders and preserve user edits; `instruction-migration.ts` importing legacy agent instructions into `.agents/context/imported-agent-instructions.md` with recorded source scopes; `agents-template.ts` extracted AGENTS.md renderer; CLAUDE.md shim template containing only `@AGENTS.md`; `--github` / `--no-github` / `--confirm-remove-github-workflows` flags on `updateagents` and `new-project`; restored Two-Tier Identity & Context Resolution Cascade (with `vision.md`) in the AGENTS.md template.
+
+### Fixed
+
+- **CI Hermeticity for `new-project` Identity Gate** (#211): `agent-engine` tests now pass `--agent-name` explicitly instead of relying on the developer machine's `~/.agents/identity/assistant.md`; CI test job clones with `fetch-depth: 0` so `pr-convention-miner` analyzes real history instead of a single shallow merge ref; spawn assertions attach child `stderr` so CI failures surface the underlying error.
+- **`docs/CHANGELOG.md` Mirror Resync** (#211): documentation changelog backfilled 3.2.0 → 7.1.0 from the canonical root changelog while retaining the docs-only 1.0.0 – 2.4.1 history (68 sections, zero duplicates).
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.1.0...v7.2.0
+
+---
 
 ## [7.1.0] - 2026-10-01
 
