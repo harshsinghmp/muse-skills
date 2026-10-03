@@ -209,8 +209,10 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 - **Day-1 Proof-of-Life Starter Dashboard UI**:
   - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js), `src/pages/index.astro` (Astro), or `index.html` (Pure HTML): Generates an interactive live dashboard that immediately exercises the selected stack upon startup.
   - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js) or `src/pages/index.astro` (Astro): Generates an interactive live dashboard that immediately exercises the selected stack upon `bun run dev` (Drizzle DB status, Better Auth client SDK status, Stripe checkout trigger, and quick-launch links to `/admin`, `/keystatic`, or `/puck`).
-- **Production Deployment Artifacts & CI/CD**:
-  - `.github/workflows/ci.yml`: Automated CI pipeline running dependencies installation, TypeScript checking, test runner, and Vibeguard secret audits.
+- **GitHub project assets & CI/CD**:
+  - The shared renderer adapts `CHANGELOG.md` and `.github/{CONTRIBUTING,SECURITY,SUPPORT,CODE_OF_CONDUCT,GOVERNANCE,FAQ}.md` plus issue templates to verified project/repository identity; it does not copy this source repository's identity or credentials.
+  - Workflow templates currently cover Node/Bun projects with actual verification scripts, Python manifests, and Composer/PHP projects. Select from detected files and project choices; never emit a passing placeholder (`|| true`) or run checks the project does not define. Existing user-edited files are preserved. For other stacks, ask before selecting a workflow.
+  - Interactive setup asks whether the project will use GitHub when no repository signal exists; non-interactive runs require `--github` or `--no-github`. If hosting, contributor names, security contact, or workflow applicability cannot be determined, ask the user, apply their answer, and continue. If updateagents later detects a non-GitHub origin with workflow files, ask before removing them; remove only after explicit confirmation.
   - `Dockerfile` & `.dockerignore`: Multi-stage production container for Node/Bun with unprivileged non-root user (`--deploy=docker`).
   - `wrangler.toml`: Cloudflare Workers / Pages configuration with node compatibility and binding placeholders (`--deploy=cloudflare`).
   - `vercel.json`: Production headers, function rules, and security policies (`--deploy=vercel`).
@@ -279,6 +281,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
   --ecommerce=medusa \
   --db=postgres \
   --auth=better-auth \
+  --github \
   --non-interactive
 ```
 
@@ -297,7 +300,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--palette <color>` | String | Brand theme: `slate` \| `indigo` \| `emerald` \| `amber` \| `violet` |
 | `--first-milestone <m>` | String | Immediate next task / initial milestone |
 | `--planned-milestones <l>`| String | Comma-separated planned milestones |
-| `--agent-name <name>` | String | Lead autonomous agent persona (default: `Orchestrator`) |
+| `--agent-name <name>` | String | Agent name configured for this workspace; otherwise use the user's global assistant identity and prompt if unavailable |
 | `--agent-role <role>` | String | Lead agent functional role description |
 | `--constraint <text>` | String | Primary operational constraint or invariant |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
@@ -313,6 +316,7 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--db <db>` | String | `neon` \| `supabase` \| `postgres` \| `sqlite` \| `custom` \| `none` |
 | `--auth <auth>` | String | `better-auth` \| `supabase` \| `authjs` \| `custom` \| `none` |
 | `--deploy <deploy>` | String | `cloudflare` \| `docker` \| `vercel` \| `custom` \| `none` |
+| `--github` / `--no-github` | Boolean | Explicitly include or omit GitHub-specific files; interactive setup asks when unknown |
 | `--skip-install` | Boolean | Skip running bun install |
 | `--dry-run` | Boolean | Simulate without writing files |
 | `--non-interactive` | Boolean | Run without interactive prompts |
@@ -437,14 +441,14 @@ After scaffolding, verify the project:
 1. **Intake Brief**: Check that `./Client-Intake/00-Intake-Brief.md` exists with pre-filled scaffold answers.
 2. **Post-Scaffold Onboarding**: Walk the employee through the brief with your agent, then write the intake docs and `./start-here.md` it prescribes.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
-4. **Governance Container**: Check `./.agents/` 9-folder tree and `./AGENTS.md`. Working artifacts (research corpora, planning docs, reports) live under `./.agents/artifacts/<topic>/` per its README contract stub — never the repo tree, never `./.memory`; durable findings promote to `./.agents/context/`.
+4. **Governance Container**: Check `./.agents/` tree, `./AGENTS.md`, and `./CLAUDE.md` containing only `@AGENTS.md`. Working artifacts (research corpora, planning docs, reports) live under `./.agents/artifacts/<topic>/` per its README contract stub — never the repo tree, never `./.memory`; durable findings promote to `./.agents/context/`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.
 6. **CMS & Visual Builder Completeness**: If Payload, Keystatic, or Puck is enabled, verify config files (`payload.config.ts`, `keystatic.config.ts`), collection schemas, and admin UI pages exist.
 7. **Aria Builder Isolation**: If Aria is enabled, verify the target holds the official upstream clone (`package.json` named `@ariabuilder/aria`, `astro.config.ts`, `uno.user.config.ts` with the Wind 4 preset) plus engine governance only — no `aria.config.mjs`, no `Aria*.astro` components, no `backend/`, no engine tokens/CI. Run `npm run dev` and complete first-admin setup at `http://localhost:4321/admin/setup`.
 8. **Atomic Payload Isolation**: If Atomic is enabled, verify the target holds the official upstream template (`package.json` named `atomic-payload`, `src/payload.config.ts` with `buildConfig` + `mongooseAdapter`, `next.config.ts` with `withPayload`) plus engine governance only — no `src/styles/tokens.css`, no `uno.config.ts`, no Drizzle/CI/pre-commit overlays. Run `pnpm install`, `pnpm generate:types`, `pnpm dev`, open `http://localhost:42100/admin`, create the first admin, seed via the dashboard banner.
 9. **Backend Engine**: If Medusa is provisioned, check `./backend/medusa-config.ts`, `./backend/docker-compose.yml`, and `./backend/package.json`. If PostgreSQL container is requested, check `./docker-compose.yml`.
 10. **Day-1 Starter Dashboard**: Check that `src/app/page.tsx` (Next.js) or `src/pages/index.astro` (Astro) is provisioned with live stack badges and quick links.
-11. **Deployment & CI/CD**: Verify `.github/workflows/ci.yml` is present, alongside `Dockerfile` / `wrangler.toml` / `vercel.json` matching `--deploy`.
+11. **GitHub assets & deployment**: For a GitHub project, verify the generated changelog/community files and only the workflow(s) selected for the detected stack; verify `Dockerfile` / `wrangler.toml` / `vercel.json` against `--deploy`. Isolated official scaffolds receive no overlays.
 12. **Quality Gates & Test Suite**: Run `bun test` inside the scaffolded workspace to confirm `tests/health.test.ts` passes cleanly.
 13. **Day-1 Secret Defense**: Verify `scripts/pre-commit.sh` exists and is executable.
 14. **Dynamic ADRs & Product DOX**: Check that `.agents/context/decisions.md` contains ADR-001 through ADR-006, and `.agents/context/product.md` reflects the interview scope.

@@ -9,7 +9,7 @@ This reference documents the 13 tracked assets required for a repository to achi
 ### Asset 1: Root Agent Router (`AGENTS.md`)
 - **Location**: Repository root (`./AGENTS.md`)
 - **Criteria**:
-  - Lean DOX rail and Operating Constitution (<85 lines) with Secretary Protocol auto-wired.
+  - Lean root `AGENTS.md` workspace instructions (<90 lines) with Secretary Protocol and explicit dispatch reference.
   - Serves as a progressive disclosure routing table, not a monolithic rule dump.
   - Links to deeper standards in `.agents/standards/` and context in `.agents/context/`.
   - Defines the core operating identity, toolchain default, turn invariants, and autonomous Secretary dispatch on session start.

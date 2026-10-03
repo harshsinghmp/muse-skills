@@ -385,17 +385,24 @@ describe("Invocation UX & conventions", () => {
     expect(digestRes.stdout).toContain("What Shipped & Verified");
 
     // Test --scope-check mode
-    const scopeRes = spawnSync("bun", [scriptPath, "--scope-check", "We need a complete redesign and custom animation", "--json"], {
-      encoding: "utf8",
-      cwd: REPO_ROOT,
-    });
+    const scopeRes = spawnSync(
+      "bun",
+      [scriptPath, "--scope-check", "We need a complete redesign and custom animation", "--json"],
+      {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      },
+    );
     expect(scopeRes.status).toBe(0);
     const scopeData = JSON.parse(scopeRes.stdout);
     expect(scopeData.isOutScope).toBe(true);
     expect(scopeData.responseTemplate).toContain("Phase 2");
 
     // Test --founder-audit mode
-    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], { encoding: "utf8", cwd: REPO_ROOT });
+    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
     expect(founderRes.status).toBe(0);
     const founderData = JSON.parse(founderRes.stdout);
     expect(founderData.highLeveragePercentage).toBe(70);

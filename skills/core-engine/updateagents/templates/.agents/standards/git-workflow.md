@@ -17,13 +17,13 @@
 5. Prefer `git rebase` within feature branches to keep history clean and linear.
 6. For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
 7. Prefer a new revert commit over rewriting shared history.
-8. **Atomic PR Per Skill / Feature Protocol**: Always open a separate, dedicated feature branch and PR for each new feature per skill, even when executing multiple upgrades from a single working session. Never batch multi-skill changes into one monolithic PR.
+8. **Atomic PR per Feature Protocol**: Give each independently deliverable feature its own dedicated feature branch and PR. Keep coordinated changes needed for that feature together; never batch unrelated features or workstreams into one PR. This rule is per feature, not per skill.
 
 ---
 
 ## 2. Meaningful Git Commit Standard
 
-Every commit in this repository must follow this structured format:
+Every commit must follow this structured format:
 
 ```
 <type>(<scope>): <imperative summary>
@@ -50,7 +50,7 @@ Every commit in this repository must follow this structured format:
 - `ci`: CI/CD pipeline and automation configuration.
 
 ### Rejection Gate
-Vague commit messages like `"update"`, `"fix"`, `"minor changes"`, or `"wip"` are strictly rejected by the **Quality Assurance Gate**.
+Vague commit messages like `update`, `fix`, `minor changes`, or `wip` are rejected by the Quality Assurance Gate.
 
 ---
 
@@ -78,28 +78,25 @@ All development moves across 4 deterministic lifecycle phases:
 
 ## 4. Releases & Semantic Versioning (vX.Y.Z)
 
-All releases and git tags must follow strict `vX.Y.Z` semantic versioning:
+All releases and git tags follow strict `vX.Y.Z` semantic versioning:
 
 - **X (Major)**: Breaking architectural changes, core schema shifts, or protocol overhauls (`vX.0.0`).
 - **Y (Feature)**: Substantive new agent capabilities, MCP tools, or CLI subcommands (`vX.Y.0`).
 - **Z (Minor / Hotfix)**: Bug fixes, security patches, performance, and urgent hotfixes (`vX.Y.Z`).
 
 ### Release Invariants
-- Sync `package.json` `"version"` with the `vX.Y.Z` tag in the release commit.
+- Sync `package.json` `version` with the `vX.Y.Z` tag in the release commit.
 - Stage on `release/vX.Y.Z` from `dev` → merge to `master` → back-merge to `dev`.
 - CI publishes on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). Never publish manually.
 - **README "What's New" Rule**:
-  - Keep only the current release/feature highlights in `README.md` under `## 🚀 What's New`.
-  - Do NOT accumulate historical version blocks (`### vX.Y.Z`).
-  - Do NOT write version headers (`### vX.Y.Z`) inside `## 🚀 What's New`; format as a clean, plain-English bullet list understandable to non-technical users.
-  - Detailed versioned change history lives strictly in `CHANGELOG.md`.
+  - Keep only current release/feature highlights in `README.md` under `## 🚀 What's New` under 5 line.
+  - Do not accumulate historical version blocks (`### vX.Y.Z`) or put version headers inside `What's New`.
+  - Use a clean, plain-English bullet list; keep detailed versioned history in `CHANGELOG.md`.
 
 ---
 
-## 5. Skill Authoring & Ecosystem Invariants
+## 5. Clean Package Syntax & Versioning
 
-- **Skills Are Products**: Read the exact `SKILL.md` before editing one.
-- **Valid Frontmatter**: Keep YAML frontmatter valid (`name` + trigger-rich `description`) on every `SKILL.md`; it is the discovery surface for all runtimes.
-- **Atomic Updates**: Adding/removing a skill requires updating in the same commit: README badges/tables, `skills.json`, and `llms.txt`.
-- **Zero Secrets**: No secrets or personal environment values in any shipped file.
-- **Clean Package Syntax & No Published Refs**: In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is a git reference. Never append, publish, or pass raw commit hashes or arbitrary branch references (`#<ref>`); downstream installers execute `git clone --depth 1 --branch <ref>` which fatally rejects commit SHAs (`fatal: Remote branch <sha> not found`). Always keep repository links and skill installation commands clean (`skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it is a valid tag/branch that never breaks linking or downstream resolution. For package managers (`npm`, `bun`, etc.), use `@latest` when specified as a parameter; otherwise keep commands clean without redundant arguments to fetch latest automatically.
+- In `<owner>/<repo>#<ref>` package syntax, `#<ref>` is a Git reference. Keep repository/install targets clean (for example, `npx skills add <owner>/<repo>`); never append or publish raw commit SHAs or arbitrary branch refs.
+- Installers may run `git clone --depth 1 --branch <ref>`; a commit SHA is not a remote branch and fails with `fatal: Remote branch <sha> not found`. Add a ref only when required, and use a valid branch or tag.
+- For package tools that accept an explicit version/tag, use `@latest` only when latest is explicitly requested. Otherwise omit redundant version arguments.

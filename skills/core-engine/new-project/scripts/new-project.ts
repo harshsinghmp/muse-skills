@@ -26,6 +26,12 @@ import os from "node:os";
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
+import {
+  detectAgentTemplateProfile,
+  readConfiguredAgentName,
+  renderAgentsTemplate,
+} from "../../updateagents/scripts/agents-template";
+import { scaffoldGitHubAssets } from "../../updateagents/scripts/github-scaffold";
 
 // Template source of truth located in updateagents/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
@@ -91,6 +97,8 @@ const { values, positionals } = parseArgs({
     "no-cache": { type: "boolean", default: false },
     latest: { type: "boolean", default: false },
     "non-interactive": { type: "boolean", default: false },
+    github: { type: "boolean" },
+    "no-github": { type: "boolean" },
     "dry-run": { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
     help: { type: "boolean", short: "h", default: false },
@@ -128,8 +136,8 @@ Options:
       --palette <palette>       Color theme: slate | indigo | emerald | amber | violet | custom
       --first-milestone <item>  Immediate first milestone to build
       --planned-milestones <m>  Planned upcoming milestones (comma-separated)
-      --agent-name <name>       Primary AI agent identity (default: Orchestrator)
-      --agent-role <role>       Primary AI agent role (default: Lead Workspace Orchestrator)
+      --agent-name <name>       Primary AI agent identity (defaults to configured global identity)
+      --agent-role <role>       Role configured for the primary workspace agent
       --constraint <rule>       Primary governance quality rule
   -i, --intent <intent>         brochure | content | ecommerce | app | mobile | governance
       --preset <preset>         1-click recipe: powerhouse | astro-commerce | publisher | edge | visual | astro-visual | plain-astro | git-cms | instatic | pure-html | mobile | astro-mobile | atomic-payload
@@ -149,6 +157,8 @@ Options:
       --no-cache                Always fetch latest upstream templates & bypass cache
       --latest                  Pin dependencies to latest upstream releases
       --non-interactive         Run without interactive prompts
+      --github                  Scaffold GitHub community files and stack-matched workflows
+      --no-github               Skip GitHub-specific files for a non-GitHub project
       --dry-run                 Simulate without writing files
   -f, --force                   Force replace existing destination files
   -h, --help                    Show this help message
@@ -162,6 +172,7 @@ const isNonInteractive = values["non-interactive"] || false;
 const skipInstall = values["skip-install"] || false;
 const noCache = values["no-cache"] || false;
 const useLatest = values.latest || false;
+let githubProjectEnabled: boolean | undefined = values.github ? true : values["no-github"] ? false : undefined;
 
 if (values["cms-contract"] && !values.intent && !values.framework && !values.preset && !values.name) {
   const targetDir = positionals[0]
@@ -2032,11 +2043,9 @@ async function main() {
         );
       }
 
-      if (!agentName) {
-        agentName = await ask(rl, "🤖 Primary AI Agent Name", "Orchestrator");
-      }
+      if (!agentName) agentName = await ask(rl, "🤖 Primary AI Agent Name", "");
       if (!agentRole) {
-        agentRole = await ask(rl, "Primary Agent Role", "Lead Workspace Orchestrator");
+        agentRole = await ask(rl, "Primary Agent Role", "Configured workspace agent");
       }
       if (!primaryConstraint) {
         primaryConstraint = await ask(
@@ -2044,6 +2053,10 @@ async function main() {
           "Primary Quality Invariant",
           "Zero regression, 100% test pass rate, and zero secret exposure",
         );
+      }
+      if (githubProjectEnabled === undefined) {
+        const githubChoice = (await ask(rl, "Will this project be hosted on GitHub? (yes/no)", "no")).toLowerCase();
+        githubProjectEnabled = ["y", "yes"].includes(githubChoice);
       }
     } finally {
       rl.close();
@@ -2085,8 +2098,11 @@ async function main() {
   colorPalette = (colorPalette || "slate").toLowerCase();
   firstMilestone = firstMilestone || "Scaffold core application shell and initial landing page";
   plannedMilestones = plannedMilestones || "Backend API integration, Automated testing suite, Production deployment";
-  agentName = agentName || "Orchestrator";
-  agentRole = agentRole || "Lead Workspace Orchestrator";
+  agentName = agentName || readConfiguredAgentName() || "";
+  if (!agentName) {
+    throw new Error("Set --agent-name or configure ~/.agents/identity/assistant.md before scaffolding.");
+  }
+  agentRole = agentRole || "Configured workspace agent";
   primaryConstraint = primaryConstraint || "Zero regression, 100% test pass rate, and zero secret exposure";
 
   config.framework = (config.framework || "astro").toLowerCase();
@@ -2185,16 +2201,38 @@ async function main() {
   const agentsSrc = join(TEMPLATES_DIR, "AGENTS.md");
   const agentsDest = join(resolvedTarget, "AGENTS.md");
   if (existsSync(agentsSrc)) {
-    let content = readFileSync(agentsSrc, "utf8");
-    content = content.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
-    content = content.replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
-    content = content.replace(/\{\{AGENT_NAME\}\}/g, agentName);
-    content = content.replace(/\{\{AGENT_ROLE\}\}/g, agentRole);
+    const template = readFileSync(agentsSrc, "utf8");
+    const packageManager = config.cms === "atomic-payload" ? "pnpm" : config.cms === "aria" ? "npm" : "Bun";
+    const profile = detectAgentTemplateProfile(resolvedTarget, {
+      projectName,
+      projectDesc,
+      agentName,
+      agentRole,
+      intent: config.intent,
+      framework: config.framework,
+      styling: config.styling,
+      animation: config.animation,
+      toolchain: `${packageManager}; ${config.framework} runtime selected by new-project`,
+      governanceModel: "Secretary intake → selected project workflow → verified task closeout",
+    });
+    const content = renderAgentsTemplate(template, profile);
     if (!existsSync(agentsDest) || isForce) {
       if (!isDryRun) writeFileSync(agentsDest, content, "utf8");
       console.log("  ✅ Created: `./AGENTS.md`");
     } else {
       console.log("  ⏩ Skipped: `./AGENTS.md` (already exists)");
+    }
+  }
+
+  // Claude-specific entry point imports the shared workspace instructions.
+  const claudeSrc = join(TEMPLATES_DIR, "CLAUDE.md");
+  const claudeDest = join(resolvedTarget, "CLAUDE.md");
+  if (existsSync(claudeSrc)) {
+    if (!existsSync(claudeDest) || isForce) {
+      if (!isDryRun) cpSync(claudeSrc, claudeDest);
+      console.log("  ✅ Created: `./CLAUDE.md` (imports `AGENTS.md`)");
+    } else {
+      console.log("  ⏩ Skipped: `./CLAUDE.md` (already exists)");
     }
   }
 
@@ -2215,6 +2253,7 @@ async function main() {
   const subdirs = [
     "archive",
     "artifacts",
+    "dump",
     "brand",
     "brand/tokens",
     "brand/screenshots",
@@ -5349,44 +5388,6 @@ ${
         console.log("  ✅ Auto-wired: `index.html` (Day-1 Pure HTML/CSS Starter Page)");
       }
 
-      // 3.10 Generate Production Deployment Artifacts & CI/CD
-      const ghWorkflowsDir = join(resolvedTarget, ".github", "workflows");
-      mkdirSync(ghWorkflowsDir, { recursive: true });
-      const ciWorkflowContent = `name: CI & Quality Gate
-
-on:
-  push:
-    branches: [main, master, dev]
-  pull_request:
-    branches: [main, master, dev]
-
-jobs:
-  verify:
-    name: Quality & Secret Audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Bun Runtime
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Run Test Suite
-        run: bun test || true
-
-      - name: Vibeguard Secret Audit
-        run: |
-          echo "Inspecting workspace for credential leaks..."
-          ! git grep -E "(sk_live_[0-9a-zA-Z]{24}|ghp_[0-9a-zA-Z]{36}|-----BEGIN PRIVATE KEY-----)" . || exit 1
-`;
-      writeFileSync(join(ghWorkflowsDir, "ci.yml"), ciWorkflowContent, "utf8");
-      console.log("  ✅ Auto-wired: `.github/workflows/ci.yml` (Automated CI & Vibeguard Audit)");
-
       if (config.deploy === "docker" || existsSync(join(resolvedTarget, "docker-compose.yml"))) {
         const dockerfileContent = `# Multi-stage production container for ${projectName}
 FROM oven/bun:1-alpine AS base
@@ -5614,8 +5615,8 @@ exit 0
         }
 
         pkg.scripts["test"] = "bun test";
-        pkg.scripts["lint"] = "biome check src || true";
-        pkg.scripts["format"] = "biome format --write src || true";
+        pkg.scripts["lint"] = "biome check src";
+        pkg.scripts["format"] = "biome format --write src";
         pkg.scripts["precommit"] = "bash scripts/pre-commit.sh";
 
         if (config.db === "postgres" && config.ecommerce !== "medusa") {
@@ -5689,6 +5690,31 @@ exit 0
             // Gracefully continue if offline or sandbox
           }
         }
+      }
+
+      // Render after project scripts and any generated lockfile are finalized.
+      const githubAssets = scaffoldGitHubAssets(resolvedTarget, {
+        projectName,
+        projectDesc,
+        authorName: values.author,
+        agentName,
+        intent: config.intent,
+        framework: config.framework,
+        deploy: config.deploy,
+        githubProject: githubProjectEnabled,
+        packageManager: "bun",
+        dryRun: isDryRun,
+      });
+      for (const asset of githubAssets.created) console.log(`  ✅ Auto-wired: \`${asset}\``);
+      if (githubAssets.confirmationRequired) {
+        console.log(
+          "  ⚠️ Non-GitHub repository detected; existing workflows preserved. Ask before removing `.github/workflows`.",
+        );
+      }
+      if (githubAssets.hostUnknown) {
+        console.log(
+          "  ⚠️ GitHub assets skipped because hosting was not selected; rerun updateagents after confirming GitHub hosting.",
+        );
       }
 
       console.log("  ✅ Self-Verification: All generated configuration files and packages confirmed.\n");
@@ -6478,7 +6504,7 @@ ${artifactList}
 
 ### ADR-006: Automated Quality Gates & Vibeguard Secret Defense
 - **Context**: Prevent credential leaks and ensure zero-regression testing on day 1.
-- **Decision**: Provisioned pre-commit hook (\`scripts/pre-commit.sh\`), health test suite (\`tests/health.test.ts\`), and automated CI workflow (\`.github/workflows/ci.yml\`).
+- **Decision**: Provisioned the pre-commit hook (\`scripts/pre-commit.sh\`), health test suite (\`tests/health.test.ts\`), and project-adapted CI workflow when GitHub hosting was selected.
 - **Status**: Accepted & Implemented.
 `;
       writeFileSync(decisionsMdPath, decisionsContent, "utf8");
