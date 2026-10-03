@@ -81,7 +81,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
         encoding: "utf8",
       });
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain(
         "Initializing Agent Governance & Progressive Disclosure DOX (from updateagents/templates)",
       );
@@ -99,7 +99,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resPower.status).toBe(0);
+      expect(resPower.status, resPower.stderr).toBe(0);
       expect(resPower.stdout).toContain("Framework:         `NEXTJS`");
       expect(resPower.stdout).toContain("Styling:           `HYBRID`");
       expect(resPower.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
@@ -114,7 +114,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resVisual.status).toBe(0);
+      expect(resVisual.status, resVisual.stderr).toBe(0);
       expect(resVisual.stdout).toContain("Framework:         `ASTRO`");
       expect(resVisual.stdout).toContain("CMS:               `ARIABUILDER`");
       expect(resVisual.stdout).toContain("E-Commerce:        `FASTRR`");
@@ -128,7 +128,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resInstatic.status).toBe(0);
+      expect(resInstatic.status, resInstatic.stderr).toBe(0);
       expect(resInstatic.stdout).toContain("Framework:         `INSTATIC`");
       expect(resInstatic.stdout).toContain("Styling:           `BEM`");
 
@@ -141,7 +141,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resMobile.status).toBe(0);
+      expect(resMobile.status, resMobile.stderr).toBe(0);
       expect(resMobile.stdout).toContain("Framework:         `EXPO`");
       expect(resMobile.stdout).toContain("Mobile:            `EXPO`");
 
@@ -154,7 +154,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resAstroMobile.status).toBe(0);
+      expect(resAstroMobile.status, resAstroMobile.stderr).toBe(0);
       expect(resAstroMobile.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroMobile.stdout).toContain("State:             `NANOSTORES`");
       expect(resAstroMobile.stdout).toContain("Mobile:            `CAPACITOR`");
@@ -168,7 +168,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resAstroComm.status).toBe(0);
+      expect(resAstroComm.status, resAstroComm.stderr).toBe(0);
       expect(resAstroComm.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroComm.stdout).toContain("CMS:               `ARIABUILDER`");
       expect(resAstroComm.stdout).toContain("E-Commerce:        `MEDUSA`");
@@ -182,7 +182,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resAstroBlog.status).toBe(0);
+      expect(resAstroBlog.status, resAstroBlog.stderr).toBe(0);
       expect(resAstroBlog.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroBlog.stdout).toContain("CMS:               `STUDIOCMS`");
 
@@ -195,7 +195,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resAstroEmdash.status).toBe(0);
+      expect(resAstroEmdash.status, resAstroEmdash.stderr).toBe(0);
       expect(resAstroEmdash.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroEmdash.stdout).toContain("CMS:               `EMDASH`");
 
@@ -208,7 +208,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resPureHtml.status).toBe(0);
+      expect(resPureHtml.status, resPureHtml.stderr).toBe(0);
       expect(resPureHtml.stdout).toContain("Framework:         `HTML`");
       expect(resPureHtml.stdout).toContain("Styling:           `BEM`");
 
@@ -221,7 +221,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resNextComm.status).toBe(0);
+      expect(resNextComm.status, resNextComm.stderr).toBe(0);
       expect(resNextComm.stdout).toContain("Framework:         `NEXTJS`");
       expect(resNextComm.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
       expect(resNextComm.stdout).toContain("E-Commerce:        `PAYLOAD`");
@@ -235,7 +235,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
           encoding: "utf8",
         },
       );
-      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.status, resAtomic.stderr).toBe(0);
       expect(resAtomic.stdout).toContain("Framework:         `NEXTJS`");
       expect(resAtomic.stdout).toContain("CMS:               `ATOMIC-PAYLOAD`");
       expect(resAtomic.stdout).toContain("Styling:           `NONE`");
@@ -265,7 +265,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain("Intent:            `ECOMMERCE`");
       expect(res.stdout).toContain("Framework:         `NEXTJS`");
       expect(res.stdout).toContain("Styling:           `HYBRID`");
@@ -286,7 +286,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       spawnSync("git", ["remote", "add", "origin", "git@github.com:example/fresh-project.git"], { cwd: target });
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain("Step 4A: No agent files detected — Scaffolding fresh Agent Engine DOX container");
       expect(res.stdout).toContain("UPDATEAGENTS SYNCHRONIZATION REPORT");
       expect(res.stdout).toContain("SCAFFOLDED ASSETS");
@@ -321,7 +321,7 @@ Custom billing engine for healthcare providers.
       );
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain("retaining source history and updating the shared engine");
       expect(res.stdout).toContain("agent-instructions/");
 
@@ -428,7 +428,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // Verify AGENTS.md
       const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
@@ -495,7 +495,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Verify Client-Intake brief exists with pre-filled scaffold answers
       const briefPath = join(target, "Client-Intake/00-Intake-Brief.md");
@@ -612,7 +612,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Drizzle ORM typed schema & client
       expect(existsSync(join(target, "src/lib/schema.ts"))).toBe(true);
@@ -690,7 +690,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Day-1 Starter Dashboard
       expect(existsSync(join(target, "src/app/page.tsx"))).toBe(true);
@@ -763,7 +763,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resAria.status).toBe(0);
+      expect(resAria.status, resAria.stderr).toBe(0);
       expect(resAria.stdout).toContain("admin/setup");
       // Official upstream markers (present via clone and offline fallback).
       expect(existsSync(join(targetAria, "package.json"))).toBe(true);
@@ -799,7 +799,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.status, resAtomic.stderr).toBe(0);
       expect(resAtomic.stdout).toContain("localhost:42100/admin");
       expect(resAtomic.stdout).toContain("Atomic Payload is fully isolated");
       // Official upstream markers (present via both the npm-pack merge and the offline fallback).
@@ -839,7 +839,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resStudio.status).toBe(0);
+      expect(resStudio.status, resStudio.stderr).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
       const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
       expect(studioCfg).toContain("from 'studiocms/config'");
@@ -870,7 +870,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resEmdash.status).toBe(0);
+      expect(resEmdash.status, resEmdash.stderr).toBe(0);
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "emdash-env.d.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "seed/seed.json"))).toBe(true);
@@ -901,7 +901,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resPayloadEcom.status).toBe(0);
+      expect(resPayloadEcom.status, resPayloadEcom.stderr).toBe(0);
       expect(existsSync(join(targetPayloadEcom, "src/payload.config.ts"))).toBe(true);
       const payloadCfg = readFileSync(join(targetPayloadEcom, "src/payload.config.ts"), "utf8");
       expect(payloadCfg).toContain("Products, Orders, Customers");
@@ -923,7 +923,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resHtml.status).toBe(0);
+      expect(resHtml.status, resHtml.stderr).toBe(0);
       expect(existsSync(join(targetHtml, "index.html"))).toBe(true);
       const htmlDoc = readFileSync(join(targetHtml, "index.html"), "utf8");
       expect(htmlDoc).toContain("PURE HTML/CSS • ZERO BUILD STEP");
@@ -959,7 +959,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Verify Client-Intake brief with pre-filled agency answers
       const briefPath = join(targetNoCache, "Client-Intake/00-Intake-Brief.md");
@@ -1025,7 +1025,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resSunset.status).toBe(0);
+      expect(resSunset.status, resSunset.stderr).toBe(0);
       expect(existsSync(join(targetSunset, "src/styles/tokens.css"))).toBe(true);
       const tokensCss = readFileSync(join(targetSunset, "src/styles/tokens.css"), "utf8");
       expect(tokensCss).toContain("oklch(0.3 0.15 25)");
@@ -1050,7 +1050,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resDeepSea.status).toBe(0);
+      expect(resDeepSea.status, resDeepSea.stderr).toBe(0);
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
       expect(deepSeaTokens).toContain("DEEP-SEA");
@@ -1070,7 +1070,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       const skillDir = join(targetProject, ".agents/skills/oklch-skill");
       expect(existsSync(skillDir)).toBe(true);
@@ -1104,7 +1104,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resPlain.status).toBe(0);
+      expect(resPlain.status, resPlain.stderr).toBe(0);
       const plainPkg = JSON.parse(readFileSync(join(targetPlainAstro, "package.json"), "utf8"));
       expect(plainPkg.dependencies).not.toHaveProperty("react");
       expect(plainPkg.dependencies).not.toHaveProperty("react-dom");
@@ -1119,7 +1119,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGit.status).toBe(0);
+      expect(resGit.status, resGit.stderr).toBe(0);
       expect(existsSync(join(targetGitCms, "src/content/config.ts"))).toBe(true);
       expect(existsSync(join(targetGitCms, "src/content/blog/first-post.md"))).toBe(true);
       expect(existsSync(join(targetGitCms, "src/pages/rss.xml.ts"))).toBe(true);
@@ -1139,7 +1139,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // AI-ready DOX harness first
       expect(existsSync(join(targetHtml, "AGENTS.md"))).toBe(true);
@@ -1160,7 +1160,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resPlain.status).toBe(0);
+      expect(resPlain.status, resPlain.stderr).toBe(0);
       const pkg = JSON.parse(readFileSync(join(targetPlain, "package.json"), "utf8"));
       expect(pkg.dependencies).not.toHaveProperty("react");
       expect(pkg.dependencies).not.toHaveProperty("@astrojs/react");
@@ -1171,7 +1171,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGit.status).toBe(0);
+      expect(resGit.status, resGit.stderr).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
     }, 30000);
 
@@ -1183,7 +1183,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGraphics.status).toBe(0);
+      expect(resGraphics.status, resGraphics.stderr).toBe(0);
       expect(existsSync(join(targetGraphics, "creative/tokens"))).toBe(true);
       expect(existsSync(join(targetGraphics, "creative/decks"))).toBe(true);
       expect(existsSync(join(targetGraphics, "creative/assets"))).toBe(true);
@@ -1198,7 +1198,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGrowth.status).toBe(0);
+      expect(resGrowth.status, resGrowth.stderr).toBe(0);
       expect(existsSync(join(targetGrowth, "marketing/smm"))).toBe(true);
       expect(existsSync(join(targetGrowth, "marketing/seo"))).toBe(true);
       expect(existsSync(join(targetGrowth, "marketing/paidads"))).toBe(true);
@@ -1213,7 +1213,7 @@ Custom billing engine for healthcare providers.
         [NEW_PROJECT_SCRIPT, targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resEcom.status).toBe(0);
+      expect(resEcom.status, resEcom.stderr).toBe(0);
       const productEcom = readFileSync(join(targetEcom, ".agents/context/product.md"), "utf8");
       expect(productEcom).toContain("ecommerce_retail");
       const roadmapEcom = readFileSync(join(targetEcom, ".agents/context/roadmap.md"), "utf8");

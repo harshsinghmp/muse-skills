@@ -62,6 +62,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Full history: pr-convention-miner test analyzes recent commits and
+          # fails on shallow PR merge refs (single non-conventional merge commit).
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
         with:
