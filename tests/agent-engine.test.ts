@@ -77,7 +77,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
   describe("Part B: new-project Framework Creation & Intent-First Configurator", () => {
     it("new-project copies Agent Engine from updateagents/templates and supports wordpress archetype", () => {
       const target = join(TEST_SANDBOX, "wp-agency");
-      const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
+      const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
         encoding: "utf8",
       });
 
@@ -94,7 +94,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetPower = join(TEST_SANDBOX, "power-test");
       const resPower = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -109,7 +109,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetVisual = join(TEST_SANDBOX, "visual-test");
       const resVisual = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetVisual, "--non-interactive", "--preset=visual", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetVisual, "--non-interactive", "--preset=visual", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -123,7 +123,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetInstatic = join(TEST_SANDBOX, "instatic-test");
       const resInstatic = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -136,7 +136,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetMobile = join(TEST_SANDBOX, "mobile-test");
       const resMobile = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -149,7 +149,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroMobile = join(TEST_SANDBOX, "astro-mobile-test");
       const resAstroMobile = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -163,7 +163,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroComm = join(TEST_SANDBOX, "astro-comm-test");
       const resAstroComm = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -177,7 +177,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroBlog = join(TEST_SANDBOX, "astro-blog-test");
       const resAstroBlog = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -190,7 +190,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroEmdash = join(TEST_SANDBOX, "astro-emdash-test");
       const resAstroEmdash = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -203,7 +203,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetPureHtml = join(TEST_SANDBOX, "pure-html-test");
       const resPureHtml = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -216,7 +216,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetNextComm = join(TEST_SANDBOX, "next-comm-test");
       const resNextComm = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -230,7 +230,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAtomic = join(TEST_SANDBOX, "atomic-preset-test");
       const resAtomic = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"],
         {
           encoding: "utf8",
         },
@@ -246,7 +246,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetCustom,
           "--non-interactive",
           "--intent=ecommerce",
@@ -406,7 +406,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Acme Health",
@@ -476,7 +476,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Sovereign Store",
@@ -594,7 +594,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Fullstack Powerhouse",
@@ -673,7 +673,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--github",
@@ -751,7 +751,7 @@ Custom billing engine for healthcare providers.
       const resAria = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetAria,
           "--non-interactive",
           "--intent=ecommerce",
@@ -787,7 +787,7 @@ Custom billing engine for healthcare providers.
       const resAtomic = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetAtomic,
           "--non-interactive",
           "--intent=content",
@@ -828,7 +828,7 @@ Custom billing engine for healthcare providers.
       const resStudio = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetStudio,
           "--non-interactive",
           "--intent=content",
@@ -859,7 +859,7 @@ Custom billing engine for healthcare providers.
       const resEmdash = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetEmdash,
           "--non-interactive",
           "--intent=content",
@@ -889,7 +889,7 @@ Custom billing engine for healthcare providers.
       const resPayloadEcom = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetPayloadEcom,
           "--non-interactive",
           "--intent=ecommerce",
@@ -920,7 +920,7 @@ Custom billing engine for healthcare providers.
       const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
       const resHtml = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resHtml.status, resHtml.stderr).toBe(0);
@@ -938,7 +938,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetNoCache,
           "--non-interactive",
           "--intent=content",
@@ -1016,7 +1016,7 @@ Custom billing engine for healthcare providers.
       const resSunset = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetSunset,
           "--non-interactive",
           "--preset=plain-astro",
@@ -1041,7 +1041,7 @@ Custom billing engine for healthcare providers.
       const resDeepSea = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetDeepSea,
           "--non-interactive",
           "--preset=plain-astro",
@@ -1061,7 +1061,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetProject,
           "--non-interactive",
           "--preset=instatic",
@@ -1095,7 +1095,7 @@ Custom billing engine for healthcare providers.
       const resPlain = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetPlainAstro,
           "--non-interactive",
           "--framework=astro",
@@ -1116,7 +1116,7 @@ Custom billing engine for healthcare providers.
       const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
       const resGit = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resGit.status, resGit.stderr).toBe(0);
@@ -1130,7 +1130,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetHtml,
           "--non-interactive",
           "--preset=pure-html",
@@ -1157,7 +1157,7 @@ Custom billing engine for healthcare providers.
       const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
       const resPlain = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resPlain.status, resPlain.stderr).toBe(0);
@@ -1168,7 +1168,7 @@ Custom billing engine for healthcare providers.
       const targetGit = join(TEST_SANDBOX, "preset-git-cms");
       const resGit = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resGit.status, resGit.stderr).toBe(0);
@@ -1180,7 +1180,7 @@ Custom billing engine for healthcare providers.
       const targetGraphics = join(TEST_SANDBOX, "preset-graphics");
       const resGraphics = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resGraphics.status, resGraphics.stderr).toBe(0);
@@ -1195,7 +1195,7 @@ Custom billing engine for healthcare providers.
       const targetGrowth = join(TEST_SANDBOX, "preset-growth");
       const resGrowth = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resGrowth.status, resGrowth.stderr).toBe(0);
@@ -1210,7 +1210,7 @@ Custom billing engine for healthcare providers.
       const targetEcom = join(TEST_SANDBOX, "preset-ecom");
       const resEcom = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
         { encoding: "utf8" },
       );
       expect(resEcom.status, resEcom.stderr).toBe(0);
