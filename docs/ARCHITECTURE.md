@@ -49,7 +49,7 @@ muse-skills/
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/before-after.md    # Synthesis examples
 │   ├── references/                 # 13-Asset matrix, fast-skip protocol & priority tables
-│   ├── scripts/updateagents.ts     # Core sync, audit, sanitize & scaffolding engine
+│   ├── scripts/                    # Core engine + github-scaffold, instruction-migration & agents-template renderers
 │   ├── templates/                  # Canonical Agent Engine DOX templates (.agents/, AGENTS.md, etc.)
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
