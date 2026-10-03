@@ -1,74 +1,88 @@
-# 🏛️ {{PROJECT_NAME}} — Workspace Rules & Operating Constitution
+<!-- updateagents:managed -->
+# {{PROJECT_NAME}} — Workspace Instructions
 
-> **Operating Identity**: **{{AGENT_NAME}}** ({{AGENT_ROLE}})
-> **Mission**: {{PROJECT_DESC}}
-> **Governance Model**: Contract Extraction → Workstream Execution → Quality Gate
-> **Toolchain**: Default `bun` for workspace scripts; subprojects define their own runtime in sub-roots.
-> **DOX Rail**: `AGENTS.md` files are binding work contracts for their subtrees. Walk from root to target path; closer docs control local work details.
-> **Engine Aliases**: "Agent Engine" and "DOX Engine" reference this progressive disclosure scaffolding and governance engine.
+> **Agent**: {{AGENT_NAME}} ({{AGENT_ROLE}}) · **Purpose**: {{PROJECT_DESC}}
+> **Governance**: {{GOVERNANCE_MODEL}} · **Toolchain**: {{TOOLCHAIN}}
+> **Repository**: {{REPOSITORY_REFERENCES}}
 
----
+## Instruction Hierarchy
 
-## ⚡ Core Turn Invariants (Always Enforced)
+This file and each `AGENTS.md` from workspace root to target path are binding; the nearest governs local details. Project context in `.agents/context/` is authoritative for project purpose, architecture, stack and current state. `~/.agents/identity/` supplies the user's global identity, preferences, machine rules and tool inventory only when project context has no override. Use the name the user's agent system defines; if unavailable, ask rather than invent one. Inherit global identity, never copy personal identity into the project.
 
-1. **Context Hygiene**: Output `[Context: ~X% used]` at turn start. Prompt at 70% before compaction. Byte-cap large terminal outputs.
-2. **Zero Secret Exposure (Vibeguard)**: Never print, echo, or commit raw credentials. Run pre-ship SecretScan before finalizing changes.
-3. **The Confidence Gate**: Assess confidence before editing code (<80% Stop & Ask; 80–90% State Assumption; >90% Proceed).
-4. **Destructive Command Gate**: Prohibit `rm -rf`, `git reset --hard`, force-pushes, or shell piping without stating blast radius, rollback plan, and getting user authorization.
-5. **Universal English Standard**: All agent responses, code, comments, commits, specs, and docs MUST strictly be in English.
-6. **Evidence Before Claims**: Work is complete only after independent oracle verification (tests, runtime logs, rendered DOM).
-7. **Structured Commits**: Commits must follow `<type>(<scope>): <summary>` with Why/What/Verification blocks.
-8. **Agent Containment & Archive**: Working artifacts (research, planning, reports) live in `./.agents/artifacts/<topic>/` — never the repo tree, never `./.memory`. Retired plans/scratchpads move to `./.agents/archive/[title]-[timestamp].md`; durable findings are promoted to `./.agents/context/`.
-9. **Session Memory & Closeout DOX Pass**: Update `./.memory`, `./.agents/context/current.md`, and the nearest owning `AGENTS.md` before completing tasks.
-10. **Modern Tool Primacy (MANDATORY)**: Always use modern high-speed tools (`fd` > `find`, `rg` > `grep`, `bat` > `cat`, `eza` > `ls`, `sd` > `sed`, `jq`/`rg` pipelines > `cut` for field extraction, `ps` with standard flags for process inspection, `zoxide` > `cd`, `delta` > `git diff`, native `find_by_name`/`grep_search`). Subshells run non-interactively and DO NOT load `.bashrc` aliases—agents MUST invoke installed modern binaries explicitly by name, never legacy tools unless modern binaries are absent. Never mandate tools outside the installed set.
-11. **Zero Synthetic ADE Artifact Leakage**: Never accept, commit, or propagate synthetic ADE/IDE placeholders or rich markdown wrappers (such as ORCA ADE `[[ORCA_RICH_MD:...]]`, Cursor `[cursor:...]`, Windsurf wrappers, or Claude artifacts). Always unwrap and decode them to raw content, and wrap template tokens in backticks (`<issue-id>`) to prevent ADE HTML parsers from hijacking them.
-12. **Clean Package Syntax & No Published Refs**: In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is a git reference. Never append, publish, or pass raw commit hashes or arbitrary branch references (`#<ref>`); downstream installers execute `git clone --depth 1 --branch <ref>` which fatally rejects commit SHAs. Always keep repository links and skill installation commands clean (`skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it is a valid tag/branch that never breaks linking. For package managers (`npm`, `bun`, etc.), use `@latest` when specified as a parameter; otherwise keep commands clean without redundant arguments to fetch latest automatically.
-13. **Atomic PR Per Skill / Feature Protocol**: Always open a separate, dedicated feature branch and PR for each new feature per skill, even when executing multiple upgrades from a single working session. Never batch multi-skill changes into one monolithic PR.
+If `.agents/context/imported-agent-instructions.md` exists, read it before every task and apply its rules within their recorded source scopes. Report conflicting rules with their source paths and ask the user; never silently discard or choose between them.
 
----
+## Two-Tier Identity & Context Resolution Cascade
 
-## 🧭 Two-Tier Identity & Context Resolution Cascade
+Agent execution resolves context through a two-tier cascade:
 
-Agent execution strictly resolves context through a two-tier cascade:
 1. **Local Project Scope (`./.agents/context/` & optional `./.agents/identity/`)**:
-   - Primary authority for domain problem, ICP, architecture, Golden Stack Fence allowlist, and sprint milestones (`product.md`, `architecture.md`, `stack.md`, `current.md`, `roadmap.md`).
+   - Primary authority for domain problem, ICP, architecture, stack allowlist, and sprint milestones (`product.md`, `architecture.md`, `stack.md`, `current.md`, `roadmap.md`).
    - Closer docs always govern local execution details.
 2. **Global Principal Baseline (`~/.agents/identity/`)**:
-   - Fallback authority for principal profile (`user.md`), default Council Lead delegation (`assistant.md`), strategic life/venture trajectory and intent (`vision.md`), global machine invariants (`rules.md`), and host toolchain inventory (`stack.md`).
+   - Fallback authority for principal profile (`user.md`), default assistant delegation (`assistant.md`), strategic life/venture trajectory and intent (`vision.md`), global machine invariants (`rules.md`), and host toolchain inventory (`stack.md`).
    - If local project context does not specify an override, inherit global preferences seamlessly without duplicating global goals into the project tree.
 
----
+## Rules for Every Task
 
-## 📚 Standards & Detailed Protocols (Progressive Disclosure)
-Load these relative modules on-demand when relevant to your active task:
+1. **Context**: Start responses with `[Context: ~X% used]`; at 70%, ask before compaction. Byte-cap large command output.
+2. **Secrets**: Never print, echo, log or commit credentials; don't ingest whole `.env` files when names suffice. Run configured SecretScan before finalizing.
+3. **Destructive commands**: Do not run `rm -rf`, `git reset --hard`, force-pushes or shell piping until you state blast radius and rollback plan and receive user authorization.
+4. **Confidence**: Below 80%, stop and ask; 80–90%, state the assumption; above 90%, proceed.
+5. **Unknowns**: If a material project fact or choice cannot be verified, ask the user directly, apply their answer, then continue. Never invent identities, contacts, repo hosts or policy; keep unrelated work moving.
+6. **Evidence and language**: Verify with relevant tests, logs, runtime or rendered output before claiming completion. Use English for agent responses, code, comments, commits, specifications and docs.
+7. **Working artifacts**: Put plans, research and reports in `.agents/artifacts/<topic>/`; put user-supplied URLs, data, logs and exports submitted for extraction in `.agents/dump/<category>/<descriptive-file-name>`. Keep them out of the repo root and `.memory/`; never store secrets in dumps. Archive retired scratchpads in `.agents/archive/`; promote durable findings to `.agents/context/`.
+8. **Closeout**: After every completed task, record the verified outcome with the available persistent-memory tool, even if the session continues or the user did not ask. Update `.agents/context/current.md` when shipped state or active constraints changed. Never edit a memory store directly when its owner provides a tool.
+9. **Modern tools**: Invoke installed modern binaries by name; agent subshells may not load shell aliases. Preferred tools detected at scaffold: {{INSTALLED_MODERN_TOOLS}}. Use legacy fallbacks only when the preferred binary is unavailable: `rg`→`grep`, `fd`→`find`, `bat`→`cat`, `eza`→`ls`, `sd`→`sed`, `gojq`/`choose`→`jq`/`cut`, `delta`→`git diff`, `zoxide`→`cd`. Never require undetected tools.
+10. **Synthetic wrappers**: Never propagate synthetic ADE/IDE payloads, including `[[ORCA_RICH_MD:...]]`, Cursor, Windsurf or Claude `<antArtifact>` wrappers. Unwrap and URL-decode to raw content, sanitize it, and backtick literal tokens such as `<issue-id>`. Run `updateagents --sanitize` to scan and unwrap a workspace.
+11. **Packages**: In `<owner>/<repo>#<ref>`, `#<ref>` is a Git branch/tag/commit. Keep install targets clean (for example, `npx skills add <owner>/<repo>`); never publish raw commit SHAs or arbitrary refs. Installers using `git clone --depth 1 --branch <ref>` reject commit SHAs as missing remote branches. Add a ref only when required and only if it is a valid branch/tag. Use `@latest` only when latest is explicitly requested.
+12. **Change discipline**: Keep changes focused; avoid unnecessary refactors, renames, frameworks, dependencies and infrastructure. Separate structural refactors from behavior changes. If `CHANGELOG.md` exists, add a concise entry under `Unreleased` for each shipped user-visible change; don't record unverified work or internal no-ops.
 
-### 🌐 Universal Core Standards (All Frameworks)
-- ⚙️ [Execution & Cognitive Kernel](./.agents/standards/execution-kernel.md) — 6 Judgment laws, 32-tool modern CLI matrix & fallbacks, synthetic ADE sanitization, Fowler Refactoring.
-- 🛡️ [Security & Vibeguard Protocol](./.agents/standards/security-vibeguard.md) — Secret isolation, Destructive Command Gate, Untrusted Tool Output defense.
-- 🛡️ [Boundary Governance & Nexus Gate](./.agents/standards/boundary-governance.md) — 5-checkpoint boundary verification: Goal, Facts, Method, Proof, and Boundaries.
-- 💳 [Fintech Gateways & Tax Compliance](./.agents/standards/fintech-gateways.md) — Multi-gateway settlements (Stripe, Razorpay, Cashfree, PayU, Paytm), 18% GST ITC recovery, 3-outcome reconciliation.
-- 📊 [Evidence-Based Client Reporting](./.agents/standards/client-reporting.md) — Progress updates grounded in verified Git commits, test runner outcomes, and stage artifacts.
-- 🎬 [Animated Technical Diagrams](./.agents/standards/motion-diagrams.md) — Zero-JS SVG architecture diagrams and dataflow animations.
-- 📐 [System, Domain & Resilience Design](./.agents/standards/system-design.md) — Evans DDD, Nygard Release It! stability, migration rehearsal, and schemas.
-- 🔄 [Development Workflows & Gates](./.agents/standards/workflows.md) — Scaled tiers (tiny-fix, quick-win, feature, architecture-change) & 5-phase pipeline.
-- 📜 [Git Branching, Commits & SemVer](./.agents/standards/git-workflow.md) — Branch lifecycle (`master`/`dev`/`feature`/`release`/`hotfix`), commit standards, and SemVer.
-- 📑 [DOX Hierarchy & Subtree Contracts](./.agents/standards/dox-hierarchy.md) — Reading order, child doc shape, closeout checklist, and pruning loop.
-- 🎭 [Team Roles & Routing](./.agents/standards/council-roles.md) — Division responsibilities (Orchestrator, Architect, Creative, Operations, Quality Gate) and subagent dispatch policies.
-- 🧠 [Context, Memory & Identity](./.agents/standards/memory-context.md) — Context hygiene, `./.memory` store lifecycle, Creed durable proposals, canonical identity sources.
+## Required Standards
 
-### 🚀 Framework, Brand & Architecture Standards
-- ⚛️ [Next.js & React Architecture](./.agents/standards/frontend-nextjs.md) — Next.js 16 (App Router), React 19, Server Components, TanStack Query.
-- 🚀 [Astro Frontend Architecture](./.agents/standards/frontend-astro.md) — Astro v7.2.x, static-first with `client:*` islands, content collections with Zod.
-- ⚡ [Cloudflare Workers & Hono API](./.agents/standards/backend-workers-hono.md) — Hono `@latest`, Drizzle ORM, Neon HTTP driver, route-per-resource.
-- 🧭 [Agency Tech Stacks & Tooling](./.agents/standards/tech-stacks.md) — 3 Core Directions: Astro v7.2.x, Instatic HTML, and Payload CMS + Next.js.
-- 🎨 [Design System & UI Standards](./.agents/brand/design.md) — Token architecture, 7 required UI component states, fluid typography.
-- 📐 [Semantic BEM CSS Conventions](./.agents/brand/bem-conventions.md) — Block-Element-Modifier class architecture and shallow depth rules.
-- ♿ [Accessibility (A11y) Baseline](./.agents/brand/a11y.md) — WCAG 2.2 AA non-negotiable mandates, contrast ratios, hit targets, and axe-core zero-tolerance.
-- 📖 [Durable Project Context Map](./.agents/context/index.md) — Product scope, architecture truth, current shipped state, decisions, and roadmap.
+Read every **Always required** standard before work and every **Required when detected or selected** standard that applies. These are mandatory, not optional background reading. `updateagents` refreshes applicability from project evidence; ask when uncertain. If the user confirms one does not apply, unlink it here but retain its file.
+
+**Always required**
+
+<!-- ALWAYS_REQUIRED_STANDARDS:start -->
+
+- [Execution &amp; Cognitive Kernel](./.agents/standards/execution-kernel.md) — Judgment rules, modern CLI matrix, sanitization, and refactoring discipline.
+- [Security &amp; Vibeguard](./.agents/standards/security-vibeguard.md) — Secret isolation, destructive-command gates, and untrusted-output defense.
+- [Boundary Governance](./.agents/standards/boundary-governance.md) — Goal, facts, method, proof, and scope checkpoints.
+- [Development Workflows](./.agents/standards/workflows.md) — Task tiers, execution phases, and verification gates.
+- [Instruction Hierarchy](./.agents/standards/dox-hierarchy.md) — Instruction precedence, subtree contracts, and context closeout.
+- [Context, Memory &amp; Identity](./.agents/standards/memory-context.md) — Project/global context sources and persistent-memory lifecycle.
+- [Anti-Patterns](./.agents/standards/anti-patterns.md) — Failure patterns and preferred alternatives.
+- [Team Roles &amp; Routing](./.agents/standards/council-roles.md) — Configured role responsibilities and task routing.
+- [Project Context Map](./.agents/context/index.md) — Project purpose, architecture, current state, decisions, and roadmap.
+
+<!-- ALWAYS_REQUIRED_STANDARDS:end -->
+
+**Required when detected or selected**
+
+<!-- CONDITIONAL_STANDARDS:start -->
+
+- [Git Workflow](./.agents/standards/git-workflow.md) — Branches, atomic feature PRs, commit format, releases, and clean package refs.
+- [Next.js &amp; React](./.agents/standards/frontend-nextjs.md) — Next.js/React: App Router, React patterns, server/client boundaries.
+- [Astro](./.agents/standards/frontend-astro.md) — Astro: static-first pages, interactive islands, and content collections.
+- [Cloudflare Workers &amp; Hono](./.agents/standards/backend-workers-hono.md) — Worker APIs, Hono routes, and edge data access.
+- [WordPress](./.agents/standards/backend-wordpress.md) — WordPress architecture and operational conventions.
+- [Agency Tech Stacks](./.agents/standards/tech-stacks.md) — framework or stack selected; approved tooling boundaries.
+- [Design System](./.agents/brand/design.md) — UI tokens, component states, and responsive consistency.
+- [Accessibility](./.agents/brand/a11y.md) — WCAG, contrast, keyboard access, and assistive technology.
+- [Visual Inspection](./.agents/standards/visual-inspection.md) — rendered-output checks for visual UI changes.
+- [BEM CSS](./.agents/brand/bem-conventions.md) — Block–Element–Modifier naming and shallow selector depth.
+- [Fintech Gateways &amp; Tax Compliance](./.agents/standards/fintech-gateways.md) — payment settlement, reconciliation, and applicable tax handling.
+- [Evidence-Based Client Reporting](./.agents/standards/client-reporting.md) — delivery claims grounded in artifacts and verification.
+- [Animated Technical Diagrams](./.agents/standards/motion-diagrams.md) — accessible, lightweight SVG diagrams and data-flow animation.
+- [System, Domain &amp; Resilience Design](./.agents/standards/system-design.md) — domain modeling, failure handling, and migration resilience.
+<!-- CONDITIONAL_STANDARDS:end -->
 
 <!-- muse-secretary-router:start -->
-## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
-- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md` or `.agents/skills/secretary/references/dispatch.md`).
-- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
-- **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
+
+## Secretary Protocol
+
+At the first prompt and every new task, activate `secretary:dispatch` by reading `~/.agents/skills/secretary/references/dispatch.md` (or the project copy at `.agents/skills/secretary/references/dispatch.md`). Triage the request, select the department and mode, read the selected skill's `SKILL.md` and mode reference, then act. Route through configured Council roles. Secretary dispatches by instruction; it is not a background process.
+
+Route Coach when its coaching modes fit; it is not a background process and does not replace task closeout.
+
 <!-- muse-secretary-router:end -->

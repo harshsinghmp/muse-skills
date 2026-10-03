@@ -52,6 +52,15 @@ bun path/to/updateagents/scripts/updateagents.ts --sanitize
 # Directly scaffold missing Agent Engine assets
 bun path/to/updateagents/scripts/updateagents.ts --scaffold
 
+# Explicitly confirm GitHub hosting when no remote/package metadata is set
+bun path/to/updateagents/scripts/updateagents.ts --scaffold --github
+
+# Confirm a non-GitHub host; workflow files are removed only with a second explicit confirmation
+bun path/to/updateagents/scripts/updateagents.ts --scaffold --no-github --confirm-remove-github-workflows
+
+# Remove existing GitHub workflows only after confirming a non-GitHub project
+bun path/to/updateagents/scripts/updateagents.ts --scaffold --confirm-remove-github-workflows
+
 # Context Token-Budget & Decay Health Meter
 bun path/to/updateagents/scripts/updateagents.ts --budget
 
@@ -100,13 +109,13 @@ Updated Agent Context
 ```
 
 1. **Establish Workspace Context**: Verifies `cwd` and excludes `.memory/**`.
-2. **Discover Agent Context**: Identifies `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc.
+2. **Discover Agent Context**: Finds supported runtime instruction files, nested rule sets, and Markdown/text files inside generic agent/rule/instruction/prompt directories; snapshots exact originals, imports scoped rules into `.agents/context/imported-agent-instructions.md`, and installs lightweight adapters to the shared `AGENTS.md` engine.
 3. **Inspect Project State**: Reads canonical sources (`package.json`, build/test configs).
 4. **Context Integrations**: Utilizes `codegraph`, `rtk`, or `ponytail` if present.
 5. **Build Context Delta**: Categorizes changes into `NEW`, `CHANGED`, `OBSOLETE`, `CONFLICTING`.
 6. **Determine Targets**: Targets smallest correct scope.
 7. **Preserve Existing Knowledge**: Protects intentional human notes and ADRs.
-8. **DOX Scaffolding & Context Placement**: Checks existing agent files, scaffolds if absent, and merges custom content into context files without clobbering.
+8. **DOX Scaffolding & Context Placement**: Scaffolds if absent; otherwise preserves every supported instruction source, migrates its complete contents with provenance, and adapts each runtime without silently losing rules.
 9. **Standards Synchronization**: Syncs all 19 rulebooks from `updateagents/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, motion diagrams, negative anti-patterns, and visual inspection) and displays the Invariant Atom Table telemetry.
 10. **Capture Commands**: Verifies commands against actual package scripts.
 11. **Capture Architecture**: Documents system boundaries and data flows.

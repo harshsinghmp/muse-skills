@@ -1,9 +1,9 @@
-<!-- Anti-slop PR template: every section is load-bearing. Unverified PRs do not merge. -->
+<!-- Keep this request focused, attributable, and verifiable. -->
 
 ## Why
 
 <!-- Rationale and motivation — the non-obvious "why", not a restatement of the diff. -->
-<!-- Links: Closes #<issue-id> / Resolves #<issue-id> -->
+<!-- Add issue links here when applicable (for example: Closes #123). -->
 
 ## What
 
@@ -15,10 +15,9 @@
 
 <!-- Proof over assertion: paste real command output, not claims. -->
 
-- [ ] All automated tests pass (`bun test` / project equivalent)
-- [ ] Static type check passes where applicable (`tsc --noEmit`)
-- [ ] Pre-ship secret scan passed (`rg -i "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" .`)
-- [ ] Documentation synchronized (`CHANGELOG.md`, affected docs)
+- [ ] Project-defined tests, type checks, lint, and build pass where applicable (commands listed below)
+- [ ] Configured secret scan passed; no credentials or private values were exposed
+- [ ] Changelog and affected documentation are updated when behavior or user-facing contracts changed
 
 ```text
 <paste verification command output here>
@@ -27,7 +26,6 @@
 ## Anti-Slop Checklist
 
 - [ ] No secrets, tokens, or `.env` values committed
-- [ ] No unrequested refactors of adjacent code (minimal-diff doctrine)
-- [ ] No synthetic ADE/IDE artifacts (`[[ORCA_RICH_MD:...]]`, Cursor/Claude wrappers)
-- [ ] Commit messages follow Conventional Commits (`<type>(<scope>): summary`)
+- [ ] No unrequested changes outside the stated scope
+- [ ] User data, generated files, and project-specific instructions are preserved
 - [ ] Ruled-out alternatives documented where non-obvious

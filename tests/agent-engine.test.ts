@@ -65,6 +65,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, TEST_SANDBOX, "--scaffold"], { encoding: "utf8" });
       expect(scaffoldRes.status).toBe(0);
       expect(scaffoldRes.stdout).toContain("Agent Engine successfully provisioned");
+      expect(scaffoldRes.stdout).toContain("GitHub assets deferred because hosting is unknown");
 
       expect(existsSync(join(TEST_SANDBOX, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/standards/backend-wordpress.md"))).toBe(true);
@@ -281,6 +282,8 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     it("updateagents scaffolds fresh Agent Engine on empty directory", () => {
       const target = join(TEST_SANDBOX, "fresh-project");
       mkdirSync(target, { recursive: true });
+      spawnSync("git", ["init", "-q"], { cwd: target });
+      spawnSync("git", ["remote", "add", "origin", "git@github.com:example/fresh-project.git"], { cwd: target });
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
       expect(res.status).toBe(0);
@@ -290,9 +293,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
 
       expect(existsSync(join(target, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(target, ".agents/standards/backend-wordpress.md"))).toBe(true);
+      expect(existsSync(join(target, "CHANGELOG.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/CONTRIBUTING.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/SECURITY.md"))).toBe(true);
     });
 
-    it("updateagents parses custom legacy files, maps context intelligently, and archives original", () => {
+    it("updateagents imports complete legacy instructions, archives the source, and installs a Claude adapter", () => {
       const target = join(TEST_SANDBOX, "legacy-project");
       mkdirSync(target, { recursive: true });
 
@@ -316,28 +322,26 @@ Custom billing engine for healthcare providers.
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
       expect(res.status).toBe(0);
-      expect(res.stdout).toContain(
-        "Step 4B: Custom agent files detected — Extracting and intelligently placing context",
+      expect(res.stdout).toContain("retaining source history and updating the shared engine");
+      expect(res.stdout).toContain("agent-instructions/");
+
+      const imported = readFileSync(join(target, ".agents/context/imported-agent-instructions.md"), "utf8");
+      expect(imported).toContain("Custom billing engine for healthcare providers");
+      expect(imported).toContain("npm run test:unit");
+      expect(imported).toContain("Mandatory HIPAA compliance audit");
+      expect(imported).toContain("CLAUDE.md");
+      expect(readFileSync(join(target, "AGENTS.md"), "utf8")).toContain("imported-agent-instructions.md");
+
+      // Exact original remains recoverable and Claude follows the shared AGENTS.md.
+      expect(readFileSync(join(target, "CLAUDE.md"), "utf8").trim()).toBe("@AGENTS.md");
+      const manifest = JSON.parse(
+        readFileSync(join(target, ".agents/archive/agent-instructions/manifest.json"), "utf8"),
       );
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/product.md");
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/architecture.md");
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/decisions.md");
-      expect(res.stdout).toContain("Archived CLAUDE.md");
-
-      // Verify custom content exists in context files
-      const productContent = readFileSync(join(target, ".agents/context/product.md"), "utf8");
-      expect(productContent).toContain("Custom billing engine for healthcare providers");
-
-      const archContent = readFileSync(join(target, ".agents/context/architecture.md"), "utf8");
-      expect(archContent).toContain("npm run test:unit");
-
-      const decisionsContent = readFileSync(join(target, ".agents/context/decisions.md"), "utf8");
-      expect(decisionsContent).toContain("Mandatory HIPAA compliance audit");
-
-      // Verify CLAUDE.md was moved to archive and not in root
-      expect(existsSync(join(target, "CLAUDE.md"))).toBe(false);
-      const archiveFiles = readdirSync(join(target, ".agents/archive"));
-      expect(archiveFiles.some((f) => f.startsWith("CLAUDE.legacy-"))).toBe(true);
+      const archivedClaude = manifest.sources.find(
+        (source: { sourcePath: string }) => source.sourcePath === "CLAUDE.md",
+      );
+      expect(archivedClaude).toBeDefined();
+      expect(readFileSync(join(target, archivedClaude.archivePath), "utf8")).toContain("Custom billing engine");
     });
 
     it("updateagents auto-wires Autonomous Secretary Protocol into AGENTS.md on first run and Day-N sync", () => {
@@ -350,7 +354,7 @@ Custom billing engine for healthcare providers.
       const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
       expect(agentsMd).toContain("<!-- muse-secretary-router:start -->");
       expect(agentsMd).toContain("secretary:dispatch");
-      expect(agentsMd).toContain("Autonomous Agency Orchestration (Secretary Protocol)");
+      expect(agentsMd).toContain("## Secretary Protocol");
 
       // 2. Simulate user custom AGENTS.md without secretary router
       const customContent = "# My Custom Rules\n- Rule 1: Always test\n";
@@ -359,13 +363,15 @@ Custom billing engine for healthcare providers.
       // 3. Run updateagents sync
       const syncRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
       expect(syncRes.status).toBe(0);
-      expect(syncRes.stdout).toContain("Secretary Protocol: Auto-wired into AGENTS.md");
 
-      // 4. Verify custom rule preserved AND secretary router injected
+      // 4. Verify custom rule is active in the imported source and shared router is installed.
       const syncedContent = readFileSync(join(target, "AGENTS.md"), "utf8");
-      expect(syncedContent).toContain("Rule 1: Always test");
       expect(syncedContent).toContain("<!-- muse-secretary-router:start -->");
       expect(syncedContent).toContain("secretary:dispatch");
+      expect(syncedContent).toContain("imported-agent-instructions.md");
+      expect(readFileSync(join(target, ".agents/context/imported-agent-instructions.md"), "utf8")).toContain(
+        "Rule 1: Always test",
+      );
     });
   });
 
@@ -670,6 +676,7 @@ Custom billing engine for healthcare providers.
           NEW_PROJECT_SCRIPT,
           target,
           "--non-interactive",
+          "--github",
           "--name=Nebula Cloud",
           "--author=Nebula Inc",
           "--intent=webapp",
@@ -697,7 +704,11 @@ Custom billing engine for healthcare providers.
       // 2. Production Deployment & CI/CD
       expect(existsSync(join(target, ".github/workflows/ci.yml"))).toBe(true);
       const ciContent = readFileSync(join(target, ".github/workflows/ci.yml"), "utf8");
-      expect(ciContent).toContain("Vibeguard Secret Audit");
+      expect(ciContent).toContain("bun run test");
+      expect(ciContent).not.toContain("|| true");
+      expect(existsSync(join(target, "CHANGELOG.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/CONTRIBUTING.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/SECURITY.md"))).toBe(true);
 
       expect(existsSync(join(target, "Dockerfile"))).toBe(true);
       expect(existsSync(join(target, ".dockerignore"))).toBe(true);
