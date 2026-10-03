@@ -48,6 +48,10 @@ Before writing implementation code, evaluate every feature through all three len
 4. Run the full project verification gate (`test`, `lint`, `type-check`, `build`).
 5. Route the finished diff through `code-review`.
 
+### 4. Durable Workflow Orchestration (Temporal — adopt only if the project uses it)
+
+Temporal design twin (source: `wshobson/agents` `workflow-orchestration-patterns`): workflow-orchestrates/activity-executes split; determinism rules (no `datetime.now`, no threads, no direct API calls in workflows); idempotent activities + timeouts + heartbeats; WHEN-NOT-USE (CRUD→APIs, batch→Airflow, streaming→Kafka).
+
 ## Quality gate
 
 - [ ] Three-Perspective Architecture (Frontend, Backend, Security) verified before code merge.

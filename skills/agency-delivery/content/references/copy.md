@@ -595,6 +595,15 @@ Before publishing or marking any copy ready, pass it through these 5 rigorous ed
 8. **TALE (Narrative Arc Gate)**:
    - Tension → Adversity → Lesson → Elevation sequence to maintain cognitive engagement over flat, bulleted recitation.
 
+### 6. Message-Market-Fit Trio & CTA Shape
+
+Run the trio before finalizing any copy (source: marketingskills `copywriting` SKILL.md):
+1. **The "Now you can" test** — does the headline complete "now you can ___" with a concrete outcome?
+2. **The Human Action Model** — name the discomfort → the vision → the path, in that order.
+3. **The Perception Gap check** — what the reader believes now vs what must be true to act; close it explicitly.
+
+Shape CTAs as **[Verb] + [Get] + [Qualifier]** (e.g. *"Start — get the audit — free, 2 minutes"*) — value-not-action verbs first.
+
 ---
 
 ## Final Quality Checklist
@@ -606,6 +615,7 @@ Before publishing or marking any copy ready, pass it through these 5 rigorous ed
 - [ ] Bullets written as fascinations (BGNGo / 7 Deadly Fascinations).
 - [ ] Top 4 objections explicitly addressed (Price, Effort, Trust, Fit).
 - [ ] CTAs follow First-Person / RAD rules with friction-reducing microcopy.
+- [ ] Message-fit trio passed ("Now you can" completes, discomfort→vision→path ordered, perception gap closed); CTAs follow [Verb]+[Get]+[Qualifier].
 - [ ] Testimonials follow Before-During-After or TEASE transformation arcs.
 - [ ] Hype adjectives eradicated (seamless, robust, cutting-edge, elevate, empower).
 - [ ] "So What? Prove It." and Aaron 8 Pre-Flight Auditor Gates passed.
