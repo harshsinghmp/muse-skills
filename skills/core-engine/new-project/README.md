@@ -88,7 +88,8 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--palette <color>` | String | Brand theme: `slate` \| `indigo` \| `emerald` \| `amber` \| `violet` |
 | `--first-milestone <m>` | String | Immediate next task / initial milestone |
 | `--planned-milestones <list>`| String | Comma-separated planned milestones |
-| `--agent-name <name>` | String | Lead autonomous agent persona name (default: `Orchestrator`) |
+| `--agent-name <name>` | String | Agent name configured for this workspace; otherwise uses the user's global assistant identity and prompts if unavailable |
+| `--github` / `--no-github` | Boolean | Explicitly include or omit GitHub community files and stack-matched workflows; interactive setup asks when unknown |
 | `--agent-role <role>` | String | Lead agent functional role description |
 | `--constraint <text>` | String | Primary operational constraint or invariant |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |

@@ -43,14 +43,13 @@ pulse-state/
 # ==============================================================================
 # AI Agents, Tools, Contexts & Instructions (Internal Cockpit - Stays Local)
 # ==============================================================================
-# Agent Context, Standards & Root DOX Rails
+# Agent Context, Standards & Workspace Instructions
 .agents/
 AGENTS.md
 AGENTS.local.md
 AGENTS.override.md
 AGENTS_*.md
 skills-lock.json
-CLAUDE.md
 
 # Modern AI Agent CLI & IDE Workspaces
 .gemini/

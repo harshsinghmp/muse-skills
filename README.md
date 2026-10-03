@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-7.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
-[![Tests Passing](https://img.shields.io/badge/Tests-189%2F189%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-206%2F206%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
@@ -27,7 +27,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
-Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 189 verified tests.
+Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 206 verified tests.
 See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---

@@ -11,6 +11,363 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **GitHub Scaffolding, Instruction Migration & CLAUDE.md Shim (`updateagents` v2.3.0)** (#211): New `github-scaffold.ts` shared renderer for `CHANGELOG.md`, `.github/` community files (CONTRIBUTING, SECURITY, SUPPORT, CODE_OF_CONDUCT, GOVERNANCE, FAQ) and stack-detected workflow templates (Node/Bun, Python, Composer) that never emit passing placeholders and preserve user edits; `instruction-migration.ts` importing legacy agent instructions into `.agents/context/imported-agent-instructions.md` with recorded source scopes; `agents-template.ts` extracted AGENTS.md renderer; CLAUDE.md shim template containing only `@AGENTS.md`; `--github` / `--no-github` / `--confirm-remove-github-workflows` flags on `updateagents` and `new-project`; restored Two-Tier Identity & Context Resolution Cascade (with `vision.md`) in the AGENTS.md template.
+
+## [7.1.0] - 2026-10-01
+
+### Added
+
+- **Tri-Vector Autonomous Agency Coach (`coach`)** (#210): Structured daily standups, async scope checks, client digest automation, and founder vitality audits across Team, Client, and Founder vectors with five dedicated reference playbooks (`team.md`, `client.md`, `founder.md`, `audit.md`, `effort-rubric.md`) and executable CLI engine (`coach.ts`).
+- **Toxic Loop Circuit Breaker (`dead-letter`)** (#206): Automatic circuit-trip on ≥2 identical failure signatures, Precondition Delta gate, Vibeguard zero-credential sanitization, and atomic POSIX rename writes for corrupted-state protection (`circuit-breaker.md`).
+- **Receipt-or-Rejection Gate (`pua`)** (#207): Verbatim CLI receipt requirement, Ghost File Probe (`fs.existsSync`), Churn-to-Signal ratio guardrail (≤ 1.5; > 3.0 = halt), and banned sycophancy phrase scan with 3-line diagnosis format (`receipt-verification.md`).
+- **Automated Purge Register & Founder Vitality ADE (`periodic-retreat` v1.1.0)** (#208): 4-phase strategic retreat facilitation — forensic retrospective with git churn heatmap, `bunx knip` dead-export purge register, Automate/Delegate/Eliminate vitality framework, and binary OKR contracts with Monday Launchpad Packet (`retreat-protocol.md`).
+- **AST Code-Shield Pipeline & Cadence Burstiness (`humanize` v1.1.0)** (#209): 3-pass stash pipeline (fenced code, inline backticks, frontmatter, tables, URLs) preserving code blocks through humanization; cadence dispersion metric (σ ≥ 5.0); bullet density fence (≤ 40%); em-dash budget (≤ 1 per 500w); technical jargon whitelist (`ast-shield-and-cadence.md`).
+
+### Fixed
+
+- **Git Convention Miner Merge Commit Filter (`git`)**: Ignored topological merge commits (`--no-merges`) when mining repository commit message conventions in `pr-convention-miner.ts`.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.0.0...v7.1.0
+
+---
+
+## [7.0.0] - 2026-10-01
+
+### Added
+
+- **Autonomous Agent-to-Agent Negotiation & Concurrency Leases (`secretary` v1.8.0)** (#204): `acquireLease`, `releaseLease`, and `verifyHandoffPacket` primitives enabling zero-human multi-agent coordination with SHA-256 evidence approval gates and handoff verification receipts.
+- **AEO 18-Token Quotability & AI Crawler Auditor (`seo` v1.3.0)** (#205): 18-token standalone quotability enforcement for AI-indexed headings, `robots.txt` crawler segregation auditor, and AEO content density gate.
+- **Wave 2 Senior Auditor Engine (`code-review` v1.6.0)** (#202): Edge/SSR pitfall detection, React lifecycle dropper scanning, and `--audit-all` mode completing all 13 security controls.
+- **PR Convention Miner & Guidelines Synthesizer (`git` v1.3.0)** (#203): Automated synthesis of repository PR conventions from git history into enforced commit guidelines (`pr-convention-miner.ts`).
+- **Context Health Gauge & Task Stashing (`context-anchor` v1.4.0)** (#189): Task interruption stashing, real-time context budget metering, deadlock breaker engine, and observation masking.
+- **Workerd Preview Containers (`devops` v1.2.0)** (#190): Cloudflare `workerd` isolated execution environment scaffolding for living deliverable review links.
+- **Webhook Payload Byte-Size Limiter (`automation` v1.1.0)** (#194): Payload size validation and receiver guard for all webhook endpoints.
+- **Canonical UTM Builder & PII Scrubber (`analytics` v1.1.0)** (#193): UTM parameter builder with case normalization and automatic PII redaction.
+- **9:16 Aspect-Ratio Guard & Mobile Safe-Zone Calculator (`smm` v1.3.0)** (#192): Enforces mobile-first aspect ratios and UI safe-zone calculations for all social media assets.
+- **Breadcrumb JSON-LD Generator & Trailing-Slash Normalizer (`seo` v1.2.0)** (#191): Structured data generation for breadcrumb navigation and canonical trailing-slash enforcement.
+- **EDR & Runtime Safety Auditor (`code-review` v1.4.0)** (#188): SEC-11..13 controls — memory exhaustion guards, uncapped regex backtracking detection, dependency integrity verification.
+- **Gitignore Wildcard Parent Trap & Tracked Index Cache Auditor (`git` v1.2.0)** (#187): Detects and patches gitignore entries accidentally ignoring parent directories; audits stale tracked-file index cache.
+- **Frontmatter-Guard Build Crash Sanitizer (`content` v1.2.0)** (#186): Pre-commit YAML mapping protector preventing frontmatter-induced static-site build crashes.
+- **Anti-FOUC Hydrator, Zero-CLS Font Metrics & Print Stylesheet (`webdev`)** (#184): Client-side hydration anti-FOUC patterns, Cumulative Layout Shift (CLS) elimination for custom fonts, and print-optimized stylesheet scaffolding.
+- **Brand Immersion Tokens & Adaptive Favicon (`design`)** (#183): Dynamic favicon generation from brand tokens with aesthetic asset scaffolding.
+- **CMS-Cohesion Linter & Verified Deploy Gate (`gauntlet-loop`)** (#178): Pre-deploy CMS cohesion audit and deterministic deploy gate with verified receipt.
+- **Deposit-Before-Code & Deemed Acceptance Standard (`accounts`)** (#177): Enforces deposit receipts before code delivery and automatic deemed acceptance triggers.
+- **Shared Credential Vaulting & Client Handover Package (`ops`)** (#176): Structured credential vaulting per client and standardized handover package generation.
+- **Diplomatic Scope Shield & Pushback Matrix (`client-comms`)** (#175): Scope creep defense playbook with escalation-tier pushback response matrix.
+- **Follow-the-Sun Twilight Handover (`secretary`)** (#174): Timezone-aware twilight handover engine with overlap window detection across 4 hemispheres.
+- **Sliding Token Budget Governor (`accounts`)** (#173): Sliding-window AI compute token attribution and context budget enforcement per client project.
+
+### Changed
+
+- **`updatedocs` v2.6.0** (#197): Zero-runtime-env repository support with enhanced `findFiles` exclusion patterns for environments without local `.env` configuration.
+- **`code-review` v1.5.0** (#196): Scanner hardening, test-file exclusions, and comment-block filtering reducing false-positive audit results.
+- **`new-project`** (#200): Official Razorpay SDK client wired in place of mock order endpoint; `crypto.randomUUID()` for cryptographically secure order IDs (#195).
+- **Cross-skill relative link harmonization** (#199): All nested `README.md` catalogs and cross-skill relative links normalized and verified.
+
+### Fixed
+
+- **Validate script path** (#198): Corrected `validate-memory-file.sh` invocation path; anchored `.gitignore` build directories; resolved Biome linter warnings.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v6.2.0...v7.0.0
+
+---
+
+## [6.1.1] - 2026-09-29
+
+### Added
+
+- **Autonomous Secretary Protocol Auto-Wiring (`updateagents`)**:
+  - Enforced that `updateagents` automatically verifies and wires the canonical Secretary Protocol router (`secretary:dispatch`) into `AGENTS.md` across all runs: Day-0 scaffolding (`--scaffold`), Day-1 legacy retrofit, and Day-N context synchronization.
+  - Guarantees that any agent session automatically triggers `secretary:dispatch` on first run to orchestrate tasks across all 46 canonical Muse departments under the designated Council Lead (**Sol**, **Jasper**, **Crew**, **Nexus**).
+  - Updated master `updateagents/templates/AGENTS.md` with the Secretary router block.
+  - Adjusted Asset 1 audit line ceiling in `updateagents/scripts/updateagents.ts` and `updateagents/references/twelve-asset-matrix.md` to `<85 lines` to comfortably accommodate the Operating Constitution, turn invariants, and Secretary router.
+  - Synchronized internal project context files (`current.md`, `product.md`, `architecture.md`, `roadmap.md`) to full 46-skill parity.
+
+## [6.1.0] - 2026-09-29
+
+### Changed
+
+- **Consolidated AI-Readiness & Context Synchronization Engine (`updateagents` #42)**: Merged `ai-ready` into `updateagents`, establishing a single universal agent context synchronization and AI-readiness engine:
+  - Unified Day-0 scaffolding (`--scaffold`), Day-1 legacy retrofit, Day-N standards sync, and 13-asset AI-readiness auditing (`--audit`, `--fail-under`, `--json`) into `updateagents/scripts/updateagents.ts`.
+  - Migrated master DOX templates (`.agents/`, `AGENTS.md`, `Client-Intake/`, `llms.txt`, `.github/`, etc.) into `updateagents/templates/` as the single source of truth for both `updateagents` and `new-project`.
+  - Added synthetic ADE/IDE artifact sanitization mode (`--sanitize`) to unwrap proprietary wrappers (`ORCA_RICH_MD`, Cursor, Windsurf) across codebases.
+  - Reconciled catalog from 47 to 46 universal skills across `skills.json`, `llms.txt`, `README.md`, `AGENTS.md`, and test suites.
+  - Updated all downstream skill references (`new-project`, `git`, `updatedocs`, `audit`, `coupling-router`, `relay`, `secretary`) to route through `updateagents`.
+  - Streamlined `scripts/install.sh` and `scripts/export-commands.ts` with interactive updateagents execution and clean harness detection.
+
+## [6.0.0] - 2026-09-27
+
+### Added
+
+- **Unified Customer Relationship & Event-Driven Marketing Flow Engine (`crm` #47 & `flows` alias)**: Added the 47th canonical agency department (`crm/SKILL.md`) with 7 high-impact production modes (`onboard`, `abandon`, `nurture`, `winback`, `deliverability`, `sms`, `contacts`). Features:
+  - Canonical 5-stage activation sequences (`references/onboard.md`) driving time-to-value under 15 minutes.
+  - Multi-touch abandonment rescue state machines (`references/abandon.md`) for e-commerce cart/checkout and SaaS trial drop-offs.
+  - Value-first customer nurture sequences (`references/nurture.md`) with segment-aware branch logic.
+  - Reason-aware win-back playbooks (`references/winback.md`) recovering churned and dormant accounts.
+  - Strict email authentication infrastructure (`references/deliverability.md`) enforcing SPF, DKIM, DMARC, RFC 8058 1-click unsubscribe headers, and progressive IP/domain warming schedules.
+  - Compliant SMS automation (`references/sms.md`) implementing TCPA express written consent, CTIA rules, A2P 10DLC registration, and timezone quiet hours.
+  - Unified contact data schemas and dynamic RFM segmentation (`references/contacts.md`) with GDPR/CCPA right-to-erasure and identity resolution rules.
+- **3D Motion & Interactive Spatial Design Mode (`design:3d`)**: Added the 11th mode to `design` (`design/references/3d.md`), establishing Spline embeds, Three.js / React Three Fiber (R3F) declarative pipelines, Blender asset optimization, and strict mobile polygon/draw-call budgets with Draco geometry compression.
+- **Agency Legal Architecture Mode (`ops:legal`)**: Added the 10th mode to `ops` (`ops/references/legal.md`), providing standardized contracts: Master Services Agreements (MSAs), Statements of Work (SOWs), subcontractor IP assignment agreements, two-way NDAs, and generative AI disclosure and confidentiality clauses.
+- **Conversational Voice AI & Telephony Mode (`automation:voice`)**: Added the 7th mode to `automation` (`automation/references/voice.md`), codifying sub-600ms latency voice agents across Retell AI, Bland AI, Twilio Voice SIP media streams, ElevenLabs synthesis, and warm human transfer escalations.
+- **Community Architecture & Engagement Loops Mode (`growth:community`)**: Added the 10th mode to `growth` (`growth/references/community.md`), detailing channel taxonomies, Day 1 to Day 30 onboarding rituals, weekly engagement calendars, 14d/30d inactivity winback loops, and AutoMod regex spam guardrails across Discord, Skool, Slack, and Circle.
+
+### Changed
+
+- **Agency Department Expansion**: Scaled catalog to 47 production-grade agency departments.
+- **Universal Executive Secretary Sync**: Synchronized `secretary:dispatch` directory and 174 slash commands across all supported agent harnesses (OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, Hermes).
+- **Catalog Byte-Parity Contract**: Reconciled skill definitions, argument hints, and mode counts across `SKILL.md`, `skills.json`, `llms.txt`, and `README.md`.
+- **Test Suite Expansion**: Added comprehensive simulation tests covering all new department modes (142 tests passing with 3,157 assertions).
+
+## [5.26.0] - 2026-09-24
+
+### Added
+
+- **Executive Secretary Controller & Universal Front Door (`secretary:dispatch` #30)**: Central triage router on session start across all 46 canonical departments. Maps user intent to the 4 Council Leads (**Sol**, **Jasper**, **Crew**, **Nexus**) with 5-step progressive disclosure protocol, Socratic 3-prong stress-testing, and single-use approval hash gates.
+- **Multi-Harness Slash Command Exporter & CLI Runner (`scripts/export-commands.ts` #30)**: Automated export of 171 first-class slash commands into detected agent harnesses (`.opencode/commands/`, `.gemini/commands/`, `.cursor/commands/`, `.windsurf/workflows/`) and global `~/.local/bin/muse` executable CLI runner.
+- **Continuous Auto-Sync Dispatch Engine (`scripts/sync-dispatch.ts` #31)**: Automated catalog scanner recompiling `secretary/references/dispatch.md` with zero drift against `skills.json` and mode references, wired into git hooks and CI test assertions.
+- **Viral Carousel Growth Engine (`smm:carousel` #28)**: Autonomous 6-slide viral carousel generation mode with Playwright, Gemini vision prompts, and Upload-Post publishing.
+- **JSON Canvas & PKM Vault Architecture (`ops:obsidian` #29 & #33)**: Full Obsidian Flavored Markdown (OFM) support, JSON Canvas 1.0 visual node specifications, and CLI automation.
+- **Cloudflare & Modern Declarative Wrangler (`devops:cloudflare` #32)**: Declarative `wrangler.jsonc` bindings, Workers, Pages, Full (Strict) SSL, and Zero Trust tunnels.
+
+### Changed
+
+- **Documentation Synchronization with Copywriting Frameworks (`updatedocs` #32)**: Synchronized all project-level documentation with battle-tested copywriting formulas: AIDA + 4 Ps (`README.md`), QUEST (`CONTRIBUTING.md`), ACCA (`docs/DOGFOOD.md`), Danny Iny 6+1 (`docs/SKILL_SPECIFICATION.md`), PAS (`scripts/hooks/README.md`).
+- **Catalog Reconciliation**: Restored `webdev` and eliminated legacy `handoff` entry in `README.md`; reconciled mode tables and counts across `webdev` (15 modes), `devops` (7 modes), `smm` (10 modes), `content` (9 modes), and `database` (6 modes).
+- **Workspace Memory Synchronization**: Reconciled skill count to 46 and audit-mode tally to 20 in `AGENTS.md`.
+
+## [5.25.1] - 2026-09-22
+
+### Fixed
+
+- **Type Definition Parity in `extract-skill`**: Updated `GateResult` interface in `scripts/extract-skill.ts` to include `"tdd"` in its `gate` union type, ensuring strict TypeScript check (`bun run type-check`) compiles with zero diagnostics.
+
+## [5.25.0] - 2026-09-22
+
+### Added
+
+- **Full-Stack Funnel & Checkout Engineering Pipeline (`webdev:funnel`)**: Added the 15th execution mode to `webdev` (`webdev/references/funnel.md`). Codifies complete full-stack funnel architectures: multi-step form state machines with per-step Zod validation and endowed progress, frictionless Stripe checkout with order bump mechanics and idempotency headers, 1-click post-purchase upsell/downsell state machines via tokenized payment methods, dual-rail conversion tracking (Meta CAPI server endpoints with SHA-256 PII hashing and `event_id` deduplication), and asynchronous CRM webhook queues.
+
+## [5.24.0] - 2026-09-22
+
+### Added
+
+- **TDD Skill Engineering Protocol & Gate 4 in `extract-skill` (`updateagents`)**: Codified the TDD Skill Engineering Protocol (`updateagents/references/skill-authoring.md`) derived from `writing-skills`. Establishes the Red-Green-Refactor loop for agent prompt instructions (RED: baseline adversarial pressure scenario, GREEN: minimal constraint, REFACTOR: loophole closure against LLM rationalizations). Upgraded `scripts/extract-skill.ts` with Gate 4 (`checkTddEngineeringGate`, `--tdd-scenario`, `--tdd`) and linked Step 13b in `updateagents/SKILL.md`.
+
+## [5.23.0] - 2026-09-22
+
+### Changed
+
+- **Strict On-Demand Execution Policy (`code-review:simplify` & `refactor:sweep`)**: Enforced strict governance policies across `code-review` and `refactor` engines guaranteeing that `simplify` and `sweep` execution modes are strictly on-demand. Added explicit warnings and rules in `code-review/SKILL.md`, `code-review/references/simplify.md`, `refactor/SKILL.md`, and `refactor/references/sweep.md` ensuring autonomous agents never trigger behavioral simplifications or codebase-wide component rewiring unprompted.
+
+## [5.22.0] - 2026-09-22
+
+### Added
+
+- **Developer Codebase Orientation & Execution Path Tracing (`webdev:onboard`)**: Consolidated `agency-codebase-onboarding-engineer` into `webdev` as its 14th execution mode (`webdev/references/onboard.md`, with `onboard` and `oinboard` triggers). Implements the 3-Tier Orientation Map (1-Line Summary, 5-Minute Overview, Deep Dive into Boundaries), end-to-end execution path tracing, and strict code-grounded heuristics without speculative inferences.
+
+## [5.21.0] - 2026-09-22
+
+### Added
+
+- **Purposeful Whimsy & Delight Engine (`animate:delight`)**: Integrated `agency-whimsy-injector` into `animate` as its 7th execution mode (`animate/references/delight.md`). Adds brand personality spectrum matrices (Professional vs. Casual vs. Error vs. Success), spring-loaded micro-interactions, zero-dependency canvas confetti celebrations, Konami code discovery easter eggs, and charming empty/error states under strict WCAG `prefers-reduced-motion` compliance.
+
+## [5.20.0] - 2026-09-22
+
+### Added
+
+- **Full-Funnel App Store Optimization Engine (`mobile:aso`)**: Deepened `mobile:aso` (`mobile/references/aso.md`) with comprehensive frameworks consolidated from `agency-app-store-optimizer`. Adds Apple Product Page Optimization (PPO) vs. Google Play Store Listing Experiments, 6-slide narrative screenshot storytelling psychology, in-app ratings prompt trigger heuristics (`SKStoreReviewController`/`ReviewManager`), review response customer-service templates, and tiered metadata localization matrices.
+
+## [5.19.0] - 2026-09-22
+
+### Added
+
+- **Public Relations & Crisis Communications Engine (`growth:pr`)**: Consolidated `agency-pr-communications-manager` into `growth` as its 9th operational mode (`growth/references/pr.md`). Includes AP-style newswire release frameworks, 3-paragraph journalist pitching rules, 30-minute crisis communications holding statements (P1–P4 triage), and executive thought leadership byline templates.
+
+## [5.18.0] - 2026-09-22
+
+### Added
+
+- **Comprehensive Historical Changelog Sync (v5.0.0 → v5.17.0)**: Fully backfilled and documented detailed changelog records for all 17 minor releases across the v5 milestone series, detailing atomic features, department consolidations, architectural improvements, and security verifications.
+
+## [5.17.0] - 2026-09-22
+
+### Added
+
+- **High-Converting Developer Blueprint (`README.md`)**: Re-architected root documentation applying the Before-After-Bridge (BAB) + AIDCA developer copywriting framework.
+- **1-Command Quick Start Above the Fold**: Placed `npx skills add harshsinghmp/muse-skills` prominently at the very top for zero-friction agent and developer installation.
+- **Progressive Disclosure Toggles**: Incorporated `<details><summary>` interactive collapsibles for System Architecture (Mermaid workflows and runtime specs) and the complete 46-Skill Catalog table.
+- **Historical Documentation Archive**: Preserved the complete v5.0.0 documentation as an archival reference at [`docs/README-v5.0.0.md`](docs/README-v5.0.0.md).
+- **Branch Cleanliness**: Pruned 22 merged local feature branches, keeping the local workspace lean and strictly aligned with remote branches.
+
+## [5.16.0] - 2026-09-22
+
+### Added
+
+- **Brand Lifecycle & Client Onboarding Engine (`brand`)**: Registered the 46th canonical agency department skill (`brand/SKILL.md`) equipped with 8 operational modes: `intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, and `audit`.
+- **Automated 50-Point Intake Audit Tool (`brand/scripts/intake-audit.ts`)**: Fast CLI utility scoring client intake briefs across clarity, completeness, and feasibility gates with instant clarification generation.
+- **Zero-Leak Credential Delegation Protocol**: Enforces secure client credential exchange without storing secrets in plaintext across Google, Meta, AWS, Shopify, and Cloudflare in `brand:accounts-access`.
+- **Executive Milestone Reports**: Shipped comprehensive interactive HTML milestone reports at [`.agents/reports/v5.16.0-2026-09-22.html`](.agents/reports/v5.16.0-2026-09-22.html) and [`.agents/reports/latest.html`](.agents/reports/latest.html).
+
+## [5.15.0] - 2026-09-22
+
+### Added
+
+- **Universal Full-Stack Refactoring Engine (`refactor`)**: Promoted and expanded `refactor-ui` into a full-system refactoring department (`refactor/SKILL.md`) featuring 7 dedicated execution modes: `ui`, `code`, `architecture`, `perf`, `database`, `sweep`, and `polish`.
+- **Architectural Decoupling & Cyclomatic Reduction**: Standardized procedural guidelines for reducing cyclomatic complexity, breaking circular module dependencies, and enforcing zero-downtime database migration patterns.
+
+## [5.14.0] - 2026-09-22
+
+### Added
+
+- **WCAG 2.2 AA Accessibility Engine (`webdev:accessibility`)**: Added comprehensive accessibility operating playbooks (`webdev/references/accessibility.md`) featuring automated Playwright axe test scripts, modal focus trapping routines, semantic ARIA landmarks, and `:focus-visible` ring conventions.
+- **Fullstack Security Architecture (`webdev:security-headers`)**: Consolidated Three-Perspective Security Architecture, security headers (CSP, HSTS, X-Frame-Options), and SSRF IP blocklists (`webdev/references/security-headers.md`, `webdev/references/backend.md`).
+- **EARS Specification Miner (`webdev:spec`)**: Integrated Easy Approach to Requirements Syntax (EARS) template for extracting unambiguous requirements from client briefs (`webdev/templates/specification-template.md`).
+
+## [5.13.0] - 2026-09-22
+
+### Added
+
+- **Design Department UI Kit Architecture (`design:uikit`)**: Consolidated starwind-ui, headless primitives, and Class Variance Authority (CVA) patterns in `design/references/uikit.md`.
+- **Visual Storytelling & Narrative Arcs (`design:story`)**: Codified brand narrative frameworks, emotional arcs, and multi-frame video storyboards (`design/references/story.md`).
+- **Presentation Decks & W3C Design Tokens**: Added 15 proven slide deck structures (`design/references/slides.md`) and a W3C-compliant design tokens starter template (`design/templates/design-tokens-starter.json`).
+
+## [5.12.0] - 2026-09-22
+
+### Added
+
+- **Broadcast Podcast Audio Engineering (`content:podcast`)**: Codified industry-standard LUFS loudness targets (-16 LUFS stereo, -19 LUFS mono), dynamic range multi-band compression, and background de-noising procedures (`content/references/podcast.md`).
+- **AI Video Editing & Short-Form Retention (`content:video`)**: Integrated HeyFrames AI workflows, 3-second visual hooks, pattern interrupts, and high-CTR thumbnail prompt syntax (`content/references/video.md`, `content/references/thumbnails.md`).
+- **Copywriting Framework Selector (`content:copy`)**: Systematized PAS, AIDA, BAB, FAB, 4Ps, QUEST, and StoryBrand frameworks with automatic context recommendation matrices.
+
+## [5.11.0] - 2026-09-22
+
+### Added
+
+- **Competitor Intelligence & Market Research (`research`)**: Added structured competitor messaging grids, feature parity matrices, and pricing tier analyses (`research/references/competitor-analysis.md`).
+- **Due Diligence Dossiers**: Codified corporate research dossiers with source validation, market opportunity scoring, and citation verification.
+
+## [5.10.0] - 2026-09-22
+
+### Added
+
+- **Client Communications Inbox Triage (`client-comms`)**: Implemented P0–P3 inbox triage rubrics and automated client nudge sequences (`client-comms/references/inbox-triage.md`).
+- **Factual Git-Evidence Reporting**: Standardized progress updates grounded exclusively in verified Git commits, build artifacts, and test logs (`client-comms/references/factual-reporting.md`).
+
+## [5.9.0] - 2026-09-22
+
+### Added
+
+- **Agency Legal & Contract Standards (`ops:contracts`)**: Added production-ready SOW, NDA, and MSA contract drafting standards with explicit scope boundaries and change-order clauses (`ops/references/contracts.md`).
+- **4-Section Executive Meeting Capture (`ops:meeting-notes`)**: Codified standardized meeting capture templates with automated action item extraction, deadlines, and direct owner attribution (`ops/references/meeting-notes.md`).
+
+## [5.8.0] - 2026-09-22
+
+### Added
+
+- **Git Credential Exposure Audit Protocol (`git:exposure-audit`)**: Codified emergency remediation workflows for token exposures, git history purging with git-filter-repo, and pre-commit secret scanning hooks (`git/references/exposure-audit.md`).
+
+## [5.7.0] - 2026-09-22
+
+### Added
+
+- **SEO & AI Answer Engine Optimization (`seo:aeo`)**: Added answer-first content density under headers, 18-token standalone quotability rules, and Citation Share of Voice (SoV) benchmarks for Perplexity, ChatGPT Search, Gemini, and Claude (`seo/references/aeo.md`).
+- **Structured Semantic Markup**: Implemented JSON-LD schema generation standards for technical documentation, software products, and FAQs.
+
+## [5.6.0] - 2026-09-22
+
+### Added
+
+- **Paid Ads Google & Meta Playbooks (`paidads`)**: Added campaign architecture playbooks for Google Search/PMax and Meta Ads (`paidads/references/google.md`, `paidads/references/meta.md`), including conversion pixel tracking, retargeting funnels, and budget pacing algorithms.
+
+## [5.5.0] - 2026-09-22
+
+### Added
+
+- **SMM Creator Vetting Scorecard (`smm:creator-vetting`)**: Added 25-point creator vetting scorecard, engagement authenticity verification, and red-flag audit matrices (`smm/references/creator-vetting.md`).
+- **Social Search AEO**: Optimized caption keyword density, hashtag taxonomy, and semantic hooks for social search discovery across TikTok, Instagram, and LinkedIn.
+
+## [5.4.0] - 2026-09-22
+
+### Added
+
+- **Affiliate Reward Models & Referral Loops (`growth:affiliates`)**: Added affiliate reward tier structures, referral loop tracking, and viral coefficient calculations ($K = i \times c$) in `growth/references/affiliates-referrals.md`.
+- **Product Hunt Launch Engine (`growth:launch`)**: Integrated hour-by-hour launch day playbooks, community engagement strategies, and initial upvote activation sequences.
+
+## [5.3.0] - 2026-09-22
+
+### Added
+
+- **DevOps Cloudflare Edge & Zero Trust Tunnels (`devops:cloudflare`)**: Added Cloudflare Workers, Pages, Full (Strict) SSL encryption, and Zero Trust tunnel deployment procedures (`devops/references/cloudflare.md`).
+- **Quick Tunnels**: Added `try.cloudflare.com` quick tunnel support for instant ephemeral testing of local web servers without opening firewall ports.
+
+## [5.2.0] - 2026-09-22
+
+### Added
+
+- **Database Memory Calibration & Query Optimization (`database`)**: Added memory calibration formulas (`shared_buffers`, `work_mem`, `effective_cache_size`) for PostgreSQL and MySQL in `database/references/tuning.md`.
+- **Consolidated Query Optimizer**: Merged standalone database-optimizer into `database:optimize` mode (`database/references/optimize.md`).
+
+## [5.1.0] - 2026-09-22
+
+### Internal Activity & System Consolidation (Pain → Feature → Solution)
+
+#### 1. Three.js Micro-Skill Proliferation & Prompt Overlap
+- **Pain**: The workspace accumulated 16 disparate Three.js micro-skills, causing trigger overlap, inflated context loading, and inconsistent WebGL practices across agency design tasks.
+- **Feature**: Consolidated all 16 micro-skills into the canonical `animate:threejs` mode (`animate/references/threejs.md`) and registered explicit shader, physics, and post-processing patterns under `animate/SKILL.md`.
+- **Solution**: The team safely archived and purged all 16 standalone Three.js directories into compressed tarballs, channeling all 3D canvas and WebGL orchestration through a single deterministic entry point.
+
+#### 2. Accessibility Deficits & Inconsistent Web Compliance
+- **Pain**: Audits revealed accessibility was treated as an afterthought without unified WCAG AA standards, resulting in keyboard navigation barriers, invisible focus outlines, and unhandled modal focus traps.
+- **Feature**: Codified a complete WCAG 2.2 AA operating playbook into `webdev:accessibility` (`webdev/references/accessibility.md`) featuring semantic landmark hierarchies, `:focus-visible` styling patterns, keyboard trapping routines, ARIA design tokens, and Playwright axe test scripts.
+- **Solution**: Embedded compliance checks directly into the web development lifecycle, providing engineers and agents with clear verification recipes before shipping client interfaces.
+
+#### 3. Restricted Scope of Interface Refactoring
+- **Pain**: The legacy `refactor-ui` skill only addressed styling and Tailwind classes, leaving architectural drift, backend code smells, unoptimized database queries, and multi-page inconsistencies unmanaged by a dedicated engine.
+- **Feature**: Evolved `refactor-ui` into the universal `refactor` department skill (`refactor/SKILL.md`) with 7 specialized execution modes: `ui`, `code`, `architecture`, `perf`, `database`, `sweep`, and `polish`.
+- **Solution**: Standardized full-stack refactoring under one unified command suite equipped with automated contrast audits, cyclomatic complexity reduction criteria, and zero-downtime database migration rules.
+
+#### 4. Fragmented Client Brand Onboarding & Delegation Security
+- **Pain**: Brand onboarding lacked a standardized operational harness, leading to scattered client intake briefs, ad-hoc credential sharing, misaligned design directives, and loose access revocation upon project completion.
+- **Feature**: Formalized `brand` (`brand/SKILL.md`) as the 46th canonical agency department, introducing 8 operational modes (`intake`, `research`, `pipeline`, `accounts-access`, `brief`, `ecommerce`, `offboard`, `audit`) and an automated 50-point intake audit script (`brand/scripts/intake-audit.ts`).
+- **Solution**: Delivered an end-to-end client lifecycle mechanism enforcing zero-leak access delegation, cross-department brief generation (design, webdev, content, paidads), and a mandatory 48-hour access revocation protocol.
+
+#### 5. Workspace Clutter & Redundant Cluster D Skills
+- **Pain**: Over 1,000 legacy and third-party skills cluttered global and local trees, diluting discovery relevance and consuming unnecessary disk and memory footprint.
+- **Feature**: Harvested high-signal frameworks, playbooks, and templates from 52 Cluster D skills into the agency's primary departments:
+  - **`ops`**: SOW/NDA/MSA contract drafting standards (`ops/references/contracts.md`) and 4-section meeting capture formats (`ops/references/meeting-notes.md`).
+  - **`client-comms`**: P0–P3 inbox triage rubrics and nudge sequences (`client-comms/references/inbox-triage.md`).
+  - **`growth`**: Affiliate tier reward models and referral loops (`growth/references/affiliates-referrals.md`).
+  - **`smm`**: 25-point creator vetting scorecard and red-flag audits (`smm/references/creator-vetting.md`).
+  - **`brand`**: 7-element customer persona framework (`brand/references/persona.md`) and starter guidelines template (`brand/templates/brand-guidelines-starter.md`).
+  - **`content`**: High-CTR thumbnail prompt syntax (`content/references/thumbnails.md`), 12 editorial voice archetypes (`content/references/voice-archetypes.md`), and broadcast podcast audio engineering (`content/references/podcast.md`).
+  - **`research`**: Competitor messaging grids and pricing tier analyses (`research/references/competitor-analysis.md`).
+  - **`database`**: PostgreSQL/MySQL memory calibration formulas and index optimization (`database/references/tuning.md`, `database/references/optimize.md`).
+  - **`webdev`**: Security headers, rate limiting, and EARS requirements extraction template (`webdev/references/security-headers.md`, `webdev/templates/specification-template.md`).
+  - **`design`**: 15 slide deck structures (`design/references/slides.md`), W3C design tokens starter (`design/templates/design-tokens-starter.json`), and component UI kit architecture (`design/references/uikit.md`).
+  - **`devops`**: Cloudflare Workers, Pages, and Zero Trust tunnels (`devops/references/cloudflare.md`).
+  - **`git`**: Secret exposure audit procedures (`git/references/exposure-audit.md`).
+- **Solution**: Safely pruned 1,080 redundant skills across workspace environments into compressed tarballs, bringing the overlap matrix to 1,080 pruned, 83 preserved unique properties, and 0 replace-with-muse remaining.
+
+#### 6. Catalog Integrity & Zero-Leak Quality Enforcement
+- **Pain**: High-velocity multi-skill refactoring created risks of unmonitored test failures, secret leaks, or catalog drift between `SKILL.md`, `skills.json`, and `llms.txt`.
+- **Feature**: Expanded the automated test suite with simulation workflows (`tests/simulation-workflows.test.ts`), added strict byte-parity validation across registry files, and executed automated TruffleHog secret scans via Vibeguard Protocol.
+- **Solution**: Locked in 100% test pass rate across 116 tests in 7 files with zero credential leaks, validating all 46 canonical skills for production readiness.
+
+## [5.0.0] - 2026-09-21
+
+### Added
+
+- **Native Agent Taste Engine (`scripts/taste-engine.ts`)**: Autonomous, zero-third-party SaaS preference learning and behavioral habit extraction engine. Classifies recurring user steering across 5 taxonomy classes (Style, Architecture, Quality, Workflow, Communication), tracks recurrence count ($N \ge 2$), enforces configurable active atom cap (scalable up to 40+), performs real-time conflict detection, and automatically prunes stale atoms (>365 days).
+- **Task Observation Hook (`scripts/hooks/taste-observer.sh`)**: 15th shell hook for real-time passive learning from conversation corrections and feedback with Vibeguard zero-leak sanitization.
+- **DOX Engine 17 Modular Standards**: Upgraded template canon in `ai-ready/templates/.agents/standards/` to 17 modular standards (adding `boundary-governance.md`, `fintech-gateways.md`, `client-reporting.md`, `motion-diagrams.md`), with Turn Invariant #13 (Atomic PR Protocol) in `AGENTS.md` and `git-workflow.md`.
+- **OpenAccountants Fintech Clearing & ITC Recovery**: Built-in multi-gateway transaction reconciliation engine (`accounts/scripts/reconcile-gateways.ts`) for Stripe, Razorpay, Cashfree, PayU, and Paytm with 18% GST ITC recovery and universal multi-currency ledger interoperability (QuickBooks, Xero, NetSuite, Zoho, OpenAccountants, plain-text accounting).
+- **Agency Council Capabilities Playbooks**:
+  - **Jasper (Creative Technologist)**: Dashmotion zero-JS moving SVG technical architecture diagrams (`animate/references/technical-diagrams.md`) and Agent Reach zero-cost social listening (`smm/references/social-intel.md`).
+  - **Sol (Product Architect)**: Optim-Agent semantic DB parameter optimization (`database/references/tuning.md`) and Browser Relay authenticated session bridge (`automation/references/browser-relay.md`).
+  - **Nexus (Technical Director)**: Odai 5-checkpoint mission-focused boundary governance (`code-review/references/boundary-governance.md`).
+  - **Crew (Delivery Specialist)**: Ribao commit-verified factual progress reporting (`client-comms/references/factual-reporting.md`).
+  - **Council Overall**: Global Invariant Atom Table telemetry (`updateagents/references/global-atoms.md`).
 - **New skill `accounts` (#45)**: Agency and client financial operations engine — 6 modes (`invoicing`, `bookkeeping`, `client-pnl`, `cashflow`, `tax-compliance`, `audit`), complete playbooks, and companion metadata.
 - **New skill `muse-security` (#44)**: Single source of truth for external security workflows — 6 modes (`cve`, `remediate`, `cloud-waf`, `sast`, `runtime`, `audit`), complete playbooks, and companion metadata.
 - **`smm` Postiz Mode (#28)**: Added `postiz` multi-channel scheduled dispatch mode across 28+ networks via Postiz API/CLI (`smm/references/postiz.md`), remote media upload pipeline, dynamic integration discovery, and TikTok `DIRECT_POST` flags.
@@ -33,6 +390,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `new-project`: Added Poka-Yoke architectural scaffolding contracts (branded IDs, discriminated union states) and Milestone Exclusion List ("What We Are NOT Building") in `new-project/SKILL.md`.
   - `humanize`: Expanded structural de-AI detection patterns P51–P60 (Somatic Cliches, Narrative Moralizing, Artificial Causal Tidiness, Sycophantic Openers, Hedging Stacks, Nominalization Bloat, Reasoning Trace Leakage, Em-Dash Saturation, Pseudo-Profundity, Venue Mismatch) in `humanize/references/patterns.md`.
 
+## [4.4.2] - 2026-09-18
+
+### Added
+
+- **new-project grill-mode rhythm alternate**: Stage 1 picker (one-at-a-time default vs frontier-rounds grill-mode) — frontier rounds, Q/A format, facts/decisions split, anti-passivity + prototype hatch, confirmation gate, ops rules. Default untouched.
+
+## [4.4.1] - 2026-09-18
+
+### Added
+
+- **code-review story-level arch axes (row 9)**: component reuse, domain consistency, data privacy, service architecture, infra delivery — appended to design-soundness pass. Lane-A shortlist fully resolved (12/13 already landed + this enrich).
+
+## [4.4.0] - 2026-09-18
+
+### Added
+
+- **New skill `retain` (#43)**: post-delivery retention loop — check-in, value-note, QBR, review-ask, referral/rebuy, churn-watch modes.
+- **webdev new modes (8→12)**: spec, implement, LOGIC-prototype, deploy (one-command ship + static-upload fallback + object-storage contract).
+- **design new mode**: UI-prototype (clickable mock, locked/iterate/kill verdict).
+- **Step 3b addy enriches**: capability map (coupling-router), assumptions + spec template (relay), CONSTRAINTS contract (code-review), context hierarchy (context-anchor), stack preamble + testing bar + adversarial critic (gauntlet-loop), deprecation + Hyrum's Law (webdev), gate order + flags (devops), rollout thresholds + DoD bar (qa-launch).
+- **Step 3c marketingskills enriches**: Seven Sweeps + panel gates (content), SEO/GEO/pSEO/IA/ASO deltas, social atomization (smm), CRO + lifecycle mechanics (growth/analytics), revops + prospecting + PR/events/directories (gtm/ops), ads playbooks (paidads), seam-3 shared context template (ops).
+- **Step 3d 16-repo enriches**: show-me/narrow-props (refactor-ui), rigor ladder + lang refs (code-review), scorer + validator (humanize), agent-loop scaffold (devops), hallmark rotation/stamp/wrapper (design), paired-judge + ratchet (gauntlet), CN specs + motion-cards (design/smm, paraphrased), video-delivery lane (animate), audit-gate + doctor/JSON (devops).
+
+## [4.3.0] - 2026-09-18
+
+### Added
+
+- **Cross-supplier enrichments (vercel-labs, obra/superpowers, wshobson, mattpocock, addyosmani)** folded as enrich-only upgrades, zero new skills: `webdev` (prefixed rule oracle, composition patterns, metrics-first audit, python uv/packaging/async/perf path, test-authoring), `code-review` (TDD iron-law gate, root-cause rule, noise gate + weighed verdict, decay lens, design-soundness pass, finding shape, STRIDE→attack-tree→requirements→mitigation chain, Fowler smell fallback), `gauntlet-loop` (triage ratchet, fresh-worker + 5-round cap, sweep ladder, tech-debt sprint, second-model gate), `relay` (approval gate, packet schema, wayfinder decision map), `animate` (declarative layer + reduced-motion gate), `refactor-ui` (oracle gap-fill), `seo` (prose rules), `updatedocs` (sample hygiene), `pua` (red-capable debug discipline), `coach` (TDD seam gate), `updateagents` (glossary sparring + ADR 3-gate), `secretary` (tracer tickets + expand-contract), `devops` (SAST/FP-tuning, pipeline troubleshooting, burn-rate alerts), `ai-ready` (onboarding tour + layering pass), `mobile` (a11y checklist), `git` (clean-PR micro-step), `gtm` (metrics loop), `new-project` (interview discipline), `coupling-router` (sizing + checkpoints)
+
+## [4.2.0] - 2026-09-17
+
+### Added
+
+- **60 tool-independent upgrade mechanisms** folded from skills-hub research into `code-review` (delegate, intended-vs-implemented, multi-reviewer, security-process, simplify, skill-bundle-scan, fixing-findings, receiving-feedback, security-controls, themes), `gauntlet-loop`, `qa-launch` (functional.md), `relay`, and `ai-ready` (advanced-audit-passes) reference passes
+
+### Fixed
+
+- `scripts/evidence-graph-builder.mjs` lint cleanups
+- `skills.json` formatter sync
+- `.gitignore` ruff cache entry
+
+## [4.1.0] - 2026-09-16
+
+### Added
+
+- **Audit Mode (13 skills)**: database, git, smm, ops, gtm, animate, analytics, seo, qa-launch, content, pua, growth, mobile — each with `references/audit.md` + modes-table row; 5 companion skills got audit routing sections
+- **Automation Infrastructure**: 14 shell hooks (`scripts/hooks/`) — session-close report archive, secret-scan pre-commit, worktree-lease check, registry sync, stale-frontmatter check, pre-push test gate, session-resume probe, dead-letter sweep, cache-pressure check, gauntlet closeout, context-switch snapshot, evidence-decision sync, audit-quick check
+- **Lint + Type-Check**: biome (JS/TS), ruff (Python), tsc (TypeScript) — wired into CI as separate jobs
+- **CI/CD Pipeline**: release workflow (`.github/workflows/release.yml`) — tag push → bun test → GitHub release (npm publish removed; npx skills add fetches from GitHub)
+- **Security**: command-injection fix in extract-skill.ts (removed `shell:true`, added allowlist validator); gitleaks secret scan in CI
+- **Evidence Ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking with 4-tier confidence taxonomy
+- **Session Report Archive**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
+
+### Fixed
+
+- Command injection in `scripts/extract-skill.ts` — `spawnSync(shell:true)` → `spawnSync(cmd, args)` + `ALLOWED_TEST_CMD_PREFIXES` validator
+- Secret scan stderr suppression — `2>/dev/null` → surfaced as `[hooks] SCAN ERROR` (fail-closed)
+- Hardcoded paths in `sync_registry.py` and `gen-repo-report.py` — `ROOT` now resolves from `__file__`
+- `isNaN` → `Number.isNaN` in extract-skill.ts
+- Unused variable in extract-skill.ts (`promise` → `_promise`)
+- README: version badge 3.1.0 → 4.0.0, "forty-one" → "40", fixed duplicate telegram row + #38/#39 numbering
+
+### Infrastructure
+
+- `biome.json`, `ruff.toml`, `tsconfig.json` added for lint/type-check
+- `package.json` scripts: `lint`, `type-check` added
+- `bun-types` installed for TypeScript checking
+- GitHub Actions: lint + type-check + test + secret-scan jobs
+
+## [4.0.1] - 2026-09-14
+
+### Fixed
+
+- Invocation UX frontmatter (`argument-hint`, `user-invocable`) on all 36 skills
+- Conventions checklist + test pins (modes tables, default-stack lines, byte-parity)
+- Modern-tool primacy sweep (modern-first with `|| legacy` fallback)
+- Git skill modes upgrade (4 new references: history, issue-to-pr, troubleshooting, report-template)
+- Review fixes from spec/code/frontend/design audit passes
+
+## [4.0.0] - 2026-09-13
+
+### Added
+
+- **Agency Delivery Layer (14 new skills)**: 12 department head skills — strategy, creative, and delivery leadership each with a mode router that switches between solo-operator and full-agency behavior — plus **`qa-launch`** (#35) and **`client-comms`** (#36). UI-corpus and digital-marketing-pro mechanisms distilled tool-independently: no hard vendor dependencies. **OSS default stacks** and **solo-operator lines** across the whole agency layer. Full suite now 36 skills across 6 categories (registry, README, and `llms.txt` synced).
+
+### Changed
+
+- **`handoff` renamed to `relay`** — **breaking**: update any triggers or scripts that reference the old skill name. The `handoff` tag is kept as a keyword so existing discovery still works.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v3.1.0...v4.0.0
+
 ## [3.1.0] - 2026-09-11
 
 ### Added
@@ -42,7 +490,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **evidence-ledger Registry Metadata (skills.json)**: the v3.0.0 release bumped `evidence-ledger` SKILL.md to v2.0.0 but left the registry with the old v1.x metadata — backfilled 7 tags (project-tracking, decisions, commitments, agency-workflow, context-switch, evidence-dashboard, staleness-detection), 6 suggested_skills (context-anchor, handoff, dead-letter, updateagents, coach, periodic-retreat), 2 aliases (project-evidence, evidence-tracker), and the `list_dir` tool; also fixed two unicode-encoding glitches in the `handoff` and `designscope` descriptions. (PR #85)
-- **v3.0.0 Changelog Stamp Drift**: the release stamp left the v3.0.0 detail entries stranded under `[Unreleased]` (duplicating `[3.0.0]`'s Major Changes/Changed summaries) and omitted the v3.0.0 compare link; the `docs/CHANGELOG.md` mirror was missing the `[3.0.0]` section entirely. All repaired: details folded into `[3.0.0]` under Added/Changed/Fixed, compare links added (`v2.7.0...v3.0.0` and `v3.0.0...v3.1.0`), mirror backfilled.
+- **v3.0.0 Changelog Stamp Drift**: the release stamp left the v3.0.0 detail entries stranded under `[Unreleased]` (duplicating `[3.0.0]`'s Major Changes/Changed summaries) and omitted the v3.0.0 compare link; the `docs/CHANGELOG.md` mirror was missing the `[3.0.0]` section entirely. All repaired: details folded into `[3.0.0]` under Changed/Fixed, compare links added (`v2.7.0...v3.0.0` and `v3.0.0...v3.1.0`), mirror backfilled.
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v3.0.0...v3.1.0
 
@@ -57,11 +505,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Suite Hardening Pass (5 skills, cross-pollination from the code-review corpus)**: mechanisms distilled from the 63-source review corpus landed where they fit best. **`gauntlet-loop` v1.2.0** — the Automated Gate gains a **quality-bar regression check** (suppressions added, tests skipped/deleted, assertions weakened, or thresholds edited down in the round's diff → round score 0.0: a build that passes because the bar was lowered is a regression, not a pass) and a **fail-closed eval check** (the proof suite must contain a test that CAN fail on the defect class the round claims to fix — a green run no test could have caught proves nothing; write the capable test and watch it fail on the pre-fix state first); `ITERATION_LEDGER` now records new-vs-fixed finding counts per round, and divergence (new findings outnumber fixed two rounds running) stops the loop with an escalation instead of burning the remaining budget. **`dead-letter` v1.5.0** — modularized: record template → [references/record-schema.md](dead-letter/references/record-schema.md), status sweep → [references/sweep-protocol.md](dead-letter/references/sweep-protocol.md) (SKILL.md down to 144 lines; sweep loads only the sweep protocol, capture loads only the schema), and the sweep gains a **findings ledger** (`.agents/artifacts/dead-letter-ledger.md`) that deduplicates recurring sweep verdicts, measures convergence across sweeps, and links clusters → repro packs → outcomes. **`secretary` v1.4.0** — Delegation Control Gates gain **Feedback Reception**: review feedback returning from delegations is verified against the code before implementation, each item classified implement / rebut (with evidence, never deference) / ask (one specific question), with investigation-before-application for auth/payments/migration items — performative agreement fails the gate. **`pua` v1.1.0** — modularized: 8 corporate flavor packs + situational auto-selector → [references/flavor-packs.md](pua/references/flavor-packs.md) (SKILL.md 208 lines; core procedure starts without the persona layer). **`refactor-ui` v1.1.2** — audit/review/sweep report severity markers ship text + symbol with color as a redundant third channel, never color alone (applies to rendered HTML report artifacts too).
 - **Modular Router & 3 New Modes (`code-review` v1.3.0)**: SKILL.md rebuilt as a token-minimal router — 7 modes now, each with an explicit load-map (references load only for their mode): `diff` (default, full 17-theme catalog), `hotfix` and `contract` (nothing extra), `audit` (+ conventions discovery: the project's own test runner/standards/error conventions define Axis A, then two-axis standards+spec side-by-side report), **`security`** (numbered SEC-01..10 control pass — injection, access control/IDOR, auth/session, crypto, SSRF, secrets, rate limiting, error disclosure, dependency/supply-chain — evidence-first findings with snippet + exploitability + remediation, and an explicit "no findings" statement per passed control), **`receive`** (feedback intake: verify before implementing, classify each item implement/rebut/ask, risk-gating for auth/payments/migrations, anti-sycophancy), **`fix`** (findings ledger → test-first fixes, one commit per finding, skip ledger for blind-risk items, re-review until convergence with bounded rounds). Theme catalog moved to [references/themes.md](code-review/references/themes.md) with two new corpus-grounded triggers: **13.4 Quality-Bar Regression** (suppressions added, tests skipped/deleted, assertions weakened, thresholds edited down — a build that passes because the bar was lowered is a regression, not a pass; Reject) and **16.5 Half-Applied Refactor Debris** (old+new coexist, orphaned helpers, debug scaffolding; Request Changes). Report gains "What's Good" and "Open Questions" sections; new pitfalls (generic-convention preaching, over-loading). Distilled from a 63-source agent-skill code-review corpus (fetched 2026-09-10, `.agents/artifacts/code-review-research/`); cross-pollination map recorded for the rest of the suite.
-- **Test-Spec Immutability Theme (`code-review` v1.2.0)**: new **Theme 17 under Level 5 (Verification Integrity)** — 4 triggers pinning the spec–test relationship in review: test weakened to match broken behavior (Reject), spec edit hidden inside a fix commit (Reject), unexplained test modification (Request Changes), snapshot regenerated blind (Request Changes). The principle is stated in the skill: the test defines correct behavior — fix the implementation to match the spec, never the reverse; a genuinely wrong spec is changed as a deliberate, separately-reviewable spec decision, not a hunk inside a bug fix. Registry surfaces synced (skills.json, llms.txt, README #4, per-skill README).
-- **Cluster Triage Sweep (`dead-letter` v1.4.0)**: `dead-letter status` upgraded from a flat listing to a three-pass root-cause triage — inventory, clustering by root cause (not error-string similarity), and one verdict per cluster (systemic / coincidental / cascade / escalate-cluster); report inline ≤40 lines closing with a sweep action line. Source: dic-skills nightly triage from the 248-source corpus; pairs with the coupling-router's DAG skip policy.
-- **Repro Test Pack Generator (`dead-letter` v1.3.0)**: at close-out (Recovery Sequence step 6), deterministic failures convert into a repro pack at `.agents/artifacts/repro-<slug>-<timestamp>/` — numbered reproduction steps, preconditions, expected-vs-actual assertion pair, and a minimal failing test observed red against the un-fixed code (unseen red is a claim, not evidence), with explicit skip cases and a worked example ([sample-repro-pack.md](dead-letter/examples/sample-repro-pack.md)). The capture that documents a failure becomes the regression test that prevents its recurrence.
-- **Plan Hardening Pass (research-driven, 3 skills)**: upgrades distilled from a 248-source corpus of failure-handling, orchestration, and plan-evaluation agent skills (fetched and deduplicated in `.agents/artifacts/sde-research/`). **`coupling-router` v1.4.0** — the Plan-Evaluation Gate gains a multi-perspective review requirement for plans with ≥5 tasks (spec/devil's-advocate, coupling, failure lenses; unresolved findings reject the plan). **`secretary` v1.3.0** — Wave Dispatch (DAG) gate (same-wave parallel dispatch, wave validation before the next launches, dependents on a failed parent marked `SKIP` and routed to `dead-letter`), a file-based Task Ledger (`.agents/secretary-tasks.json`, idempotent operations, verification receipts before `DONE`, state reconstructed from files + git history after context resets), and a three-tier Handoff Harvest protocol. **`dead-letter` v1.2.0** — the Recovery Sequence (ordered checklist embedded in the record, single resume point) and Baseline Reference (last-known-good verification; a clean-exit regression fails the round).
-- **Selection System (`skills.json` + `scripts/select-skills.ts`)**: the registry now carries three selection primitives — per-skill `scope` (`global` agent-level vs `local` per-project), five top-level `categories[]`, and named `selections{}` (`global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal`). A zero-dependency Bun resolver (`bun scripts/select-skills.ts <selection> [--format names|install|json]`) turns a selection into the concrete skill list or copy-pasteable `npx skills add` commands. Pinned by a hardening test.
+- **Test-Spec Immutability Theme (`code-review` v1.2.0)**: new **Theme 17 under Level 5 (Verification Integrity)** — 4 triggers pinning the spec–test relationship in review: test weakened to match broken behavior (Reject), spec edit hidden inside a fix commit (Reject), unexplained test modification (Request Changes), snapshot regenerated blind (Request Changes). The principle is stated in the skill: the test defines correct behavior — fix the implementation to match the spec, never the reverse; a genuinely wrong spec is changed as a deliberate, separately-reviewable spec decision, not a hunk inside a bug fix. Frontmatter gains trigger `(6)` (diffs touching tests/specs/snapshots), `test-spec-immutability` tag, and new openclaw triggers (`review test changes`, `tests weakened to pass`); review-output checklist and verification list gain test-spec integrity items; new Pitfall (spec-weakening tolerance); worked finding added to the sample review. Also fixed two latent drift bugs in the same pass: mode table and Step 2 heading still said "15-theme" after Theme 16 existed (now 17), and the Step 2 intro said "three levels of triggers" with four levels present (now five). Sources: agent-skill-eval `fix-failing-tests` ("test files define the correct behavior... never the other way around") and flightplanner `fp-fix` ("NEVER modifies spec files — the spec is the source of truth") from the 248-source corpus; closes the review-time loop with dead-letter's repro-pack spec note (v1.3.0). Registry surfaces synced (skills.json, llms.txt, README #4, per-skill README).
+- **Cluster Triage Sweep (`dead-letter` v1.4.0)**: `dead-letter status` upgraded from a flat listing to a three-pass root-cause triage — **inventory** (open records, retry counts, ages; a 2+-retry open record is itself flagged as a process defect), **clustering** by root cause with four cluster keys in priority order (same root cause, same dependency/producer, same precondition, same surface), and **one verdict per cluster**: systemic (one fix covers all members; they resume at Recovery Sequence step 4 after it lands — never per-record retries), coincidental (split; own Recovery Decisions), cascade (fix the producer first, members hold as `BLOCKED-CASCADE-<code>`), or escalate-cluster (one escalation with the cluster as evidence for clusters ≥3 or any member with ≥2 retries). Clustering is explicitly on root cause, not error-string similarity — identical stack traces can hide different causes (new pitfalls: string-match clustering, retry storm on systemic clusters). Report is inline ≤40 lines and closes with a sweep action line (fixes / retries authorized / escalations); a sweep that authorizes retries for a systemic cluster has failed its purpose. Source: dic-skills nightly triage from the 248-source corpus; pairs with the coupling-router's DAG skip policy (wave dependents route here as `SKIP`, and a systemic cluster explains them in one verdict).
+- **Repro Test Pack Generator (`dead-letter` v1.3.0)**: at close-out (Recovery Sequence step 6), deterministic failures (`FAILED-LOGIC`, `FAILED-TOOL`, stable-trigger `BLOCKED-*`) convert into a repro pack at `.agents/artifacts/repro-<slug>-<timestamp>/` — exact numbered reproduction steps, preconditions (data/env/config/versions), expected-vs-actual assertion pair, and a minimal failing test observed red against the un-fixed code (unseen red is a claim, not evidence). Explicit skip cases (transient/environment-dependent failures, fix already shipped, no test runner or external-system dependency), a spec-immutability note (if behavior is actually correct, fix the spec — never weaken the test to match broken behavior), and a worked example ([sample-repro-pack.md](dead-letter/examples/sample-repro-pack.md)) plus an updated sample record that shows a correctly-skipped pack. The capture that documents a failure becomes the regression test that prevents its recurrence; on recurrence, the pack is the parent record's evidence attachment. Registry surfaces synced (skills.json, llms.txt, README #15, per-skill README with full current record format).
+- **Plan Hardening Pass (research-driven, 3 skills)**: upgrades distilled from a 248-source corpus of failure-handling, orchestration, and plan-evaluation agent skills (fetched and deduplicated in `.agents/artifacts/sde-research/`). **`coupling-router` v1.4.0** — the Plan-Evaluation Gate (v1.3.0) gains a **multi-perspective review** requirement for plans with ≥5 tasks: three review lenses in sequence (spec/devil's-advocate, coupling, failure — with per-wave recovery owner, dead-letter route, and dependent-skip policy); findings recorded against the plan, unresolved findings reject it, single-lens review only below 5 tasks. **`secretary` v1.3.0** — Delegation Control Gates gain **Wave Dispatch (DAG)**: same-wave independent tasks dispatch in parallel, a wave completes and validates before the next launches, and dependents on a failed parent are marked `SKIP` and routed to `dead-letter` (never dangling); new **Task Ledger** section (`.agents/secretary-tasks.json`, idempotent `next`/`set-status`/`verify` operations, verification receipts before `DONE`, state reconstructed from files + git history after context resets); new **Handoff Harvest** protocol with three tiers (standard post-phase, incremental delta-only, consolidation at session end — read ALL pending handoffs before saving any, deduplicate across them, then write once); Step 6 session handover now runs the consolidation harvest first; verification checklist extended (ledger receipts, no wave launched on an unresolved parent failure).
+- **Recovery Hardening Pass (`dead-letter` v1.2.0)**: the Recovery Decision flow (v1.1.0) gains two mechanisms from the same corpus research — a **Recovery Sequence**: the ordered checklist (classify → decide → precondition → fix → verify-against-baseline → close) embedded in the record and marked step-by-step, making the record the single resume point for any retry (never an arbitrary step); and a **Baseline Reference**: path/commit/receipt of the last-known-good state, with the verification loop comparing retried output against it — a regression fails the round even when the exit code is clean. New pitfalls (improvised recovery order, clean-exit regression) and extended verification checks. Also fixed duplicated Verification-section lines left by v1.1.0.
+- **Selection System (`skills.json` + `scripts/select-skills.ts`)**: the registry now carries three selection primitives — per-skill `scope` (`global`: agent-level, install once, works in any workspace — session continuity, orchestration, personal workflow, machine maintenance; `local`: per-project — docs, git lifecycle, review, design, audits), five top-level `categories[]` (core-engine, context-orchestration, quality-review, design-interface, reflection-maintenance), and named `selections{}` (`global`, `local`, `core`, `context`, `quality`, `design`, `reflect`, `minimal` — the smallest useful set: updatedocs, handoff, dead-letter, secretary). A zero-dependency Bun resolver (`bun scripts/select-skills.ts <selection> [--format names|install|json]`) turns a selection into the concrete skill list or copy-pasteable `npx skills add` commands; `list` prints the menu, unknown selections exit 2, and category ids, `all`, and individual skill names also resolve. Pinned by a hardening test (scope partition covers all 22 skills with no overlap, category selections are subsets, minimal resolves, unknown fails).
 
 ### Changed
 
@@ -121,8 +570,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.6.0...v2.7.0
 
----
-
 ## [2.6.0] - 2026-09-08
 
 ### Added
@@ -141,8 +588,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.5.1...v2.6.0
 
----
-
 ## [2.5.1] - 2026-09-08
 
 ### Changed
@@ -156,8 +601,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **DOX Governance Container**: repo `.agents/` container retrofitted to the 9-folder Progressive Disclosure DOX architecture with the 13 modular standards synced from the `ai-ready` template canon; `AGENTS.md` converted to the lean DOX rail with project identity restored.
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.5.0...v2.5.1
-
----
 
 ## [2.5.0] - 2026-09-07
 
@@ -176,6 +619,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Emdash Astro Integration** ([#63](https://github.com/harshsinghmp/muse-skills/pull/63)): configured the official Emdash Astro integration in the edge CMS provisioning path.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v2.4.1...v2.5.0
+
 
 ---
 

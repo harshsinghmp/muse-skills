@@ -5,8 +5,8 @@
  *
  * Full lifecycle engine for agent instructions, repository AI-readiness, and cognitive memory:
  *   - Day 0 (Empty dir): Scaffolds fresh Agent Engine DOX architecture from master templates.
- *   - Day 1 (Retrofit): Intelligently extracts custom human rules from legacy files (CLAUDE.md, .cursorrules),
- *     archives legacy files, maps context to .agents/context/*, and provisions the lean root AGENTS.md rail.
+ *   - Day 1 (Retrofit): Discovers supported runtime instructions, snapshots exact originals, imports complete
+ *     scoped rules into canonical context, adapts runtime files, and provisions the lean root AGENTS.md router.
  *   - Day N (Sync): Synchronizes 19 standards and brand tokens, enforces MuseMemory hard boundary,
  *     and validates size and invariant invariants.
  *   - Audit Mode (--audit): Audits 13 tracked assets across AI Context, Dev Workflow, and Governance,
@@ -34,7 +34,6 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
-  renameSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -42,19 +41,33 @@ import { homedir } from "node:os";
 import { basename, join, relative, resolve } from "node:path";
 import * as readline from "node:readline/promises";
 import { parseArgs } from "node:util";
+import {
+  detectAgentTemplateProfile,
+  readConfiguredAgentName,
+  renderAgentsTemplate,
+  checkModernToolsAvailability as scanModernTools,
+} from "./agents-template";
+import { parseGitHubRemote, scaffoldGitHubAssets, selectGitHubWorkflowTemplates } from "./github-scaffold";
+import {
+  adaptAgentInstructionSources,
+  discoverAgentInstructionSources,
+  isManagedRootAgents,
+  migrateAgentInstructions,
+} from "./instruction-migration";
 
 // Template source of truth located in updateagents/templates/
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 
 /** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
-const AGENTS_MD_MAX_LINES = 85;
+const AGENTS_MD_MAX_LINES = 90;
 
 export const SECRETARY_ROUTER_BLOCK = `<!-- muse-secretary-router:start -->
-## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
-- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **\`secretary:dispatch\`** (\`view_file ~/.agents/skills/secretary/references/dispatch.md\` or \`.agents/skills/secretary/references/dispatch.md\`).
-- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching \`references/<mode>.md\` before writing code.
-- **Verification Gate**: All work must pass the pre-merge contract (\`bun test\`, lint, zero secret exposure) before claiming completion.
+## Secretary Protocol
+
+At the first prompt and every new task, activate \`secretary:dispatch\` by reading \`~/.agents/skills/secretary/references/dispatch.md\` (or the project copy at \`.agents/skills/secretary/references/dispatch.md\`). Triage the request, select the department and mode, read the selected skill's \`SKILL.md\` and mode reference, then act. Route through configured Council roles. Secretary dispatches by instruction; it is not a background process.
+
+Route Coach when its coaching modes fit; it is not a background process and does not replace task closeout.
 <!-- muse-secretary-router:end -->`;
 
 export function ensureSecretaryRouter(content: string): { updatedContent: string; modified: boolean } {
@@ -77,6 +90,30 @@ export function ensureSecretaryRouter(content: string): { updatedContent: string
     updatedContent: content + separator + SECRETARY_ROUTER_BLOCK + "\n",
     modified: true,
   };
+}
+
+const IMPORTED_INSTRUCTIONS_BLOCK = `<!-- updateagents:imported-instructions-router:start -->
+## Imported Agent Instructions
+
+Read \`.agents/context/imported-agent-instructions.md\` before every task when present. It preserves user-authored rules from earlier agent systems with source-path provenance; apply each within its recorded scope and ask the user about conflicts.
+<!-- updateagents:imported-instructions-router:end -->`;
+
+export function ensureImportedInstructionsRouter(content: string): { updatedContent: string; modified: boolean } {
+  const start = "<!-- updateagents:imported-instructions-router:start -->";
+  const end = "<!-- updateagents:imported-instructions-router:end -->";
+  const startIndex = content.indexOf(start);
+  const endIndex = content.indexOf(end);
+  if (startIndex >= 0 && endIndex >= startIndex) {
+    const stop = endIndex + end.length;
+    const existing = content.slice(startIndex, stop);
+    if (existing.trim() === IMPORTED_INSTRUCTIONS_BLOCK.trim()) return { updatedContent: content, modified: false };
+    return {
+      updatedContent: content.slice(0, startIndex) + IMPORTED_INSTRUCTIONS_BLOCK + content.slice(stop),
+      modified: true,
+    };
+  }
+  const separator = content.endsWith("\n\n") ? "" : content.endsWith("\n") ? "\n" : "\n\n";
+  return { updatedContent: `${content}${separator}${IMPORTED_INSTRUCTIONS_BLOCK}\n`, modified: true };
 }
 
 // CLI Flags
@@ -106,6 +143,9 @@ const { values, positionals } = parseArgs({
     "fail-under": { type: "string", default: "" },
     json: { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
+    "confirm-remove-github-workflows": { type: "boolean", default: false },
+    github: { type: "boolean", default: false },
+    "no-github": { type: "boolean", default: false },
     help: { type: "boolean", short: "h", default: false },
   },
   allowPositionals: true,
@@ -142,6 +182,9 @@ Options:
   --dry-run        Simulate without writing files to disk
   --json           Output audit results in JSON format
   -f, --force      Force overwrite of standards and templates
+  --confirm-remove-github-workflows  Confirm removal of .github/workflows for a non-GitHub project
+  --github         Confirm an unknown hosting target should receive GitHub project assets
+  --no-github      Confirm the project is not GitHub-based (combine with removal confirmation if needed)
   -h, --help       Show this help message
 `);
   process.exit(0);
@@ -242,7 +285,7 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
     const userMd = `# 👤 Principal Identity & Working Style\n\n- **Name / Handle**: ${name}\n- **Domain Superpowers**: ${superpowers}\n- **Communication Style**: ${comms}\n`;
     const assistantMd = `# 🏛️ Assistant Persona & Agency Council\n\n- **Default Assistant Identity**: ${assistantName}\n- **Delegation Stance**: ${delegation}\n- **Council Leads**:\n  - **Sol**: Product Architect & Full-Stack Automator\n  - **Jasper**: Creative Technologist & Growth Mastermind\n  - **Crew**: Client Delivery Specialist & Operations\n  - **Nexus**: Technical Director & Hardening Gate\n`;
     const visionMd = `# 🧭 Strategic Vision & Trajectory (Current Reality ➔ Target Vision)\n\n## 1. Current Coordinates (Reality)\n${currentState}\n\n## 2. Target Vision (1-Year Horizon)\n${targetVision}\n\n## 3. 90-Day Trajectory (Core Milestones)\n${milestones}\n\n## 4. Operating Values\n- **Evidence Before Claims**: Work is complete only after oracle verification.\n- **Zero Slop**: Ruthless clarity, no generic filler, no unmaintained dependencies.\n- **Additive & Safe**: Never clobber working systems or client files.\n`;
-    const rulesMd = `# 🛡️ Global Machine Invariants & Toolchain Standards\n\n- **Toolchain**: ${toolchain}\n- **Security**: ${security}\n- **Git Protocol**: Atomic PRs, Meaningful Git Commit Protocol\n`;
+    const rulesMd = `# 🛡️ Global Machine Invariants & Toolchain Standards\n\n- **Toolchain**: ${toolchain}\n- **Security**: ${security}\n- **Git Protocol**: Follow each repository's documented workflow; keep changes focused and reviewable.\n`;
 
     // Auto-detect host machine toolchain
     const detectTools = ["rg", "fd", "bat", "eza", "sd", "zoxide", "delta", "jq"];
@@ -257,7 +300,7 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
       return res.status === 0;
     });
 
-    const stackMd = `# 🛠️ Host Machine Toolchain & Installed Tools — ~/.agents/identity/stack.md\n\n- **Operating System**: ${process.platform} (${process.arch})\n- **Default Package Manager**: bun\n- **Detected Runtimes**: ${detectedRuntimes.join(", ") || "bun, node"}\n- **Installed Modern CLI Set**: ${detectedModern.join(", ") || "rg, fd, bat, eza"}\n- **Git Protocol**: Atomic PRs, Meaningful Git Commit Protocol\n`;
+    const stackMd = `# 🛠️ Host Machine Toolchain & Installed Tools — ~/.agents/identity/stack.md\n\n- **Operating System**: ${process.platform} (${process.arch})\n- **Default Package Manager**: bun\n- **Detected Runtimes**: ${detectedRuntimes.join(", ") || "bun, node"}\n- **Installed Modern CLI Set**: ${detectedModern.join(", ") || "rg, fd, bat, eza"}\n`;
 
     writeFileSync(join(destDir, "user.md"), userMd, "utf8");
     writeFileSync(join(destDir, "assistant.md"), assistantMd, "utf8");
@@ -290,7 +333,7 @@ export async function runOnboardingFlow(isGlobal: boolean, targetDir: string): P
       const overrideChoice = await prompt("Add project-specific overrides for this workspace? [y/N]", "n");
       wantOverrides = overrideChoice.toLowerCase() === "y" || overrideChoice.toLowerCase() === "yes";
       if (!wantOverrides) {
-        console.log("  ✅ Inheriting global identity defaults. Project DOX rail active.\n");
+        console.log("  ✅ Inheriting global identity defaults. Workspace instructions active.\n");
         rl.close();
         return;
       }
@@ -395,6 +438,7 @@ export function computeContextHash(contextDir: string): string {
     "decisions.md",
     "brand.md",
     "accounts.md",
+    "imported-agent-instructions.md",
     "index.md",
   ];
   const hasher = createHash("sha256");
@@ -799,7 +843,7 @@ export function syncIdeAdapters(targetDir: string): {
     "git-workflow.md": {
       globs: "*",
       alwaysApply: false,
-      desc: "Meaningful Git Commit Protocol, Atomic PRs, and branch lifecycles",
+      desc: "Repository-defined branch, commit, review, and release workflows",
     },
     "tech-stacks.md": {
       globs: "package.json,bun.lock,bun.lockb,pnpm-lock.yaml,package-lock.json",
@@ -1553,34 +1597,7 @@ export function scanForSyntheticArtifacts(target: string): { file: string; count
 }
 
 export function checkModernToolsAvailability(): { installed: string[]; missing: string[] } {
-  const coreTools = [
-    "fd",
-    "rg",
-    "bat",
-    "eza",
-    "sd",
-    "choose",
-    "procs",
-    "zoxide",
-    "delta",
-    "btop",
-    "ncdu",
-    "gojq",
-    "zstd",
-  ];
-  const installed: string[] = [];
-  const missing: string[] = [];
-
-  for (const tool of coreTools) {
-    const res = spawnSync("which", [tool], { encoding: "utf8" });
-    if (res.status === 0) {
-      installed.push(tool);
-    } else {
-      missing.push(tool);
-    }
-  }
-
-  return { installed, missing };
+  return scanModernTools();
 }
 
 export interface AssetCheck {
@@ -1593,6 +1610,45 @@ export interface AssetCheck {
 }
 
 export function auditWorkspace(target: string): AssetCheck[] {
+  const origin = spawnSync("git", ["remote", "get-url", "origin"], { cwd: target, encoding: "utf8" });
+  let packageRepository = "";
+  try {
+    const packageJson = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+    const repository = packageJson.repository?.url || packageJson.repository;
+    packageRepository = typeof repository === "string" ? repository.replace(/^github:/i, "https://github.com/") : "";
+  } catch {}
+  const hasNonGitHubOrigin =
+    (origin.status === 0 && !parseGitHubRemote(origin.stdout)) ||
+    (Boolean(packageRepository) && !parseGitHubRemote(packageRepository));
+  let projectScripts: Record<string, string> = {};
+  try {
+    const packageJson = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+    projectScripts = packageJson.scripts || {};
+  } catch {}
+  const workflowRequired =
+    selectGitHubWorkflowTemplates({
+      packageScripts: projectScripts,
+      hasPythonProject: ["pyproject.toml", "requirements.txt", "Pipfile"].some((file) =>
+        existsSync(join(target, file)),
+      ),
+      hasComposerProject: existsSync(join(target, "composer.json")),
+    }).length > 0;
+  const workflowsPath = join(target, ".github/workflows");
+  const workflowFiles =
+    existsSync(workflowsPath) && statSync(workflowsPath).isDirectory()
+      ? readdirSync(workflowsPath, { withFileTypes: true }).some(
+          (entry) => entry.isFile() && /\.ya?ml$/i.test(entry.name),
+        )
+      : false;
+  const dependencyAutomationRequired = [
+    "package.json",
+    "pyproject.toml",
+    "requirements.txt",
+    "Pipfile",
+    "composer.json",
+    "Cargo.toml",
+    "go.mod",
+  ].some((file) => existsSync(join(target, file)));
   const gitignorePath = join(target, ".gitignore");
   let gitignoreHasEnv = false;
   if (existsSync(gitignorePath)) {
@@ -1606,7 +1662,7 @@ export function auditWorkspace(target: string): AssetCheck[] {
   let agentsMdOk = false;
   if (existsSync(agentsMdPath)) {
     const lines = readFileSync(agentsMdPath, "utf8").split("\n").length;
-    agentsMdOk = lines <= AGENTS_MD_MAX_LINES; // Lean DOX router (<50 lines)
+    agentsMdOk = lines <= AGENTS_MD_MAX_LINES; // Lean workspace instruction file
   }
 
   const toolConfigOk =
@@ -1662,16 +1718,22 @@ export function auditWorkspace(target: string): AssetCheck[] {
       name: "CI Verification Pipeline",
       category: "Dev Workflow",
       path: ".github/workflows",
-      passed: existsSync(join(target, ".github/workflows")),
-      details: "Automated test & build workflow",
+      passed: hasNonGitHubOrigin || !workflowRequired || workflowFiles,
+      details: hasNonGitHubOrigin
+        ? "Not applicable: repository origin is not GitHub"
+        : workflowFiles
+          ? "Workflow file present"
+          : workflowRequired
+            ? "Project checks require a workflow"
+            : "No detected checks require a workflow",
     },
     {
       id: 6,
       name: "Issue Templates",
       category: "Dev Workflow",
       path: ".github/ISSUE_TEMPLATE",
-      passed: existsSync(join(target, ".github/ISSUE_TEMPLATE")),
-      details: "Structured issue forms",
+      passed: hasNonGitHubOrigin || existsSync(join(target, ".github/ISSUE_TEMPLATE")),
+      details: hasNonGitHubOrigin ? "Not applicable: repository origin is not GitHub" : "Structured issue forms",
     },
     {
       id: 7,
@@ -1679,17 +1741,24 @@ export function auditWorkspace(target: string): AssetCheck[] {
       category: "Dev Workflow",
       path: ".github/pull_request_template.md",
       passed:
+        hasNonGitHubOrigin ||
         existsSync(join(target, ".github/pull_request_template.md")) ||
         existsSync(join(target, ".github/PULL_REQUEST_TEMPLATE.md")),
-      details: "Anti-slop PR verification checklist",
+      details: hasNonGitHubOrigin
+        ? "Not applicable: repository origin is not GitHub"
+        : "Anti-slop PR verification checklist",
     },
     {
       id: 8,
       name: "Dependency Automation",
       category: "Dev Workflow",
       path: ".github/dependabot.yml",
-      passed: existsSync(join(target, ".github/dependabot.yml")),
-      details: "Dependabot configuration present",
+      passed: hasNonGitHubOrigin || !dependencyAutomationRequired || existsSync(join(target, ".github/dependabot.yml")),
+      details: hasNonGitHubOrigin
+        ? "Not applicable: repository origin is not GitHub"
+        : !dependencyAutomationRequired
+          ? "No supported dependency ecosystem detected"
+          : "Dependabot configuration present",
     },
     {
       id: 9,
@@ -1704,8 +1773,11 @@ export function auditWorkspace(target: string): AssetCheck[] {
       name: "Contributing Protocol",
       category: "Onboarding & Governance",
       path: "CONTRIBUTING.md",
-      passed: existsSync(join(target, "CONTRIBUTING.md")),
-      details: "Conventional Commits protocol",
+      passed:
+        hasNonGitHubOrigin ||
+        existsSync(join(target, "CONTRIBUTING.md")) ||
+        existsSync(join(target, ".github/CONTRIBUTING.md")),
+      details: hasNonGitHubOrigin ? "Not applicable: repository origin is not GitHub" : "Contribution protocol present",
     },
     {
       id: 11,
@@ -1742,10 +1814,17 @@ export function auditWorkspace(target: string): AssetCheck[] {
 
 export function scaffoldAgentEngine(
   target: string,
-  options: { dryRun?: boolean; force?: boolean } = {},
-): { created: string[]; skipped: string[] } {
+  options: { dryRun?: boolean; force?: boolean; githubProject?: boolean; confirmRemoveGitHubWorkflows?: boolean } = {},
+): {
+  created: string[];
+  skipped: string[];
+  removed: string[];
+  confirmationRequired: boolean;
+  hostUnknown: boolean;
+} {
   const created: string[] = [];
   const skipped: string[] = [];
+  const removed: string[] = [];
   const dry = options.dryRun || false;
   const force = options.force || false;
 
@@ -1758,6 +1837,7 @@ export function scaffoldAgentEngine(
   const subdirs = [
     "archive",
     "artifacts",
+    "dump",
     "brand",
     "brand/tokens",
     "brand/screenshots",
@@ -1776,6 +1856,12 @@ export function scaffoldAgentEngine(
       mkdirSync(p, { recursive: true });
       created.push(`.agents/${sub}/`);
     }
+  }
+
+  // Preserve and import existing instructions before any adapter or router is refreshed.
+  const instructionMigration = migrateAgentInstructions(target, { dryRun: dry, includeManagedRoot: force });
+  for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
+    created.push(`${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (snapshot)`);
   }
 
   // 2. Copy standards
@@ -1844,7 +1930,9 @@ export function scaffoldAgentEngine(
   if (!existsSync(rootAgents) || force) {
     if (!dry && existsSync(srcAgents)) {
       const templateContent = readFileSync(srcAgents, "utf8");
-      const { updatedContent } = ensureSecretaryRouter(templateContent);
+      const profile = detectAgentTemplateProfile(target);
+      const rendered = renderAgentsTemplate(templateContent, profile);
+      const { updatedContent } = ensureSecretaryRouter(rendered);
       writeFileSync(rootAgents, updatedContent, "utf8");
     }
     created.push("AGENTS.md");
@@ -1861,6 +1949,28 @@ export function scaffoldAgentEngine(
     } else {
       skipped.push("AGENTS.md");
     }
+  }
+
+  // 5a. Deploy Claude's single-source pointer to AGENTS.md.
+  const srcClaude = join(TEMPLATES_DIR, "CLAUDE.md");
+  const destClaude = join(target, "CLAUDE.md");
+  assertNotMemory(destClaude);
+  if (existsSync(srcClaude) && (!existsSync(destClaude) || force)) {
+    if (!dry) cpSync(srcClaude, destClaude);
+    created.push("CLAUDE.md");
+  } else if (existsSync(destClaude)) {
+    skipped.push("CLAUDE.md");
+  }
+
+  const instructionAdapters = adaptAgentInstructionSources(instructionMigration.sources, { dryRun: dry });
+  for (const adapterPath of instructionAdapters) created.push(`${adapterPath} (forwards to AGENTS.md)`);
+  if (!dry && existsSync(rootAgents)) {
+    const rootContent = readFileSync(rootAgents, "utf8");
+    const withSecretary = ensureSecretaryRouter(rootContent).updatedContent;
+    const withInstructions = instructionMigration.canonicalPath
+      ? ensureImportedInstructionsRouter(withSecretary).updatedContent
+      : withSecretary;
+    if (withInstructions !== rootContent) writeFileSync(rootAgents, withInstructions, "utf8");
   }
 
   // 5b. Deploy .mcp.json tool config if missing (asset 3)
@@ -1887,23 +1997,17 @@ export function scaffoldAgentEngine(
     created.push(".gitignore");
   }
 
-  // 7. Deploy GitHub workflow & template bundle if missing (assets 6, 7, 8)
-  const githubTemplates = join(TEMPLATES_DIR, "github");
-  if (existsSync(githubTemplates)) {
-    for (const item of readdirSync(githubTemplates)) {
-      const src = join(githubTemplates, item);
-      const dest = join(target, ".github", item);
-      if (!existsSync(dest)) {
-        if (!dry) {
-          mkdirSync(join(target, ".github"), { recursive: true });
-          cpSync(src, dest, { recursive: true });
-        }
-        created.push(`.github/${item}`);
-      } else {
-        skipped.push(`.github/${item}`);
-      }
-    }
-  }
+  // 7. Adapt GitHub community assets and stack-specific workflows from the target project.
+  const githubAssets = scaffoldGitHubAssets(target, {
+    ...detectAgentTemplateProfile(target),
+    agentName: readConfiguredAgentName(),
+    githubProject: options.githubProject,
+    removeWorkflowsConfirmed: options.confirmRemoveGitHubWorkflows,
+    dryRun: dry,
+  });
+  created.push(...githubAssets.created);
+  skipped.push(...githubAssets.skipped);
+  removed.push(...githubAssets.removed);
 
   // 8. Deploy .env.example if missing (asset 12)
   const srcEnvExample = join(TEMPLATES_DIR, "env.example");
@@ -1934,7 +2038,13 @@ export function scaffoldAgentEngine(
     created.push("Client-Intake/00-Intake-Brief.md");
   }
 
-  return { created, skipped };
+  return {
+    created,
+    skipped,
+    removed,
+    confirmationRequired: githubAssets.confirmationRequired,
+    hostUnknown: githubAssets.hostUnknown,
+  };
 }
 
 // =========================================================================
@@ -1984,7 +2094,58 @@ if (isScaffold) {
   if (isDryRun) console.log(`🔍 [DRY RUN — No filesystem writes]`);
   console.log("------------------------------------------------------------\n");
 
-  const { created, skipped } = scaffoldAgentEngine(workspaceDir, { dryRun: isDryRun, force: isForce });
+  let result = scaffoldAgentEngine(workspaceDir, {
+    dryRun: isDryRun,
+    force: isForce,
+    githubProject: values.github ? true : values["no-github"] ? false : undefined,
+    confirmRemoveGitHubWorkflows: values["confirm-remove-github-workflows"],
+  });
+  if (result.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
+    const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await prompt.question(
+      "No GitHub host is configured. Should GitHub community files and matching workflows be scaffolded? [y/N] ",
+    );
+    prompt.close();
+    const githubResult = scaffoldGitHubAssets(workspaceDir, {
+      ...detectAgentTemplateProfile(workspaceDir),
+      agentName: readConfiguredAgentName(),
+      githubProject: /^y(es)?$/i.test(answer.trim()),
+      removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+      dryRun: isDryRun,
+    });
+    result = {
+      ...result,
+      created: [...result.created, ...githubResult.created],
+      skipped: [...result.skipped, ...githubResult.skipped],
+      removed: [...result.removed, ...githubResult.removed],
+      confirmationRequired: githubResult.confirmationRequired,
+      hostUnknown: false,
+    };
+  }
+  if (result.confirmationRequired && !isDryRun && process.stdin.isTTY && !values["confirm-remove-github-workflows"]) {
+    const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await prompt.question(
+      "This project has a non-GitHub origin. Remove all files under .github/workflows? Other .github files will be kept. [y/N] ",
+    );
+    prompt.close();
+    if (/^y(es)?$/i.test(answer.trim())) {
+      const githubResult = scaffoldGitHubAssets(workspaceDir, {
+        ...detectAgentTemplateProfile(workspaceDir),
+        agentName: readConfiguredAgentName(),
+        githubProject: true,
+        removeWorkflowsConfirmed: true,
+        dryRun: isDryRun,
+      });
+      result = {
+        ...result,
+        created: [...result.created, ...githubResult.created],
+        skipped: [...result.skipped, ...githubResult.skipped],
+        removed: githubResult.removed,
+        confirmationRequired: githubResult.confirmationRequired,
+      };
+    }
+  }
+  const { created, skipped, removed } = result;
   console.log(`✅ Scaffolding complete:`);
   console.log(`  • Created / Provisioned: ${created.length} files/directories`);
   for (const c of created.slice(0, 10)) console.log(`    + ${c}`);
@@ -1992,6 +2153,15 @@ if (isScaffold) {
   if (skipped.length > 0) {
     console.log(`  • Preserved (Already present): ${skipped.length} files`);
   }
+  if (removed.length > 0) console.log(`  • Removed after confirmation: ${removed.join(", ")}`);
+  if (result.hostUnknown)
+    console.log(
+      "  • GitHub assets deferred because hosting is unknown. Ask the user, then rerun with --github, --no-github, or --confirm-remove-github-workflows.",
+    );
+  if (result.confirmationRequired)
+    console.log(
+      "  • GitHub workflows preserved. Ask the user before removal, then rerun with --confirm-remove-github-workflows.",
+    );
   console.log("\n🎉 Agent Engine successfully provisioned!");
   process.exit(0);
 }
@@ -2106,26 +2276,13 @@ console.log("-------------------------------------------------------\n");
 
 // Step 2: Discover Existing Agent Files
 console.log("🔍 Step 2: Scanning for existing agent files...");
-const knownAgentFiles = [
-  "AGENTS.md",
-  "CLAUDE.md",
-  ".cursorrules",
-  ".github/copilot-instructions.md",
-  "GEMINI.md",
-  "CODEX.md",
-];
-
-const discoveredFiles: Array<{ relPath: string; fullPath: string; content: string }> = [];
-
-for (const file of knownAgentFiles) {
-  const fullPath = join(workspaceDir, file);
-  if (existsSync(fullPath)) {
-    try {
-      const content = readFileSync(fullPath, "utf8");
-      discoveredFiles.push({ relPath: file, fullPath, content });
-      console.log(`  📄 Found agent file: ./${file} (${(content.length / 1024).toFixed(1)} KB)`);
-    } catch {}
-  }
+const discoveredFiles = discoverAgentInstructionSources(workspaceDir).map((source) => ({
+  relPath: source.relativePath,
+  fullPath: source.absolutePath,
+  content: source.content,
+}));
+for (const file of discoveredFiles) {
+  console.log(`  📄 Found agent instructions: ./${file.relPath} (${(file.content.length / 1024).toFixed(1)} KB)`);
 }
 
 const agentsDir = join(workspaceDir, ".agents");
@@ -2135,7 +2292,7 @@ const hasAgentsDir = existsSync(agentsDir);
 const hasStandards = existsSync(standardsDir);
 const hasContext = existsSync(contextDir);
 
-const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir;
+const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir || existsSync(join(workspaceDir, "AGENTS.md"));
 
 if (!hasAnyAgentFiles) {
   console.log("  ℹ️  No existing agent files or .agents/ container found.");
@@ -2171,7 +2328,8 @@ if (
   existsSync(contextDir) &&
   existsSync(hashFile) &&
   existsSync(rootAgentsFile) &&
-  !existsSync(legacyClaude)
+  (!existsSync(legacyClaude) || readFileSync(legacyClaude, "utf8").trim() === "@AGENTS.md") &&
+  discoveredFiles.length === 0
 ) {
   const currentHash = computeContextHash(contextDir);
   const savedHash = readFileSync(hashFile, "utf8").trim();
@@ -2242,36 +2400,77 @@ if (frameworkDetected === "generic") {
   }
 }
 
-// Helper: Extract Custom Sections from Markdown
-function extractSections(markdown: string): Record<string, string> {
-  const sections: Record<string, string> = {};
-  const lines = markdown.split("\n");
-  let currentHeader = "PREAMBLE";
-  let currentContent: string[] = [];
-
-  for (const line of lines) {
-    const headerMatch = line.match(/^#{1,3}\s+(.+)$/);
-    if (headerMatch) {
-      if (currentContent.length > 0) {
-        sections[currentHeader] = currentContent.join("\n").trim();
-        currentContent = [];
-      }
-      currentHeader = headerMatch[1].trim().toLowerCase();
-    } else {
-      currentContent.push(line);
-    }
+// Keep project GitHub assets additive and adapt CI only to detected project scripts/files.
+let githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
+  projectName,
+  projectDesc,
+  framework: frameworkDetected,
+  packageScripts: projectScripts,
+  agentName: readConfiguredAgentName(),
+  githubProject: values.github ? true : values["no-github"] ? false : undefined,
+  removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+  dryRun: isDryRun,
+});
+if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
+  const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = await prompt.question(
+    "No GitHub host is configured. Should GitHub community files and matching workflows be scaffolded? [y/N] ",
+  );
+  prompt.close();
+  githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
+    projectName,
+    projectDesc,
+    framework: frameworkDetected,
+    packageScripts: projectScripts,
+    agentName: readConfiguredAgentName(),
+    githubProject: /^y(es)?$/i.test(answer.trim()),
+    removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+    dryRun: isDryRun,
+  });
+}
+if (
+  githubAssetResult.confirmationRequired &&
+  !isDryRun &&
+  process.stdin.isTTY &&
+  !values["confirm-remove-github-workflows"]
+) {
+  const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = await prompt.question(
+    "This project has a non-GitHub origin. Remove all files under .github/workflows? Other .github files will be kept. [y/N] ",
+  );
+  prompt.close();
+  if (/^y(es)?$/i.test(answer.trim())) {
+    githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
+      projectName,
+      projectDesc,
+      framework: frameworkDetected,
+      packageScripts: projectScripts,
+      agentName: readConfiguredAgentName(),
+      removeWorkflowsConfirmed: true,
+      dryRun: isDryRun,
+    });
   }
-  if (currentContent.length > 0) {
-    sections[currentHeader] = currentContent.join("\n").trim();
-  }
-
-  return sections;
+}
+for (const path of githubAssetResult.created) report.scaffolded.push(path);
+for (const path of githubAssetResult.skipped) report.preserved.push(path);
+if (githubAssetResult.removed.length)
+  report.scaffolded.push(...githubAssetResult.removed.map((path) => `${path} (removed after confirmation)`));
+if (githubAssetResult.confirmationRequired) {
+  console.log(
+    "  ⚠️ GitHub workflow files were preserved. Ask the user before removal; confirm with --confirm-remove-github-workflows.",
+  );
+}
+if (githubAssetResult.hostUnknown) {
+  console.log(
+    "  ⚠️ GitHub assets deferred because hosting is unknown; ask the user and rerun with --github or --no-github.",
+  );
 }
 
 // Provision .agents/ directory structure
 const subdirs = [
   "archive",
   "artifacts",
+  "dump",
   "brand",
   "brand/tokens",
   "brand/screenshots",
@@ -2292,42 +2491,58 @@ for (const sub of subdirs) {
   }
 }
 
+const instructionMigration = migrateAgentInstructions(workspaceDir, { dryRun: isDryRun });
+for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
+  report.archived.push(
+    `${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (exact snapshot)`,
+  );
+}
+if (instructionMigration.imported.length > 0) {
+  report.contextMerged.push({
+    targetFile: instructionMigration.canonicalPath || ".agents/context/imported-agent-instructions.md",
+    section: `Imported ${instructionMigration.imported.length} source file(s)`,
+    source: "Agent-specific instruction migration",
+  });
+  console.log(
+    `  🧭 Imported ${instructionMigration.imported.length} source(s) into ${instructionMigration.canonicalPath}`,
+  );
+}
+
+function scaffoldMissingContextTemplates(): void {
+  const sourceDir = join(TEMPLATES_DIR, ".agents/context");
+  if (!existsSync(sourceDir)) return;
+  for (const file of readdirSync(sourceDir)) {
+    const source = join(sourceDir, file);
+    const destination = join(contextDir, file);
+    assertNotMemory(destination);
+    if (existsSync(destination) || isDryRun) continue;
+
+    let content = readFileSync(source, "utf8")
+      .replace(/\{\{PROJECT_NAME\}\}/g, projectName)
+      .replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
+    if (file === "product.md") {
+      content = `# 📦 Product Scope & Inventory\n\n## Overview\n${projectDesc}\n\n## Key Capabilities\n- Framework: ${frameworkDetected.toUpperCase()}\n- Governed by the project Agent Engine.\n`;
+    } else if (file === "architecture.md") {
+      const scripts = Object.entries(projectScripts)
+        .map(([name, command]) => `- npm run ${name} / bun ${name}: ${command}`)
+        .join("\n");
+      content = `# 🏗️ Architecture & Workspace Layout\n\n## Stack\n- Framework: ${frameworkDetected.toUpperCase()}\n- Runtime: from project configuration\n\n## Verified Project Scripts\n${scripts || "- No package scripts detected"}\n\n## Directory Layout\nDocument verified application boundaries and data flows here.\n`;
+    } else if (file === "current.md") {
+      content = `# 📍 Current Shipped State & System Reality\n\n## Verified Shipped Reality\n- Project **${projectName}** initialized with the Agent Engine.\n- Framework: ${frameworkDetected.toUpperCase()}.\n\n## Next Immediate Focus\n- Record the next verified project milestone.\n`;
+    }
+
+    writeFileSync(destination, content, "utf8");
+    report.scaffolded.push(`.agents/context/${file}`);
+    console.log(`  ✅ Created: ./.agents/context/${file}`);
+  }
+}
+
 // =========================================================================
 // SCENARIO A: No Agent Files Found -> Scaffold Fresh Agent Engine
 // =========================================================================
 if (!hasAnyAgentFiles) {
   console.log("\n🛠️  Step 4A: No agent files detected — Scaffolding fresh Agent Engine DOX container...");
-
-  // Initialize context files from templates
-  const contextTemplatesDir = join(TEMPLATES_DIR, ".agents/context");
-  if (existsSync(contextTemplatesDir)) {
-    for (const file of readdirSync(contextTemplatesDir)) {
-      const srcFile = join(contextTemplatesDir, file);
-      const destFile = join(contextDir, file);
-      assertNotMemory(destFile);
-
-      if (!existsSync(destFile) && !isDryRun) {
-        let content = readFileSync(srcFile, "utf8");
-        content = content.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
-        content = content.replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
-
-        if (file === "product.md") {
-          content = `# 📦 Product Scope & Inventory\n\n## Overview\n${projectDesc}\n\n## Key Capabilities\n- Framework: ${frameworkDetected.toUpperCase()}\n- Governed by Agency Council DOX Architecture.\n`;
-        } else if (file === "architecture.md") {
-          const scriptList = Object.entries(projectScripts)
-            .map(([k, v]) => `- \`npm run ${k}\` / \`bun ${k}\`: ${v}`)
-            .join("\n");
-          content = `# 🏗️ Architecture & Workspace Layout\n\n## 1. Stack Specifications\n- **Framework**: ${frameworkDetected.toUpperCase()}\n- **Runtime**: Node.js / Bun / PHP\n\n## 2. Verified Project Scripts\n${scriptList || "- Default framework commands"}\n\n## 3. Directory Layout\nApplication source code organized in standard framework folders.\n`;
-        } else if (file === "current.md") {
-          content = `# 📍 Current Shipped State & System Reality\n\n## 1. Verified Shipped Reality\n- Project **${projectName}** initialized with Progressive Disclosure DOX.\n- Framework: ${frameworkDetected.toUpperCase()}.\n\n## 2. Next Immediate Focus\n- Proceed with active milestone implementation.\n`;
-        }
-
-        writeFileSync(destFile, content, "utf8");
-        report.scaffolded.push(`.agents/context/${file}`);
-        console.log(`  ✅ Created: ./.agents/context/${file}`);
-      }
-    }
-  }
+  scaffoldMissingContextTemplates();
 
   // Deploy Lean Root AGENTS.md
   const rootAgentsPath = join(workspaceDir, "AGENTS.md");
@@ -2335,184 +2550,82 @@ if (!hasAnyAgentFiles) {
   const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
   if (existsSync(railTemplate) && !isDryRun) {
     const templateContent = readFileSync(railTemplate, "utf8");
-    const { updatedContent } = ensureSecretaryRouter(templateContent);
+    const profile = detectAgentTemplateProfile(workspaceDir, {
+      projectName,
+      projectDesc,
+      framework: frameworkDetected,
+      dependencies,
+    });
+    const rendered = renderAgentsTemplate(templateContent, profile);
+    const { updatedContent } = ensureSecretaryRouter(rendered);
     writeFileSync(rootAgentsPath, updatedContent, "utf8");
-    report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
-    console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
+    report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
+    console.log("  ✅ Deployed root AGENTS.md workspace instructions with Secretary Protocol");
+  }
+
+  const claudePointerTemplate = join(TEMPLATES_DIR, "CLAUDE.md");
+  const claudePointerPath = join(workspaceDir, "CLAUDE.md");
+  assertNotMemory(claudePointerPath);
+  if (existsSync(claudePointerTemplate) && !existsSync(claudePointerPath)) {
+    if (!isDryRun) cpSync(claudePointerTemplate, claudePointerPath);
+    report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
+    console.log("  ✅ Deployed Claude pointer to root AGENTS.md");
   }
 }
 
 // =========================================================================
-// SCENARIO B: Agent Files Exist -> Extract Custom Content & Place Intelligently
+// SCENARIO B: Existing agent files -> Preserve, migrate, and adapt
 // =========================================================================
 if (hasAnyAgentFiles) {
-  console.log("\n🔄 Step 4B: Custom agent files detected — Extracting and intelligently placing context...");
-
-  // Collect all text from discovered legacy files
-  const aggregatedCustomRules: string[] = [];
-  let extractedProjectPurpose = "";
-  const extractedArchCommands: string[] = [];
-  const extractedDecisions: string[] = [];
-  const extractedCurrentNotes: string[] = [];
-
-  for (const item of discoveredFiles) {
-    const sections = extractSections(item.content);
-
-    for (const [title, content] of Object.entries(sections)) {
-      if (!content.trim()) continue;
-
-      if (
-        title.includes("overview") ||
-        title.includes("purpose") ||
-        title.includes("about") ||
-        title.includes("scope")
-      ) {
-        extractedProjectPurpose += `\n### From ${item.relPath} (${title})\n${content}\n`;
-      } else if (
-        title.includes("command") ||
-        title.includes("script") ||
-        title.includes("build") ||
-        title.includes("stack") ||
-        title.includes("run")
-      ) {
-        extractedArchCommands.push(`### From ${item.relPath} (${title})\n${content}`);
-      } else if (
-        title.includes("decision") ||
-        title.includes("adr") ||
-        title.includes("principle") ||
-        title.includes("rule")
-      ) {
-        extractedDecisions.push(`### From ${item.relPath} (${title})\n${content}`);
-      } else if (
-        title.includes("task") ||
-        title.includes("todo") ||
-        title.includes("current") ||
-        title.includes("progress") ||
-        title.includes("status")
-      ) {
-        extractedCurrentNotes.push(`### From ${item.relPath} (${title})\n${content}`);
-      } else {
-        aggregatedCustomRules.push(`### From ${item.relPath} (${title})\n${content}`);
-      }
-    }
-  }
-
-  // Helper to append custom content safely if not already present
-  function mergeIntoContextFile(fileName: string, header: string, extraContent: string) {
-    const filePath = join(contextDir, fileName);
-    assertNotMemory(filePath);
-
-    let base = "";
-    if (existsSync(filePath)) {
-      base = readFileSync(filePath, "utf8");
-      report.preserved.push(`.agents/context/${fileName}`);
-    } else {
-      const templatePath = join(TEMPLATES_DIR, ".agents/context", fileName);
-      if (existsSync(templatePath)) base = readFileSync(templatePath, "utf8");
-      else base = `# ${fileName}\n\n`;
-      report.scaffolded.push(`.agents/context/${fileName}`);
-    }
-
-    if (extraContent && !base.includes("### From")) {
-      const updated = `${base.trim()}\n\n## ${header}\n\n${extraContent.trim()}\n`;
-      if (!isDryRun) writeFileSync(filePath, updated, "utf8");
-      report.contextMerged.push({
-        targetFile: `.agents/context/${fileName}`,
-        section: header,
-        source: "Discovered agent files",
-      });
-      logExplicitModification({
-        file: `.agents/context/${fileName}`,
-        changeType: existsSync(filePath) ? "updated" : "created",
-        section: header,
-        diffSummary: `Merged custom section "${header}" (${extraContent.trim().slice(0, 80)}...)`,
-      });
-      console.log(`  🔄 Merged custom content into ./.agents/context/${fileName}`);
-    }
-  }
-
-  if (extractedProjectPurpose) {
-    mergeIntoContextFile("product.md", "Imported Project Overview & Scope", extractedProjectPurpose);
-  }
-  if (extractedArchCommands.length > 0) {
-    mergeIntoContextFile("architecture.md", "Imported Commands & Architecture", extractedArchCommands.join("\n\n"));
-  }
-  if (extractedDecisions.length > 0) {
-    mergeIntoContextFile("decisions.md", "Imported Decisions & Invariants", extractedDecisions.join("\n\n"));
-  }
-  if (extractedCurrentNotes.length > 0) {
-    mergeIntoContextFile("current.md", "Imported Current Status & Notes", extractedCurrentNotes.join("\n\n"));
-  }
-
-  // Safely Archive Monolithic Files & Deploy Lean Rail
+  console.log(
+    "\n🔄 Step 4B: Existing agent instructions detected — retaining source history and updating the shared engine...",
+  );
+  scaffoldMissingContextTemplates();
   const rootAgentsPath = join(workspaceDir, "AGENTS.md");
   assertNotMemory(rootAgentsPath);
 
-  if (existsSync(rootAgentsPath)) {
-    const rootContent = readFileSync(rootAgentsPath, "utf8");
-    const isManagedRail =
-      rootContent.includes("DOX Rail:") ||
-      rootContent.includes("Core Turn Invariants") ||
-      rootContent.includes(".agents/context") ||
-      rootContent.includes(".agents/standards") ||
-      rootContent.split("\n").length <= 60;
-    const isUnfilledTemplate = rootContent.includes("{{PROJECT_NAME}}") || rootContent.includes("{{AGENT_NAME}}");
-
-    if ((!isManagedRail || isUnfilledTemplate) && !isDryRun) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-      const archivePath = join(agentsDir, "archive", `AGENTS.legacy-${timestamp}.md`);
-      renameSync(rootAgentsPath, archivePath);
-      report.archived.push(`AGENTS.md ➔ .agents/archive/AGENTS.legacy-${timestamp}.md`);
-      console.log(`  📦 Archived AGENTS.md ➔ .agents/archive/AGENTS.legacy-${timestamp}.md`);
-
-      // Deploy lean router
-      const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
-      if (existsSync(railTemplate)) {
-        const templateContent = readFileSync(railTemplate, "utf8");
-        const { updatedContent } = ensureSecretaryRouter(templateContent);
-        writeFileSync(rootAgentsPath, updatedContent, "utf8");
-        report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
-        console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
-      }
-    } else {
-      const existing = readFileSync(rootAgentsPath, "utf8");
-      const { updatedContent, modified } = ensureSecretaryRouter(existing);
-      if (modified && !isDryRun) {
-        writeFileSync(rootAgentsPath, updatedContent, "utf8");
-        logExplicitModification({
-          file: "AGENTS.md",
-          changeType: "updated",
-          section: "Secretary Protocol",
-          diffSummary: "Auto-wired Secretary Protocol router block into AGENTS.md",
-        });
-        console.log("  🏛️ Secretary Protocol: Auto-wired into AGENTS.md for first-run autonomous dispatch");
-        report.scaffolded.push("AGENTS.md (Secretary Router Auto-Wired)");
-      } else {
-        report.preserved.push("AGENTS.md");
-        console.log("  ✅ Preserved existing AGENTS.md (managed DOX rail / curated content)");
-      }
-    }
-  } else {
-    // Deploy lean router if missing
+  const previousRoot = existsSync(rootAgentsPath) ? readFileSync(rootAgentsPath, "utf8") : "";
+  if (!previousRoot || !isManagedRootAgents(previousRoot)) {
     const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
     if (existsSync(railTemplate) && !isDryRun) {
-      const templateContent = readFileSync(railTemplate, "utf8");
-      const { updatedContent } = ensureSecretaryRouter(templateContent);
-      writeFileSync(rootAgentsPath, updatedContent, "utf8");
-      report.scaffolded.push("AGENTS.md (Lean DOX Rail & Secretary Protocol)");
-      console.log("  ✅ Deployed lean root AGENTS.md DOX rail (<85 lines) with Secretary Protocol");
+      const profile = detectAgentTemplateProfile(workspaceDir, {
+        projectName,
+        projectDesc,
+        framework: frameworkDetected,
+        dependencies,
+      });
+      const rendered = renderAgentsTemplate(readFileSync(railTemplate, "utf8"), profile);
+      const withSecretary = ensureSecretaryRouter(rendered).updatedContent;
+      const updated = instructionMigration.canonicalPath
+        ? ensureImportedInstructionsRouter(withSecretary).updatedContent
+        : withSecretary;
+      writeFileSync(rootAgentsPath, updated, "utf8");
+      report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
+      console.log("  ✅ Deployed root AGENTS.md and retained all previous rules in imported context");
+    }
+  } else if (!isDryRun) {
+    const withSecretary = ensureSecretaryRouter(previousRoot).updatedContent;
+    const updated = instructionMigration.canonicalPath
+      ? ensureImportedInstructionsRouter(withSecretary).updatedContent
+      : withSecretary;
+    if (updated !== previousRoot) {
+      writeFileSync(rootAgentsPath, updated, "utf8");
+      report.preserved.push("AGENTS.md (managed content retained; shared routers refreshed)");
     }
   }
+}
 
-  // Safely Archive CLAUDE.md if present (zero-claude adherence)
-  const claudePath = join(workspaceDir, "CLAUDE.md");
-  if (existsSync(claudePath) && !isDryRun) {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-    const archivePath = join(agentsDir, "archive", `CLAUDE.legacy-${timestamp}.md`);
-    renameSync(claudePath, archivePath);
-    report.archived.push(`CLAUDE.md ➔ .agents/archive/CLAUDE.legacy-${timestamp}.md`);
-    console.log(`  📦 Archived CLAUDE.md ➔ .agents/archive/CLAUDE.legacy-${timestamp}.md`);
-  }
+// Rewrite supported runtime files as small adapters only after their exact contents are imported.
+const adaptedSources = adaptAgentInstructionSources(instructionMigration.sources, { dryRun: isDryRun });
+for (const sourcePath of adaptedSources) report.scaffolded.push(`${sourcePath} (forwards to AGENTS.md)`);
+for (const sourcePath of adaptedSources)
+  console.log(`  🔗 Updated ./${sourcePath} to use the canonical instruction engine`);
+
+const claudePath = join(workspaceDir, "CLAUDE.md");
+const claudeTemplatePath = join(TEMPLATES_DIR, "CLAUDE.md");
+if (!existsSync(claudePath) && existsSync(claudeTemplatePath)) {
+  if (!isDryRun) cpSync(claudeTemplatePath, claudePath);
+  report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
 }
 
 // =========================================================================
@@ -2645,7 +2758,7 @@ if (report.contextMerged.length > 0) {
 }
 
 if (report.archived.length > 0) {
-  console.log(`\n📦 ARCHIVED LEGACY FILES (${report.archived.length}):`);
+  console.log(`\n📦 PRESERVED INSTRUCTION SNAPSHOTS (${report.archived.length}):`);
   for (const a of report.archived) console.log(`   • ${a}`);
 }
 
@@ -2661,7 +2774,7 @@ if (postInitModifications.length > 0) {
 console.log(`\n✅ SYNCHRONIZED FROM UPDATEAGENTS MASTER CANON:`);
 console.log(`   • Standards:   ${report.standardsSynced.length} rulebooks in .agents/standards/`);
 console.log(`   • Brand:       Design tokens & guidelines in .agents/brand/`);
-console.log(`   • Router:      Lean root AGENTS.md DOX rail active`);
+console.log(`   • Router:      Root AGENTS.md workspace instructions active`);
 console.log(`   • Cognitive:   Taste & Invariant Atom Table verified`);
 console.log(`   • Safety:      Application code & .memory/** 100% untouched`);
 console.log("============================================================\n");
