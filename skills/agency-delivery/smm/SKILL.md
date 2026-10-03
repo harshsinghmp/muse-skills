@@ -1,10 +1,10 @@
 ---
 name: smm
 aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "social-media-posts", "carousel", "carousel-growth-engine", "tiktok-carousel"]
-description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, and social analytics — routed through ten modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
-argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|audit]"
+description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, X (Twitter) account growth, and social analytics — routed through eleven modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, grow an X account from cold start to monetization, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
+argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|x|audit]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **analytics** | "social analytics", "social report", "engagement metrics" | Performance reporting, metric definitions, iteration loop | [references/analytics.md](references/analytics.md) |
 | **postiz** | "postiz", "schedule with postiz", "multi-channel postiz dispatch", "postiz queue" | Automated multi-channel publishing & queue management via Postiz API/CLI | [references/postiz.md](references/postiz.md) |
 | **carousel** | "carousel", "carousel growth engine", "tiktok carousel", "instagram carousel", "6-slide carousel", "carousel generator", "aspect ratio" | Autonomous 6-slide viral carousel generation (Hook → Problem → Agitation → Solution → Feature → CTA), 9:16 aspect ratio guard, and Upload-Post API | [references/carousel.md](references/carousel.md) |
+| **x** | "grow my x account", "x growth", "twitter growth", "x cold start", "x algorithm", "for you feed", "grow on twitter" | X account growth: storefront audit, positioning triangle, content archetypes, For You algorithm leverage, cold-start playbook, engagement strategy, monetization pyramid, 80/20 review | [references/x.md](references/x.md) |
 | **audit** | "audit social", "content audit", "channel audit", "engagement audit" | Content audit (style guide, authenticity) + channel audit (cross-platform consistency, cadence) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -61,6 +62,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Writing platform-native posts, captions, and hooks.
 - Managing comments, DMs, and community engagement.
 - Running influencer collaborations or a UGC pipeline.
+- Growing an X (Twitter) account from cold start through monetization.
 - Reporting on social performance and iterating.
 
 ### Anti-Triggers

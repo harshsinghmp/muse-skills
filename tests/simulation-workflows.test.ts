@@ -81,7 +81,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillContent).toContain("**carousel**");
       expect(skillContent).toContain("references/carousel.md");
       expect(skillContent).toContain(
-        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|audit]"',
+        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|x|audit]"',
       );
 
       const openaiYaml = fs.readFileSync(path.join(smmDir, "agents", "openai.yaml"), "utf8");
