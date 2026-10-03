@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **X (Twitter) Account Growth Mode (`smm:x`)**: eleventh `smm` mode (`skills/agency-delivery/smm/references/x.md`) adapted from the 14-skill kangarooking/X-growth-skills corpus (MIT, translated to English, de-sinicized) — four-step-saves philosophy + three translations, For You algorithm mechanics (dual-source recall, multi-action weighted scoring, out-of-network dominance), profile storefront audit, positioning impossible-triangle, content archetypes + Hook-Body-CTA + five-piece completeness gate, cold-start 0→1k playbook, engagement patterns, benchmark research, monetization pyramid, weekly 80/20 loop, seven account-killer pitfalls. `smm` bumps to 1.4.0 with description/argument-hint/mode-table parity across SKILL.md, README, skills.json, llms.txt, and agents/openai.yaml.
+
 - **Stale-Lane Enrichment Transplant** (#212): harvested the genuine unshipped residue of 13 stale `feat/*` branches (verified 88–100% already shipped line-by-line) — message-market-fit trio + `[Verb]+[Get]+[Qualifier]` CTA shape (`content:copy` Part 10), production-pipeline selection + edit anatomy + production-family checklist (`content:video` Procedure #5), maturity-tier listing scorecard (`mobile:aso` Procedure #6), and Temporal design-twin orchestration rules (`webdev:fullstack` #4).
 
 ## [7.2.0] - 2026-10-03
