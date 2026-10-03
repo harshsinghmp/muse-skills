@@ -64,7 +64,7 @@ Based on the existing `audit/` skill structure — reuse these five checkpoints:
 | Gaps in AGENTS.md or standards | `updateagents` |
 | Unverifiable claims | `evidence-ledger` |
 | Repeated defect class = broken upstream process | `dead-letter` |
-| Repo-hygiene gaps (missing CI, templates) | `ai-ready` |
+| Repo-hygiene gaps (missing CI, templates) | `updateagents` (audit mode) |
 | Strategic contradictions | `periodic-retreat` |
 
 ## What non-audit skills get instead

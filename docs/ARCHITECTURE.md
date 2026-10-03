@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Muse Skills** (`@harshsinghmp/muse-skills`) is an enterprise-grade agent skill repository and governance toolkit within the **LifeOS** ecosystem. It provides autonomous AI agents with structured operational capabilities for Project Operating System provisioning, workspace memory synchronization, PIP performance enforcement, subagent coordination, error triage, and context anchoring.
+**Muse Skills** (`@harshsinghmp/muse-skills`) is an enterprise-grade agent skill repository and governance toolkit within the **Muse** ecosystem. It provides autonomous AI agents with structured operational capabilities for Project Operating System provisioning, workspace memory synchronization, PIP performance enforcement, subagent coordination, error triage, and context anchoring.
 
 All skills follow a dual-layer architecture:
 1. **Universal Metadata Layer**: Extended YAML frontmatter (with Hermes metadata, tools, and platform requirements) parsed natively by `npx skills`, Claude Code, Cursor, and Hermes.
@@ -45,11 +45,12 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── updateagents/                   # Workspace memory synchronization (Flagship #2)
+├── updateagents/                   # Agent Context Synchronization & AI-Readiness Engine (Flagship #2)
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/before-after.md    # Synthesis examples
-│   ├── references/                 # Priority tables & discovery commands
-│   ├── scripts/validate-memory-file.sh # Memory file validator
+│   ├── references/                 # 13-Asset matrix, fast-skip protocol & priority tables
+│   ├── scripts/                    # Core engine + github-scaffold, instruction-migration & agents-template renderers
+│   ├── templates/                  # Canonical Agent Engine DOX templates (.agents/, AGENTS.md, etc.)
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
@@ -62,20 +63,6 @@ muse-skills/
 ├── pua/                            # PIP performance & structured debugging
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── examples/sample-pip-report.md # Real-world diagnostic report
-│   ├── README.md                   # Child documentation
-│   └── SKILL.md                    # Core operational procedure
-│
-├── handoff/                        # Structured subagent context packet generator
-│   ├── agents/openai.yaml          # Agent tool definition
-│   ├── examples/sample-handoff.md  # Packet example
-│   ├── README.md                   # Child documentation
-│   └── SKILL.md                    # Core operational procedure
-│
-├── ai-ready/                       # Repository AI-readiness auditor & Agent Engine home (Priority #7)
-│   ├── agents/openai.yaml          # Agent tool definition
-│   ├── references/                 # 12-Asset matrix & fast-skip protocol
-│   ├── scripts/ai-ready.ts         # Auditor & scaffolding CLI
-│   ├── templates/                  # Canonical Agent Engine DOX templates
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │

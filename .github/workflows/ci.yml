@@ -62,6 +62,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Full history: pr-convention-miner test analyzes recent commits and
+          # fails on shallow PR merge refs (single non-conventional merge commit).
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -111,7 +115,7 @@ jobs:
 
       - name: Upload SARIF (opt-in, only when AUDIT_FORMAT=sarif)
         if: always() && env.AUDIT_FORMAT == 'sarif'
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: ${{ env.AUDIT_OUTPUT }}
           category: secret-scan

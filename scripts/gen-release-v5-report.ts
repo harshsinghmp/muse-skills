@@ -524,7 +524,7 @@ footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
       <div class="scqa-box">
         <div class="scqa-row">
           <div class="scqa-kicker">Situation</div>
-          <div class="scqa-desc">Muse Skills serves as the foundational operating harness across Harsh's LifeOS agency ecosystem, requiring autonomous agents to execute complex client workflows across design, engineering, marketing, and operations without context drift, prompt degradation, or manual intervention.</div>
+          <div class="scqa-desc">Muse Skills serves as the foundational operating harness across the universal agency ecosystem, requiring autonomous agents to execute complex client workflows across design, engineering, marketing, and operations without context drift, prompt degradation, or manual intervention.</div>
         </div>
         <div class="scqa-row">
           <div class="scqa-kicker">Complication</div>
@@ -1020,7 +1020,7 @@ footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
 <footer>
   <div class="wrap">
-    <p>Generated for Harsh (Founder & Technical Architect) · Agency Council & LifeOS Ecosystem</p>
+    <p>Generated for Harsh Singh (Founder & Technical Architect) · Sovereign Agency Council</p>
     <p style="margin-top: 6px;">Git Commit: <code>195725c</code> (main) · Tag: <code>v5.0.0</code> · All 93 tests passing · <a href="https://github.com/harshsinghmp/muse-skills">GitHub Repository</a></p>
   </div>
 </footer>

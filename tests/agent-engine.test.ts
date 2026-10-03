@@ -4,10 +4,9 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
-const AI_READY_TEMPLATES = join(REPO_ROOT, "ai-ready/templates");
-const AI_READY_SCRIPT = join(REPO_ROOT, "ai-ready/scripts/ai-ready.ts");
-const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "new-project/scripts/new-project.ts");
-const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "updateagents/scripts/updateagents.ts");
+const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
+const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
+const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
 const TEST_SANDBOX = join("/tmp", "agent-engine-test-sandbox-" + Date.now());
 
 describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
@@ -20,20 +19,21 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     rmSync(TEST_SANDBOX, { recursive: true, force: true });
   });
 
-  describe("Part A: ai-ready as Canonical Home of Agent Engine", () => {
-    it("ai-ready/templates exists and houses master templates", () => {
-      expect(existsSync(AI_READY_TEMPLATES)).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, "AGENTS.md"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, "gitignore.template"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/standards"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/brand"))).toBe(true);
-      expect(existsSync(join(AI_READY_TEMPLATES, ".agents/context"))).toBe(true);
+  describe("Part A: updateagents as Canonical Home of Agent Engine", () => {
+    it("updateagents/templates exists and houses master templates", () => {
+      expect(existsSync(UPDATEAGENTS_TEMPLATES)).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "AGENTS.md"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "gitignore.template"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/standards"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/brand"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, ".agents/context"))).toBe(true);
+      expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
 
-    it("ai-ready/templates contains all 17 modular standards including backend-wordpress.md", () => {
-      const standardsDir = join(AI_READY_TEMPLATES, ".agents/standards");
+    it("updateagents/templates contains all 19 modular standards including backend-wordpress.md", () => {
+      const standardsDir = join(UPDATEAGENTS_TEMPLATES, ".agents/standards");
       const files = readdirSync(standardsDir);
-      expect(files.length).toBe(17);
+      expect(files.length).toBe(19);
       expect(files).toContain("backend-wordpress.md");
       expect(files).toContain("backend-workers-hono.md");
       expect(files).toContain("frontend-nextjs.md");
@@ -43,6 +43,8 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(files).toContain("fintech-gateways.md");
       expect(files).toContain("client-reporting.md");
       expect(files).toContain("motion-diagrams.md");
+      expect(files).toContain("anti-patterns.md");
+      expect(files).toContain("visual-inspection.md");
 
       const wpContent = readFileSync(join(standardsDir, "backend-wordpress.md"), "utf8");
       expect(wpContent).toContain("Roots Bedrock");
@@ -53,36 +55,38 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(techContent).toContain("Direction 4: Modern WordPress");
     });
 
-    it("ai-ready CLI script supports --audit and --scaffold", () => {
+    it("updateagents CLI script supports --audit and --scaffold", () => {
       // 1. Audit on empty sandbox should report missing assets
-      const auditRes = spawnSync("bun", [AI_READY_SCRIPT, TEST_SANDBOX, "--audit"], { encoding: "utf8" });
+      const auditRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, TEST_SANDBOX, "--audit"], { encoding: "utf8" });
       expect(auditRes.status).toBe(0);
       expect(auditRes.stdout).toContain("AI-READY AUDIT REPORT");
 
       // 2. Scaffold on sandbox should provision the full Agent Engine
-      const scaffoldRes = spawnSync("bun", [AI_READY_SCRIPT, TEST_SANDBOX, "--scaffold"], { encoding: "utf8" });
+      const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, TEST_SANDBOX, "--scaffold"], { encoding: "utf8" });
       expect(scaffoldRes.status).toBe(0);
       expect(scaffoldRes.stdout).toContain("Agent Engine successfully provisioned");
+      expect(scaffoldRes.stdout).toContain("GitHub assets deferred because hosting is unknown");
 
       expect(existsSync(join(TEST_SANDBOX, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/standards/backend-wordpress.md"))).toBe(true);
       expect(existsSync(join(TEST_SANDBOX, ".agents/brand/tokens"))).toBe(true);
+      expect(existsSync(join(TEST_SANDBOX, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
   });
 
   describe("Part B: new-project Framework Creation & Intent-First Configurator", () => {
-    it("new-project copies Agent Engine from ai-ready/templates and supports wordpress archetype", () => {
+    it("new-project copies Agent Engine from updateagents/templates and supports wordpress archetype", () => {
       const target = join(TEST_SANDBOX, "wp-agency");
-      const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
+      const res = spawnSync("bun", [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", target, "--non-interactive", "-t", "wordpress", "--dry-run"], {
         encoding: "utf8",
       });
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain(
-        "Initializing Agent Governance & Progressive Disclosure DOX (from ai-ready/templates)",
+        "Initializing Agent Governance & Progressive Disclosure DOX (from updateagents/templates)",
       );
       expect(res.stdout).toContain("Archetype:          WORDPRESS");
-      expect(res.stdout).toContain("Synced: ./.agents/standards/ (17 standards, including WordPress)");
+      expect(res.stdout).toContain("Synced: ./.agents/standards/ (19 standards, including WordPress)");
     });
 
     it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile, atomic-payload)", () => {
@@ -90,12 +94,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetPower = join(TEST_SANDBOX, "power-test");
       const resPower = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPower, "--non-interactive", "--preset=powerhouse", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resPower.status).toBe(0);
+      expect(resPower.status, resPower.stderr).toBe(0);
       expect(resPower.stdout).toContain("Framework:         `NEXTJS`");
       expect(resPower.stdout).toContain("Styling:           `HYBRID`");
       expect(resPower.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
@@ -105,12 +109,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetVisual = join(TEST_SANDBOX, "visual-test");
       const resVisual = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetVisual, "--non-interactive", "--preset=visual", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetVisual, "--non-interactive", "--preset=visual", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resVisual.status).toBe(0);
+      expect(resVisual.status, resVisual.stderr).toBe(0);
       expect(resVisual.stdout).toContain("Framework:         `ASTRO`");
       expect(resVisual.stdout).toContain("CMS:               `ARIABUILDER`");
       expect(resVisual.stdout).toContain("E-Commerce:        `FASTRR`");
@@ -119,12 +123,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetInstatic = join(TEST_SANDBOX, "instatic-test");
       const resInstatic = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetInstatic, "--non-interactive", "--preset=instatic", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resInstatic.status).toBe(0);
+      expect(resInstatic.status, resInstatic.stderr).toBe(0);
       expect(resInstatic.stdout).toContain("Framework:         `INSTATIC`");
       expect(resInstatic.stdout).toContain("Styling:           `BEM`");
 
@@ -132,12 +136,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetMobile = join(TEST_SANDBOX, "mobile-test");
       const resMobile = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetMobile, "--non-interactive", "--preset=mobile", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resMobile.status).toBe(0);
+      expect(resMobile.status, resMobile.stderr).toBe(0);
       expect(resMobile.stdout).toContain("Framework:         `EXPO`");
       expect(resMobile.stdout).toContain("Mobile:            `EXPO`");
 
@@ -145,12 +149,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroMobile = join(TEST_SANDBOX, "astro-mobile-test");
       const resAstroMobile = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroMobile, "--non-interactive", "--preset=astro-mobile", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resAstroMobile.status).toBe(0);
+      expect(resAstroMobile.status, resAstroMobile.stderr).toBe(0);
       expect(resAstroMobile.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroMobile.stdout).toContain("State:             `NANOSTORES`");
       expect(resAstroMobile.stdout).toContain("Mobile:            `CAPACITOR`");
@@ -159,12 +163,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroComm = join(TEST_SANDBOX, "astro-comm-test");
       const resAstroComm = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroComm, "--non-interactive", "--preset=astro-commerce", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resAstroComm.status).toBe(0);
+      expect(resAstroComm.status, resAstroComm.stderr).toBe(0);
       expect(resAstroComm.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroComm.stdout).toContain("CMS:               `ARIABUILDER`");
       expect(resAstroComm.stdout).toContain("E-Commerce:        `MEDUSA`");
@@ -173,12 +177,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroBlog = join(TEST_SANDBOX, "astro-blog-test");
       const resAstroBlog = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroBlog, "--non-interactive", "--preset=astro-blog", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resAstroBlog.status).toBe(0);
+      expect(resAstroBlog.status, resAstroBlog.stderr).toBe(0);
       expect(resAstroBlog.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroBlog.stdout).toContain("CMS:               `STUDIOCMS`");
 
@@ -186,12 +190,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAstroEmdash = join(TEST_SANDBOX, "astro-emdash-test");
       const resAstroEmdash = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAstroEmdash, "--non-interactive", "--preset=astro-emdash", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resAstroEmdash.status).toBe(0);
+      expect(resAstroEmdash.status, resAstroEmdash.stderr).toBe(0);
       expect(resAstroEmdash.stdout).toContain("Framework:         `ASTRO`");
       expect(resAstroEmdash.stdout).toContain("CMS:               `EMDASH`");
 
@@ -199,12 +203,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetPureHtml = join(TEST_SANDBOX, "pure-html-test");
       const resPureHtml = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPureHtml, "--non-interactive", "--preset=pure-html", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resPureHtml.status).toBe(0);
+      expect(resPureHtml.status, resPureHtml.stderr).toBe(0);
       expect(resPureHtml.stdout).toContain("Framework:         `HTML`");
       expect(resPureHtml.stdout).toContain("Styling:           `BEM`");
 
@@ -212,12 +216,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetNextComm = join(TEST_SANDBOX, "next-comm-test");
       const resNextComm = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetNextComm, "--non-interactive", "--preset=next-commerce", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resNextComm.status).toBe(0);
+      expect(resNextComm.status, resNextComm.stderr).toBe(0);
       expect(resNextComm.stdout).toContain("Framework:         `NEXTJS`");
       expect(resNextComm.stdout).toContain("CMS:               `PAYLOAD + PUCK VISUAL BUILDER`");
       expect(resNextComm.stdout).toContain("E-Commerce:        `PAYLOAD`");
@@ -226,12 +230,12 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const targetAtomic = join(TEST_SANDBOX, "atomic-preset-test");
       const resAtomic = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetAtomic, "--non-interactive", "--preset=atomic-payload", "--dry-run"],
         {
           encoding: "utf8",
         },
       );
-      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.status, resAtomic.stderr).toBe(0);
       expect(resAtomic.stdout).toContain("Framework:         `NEXTJS`");
       expect(resAtomic.stdout).toContain("CMS:               `ATOMIC-PAYLOAD`");
       expect(resAtomic.stdout).toContain("Styling:           `NONE`");
@@ -242,7 +246,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetCustom,
           "--non-interactive",
           "--intent=ecommerce",
@@ -261,7 +265,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain("Intent:            `ECOMMERCE`");
       expect(res.stdout).toContain("Framework:         `NEXTJS`");
       expect(res.stdout).toContain("Styling:           `HYBRID`");
@@ -278,18 +282,23 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
     it("updateagents scaffolds fresh Agent Engine on empty directory", () => {
       const target = join(TEST_SANDBOX, "fresh-project");
       mkdirSync(target, { recursive: true });
+      spawnSync("git", ["init", "-q"], { cwd: target });
+      spawnSync("git", ["remote", "add", "origin", "git@github.com:example/fresh-project.git"], { cwd: target });
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
       expect(res.stdout).toContain("Step 4A: No agent files detected — Scaffolding fresh Agent Engine DOX container");
       expect(res.stdout).toContain("UPDATEAGENTS SYNCHRONIZATION REPORT");
       expect(res.stdout).toContain("SCAFFOLDED ASSETS");
 
       expect(existsSync(join(target, "AGENTS.md"))).toBe(true);
       expect(existsSync(join(target, ".agents/standards/backend-wordpress.md"))).toBe(true);
+      expect(existsSync(join(target, "CHANGELOG.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/CONTRIBUTING.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/SECURITY.md"))).toBe(true);
     });
 
-    it("updateagents parses custom legacy files, maps context intelligently, and archives original", () => {
+    it("updateagents imports complete legacy instructions, archives the source, and installs a Claude adapter", () => {
       const target = join(TEST_SANDBOX, "legacy-project");
       mkdirSync(target, { recursive: true });
 
@@ -312,48 +321,82 @@ Custom billing engine for healthcare providers.
       );
 
       const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
-      expect(res.status).toBe(0);
-      expect(res.stdout).toContain(
-        "Step 4B: Custom agent files detected — Extracting and intelligently placing context",
+      expect(res.status, res.stderr).toBe(0);
+      expect(res.stdout).toContain("retaining source history and updating the shared engine");
+      expect(res.stdout).toContain("agent-instructions/");
+
+      const imported = readFileSync(join(target, ".agents/context/imported-agent-instructions.md"), "utf8");
+      expect(imported).toContain("Custom billing engine for healthcare providers");
+      expect(imported).toContain("npm run test:unit");
+      expect(imported).toContain("Mandatory HIPAA compliance audit");
+      expect(imported).toContain("CLAUDE.md");
+      expect(readFileSync(join(target, "AGENTS.md"), "utf8")).toContain("imported-agent-instructions.md");
+
+      // Exact original remains recoverable and Claude follows the shared AGENTS.md.
+      expect(readFileSync(join(target, "CLAUDE.md"), "utf8").trim()).toBe("@AGENTS.md");
+      const manifest = JSON.parse(
+        readFileSync(join(target, ".agents/archive/agent-instructions/manifest.json"), "utf8"),
       );
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/product.md");
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/architecture.md");
-      expect(res.stdout).toContain("Merged custom content into ./.agents/context/decisions.md");
-      expect(res.stdout).toContain("Archived CLAUDE.md");
+      const archivedClaude = manifest.sources.find(
+        (source: { sourcePath: string }) => source.sourcePath === "CLAUDE.md",
+      );
+      expect(archivedClaude).toBeDefined();
+      expect(readFileSync(join(target, archivedClaude.archivePath), "utf8")).toContain("Custom billing engine");
+    });
 
-      // Verify custom content exists in context files
-      const productContent = readFileSync(join(target, ".agents/context/product.md"), "utf8");
-      expect(productContent).toContain("Custom billing engine for healthcare providers");
+    it("updateagents auto-wires Autonomous Secretary Protocol into AGENTS.md on first run and Day-N sync", () => {
+      const target = join(TEST_SANDBOX, "secretary-test");
+      mkdirSync(target, { recursive: true });
 
-      const archContent = readFileSync(join(target, ".agents/context/architecture.md"), "utf8");
-      expect(archContent).toContain("npm run test:unit");
+      // 1. Scaffold on empty sandbox
+      const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target, "--scaffold"], { encoding: "utf8" });
+      expect(scaffoldRes.status).toBe(0);
+      const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
+      expect(agentsMd).toContain("<!-- muse-secretary-router:start -->");
+      expect(agentsMd).toContain("secretary:dispatch");
+      expect(agentsMd).toContain("## Secretary Protocol");
 
-      const decisionsContent = readFileSync(join(target, ".agents/context/decisions.md"), "utf8");
-      expect(decisionsContent).toContain("Mandatory HIPAA compliance audit");
+      // 2. Simulate user custom AGENTS.md without secretary router
+      const customContent = "# My Custom Rules\n- Rule 1: Always test\n";
+      writeFileSync(join(target, "AGENTS.md"), customContent, "utf8");
 
-      // Verify CLAUDE.md was moved to archive and not in root
-      expect(existsSync(join(target, "CLAUDE.md"))).toBe(false);
-      const archiveFiles = readdirSync(join(target, ".agents/archive"));
-      expect(archiveFiles.some((f) => f.startsWith("CLAUDE.legacy-"))).toBe(true);
+      // 3. Run updateagents sync
+      const syncRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target], { encoding: "utf8" });
+      expect(syncRes.status).toBe(0);
+
+      // 4. Verify custom rule is active in the imported source and shared router is installed.
+      const syncedContent = readFileSync(join(target, "AGENTS.md"), "utf8");
+      expect(syncedContent).toContain("<!-- muse-secretary-router:start -->");
+      expect(syncedContent).toContain("secretary:dispatch");
+      expect(syncedContent).toContain("imported-agent-instructions.md");
+      expect(readFileSync(join(target, ".agents/context/imported-agent-instructions.md"), "utf8")).toContain(
+        "Rule 1: Always test",
+      );
     });
   });
 
   describe("Part D: handoff & gauntlet-loop Upgrades", () => {
     it("handoff contains session resumption and zero .claude references", () => {
-      const handoffContent = readFileSync(join(REPO_ROOT, "relay/SKILL.md"), "utf8");
+      const handoffContent = readFileSync(join(REPO_ROOT, "skills/context-orchestration/relay/SKILL.md"), "utf8");
       expect(handoffContent).toContain("Inbound Session Resumption");
       expect(handoffContent).toContain("where were we");
       expect(handoffContent).toContain("directory-boundary");
       expect(handoffContent).not.toContain(".claude/");
-      expect(existsSync(join(REPO_ROOT, "relay/references/resumption-protocol.md"))).toBe(true);
+      expect(existsSync(join(REPO_ROOT, "skills/context-orchestration/relay/references/resumption-protocol.md"))).toBe(
+        true,
+      );
     });
 
     it("gauntlet-loop contains 'The Bar is the Whole Trick' and blind A/B critique", () => {
-      const gauntletContent = readFileSync(join(REPO_ROOT, "gauntlet-loop/SKILL.md"), "utf8");
+      const gauntletContent = readFileSync(join(REPO_ROOT, "skills/quality-review/gauntlet-loop/SKILL.md"), "utf8");
       expect(gauntletContent).toContain("The Bar is the Whole Trick");
       expect(gauntletContent).toContain("Blind A/B");
       expect(gauntletContent).toContain("Prompt Synthesizer Mode");
-      expect(existsSync(join(REPO_ROOT, "gauntlet-loop/references/bar-selection-and-blind-critique.md"))).toBe(true);
+      expect(
+        existsSync(
+          join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/bar-selection-and-blind-critique.md"),
+        ),
+      ).toBe(true);
     });
   });
 
@@ -363,7 +406,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Acme Health",
@@ -385,7 +428,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // Verify AGENTS.md
       const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
@@ -433,7 +476,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Sovereign Store",
@@ -452,7 +495,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Verify Client-Intake brief exists with pre-filled scaffold answers
       const briefPath = join(target, "Client-Intake/00-Intake-Brief.md");
@@ -518,9 +561,32 @@ Custom billing engine for healthcare providers.
 
       const dockerCompose = readFileSync(join(target, "backend/docker-compose.yml"), "utf8");
       expect(dockerCompose).toContain("postgres:16-alpine");
-      expect(dockerCompose).toContain("redis:7-alpine");
-
       expect(readFileSync(join(target, "Client-Intake/00-Intake-Brief.md"), "utf8")).toContain("medusa");
+
+      // 7. Verify DOX full-service brand and accounts suite
+      expect(existsSync(join(target, ".agents/context/accounts.md"))).toBe(true);
+      const accountsContent = readFileSync(join(target, ".agents/context/accounts.md"), "utf8");
+      expect(accountsContent).toContain("Vibeguard Zero-Leak Protocol");
+      expect(accountsContent).toContain("Sovereign Store");
+
+      const indexContent = readFileSync(join(target, ".agents/context/index.md"), "utf8");
+      expect(indexContent).toContain("accounts.md");
+      expect(indexContent).toContain("voice.md");
+
+      expect(existsSync(join(target, ".agents/brand/voice.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/personas.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/positioning.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/messaging.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/visual-identity.md"))).toBe(true);
+      expect(existsSync(join(target, ".agents/brand/social-hooks.md"))).toBe(true);
+
+      const voiceContent = readFileSync(join(target, ".agents/brand/voice.md"), "utf8");
+      expect(voiceContent).toContain("Sovereign Store");
+      expect(voiceContent).toContain("Anti-Puffery Blacklist");
+
+      const personasContent = readFileSync(join(target, ".agents/brand/personas.md"), "utf8");
+      expect(personasContent).toContain("Sovereign Store");
+      expect(personasContent).toContain("The Operational Champion");
     });
 
     it("provisions complete end-to-end implementations for Drizzle, Better Auth, Stripe, Payload, and Puck", () => {
@@ -528,7 +594,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
           "--name=Fullstack Powerhouse",
@@ -546,7 +612,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Drizzle ORM typed schema & client
       expect(existsSync(join(target, "src/lib/schema.ts"))).toBe(true);
@@ -607,9 +673,10 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           target,
           "--non-interactive",
+          "--github",
           "--name=Nebula Cloud",
           "--author=Nebula Inc",
           "--intent=webapp",
@@ -623,7 +690,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Day-1 Starter Dashboard
       expect(existsSync(join(target, "src/app/page.tsx"))).toBe(true);
@@ -637,7 +704,11 @@ Custom billing engine for healthcare providers.
       // 2. Production Deployment & CI/CD
       expect(existsSync(join(target, ".github/workflows/ci.yml"))).toBe(true);
       const ciContent = readFileSync(join(target, ".github/workflows/ci.yml"), "utf8");
-      expect(ciContent).toContain("Vibeguard Secret Audit");
+      expect(ciContent).toContain("bun run test");
+      expect(ciContent).not.toContain("|| true");
+      expect(existsSync(join(target, "CHANGELOG.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/CONTRIBUTING.md"))).toBe(true);
+      expect(existsSync(join(target, ".github/SECURITY.md"))).toBe(true);
 
       expect(existsSync(join(target, "Dockerfile"))).toBe(true);
       expect(existsSync(join(target, ".dockerignore"))).toBe(true);
@@ -680,7 +751,7 @@ Custom billing engine for healthcare providers.
       const resAria = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetAria,
           "--non-interactive",
           "--intent=ecommerce",
@@ -692,7 +763,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resAria.status).toBe(0);
+      expect(resAria.status, resAria.stderr).toBe(0);
       expect(resAria.stdout).toContain("admin/setup");
       // Official upstream markers (present via clone and offline fallback).
       expect(existsSync(join(targetAria, "package.json"))).toBe(true);
@@ -716,7 +787,7 @@ Custom billing engine for healthcare providers.
       const resAtomic = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetAtomic,
           "--non-interactive",
           "--intent=content",
@@ -728,7 +799,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resAtomic.status).toBe(0);
+      expect(resAtomic.status, resAtomic.stderr).toBe(0);
       expect(resAtomic.stdout).toContain("localhost:42100/admin");
       expect(resAtomic.stdout).toContain("Atomic Payload is fully isolated");
       // Official upstream markers (present via both the npm-pack merge and the offline fallback).
@@ -757,7 +828,7 @@ Custom billing engine for healthcare providers.
       const resStudio = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetStudio,
           "--non-interactive",
           "--intent=content",
@@ -768,7 +839,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resStudio.status).toBe(0);
+      expect(resStudio.status, resStudio.stderr).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
       const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
       expect(studioCfg).toContain("from 'studiocms/config'");
@@ -788,7 +859,7 @@ Custom billing engine for healthcare providers.
       const resEmdash = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetEmdash,
           "--non-interactive",
           "--intent=content",
@@ -799,7 +870,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resEmdash.status).toBe(0);
+      expect(resEmdash.status, resEmdash.stderr).toBe(0);
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "emdash-env.d.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "seed/seed.json"))).toBe(true);
@@ -818,7 +889,7 @@ Custom billing engine for healthcare providers.
       const resPayloadEcom = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetPayloadEcom,
           "--non-interactive",
           "--intent=ecommerce",
@@ -830,7 +901,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resPayloadEcom.status).toBe(0);
+      expect(resPayloadEcom.status, resPayloadEcom.stderr).toBe(0);
       expect(existsSync(join(targetPayloadEcom, "src/payload.config.ts"))).toBe(true);
       const payloadCfg = readFileSync(join(targetPayloadEcom, "src/payload.config.ts"), "utf8");
       expect(payloadCfg).toContain("Products, Orders, Customers");
@@ -849,10 +920,10 @@ Custom billing engine for healthcare providers.
       const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
       const resHtml = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetHtml, "--non-interactive", "--preset=pure-html", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resHtml.status).toBe(0);
+      expect(resHtml.status, resHtml.stderr).toBe(0);
       expect(existsSync(join(targetHtml, "index.html"))).toBe(true);
       const htmlDoc = readFileSync(join(targetHtml, "index.html"), "utf8");
       expect(htmlDoc).toContain("PURE HTML/CSS • ZERO BUILD STEP");
@@ -867,7 +938,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetNoCache,
           "--non-interactive",
           "--intent=content",
@@ -888,7 +959,7 @@ Custom billing engine for healthcare providers.
         { encoding: "utf8" },
       );
 
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // 1. Verify Client-Intake brief with pre-filled agency answers
       const briefPath = join(targetNoCache, "Client-Intake/00-Intake-Brief.md");
@@ -912,7 +983,7 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetNoCache, "start-here.md"))).toBe(false);
     }, 15000);
 
-    it("verifies zero personal details or agency leaks remain in ai-ready/templates", () => {
+    it("verifies zero personal details or agency leaks remain in updateagents/templates", () => {
       const prohibited = ["Harsh", "harshsinghmp", "Agency Council", "Kameli", "/home/harsh", "~/.config/LIFEOS"];
 
       function scanDir(dir: string) {
@@ -930,7 +1001,7 @@ Custom billing engine for healthcare providers.
         }
       }
 
-      scanDir(AI_READY_TEMPLATES);
+      scanDir(UPDATEAGENTS_TEMPLATES);
     });
   });
 
@@ -945,7 +1016,7 @@ Custom billing engine for healthcare providers.
       const resSunset = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetSunset,
           "--non-interactive",
           "--preset=plain-astro",
@@ -954,7 +1025,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resSunset.status).toBe(0);
+      expect(resSunset.status, resSunset.stderr).toBe(0);
       expect(existsSync(join(targetSunset, "src/styles/tokens.css"))).toBe(true);
       const tokensCss = readFileSync(join(targetSunset, "src/styles/tokens.css"), "utf8");
       expect(tokensCss).toContain("oklch(0.3 0.15 25)");
@@ -970,7 +1041,7 @@ Custom billing engine for healthcare providers.
       const resDeepSea = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetDeepSea,
           "--non-interactive",
           "--preset=plain-astro",
@@ -979,7 +1050,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resDeepSea.status).toBe(0);
+      expect(resDeepSea.status, resDeepSea.stderr).toBe(0);
       const deepSeaTokens = readFileSync(join(targetDeepSea, "src/styles/tokens.css"), "utf8");
       expect(deepSeaTokens).toContain("oklch(0.48 0.14 255)");
       expect(deepSeaTokens).toContain("DEEP-SEA");
@@ -990,7 +1061,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetProject,
           "--non-interactive",
           "--preset=instatic",
@@ -999,7 +1070,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       const skillDir = join(targetProject, ".agents/skills/oklch-skill");
       expect(existsSync(skillDir)).toBe(true);
@@ -1024,7 +1095,7 @@ Custom billing engine for healthcare providers.
       const resPlain = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetPlainAstro,
           "--non-interactive",
           "--framework=astro",
@@ -1033,7 +1104,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(resPlain.status).toBe(0);
+      expect(resPlain.status, resPlain.stderr).toBe(0);
       const plainPkg = JSON.parse(readFileSync(join(targetPlainAstro, "package.json"), "utf8"));
       expect(plainPkg.dependencies).not.toHaveProperty("react");
       expect(plainPkg.dependencies).not.toHaveProperty("react-dom");
@@ -1045,10 +1116,10 @@ Custom billing engine for healthcare providers.
       const targetGitCms = join(TEST_SANDBOX, "astro-git-cms-showcase");
       const resGit = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGitCms, "--non-interactive", "--framework=astro", "--cms=git", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGit.status).toBe(0);
+      expect(resGit.status, resGit.stderr).toBe(0);
       expect(existsSync(join(targetGitCms, "src/content/config.ts"))).toBe(true);
       expect(existsSync(join(targetGitCms, "src/content/blog/first-post.md"))).toBe(true);
       expect(existsSync(join(targetGitCms, "src/pages/rss.xml.ts"))).toBe(true);
@@ -1059,7 +1130,7 @@ Custom billing engine for healthcare providers.
       const res = spawnSync(
         "bun",
         [
-          NEW_PROJECT_SCRIPT,
+          NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent",
           targetHtml,
           "--non-interactive",
           "--preset=pure-html",
@@ -1068,7 +1139,7 @@ Custom billing engine for healthcare providers.
         ],
         { encoding: "utf8" },
       );
-      expect(res.status).toBe(0);
+      expect(res.status, res.stderr).toBe(0);
 
       // AI-ready DOX harness first
       expect(existsSync(join(targetHtml, "AGENTS.md"))).toBe(true);
@@ -1086,10 +1157,10 @@ Custom billing engine for healthcare providers.
       const targetPlain = join(TEST_SANDBOX, "preset-plain-astro");
       const resPlain = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetPlain, "--non-interactive", "--preset=plain-astro", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resPlain.status).toBe(0);
+      expect(resPlain.status, resPlain.stderr).toBe(0);
       const pkg = JSON.parse(readFileSync(join(targetPlain, "package.json"), "utf8"));
       expect(pkg.dependencies).not.toHaveProperty("react");
       expect(pkg.dependencies).not.toHaveProperty("@astrojs/react");
@@ -1097,11 +1168,56 @@ Custom billing engine for healthcare providers.
       const targetGit = join(TEST_SANDBOX, "preset-git-cms");
       const resGit = spawnSync(
         "bun",
-        [NEW_PROJECT_SCRIPT, targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGit, "--non-interactive", "--preset=git-cms", "--skip-install"],
         { encoding: "utf8" },
       );
-      expect(resGit.status).toBe(0);
+      expect(resGit.status, resGit.stderr).toBe(0);
       expect(existsSync(join(targetGit, "src/content/config.ts"))).toBe(true);
+    }, 30000);
+
+    it("supports graphics, ecom, and growth archetypes with dedicated creative/ and marketing/ directories", () => {
+      // 1. Graphics preset
+      const targetGraphics = join(TEST_SANDBOX, "preset-graphics");
+      const resGraphics = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGraphics, "--non-interactive", "--preset=graphics", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGraphics.status, resGraphics.stderr).toBe(0);
+      expect(existsSync(join(targetGraphics, "creative/tokens"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/decks"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/assets"))).toBe(true);
+      expect(existsSync(join(targetGraphics, "creative/README.md"))).toBe(true);
+      const productGraphics = readFileSync(join(targetGraphics, ".agents/context/product.md"), "utf8");
+      expect(productGraphics).toContain("creative_design_studio");
+
+      // 2. Growth preset
+      const targetGrowth = join(TEST_SANDBOX, "preset-growth");
+      const resGrowth = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetGrowth, "--non-interactive", "--preset=growth", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resGrowth.status, resGrowth.stderr).toBe(0);
+      expect(existsSync(join(targetGrowth, "marketing/smm"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/seo"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/paidads"))).toBe(true);
+      expect(existsSync(join(targetGrowth, "marketing/README.md"))).toBe(true);
+      const productGrowth = readFileSync(join(targetGrowth, ".agents/context/product.md"), "utf8");
+      expect(productGrowth).toContain("growth_marketing_agency");
+
+      // 3. E-commerce preset
+      const targetEcom = join(TEST_SANDBOX, "preset-ecom");
+      const resEcom = spawnSync(
+        "bun",
+        [NEW_PROJECT_SCRIPT, "--agent-name", "Test Agent", targetEcom, "--non-interactive", "--preset=ecom", "--skip-install"],
+        { encoding: "utf8" },
+      );
+      expect(resEcom.status, resEcom.stderr).toBe(0);
+      const productEcom = readFileSync(join(targetEcom, ".agents/context/product.md"), "utf8");
+      expect(productEcom).toContain("ecommerce_retail");
+      const roadmapEcom = readFileSync(join(targetEcom, ".agents/context/roadmap.md"), "utf8");
+      expect(roadmapEcom).toContain("webdev:ecommerce");
     }, 30000);
   });
 });

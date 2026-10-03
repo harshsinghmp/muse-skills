@@ -14,7 +14,7 @@ import json
 import os
 import re
 
-ROOT = "/home/harsh/Projects/github/muse-skills"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(ROOT, "skills.json")
 LLM_PATH = os.path.join(ROOT, "llms.txt")
 

@@ -2,8 +2,8 @@
 node_modules/
 
 # Build output
-dist/
-build/
+/dist/
+/build/
 
 # Environment files
 .env
@@ -23,7 +23,8 @@ build/
 GEMINI.md
 .codex/
 /.agents/
-!ai-ready/templates/.agents/
+!skills/core-engine/updateagents/templates/.agents/
+!updateagents/templates/.agents/
 .codegraph/
 .crush/
 .omo/
@@ -46,10 +47,13 @@ GEMINI.md
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs & Environments
 *.log
 npm-debug.log*
-.venv-report/
+.venv*/
+venv/
+*.pyc
+__pycache__/
 
 # Test coverage
 coverage/
@@ -59,6 +63,8 @@ coverage/
 tmp/
 temp/
 *.tmp
+.docs.hash
+.context.hash
 
 # Skill-specific
 skills-lock.json

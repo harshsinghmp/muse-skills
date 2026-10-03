@@ -5,23 +5,38 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-5.25.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-7.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
-[![Tests Passing](https://img.shields.io/badge/Tests-116%2F116%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
-[![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-Claude%20Code%20%7C%20Cursor%20%7C%20Gemini%20%7C%20OpenCode%20%7C%20Hermes%20%7C%20Antigravity-orange.svg?style=for-the-badge)](#-runtime-compatibility)
+[![Tests Passing](https://img.shields.io/badge/Tests-206%2F206%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
+[![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
 
 ```bash
-# ⚡ Quick Start: Install all 46 skills globally in 1 command
+# ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
+
+# 🚀 Option B: Instant Remote Setup (Skills + 174 Native Slash Commands — No Clone Needed)
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
+
+# 🛠️ Option C: Manual Setup (From Source)
+git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
 ```
+
+---
+
+## 🆕 What's New
+
+Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 206 verified tests.
+See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---
 
 ## 🧭 Overview
 
-**Muse Skills** is an open-source suite of 46 portable AI agent skills engineered for modern developers, technical founders, and digital agencies. It provides battle-tested playbooks, structured workflows, and rigorous quality gates directly to your AI agents—without bloated frameworks, API wrappers, or runtime lock-in.
+**Muse Skills** transforms vanilla AI coding assistants into an autonomous, senior full-service engineering team and digital agency. Built on the open `SKILL.md` RFC specification, it injects 46 production-grade departments—spanning full-stack engineering, motion design, growth hacking, client operations, and rigorous quality auditing—directly into your agent harness with zero runtime bloat, zero API lock-in, and zero credential leakage.
+
+Unlike brittle system prompts or heavy wrapper frameworks, Muse Skills enforces **Progressive Disclosure**: agents read only what they need, execute structured mode playbooks, and verify every single claim against executable tests before declaring work complete.
 
 Every skill follows the open `SKILL.md` specification: rich intent triggers, step-by-step procedures, failure recovery routines, and automated verification tests. Your agent reads only what it needs, when it needs it, and verifies every claim before reporting success.
 
@@ -31,38 +46,46 @@ Every skill follows the open `SKILL.md` specification: rich intent triggers, ste
 
 | Challenge with Vanilla AI Agents | The Muse Skills Advantage |
 | :--- | :--- |
-| **Context Amnesia**: Agents lose track of architecture, conventions, and past decisions between sessions. | **Persistent Context Architecture**: `context-anchor` and `updateagents` preserve project truth and architectural constraints indefinitely. |
-| **Premature Victory**: Agents claim code works without running real tests, leaving broken builds behind. | **Automated Verification Gates**: Every workflow enforces executable test commands (`bun test`, `pytest`) before sign-off. |
+| **Prompt Fatigue & Manual Routing**: Users must remember exact prompts, sub-skills, or paths for every task. | **Universal Central Dispatch**: `secretary:dispatch` automatically inspects user intent on session start, maps to the right Council Lead (**Sol**, **Jasper**, **Crew**, **Nexus**), and routes to the exact mode playbook. |
+| **Context Amnesia**: Agents lose track of architecture, conventions, and past decisions between sessions. | **Persistent Cognitive Context**: `context-anchor` and `updateagents` preserve project truth, active constraints, and architectural invariants indefinitely. |
+| **Premature Victory**: Agents claim code works without running real tests, leaving broken builds behind. | **Automated Verification Gates**: Every workflow enforces executable test commands (`bun test`, `pytest`) before sign-off (Evidence over Claims). |
 | **Chaotic Releases**: Unformatted commits directly to production branches cause merge conflicts and regressions. | **Disciplined Release Flow**: The `git` skill automates semantic versioning, feature branches, and tag creation seamlessly. |
+| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, and Hermes. |
 | **Messy Client Handoffs**: Scattered requirements, manual onboarding, and accidental credential leaks. | **End-to-End Agency Operations**: Dedicated skills for `brand` intake, `client-comms`, `accounts`, and `qa-launch` with zero credential leakage. |
 
 ---
 
 ## 📐 System Architecture
 
-Muse Skills operates on a **Progressive Disclosure** model. Agents maintain a lightweight memory footprint by loading modular skills on demand, executing structured mode handlers, and validating outcomes through deterministic checks.
+Muse Skills operates on a **Progressive Disclosure** and **Autonomous Council Dispatch** model. Agents maintain a lean, lightweight context footprint by loading modular skills on demand, executing structured mode handlers, and validating outcomes through deterministic checks.
 
 ```mermaid
 flowchart TD
-    subgraph Agent Runtime ["🤖 Any AI Agent Runtime (Claude Code, Cursor, OpenCode, Gemini, Hermes)"]
-        UserPrompt["User Prompt / Goal"] --> IntentRouter["Discovery & Trigger Matching"]
+    subgraph Harness ["🤖 80+ Supported Agent Runtimes"]
+        UserPrompt["User Goal / Prompt"] --> Dispatcher["🏛️ Universal Front Door (secretary:dispatch)"]
+        SlashCmd["Slash Commands (/webdev, /design, /crm)"] --> Dispatcher
     end
 
-    subgraph Skill Layer ["🏛️ Muse Skills Library (46 Skills)"]
-        IntentRouter --> |Loads on demand| SkillMD["SKILL.md (Contract & Frontmatter)"]
-        SkillMD --> ModeRouter{"Mode Router"}
-        ModeRouter --> Engineering["🏗️ Engineering & Infra (webdev, database, devops)"]
-        ModeRouter --> Design["🎨 Creative & Motion (design, animate, designscope)"]
-        ModeRouter --> Growth["📈 Growth & Marketing (seo, paidads, smm, content)"]
-        ModeRouter --> Operations["📋 Delivery & Operations (brand, client-comms, accounts)"]
+    subgraph Council ["👔 The Agency Council Leads"]
+        Dispatcher --> Sol["⚡ Sol: Product Architect & Full-Stack Automator"]
+        Dispatcher --> Jasper["🎨 Jasper: Creative Technologist & Growth Mastermind"]
+        Dispatcher --> Crew["📋 Crew: Operations Lead & Client Delivery Specialist"]
+        Dispatcher --> NexusLead["🛡️ Nexus: Technical Director & Hardening Gate"]
     end
 
-    subgraph Quality Gates ["🛡️ Nexus Quality Gates"]
-        Engineering --> Verifier["Executable Test Suite (bun test)"]
-        Design --> Verifier
-        Growth --> Verifier
-        Operations --> Verifier
-        Verifier --> Evidence["Evidence Ledger & Clean Git Commits"]
+    subgraph SkillLayer ["📦 46 Canonical Departments (Loaded On-Demand)"]
+        Sol --> EngSkills["webdev, database, devops, mobile, automation, new-project, crm"]
+        Jasper --> DesignSkills["design, animate, designscope, content, smm, seo"]
+        Crew --> OpsSkills["brand, ops, client-comms, accounts, gtm, retain"]
+        NexusLead --> QualitySkills["code-review, qa-launch, muse-security, gauntlet-loop, git"]
+    end
+
+    subgraph QualityGates ["🛡️ Nexus Pre-Merge Verification Contract"]
+        EngSkills --> Gate["Executable Verification Suite (bun test: 124/124 Pass)"]
+        DesignSkills --> Gate
+        OpsSkills --> Gate
+        QualitySkills --> Gate
+        Gate --> Output["Clean Git PR, Evidence Ledger & Zero Credential Leak"]
     end
 ```
 
@@ -95,36 +118,37 @@ Muse Skills organizes 46 specialized capabilities into four internal agency divi
 
 ### 1. 🏗️ Engineering & System Architecture
 High-performance application development, database design, and cloud infrastructure.
-- **Web & Full-Stack**: Complete web applications with Next.js, Astro, and clean component patterns ([`webdev`](webdev/README.md)).
-- **Interactive Project Creation**: 6-stage scaffolding engine with framework, styling, and database wiring ([`new-project`](new-project/README.md)).
-- **Full-Stack Refactoring**: 7-mode engine for cleaning legacy code, architecture, and query optimization ([`refactor`](refactor/README.md)).
-- **Modern Infrastructure**: Cloudflare Workers, Pages, Zero Trust tunnels, and automated CI/CD pipelines ([`devops`](devops/README.md)).
-- **Mobile Development**: Native cross-platform workflows with Expo and Capacitor ([`mobile`](mobile/README.md)).
-- **Database Operations**: Query tuning, migrations, connection pools, and ORM schemas ([`database`](database/README.md)).
+- **Web & Full-Stack**: Complete web applications with Next.js, Astro, and clean component patterns ([`webdev`](skills/agency-delivery/webdev/README.md)).
+- **Interactive Project Creation**: 6-stage scaffolding engine with framework, styling, and database wiring ([`new-project`](skills/core-engine/new-project/README.md)).
+- **Full-Stack Refactoring**: 7-mode engine for cleaning legacy code, architecture, and query optimization ([`refactor`](skills/design-interface/refactor/README.md)).
+- **Modern Infrastructure**: Cloudflare Workers, Pages, Zero Trust tunnels, and automated CI/CD pipelines ([`devops`](skills/agency-delivery/devops/README.md)).
+- **Mobile Development**: Native cross-platform workflows with Expo and Capacitor ([`mobile`](skills/agency-delivery/mobile/README.md)).
+- **Database Operations**: Query tuning, migrations, connection pools, and ORM schemas ([`database`](skills/agency-delivery/database/README.md)).
 
 ### 2. 🎨 Creative Design, UI/UX & Motion
 Award-winning user interfaces, design systems, and rich interactive web experiences.
-- **Design Systems & UI Kits**: Design tokens, component primitives, responsive layouts, and CRO patterns ([`design`](design/README.md)).
-- **Unified Motion & 3D**: Three.js WebGL scenes, interactive canvas shaders, and smooth GSAP choreography ([`animate`](animate/README.md)).
-- **Design System Extraction**: Reverse-engineer design tokens and component catalogs from existing websites ([`designscope`](designscope/README.md)).
-- **Natural Copywriting**: Humanize AI drafts and apply battle-tested copywriting formulas ([`humanize`](humanize/README.md), [`content`](content/README.md)).
+- **Design Systems & UI Kits**: Design tokens, component primitives, responsive layouts, and CRO patterns ([`design`](skills/agency-delivery/design/README.md)).
+- **Unified Motion & 3D**: Three.js WebGL scenes, interactive canvas shaders, and smooth GSAP choreography ([`animate`](skills/design-interface/animate/README.md)).
+- **Design System Extraction**: Reverse-engineer design tokens and component catalogs from existing websites ([`designscope`](skills/design-interface/designscope/README.md)).
+- **Natural Copywriting**: Humanize AI drafts and apply battle-tested copywriting formulas ([`humanize`](skills/quality-review/humanize/README.md), [`content`](skills/agency-delivery/content/README.md)).
 
 ### 3. 📈 Growth, Marketing & Operations
 End-to-end client acquisition, content generation, and agency delivery workflows.
-- **Brand & Client Lifecycle**: Client intake briefs, secure credential delegation, and offboarding ([`brand`](brand/README.md)).
-- **Organic Social & Video**: Social listening, viral content hooks, and multi-platform publishing ([`smm`](smm/README.md)).
-- **Search & AI Discovery (SEO/AEO)**: Keyword clustering, semantic search optimization, and AI answer engine readiness ([`seo`](seo/README.md)).
-- **Paid Advertising**: Multi-channel campaign planning across Google, Meta, LinkedIn, and TikTok ([`paidads`](paidads/README.md)).
-- **Financial Operations**: DSO cashflow compression, automated invoice dunning, and margin analytics ([`accounts`](accounts/README.md)).
-- **Client Communications**: Factual status updates grounded in verified Git evidence ([`client-comms`](client-comms/README.md)).
+- **CRM & Automated Flows**: Audience segmentation, RFM scoring, welcome drips, cart recovery, and deliverability infrastructure ([`crm`](skills/agency-delivery/crm/README.md)).
+- **Brand & Client Lifecycle**: Client intake briefs, secure credential delegation, and offboarding ([`brand`](skills/agency-delivery/brand/README.md)).
+- **Organic Social & Video**: Social listening, viral content hooks, and multi-platform publishing ([`smm`](skills/agency-delivery/smm/README.md)).
+- **Search & AI Discovery (SEO/AEO)**: Keyword clustering, semantic search optimization, and AI answer engine readiness ([`seo`](skills/agency-delivery/seo/README.md)).
+- **Paid Advertising**: Multi-channel campaign planning across Google, Meta, LinkedIn, and TikTok ([`paidads`](skills/agency-delivery/paidads/README.md)).
+- **Financial Operations**: DSO cashflow compression, automated invoice dunning, and margin analytics ([`accounts`](skills/agency-delivery/accounts/README.md)).
+- **Client Communications**: Factual status updates grounded in verified Git evidence ([`client-comms`](skills/agency-delivery/client-comms/README.md)).
 
 ### 4. 🛡️ Technical Direction & Quality Assurance
 The hardening gate that audits every line of code, design asset, and deployment.
-- **Code Review & Standards**: Enforce clean architecture, type safety, and zero-defect delivery ([`code-review`](code-review/README.md)).
-- **Autonomous Release Management**: Semantic versioning, changelog compilation, and branch lifecycles ([`git`](git/README.md)).
-- **Launch Verification**: Comprehensive pre-launch smoke testing and cross-browser quality checks ([`qa-launch`](qa-launch/README.md)).
-- **Security & Cloud Governance**: Zero-credential leakage scanning and proactive security audits ([`muse-security`](muse-security/README.md)).
-- **Stress-Test Gauntlets**: Bounded feedback loops and blind A/B critique to eliminate regressions ([`gauntlet-loop`](gauntlet-loop/README.md)).
+- **Code Review & Standards**: Enforce clean architecture, type safety, and zero-defect delivery ([`code-review`](skills/quality-review/code-review/README.md)).
+- **Autonomous Release Management**: Semantic versioning, changelog compilation, and branch lifecycles ([`git`](skills/core-engine/git/README.md)).
+- **Launch Verification**: Comprehensive pre-launch smoke testing and cross-browser quality checks ([`qa-launch`](skills/agency-delivery/qa-launch/README.md)).
+- **Security & Cloud Governance**: Zero-credential leakage scanning and proactive security audits ([`muse-security`](skills/quality-review/muse-security/README.md)).
+- **Stress-Test Gauntlets**: Bounded feedback loops and blind A/B critique to eliminate regressions ([`gauntlet-loop`](skills/quality-review/gauntlet-loop/README.md)).
 
 ---
 
@@ -136,52 +160,52 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 | Skill | Description |
 |:---|:---|
-| [`accounts`](accounts/README.md) | Full financial operations department: client invoicing, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 7 modes. |
-| [`ai-ready`](ai-ready/README.md) | Audits repositories for AI agent readiness and provisions the progressive disclosure documentation architecture. |
-| [`analytics`](analytics/README.md) | Full data and measurement department: event tracking, KPI dashboards, marketing attribution, and conversion rate optimization across 5 modes. |
-| [`animate`](animate/README.md) | Complete motion design, micro-interactions, layout transitions, animated SVGs, and interactive 3D WebGL scenes via Three.js. |
-| [`audit`](audit/README.md) | Reflective project health audit diagnosing technical debt, documentation drift, and structural risks. |
-| [`automation`](automation/README.md) | Process automation, scheduled background workflows, webhook integrations, and zero-credential browser relays. |
-| [`brand`](brand/README.md) | Complete brand and client lifecycle engine: intake audits, secure credential delegation, cross-department briefs, and offboarding. |
-| [`clean-system-cache`](clean-system-cache/README.md) | Cross-platform developer and system cache cleaner safely purging unreferenced package manager and build artifacts. |
-| [`client-comms`](client-comms/README.md) | Professional client communication playbooks: evidence-backed status reports, change requests, and scope boundaries. |
-| [`coach`](coach/README.md) | Meta-cognitive coaching skill guiding strategic project decisions, architectural tradeoffs, and focus alignment. |
-| [`code-review`](code-review/README.md) | Thorough multi-perspective code review enforcing clean architecture, boundary invariants, and regression prevention. |
-| [`content`](content/README.md) | Full content studio: SEO-optimized articles, conversion landing copy, email drip sequences, video scripts, and podcasts across 8 modes. |
-| [`context-anchor`](context-anchor/README.md) | Session start and checkpoint skill capturing persistent context, active invariants, and open loops. |
-| [`coupling-router`](coupling-router/README.md) | Coupling-aware routing engine calculating blast radius and managing parallel worktree isolation leases. |
-| [`database`](database/README.md) | Unified database engineering: query tuning, schema migrations, indexing strategy, and connection pooling across 5 modes. |
-| [`dead-letter`](dead-letter/README.md) | Captures, triages, and stores unhandled tasks, unexpected exceptions, and skipped workflows for future resolution. |
-| [`design`](design/README.md) | Complete UI/UX design studio: design systems, OKLCH token palettes, component primitives, responsive layouts, and CRO patterns across 8 modes. |
-| [`designscope`](designscope/README.md) | Reverse-engineers design systems, color palettes, typography hierarchies, and layout rules from existing websites. |
-| [`devops`](devops/README.md) | Full infrastructure and reliability department: Cloudflare Workers and Pages, CI/CD pipelines, SSL, and DNS management across 7 modes. |
-| [`evidence-ledger`](evidence-ledger/README.md) | Records verifiable claims, test runs, benchmark results, and commitments with cryptographic hash tracking. |
-| [`gauntlet-loop`](gauntlet-loop/README.md) | Bounded adversarial stress-testing and critique loops driving autonomous self-refinement to production quality. |
-| [`git`](git/README.md) | Autonomous Git operations: clean semantic commits, atomic feature branch PRs, and end-to-end release lifecycle automation. |
-| [`growth`](growth/README.md) | Full growth strategy department: value proposition positioning, acquisition funnels, pricing models, and Product Hunt launches across 8 modes. |
-| [`gtm`](gtm/README.md) | Comprehensive Go-To-Market strategy, product positioning, launch timelines, and distribution playbooks. |
-| [`handoff`](handoff/README.md) | Generates structured session handoff artifacts enabling flawless continuity across different AI models and developer sessions. |
-| [`humanize`](humanize/README.md) | Removes robotic phrasing, corporate jargon, and AI clichés to produce clear, authentic human prose. |
-| [`incident-response`](incident-response/README.md) | Incident management playbooks for rapid triage, live root-cause isolation, emergency remediation, and post-mortems. |
-| [`mobile`](mobile/README.md) | Complete mobile development: Expo React Native, Ionic Capacitor web-to-mobile wrapping, push notifications, and app store deployment across 5 modes. |
-| [`muse-security`](muse-security/README.md) | Security hardening, vulnerability scanning, Cloudflare WAF rule management, and credential leak prevention. |
-| [`new-project`](new-project/README.md) | Interactive project creator and Agent Engine provisioner with a 6-stage pipeline supporting Next.js, Astro, UnoCSS, and Drizzle. |
-| [`ops`](ops/README.md) | Agency operations management: client workspace isolation, SLA tracking, deliverable verification, and hosting maintenance. |
-| [`paidads`](paidads/README.md) | Full paid advertising department: campaign planning, ad copy, conversion pixel tracking, and cross-channel retargeting across 10 modes. |
-| [`periodic-retreat`](periodic-retreat/README.md) | Structured milestone review reflecting on achievements, refining roadmap priorities, and purging deprecated patterns. |
-| [`pua`](pua/README.md) | Prompt understanding and augmentation engine expanding ambiguous prompts into precise technical specifications. |
-| [`qa-launch`](qa-launch/README.md) | Pre-launch QA testing: cross-browser responsive checks, smoke test automation, visual regression audits, and deployment sign-off. |
-| [`refactor`](refactor/README.md) | Universal 7-mode refactoring engine: code cleanup, architectural decoupling, performance tuning, and query optimization. |
-| [`relay`](relay/README.md) | Asynchronous agent-to-agent communication relay facilitating structured handoffs and task coordination. |
-| [`research`](research/README.md) | Deep technical research and market intelligence: competitive analysis, library evaluations, and synthesis reports. |
-| [`retain`](retain/README.md) | Post-delivery client retention: automated health checks, customer success workflows, NPS tracking, and proactive renewal reviews. |
-| [`sales-enablement`](sales-enablement/README.md) | B2B sales collateral generator: pitch decks, discovery call scripts, objection-handling matrices, and ROI calculators. |
-| [`secretary`](secretary/README.md) | Administrative meeting transcription, executive summaries, action item extraction, and agenda scheduling. |
-| [`seo`](seo/README.md) | Technical SEO, AI Answer Engine Optimization (AEO), keyword clustering, structured semantic data, and core web vitals. |
-| [`smm`](smm/README.md) | Social media management: organic strategy, viral hooks, multi-platform content scheduling, and engagement analytics across 6 modes. |
-| [`telegram`](telegram/README.md) | Telegram bot development: webhook management, interactive menus, inline keyboards, and automated notifications. |
-| [`updateagents`](updateagents/README.md) | Scaffolds and synchronizes the 9-folder `.agents/` container, modular standards, brand tokens, and persistent memory. |
-| [`updatedocs`](updatedocs/README.md) | Documentation synchronization engine detecting doc drift and updating markdown files to match implementation reality. |
+| [`accounts`](skills/agency-delivery/accounts/README.md) | Full financial operations department: client invoicing, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 7 modes. |
+| [`analytics`](skills/agency-delivery/analytics/README.md) | Full data and measurement department: event tracking, KPI dashboards, marketing attribution, and conversion rate optimization across 5 modes. |
+| [`animate`](skills/design-interface/animate/README.md) | Complete motion design, micro-interactions, layout transitions, animated SVGs, and interactive 3D WebGL scenes via Three.js. |
+| [`audit`](skills/quality-review/audit/README.md) | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. |
+| [`automation`](skills/agency-delivery/automation/README.md) | Full automation and AI services department: workflow automation, chatbots, AI agents, RAG pipelines, integrations, prompt engineering, and voice AI agents across 7 modes. |
+| [`brand`](skills/agency-delivery/brand/README.md) | Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department briefs, and offboarding across 8 modes. |
+| [`clean-system-cache`](skills/reflection-maintenance/clean-system-cache/README.md) | Safe cross-platform developer, designer, and browser cache purge across 15+ package managers, IDEs, and browser engines. |
+| [`client-comms`](skills/agency-delivery/client-comms/README.md) | Client-facing communication: status reporting, change-request triage, project handover, and client feedback intake across 4 modes. |
+| [`coach`](skills/reflection-maintenance/coach/README.md) | Tri-vector autonomous agency coach for internal teams, client boundary defense, and founder leverage calibration across 4 modes. |
+| [`code-review`](skills/quality-review/code-review/README.md) | Language-agnostic, rigorous code review derived from Linus Torvalds' corpus: correctness, simplicity, boundary invariants, and evidence over claims. |
+| [`content`](skills/agency-delivery/content/README.md) | Full content studio: SEO-aware blog posts, conversion copywriting, email sequences, video scripts, podcasts, and case studies across 8 modes. |
+| [`context-anchor`](skills/context-orchestration/context-anchor/README.md) | Drop a working reference anchor at any point in a session to prevent context drift, and park parallel client workstreams for instant switching. |
+| [`coupling-router`](skills/context-orchestration/coupling-router/README.md) | Coupling-aware architectural delegation, blast radius calculation, and shared-worktree lease arbitration for multi-agent workflows. |
+| [`crm`](skills/agency-delivery/crm/README.md) | Full customer relationship and marketing flow department: audience segmentation, RFM scoring, welcome onboarding, cart abandonment recovery, lead nurture journeys, winback, deliverability DNS (SPF/DKIM/DMARC), and SMS triggers across 7 modes. |
+| [`database`](skills/agency-delivery/database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 6 modes. |
+| [`dead-letter`](skills/quality-review/dead-letter/README.md) | Capture, triage, and quarantine failed tasks before they disappear, generating bounded retry packets or escalation questions. |
+| [`design`](skills/agency-delivery/design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, visual storytelling, and interactive 3D web scenes across 11 modes. |
+| [`designscope`](skills/design-interface/designscope/README.md) | Reverse-engineers design systems, color palettes, typography hierarchies, layout trees, and tokens from existing websites, images, or Figma. |
+| [`devops`](skills/agency-delivery/devops/README.md) | Full infrastructure and reliability department: hosting, CI/CD pipelines, DNS, Cloudflare edge and Workers, security hardening, monitoring, and incident response across 7 modes. |
+| [`evidence-ledger`](skills/context-orchestration/evidence-ledger/README.md) | Persistent per-project evidence tracking and source-cited claim verification gate enforcing 'No source, no claim. No verification path, no release.' |
+| [`gauntlet-loop`](skills/quality-review/gauntlet-loop/README.md) | Bounded multi-agent quality improvement loop preventing infinite iterations, self-grading delusions, and regression churn. |
+| [`git`](skills/core-engine/git/README.md) | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop triage, 4-phase branching, surgical test gating, and semver release automation. |
+| [`growth`](skills/agency-delivery/growth/README.md) | Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, community building, and growth audits across 10 modes. |
+| [`gtm`](skills/agency-delivery/gtm/README.md) | Outbound & developer GTM department: account research, lead scoring, cold email, TAB customer discovery, champion enablement, and founder sales across 9 modes. |
+| [`humanize`](skills/quality-review/humanize/README.md) | Editorial review and prose humanization system eliminating AI writing artifacts, formulaic patterns, and robotic cadence without altering facts or voice. |
+| [`incident-response`](skills/agency-delivery/incident-response/README.md) | Live incident command: severity triage, stop-the-bleeding mitigation playbooks, status communication, and blameless post-mortems across 4 modes. |
+| [`mobile`](skills/agency-delivery/mobile/README.md) | Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), and PWA across 5 modes. |
+| [`muse-security`](skills/quality-review/muse-security/README.md) | Unified security authority: CVE triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare), and SAST review across 6 modes. |
+| [`new-project`](skills/core-engine/new-project/README.md) | Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner with a 6-stage pipeline. |
+| [`ops`](skills/agency-delivery/ops/README.md) | Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, retros, vendor management, Obsidian PKM vaults, and agency legal templates across 10 modes. |
+| [`paidads`](skills/agency-delivery/paidads/README.md) | Full paid advertising department: campaign planning, ad copy, pixel tracking, and cross-channel retargeting across Google, Meta, LinkedIn, TikTok, and YouTube across 10 modes. |
+| [`periodic-retreat`](skills/reflection-maintenance/periodic-retreat/README.md) | Quarterly personal and project strategic retreat facilitator conducting multi-scale audits of project health, architecture debt, and OKR handoffs. |
+| [`pua`](skills/quality-review/pua/README.md) | Performance Improvement Plan engine forcing exhaustive problem-solving and structured debugging when tasks stall. |
+| [`qa-launch`](skills/agency-delivery/qa-launch/README.md) | Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, release checklist, and regression sweeps across 4 modes. |
+| [`refactor`](skills/design-interface/refactor/README.md) | Universal 7-mode refactoring engine: UI components, code cleanup, architectural decoupling, runtime performance, and database schemas. |
+| [`relay`](skills/context-orchestration/relay/README.md) | Bidirectional agent handoff and session resumption engine with ambient continuity maintaining an always-current HANDOFF.md live-state file. |
+| [`research`](skills/agency-delivery/research/README.md) | Client-serving research department: user research, market sizing, competitive intelligence, and due-diligence entity dossiers across 3 modes. |
+| [`retain`](skills/agency-delivery/retain/README.md) | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, review asks, and churn-watch signals across 6 modes. |
+| [`sales-enablement`](skills/agency-delivery/sales-enablement/README.md) | Pre-sale sales enablement department: demo scripts, objection-handling handbooks, one-pagers, and sales playbooks across 4 modes. |
+| [`secretary`](skills/context-orchestration/secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 46 departments. |
+| [`seo`](skills/agency-delivery/seo/README.md) | Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, and AI answer engine optimization across 7 modes. |
+| [`smm`](skills/agency-delivery/smm/README.md) | Full organic social department: platform strategy, editorial calendars, post writing, community management, viral carousel generation, and Postiz automation across 10 modes. |
+| [`telegram`](skills/agency-delivery/telegram/README.md) | Telegram messaging department: pure-bash bot alerts, approval boards via curl + jq, and Claude Code hook integration across 5 modes. |
+| [`updateagents`](skills/core-engine/updateagents/README.md) | Universal agent context synchronization and repository AI-readiness engine: 13-asset audit, Stage-0 Fast-Skip, synthetic ADE sanitization, and standards synchronization. |
+| [`updatedocs`](skills/core-engine/updatedocs/README.md) | Project-wide documentation synchronization, drift detection, and governance engine aligning documentation with repository code. |
+| [`webdev`](skills/agency-delivery/webdev/README.md) | Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, and responsive audits across 15 modes. |
 
 </details>
 
@@ -203,7 +227,22 @@ Or install scoped specifically to your current project:
 npx skills add harshsinghmp/muse-skills --scope project
 ```
 
-### Option 2: Install Individual Skills
+### Option 2: Multi-Harness Native Slash Commands
+
+Export native slash commands into your detected agent harnesses (`.opencode`, `.gemini`, `.cursor`, `.windsurf`):
+
+```bash
+# Auto-detects harnesses, installs skills, and exports native slash commands
+bun run setup
+```
+
+Once installed, invoke any skill or mode directly in your agent:
+- `/crm` or `/crm:onboard`
+- `/webdev` or `/webdev:funnel`
+- `/design:uikit` or `/design:saas`
+- `/smm:carousel` or `/ops:obsidian`
+
+### Option 3: Install Individual Skills
 
 Pick and install only the specific skills your project requires:
 
@@ -227,7 +266,7 @@ npx skills add harshsinghmp/muse-skills --skill git
 Every skill in Muse Skills is validated through an automated test suite guaranteeing functional reliability, documentation parity, and security compliance:
 
 ```bash
-# Run complete test suite (116 tests, 2,797 assertions)
+# Run complete test suite (124 tests, 2,855 assertions across 7 test suites)
 bun test
 
 # Run code linter and formatting checks
@@ -235,11 +274,14 @@ bun run lint
 
 # Run strict TypeScript type verification
 bun run type-check
+
+# Verify zero-drift across secretary:dispatch and skills catalog
+bun run sync-dispatch --check
 ```
 
-- **100% Green Test Suite**: 116 tests across 7 comprehensive test files validating end-to-end multi-skill execution.
+- **100% Green Test Suite**: 124 tests across 7 comprehensive test files validating end-to-end multi-skill execution.
 - **Zero-Secret Leakage Guarantee**: Enforced by pre-commit hooks and automated credential scanning pipelines.
-- **Documentation Parity**: Automated tests verify that every single skill, mode, parameter, and CLI flag is accurately documented across all manifests.
+- **Zero-Drift Dispatch Guarantee**: CI strictly enforces that `secretary/references/dispatch.md` and harness commands stay in 100% lockstep with repository code.
 
 ---
 

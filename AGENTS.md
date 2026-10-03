@@ -1,6 +1,6 @@
 # AGENTS.md - muse-skills
 
-Curated suite of forty-five universal AI agent skills. MIT. Install via
+Curated suite of forty-six universal AI agent skills. MIT. Install via
 `npx skills add harshsinghmp/muse-skills`.
 
 ## Read before working
@@ -10,10 +10,8 @@ Working artifacts (research corpora, planning docs, reports) belong in
 `.agents/artifacts/<topic>/` — never the repo tree, never `.memory/`
 (musememory owns it); durable findings are promoted to `.agents/context/`
 via `updateagents`.
-Start at `.agents/context/index.md`, then read only the files your task
-needs: `product.md`, `architecture.md`, `brand.md`, `current.md`,
-`decisions.md`, `roadmap.md`. Code and skill frontmatter are canonical
-when docs drift.
+Start at `.agents/context/index.md` and read only the files your task needs.
+Code and skill frontmatter are canonical when docs drift.
 
 ## Working rules
 
@@ -25,13 +23,16 @@ when docs drift.
 - Commits follow `CONTRIBUTING.md` (Meaningful Git Commit Protocol).
 - Branch and release lifecycle lives in `CONTRIBUTING.md` as well:
   never commit to `main`; cut `feat/*` from `dev`.
-- Atomic PR per Skill: Always open a separate, dedicated feature branch and PR
-  for each new feature per skill, even when executing multiple upgrades from a
-  single working session. Never batch multi-skill changes into one monolithic PR.
+- Atomic PR per skill: separate `feat/*` branch and PR per change; never batch
+  multi-skill work into one PR.
 - No secrets or personal environment values in any shipped file.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
-- Modern Tool Primacy: call installed modern CLI tools explicitly by binary name, modern-first with `|| legacy` fallback (`rg` > `grep`, `fd` > `find`, `bat` > `cat` for display, `eza` > `ls`, `sd` > `sed`, `zoxide` > `cd`, `delta` > `diff` for display); agent subshells have no `.bashrc` aliases. Never mandate tools outside the installed set.
+- Modern Tool Primacy: call installed modern CLI tools by binary name,
+  modern-first with `|| legacy` fallback (`rg` > `grep`, `fd` > `find`,
+  `bat`/`eza` > `cat`/`ls`, `sd`/`zoxide` > `sed`/`cd`, `delta` > `diff`);
+  agent subshells have no `.bashrc` aliases. Never mandate tools outside the
+  installed set.
 - Synthetic ADE/IDE Artifact Sanitization: never accept or commit
   synthetic placeholders (`ORCA_RICH_MD`, Cursor, Windsurf, Claude
   artifacts); unwrap to raw content, backtick template variables
@@ -39,12 +40,10 @@ when docs drift.
 - Clean Package Syntax: in `<owner>/<repo>#<ref>` specs, never append
   raw commit hashes; keep install commands clean (`npx skills add
   <owner>/<repo>`).
-- Universal Copywriting & SEO/AEO Mandate: Every piece of copy created across the agency (social posts, threads, direct messages, outreach emails, lifecycle sequences, newsletters, blog articles, landing pages, VSLs, and sales collateral) must strictly follow the copywriting formula selector and battle-tested frameworks codified in `content:copy` (`content/references/copy.md`). Furthermore, all public-facing content MUST be actively optimized for both Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: Perplexity, ChatGPT Search, Gemini AI Overviews, Claude) enforcing CORE-EEAT, the 18-token standalone quotability rule, answer-first density under headers, and structured semantic markup.
+- Universal Copywriting & SEO/AEO Mandate: every piece of agency copy (social, email, lifecycle, newsletter, blog, landing, VSL, sales collateral) must follow the formula selector and frameworks in `content:copy` (`content/references/copy.md`). All public-facing content must also optimize for both Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: Perplexity, ChatGPT Search, Gemini AI Overviews, Claude) enforcing CORE-EEAT, the 18-token standalone quotability rule, answer-first density under headers, and structured semantic markup.
 - Test gate: `bun test` must pass before any merge.
 
 ## Verification
-
-The Bun test suite (`bun test`) is the pre-merge contract.
 
 ### Lint + type-check (local runs)
 - `bun run lint` → `biome check .` + `ruff check scripts/`
@@ -55,7 +54,7 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 
 - **Hooks** (15 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
 - **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish)
-- **Audit modes**: 13 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
+- **Audit modes**: 21 skills have dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
 - **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking
 - **Session reports**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
 
@@ -67,3 +66,10 @@ The Bun test suite (`bun test`) is the pre-merge contract.
 - Modern-tool primacy (installed set only, never mandate outside it)
 - Tool-independent mechanisms with Default-stack lines where a stack was chosen
 - No secrets or personal values in shipped files
+
+<!-- muse-secretary-router:start -->
+## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
+- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md` or `.agents/skills/secretary/references/dispatch.md`).
+- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
+- **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
+<!-- muse-secretary-router:end -->
