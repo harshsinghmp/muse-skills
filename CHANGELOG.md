@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **Stale-Lane Enrichment Transplant** (#212): harvested the genuine unshipped residue of 13 stale `feat/*` branches (verified 88–100% already shipped line-by-line) — message-market-fit trio + `[Verb]+[Get]+[Qualifier]` CTA shape (`content:copy` Part 10), production-pipeline selection + edit anatomy + production-family checklist (`content:video` Procedure #5), maturity-tier listing scorecard (`mobile:aso` Procedure #6), and Temporal design-twin orchestration rules (`webdev:fullstack` #4).
+
 ## [7.2.0] - 2026-10-03
 
 ### Added
