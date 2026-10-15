@@ -58,9 +58,15 @@ A shooting- or editing-ready video production packet:
   - *Vision Fallback for Silent Footage*: When transcribing video assets, if Speech-to-Text (ASR) returns zero spoken dialogue (e.g. gameplay VODs, silent tutorials, ambient product reels), seamlessly fall back to visual frame analysis. Extract key motion frames, describe on-screen actions, and automatically generate synthetic narrative hooks and captions.
   - *GPU & ASR Memory Lifecycle*: Explicitly release automated speech recognition (Whisper) and video reframing models immediately after transcription batches to prevent GPU out-of-memory crashes during multi-asset processing.
 
+### 5. Production Pipeline & Edit Anatomy
+- **Pick the pipeline from the job** (source: marketingskills `video` SKILL.md): Hyperframes-style HTML rendering for programmatic/templated output vs Remotion-style React rendering for code-composed motion — decide on templating needs and team stack, not hype. When using AI generation, slot the model to the shot (Veo/Sora/Runway/Kling/Seedance/Hailuo/Pika/open-weights each carry different cost/quality slots) and record which model made which shot for re-runs.
+- **Reverse-engineer reference edits with an edit anatomy** before rebuilding: cut cadence, transition grammar, text-on-screen system, sound-design layering, pacing curve — named mechanisms per beat, never "similar vibe".
+- **Production-family checklist** (paraphrased: generative-media-skills production families, MIT — providers overlap vendor skills, delta only): lock content-format per surface; assemble at runtime from named parts (script/voice/timeline/captions); clear rights/provenance/consent before shipping (credit kept, consent on file); hold one creative-direction pass; finish with post-production (grade/mix/captions/export).
+
 ## Quality gate
 
 - [ ] Hook lands within the first 3 seconds across visual, audio, and text layers.
+- [ ] Production pipeline picked by job (programmatic vs code-composed); AI-model choice per shot recorded; reference rebuilds carry a named edit anatomy.
 - [ ] Pacing enforces a pattern interrupt every 2.5–3.5 seconds in short-form.
 - [ ] No title-thumbnail word repetition for long-form packaging; 3 angle pairs provided.
 - [ ] HeyFrames safe-zone margins (35%–65% vertical) respected for captions and overlays.

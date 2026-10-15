@@ -23,5 +23,5 @@
 
 ### ADR-004: Dual-Store Cognitive Memory Separation
 - **Context**: Clear separation needed between real-time machine runtime invariants and human-verified shipped documentation.
-- **Decision**: Machine-readable constraints live in `./.memory/CURRENT.md`; durable human/agent truth lives in `./.agents/context/current.md`.
+- **Decision**: Where a memory system is configured, machine-readable constraints are managed strictly via memory tooling or CLI (such as `./.memory/CURRENT.md`), never by editing store files directly; skip the step entirely where the project has no memory system. Durable human/agent truth lives in `./.agents/context/current.md`.
 - **Status**: Accepted & Implemented.

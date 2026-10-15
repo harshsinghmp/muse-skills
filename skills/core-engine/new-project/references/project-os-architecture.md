@@ -30,7 +30,7 @@ Guarantees zero temporary file clutter at the repository root:
 
 ### 3. Dual-Path Cognitive Memory
 Clean separation of machine runtime state from human-and-agent verified system reality:
-- **`.memory/CURRENT.md` (Machine / Real-Time)**: Owned by `musememory`. Contains active hard constraints, multi-agent collision workstreams, and session handoffs.
+- **`.memory/CURRENT.md` (Machine / Real-Time)**: Managed strictly via memory tooling/CLI, never hand-edited directly; skipped if no memory system exists. Contains active hard constraints, multi-agent collision workstreams, and session handoffs.
 - **`./.agents/context/current.md` (Durable Shipped Reality)**: Contains verified shipped reality, live deliverables, runtime health oracle, and known gaps/placeholders.
 
 ---

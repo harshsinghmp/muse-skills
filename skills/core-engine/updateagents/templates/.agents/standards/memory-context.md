@@ -23,17 +23,21 @@ Before compaction, confirm:
 
 ---
 
-## 2. Persistent Cognitive Memory (`./.memory` & Memory MCP)
+## 2. Persistent Cognitive Memory (`./.memory` & Memory Tooling)
 
-The `./.memory` directory at the project root is the local persistent store managed by Cognitive Memory.
+The `./.memory` directory at the project root is the local persistent store managed exclusively by cognitive memory systems (such as `musememory` or a memory MCP server).
+
+> [!IMPORTANT]
+> **Store Protection Invariant**: Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system. Hand-editing store files corrupts database state and multi-agent coordination.
 
 ### Session Lifecycle & Concurrency
-1. **Pre-Flight Grounding**: At session start, call `get_context()` to load `USER.md`, active `CURRENT.md` invariants, and check active concurrent agent workstreams before editing files.
+1. **Pre-Flight Grounding**: At session start, retrieve context via memory tooling or MCP (`get_context()`) to load active invariants and check active concurrent agent workstreams before editing files. If no memory system exists, rely on `./.agents/context/current.md`.
 2. **Multi-Agent Coordination (`CURRENT.md`)**:
-   - When running parallel agents across separate chats, register session ID, active task, and target file scopes in `CURRENT.md` under `## 🤖 Active Concurrent Agent Workstreams`.
+   - When a project memory system is present, register session ID, active task, and target file scopes via memory tooling (`memory_capture(type="constraint", ...)`). Never edit store files directly.
    - Never modify files currently claimed by another active agent's in-progress workstream.
+   - Skip entirely if the project has no memory system.
 3. **Durable Knowledge & Anti-Patterns**:
-   - Capture verified architectural decisions (`type: "rule" | "architecture" | "adr"`).
+   - Capture verified architectural decisions via memory tooling (`type: "rule" | "architecture" | "adr"`).
    - Capture failed approaches (`type: "negative"`) to prevent repeating past mistakes.
    - Bind memories to AST code symbols rather than fragile line numbers.
 4. **Supersession & Storage Hygiene**:
@@ -41,7 +45,7 @@ The `./.memory` directory at the project root is the local persistent store mana
    - Run `memory optimize` periodically or on cadence (7 days / 48h idle) to purge test noise and defragment SQLite.
 
 ### ⚠️ Dual-File Distinction: `.memory/CURRENT.md` vs `./.agents/context/current.md`
-- **`.memory/CURRENT.md` (Machine & Real-Time Coordination)**: Stores machine-readable active hard constraints, in-flight agent workstream locks, and pre-compaction session handoffs. Never dump static project overviews or changelogs here.
+- **`.memory/CURRENT.md` (Machine & Real-Time Coordination)**: Managed exclusively via memory tooling/CLI when a memory system is configured. Stores machine-readable active hard constraints, in-flight agent workstream locks, and pre-compaction session handoffs. Never edit directly by hand. Never dump static project overviews or changelogs here. If no memory system is present, this file and directory are omitted entirely.
 - **`./.agents/context/current.md` (Durable Shipped Reality)**: Owned by the project DOX tree. Stores the human-and-agent verified state of the codebase (verified shipped reality, live deliverables, runtime health oracle, and known gaps/placeholders). Updated during the Phase 5 Closeout DOX pass.
 
 ---

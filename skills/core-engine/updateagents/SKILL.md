@@ -2,7 +2,7 @@
 name: updateagents
 aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
 description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards."
-argument-hint: "[sync|audit|sanitize|scaffold]"
+argument-hint: "[sync|audit|sanitize|scaffold|promote]"
 user-invocable: true
 version: 2.3.0
 author: Agency Council
@@ -52,6 +52,7 @@ Use `updateagents` when:
 * A project is being handed to another agent or developer.
 * An agent repeatedly makes mistakes because required project context is missing or outdated.
 * A repository gains or changes agent instruction files.
+* An agent or tool attempts to create or update a foreign-harness instruction file (`CLAUDE.md`, `GEMINI.md`, `.cursorrules`, etc.).
 * A sprint, feature, major PR, release, or migration changes project behavior.
 * Periodic project-context hygiene is being performed.
 * Upgrading a legacy project to the Progressive Disclosure DOX architecture.
@@ -70,6 +71,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **`audit`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
+| **`promote`** | Intercept & promote foreign-harness instruction writes to DOX standards/context | Promoted standards/context, preserved archive, resynced router | [references/legacy-promotion.md](references/legacy-promotion.md) |
 
 ---
 
@@ -249,6 +251,16 @@ Run `validate-memory-file.sh` to confirm size, structure, command accuracy, and 
 ### Step 17 — Report the Change
 Output a concise change report detailing files discovered, updated, new/obsolete knowledge, and validation receipts.
 
+### Step 18 — Intercept & Promote Foreign-Harness Writes (`promote` Mode)
+When an agent or harness attempts to write or update a prohibited legacy instruction target (`CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`, etc.):
+1. **Detect**: Intercept the target path. If it matches compiled IDE artifacts (`.cursor/rules/*.mdc`, `.github/copilot-instructions.md`), refuse and direct to `updateagents --sync-ide`.
+2. **Safety Gates**: Refuse content exceeding 8KB or containing shell/bash script mutations.
+3. **Route**: Ascend to find the nearest ancestor Agent Engine container (`.agents/` or `AGENTS.md`). If the target is outside `$HOME` with no container, refuse loudly and escalate to the user without guessing. If at `$HOME` level with no container, route to `~/.agents/AGENTS.md`.
+4. **Classify**: Check for imperatives (`never`, `always`, `must`, `require`) and policy vocabulary (`rule`, `standard`, `policy`). Route rule-like material to `<container>/.agents/standards/<name>.md`; route project facts to `<container>/.agents/context/<bucket>.md`.
+5. **Deduplicate**: Normalize whitespace. If identical content exists in destination, exit cleanly with zero mutation.
+6. **Archive & Envelope**: Snapshot original bytes to `.agents/archive/agent-instructions/`, render clean adapter at source, and append provenance envelope to destination.
+7. **Resync Router**: Resync `AGENTS.md` and report canonical destination.
+
 ---
 
 ## Pitfalls
@@ -271,6 +283,7 @@ Do not add entire package manifests, full dependency lists, complete directory t
 * **`.memory/` Found**: Ignore completely. Do not read, modify, or validate.
 * **Conflicting Instructions**: Preserve conflict, identify likely source of truth, and report for human review.
 * **File Too Large**: Trim duplication and offload verbose reference material to `./.agents/context/`.
+* **Foreign-Harness Legacy Write**: Intercept via `updateagents --promote <path>`. Refuse and redirect compiled IDE artifacts (`--sync-ide`). Refuse and escalate unknown scopes outside $HOME with no container, shell/bash mutations, or content >8KB.
 
 ---
 

@@ -14,17 +14,23 @@
 #    - docker (BuildKit layers only), podman
 # 4. Designers & Creative Suites:
 #    - adobe (Media Cache .cfa/.pek, scratch files), figma, blender, electron
-# 5. Web Browsers (HTTP Disk Cache ONLY - Zero Cookies/Session Impact):
+# 5. Agent Runtimes & Toolchains (Capability Tiering):
+#    - opencode, claude, cursor, gemini/antigravity, codex, continue, mcp, lsp
+#    - Three-tier classification: T1 Regenerable, T2 Capability-Coupled, T3 Irreplaceable
+#    - T2 caches are PRESERVED BY DEFAULT; opt-in via --include-coupled with Rehydration Manifest
+# 6. Web Browsers (HTTP Disk Cache ONLY - Zero Cookies/Session Impact):
 #    - chrome, chromium, brave, edge, firefox, zen, vivaldi, safari (or 'browser')
-# 6. Dead node_modules scanner:
+# 7. Dead node_modules scanner:
 #    - Optional scanner to detect abandoned node_modules across project directories
 #
 # Invariants:
 # - Dynamically skips any tool not installed or absent on the system.
+# - Capability-Coupled Protection: T2 caches backing live agent capabilities (plugins,
+#   skills, MCP servers, LSPs) are strictly PRESERVED BY DEFAULT.
 # - Running Session Protection: Never interrupts active browser sessions, running IDEs,
-#   or render engines; active sessions are gracefully skipped in execution mode.
+#   or live agent runtimes; active sessions are gracefully skipped in execution mode.
 # - Cache Only: Strictly purges disposable HTTP/disk caches. NEVER touches cookies,
-#   saved passwords, logins, history, bookmarks, tabs, or user profiles.
+#   saved passwords, logins, history, bookmarks, tabs, agent memory, or user profiles.
 # - Zero external runtimes: pure POSIX / Bash with standard coreutils.
 # ==============================================================================
 
@@ -32,20 +38,26 @@ set -eo pipefail
 
 DRY_RUN=false
 VERBOSE=false
+INCLUDE_COUPLED=false
 SPECIFIC_TOOLS=""
 SCAN_NODE_MODULES_PATH=""
 OS="$(uname -s)"
+PURGED_T2_LIST=()
+T2_PRESERVED_COUNT=0
 
 usage() {
     cat << 'EOF'
 Usage: clean-cache.sh [OPTIONS]
 
 Clean only unreferenced, dangling, and unnecessary caches from installed development,
-design, and browser tools across Linux and macOS. Requires zero external interpreters.
+design, agent, and browser tools across Linux and macOS. Requires zero external interpreters.
 
 Options:
   --dry-run                 Inspect and calculate reclaimable cache space without deleting anything.
-  --tool <list>             Comma-separated list of tools to clean (or 'all').
+  --include-coupled         Opt-in to purging T2 capability-coupled caches (plugins, MCP, LSPs).
+                            PRESERVED BY DEFAULT. Generates a rehydration manifest if purged.
+  --all-caches              Alias for --include-coupled.
+  --tool <list>             Comma-separated list of tools to clean (or 'all', 'browser', 'agents').
   --scan-node-modules <dir> Scan a directory tree for dormant node_modules folders and report sizes.
   -v, --verbose             Print detailed command execution outputs.
   -h, --help                Show this help message and exit.
@@ -53,6 +65,7 @@ Options:
 Supported Tools:
   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle, brew
   IDEs & Compilers : xcode, android, vscode, cursor, cypress
+  Agent Runtimes   : opencode, claude, cursor, gemini, codex, continue, mcp, lsp (or 'agents' for all)
   Containers       : docker, podman
   Designers        : adobe, figma, blender, electron
   Web Browsers     : chrome, chromium, brave, edge, firefox, zen, vivaldi, safari (or 'browser' for all)
@@ -64,6 +77,10 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --include-coupled|--all-caches)
+            INCLUDE_COUPLED=true
             shift
             ;;
         --tool)
@@ -130,6 +147,10 @@ is_tool_selected() {
     if [[ ",$SPECIFIC_TOOLS," =~ ,browser, ]] && [[ ",chrome,chromium,brave,edge,firefox,zen,vivaldi,safari," =~ ,"$t", ]]; then
         return 0
     fi
+    # If the user specified 'agents', match any supported agent runtime
+    if [[ ",$SPECIFIC_TOOLS," =~ ,agents, ]] && [[ ",opencode,claude,cursor,gemini,codex,continue,mcp,lsp," =~ ,"$t", ]]; then
+        return 0
+    fi
     return 1
 }
 
@@ -139,6 +160,12 @@ is_any_process_running() {
             if pgrep -x "$p" >/dev/null 2>&1 || pgrep -i -x "$p" >/dev/null 2>&1; then
                 return 0
             fi
+            # Also check command lines for agent runtimes that may run under node / python / electron
+            if [ "$p" = "opencode" ] || [ "$p" = "claude" ] || [ "$p" = "antigravity" ]; then
+                if pgrep -f "/$p" >/dev/null 2>&1 || pgrep -f "$p " >/dev/null 2>&1; then
+                    return 0
+                fi
+            fi
         else
             if ps -A -o comm= 2>/dev/null | grep -i -E "^${p}$" >/dev/null 2>&1; then
                 return 0
@@ -146,6 +173,36 @@ is_any_process_running() {
         fi
     done
     return 1
+}
+
+# Snapshot active agent capabilities before cleanup
+snapshot_agent_capabilities() {
+    local count=0
+    local dirs=(
+        "$HOME/.cache/opencode/npm"
+        "$HOME/.cache/opencode/packages"
+        "$HOME/.cache/opencode/skills"
+        "$HOME/.cache/opencode/bin"
+        "$HOME/Library/Caches/opencode/npm"
+        "$HOME/Library/Caches/opencode/packages"
+        "$HOME/Library/Caches/opencode/skills"
+        "$HOME/.cache/claude"
+        "$HOME/.claude/cache"
+        "$HOME/.cache/gemini"
+        "$HOME/.cache/antigravity"
+        "$HOME/.continue/cache"
+        "$HOME/.cache/continue"
+        "$HOME/.cache/mcp"
+        "$HOME/.cache/lsp"
+    )
+    for d in "${dirs[@]}"; do
+        if [ -d "$d" ]; then
+            local n
+            n=$(find "$d" -mindepth 1 -maxdepth 1 2>/dev/null | wc -l || echo 0)
+            count=$(( count + n ))
+        fi
+    done
+    echo "$count"
 }
 
 # Chromium Profile HTTP & Bytecode Cache calculation
@@ -353,6 +410,8 @@ handle_safari_browser() {
     fi
 }
 
+CAP_BEFORE=$(snapshot_agent_capabilities)
+
 MODE_LABEL="EXECUTED"
 if [ "$DRY_RUN" = true ]; then
     MODE_LABEL="DRY RUN (Preview)"
@@ -383,6 +442,56 @@ record_result() {
     printf "%-26s | %-11s | %-10s | %-10s | %s\n" "$tool" "$status" "$b_fmt" "$a_fmt" "$r_fmt"
     if [ "$VERBOSE" = true ] && [ -n "$details" ]; then
         echo "  └─ $details"
+    fi
+}
+
+handle_coupled_agent_cache() {
+    local tool_id="$1"
+    local label="$2"
+    local cache_dir="$3"
+    local what_removed="$4"
+    local reinstalls="$5"
+    local network_req="$6"
+    local restart_req="$7"
+    local restore_cmd="$8"
+    shift 8
+    local proc_candidates=("$@")
+
+    if ! is_tool_selected "$tool_id"; then
+        return
+    fi
+    [ -z "$cache_dir" ] || [ ! -d "$cache_dir" ] && return
+
+    local size_before
+    size_before=$(get_dir_size_kb "$cache_dir")
+    [ "$size_before" -le 0 ] && return
+
+    # T2 Capability-Coupled: PRESERVED BY DEFAULT
+    if [ "$INCLUDE_COUPLED" != true ]; then
+        T2_PRESERVED_COUNT=$(( T2_PRESERVED_COUNT + 1 ))
+        record_result "$label" "preserved" "$size_before" "$size_before" 0 "T2 Capability-coupled: Preserved by default (pass --include-coupled to override)"
+        return
+    fi
+
+    # Explicit opt-in (--include-coupled): Enforce running session protection
+    if is_any_process_running "${proc_candidates[@]}"; then
+        if [ "$DRY_RUN" = true ]; then
+            record_result "$label" "running" "$size_before" 0 "$size_before" "Agent runtime running; reclaimable when process exits"
+        else
+            record_result "$label" "skipped" "$size_before" "$size_before" 0 "Active runtime session running; skipped to protect live capabilities"
+        fi
+    else
+        if [ "$DRY_RUN" = true ]; then
+            record_result "$label" "reclaimable" "$size_before" 0 "$size_before" "Would purge T2 cache (rehydration manifest below)"
+            PURGED_T2_LIST+=("$label|$cache_dir|$what_removed|$reinstalls|$network_req|$restart_req|$restore_cmd")
+        else
+            purge_dir_contents "$cache_dir"
+            local size_after
+            size_after=$(get_dir_size_kb "$cache_dir")
+            local reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
+            record_result "$label" "cleaned" "$size_before" "$size_after" "$reclaimed" "T2 capability cache purged (rehydration required)"
+            PURGED_T2_LIST+=("$label|$cache_dir|$what_removed|$reinstalls|$network_req|$restart_req|$restore_cmd")
+        fi
     fi
 }
 
@@ -815,7 +924,172 @@ if is_tool_selected "electron"; then
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Web Browsers (HTTP Disk Cache ONLY — Zero Cookies/Session Impact)
+# 5. Agent Runtimes & Toolchains (T2 Capability-Coupled & T1 Regenerable)
+# Invariants:
+# - Three-Tier Classification:
+#   * T1 Regenerable: Pure download/build artifacts (models metadata cache, temp zips).
+#   * T2 Capability-Coupled: Installed plugins, skills, MCP servers, LSPs. PRESERVED BY DEFAULT.
+#   * T3 Irreplaceable: Auth tokens, session DBs, memory, git repos. NEVER TOUCHED.
+# - Active Runtime Protection: If agent runtime is running, caches are treated
+#   as live referenced and skipped in execution mode.
+# - Rehydration Manifest: Any T2 purge emits deterministic restoration steps.
+# ------------------------------------------------------------------------------
+
+# OpenCode: packages (T2)
+opencode_pkg="$HOME/.cache/opencode/packages"
+[ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/opencode/packages" ] && opencode_pkg="$HOME/Library/Caches/opencode/packages"
+handle_coupled_agent_cache "opencode" "opencode (packages) [T2]" "$opencode_pkg" \
+    "Installed plugin packages & git repositories" \
+    "Automatically on next command execution" \
+    "YES (requires npm / git network access)" \
+    "YES (takes effect on next session start)" \
+    "opencode (or relaunch agent session)" \
+    "opencode" "open-code"
+
+# OpenCode: npm (T2)
+opencode_npm="$HOME/.cache/opencode/npm"
+[ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/opencode/npm" ] && opencode_npm="$HOME/Library/Caches/opencode/npm"
+handle_coupled_agent_cache "opencode" "opencode (npm) [T2]" "$opencode_npm" \
+    "OpenCode plugin npm tarballs & node_modules payloads" \
+    "Automatically on next plugin fetch" \
+    "YES (downloads from registry.npmjs.org)" \
+    "NO" \
+    "opencode" \
+    "opencode" "open-code"
+
+# OpenCode: skills (T2)
+opencode_skills="$HOME/.cache/opencode/skills"
+[ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/opencode/skills" ] && opencode_skills="$HOME/Library/Caches/opencode/skills"
+handle_coupled_agent_cache "opencode" "opencode (skills) [T2]" "$opencode_skills" \
+    "Cached remote skill payloads" \
+    "Automatically on next skill call" \
+    "YES (downloads remote skills)" \
+    "NO" \
+    "opencode" \
+    "opencode" "open-code"
+
+# OpenCode: bin / LSP (T2)
+opencode_bin="$HOME/.cache/opencode/bin"
+[ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/opencode/bin" ] && opencode_bin="$HOME/Library/Caches/opencode/bin"
+handle_coupled_agent_cache "opencode" "opencode (bin) [T2]" "$opencode_bin" \
+    "Language server binaries & tool executables" \
+    "Automatically on LSP/tool invocation" \
+    "YES (downloads language server binaries)" \
+    "YES" \
+    "opencode" \
+    "opencode" "open-code"
+
+# OpenCode: models.json (T1 Regenerable metadata)
+if is_tool_selected "opencode"; then
+    opencode_models="$HOME/.cache/opencode/models.json"
+    [ "$OS" = "Darwin" ] && [ -f "$HOME/Library/Caches/opencode/models.json" ] && opencode_models="$HOME/Library/Caches/opencode/models.json"
+    if [ -f "$opencode_models" ]; then
+        size_before=$(get_dir_size_kb "$opencode_models")
+        if [ "$size_before" -gt 0 ]; then
+            if is_any_process_running "opencode" "open-code"; then
+                if [ "$DRY_RUN" = true ]; then
+                    record_result "opencode (models) [T1]" "running" "$size_before" 0 "$size_before" "opencode is running; reclaimable when closed"
+                else
+                    record_result "opencode (models) [T1]" "skipped" "$size_before" "$size_before" 0 "Running session protected; close opencode to prune"
+                fi
+            else
+                if [ "$DRY_RUN" = true ]; then
+                    record_result "opencode (models) [T1]" "reclaimable" "$size_before" 0 "$size_before" "Would delete regenerable models metadata"
+                else
+                    rm -f "$opencode_models" 2>/dev/null || true
+                    size_after=$(get_dir_size_kb "$opencode_models")
+                    reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
+                    record_result "opencode (models) [T1]" "cleaned" "$size_before" "$size_after" "$reclaimed" "Models metadata cache pruned"
+                fi
+            fi
+        fi
+    fi
+fi
+
+# Claude Code (T2)
+claude_cache="$HOME/.cache/claude"
+[ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/claude" ] && claude_cache="$HOME/Library/Caches/claude"
+handle_coupled_agent_cache "claude" "claude (cache) [T2]" "$claude_cache" \
+    "Language server binaries & tool downloads" \
+    "Automatically on tool/LSP launch" \
+    "YES (downloads tool dependencies)" \
+    "YES" \
+    "claude (restarts LSP on next file touch)" \
+    "claude" "claude-code"
+
+claude_runtime="$HOME/.claude/cache"
+handle_coupled_agent_cache "claude" "claude (runtime) [T2]" "$claude_runtime" \
+    "Temporary agent runtime cache" \
+    "Automatically on next session" \
+    "NO" \
+    "YES" \
+    "claude" \
+    "claude" "claude-code"
+
+# Gemini CLI / Antigravity (T2)
+gemini_cache="$HOME/.cache/gemini"
+handle_coupled_agent_cache "gemini" "gemini (cache) [T2]" "$gemini_cache" \
+    "MCP schemas & downloaded tool dependencies" \
+    "Automatically on MCP tool initialization" \
+    "YES" \
+    "YES" \
+    "agy (or relaunch Antigravity)" \
+    "gemini" "antigravity"
+
+antigravity_cache="$HOME/.cache/antigravity"
+handle_coupled_agent_cache "gemini" "antigravity (cache) [T2]" "$antigravity_cache" \
+    "Antigravity CLI tool schemas & scratch caches" \
+    "Automatically on next session" \
+    "NO" \
+    "YES" \
+    "antigravity" \
+    "gemini" "antigravity"
+
+# Continue (T2)
+continue_cache="$HOME/.continue/cache"
+[ ! -d "$continue_cache" ] && [ -d "$HOME/.cache/continue" ] && continue_cache="$HOME/.cache/continue"
+handle_coupled_agent_cache "continue" "continue (cache) [T2]" "$continue_cache" \
+    "Codebase indices & cached model context" \
+    "Rebuilt on next indexing run" \
+    "NO" \
+    "YES" \
+    "Reload Continue in IDE" \
+    "continue"
+
+# Codex (T2)
+codex_cache="$HOME/.cache/codex"
+handle_coupled_agent_cache "codex" "codex (cache) [T2]" "$codex_cache" \
+    "Downloaded tools & runtime cache" \
+    "Automatically on invocation" \
+    "YES" \
+    "YES" \
+    "codex" \
+    "codex"
+
+# MCP Server Shared Caches (T2)
+mcp_cache="$HOME/.cache/mcp"
+[ ! -d "$mcp_cache" ] && [ -d "$HOME/.cache/modelcontextprotocol" ] && mcp_cache="$HOME/.cache/modelcontextprotocol"
+handle_coupled_agent_cache "mcp" "mcp (servers) [T2]" "$mcp_cache" \
+    "MCP server installs and runtime environments" \
+    "Rebuilt on next MCP server spawn" \
+    "YES (reinstalls MCP server packages)" \
+    "YES" \
+    "Restart MCP client / host" \
+    "opencode" "claude" "cursor" "code" "gemini" "antigravity"
+
+# LSP Language Server Shared Caches (T2)
+lsp_cache="$HOME/.cache/lsp"
+[ ! -d "$lsp_cache" ] && [ -d "$HOME/.cache/language-servers" ] && lsp_cache="$HOME/.cache/language-servers"
+handle_coupled_agent_cache "lsp" "lsp (servers) [T2]" "$lsp_cache" \
+    "Language server symbol caches & binaries" \
+    "Re-indexed on file open" \
+    "NO" \
+    "YES" \
+    "Restart language server or IDE" \
+    "cursor" "code" "opencode" "claude"
+
+# ------------------------------------------------------------------------------
+# 6. Web Browsers (HTTP Disk Cache ONLY — Zero Cookies/Session Impact)
 # Invariants:
 # - Active Session Protection: If a browser is running, cache purge is skipped
 #   in execution mode to guarantee live tabs, websockets, and sessions are never interrupted.
@@ -868,6 +1142,22 @@ handle_chromium_browser "vivaldi" "vivaldi (cache)" \
 # Apple Safari (macOS only)
 handle_safari_browser
 
+CAP_AFTER=$(snapshot_agent_capabilities)
+
+if [ "$INCLUDE_COUPLED" = false ] && [ "$DRY_RUN" = false ]; then
+    if [ "$CAP_AFTER" -lt "$CAP_BEFORE" ]; then
+        echo "" >&2
+        echo "====================================================================" >&2
+        echo " 🚨 FATAL ERROR: Capability Inventory Regression Detected!" >&2
+        echo "====================================================================" >&2
+        echo " Live agent capability count dropped from $CAP_BEFORE to $CAP_AFTER" >&2
+        echo " during default safe cache cleaning." >&2
+        echo " T2 capability caches must NEVER be dropped without --include-coupled." >&2
+        echo "====================================================================" >&2
+        exit 1
+    fi
+fi
+
 echo "--------------------------------------------------------------------"
 if [ "$DRY_RUN" = true ]; then
     echo "Total Reclaimable Space : ~$(fmt_kb "$TOTAL_RECLAIMED_KB")"
@@ -876,7 +1166,41 @@ else
 fi
 free_disk=$(df -h "$HOME" | awk 'NR==2 {print $4}')
 echo "Disk Free Space (Home)  : ${free_disk} available"
+if [ "$T2_PRESERVED_COUNT" -gt 0 ]; then
+    echo "T2 Capability Caches    : ${T2_PRESERVED_COUNT} preserved (safe default; pass --include-coupled to override)"
+fi
+if [ "$INCLUDE_COUPLED" = false ]; then
+    echo "Capability Inventory    : PASS (${CAP_BEFORE} capability items verified intact)"
+else
+    diff_lost=$(( CAP_BEFORE > CAP_AFTER ? CAP_BEFORE - CAP_AFTER : 0 ))
+    echo "Capability Inventory    : ${diff_lost} capability items unlinked (rehydration required)"
+fi
 echo "===================================================================="
+
+if [ "${#PURGED_T2_LIST[@]}" -gt 0 ]; then
+    echo ""
+    echo "===================================================================="
+    if [ "$DRY_RUN" = true ]; then
+        echo " 📋 REHYDRATION MANIFEST (Preview — Rehydration Impact if Executed)"
+    else
+        echo " 📋 REHYDRATION MANIFEST (T2 Capability-Coupled Caches Purged)"
+    fi
+    echo "===================================================================="
+    echo "The following capability-coupled caches were targeted under explicit opt-in."
+    echo "Restore and rehydration requirements are detailed below:"
+    echo "--------------------------------------------------------------------"
+    for entry in "${PURGED_T2_LIST[@]}"; do
+        IFS='|' read -r m_label m_path m_removed m_reinstalls m_net m_restart m_cmd <<< "$entry"
+        echo "• $m_label ($m_path)"
+        echo "    Removed           : $m_removed"
+        echo "    Reinstalls        : $m_reinstalls"
+        echo "    Network Required  : $m_net"
+        echo "    Restart Required  : $m_restart"
+        echo "    Restore Command   : $m_cmd"
+        echo ""
+    done
+    echo "===================================================================="
+fi
 
 # ------------------------------------------------------------------------------
 # 5. Optional Dormant node_modules Scanner (Inspired by Reddit npkill recommendation)

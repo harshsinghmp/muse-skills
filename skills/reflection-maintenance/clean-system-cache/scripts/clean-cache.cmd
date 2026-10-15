@@ -21,8 +21,11 @@ rem ============================================================================
 setlocal enabledelayedexpansion
 
 set DRY_RUN=0
+set INCLUDE_COUPLED=0
 set TARGET_TOOL=all
 set SCAN_NM_DIR=
+set T2_PURGED=0
+set T2_PRESERVED=0
 
 :parse_args
 if "%~1"=="" goto run_cleanup
@@ -33,6 +36,26 @@ if /i "%~1"=="--dry-run" (
 )
 if /i "%~1"=="/dry-run" (
     set DRY_RUN=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="--include-coupled" (
+    set INCLUDE_COUPLED=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/include-coupled" (
+    set INCLUDE_COUPLED=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="--all-caches" (
+    set INCLUDE_COUPLED=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/all-caches" (
+    set INCLUDE_COUPLED=1
     shift
     goto parse_args
 )
@@ -73,23 +96,38 @@ echo ====================================================================
 echo  clean-cache.cmd — Native Windows Developer ^& Designer Cache Cleaner
 echo ====================================================================
 echo Usage:
-echo   clean-cache.cmd [/dry-run] [/tool name] [/scan-node-modules dir]
+echo   clean-cache.cmd [/dry-run] [/include-coupled] [/tool name] [/scan-node-modules dir]
 echo.
 echo Options:
 echo   /dry-run, --dry-run          Preview cleanup actions without deleting files.
-echo   /tool, --tool name           Clean a specific tool (e.g. npm, uv, docker, adobe).
+echo   /include-coupled             Opt-in to purging T2 capability-coupled caches (plugins, MCP, LSPs).
+echo                                PRESERVED BY DEFAULT. Emits rehydration manifest if purged.
+echo   /all-caches                  Alias for /include-coupled.
+echo   /tool, --tool name           Clean a specific tool (e.g. npm, uv, opencode, adobe, browser, agents).
 echo   /scan-node-modules dir       Audit directory tree for dormant node_modules folders.
 echo   /?, -h, --help               Display this help message.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
 echo   IDEs ^& Mobile    : android, vscode, cursor, cypress
+echo   Agent Runtimes   : opencode, claude, cursor, gemini, codex, continue, mcp, lsp (or 'agents')
 echo   Containers       : docker, podman
 echo   Designers        : adobe, figma, blender, electron
 echo   Web Browsers     : chrome, chromium, brave, edge, firefox, zen, vivaldi (or 'browser' for all)
 exit /b 0
 
 :run_cleanup
+set CAP_BEFORE=0
+if exist "%LOCALAPPDATA%\opencode\cache\npm" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\npm" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%LOCALAPPDATA%\opencode\cache\packages" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\packages" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%LOCALAPPDATA%\opencode\cache\skills" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\skills" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%USERPROFILE%\.cache\opencode\npm" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\npm" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%USERPROFILE%\.cache\opencode\packages" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\packages" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%USERPROFILE%\.cache\opencode\skills" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\skills" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%LOCALAPPDATA%\claude\cache" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\claude\cache" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%USERPROFILE%\.cache\claude" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\claude" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+if exist "%USERPROFILE%\.continue\cache" for /f %%i in ('dir /b /a "%USERPROFILE%\.continue\cache" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
+
 echo ====================================================================
 if "%DRY_RUN%"=="1" (
     echo  [!] Clean System Cache (Windows CMD) - DRY RUN (Preview)
@@ -549,7 +587,209 @@ if exist "%LOCALAPPDATA%\electron\Cache" (
 :skip_electron
 
 rem ----------------------------------------------------------------------
-rem 20. Google Chrome (HTTP Disk Cache & Code Cache ONLY)
+rem 20. Agent Runtimes & Toolchains (T2 Capability-Coupled Caches)
+rem ----------------------------------------------------------------------
+if "%TARGET_TOOL%"=="all" goto check_agents
+if /i "%TARGET_TOOL%"=="agents" goto check_agents
+if /i "%TARGET_TOOL%"=="opencode" goto check_opencode
+if /i "%TARGET_TOOL%"=="claude" goto check_claude
+if /i "%TARGET_TOOL%"=="gemini" goto check_gemini
+if /i "%TARGET_TOOL%"=="continue" goto check_continue
+if /i "%TARGET_TOOL%"=="codex" goto check_codex
+goto skip_agents
+
+:check_agents
+:check_opencode
+rem --- OpenCode (packages, npm, skills) [T2] ---
+set OP_CACHE=
+if exist "%LOCALAPPDATA%\opencode\cache" set OP_CACHE=%LOCALAPPDATA%\opencode\cache
+if "%OP_CACHE%"=="" if exist "%USERPROFILE%\.cache\opencode" set OP_CACHE=%USERPROFILE%\.cache\opencode
+if not "%OP_CACHE%"=="" (
+    if exist "%OP_CACHE%\packages" (
+        if "%INCLUDE_COUPLED%"=="0" (
+            echo [opencode (packages) [T2]]^| preserved   ^| T2 Capability-coupled: Preserved by default
+            set /a T2_PRESERVED+=1
+        ) else (
+            tasklist /fi "imagename eq opencode.exe" 2>nul | findstr /i "opencode.exe" >nul
+            if !ERRORLEVEL! equ 0 (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (packages) [T2]]^| running     ^| OpenCode is running; close agent to clean
+                ) else (
+                    echo [opencode (packages) [T2]]^| skipped     ^| Active session running; skipped to protect live skills
+                )
+            ) else (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (packages) [T2]]^| reclaimable ^| Would purge plugin packages (rehydration required)
+                    set T2_PURGED=1
+                ) else (
+                    del /q /s "%OP_CACHE%\packages\*.*" >nul 2>&1
+                    for /d %%p in ("%OP_CACHE%\packages\*") do rmdir /s /q "%%p" >nul 2>&1
+                    echo [opencode (packages) [T2]]^| cleaned     ^| Plugin package cache purged
+                    set T2_PURGED=1
+                )
+            )
+        )
+    )
+    if exist "%OP_CACHE%\npm" (
+        if "%INCLUDE_COUPLED%"=="0" (
+            echo [opencode (npm) [T2]]     ^| preserved   ^| T2 Capability-coupled: Preserved by default
+            set /a T2_PRESERVED+=1
+        ) else (
+            tasklist /fi "imagename eq opencode.exe" 2>nul | findstr /i "opencode.exe" >nul
+            if !ERRORLEVEL! equ 0 (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (npm) [T2]]     ^| running     ^| OpenCode is running; close agent to clean
+                ) else (
+                    echo [opencode (npm) [T2]]     ^| skipped     ^| Active session running; skipped to protect live plugins
+                )
+            ) else (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (npm) [T2]]     ^| reclaimable ^| Would purge plugin npm payloads
+                    set T2_PURGED=1
+                ) else (
+                    del /q /s "%OP_CACHE%\npm\*.*" >nul 2>&1
+                    for /d %%p in ("%OP_CACHE%\npm\*") do rmdir /s /q "%%p" >nul 2>&1
+                    echo [opencode (npm) [T2]]     ^| cleaned     ^| Plugin npm cache purged
+                    set T2_PURGED=1
+                )
+            )
+        )
+    )
+    if exist "%OP_CACHE%\skills" (
+        if "%INCLUDE_COUPLED%"=="0" (
+            echo [opencode (skills) [T2]]  ^| preserved   ^| T2 Capability-coupled: Preserved by default
+            set /a T2_PRESERVED+=1
+        ) else (
+            tasklist /fi "imagename eq opencode.exe" 2>nul | findstr /i "opencode.exe" >nul
+            if !ERRORLEVEL! equ 0 (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (skills) [T2]]  ^| running     ^| OpenCode is running; close agent to clean
+                ) else (
+                    echo [opencode (skills) [T2]]  ^| skipped     ^| Active session running; skipped to protect live skills
+                )
+            ) else (
+                if "%DRY_RUN%"=="1" (
+                    echo [opencode (skills) [T2]]  ^| reclaimable ^| Would purge cached remote skills
+                    set T2_PURGED=1
+                ) else (
+                    del /q /s "%OP_CACHE%\skills\*.*" >nul 2>&1
+                    for /d %%p in ("%OP_CACHE%\skills\*") do rmdir /s /q "%%p" >nul 2>&1
+                    echo [opencode (skills) [T2]]  ^| cleaned     ^| Remote skills cache purged
+                    set T2_PURGED=1
+                )
+            )
+        )
+    )
+)
+if /i "%TARGET_TOOL%"=="opencode" goto skip_agents
+
+:check_claude
+rem --- Claude Code [T2] ---
+set CL_CACHE=
+if exist "%LOCALAPPDATA%\claude\cache" set CL_CACHE=%LOCALAPPDATA%\claude\cache
+if "%CL_CACHE%"=="" if exist "%USERPROFILE%\.cache\claude" set CL_CACHE=%USERPROFILE%\.cache\claude
+if not "%CL_CACHE%"=="" (
+    if "%INCLUDE_COUPLED%"=="0" (
+        echo [claude (cache) [T2]]     ^| preserved   ^| T2 Capability-coupled: Preserved by default
+        set /a T2_PRESERVED+=1
+    ) else (
+        tasklist /fi "imagename eq claude.exe" 2>nul | findstr /i "claude.exe" >nul
+        if !ERRORLEVEL! equ 0 (
+            if "%DRY_RUN%"=="1" (
+                echo [claude (cache) [T2]]     ^| running     ^| Claude is running; close agent to clean
+            ) else (
+                echo [claude (cache) [T2]]     ^| skipped     ^| Active session running; skipped to protect LSP
+            )
+        ) else (
+            if "%DRY_RUN%"=="1" (
+                echo [claude (cache) [T2]]     ^| reclaimable ^| Would purge Claude language servers
+                set T2_PURGED=1
+            ) else (
+                del /q /s "%CL_CACHE%\*.*" >nul 2>&1
+                for /d %%p in ("%CL_CACHE%\*") do rmdir /s /q "%%p" >nul 2>&1
+                echo [claude (cache) [T2]]     ^| cleaned     ^| Claude cache purged
+                set T2_PURGED=1
+            )
+        )
+    )
+)
+if /i "%TARGET_TOOL%"=="claude" goto skip_agents
+
+:check_continue
+rem --- Continue [T2] ---
+if exist "%USERPROFILE%\.continue\cache" (
+    if "%INCLUDE_COUPLED%"=="0" (
+        echo [continue (cache) [T2]]   ^| preserved   ^| T2 Capability-coupled: Preserved by default
+        set /a T2_PRESERVED+=1
+    ) else (
+        if "%DRY_RUN%"=="1" (
+            echo [continue (cache) [T2]]   ^| reclaimable ^| Would purge Continue codebase index
+            set T2_PURGED=1
+        ) else (
+            del /q /s "%USERPROFILE%\.continue\cache\*.*" >nul 2>&1
+            for /d %%p in ("%USERPROFILE%\.continue\cache\*") do rmdir /s /q "%%p" >nul 2>&1
+            echo [continue (cache) [T2]]   ^| cleaned     ^| Continue cache purged
+            set T2_PURGED=1
+        )
+    )
+)
+if /i "%TARGET_TOOL%"=="continue" goto skip_agents
+
+:check_gemini
+rem --- Gemini / Antigravity [T2] ---
+set GM_CACHE=
+if exist "%LOCALAPPDATA%\gemini\cache" set GM_CACHE=%LOCALAPPDATA%\gemini\cache
+if "%GM_CACHE%"=="" if exist "%USERPROFILE%\.gemini\cache" set GM_CACHE=%USERPROFILE%\.gemini\cache
+if not "%GM_CACHE%"=="" (
+    if "%INCLUDE_COUPLED%"=="0" (
+        echo [gemini (cache) [T2]]     ^| preserved   ^| T2 Capability-coupled: Preserved by default
+        set /a T2_PRESERVED+=1
+    ) else (
+        tasklist /fi "imagename eq agy.exe" 2>nul | findstr /i "agy.exe" >nul
+        if !ERRORLEVEL! equ 0 (
+            if "%DRY_RUN%"=="1" (
+                echo [gemini (cache) [T2]]     ^| running     ^| Antigravity is running; close agent to clean
+            ) else (
+                echo [gemini (cache) [T2]]     ^| skipped     ^| Active session running; skipped to protect MCP
+            )
+        ) else (
+            if "%DRY_RUN%"=="1" (
+                echo [gemini (cache) [T2]]     ^| reclaimable ^| Would purge Gemini/Antigravity MCP cache
+                set T2_PURGED=1
+            ) else (
+                del /q /s "%GM_CACHE%\*.*" >nul 2>&1
+                for /d %%p in ("%GM_CACHE%\*") do rmdir /s /q "%%p" >nul 2>&1
+                echo [gemini (cache) [T2]]     ^| cleaned     ^| Gemini cache purged
+                set T2_PURGED=1
+            )
+        )
+    )
+)
+if /i "%TARGET_TOOL%"=="gemini" goto skip_agents
+
+:check_codex
+rem --- Codex [T2] ---
+if exist "%USERPROFILE%\.cache\codex" (
+    if "%INCLUDE_COUPLED%"=="0" (
+        echo [codex (cache) [T2]]      ^| preserved   ^| T2 Capability-coupled: Preserved by default
+        set /a T2_PRESERVED+=1
+    ) else (
+        if "%DRY_RUN%"=="1" (
+            echo [codex (cache) [T2]]      ^| reclaimable ^| Would purge Codex tools cache
+            set T2_PURGED=1
+        ) else (
+            del /q /s "%USERPROFILE%\.cache\codex\*.*" >nul 2>&1
+            for /d %%p in ("%USERPROFILE%\.cache\codex\*") do rmdir /s /q "%%p" >nul 2>&1
+            echo [codex (cache) [T2]]      ^| cleaned     ^| Codex cache purged
+            set T2_PURGED=1
+        )
+    )
+)
+
+:skip_agents
+
+rem ----------------------------------------------------------------------
+rem 21. Google Chrome (HTTP Disk Cache & Code Cache ONLY)
 rem ----------------------------------------------------------------------
 if "%TARGET_TOOL%"=="all" goto check_chrome
 if /i "%TARGET_TOOL%"=="browser" goto check_chrome
@@ -767,9 +1007,56 @@ if "%DRY_RUN%"=="1" (
 )
 :skip_vivaldi
 
+set CAP_AFTER=0
+if exist "%LOCALAPPDATA%\opencode\cache\npm" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\npm" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%LOCALAPPDATA%\opencode\cache\packages" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\packages" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%LOCALAPPDATA%\opencode\cache\skills" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\skills" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%USERPROFILE%\.cache\opencode\npm" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\npm" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%USERPROFILE%\.cache\opencode\packages" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\packages" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%USERPROFILE%\.cache\opencode\skills" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\opencode\skills" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%LOCALAPPDATA%\claude\cache" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\claude\cache" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%USERPROFILE%\.cache\claude" for /f %%i in ('dir /b /a "%USERPROFILE%\.cache\claude" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+if exist "%USERPROFILE%\.continue\cache" for /f %%i in ('dir /b /a "%USERPROFILE%\.continue\cache" 2^>nul ^| find /c /v ""') do set /a CAP_AFTER+=%%i
+
+if "!INCLUDE_COUPLED!"=="0" if "%DRY_RUN%"=="0" (
+    if !CAP_AFTER! lss !CAP_BEFORE! (
+        echo.
+        echo ====================================================================
+        echo  [!] FATAL ERROR: Capability Inventory Regression Detected!
+        echo ====================================================================
+        echo  Capabilities dropped from !CAP_BEFORE! to !CAP_AFTER! during safe default cleanup.
+        echo  T2 capability caches must never be dropped without /include-coupled.
+        echo ====================================================================
+        exit /b 1
+    )
+)
+
 echo ====================================================================
 echo  Cleanup Complete. Unreferenced caches safely pruned.
+if !T2_PRESERVED! gtr 0 (
+    echo  T2 Capability Caches    : !T2_PRESERVED! preserved ^(safe default; use /include-coupled to override^)
+)
+if "!INCLUDE_COUPLED!"=="0" (
+    echo  Capability Inventory    : PASS ^(!CAP_BEFORE! capability items verified intact^)
+)
 echo ====================================================================
+
+if "!T2_PURGED!"=="1" (
+    echo.
+    echo ====================================================================
+    if "%DRY_RUN%"=="1" (
+        echo  📋 REHYDRATION MANIFEST ^(Preview - Rehydration Impact if Executed^)
+    ) else (
+        echo  📋 REHYDRATION MANIFEST ^(T2 Capability-Coupled Caches Purged^)
+    )
+    echo ====================================================================
+    echo The following capability-coupled caches were targeted under explicit opt-in:
+    echo - OpenCode: packages/npm/skills ^| Reinstalls on next run ^| Restore: opencode
+    echo - Claude: cache                 ^| Reinstalls on tool launch ^| Restore: claude
+    echo - Continue: cache               ^| Rebuilt on next index run ^| Restore: Reload Continue
+    echo - Gemini: cache                 ^| Reinstalls on MCP start   ^| Restore: agy
+    echo ====================================================================
+)
 
 rem ----------------------------------------------------------------------
 rem 20. Optional Dormant node_modules Scanner

@@ -107,9 +107,16 @@ Do not translate the entire app before verifying demand. Execute **Tiered Metada
 
 ---
 
+### 6. Maturity-Tier Listing Scorecard
+
+Score the listing against its maturity tier before any edit (source: marketingskills `aso` SKILL.md): **Dominant** (defend branded + category terms), **Established** (close gaps vs leaders), **Challenger** (long-tail + creative differentiation) — the same listing change scores differently per tier. Run the weighted 6-dimension scorecard (keywords, visuals, ratings, reviews, localization, conversion) and fix the lowest dimension first. Check each change against the Apple-vs-Google index matrix (App Store keyword field vs Play title/description indexing) so one edit never assumes both stores. Current edges to use: screenshot-caption indexing, custom product pages carrying organic weight, Store Listing Experiments for A/B tests.
+
+---
+
 ## Quality Gate
 
 - [ ] iOS keyword field is strictly under 100 characters, comma-separated with zero spaces or duplicate words.
+- [ ] Maturity tier declared; 6-dimension scorecard run with lowest-dimension-first fixes; edits checked per-store against the index matrix.
 - [ ] App titles comply with the 30-character hard limit on both stores.
 - [ ] First 2 screenshots communicate the core value proposition without requiring zoom.
 - [ ] Ratings prompts are verified to fire only on positive user milestones.

@@ -1,6 +1,6 @@
 # 📣 smm
 
-The organic social department head: one skill, ten modes — strategy, calendar, content, community, influencer, ugc, analytics, postiz, carousel, audit. Platform-native strategy, viral carousels, and multi-channel publishing.
+The organic social department head: one skill, eleven modes — strategy, calendar, content, community, influencer, ugc, analytics, postiz, carousel, x, audit. Platform-native strategy, viral carousels, X account growth, and multi-channel publishing.
 
 ## Install
 
@@ -33,6 +33,7 @@ Design an influencer and UGC program to launch our new skincare line.
 | **analytics** | social performance reporting | Analytics: platform metrics, reporting, and the iteration loop. |
 | **postiz** | schedule via postiz / social automation | Postiz: automated multi-channel dispatch across 28+ channels via API/CLI. |
 | **carousel** | viral carousel generator | Carousel: 6-slide narrative carousels via Playwright, Gemini, and Upload-Post, with aspect ratio & safe-zone validation. |
+| **x** | grow an X account | X: storefront audit, For You algorithm leverage, content archetypes, cold-start playbook, engagement strategy, monetization pyramid. |
 | **audit** | audit social channels | Audit: content consistency, style compliance, and engagement diagnostics. |
 
 ### Specialized References

@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.2.1] - 2026-10-15
+
+### Added
+
+- **Live Agent Capability Cache Engine (`clean-system-cache`)**: Three-tier cache classification matrix (T1 Regenerable, T2 Capability-coupled, T3 Irreplaceable) across `clean-cache.sh` and `clean-cache.cmd`. Preserves live agent capability trees by default (installed plugin payloads, language servers, MCP caches, and remote skill payloads across OpenCode, Claude Code, Cursor, Codex, Gemini CLI, Continue, and VS Code-family tools) to prevent mid-session agent capability dropoffs. Introduces explicit `--include-coupled` / `/include-coupled` opt-in flag and automated rehydration manifest emission.
+- **Legacy Instruction Promotion (`updateagents --promote`)**: Live interception for foreign-harness instruction write attempts (`.claude/`, `CLAUDE.md`, `.cursorrules`, `.windsurfrules`, `.aider.conf.yml`, `.github/copilot-instructions.md`), classifying content into `.agents/standards/` (imperatives/rules) or `.agents/context/` (facts/decisions) with recorded provenance, deduplication, and router synchronization.
+- **X (Twitter) Account Growth Mode (`smm:x`)**: Eleventh `smm` mode (`skills/agency-delivery/smm/references/x.md`) adapted from the 14-skill kangarooking/X-growth-skills corpus (MIT, translated to English, de-sinicized) — four-step-saves philosophy + three translations, For You algorithm mechanics (dual-source recall, multi-action weighted scoring, out-of-network dominance), profile storefront audit, positioning impossible-triangle, content archetypes + Hook-Body-CTA + five-piece completeness gate, cold-start 0→1k playbook, engagement patterns, benchmark research, monetization pyramid, weekly 80/20 loop, seven account-killer pitfalls. `smm` bumps to 1.4.0 with description/argument-hint/mode-table parity across SKILL.md, README, skills.json, llms.txt, and agents/openai.yaml.
+- **Stale-Lane Enrichment Transplant** (#212): Harvested the genuine unshipped residue of 13 stale `feat/*` branches (verified 88–100% already shipped line-by-line) — message-market-fit trio + `[Verb]+[Get]+[Qualifier]` CTA shape (`content:copy` Part 10), production-pipeline selection + edit anatomy + production-family checklist (`content:video` Procedure #5), maturity-tier listing scorecard (`mobile:aso` Procedure #6), and Temporal design-twin orchestration rules (`webdev:fullstack` #4).
+- **GitHub Community & Governance Scaffolding**: Added repository community health files (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `FAQ.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`, and issue configuration/showcase submission templates).
+
+### Fixed
+
+- **Scoped Memory Closeout Invariant (`dox-engine` / `updateagents`)**: Scoped generated session closeout so agents record session state exclusively through the project's memory tooling or CLI, never by hand-editing runtime store files (`.memory/`, `.agentmemory/`), and skip when absent; enforced dual-file distinction between store files and narrative context in `memory-context.md`, `architecture.md`, `decisions.md` (ADR-004), and `new-project` baseline context.
+- **Workflow Fallback to `.memory` (`workflows.md`)**: Added explicit fallback in standard workflows (Phase 1 constraint loading & Phase 5 closeout) to load from and record to `./.memory` via tooling/CLI when present.
+- **Harness-Independence & DOX Engine Adoption**: Enforced global-standard layout hierarchy (`.agents/` project container first, `~/.agents/` home fallback); opt-in harnesses that follow `.agents` and `AGENTS.md` do not generate parallel vendor files and adopt the DOX engine directly.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.2.0...v7.2.1
+
+---
+
 ## [7.2.0] - 2026-10-03
 
 ### Added

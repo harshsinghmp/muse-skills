@@ -51,8 +51,11 @@ import { parseGitHubRemote, scaffoldGitHubAssets, selectGitHubWorkflowTemplates 
 import {
   adaptAgentInstructionSources,
   discoverAgentInstructionSources,
+  isAllowedUntouchedTarget,
+  isInvalidLegacyWriteTarget,
   isManagedRootAgents,
   migrateAgentInstructions,
+  promoteLegacyInstructionWrite,
 } from "./instruction-migration";
 
 // Template source of truth located in updateagents/templates/
@@ -135,6 +138,8 @@ const { values, positionals } = parseArgs({
     subapp: { type: "string", default: "" },
     "lint-context": { type: "boolean", default: false },
     "sync-ide": { type: "boolean", default: false },
+    promote: { type: "string", default: "" },
+    content: { type: "string", default: "" },
     "lint-rules": { type: "boolean", default: false },
     "archive-sprints": { type: "boolean", default: false },
     "report-html": { type: "boolean", default: false },
@@ -161,6 +166,8 @@ Usage:
 Options:
   --audit          Audit 13 tracked assets, modern tools & synthetic artifacts (AI-readiness)
   -s, --scaffold   Scaffold missing Agent Engine assets (DOX container, AGENTS.md, .github templates, .env.example)
+  --promote <path> Intercept and promote foreign-harness instruction writes into .agents/
+  --content <text> Explicit content string for promotion (alternative to reading file/stdin)
   --sanitize       Scan and unwrap synthetic ADE/IDE artifacts (ORCA_RICH_MD, Cursor, etc.)
   --onboard        Run interactive identity onboarding interview (--global or --project)
   --interview      Alias for --onboard
@@ -1218,6 +1225,60 @@ if (values["sync-ide"]) {
   process.exit(0);
 }
 
+// Early handler: Legacy-Write Promotion Interceptor
+if (values.promote) {
+  const promoteTarget = values.promote;
+  let promoteContent = values.content || undefined;
+  if (!promoteContent && !process.stdin.isTTY) {
+    try {
+      const stdinContent = readFileSync(0, "utf8");
+      if (stdinContent.trim().length > 0) {
+        promoteContent = stdinContent;
+      }
+    } catch {}
+  }
+
+  const result = promoteLegacyInstructionWrite(workspaceDir, promoteTarget, {
+    content: promoteContent,
+    dryRun: isDryRun,
+    force: isForce,
+  });
+
+  if (result.status === "refused") {
+    console.error(`❌ Legacy-Write Promotion Refused: ${result.reason}`);
+    process.exit(1);
+  }
+
+  if (result.status === "untouched") {
+    console.log(`ℹ️  Allowed Target: ${result.reason}`);
+    process.exit(0);
+  }
+
+  if (result.status === "deduped") {
+    console.log(`ℹ️  Whitespace-Normalized Dedupe: ${result.reason}`);
+    console.log(`   Destination: ${result.destinationPath}`);
+    process.exit(0);
+  }
+
+  console.log("\n=======================================================");
+  console.log(" 🛡️  Legacy-Write Promotion Interceptor");
+  console.log("=======================================================");
+  console.log(`  Source:      ${result.targetPath}`);
+  console.log(`  Destination: ${result.destinationPath}`);
+  console.log(`  Reason:      ${result.reason}`);
+  if (result.archivePath) {
+    console.log(`  Archived:    ${result.archivePath}`);
+  }
+  if (result.routerResynced) {
+    console.log(`  Router:      AGENTS.md resynced`);
+  }
+  if (result.warnings.length > 0) {
+    for (const w of result.warnings) console.log(`  ${w}`);
+  }
+  console.log("=======================================================\n");
+  process.exit(0);
+}
+
 // Early handler: Lint Rules Against Dependencies
 if (values["lint-rules"]) {
   console.log("🔍 Validating standards and context rules against installed packages in:", workspaceDir);
@@ -1678,16 +1739,31 @@ export function auditWorkspace(target: string): AssetCheck[] {
   const artifactsOk =
     existsSync(join(target, ".agents/artifacts")) && existsSync(join(target, ".agents/artifacts/README.md"));
 
+  const unpromotedLegacy: string[] = [];
+  try {
+    const sources = discoverAgentInstructionSources(target);
+    for (const src of sources) {
+      if (src.relativePath === "AGENTS.md") continue;
+      if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      if (isInvalidLegacyWriteTarget(src.relativePath)) {
+        unpromotedLegacy.push(src.relativePath);
+      }
+    }
+  } catch {}
+
   const checks: AssetCheck[] = [
     {
       id: 1,
       name: "Root Agent Router",
       category: "AI Context",
       path: "AGENTS.md",
-      passed: existsSync(agentsMdPath) && agentsMdOk,
-      details: existsSync(agentsMdPath)
-        ? `Exists (<${AGENTS_MD_MAX_LINES + 1} lines DOX router)`
-        : `Missing or exceeds ${AGENTS_MD_MAX_LINES} lines`,
+      passed: existsSync(agentsMdPath) && agentsMdOk && unpromotedLegacy.length === 0,
+      details:
+        !existsSync(agentsMdPath) || !agentsMdOk
+          ? `Missing or exceeds ${AGENTS_MD_MAX_LINES} lines`
+          : unpromotedLegacy.length > 0
+            ? `Unpromoted legacy instruction file(s) detected: ${unpromotedLegacy.join(", ")} (run --promote <path> or sync)`
+            : `Exists (<${AGENTS_MD_MAX_LINES + 1} lines DOX router, zero unpromoted legacy files)`,
     },
     {
       id: 2,
@@ -2197,7 +2273,8 @@ if (isAudit) {
 
   for (const check of checks) {
     const icon = check.passed ? "✓" : "x";
-    console.log(`  [${icon}] ${check.category}: ${check.name} (${check.path})`);
+    const detail = !check.passed && check.details ? ` - ${check.details}` : "";
+    console.log(`  [${icon}] ${check.category}: ${check.name} (${check.path})${detail}`);
   }
 
   // Modern Tooling & Synthetic Artifact Health
@@ -2216,6 +2293,29 @@ if (isAudit) {
     console.log(`  • Run 'bun updateagents.ts --sanitize' to unwrap them automatically.`);
   } else {
     console.log(`\n🛡️ Synthetic Artifact Hygiene: Clean (0 synthetic ADE wrappers detected).`);
+  }
+
+  // Legacy-Harness Instruction Hygiene
+  const unpromotedLegacyList: string[] = [];
+  try {
+    const sources = discoverAgentInstructionSources(workspaceDir);
+    for (const src of sources) {
+      if (src.relativePath === "AGENTS.md") continue;
+      if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      if (isInvalidLegacyWriteTarget(src.relativePath)) {
+        unpromotedLegacyList.push(src.relativePath);
+      }
+    }
+  } catch {}
+
+  if (unpromotedLegacyList.length > 0) {
+    console.log(`\n⚠️ Legacy-Harness Instruction Warning:`);
+    console.log(
+      `  • Found ${unpromotedLegacyList.length} unpromoted foreign-harness file(s): ${unpromotedLegacyList.join(", ")}`,
+    );
+    console.log(`  • Run 'bun updateagents.ts --promote <path>' to promote them into .agents/ standards or context.`);
+  } else {
+    console.log(`\n🛡️ Legacy-Harness Hygiene: Clean (0 unpromoted foreign-harness instruction files).`);
   }
 
   console.log("============================================================");
