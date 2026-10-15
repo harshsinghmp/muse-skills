@@ -1401,4 +1401,83 @@ Custom billing engine for healthcare providers.
       expect(roadmapEcom).toContain("webdev:ecommerce");
     }, 30000);
   });
+
+  describe("Part G: Scoped Memory Closeout & Harness Independence Invariants", () => {
+    it("updateagents/templates/AGENTS.md encodes scoped closeout and harness independence rules", () => {
+      const templatePath = join(REPO_ROOT, "skills/core-engine/updateagents/templates/AGENTS.md");
+      const content = readFileSync(templatePath, "utf8");
+      expect(content).toContain(
+        "record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
+      );
+      expect(content).toContain("Harness independence & install paths");
+      expect(content).toContain("Default to global-standard layout first");
+      expect(content).toContain(
+        "If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create its own files; have it follow the DOX engine directly",
+      );
+      expect(content).toContain("~/.claude/settings.json");
+    });
+
+    it("templates/.agents/standards/workflows.md scopes memory update in Phase 5 to tooling/CLI and provides fallback to .memory", () => {
+      const workflowsPath = join(REPO_ROOT, "skills/core-engine/updateagents/templates/.agents/standards/workflows.md");
+      const content = readFileSync(workflowsPath, "utf8");
+      expect(content).toContain(
+        "Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
+      );
+      expect(content).toContain("fallback: load from `./.memory` if present");
+      expect(content).toContain("fallback to `./.memory` via tooling or CLI");
+    });
+
+    it("templates/.agents/standards/memory-context.md encodes store protection invariant", () => {
+      const memoryContextPath = join(
+        REPO_ROOT,
+        "skills/core-engine/updateagents/templates/.agents/standards/memory-context.md",
+      );
+      const content = readFileSync(memoryContextPath, "utf8");
+      expect(content).toContain(
+        "Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
+      );
+      expect(content).toContain("Skip entirely if the project has no memory system");
+    });
+
+    it("templates/.agents/standards/execution-kernel.md encodes layout hierarchy and harness independence", () => {
+      const kernelPath = join(
+        REPO_ROOT,
+        "skills/core-engine/updateagents/templates/.agents/standards/execution-kernel.md",
+      );
+      const content = readFileSync(kernelPath, "utf8");
+      expect(content).toContain("## 13. Harness Independence & Install Path Layout Hierarchy");
+      expect(content).toContain("Project-Local Standard (First Priority)");
+      expect(content).toContain("Global-Home Standard (Second Priority)");
+      expect(content).toContain("Harness-Specific Paths (Explicit Opt-In Only)");
+      expect(content).toContain("Zero Vendor Defaulting");
+      expect(content).toContain("DOX-First Adoption (No Parallel Files)");
+    });
+
+    it("templates/.agents/standards/system-design.md encodes harness-independent architecture", () => {
+      const systemDesignPath = join(
+        REPO_ROOT,
+        "skills/core-engine/updateagents/templates/.agents/standards/system-design.md",
+      );
+      const content = readFileSync(systemDesignPath, "utf8");
+      expect(content).toContain("## 7. Harness-Independent Tooling & Configuration Architecture");
+      expect(content).toContain("Zero Single-Harness Assumption");
+    });
+
+    it("templates/.agents/standards/dox-hierarchy.md includes memory state and harness independence in closeout checklist", () => {
+      const doxPath = join(REPO_ROOT, "skills/core-engine/updateagents/templates/.agents/standards/dox-hierarchy.md");
+      const content = readFileSync(doxPath, "utf8");
+      expect(content).toContain("Memory & Session State");
+      expect(content).toContain("Harness Independence & Install Paths");
+    });
+
+    it("new-project baselineCurrent and onboarding instructions encode scoped memory invariants", () => {
+      const newProjectScript = readFileSync(
+        join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts"),
+        "utf8",
+      );
+      expect(newProjectScript).toContain(
+        "Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
+      );
+    });
+  });
 });

@@ -15,7 +15,7 @@
 ```
 ./
 ├── AGENTS.md                                # Root agent contract & entry point
-├── .memory/                                 # Persistent cognitive memory store
+├── .memory/                                 # Persistent cognitive memory store (optional; tool-managed only)
 ├── .agents/
 │   ├── context/                             # Durable project truth files
 │   ├── standards/                           # Progressive disclosure rule modules

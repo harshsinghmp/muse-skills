@@ -65,3 +65,13 @@ Assume production is hostile and fragile: every dependency can be slow, every qu
 
 - **Exact Constructor Signatures**: Verify configuration keys against installed `.d.ts` definitions or local package documentation before use.
 - **Dual-Layer Specifications**: Pair human-readable YAML/JSON examples with formal machine-checkable schemas (Zod, JSON Schema, Pydantic) validated via automated tests.
+
+---
+
+## 7. Harness-Independent Tooling & Configuration Architecture
+
+Systems and scripts provisioned within the workspace must remain harness-independent:
+- **Universal Layout First**: All agent configuration, skills, and durable context anchor in the standard `.agents/` layout (project `.agents/` -> home `~/.agents/`).
+- **DOX Engine Primacy**: If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create separate vendor files; have it follow the DOX engine directly. Only harnesses lacking native `AGENTS.md` support may use minimal adapter pointers.
+- **Zero Single-Harness Assumption**: Never hardcode default paths to vendor-specific files (such as `~/.claude/settings.json` or `.cursor/rules/`). Installers and tooling must default to neutral project or user paths, requiring explicit user or environment opt-in before touching harness-specific configurations.
+- **Dual Compatibility**: Both single-harness users (e.g., Claude-only) and strict vendor-neutral users (e.g., Never-Claude constitutions) must receive correct, uncorrupted defaults from the same system.

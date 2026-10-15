@@ -2494,7 +2494,7 @@ async function main() {
 
 > **Operational Guidelines**:
 > - **For Humans**: Single-pane executive summary of active hard constraints and in-flight agent tasks. Zero verbose logs or transient filler.
-> - **For AI Agents**: Mandatory grounding rules (never violate active constraints) and concurrent workstream awareness (check what other agents are touching before editing files).
+> - **For AI Agents**: Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system. Mandatory grounding rules (never violate active constraints) and concurrent workstream awareness.
 
 ---
 
@@ -6360,7 +6360,7 @@ input, button, textarea, select {
 3. Write \`03-Offerings/\`: \`offerings-catalog.md\` and \`scope-deliverables.md\` (split launch vs. later).
 4. Write \`04-Technical-Intake/\`: \`access-and-credentials.md\` (placeholders only — never real secrets) and \`integrations-matrix.md\`.
 5. Write \`start-here.md\` at the repo root: a short developer orientation (what this is, prerequisites, install/run commands from \`package.json\`, where tokens live, how to verify). Derive it from the actual scaffolded stack — do not paste generic content.
-6. Sync the answers into \`.agents/context/product.md\` and \`.memory/CURRENT.md\`.
+6. Sync the answers into \`.agents/context/product.md\` and \`.agents/context/accounts.md\`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
 
 ## Non-Negotiables
 - Real answers only: every doc cites something the employee actually said.

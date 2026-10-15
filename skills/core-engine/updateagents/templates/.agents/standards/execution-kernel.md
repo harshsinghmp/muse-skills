@@ -245,4 +245,20 @@ In git/skills package syntax (`<owner>/<repo>#<ref>`), anything following `#` is
 - **Clean Spec Mandate**: Always use `<owner>/<repo>` (e.g. `skills add <owner>/<repo>`). If a reference is strictly required anywhere, ensure it is a valid tag/branch and never breaks linking.
 - **Package Manager Freshness**: When tools accept version parameters (`npm`, `bun`, `pnpm`), use `@latest` if latest is desired. Otherwise, keep commands clean without redundant arguments to fetch latest automatically.
 
+---
 
+## 13. Harness Independence & Install Path Layout Hierarchy
+
+AI agents operate across diverse execution harnesses (Antigravity, OpenCode, Claude Code, Cursor, Windsurf, Codex, Aider, Continue, etc.). Systems must never assume a single-harness world or hardcode vendor-specific paths as defaults.
+
+### 1. The Layout Resolution Hierarchy
+All tooling, configuration generators, hook installers, and agents must resolve paths using this strict priority:
+1. **Project-Local Standard (First Priority)**: Project root `AGENTS.md` and `.agents/` container (`standards/`, `context/`, `identity/`, `artifacts/`, `skills/`). This is the universal baseline for all runtimes.
+2. **Global-Home Standard (Second Priority)**: Home-level agent configuration (`~/.agents/AGENTS.md`, `~/.agents/skills/`, `~/.agents/context/`). Used for user-wide defaults across projects.
+3. **Harness-Specific Paths (Explicit Opt-In Only)**: Vendor-specific directories (`.claude/`, `.cursor/`, `.gemini/`, `.windsurf/`, `.codex/`) and configuration files (`settings.json`, `~/.claude/settings.json`, `.cursorrules`, etc.) are strictly opt-in. If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create separate vendor files; have it follow the DOX engine directly. Adapters are permitted only for harnesses that cannot read `AGENTS.md` natively.
+
+### 2. Install & Tooling Path Conventions
+- **Zero Vendor Defaulting**: Tool installers, hook setups, MCP configuration scripts, and documentation must **NEVER** default install paths to `~/.claude/settings.json` or any other single-harness location.
+- **DOX-First Adoption (No Parallel Files)**: If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create or maintain its own files (e.g. `.gemini/`, `.opencode/`, `GEMINI.md`, `CODEX.md`). Require it to follow the DOX engine layout directly.
+- **Solely-Harness Compatibility**: When a project or user is solely using a single harness that lacks native `AGENTS.md` support (e.g. older Claude Code), harness-specific entry points (such as `CLAUDE.md` importing `@AGENTS.md` or `.claude/` hooks) are generated or configured as explicit opt-in adapters without overriding the universal `.agents/` standard.
+- **Never-Harness Compatibility**: When an environment or project strictly forbids a specific harness (e.g. Zero-Claude / vendor-neutral runtimes under LifeOS or OpenCode), the project receives clean global-standard defaults with zero vendor directory pollution or forced foreign configurations.

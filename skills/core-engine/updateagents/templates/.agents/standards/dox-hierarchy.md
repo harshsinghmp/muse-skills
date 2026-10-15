@@ -39,7 +39,9 @@ Update the closest owning `AGENTS.md` when a change affects:
 6. Report any docs intentionally left unchanged and why.
 7. Audit for synthetic ADE/IDE artifacts (`ORCA_RICH_MD`, `antArtifact`, `[cursor:`) and unwrap before finalizing.
 8. Ensure all command snippets in updated docs use modern CLI tools (`fd`, `rg`, `bat`, `eza`) rather than legacy tools.
-
+9. Intercept foreign-harness instruction writes: never create or update `CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.aider.conf.yml`, `.github/copilot-instructions.md`, or `.cursor/rules/*.mdc`. Use `updateagents --promote <path>` to route rule-like material to `.agents/standards/` and facts to `.agents/context/`, archive any legacy file, and resync `AGENTS.md`. Compiled IDE artifacts are generated exclusively via `updateagents --sync-ide`.
+10. **Memory & Session State**: Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system. Update `./.agents/context/current.md` when shipped state or active constraints changed.
+11. **Harness Independence & Install Paths**: Ensure no generated config, hook installer, or documentation defaults to a harness-specific path (`~/.claude/settings.json`, `.cursor/`, etc.). Follow the layout hierarchy: project `.agents/` first, user `~/.agents/` second. If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create separate vendor files; have it follow the DOX engine directly.
 
 ---
 

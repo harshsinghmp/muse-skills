@@ -18,6 +18,7 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 - **📊 13-Asset AI Readiness Audit**: Evaluates repo maturity with Stage-0 Fast-Skip and CI gating (`--fail-under N`).
 - **🏛️ Autonomous Secretary Dispatch**: Automatically ensures that the root `AGENTS.md` carries the Secretary Protocol router (`secretary:dispatch`), guaranteeing autonomous triage across all 46 departments on first run or session start.
 - **🛡️ Synthetic Artifact Sanitization**: Strips proprietary IDE wrappers (`[[ORCA_RICH_MD]]`, Cursor markers) automatically via `--sanitize`.
+- **🛡️ Legacy-Write Promotion Interceptor**: Intercepts attempts to write or update foreign-harness instruction files (`CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, etc.), classifies the content into `.agents/standards/` (rule-like) or `.agents/context/` (facts), deduplicates on whitespace normalization, captures provenance, archives original bytes, and resyncs `AGENTS.md` via `--promote <path>`.
 - **⚖️ Global Invariant Atom Table Telemetry**: Audits active global invariant atoms against the $\le 20$ atom attention cap to prevent model instruction fatigue and context bloat.
 - **📏 Compact Size Control**: Enforces concise instruction files (<5KB preferred, <10KB hard ceiling).
 
@@ -33,12 +34,19 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 "audit repository readiness"
 "retrofit this project with the DOX architecture"
 "refresh agent rules and standards"
+"promote legacy CLAUDE.md into DOX standards"
 ```
 
 ### Direct CLI Execution
 ```bash
 # Run context synchronization in current working directory
 bun path/to/updateagents/scripts/updateagents.ts
+
+# Intercept and promote a foreign-harness instruction write into .agents/
+bun path/to/updateagents/scripts/updateagents.ts --promote CLAUDE.md
+
+# Promote explicit content string into .agents/
+bun path/to/updateagents/scripts/updateagents.ts --promote .cursorrules --content "Always run bun test before pushing."
 
 # Audit 13 tracked assets for repository AI-readiness
 bun path/to/updateagents/scripts/updateagents.ts --audit

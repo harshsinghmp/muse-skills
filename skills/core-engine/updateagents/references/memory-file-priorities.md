@@ -15,6 +15,10 @@ When multiple files exist, discover every supported source, preserve its exact b
 
 Discovery includes nested `AGENTS.md`, common runtime instruction files, and supported rule/instruction directories for Claude, Cursor, Windsurf, Gemini, OpenCode, Copilot, Continue, Cline and Roo, plus Markdown/text files named for agent instructions, prompts, conventions or rules. Skip `.git`, `.agents`, `.memory`, dependencies, generated build output and symlinks; never traverse above the workspace.
 
+## Live Legacy-Write Interception & Promotion
+
+For live execution where an agent attempts to write or update a foreign-harness instruction file (e.g. `CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`), the write is intercepted and routed to the nearest Agent Engine DOX container via `updateagents --promote <path>`. See [references/legacy-promotion.md](legacy-promotion.md) for the authoritative routing ladder, classification rules, provenance envelopes, and safety rails.
+
 ## File Size Guidelines
 
 - **Ideal**: 2-5KB

@@ -27,7 +27,7 @@ To balance velocity with rigor, overhead is strictly proportional to task risk:
 - **Decomposition Gate**: For multi-feature requests, decompose the input into a structured Feature Inventory before writing individual specifications.
 - **Classification Freeze**: Lock task classification (`tiny-fix`, `quick-win`, `feature`, `architecture-change`). Silent scope expansion mid-implementation is prohibited. If scope grows, pause and notify the user.
 - Identify the target tech direction (Astro / Instatic / Payload + Next.js).
-- Load active constraints from `./.agents/context/` and `./.memory`.
+- Load active constraints from `./.agents/context/` (and via the project's memory tooling or CLI if a memory system is configured; fallback: load from `./.memory` if present).
 
 ### Phase 2: 📐 Plan & Design
 - For `feature` and `architecture-change` tasks, generate an implementation plan inside `.agents/artifacts/`.
@@ -51,7 +51,7 @@ To balance velocity with rigor, overhead is strictly proportional to task risk:
 - Create structured Conventional Commits following the Git standard.
 - **Archive Work Artifacts**: Move completed plans or temporary scratchpads into `.agents/archive/` using the timestamped format `[title]-[YYYYMMDD-HHMMSS].md`.
 - **DOX Pass**: Update `./.agents/context/current.md` and the nearest owning `AGENTS.md`.
-- **Memory Update**: Persist newly confirmed invariants or architectural decisions into `./.memory`.
+- **Memory Update**: Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system (fallback to `./.memory` via tooling or CLI).
 
 ---
 

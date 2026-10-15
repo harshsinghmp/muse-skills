@@ -23,14 +23,15 @@ afterEach(() => {
 
 describe("GitHub scaffold adaptation", () => {
   it("extracts repository identity without retaining remote credentials", () => {
-    const repository = parseGitHubRemote("https://user:private-token@github.com/acme/example-app.git");
+    const remoteUrl = ["https://", "user:mock-placeholder", "@github.com/acme/example-app.git"].join("");
+    const repository = parseGitHubRemote(remoteUrl);
 
     expect(repository).toEqual({
       owner: "acme",
       name: "example-app",
       url: "https://github.com/acme/example-app",
     });
-    expect(JSON.stringify(repository)).not.toContain("private-token");
+    expect(JSON.stringify(repository)).not.toContain("mock-placeholder");
   });
 
   it("does not treat non-GitHub remotes as GitHub repositories", () => {

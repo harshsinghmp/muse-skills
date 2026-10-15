@@ -240,7 +240,7 @@ The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled wi
 1. Read `./Client-Intake/00-Intake-Brief.md` with the employee and collect answers to the checklist (brand corrections, business context, offerings, technical access, scope boundaries).
 2. Write `01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/` documents from those answers — real content only, no invented filler.
 3. Write `./start-here.md`: a short developer orientation derived from the actual scaffolded stack (install/run commands from `package.json`, token locations, verification steps).
-4. Sync answers into `.agents/context/product.md` and `.memory/CURRENT.md`.
+4. Sync answers into `.agents/context/product.md` and `.agents/context/accounts.md`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
 
 **Durable DOX Closeout (engine-run at scaffold)**:
 - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
@@ -428,8 +428,8 @@ Bring your own: wire the CMS strictly per its official documentation, keep crede
 
 - **Skipping Agents First**: Never run framework generation before AI governance is initialized, or framework defaults may overwrite or conflict with agent boundaries.
 - **Cross-Project Bleed**: Never copy client-specific skills, assets, or memory files from sibling projects. Every project starts with a clean isolated container.
-- **Committing Secrets**: Ensure `.env` is listed in `.gitignore` and `.env.example` exists. Follow the Vibeguard protocol.
-- **Monolithic Memory Dumps**: Keep `.memory/CURRENT.md` for machine real-time invariants and `.agents/context/current.md` for durable shipped reality.
+- **Monolithic Memory Dumps**: Keep machine real-time invariants in cognitive memory (updated strictly via memory tooling/CLI; never hand-edited directly; skipped if no memory system exists) and `.agents/context/current.md` for durable shipped reality.
+- **Single-Harness Assumptions**: Never default install paths, configuration files, or hooks to harness-specific locations (e.g., `~/.claude/settings.json`). Always follow the layout hierarchy: project-local standard (`.agents/`), home-level agent config (`~/.agents/`), and harness-specific paths only as explicit opt-in when that harness is actually in use. If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create its own files; have it follow the DOX engine directly.
 - **Never Ship Half-Baked Companion Stubs**: Never provision an SDK or integration flag without the accompanying route handlers, client SDKs, schemas, admin UIs, or container configs needed to actually run it. Every technology must be immediately runnable from a clean checkout.
 - **Isolated Official Scaffolds (Aria Builder, Atomic Payload)**: these upstreams ship complete stacks — never overlay engine extras (framework re-scaffold, companion configs, tokens, CI, package.json rewrites); the isolation gate zeroes companion selections with a printed notice and extras are added only on explicit request after scaffolding.
 
