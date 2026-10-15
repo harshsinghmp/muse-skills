@@ -8,10 +8,10 @@
 
 ```mermaid
 flowchart LR
-    S1[Phase 1: Deliverable Sign-Off] --> S2[Phase 2: Asset Packaging & Export]
-    S2 --> S3[Phase 3: Access Revocation & Vault Purge]
-    S3 --> S4[Phase 4: Financial Reconciliation]
-    S4 --> S5[Phase 5: NPS & Testimonial Capture]
+    S1["Phase 1: Deliverable Sign-Off"] --> S2["Phase 2: Asset Packaging & Export"]
+    S2 --> S3["Phase 3: Access Revocation & Vault Purge"]
+    S3 --> S4["Phase 4: Financial Reconciliation"]
+    S4 --> S5["Phase 5: NPS & Testimonial Capture"]
 ```
 
 ### Phase 1: Final Deliverable Audit & SOW Sign-Off

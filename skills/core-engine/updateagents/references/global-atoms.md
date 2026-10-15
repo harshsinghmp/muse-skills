@@ -21,11 +21,11 @@ The **Global Atom Table** solves this by maintaining a strict, finite ceiling:
 
 ```mermaid
 flowchart TD
-    A[Project-Local Learning / Bug Fix] -->|Recurs in ≥2 Independent Client Repos| B{Promotion Evaluation}
+    A["Project-Local Learning / Bug Fix"] -->|Recurs in ≥2 Independent Client Repos| B{Promotion Evaluation}
     B -->|Verified Universal Invariant| C[Promote to Global Atom Table]
     C --> D[Active Atoms Capped at ≤20]
     D --> E{Triggered within 365 Days?}
-    E -->|No| F[Demote / Retire Atom]
+    E -->|No| F["Demote / Retire Atom"]
     E -->|Yes| G[Retain as Permanent Global Invariant]
 ```
 

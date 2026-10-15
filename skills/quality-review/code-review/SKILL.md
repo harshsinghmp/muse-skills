@@ -263,7 +263,7 @@ flowchart TD
 
     Q6 -- No --> Q7{Untested code or missing reproducer?}
     Q7 -- Yes --> RC7[REQUEST-CHANGES]
-    Q7 -- No / Other --> Def[REQUEST-CHANGES / APPROVE]
+    Q7 -- No / Other --> Def["REQUEST-CHANGES / APPROVE"]
 ```
 
 ### Step 7: Format the Review Output

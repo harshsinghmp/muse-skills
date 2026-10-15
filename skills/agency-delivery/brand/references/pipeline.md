@@ -8,10 +8,10 @@
 
 ```mermaid
 flowchart LR
-    L[Stage 1: Lead Gen & Intake] --> Q[Stage 2: Discovery & Qualification]
-    Q --> P[Stage 3: Solution Architecture & Proposal]
-    P --> C[Stage 4: Contract, SOW & Deposit]
-    C --> K[Stage 5: Kickoff Handover to Delivery]
+    L["Stage 1: Lead Gen & Intake"] --> Q["Stage 2: Discovery & Qualification"]
+    Q --> P["Stage 3: Solution Architecture & Proposal"]
+    P --> C["Stage 4: Contract, SOW & Deposit"]
+    C --> K["Stage 5: Kickoff Handover to Delivery"]
 ```
 
 ### Stage 1: Lead Intake & First Touch

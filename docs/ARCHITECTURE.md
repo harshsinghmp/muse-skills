@@ -230,7 +230,7 @@ sequenceDiagram
 ```mermaid
 graph TD
     Trigger([User triggers /new-project]) --> Scaffolder[bun NewProject.ts]
-    Scaffolder --> DocGen[Generate Canonical /docs/]
+    Scaffolder --> DocGen["Generate Canonical /docs/"]
     Scaffolder --> StateMachine[Bootstrap 8-Stage STATE.md]
     Scaffolder --> Governance[Write .agentrules & AGENTS.md]
     Scaffolder --> Gitignore[Seed Hardened .gitignore]

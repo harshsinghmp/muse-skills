@@ -19,8 +19,8 @@ A Parameter Optimization Log with baseline vs optimized benchmarks, convergence 
 flowchart TD
     A[Baseline System Configuration] --> B[Declare Search Space & Safety Bounds]
     B --> C[Agent Proposes Semantic Candidate Configuration]
-    C --> D[Run Controlled Benchmark / Load Test]
-    D --> E[Record Measured Objective: Latency / Throughput / Cost]
+    C --> D["Run Controlled Benchmark / Load Test"]
+    D --> E["Record Measured Objective: Latency / Throughput / Cost"]
     E --> F{Target Objective Reached or Budget Exhausted?}
     F -->|No| C
     F -->|Yes| G[Lock Optimal Configuration & Generate Production Diff]

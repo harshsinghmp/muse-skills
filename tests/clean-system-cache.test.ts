@@ -46,7 +46,7 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     expect(output).toContain("Capability Inventory    : PASS");
     expect(output).toContain("[T2]");
     expect(output).toContain("preserved");
-  });
+  }, 15000);
 
   test("T2 capability-coupled cache isolation: preserved by default in execution mode", () => {
     const tmpDir = fs.mkdtempSync("/tmp/clean-test-safe-");

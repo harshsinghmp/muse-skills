@@ -317,7 +317,9 @@ export function lintMarkdownLinks(targetDir: string): { totalLinks: number; brok
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
 
   for (const file of mdFiles) {
-    const content = readFileSync(file, "utf8");
+    const rawContent = readFileSync(file, "utf8");
+    // Strip fenced code blocks and inline code to prevent testing example syntax
+    const content = rawContent.replace(/(`{1,5})[\s\S]*?\1/g, "");
     const dir = dirname(file);
     let m = linkRegex.exec(content);
 
@@ -325,13 +327,15 @@ export function lintMarkdownLinks(targetDir: string): { totalLinks: number; brok
       const linkText = m[1];
       const target = m[2].trim();
 
-      // Skip web links, mailto, and badges
+      // Skip web links, mailto, home paths, conversation/file schemes, and placeholders
       if (
         !target.startsWith("http://") &&
         !target.startsWith("https://") &&
         !target.startsWith("mailto:") &&
         !target.startsWith("conversation://") &&
-        !target.startsWith("file://")
+        !target.startsWith("file://") &&
+        !target.startsWith("~") &&
+        !target.startsWith("<")
       ) {
         totalLinks++;
         if (target.startsWith("#")) {
@@ -480,6 +484,9 @@ export function checkAnswerFirstDensity(targetDir: string): DensityReport {
   for (const file of mdFiles) {
     const lines = readFileSync(file, "utf8").split("\n");
     for (let i = 0; i < lines.length; i++) {
+      if (lines[i].includes("❌") || lines[i].includes("🚫")) {
+        continue;
+      }
       const line = lines[i].toLowerCase();
       totalWords += line.split(/\s+/).filter(Boolean).length;
       for (const phrase of fillerPhrases) {

@@ -25,12 +25,12 @@
 
 ```mermaid
 flowchart TD
-    Phase1[Phase 1 (Sequential): Database Schema & Shared Types]
-    Phase1 --> Phase2a[Phase 2a (Parallel Subagent A): Auth Controller & Token API]
-    Phase1 --> Phase2b[Phase 2b (Parallel Subagent B): Profile UI Components]
-    Phase2a --> Phase3[Phase 3 (Sequential): Code Review & Integration Tests]
+    Phase1["Phase 1 (Sequential): Database Schema & Shared Types"]
+    Phase1 --> Phase2a["Phase 2a (Parallel Subagent A): Auth Controller & Token API"]
+    Phase1 --> Phase2b["Phase 2b (Parallel Subagent B): Profile UI Components"]
+    Phase2a --> Phase3["Phase 3 (Sequential): Code Review & Integration Tests"]
     Phase2b --> Phase3
-    Phase3 --> Phase4[Phase 4 (Sequential): Git Staging & PR Release]
+    Phase3 --> Phase4["Phase 4 (Sequential): Git Staging & PR Release"]
 ```
 
 ---
