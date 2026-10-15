@@ -2252,7 +2252,7 @@ if (isAudit) {
   const TOTAL_ASSETS = 13;
 
   // Stage-0 Fast-Skip Gate
-  if (score === TOTAL_ASSETS) {
+  if (score === TOTAL_ASSETS && !values.force) {
     console.log(`[updateagents] Repository is AI-ready (${TOTAL_ASSETS}/${TOTAL_ASSETS}). Skipping pass.`);
     process.exit(0);
   }
