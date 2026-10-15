@@ -16,8 +16,9 @@ Developer and designer workstations accumulate massive disk bloat over time:
 - Container build layers (`Docker BuildKit`, `Podman`).
 - Creative suite scratch files (`Adobe Media Cache .cfa/.pek`, `Photoshop temp`, `Figma`, `Blender`).
 - Browser HTTP response caches (`Chrome`, `Firefox`, `Zen`, `Brave`, `Edge`, `Vivaldi`, `Safari`).
+- Agent toolchain caches (`OpenCode`, `Claude Code`, `Cursor`, `Codex`, `Gemini/Antigravity`, `Continue`, `MCP & LSP servers`).
 
-`clean-system-cache` provides native, zero-dependency cleaners (**pure Bash** on Linux/macOS and **native CMD batch** on Windows) that purge only disposable caches while enforcing **active running session protection** and **zero impact on cookies, logins, tabs, or repository code**.
+`clean-system-cache` provides native, zero-dependency cleaners (**pure Bash** on Linux/macOS and **native CMD batch** on Windows) that purge only disposable caches while enforcing **three-tier capability classification**, **active running session protection**, and **zero impact on cookies, logins, tabs, agent memory, or repository code**.
 
 ---
 
@@ -36,8 +37,14 @@ npx skills add harshsinghmp/muse-skills --skill clean-system-cache
 # Preview reclaimable cache without deleting (Dry Run)
 clean-system-cache/scripts/clean-cache.sh --dry-run
 
-# Clean all installed caches (skips missing or active running apps)
+# Clean all installed caches in safe mode (preserves T2 capability caches)
 clean-system-cache/scripts/clean-cache.sh
+
+# Opt-in to purge capability-coupled caches with Rehydration Manifest
+clean-system-cache/scripts/clean-cache.sh --include-coupled
+
+# Clean agent toolchain caches only
+clean-system-cache/scripts/clean-cache.sh --tool agents
 
 # Clean web browser caches only
 clean-system-cache/scripts/clean-cache.sh --tool browser
@@ -51,8 +58,11 @@ clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
 :: Preview cleanup without deleting (Dry Run)
 clean-system-cache\scripts\clean-cache.cmd /dry-run
 
-:: Execute full cleanup
+:: Execute full cleanup in safe mode (preserves T2 capability caches)
 clean-system-cache\scripts\clean-cache.cmd
+
+:: Opt-in to purge capability-coupled caches with Rehydration Manifest
+clean-system-cache\scripts\clean-cache.cmd /include-coupled
 
 :: Clean browser caches only
 clean-system-cache\scripts\clean-cache.cmd /tool browser
@@ -62,6 +72,11 @@ clean-system-cache\scripts\clean-cache.cmd /tool browser
 
 ## 🛡️ Safety Invariants
 
-1. **Running Session Protection**: If an application or browser is open, cache cleanup is skipped in execution mode so active sessions, tabs, and websockets are never interrupted.
-2. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.
-3. **Zero Dependencies**: Requires no Python, Node, or external interpreters.
+1. **Three-Tier Capability Classification**:
+   - **T1 Regenerable**: Disposable build layers, download tarballs, HTTP caches. Safe to purge silently.
+   - **T2 Capability-Coupled**: Installed plugin packages, skill trees, MCP schemas, LSPs. **Preserved by default.** Only purged via explicit `--include-coupled` / `/include-coupled` opt-in, accompanied by a deterministic Rehydration Manifest.
+   - **T3 Irreplaceable**: Auth credentials, session databases, agent memory (`.memory/**`), LifeOS config, git repos. **Never touched.**
+2. **Running Session Protection**: If an application, browser, or agent runtime is running, cleanup is skipped in execution mode so active sessions, websockets, and tools are never interrupted.
+3. **Capability Inventory Contract**: Verifies before-and-after capability counts in safe mode, guaranteeing zero tool/skill regressions.
+4. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.
+5. **Zero Dependencies**: Requires no Python, Node, or external interpreters.
