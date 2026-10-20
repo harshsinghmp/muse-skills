@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [7.3.1] - 2026-10-20
+
+### Fixed
+
+- **CI Hermeticity for `clean-system-cache`**: the dry-run capability test asserted `[T2]`/`preserved` from the runner's real `HOME`; a bare GitHub Actions runner has no installed harness caches, so it failed in CI while passing on a developer machine (red since `9a7b111`). The test now provisions a fixture `HOME` with one T2 cache, matching the sibling test's pattern, and additionally asserts the dry-run does not delete the cache it classified. Assertions unchanged.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.3.0...v7.3.1
+
+---
+
 ## [7.3.0] - 2026-10-20
 
 ### Added
