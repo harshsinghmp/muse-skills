@@ -38,6 +38,7 @@ A proposal: problem/outcome framing, proposed approach, phased plan with deliver
 ## Routing
 
 - Accepted proposal → `sow` for scope/terms; delivery tracking → `milestone`.
+- Upstream shaping: if the ask has no named problem or no appetite band yet, run the `shape` mode first — a proposal priced before the work is understood is the known margin-killer.
 
 ## Sources
 

@@ -26,6 +26,7 @@ Change note: in-scope or out-of-scope ruling, impact (effort/cost/date), options
 ## Routing
 
 - Pricing the CR → `growth`; internal resourcing → `ops`; the extra work itself routes to its skill.
+- Scope-boundary split: interception and the decision questions live in `coach` (client mode); the recorded change order and delivery impact live in `ops` (milestone mode).
 
 ## Sources
 

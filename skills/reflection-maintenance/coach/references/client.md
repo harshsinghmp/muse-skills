@@ -52,6 +52,10 @@ Parse client communication against active contract specifications in `.agents/co
 - **Out-of-Scope (Change Order)**: Request introduces new endpoints, new layouts, or modifies locked design tokens. Draft Phase 2 change order.
 - **Blocked by Client**: Missing client credentials, copy, or approval.
 
+**Scope-hammer questions (run before recommending accept or defer):** Is this a must-have for the delivered outcome? Could we ship without it? What actually happens if we do not do it? Is it new work or a pre-existing condition the client already lives with? How likely is the case, and who sees it — core or edge? What is the real impact if it occurs?
+
+**Ship test:** compare down to the baseline the client has today, never up to an ideal. "Better than the workaround they use now" is the bar for calling work done.
+
 ### Step 3: Enforce Boundaries & Generate Artifacts
 - **If Scope Creep**: Output polite boundary response using the **"Yes, And..." Formula**:
   > *"We would love to add [Feature X]! Because our current sprint is fully committed to delivering [Milestone Y] on schedule, we've scoped this as an enhancement for Phase 2 ($X budget / Y days). Shall we queue it for immediate review after Milestone Y?"*

@@ -161,6 +161,7 @@ Accidental environment pollution occurs when developers copy configurations, dat
    $$\text{Cycle Time} = \frac{\text{WIP}}{\text{Throughput}}$$
    Turns a blocked milestone into an empirical calendar date, not a subjective guess.
 3. **Dynamic Re-sequencing**: When a new engagement lands, re-compute utilization, reschedule the lowest-priority-at-risk milestone first, and notify the affected client before the deadline passes.
+4. **One Band Ahead + Reserve Band**: commit only one band ahead and hold a reserve band for overruns and incoming work. A plan committed to full capacity has no room to absorb a project that misses its band, so every overrun becomes an extension instead of a re-shape.
 
 ## 7.5. Graceful Shutdown & Liveness Probe Standard
 
