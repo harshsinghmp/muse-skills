@@ -1,4 +1,4 @@
-<!-- updateagents:managed -->
+[//]: # (updateagents:managed)
 # {{PROJECT_NAME}} — Workspace Instructions
 
 > **Agent**: {{AGENT_NAME}} ({{AGENT_ROLE}}) · **Purpose**: {{PROJECT_DESC}}
@@ -45,7 +45,7 @@ Read every **Always required** standard before work and every **Required when de
 
 **Always required**
 
-<!-- ALWAYS_REQUIRED_STANDARDS:start -->
+[//]: # (ALWAYS_REQUIRED_STANDARDS:start)
 
 - [Execution &amp; Cognitive Kernel](./.agents/standards/execution-kernel.md) — Judgment rules, modern CLI matrix, sanitization, and refactoring discipline.
 - [Security &amp; Vibeguard](./.agents/standards/security-vibeguard.md) — Secret isolation, destructive-command gates, and untrusted-output defense.
@@ -57,11 +57,11 @@ Read every **Always required** standard before work and every **Required when de
 - [Team Roles &amp; Routing](./.agents/standards/council-roles.md) — Configured role responsibilities and task routing.
 - [Project Context Map](./.agents/context/index.md) — Project purpose, architecture, current state, decisions, and roadmap.
 
-<!-- ALWAYS_REQUIRED_STANDARDS:end -->
+[//]: # (ALWAYS_REQUIRED_STANDARDS:end)
 
 **Required when detected or selected**
 
-<!-- CONDITIONAL_STANDARDS:start -->
+[//]: # (CONDITIONAL_STANDARDS:start)
 
 - [Git Workflow](./.agents/standards/git-workflow.md) — Branches, atomic feature PRs, commit format, releases, and clean package refs.
 - [Next.js &amp; React](./.agents/standards/frontend-nextjs.md) — Next.js/React: App Router, React patterns, server/client boundaries.
@@ -77,9 +77,9 @@ Read every **Always required** standard before work and every **Required when de
 - [Evidence-Based Client Reporting](./.agents/standards/client-reporting.md) — delivery claims grounded in artifacts and verification.
 - [Animated Technical Diagrams](./.agents/standards/motion-diagrams.md) — accessible, lightweight SVG diagrams and data-flow animation.
 - [System, Domain &amp; Resilience Design](./.agents/standards/system-design.md) — domain modeling, failure handling, and migration resilience.
-<!-- CONDITIONAL_STANDARDS:end -->
+[//]: # (CONDITIONAL_STANDARDS:end)
 
-<!-- muse-secretary-router:start -->
+[//]: # (muse-secretary-router:start)
 
 ## Secretary Protocol
 
@@ -87,4 +87,4 @@ At the first prompt and every new task, activate `secretary:dispatch` by reading
 
 Route Coach when its coaching modes fit; it is not a background process and does not replace task closeout.
 
-<!-- muse-secretary-router:end -->
+[//]: # (muse-secretary-router:end)

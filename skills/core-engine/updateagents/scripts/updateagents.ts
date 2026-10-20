@@ -53,9 +53,9 @@ import {
   discoverAgentInstructionSources,
   isAllowedUntouchedTarget,
   isInvalidLegacyWriteTarget,
-  isManagedRootAgents,
   migrateAgentInstructions,
   promoteLegacyInstructionWrite,
+  stripSentinelComments,
 } from "./instruction-migration";
 
 // Template source of truth located in updateagents/templates/
@@ -65,17 +65,18 @@ const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 /** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
 const AGENTS_MD_MAX_LINES = 90;
 
-export const SECRETARY_ROUTER_BLOCK = `<!-- muse-secretary-router:start -->
+export const SECRETARY_ROUTER_BLOCK = `[//]: # (muse-secretary-router:start)
 ## Secretary Protocol
 
 At the first prompt and every new task, activate \`secretary:dispatch\` by reading \`~/.agents/skills/secretary/references/dispatch.md\` (or the project copy at \`.agents/skills/secretary/references/dispatch.md\`). Triage the request, select the department and mode, read the selected skill's \`SKILL.md\` and mode reference, then act. Route through configured Council roles. Secretary dispatches by instruction; it is not a background process.
 
 Route Coach when its coaching modes fit; it is not a background process and does not replace task closeout.
-<!-- muse-secretary-router:end -->`;
+[//]: # (muse-secretary-router:end)`;
 
 export function ensureSecretaryRouter(content: string): { updatedContent: string; modified: boolean } {
-  const routerStart = "<!-- muse-secretary-router:start -->";
-  const routerEnd = "<!-- muse-secretary-router:end -->";
+  content = stripSentinelComments(content);
+  const routerStart = "[//]: # (muse-secretary-router:start)";
+  const routerEnd = "[//]: # (muse-secretary-router:end)";
 
   if (content.includes(routerStart) && content.includes(routerEnd)) {
     const startIndex = content.indexOf(routerStart);
@@ -95,15 +96,16 @@ export function ensureSecretaryRouter(content: string): { updatedContent: string
   };
 }
 
-const IMPORTED_INSTRUCTIONS_BLOCK = `<!-- updateagents:imported-instructions-router:start -->
+const IMPORTED_INSTRUCTIONS_BLOCK = `[//]: # (updateagents:imported-instructions-router:start)
 ## Imported Agent Instructions
 
 Read \`.agents/context/imported-agent-instructions.md\` before every task when present. It preserves user-authored rules from earlier agent systems with source-path provenance; apply each within its recorded scope and ask the user about conflicts.
-<!-- updateagents:imported-instructions-router:end -->`;
+[//]: # (updateagents:imported-instructions-router:end)`;
 
 export function ensureImportedInstructionsRouter(content: string): { updatedContent: string; modified: boolean } {
-  const start = "<!-- updateagents:imported-instructions-router:start -->";
-  const end = "<!-- updateagents:imported-instructions-router:end -->";
+  content = stripSentinelComments(content);
+  const start = "[//]: # (updateagents:imported-instructions-router:start)";
+  const end = "[//]: # (updateagents:imported-instructions-router:end)";
   const startIndex = content.indexOf(start);
   const endIndex = content.indexOf(end);
   if (startIndex >= 0 && endIndex >= startIndex) {
@@ -2685,7 +2687,10 @@ if (hasAnyAgentFiles) {
   assertNotMemory(rootAgentsPath);
 
   const previousRoot = existsSync(rootAgentsPath) ? readFileSync(rootAgentsPath, "utf8") : "";
-  if (!previousRoot || !isManagedRootAgents(previousRoot)) {
+  // PRINCIPLE: an existing root AGENTS.md is never regenerated. Curated rules are
+  // preserved verbatim and only the shared routers are merged in; a file that is
+  // absent is the one case that gets the template.
+  if (!previousRoot) {
     const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
     if (existsSync(railTemplate) && !isDryRun) {
       const profile = detectAgentTemplateProfile(workspaceDir, {

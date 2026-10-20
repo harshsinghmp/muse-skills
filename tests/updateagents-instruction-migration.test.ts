@@ -46,6 +46,21 @@ describe("updateagents instruction migration", () => {
     ]);
   });
 
+  it("ignores reference playbooks and templates — content is never an instruction source", () => {
+    mkdirSync(join(ROOT, "skills/demo/references"), { recursive: true });
+    mkdirSync(join(ROOT, "skills/demo/templates"), { recursive: true });
+    writeFileSync(join(ROOT, "skills/demo/references/agents.md"), "# Ported rules\n- stay here\n");
+    writeFileSync(join(ROOT, "skills/demo/references/hygiene-rules.md"), "# Hygiene\n");
+    writeFileSync(join(ROOT, "skills/demo/templates/AGENTS.md"), "# Template\n");
+    writeFileSync(join(ROOT, "CLAUDE.md"), "Real runtime rules\n");
+
+    expect(discoverAgentInstructionSources(ROOT).map((source) => source.relativePath)).toEqual(["CLAUDE.md"]);
+    // ...and a sync run must leave them untouched rather than flattening them into adapters.
+    const migration = migrateAgentInstructions(ROOT);
+    expect(adaptAgentInstructionSources(migration.sources)).toEqual(["CLAUDE.md"]);
+    expect(readFileSync(join(ROOT, "skills/demo/references/agents.md"), "utf8")).toContain("- stay here");
+  });
+
   it("imports full source content, archives exact bytes, adapts runtimes, and stays idempotent", () => {
     mkdirSync(join(ROOT, ".cursor/rules"), { recursive: true });
     const claudeRules = "# Claude\r\nNever publish raw refs.\r\n";
@@ -68,7 +83,7 @@ describe("updateagents instruction migration", () => {
     expect(readFileSync(join(ROOT, "CLAUDE.md"), "utf8").trim()).toBe("@AGENTS.md");
     const cursorAdapter = readFileSync(join(ROOT, ".cursor/rules/design.mdc"), "utf8");
     expect(cursorAdapter).toContain("globs: '**/*.tsx'");
-    expect(cursorAdapter).toContain("<!-- updateagents:adapter -->");
+    expect(cursorAdapter).toContain("[//]: # (updateagents:adapter)");
 
     const secondPass = migrateAgentInstructions(ROOT);
     expect(secondPass.imported).toEqual([]);

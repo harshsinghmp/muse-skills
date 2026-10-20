@@ -406,7 +406,9 @@ export function runSetup(options: SetupOptions = {}): void {
     }
   }
 
-  console.log(`\n🎉 Setup Complete: Active across all detected harnesses!`);
+  console.log(
+    `\n🎉 Setup Complete: Active across all detected harnesses!${totalCommands > 0 ? ` (${totalCommands} slash commands exported)` : ""}`,
+  );
 }
 
 if (import.meta.main) {

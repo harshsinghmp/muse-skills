@@ -308,9 +308,13 @@ export function renderAgentsTemplate(template: string, profile: AgentTemplatePro
 }
 
 function replaceStandardBlock(content: string, name: string, replacement: string): string {
-  const start = `<!-- ${name}:start -->`;
-  const end = `<!-- ${name}:end -->`;
-  const pattern = new RegExp(`${start}\\r?\\n[\\s\\S]*?\\r?\\n${end}`);
+  // Bracket sentinels: HTML comments around instructions are read as prompt injection
+  // by harness scanners, which then refuse the whole AGENTS.md file.
+  const start = `[//]: # (${name}:start)`;
+  const end = `[//]: # (${name}:end)`;
+  // Sentinels contain regex metacharacters now (brackets), so escape before building the pattern.
+  const esc = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`${esc(start)}\\r?\\n[\\s\\S]*?\\r?\\n${esc(end)}`);
   if (!pattern.test(content)) throw new Error(`Missing ${name} block in AGENTS.md template`);
   return content.replace(pattern, replacement || "- None detected");
 }

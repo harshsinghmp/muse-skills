@@ -47,8 +47,16 @@ def main():
             old = s["version"]
             s["version"] = fm_ver
             fixed.append((s["name"], old, fm_ver))
-    json.dump(data, open(JSON_PATH, "w", encoding="utf-8"), indent=2)
-    json.dump(data, open(JSON_PATH, "w", encoding="utf-8"), indent=2)
+    # Targeted in-place edits: re-serialising the registry rewrites every array and
+    # indentation decision (biome rejects the result), so touch only drifted version strings.
+    if fixed:
+        text = open(JSON_PATH, encoding="utf-8").read()
+        for name, old, new in fixed:
+            start = text.index(f'"name": "{name}"')
+            needle = f'"version": "{old}"'
+            at = text.index(needle, start)
+            text = text[:at] + f'"version": "{new}"' + text[at + len(needle):]
+        open(JSON_PATH, "w", encoding="utf-8").write(text)
     print(f"Fixed {len(fixed)} version(s):")
     for name, old, new in fixed:
         print(f"  {name:<22} {old!r:<10} -> {new!r}")

@@ -105,7 +105,7 @@ Never create a parallel instruction file. Merge into the canonical destination f
 - **Warning Threshold**: Emit an audit warning if the destination file reaches $\ge$ 10KB.
 
 ### E. Pre-Write Archiving
-If a legacy instruction file already exists on disk and is being adapted or replaced, snapshot its exact bytes to `.agents/archive/agent-instructions/<hash>-<name>` and register it in `manifest.json` before touching the file. Never destroy human-authored instructions.
+If a legacy instruction file already exists on disk and is being adapted or replaced, snapshot its exact bytes to `.agents/archive/agent-instructions/<hash>-<name>` and register it in `manifest.json` before touching the file. Never destroy human-authored instructions — and never regenerate an existing root `AGENTS.md`: preserving a curated file is mandatory, because the template is a starting point, not an authority over a file the user has tuned.
 
 ### F. Router Resync Gate
 After writing promoted content, the workspace router (`AGENTS.md`) is immediately resynced. If a standard was created or updated, verify it is linked; if context was modified, update `imported-agent-instructions-router` or context hashes so future agents discover the knowledge immediately.
