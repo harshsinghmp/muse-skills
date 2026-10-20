@@ -21,6 +21,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Full history: pr-convention-miner mines commit conventions, and a shallow
+          # tag checkout has no history to mine (Release failed on this since v7.1.0).
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
         with:
