@@ -446,7 +446,7 @@ Custom billing engine for healthcare providers.
       const scaffoldRes = spawnSync("bun", [UPDATEAGENTS_SCRIPT, target, "--scaffold"], { encoding: "utf8" });
       expect(scaffoldRes.status).toBe(0);
       const agentsMd = readFileSync(join(target, "AGENTS.md"), "utf8");
-      expect(agentsMd).toContain("<!-- muse-secretary-router:start -->");
+      expect(agentsMd).toContain("[//]: # (muse-secretary-router:start)");
       expect(agentsMd).toContain("secretary:dispatch");
       expect(agentsMd).toContain("## Secretary Protocol");
 
@@ -460,12 +460,23 @@ Custom billing engine for healthcare providers.
 
       // 4. Verify custom rule is active in the imported source and shared router is installed.
       const syncedContent = readFileSync(join(target, "AGENTS.md"), "utf8");
-      expect(syncedContent).toContain("<!-- muse-secretary-router:start -->");
+      expect(syncedContent).toContain("[//]: # (muse-secretary-router:start)");
       expect(syncedContent).toContain("secretary:dispatch");
       expect(syncedContent).toContain("imported-agent-instructions.md");
       expect(readFileSync(join(target, ".agents/context/imported-agent-instructions.md"), "utf8")).toContain(
         "Rule 1: Always test",
       );
+      // The curated file itself must survive verbatim — it is never regenerated from the template.
+      expect(syncedContent).toContain("# My Custom Rules");
+      expect(syncedContent).toContain("- Rule 1: Always test");
+      // And nothing emitted may contain HTML comment sentinels (injection scanners refuse the file).
+      expect(syncedContent).not.toContain("<!--");
+    });
+
+    it("ships an AGENTS.md template free of HTML-comment sentinels", () => {
+      const template = readFileSync(join(UPDATEAGENTS_TEMPLATES, "AGENTS.md"), "utf8");
+      expect(template).not.toContain("<!--");
+      expect(template).toContain("[//]: # (updateagents:managed)");
     });
   });
 

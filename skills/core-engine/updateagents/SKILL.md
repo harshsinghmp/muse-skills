@@ -4,7 +4,7 @@ aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready",
 description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards."
 argument-hint: "[sync|audit|sanitize|scaffold|promote]"
 user-invocable: true
-version: 2.3.0
+version: 2.4.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -201,13 +201,13 @@ Lazy file creation: never scaffold context files speculatively; create only on c
 3. **If ANY Found (custom content present)**:
    - Before changing an instruction file, snapshot its exact bytes under `.agents/archive/agent-instructions/`; record source path and SHA-256 in `manifest.json`.
    - Import complete source contents, including rules, workflows, configuration notes, definitions and scope metadata, into `.agents/context/imported-agent-instructions.md`. Do not section-guess, truncate or silently drop content. Preserve each source’s path and keep changed versions as additional snapshots.
-   - Make `AGENTS.md` the compact shared router. Replace supported runtime-specific files with small adapters only after snapshot + import succeeds; keep relevant frontmatter/scope metadata. Claude’s root `CLAUDE.md` remains exactly `@AGENTS.md`. Preserve non-instruction configuration files untouched.
+   - Make `AGENTS.md` the compact shared router. Replace supported runtime-specific files with small adapters only after snapshot + import succeeds; keep relevant frontmatter/scope metadata. Adapt runtime instruction files only — never files under `references/` or `templates/`, which are content, not instructions. Claude’s root `CLAUDE.md` remains exactly `@AGENTS.md`. Preserve non-instruction configuration files untouched.
    - Read imported instructions before every task, apply each within its recorded source scope, and report conflicting rules with both source paths; ask the user instead of silently choosing.
    - Report every source → archive snapshot → canonical context mapping so users can find both their active rules and exact originals. Never delete an original snapshot.
    - When refreshing a generated `AGENTS.md`, reconcile conditional-standard links with project evidence. Ask about ambiguous applicability; only unlink standards the user confirms are inapplicable, retaining their files.
 
 ### Step 9 — Synchronize Standards from Single Canon
-Synchronize standards and baseline brand tokens from `updateagents/templates/` without overwriting project context or source. Core standards are always required. Detected or selected standards are required for that project. During later runs, ask about ambiguous conditional standards; unlink only standards the user confirms are inapplicable, while retaining their files.
+Never regenerate an existing root `AGENTS.md`: preserve its content verbatim and merge only the shared routers into it, because a curated file always outranks the template and its loss is unrecoverable. Synchronize standards and baseline brand tokens from `updateagents/templates/` without overwriting project context or source. Core standards are always required. Detected or selected standards are required for that project. During later runs, ask about ambiguous conditional standards; unlink only standards the user confirms are inapplicable, while retaining their files.
 
 ### Step 10 — Capture Commands Precisely
 Document commands only when verified in `package.json` or project tooling (Install, Dev, Build, Test, Typecheck, Lint). Never invent commands.

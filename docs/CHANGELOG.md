@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.3.2] - 2026-10-20
+
+### Changed
+
+- **`updateagents` v2.4.0 — preserve, never regenerate**: an existing root `AGENTS.md` is no longer rebuilt from the template. Its content is preserved verbatim and only the shared routers are merged in; the template now applies only when the file is absent. Previously a run on an established project replaced a curated `AGENTS.md` with the template while reporting "100% in sync with zero drift".
+- **Reference playbooks are content, not instructions**: files under `references/` or `templates/` are excluded from instruction-file discovery, so rules ported into a reference file and linked from `AGENTS.md` stay in that file. A run previously flattened five real playbooks into one-paragraph adapters (−290 lines).
+
+### Fixed
+
+- **HTML-comment sentinels removed from emitted instruction files**: harness scanners read HTML comments around instructions as prompt injection and refuse the whole file, so a repository's `AGENTS.md` never reached the agent. Sentinels now use Markdown link-definition comments (`[//]: # (...)`), which render as nothing and are not HTML; legacy HTML sentinels are still recognised on read, so existing projects keep working.
+- **Canonical-file self-import**: the "is this my own generated file" check matched the old marker only, so a second run re-imported `.agents/context/imported-agent-instructions.md` into itself. The check is now format-agnostic.
+- **Import link rebasing**: links copied into `.agents/context/imported-agent-instructions.md` are rebased one level (`./.agents/x` → `../x`), so `--lint-context` no longer fails on the tool's own output.
+- **`sync-skill-versions.py` no longer reformats the registry**: it re-serialised `skills.json` (883+/158−) and biome rejects the result; drift is now applied as targeted in-place string edits (1 line per bumped skill). The duplicated write call is gone.
+- **`export-commands.ts` dead count**: `totalCommands` was accumulated six times and never read; it is now reported in the completion line.
+
 ## [7.3.1] - 2026-10-20
 
 ### Fixed

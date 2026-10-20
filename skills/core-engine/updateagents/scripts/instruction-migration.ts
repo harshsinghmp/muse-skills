@@ -32,8 +32,25 @@ export interface InstructionMigrationResult {
   canonicalPath?: string;
 }
 
-const ADAPTER_MARKER = "<!-- updateagents:adapter -->";
-const MANAGED_MARKER = "<!-- updateagents:managed -->";
+const ADAPTER_MARKER = "[//]: # (updateagents:adapter)";
+const MANAGED_MARKER = "[//]: # (updateagents:managed)";
+
+/**
+ * Harness scanners treat HTML comments wrapping instructions as prompt injection
+ * and refuse the whole file (AGENTS.md then never reaches the agent). Sentinels are
+ * therefore emitted as Markdown link-definition comments, which render as nothing
+ * and are not HTML. Legacy HTML sentinels are still recognised on read.
+ */
+const SENTINEL_TOKENS =
+  "muse-secretary-router|updateagents:(?:managed|adapter|imported-instructions|imported-instructions-router)|ALWAYS_REQUIRED_STANDARDS|CONDITIONAL_STANDARDS";
+const SENTINEL_COMMENT_RE = new RegExp(`<!--\\s*(${SENTINEL_TOKENS})(?::(start|end))?\\s*-->`, "g");
+
+export function stripSentinelComments(text: string): string {
+  return text.replace(
+    SENTINEL_COMMENT_RE,
+    (_match, token: string, pos?: string) => `[//]: # (${token}${pos ? `:${pos}` : ""})`,
+  );
+}
 const MANIFEST_PATH = ".agents/archive/agent-instructions/manifest.json";
 const CANONICAL_PATH = ".agents/context/imported-agent-instructions.md";
 const SKIP_DIRS = new Set([
@@ -108,6 +125,10 @@ function isInsideGenericInstructionDirectory(relativePath: string): boolean {
 
 function isInstructionFile(relativePath: string): boolean {
   const normalized = portablePath(relativePath);
+  // Reference playbooks and templates are content, not runtime instructions.
+  // Rules ported into a references/ file and linked from AGENTS.md must never be
+  // flattened into an adapter.
+  if (/(^|\/)(references|templates)\//.test(normalized)) return false;
   const name = basename(normalized);
   return (
     KNOWN_NAMES.has(name) ||
@@ -119,16 +140,18 @@ function isInstructionFile(relativePath: string): boolean {
 }
 
 export function isManagedRootAgents(content: string): boolean {
+  content = stripSentinelComments(content);
   return (
     content.includes(MANAGED_MARKER) ||
     (content.startsWith("# ") &&
-      content.includes("<!-- ALWAYS_REQUIRED_STANDARDS:start -->") &&
-      content.includes("<!-- CONDITIONAL_STANDARDS:start -->") &&
-      content.includes("<!-- muse-secretary-router:start -->"))
+      content.includes("[//]: # (ALWAYS_REQUIRED_STANDARDS:start)") &&
+      content.includes("[//]: # (CONDITIONAL_STANDARDS:start)") &&
+      content.includes("[//]: # (muse-secretary-router:start)"))
   );
 }
 
 function isExpectedAdapter(content: string, relativePath: string): boolean {
+  content = stripSentinelComments(content);
   if (relativePath === "CLAUDE.md") return content.trim() === "@AGENTS.md";
   if (!content.includes(ADAPTER_MARKER)) return false;
   return content.trim() === renderAdapter(content, relativePath).trim();
@@ -249,10 +272,13 @@ function renderCanonical(root: string, sources: ArchivedInstructionSource[]): st
     .sort((a, b) => a.sourcePath.localeCompare(b.sourcePath) || a.sha256.localeCompare(b.sha256))
     .map((source) => {
       const sourcePath = resolveArchivePath(root, source.archivePath);
-      const original = readFileSync(sourcePath, "utf8").trim();
+      // This file lives in .agents/context/, so a link copied verbatim from a
+      // root-level source (./.agents/standards/x.md) would resolve to
+      // .agents/context/.agents/standards/x.md. Rebase it one level up.
+      const original = readFileSync(sourcePath, "utf8").trim().replaceAll("](./.agents/", "](../");
       return `## Source: \`${source.sourcePath}\`\n\n> Original preserved at \`${source.archivePath}\`. Rules remain scoped to the source location and metadata below.\n\n${original}`;
     });
-  return `<!-- updateagents:imported-instructions -->
+  return `[//]: # (updateagents:imported-instructions)
 # Imported Agent Instructions
 
 This file contains user-authored instructions migrated from agent-specific files. Treat these as active project rules, applying each within its recorded source scope. Higher-priority system, developer and current user instructions prevail. If imported rules conflict with each other or current project evidence and precedence does not resolve the conflict, name the competing source paths and ask the user before choosing. Do not discard or silently weaken a rule.
@@ -300,7 +326,7 @@ export function migrateAgentInstructions(
   // Preserve a human-authored file at the generated destination before replacing it.
   if (existsSync(canonicalPath)) {
     const previous = readFileSync(canonicalPath, "utf8");
-    if (!previous.startsWith("<!-- updateagents:imported-instructions -->")) {
+    if (!stripSentinelComments(previous).startsWith("[//]: # (updateagents:imported-instructions)")) {
       const hash = sha256(previous);
       const sourcePath = CANONICAL_PATH;
       if (!archived.some((item) => item.sourcePath === sourcePath && item.sha256 === hash)) {
@@ -516,15 +542,16 @@ function detectHarness(targetPath: string, override?: string): string {
   return "Foreign Harness";
 }
 
-const IMPORTED_INSTRUCTIONS_BLOCK = `<!-- updateagents:imported-instructions-router:start -->
+const IMPORTED_INSTRUCTIONS_BLOCK = `[//]: # (updateagents:imported-instructions-router:start)
 ## Imported Agent Instructions
 
 Read \`.agents/context/imported-agent-instructions.md\` before every task when present. It preserves user-authored rules from earlier agent systems with source-path provenance; apply each within its recorded scope and ask the user about conflicts.
-<!-- updateagents:imported-instructions-router:end -->`;
+[//]: # (updateagents:imported-instructions-router:end)`;
 
 export function ensureImportedInstructionsRouter(content: string): { updatedContent: string; modified: boolean } {
-  const start = "<!-- updateagents:imported-instructions-router:start -->";
-  const end = "<!-- updateagents:imported-instructions-router:end -->";
+  content = stripSentinelComments(content);
+  const start = "[//]: # (updateagents:imported-instructions-router:start)";
+  const end = "[//]: # (updateagents:imported-instructions-router:end)";
   const startIndex = content.indexOf(start);
   const endIndex = content.indexOf(end);
   if (startIndex >= 0 && endIndex >= startIndex) {

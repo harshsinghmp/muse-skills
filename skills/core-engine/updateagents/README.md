@@ -117,13 +117,13 @@ Updated Agent Context
 ```
 
 1. **Establish Workspace Context**: Verifies `cwd` and excludes `.memory/**`.
-2. **Discover Agent Context**: Finds supported runtime instruction files, nested rule sets, and Markdown/text files inside generic agent/rule/instruction/prompt directories; snapshots exact originals, imports scoped rules into `.agents/context/imported-agent-instructions.md`, and installs lightweight adapters to the shared `AGENTS.md` engine.
+2. **Discover Agent Context**: Finds supported runtime instruction files, nested rule sets, and Markdown/text files inside generic agent/rule/instruction/prompt directories; snapshots exact originals, imports scoped rules into `.agents/context/imported-agent-instructions.md`, and installs lightweight adapters to the shared `AGENTS.md` engine. Only runtime instruction files are adapted: files under `references/` or `templates/` are content, never instruction sources, so rules ported into a reference playbook stay there.
 3. **Inspect Project State**: Reads canonical sources (`package.json`, build/test configs).
 4. **Context Integrations**: Utilizes `codegraph`, `rtk`, or `ponytail` if present.
 5. **Build Context Delta**: Categorizes changes into `NEW`, `CHANGED`, `OBSOLETE`, `CONFLICTING`.
 6. **Determine Targets**: Targets smallest correct scope.
 7. **Preserve Existing Knowledge**: Protects intentional human notes and ADRs.
-8. **DOX Scaffolding & Context Placement**: Scaffolds if absent; otherwise preserves every supported instruction source, migrates its complete contents with provenance, and adapts each runtime without silently losing rules.
+8. **DOX Scaffolding & Context Placement**: Scaffolds if absent; otherwise preserves every supported instruction source, migrates its complete contents with provenance, and adapts each runtime without silently losing rules. **An existing root `AGENTS.md` is never regenerated** — its content is preserved verbatim and only the shared routers are merged in.
 9. **Standards Synchronization**: Syncs all 19 rulebooks from `updateagents/templates/` (including modern WordPress, fintech gateways, boundary governance, client reporting, motion diagrams, negative anti-patterns, and visual inspection) and displays the Invariant Atom Table telemetry.
 10. **Capture Commands**: Verifies commands against actual package scripts.
 11. **Capture Architecture**: Documents system boundaries and data flows.
