@@ -1129,7 +1129,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|legal|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"',
       );
     });
 

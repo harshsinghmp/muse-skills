@@ -1,10 +1,10 @@
 ---
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown"]
-description: "Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through ten modes. Use when asked to onboard a new client, write a proposal or SOW, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
-argument-hint: "[onboarding|proposal|sow|milestone|retro|multi-client|vendor|obsidian|legal|audit]"
+description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through eleven modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **proposal** | "write a proposal", "pitch a client", "win this project", "proposal doc" | Client proposal that connects outcome to plan and price | [references/proposal.md](references/proposal.md) |
 | **sow** | "statement of work", "sow", "scope document", "contract scope" | Statement of work: scope, deliverables, terms, change process | [references/sow.md](references/sow.md) |
 | **milestone** | "track milestones", "scope creep", "project tracking", "delivery status" | Milestone and scope tracking with change control | [references/milestone.md](references/milestone.md) |
+| **shape** | "shape this ask", "set an appetite", "is this sized yet", "grab-bag project", "unsized request" | Shape an ambiguous ask before it is priced: named problem, appetite band, no-gos, de-risked pitch | [references/shape.md](references/shape.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
 | **vendor** | "vendor", "subcontractor", "freelancer management", "procurement", "tooling spend", "manage vendors" | Vendor/subcontractor scorecard, spend control, and tooling consolidation | [references/vendor.md](references/vendor.md) |
@@ -59,6 +60,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Onboarding a new client into a clean workspace.
 - Writing a proposal to win an engagement.
 - Drafting a statement of work with scope and terms.
+- Shaping an ambiguous ask before anyone prices it: appetite band, named problem, no-gos.
 - Tracking milestones, scope, and change orders.
 - Running a project retrospective.
 - Managing a portfolio of concurrent clients.

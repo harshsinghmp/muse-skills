@@ -21,6 +21,7 @@ A milestone tracker: status per deliverable (owner, due date, state), a blocker 
 6. Archive completed milestones with evidence of acceptance.
 7. Forecast delivery like a date, not a hope: estimate remaining work in story points or equivalent effort, use rolling throughput (points completed per sprint/past N weeks), and give the client a range — best/expected/worst — not a single promise. Update the range each cadence as real velocity replaces the initial guess.
 8. For public-release packaging, audit before publishing: block on secrets, private data, absolute local paths, and unlicensed assets; confirm visibility explicitly and read back post-push/post-deploy (keeper: mengto/publish-project-to-github).
+9. Route a mid-flight scope request to `coach` (client mode) for interception; the recorded change order and its delivery impact stay here.
 
 ## Quality gate
 
@@ -29,6 +30,7 @@ A milestone tracker: status per deliverable (owner, due date, state), a blocker 
 - [ ] Blockers logged with owners.
 - [ ] Scope changes have written change orders.
 - [ ] Client status summary kept current.
+- [ ] Fixed time, variable scope held: the date did not move and any cut came out of scope rather than out of the deadline.
 
 ## Sources
 

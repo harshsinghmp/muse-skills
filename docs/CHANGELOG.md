@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.3.0] - 2026-10-20
+
+### Added
+
+- **Shape Up Delivery Methodology (`ops:shape`, #215)**: Eleventh `ops` mode (`skills/agency-delivery/ops/references/shape.md`) distilling Basecamp/37signals' *Shape Up* into agency language — grab-bag triage ("redesign X" is not a project until one problem is named), narrow-the-problem rewrite, appetite bands (small batch vs big batch as a fixed time budget), the right level of abstraction, the pitch's five ingredients (problem, appetite, solution, rabbit holes, no-gos), patch/fence/cut de-risking, honour-the-bet, circuit breaker, and the baseline ship test. The doctrine is also folded in as additive routing lines across `ops:proposal` (shape-before-price gate), `ops:sow` (appetite as time budget), `ops:milestone` (fixed time / variable scope), `ops:multi-client` (one band ahead + reserve band), `coach:client` (scope-hammer questions + ship test), `coach:team` (status as unknown-vs-solved), and `client-comms:change` (interception vs recorded change order). `ops` bumps to 1.6.0, `coach` to 1.2.0, and `client-comms` to 1.3.0, with description/mode-table/argument-hint parity across SKILL.md, README, skills.json, llms.txt, agents/openai.yaml, and the regenerated `secretary/references/dispatch.md`.
+
+- **`CLAUDE.md` Shim**: Root `CLAUDE.md` forwards every Claude-family runtime to `AGENTS.md` and `.agents/context/imported-agent-instructions.md`, so the curated workspace contract has one source instead of a per-harness copy.
+
+### Fixed
+
+- **`ops` Mode-Count & Registry Drift**: `agents/openai.yaml` advertised "nine modes" (missing `legal`) and `README.md` carried a 9-row mode table — both realigned to the eleven-mode description that is now byte-identical across SKILL.md, skills.json, llms.txt, and agents/openai.yaml.
+
 ## [7.2.1] - 2026-10-15
 
 ### Added

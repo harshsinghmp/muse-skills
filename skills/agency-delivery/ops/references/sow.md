@@ -20,6 +20,7 @@ A statement of work: scope in/out, deliverables with acceptance criteria, timeli
 5. Set the revision/round-count expectation to cap open-ended feedback.
 6. Write the change-order process for anything beyond scope.
 7. Define termination, IP, and confidentiality terms; get written agreement.
+8. Record the appetite as the engagement's time budget and the no-gos as explicit exclusions; state the finish-or-re-shape default up front so an overrun is a documented re-scope, not a silent extension.
 
 ## Quality gate
 

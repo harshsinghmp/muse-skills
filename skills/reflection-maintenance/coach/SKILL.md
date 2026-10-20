@@ -4,7 +4,7 @@ aliases: ["daily-standup-coach","standup-coach","daily-standup","agency-coach","
 description: "Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across three operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md."
 argument-hint: "[team|client|founder|audit]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]

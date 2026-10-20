@@ -61,6 +61,8 @@ Evaluate the 5 core discipline pillars using `references/effort-rubric.md`:
 4. **Deep Work Focus (0–2)**: ≥4 hours continuous flow on Top 1 MIT?
 5. **Blocker Triage (0–2)**: Blockers isolated within 60 minutes and routed to `dead-letter`?
 
+**Status model:** evaluate progress as unknown-vs-solved, not percent-complete — a task that has stopped moving is an unknown to surface for help, not a person to chase.
+
 ### Step 3: Blocker Triage
 If an engineer or agent is blocked >60 minutes:
 1. Isolate the exact failing seam or missing dependency.
