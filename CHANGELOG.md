@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Front-End Performance Checklist mode (`qa-launch:performance`, #216)**: Sixth `qa-launch` mode (`skills/agency-delivery/qa-launch/references/performance.md`) incorporating the community Front-End Performance Checklist (`thedaviddias/Front-End-Performance-Checklist`, MIT) as a routed launch-QA gate. Grades a release candidate across the six payload categories — HTML, CSS, Fonts, Images, JavaScript, Server — with each item's high/medium/low priority mapped to gate severity ([H]=Block, [M]=ship-with-ticket, [L]=note), the checklist's headline budgets (page <1500 KB / ideally <500 KB, load <3 s, TTFB <1.3 s) anchored to Core Web Vitals where field data exists, a tooling list, and a 2026 modern-framing note (HTTP/2+ concatenation, WebP/AVIF, bundler-driven minification). The mode feeds the `gate` Block-or-Ship verdict and the `audit` perf-budget line. `qa-launch` bumps to 1.2.0 with description/version/mode parity across SKILL.md, README, skills.json, llms.txt, agents/openai.yaml, the root README structure tree, and the regenerated `secretary/references/dispatch.md`; also corrects a prior drift where SKILL.md listed five modes but README/openai.yaml advertised four.
+
 ## [7.3.2] - 2026-10-20
 
 ### Changed
