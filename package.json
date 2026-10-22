@@ -66,13 +66,14 @@
     "test": "bun test",
     "secret-scan": "bun scripts/secret-scan.ts",
     "validate": "bash skills/core-engine/updateagents/scripts/validate-memory-file.sh",
-    "lint": "biome check . && ruff check scripts/",
-    "type-check": "bunx --bun tsc --noEmit"
+    "lint": "biome check . && bash scripts/ruff-check.sh",
+    "type-check": "tsc --noEmit"
   },
   "type": "module",
   "version": "7.4.0",
   "devDependencies": {
+    "@biomejs/biome": "2.6.2",
     "bun-types": "^1.4.2",
-    "ruff": "^1.5.4"
+    "typescript": "^5.9.3"
   }
 }
