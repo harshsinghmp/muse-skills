@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/banner.svg" alt="Muse Skills — 46 production-grade agent departments" width="100%" />
+
 # 🏛️ Muse Skills
 
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
@@ -211,19 +213,16 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 ---
 
-## 🔗 Community & Companion Skills
+## 🔗 Companion & Community Skills
 
-Independently maintained skills that sit **outside** this suite — not vendored here, and not part of the 46-skill registry, so the zero-dependency portability rule still holds.
+Skills an agent can reach **outside** this source tree. None of them are vendored into `skills/`, and none touch the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) — the zero-dependency portability rule and registry parity both hold.
 
-| Skill | What it adds |
-|:---|:---|
-| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. |
+| Skill | What it adds | Install |
+|:---|:---|:---|
+| [`muse-skills`](https://github.com/harshsinghmp/muse-skills) | **This suite** — 46 departments. Install everything, or a single department with `--skill <name>` (e.g. `--skill qa-launch`). | `npx skills add harshsinghmp/muse-skills` |
+| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. | `npx skills add echennells/sparkbtcbot` |
 
-```bash
-npx skills add echennells/sparkbtcbot
-```
-
-> **Handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
+> **sparkbtcbot handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
 
 ---
 
