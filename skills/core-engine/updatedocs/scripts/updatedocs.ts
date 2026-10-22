@@ -118,6 +118,12 @@ export function findFiles(
     ".agents/archive",
     ".agents/artifacts",
     ".agents/reports",
+    // Historical snapshots are frozen artifacts, not live documentation: their
+    // relative links were correct against the tree as it stood at capture
+    // time (e.g. the pre-v6 flat skill layout) and must not be "repaired"
+    // against today's paths. Classified HISTORICAL under the updatedocs
+    // ownership model — audited, never rewritten.
+    "docs/README-v5.0.0.md",
   ],
 ): string[] {
   const results: string[] = [];
