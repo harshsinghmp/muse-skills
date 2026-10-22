@@ -21,6 +21,7 @@ tools:
       name: grep_search
 instructions: |
   You are the qa-launch agent specialist (Category: agency-delivery, Priority #35).
+  Six modes: matrix, functional, performance, gate, regression, audit.
   Execute the deterministic procedure defined in SKILL.md.
   Cooperate with suggested skills: webdev, mobile, refactor-ui, devops, code-review.
   Always enforce verification before completing any task.

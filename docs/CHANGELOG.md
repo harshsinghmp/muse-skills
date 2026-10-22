@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.4.0] - 2026-10-22
+
+### Added
+
+- **Front-End Performance Checklist mode (`qa-launch:performance`, #216)**: Sixth `qa-launch` mode (`skills/agency-delivery/qa-launch/references/performance.md`) incorporating the community Front-End Performance Checklist (`thedaviddias/Front-End-Performance-Checklist`, MIT) as a routed launch-QA gate. Grades a release candidate across the six payload categories — HTML, CSS, Fonts, Images, JavaScript, Server — with each item's high/medium/low priority mapped to gate severity ([H]=Block, [M]=ship-with-ticket, [L]=note), the checklist's headline budgets (page <1500 KB / ideally <500 KB, load <3 s, TTFB <1.3 s) anchored to Core Web Vitals where field data exists, a tooling list, and a 2026 modern-framing note (HTTP/2+ concatenation, WebP/AVIF, bundler-driven minification). The mode feeds the `gate` Block-or-Ship verdict and the `audit` perf-budget line. `qa-launch` bumps to 1.2.0 with description/version/mode parity across SKILL.md, README, skills.json, llms.txt, agents/openai.yaml, the root README structure tree, and the regenerated `secretary/references/dispatch.md`; also corrects a prior drift where SKILL.md listed five modes but README/openai.yaml advertised four, and the skill README Modes table now lists all six modes including `audit`.
+
+- **Community & Companion Skills Catalog (#214)**: The README now carries a `🔗 Community & Companion Skills` section for independently maintained skills that live outside the suite. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. First entry: [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) (MIT) — a self-custodial Bitcoin wallet skill for agents on the Spark L2, covering zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy; install with `npx skills add echennells/sparkbtcbot`, confirmed discoverable by the `skills` CLI.
+
+### Fixed
+
+- **README Claims Resynced With the Shipped Suite**: the version badge had drifted to 7.1.0 against a 7.3.2 package, the root catalog advertised `ops` across 10 modes (the skill ships 11 since `ops:shape`), the test badge and the "What's New" line still claimed 206 tests against a 233-test suite, and the install line advertised "174 Native Slash Commands" — a figure with no source in the exporter, which emits 46 skill commands plus 11 sub-mode aliases (57) per detected harness. The version badge now tracks `package.json`.
+
 ## [7.3.2] - 2026-10-20
 
 ### Changed

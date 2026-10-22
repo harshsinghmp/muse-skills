@@ -1,6 +1,6 @@
 # 🛡️ qa-launch
 
-The pre-launch quality gate: one skill, four modes — matrix, functional, gate, regression. Plan the coverage, verify the candidate, verdict the release, re-verify the fixes. Finds defects; routes them — never fixes inline.
+The pre-launch quality gate: one skill, six modes — matrix, functional, performance, gate, regression, audit. Plan the coverage, verify the candidate, measure performance, verdict the release, re-verify the fixes. Finds defects; routes them — never fixes inline.
 
 ## Install
 
@@ -26,8 +26,10 @@ QA the release candidate and give me a Block-or-Ship verdict.
 |:---|:---|:---|
 | **matrix** | browser / device coverage | Matrix: prioritized browser × device × viewport plan from audience data. |
 | **functional** | QA the site / release candidate | Functional: critical-path walkthrough with pass/fail evidence. |
+| **performance** | front-end performance checklist / perf budget | Performance: six-category (HTML/CSS/fonts/images/JS/Server) checklist with severity-ranked findings and budget readings. |
 | **gate** | release gate / Block-or-Ship | Gate: checklist with an explicit Ship or Block verdict. |
 | **regression** | re-verify after fixes | Regression: fixed issues plus adjacent blast radius, re-verified. |
+| **audit** | audit the quality gate / launch audit | Audit: functional + regression + UAT sign-off, then a launch-gate audit (rollback plan, perf budget, docs). |
 
 ## How it works
 
