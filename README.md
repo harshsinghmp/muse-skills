@@ -5,9 +5,9 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-7.1.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-7.3.2-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
-[![Tests Passing](https://img.shields.io/badge/Tests-206%2F206%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-233%2F233%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
@@ -16,7 +16,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (Skills + 174 Native Slash Commands — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 57 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -27,7 +27,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
-Autonomous multi-agent concurrency leases (`secretary`), tri-vector agency coaching (`coach`), and self-healing circuit breakers (`dead-letter`) across 206 verified tests.
+Front-end performance budgets inside the launch gate (`qa-launch:performance`), Shape Up appetite-based scoping (`ops:shape`), and a community & companion skills catalog — across 233 verified tests.
 See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---
@@ -189,7 +189,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`mobile`](skills/agency-delivery/mobile/README.md) | Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), and PWA across 5 modes. |
 | [`muse-security`](skills/quality-review/muse-security/README.md) | Unified security authority: CVE triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare), and SAST review across 6 modes. |
 | [`new-project`](skills/core-engine/new-project/README.md) | Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner with a 6-stage pipeline. |
-| [`ops`](skills/agency-delivery/ops/README.md) | Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, retros, vendor management, Obsidian PKM vaults, and agency legal templates across 10 modes. |
+| [`ops`](skills/agency-delivery/ops/README.md) | Internal agency operations department: client onboarding, proposals, statements of work, milestone tracking, retros, vendor management, Obsidian PKM vaults, and agency legal templates across 11 modes. |
 | [`paidads`](skills/agency-delivery/paidads/README.md) | Full paid advertising department: campaign planning, ad copy, pixel tracking, and cross-channel retargeting across Google, Meta, LinkedIn, TikTok, and YouTube across 10 modes. |
 | [`periodic-retreat`](skills/reflection-maintenance/periodic-retreat/README.md) | Quarterly personal and project strategic retreat facilitator conducting multi-scale audits of project health, architecture debt, and OKR handoffs. |
 | [`pua`](skills/quality-review/pua/README.md) | Performance Improvement Plan engine forcing exhaustive problem-solving and structured debugging when tasks stall. |
@@ -208,6 +208,22 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`webdev`](skills/agency-delivery/webdev/README.md) | Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, and responsive audits across 15 modes. |
 
 </details>
+
+---
+
+## 🔗 Community & Companion Skills
+
+Independently maintained skills that sit **outside** this suite — not vendored here, and not part of the 46-skill registry, so the zero-dependency portability rule still holds.
+
+| Skill | What it adds |
+|:---|:---|
+| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. |
+
+```bash
+npx skills add echennells/sparkbtcbot
+```
+
+> **Handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
 
 ---
 
