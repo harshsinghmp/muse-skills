@@ -29,6 +29,7 @@ QA the release candidate and give me a Block-or-Ship verdict.
 | **performance** | front-end performance checklist / perf budget | Performance: six-category (HTML/CSS/fonts/images/JS/Server) checklist with severity-ranked findings and budget readings. |
 | **gate** | release gate / Block-or-Ship | Gate: checklist with an explicit Ship or Block verdict. |
 | **regression** | re-verify after fixes | Regression: fixed issues plus adjacent blast radius, re-verified. |
+| **audit** | audit the quality gate / launch audit | Audit: functional + regression + UAT sign-off, then a launch-gate audit (rollback plan, perf budget, docs). |
 
 ## How it works
 
