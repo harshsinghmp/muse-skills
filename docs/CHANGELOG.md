@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **`updateagents` DOX Scaffold Sync**: the sync path copied only three brand documents (`design.md`, `bem-conventions.md`, `a11y.md`) while the generated context index links to six more (`voice.md`, `personas.md`, `positioning.md`, `messaging.md`, `visual-identity.md`, `social-hooks.md`), so `--lint-context` failed with 12 dangling links on every synced project. The sync now mirrors the scaffold's full brand set, matching what the context index advertises.
+- **Optional Global Identity Links Are No Longer Broken Links**: `--lint-context` failed whenever `~/.agents/identity/*` was absent — but that overlay is per-user and optional by design (the tool prints a notice and points at `--onboard --global`). Global `~` links are now collected separately and reported as informational, so they no longer fail the lint.
+- **Taste Atom Invariant Test**: the simulation suite asserted one frozen atom id (`atom-communication-mub4copy02`) that the generator mints per run (`atom-<category>-<base36 timestamp>`) and that only exists after an atom is *learned* from an observed signal — a value no other machine can reproduce. The assertion now encodes the rule that generalizes: every non-retired atom in the taste state must be projected into `decisions.md` and `current.md`, and every id must match the generator's documented shape.
+
+
 ## [7.4.0] - 2026-10-22
 
 ### Added
