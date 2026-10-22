@@ -33,11 +33,11 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Biome lint
-        run: bunx biome check .
+      - name: Install uv (ruff runner)
+        uses: astral-sh/setup-uv@v6
 
-      - name: Ruff lint
-        run: pip install ruff && ruff check scripts/
+      - name: Lint (biome + ruff)
+        run: bun run lint
 
   type-check:
     name: type-check
@@ -54,7 +54,7 @@ jobs:
         run: bun install
 
       - name: TypeScript check
-        run: bunx tsc --noEmit
+        run: bun run type-check
 
   test:
     name: bun test
