@@ -733,8 +733,13 @@ export function lintContextLinks(targetDir: string): {
   valid: boolean;
   checkedCount: number;
   brokenLinks: Array<{ file: string; link: string; target: string }>;
+  optionalGlobalLinks: Array<{ file: string; link: string; target: string }>;
 } {
   const brokenLinks: Array<{ file: string; link: string; target: string }> = [];
+  // Global identity (`~/.agents/identity/*`) is an optional, per-user
+  // overlay — the tool itself prints a notice when it is absent and tells
+  // you to run `--onboard --global`. Its absence must not fail the lint.
+  const optionalGlobalLinks: Array<{ file: string; link: string; target: string }> = [];
   let checkedCount = 0;
 
   const filesToScan: string[] = [];
@@ -777,6 +782,14 @@ export function lintContextLinks(targetDir: string): {
       }
 
       if (!existsSync(resolved)) {
+        if (rawLink.startsWith("~")) {
+          optionalGlobalLinks.push({
+            file: relative(targetDir, filePath),
+            link: rawLink,
+            target: resolved,
+          });
+          continue;
+        }
         brokenLinks.push({
           file: relative(targetDir, filePath),
           link: rawLink,
@@ -790,6 +803,7 @@ export function lintContextLinks(targetDir: string): {
     valid: brokenLinks.length === 0,
     checkedCount,
     brokenLinks,
+    optionalGlobalLinks,
   };
 }
 
@@ -1188,6 +1202,11 @@ if (values["lint-context"]) {
   console.log("🔍 Linting context markdown links and @-imports in:", workspaceDir);
   const res = lintContextLinks(workspaceDir);
   console.log(`Checked ${res.checkedCount} link(s).`);
+  if (res.optionalGlobalLinks.length > 0) {
+    console.log(
+      `ℹ️  ${res.optionalGlobalLinks.length} optional global link(s) unresolved (run 'bun updateagents.ts --onboard --global' to create them).`,
+    );
+  }
   if (!res.valid) {
     console.error(`❌ Found ${res.brokenLinks.length} broken link(s):`);
     for (const b of res.brokenLinks) {
@@ -2773,7 +2792,12 @@ if (existsSync(TEMPLATES_DIR)) {
   const masterBrandDir = join(TEMPLATES_DIR, ".agents/brand");
   const projectBrandDir = join(agentsDir, "brand");
   if (existsSync(masterBrandDir)) {
-    const brandFiles = ["design.md", "bem-conventions.md", "a11y.md"];
+    // Sync every brand document the templates ship — the context index
+    // (`.agents/context/index.md`, `brand.md`) links to voice.md,
+    // personas.md, positioning.md, messaging.md, visual-identity.md and
+    // social-hooks.md. Copying only a subset left those links dangling
+    // and failed `--lint-context` on every synced project.
+    const brandFiles = readdirSync(masterBrandDir).filter((item) => item.endsWith(".md") && item !== "CONTENT_MAP.md");
     for (const bf of brandFiles) {
       const src = join(masterBrandDir, bf);
       const dest = join(projectBrandDir, bf);

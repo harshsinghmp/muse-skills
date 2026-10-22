@@ -884,25 +884,36 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(smmRef).toContain("Select a proven copywriting formula from `copy.md`");
       expect(smmRef).toContain("Social Search & AEO");
 
-      // decisions.md and current.md persistent invariants (when present locally)
-      const decisionsPath = path.join(REPO_ROOT, ".agents", "context", "decisions.md");
-      if (fs.existsSync(decisionsPath)) {
-        const decisionsMd = fs.readFileSync(decisionsPath, "utf8");
-        expect(decisionsMd).toContain("atom-communication-mub4copy02");
-      }
-
-      const currentPath = path.join(REPO_ROOT, ".agents", "context", "current.md");
-      if (fs.existsSync(currentPath)) {
-        const currentMd = fs.readFileSync(currentPath, "utf8");
-        expect(currentMd).toContain("atom-communication-mub4copy02");
-      }
-
-      // taste-state.json
+      // Cognitive invariant: every atom recorded in the taste state must be
+      // projected into the durable context files, and every atom id must
+      // follow the generator's documented shape (`atom-<category>-<base36>`).
+      //
+      // Atom ids are minted per run (`atom-${category}-${Date.now().toString(36)}`,
+      // scripts/taste-engine.ts) and atoms are *learned* from observed signals,
+      // not seeded by a scaffold — so asserting one frozen literal id only
+      // ever passed on the machine that happened to mint it. The invariant
+      // that generalizes is the projection rule, checked over every atom.
       const tastePath = path.join(REPO_ROOT, ".agents", "context", "taste-state.json");
+      const decisionsPath = path.join(REPO_ROOT, ".agents", "context", "decisions.md");
+      const currentPath = path.join(REPO_ROOT, ".agents", "context", "current.md");
+
       if (fs.existsSync(tastePath)) {
-        const tasteJson = JSON.parse(fs.readFileSync(tastePath, "utf8")) as { atoms: Array<{ id: string }> };
-        const hasAtom = tasteJson.atoms.some((a) => a.id === "atom-communication-mub4copy02");
-        expect(hasAtom).toBe(true);
+        const tasteJson = JSON.parse(fs.readFileSync(tastePath, "utf8")) as {
+          atoms: Array<{ id: string; status?: string }>;
+        };
+        for (const atom of tasteJson.atoms) {
+          expect(atom.id).toMatch(/^atom-[a-z0-9]+-[a-z0-9]+$/);
+        }
+        const activeIds = tasteJson.atoms.filter((a) => a.status !== "retired").map((a) => a.id);
+
+        if (fs.existsSync(decisionsPath)) {
+          const decisionsMd = fs.readFileSync(decisionsPath, "utf8");
+          for (const id of activeIds) expect(decisionsMd).toContain(id);
+        }
+        if (fs.existsSync(currentPath)) {
+          const currentMd = fs.readFileSync(currentPath, "utf8");
+          for (const id of activeIds) expect(currentMd).toContain(id);
+        }
       }
     });
   });
