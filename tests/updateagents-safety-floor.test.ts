@@ -68,9 +68,7 @@ describe("🛡️ updateagents Safety Floor: managed-root self-import, community
       expect(rootContent).toContain("[//]: # (updateagents:imported-instructions-router:start)");
 
       // 1a. No archived snapshot may be a byte-for-byte copy of the managed root.
-      const offendingSnapshots = filesBelow(archiveDir).filter(
-        (file) => readFileSync(file, "utf8") === rootContent,
-      );
+      const offendingSnapshots = filesBelow(archiveDir).filter((file) => readFileSync(file, "utf8") === rootContent);
       expect(offendingSnapshots).toEqual([]);
 
       // 1b. The manifest may not claim the managed root as an imported source.
