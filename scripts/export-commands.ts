@@ -2,9 +2,10 @@
 /**
  * export-commands.ts — Universal Multi-Harness Command Exporter & Onboarding Engine
  *
- * Scans all 47 canonical Muse skills + sub-modes from skills.json, and exports
- * first-class native slash commands into detected agent harnesses (OpenCode, Antigravity,
- * Cursor, Windsurf, Claude Code, Aider, Hermes).
+ * Scans all 46 canonical Muse skills + 10 high-leverage sub-mode aliases from
+ * skills.json, and exports first-class native slash commands into the harnesses
+ * this engine actually implements — OpenCode, Gemini/Antigravity, Windsurf and
+ * Cursor (every destination is existence-gated).
  *
  * Usage:
  *   bun scripts/export-commands.ts --setup           # Auto-detect harnesses, install skills & export commands
@@ -86,7 +87,7 @@ const COUNCIL_LEADS: Record<string, string> = {
 };
 
 // ─── High-Leverage Sub-Mode Aliases ──────────────────────────────────────────
-const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: string; desc: string }> = [
+export const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: string; desc: string }> = [
   {
     command: "carousel",
     skill: "smm",
@@ -136,7 +137,6 @@ const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: string; des
     mode: "aeo",
     desc: "AI Engine Optimization for Perplexity, ChatGPT, and Gemini Overviews",
   },
-  { command: "saas", skill: "design", mode: "saas", desc: "High-converting 9-section SaaS landing page layout engine" },
   {
     command: "dispatch",
     skill: "secretary",
@@ -280,38 +280,66 @@ export function exportAntigravityCommands(destDir: string, skills: SkillItem[]):
   return count;
 }
 
+/**
+ * Resolve a skill's on-disk source directory from its skills.json `path`
+ * (e.g. "skills/core-engine/updatedocs/SKILL.md" → "skills/core-engine/updatedocs").
+ * Skills never live at REPO_ROOT/<name>; resolving by bare name installs nothing.
+ */
+export function resolveSkillSourceDir(skill: SkillItem): string {
+  const raw = typeof skill.path === "string" && skill.path.trim() !== "" ? skill.path.trim() : skill.name;
+  const resolved = path.resolve(REPO_ROOT, raw);
+  return path.basename(resolved) === "SKILL.md" ? path.dirname(resolved) : resolved;
+}
+
 export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   fs.mkdirSync(targetDir, { recursive: true });
   let count = 0;
+  const missing: string[] = [];
 
   for (const skill of skills) {
-    const srcDir = path.join(REPO_ROOT, skill.name);
+    const srcDir = resolveSkillSourceDir(skill);
     const destDir = path.join(targetDir, skill.name);
-    if (fs.existsSync(srcDir) && fs.statSync(srcDir).isDirectory()) {
-      fs.cpSync(srcDir, destDir, { recursive: true, force: true });
-      count++;
+    if (!fs.existsSync(srcDir) || !fs.statSync(srcDir).isDirectory()) {
+      missing.push(`${skill.name} → ${srcDir}`);
+      continue;
     }
+    fs.cpSync(srcDir, destDir, { recursive: true, force: true });
+    count++;
+  }
+
+  // Never swallow a missing source: a silent skip is exactly how the exporter
+  // ended up shipping commands that pointed at never-installed skills.
+  if (missing.length > 0) {
+    throw new Error(
+      `exportSkills: ${missing.length} skill source directory(ies) missing — refusing to ship commands for uninstalled skills:\n  ${missing.join("\n  ")}`,
+    );
   }
 
   return count;
 }
 
+export const SECRETARY_ROUTER_START = "[//]: # (muse-secretary-router:start)";
+export const SECRETARY_ROUTER_END = "[//]: # (muse-secretary-router:end)";
+/** Sentinel dialect written by older versions of this exporter (updateagents never shipped it). */
+export const LEGACY_SECRETARY_ROUTER_START = "<!-- muse-secretary-router:start -->";
+
 export function wireSecretaryIntoAgentsMd(targetAgentsMdPath: string): boolean {
   if (!fs.existsSync(targetAgentsMdPath)) return false;
 
   const content = fs.readFileSync(targetAgentsMdPath, "utf8");
-  const marker = "<!-- muse-secretary-router:start -->";
-  if (content.includes(marker)) {
+  // Dedupe across BOTH dialects: updateagents writes the markdown reference-comment
+  // sentinel, so an HTML-comment-only check re-injected a second router block.
+  if (content.includes(SECRETARY_ROUTER_START) || content.includes(LEGACY_SECRETARY_ROUTER_START)) {
     return false; // Already wired
   }
 
   const hookBlock = `
-${marker}
+${SECRETARY_ROUTER_START}
 ## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
 - **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **\`secretary:dispatch\`** (\`view_file ~/.agents/skills/secretary/references/dispatch.md\`).
 - **Autonomous Routing**: Triage user intent against the 47 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching \`references/<mode>.md\` before writing code.
 - **Verification Gate**: All work must pass the pre-merge contract (\`bun test\`, lint, zero secret exposure) before claiming completion.
-<!-- muse-secretary-router:end -->
+${SECRETARY_ROUTER_END}
 `;
 
   fs.writeFileSync(targetAgentsMdPath, content + hookBlock);
