@@ -143,6 +143,10 @@ export function isManagedRootAgents(content: string): boolean {
   content = stripSentinelComments(content);
   return (
     content.includes(MANAGED_MARKER) ||
+    // updateagents installs this router into the root AGENTS.md itself, so its
+    // presence is proof of management even when a hand edit dropped the
+    // explicit marker. Without this, every sync re-imports the managed root.
+    content.includes("[//]: # (updateagents:imported-instructions-router:start)") ||
     (content.startsWith("# ") &&
       content.includes("[//]: # (ALWAYS_REQUIRED_STANDARDS:start)") &&
       content.includes("[//]: # (CONDITIONAL_STANDARDS:start)") &&
@@ -169,10 +173,7 @@ export function renderAdapter(original: string, relativePath: string): string {
   return `${frontmatter}${heading ? `${heading}\n\n` : ""}${ADAPTER_MARKER}\n\nRead and follow the workspace instructions in \`AGENTS.md\` and the complete migrated rules in \`.agents/context/imported-agent-instructions.md\`. Higher-priority system, developer and current user instructions prevail. If imported sources conflict and precedence does not resolve them, report both paths and ask the user; do not silently choose.\n`;
 }
 
-export function discoverAgentInstructionSources(
-  workspaceRoot: string,
-  options: { includeManagedRoot?: boolean } = {},
-): AgentInstructionSource[] {
+export function discoverAgentInstructionSources(workspaceRoot: string): AgentInstructionSource[] {
   const root = resolve(workspaceRoot);
   const found: AgentInstructionSource[] = [];
 
@@ -195,7 +196,15 @@ export function discoverAgentInstructionSources(
       if (!entry.isFile() || !isInstructionFile(relPath)) continue;
       try {
         const content = readFileSync(fullPath, "utf8");
-        if (relPath === "AGENTS.md" && !options.includeManagedRoot && isManagedRootAgents(content)) continue;
+        // A managed root AGENTS.md is the canonical destination, never a foreign
+        // source: importing it writes a byte-for-byte copy of itself into
+        // .agents/context/imported-agent-instructions.md. `--force` must not
+        // reclassify it either — that flag exists to refresh managed adapters,
+        // and treating the root as legacy input produces self-referential
+        // duplicates that then masquerade as user-authored rules.
+        // A hand-written root (no managed marker) is still a genuine legacy
+        // source and must keep migrating.
+        if (relPath === "AGENTS.md" && isManagedRootAgents(content)) continue;
         if (isExpectedAdapter(content, relPath)) continue;
         found.push({ relativePath: relPath, absolutePath: fullPath, content });
       } catch {
@@ -297,10 +306,10 @@ ${sections.join("\n\n---\n\n")}
 
 export function migrateAgentInstructions(
   workspaceRoot: string,
-  options: { dryRun?: boolean; includeManagedRoot?: boolean } = {},
+  options: { dryRun?: boolean } = {},
 ): InstructionMigrationResult {
   const root = resolve(workspaceRoot);
-  const sources = discoverAgentInstructionSources(root, { includeManagedRoot: options.includeManagedRoot });
+  const sources = discoverAgentInstructionSources(root);
   const manifestPath = join(root, MANIFEST_PATH);
   const canonicalPath = join(root, CANONICAL_PATH);
   assertNoSymlinkSegments(root, canonicalPath);

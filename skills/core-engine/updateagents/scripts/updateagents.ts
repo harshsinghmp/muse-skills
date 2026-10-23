@@ -1955,8 +1955,11 @@ export function scaffoldAgentEngine(
     }
   }
 
-  // Preserve and import existing instructions before any adapter or router is refreshed.
-  const instructionMigration = migrateAgentInstructions(target, { dryRun: dry, includeManagedRoot: force });
+  // Preserve and import existing instructions before any adapter or router is
+  // refreshed. There is deliberately no "force" escape hatch here: the managed
+  // root AGENTS.md is the canonical destination and can never be re-imported
+  // into itself.
+  const instructionMigration = migrateAgentInstructions(target, { dryRun: dry });
   for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
     created.push(`${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (snapshot)`);
   }
@@ -2374,6 +2377,8 @@ interface ChangeReport {
   scaffolded: string[];
   contextMerged: Array<{ targetFile: string; section: string; source: string }>;
   standardsSynced: string[];
+  standardsDiverged: string[];
+  standardsSkipped: string[];
   brandSynced: string[];
   archived: string[];
   preserved: string[];
@@ -2383,6 +2388,8 @@ const report: ChangeReport = {
   scaffolded: [],
   contextMerged: [],
   standardsSynced: [],
+  standardsDiverged: [],
+  standardsSkipped: [],
   brandSynced: [],
   archived: [],
   preserved: [],
@@ -2414,6 +2421,12 @@ const hasStandards = existsSync(standardsDir);
 const hasContext = existsSync(contextDir);
 
 const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir || existsSync(join(workspaceDir, "AGENTS.md"));
+
+// A container that exists only because this run created it is still fresh. New
+// projects must receive the full canon and the community/governance files;
+// established repositories must never have canon rulebooks injected or
+// community files re-provisioned behind a plain `sync`.
+const isFreshEngineContainer = !hasAnyAgentFiles;
 
 if (!hasAnyAgentFiles) {
   console.log("  ℹ️  No existing agent files or .agents/ container found.");
@@ -2530,6 +2543,7 @@ let githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
   agentName: readConfiguredAgentName(),
   githubProject: values.github ? true : values["no-github"] ? false : undefined,
   removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+  communityAssets: isScaffold || isFreshEngineContainer,
   dryRun: isDryRun,
 });
 if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
@@ -2546,6 +2560,7 @@ if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values
     agentName: readConfiguredAgentName(),
     githubProject: /^y(es)?$/i.test(answer.trim()),
     removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+    communityAssets: isScaffold || isFreshEngineContainer,
     dryRun: isDryRun,
   });
 }
@@ -2759,33 +2774,67 @@ console.log("\n🔄 Step 5: Synchronizing standards & brand tokens from updateag
 
 if (existsSync(TEMPLATES_DIR)) {
   // Sync .agents/standards/
+  //
+  // Established projects own their standards. The canon in
+  // templates/.agents/standards is a *reference*, not an authority: overwriting
+  // a curated rulebook (or injecting unrelated ones such as WordPress/fintech
+  // guidance into a project that uses neither) is data loss, not a sync.
+  //
+  // Rules (keyed off PRE-RUN state — the sync creates an empty .agents/standards
+  // container earlier in the same run, so a Step-5-time existsSync would mistake
+  // a brand-new project for an established one and provision nothing):
+  //   fresh container (no .agents/standards before this run) -> materialize canon
+  //   existing container                                    -> report drift, write nothing
+  //   --scaffold                                            -> add missing canon files
+  //   --force                                               -> overwrite diverged canon files
   const masterStandardsDir = join(TEMPLATES_DIR, ".agents/standards");
   if (existsSync(masterStandardsDir)) {
     const standards = readdirSync(masterStandardsDir);
+    const standardsExisted = hasStandards;
+    const written: string[] = [];
     for (const std of standards) {
       const src = join(masterStandardsDir, std);
       const dest = join(standardsDir, std);
       assertNotMemory(dest);
-      if (!isDryRun) {
-        if (existsSync(dest)) {
-          const oldContent = readFileSync(dest, "utf8");
-          const newContent = readFileSync(src, "utf8");
-          if (oldContent !== newContent) {
-            cpSync(src, dest);
-            logExplicitModification({
-              file: `.agents/standards/${std}`,
-              changeType: "updated",
-              section: "Standard Synchronization",
-              diffSummary: `Updated canon for standard "${std}"`,
-            });
-          }
-        } else {
-          cpSync(src, dest);
-        }
+      const exists = existsSync(dest);
+      if (exists && !isForce) {
+        // Curated content wins. Surface the divergence instead of clobbering it.
+        const diverged = readFileSync(dest, "utf8") !== readFileSync(src, "utf8");
+        if (diverged) report.standardsDiverged.push(std);
+        report.standardsSynced.push(std);
+        continue;
       }
+      if (!exists && standardsExisted && !isScaffold && !isForce) {
+        // Do not inject orphan standards into an established project.
+        report.standardsSkipped.push(std);
+        continue;
+      }
+      if (!isDryRun) cpSync(src, dest);
+      if (exists) {
+        logExplicitModification({
+          file: `.agents/standards/${std}`,
+          changeType: "updated",
+          section: "Standard Synchronization",
+          diffSummary: `Updated canon for standard "${std}" (explicit --force)`,
+        });
+      }
+      written.push(std);
       report.standardsSynced.push(std);
     }
-    console.log(`  ✅ Synchronized ${standards.length} standards in ./.agents/standards/ (including WordPress)`);
+    console.log(
+      `  ✅ Standards: ${report.standardsSynced.length} canon rulebook(s) accounted for in ./.agents/standards/` +
+        ` (${report.standardsDiverged.length} curated, ${report.standardsSkipped.length} not applicable, ${written.length} written)`,
+    );
+    if (report.standardsDiverged.length) {
+      console.log(
+        `  🔒 Curated standards preserved: ${report.standardsDiverged.join(", ")} (use --force to overwrite)`,
+      );
+    }
+    if (report.standardsSkipped.length) {
+      console.log(
+        `  ⏭️  Canon standards not applicable here: ${report.standardsSkipped.join(", ")} (use --scaffold to add)`,
+      );
+    }
   }
 
   // Sync .agents/brand/ baseline tokens & guidelines
