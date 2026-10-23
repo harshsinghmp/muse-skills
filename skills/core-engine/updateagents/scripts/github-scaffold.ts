@@ -31,6 +31,14 @@ export interface GitHubScaffoldProfile {
   hasComposerProject?: boolean;
   composerTestScript?: boolean;
   removeWorkflowsConfirmed?: boolean;
+  /**
+   * Provision community/governance files (CODE_OF_CONDUCT, CONTRIBUTING,
+   * SECURITY, issue/PR templates, dependabot, CHANGELOG). These are additive
+   * but unrelated to context synchronization, so a plain `sync` on an
+   * established repository must not create them. Defaults to true for direct
+   * scaffold callers; the sync path passes `--scaffold` visibility.
+   */
+  communityAssets?: boolean;
   dryRun?: boolean;
 }
 
@@ -414,30 +422,35 @@ export function scaffoldGitHubAssets(targetDir: string, hints: GitHubScaffoldPro
   }
   if (!isGitHubProject) return result;
 
-  for (const source of filesBelow(TEMPLATES_DIR)) {
-    const sourceRelative = relative(TEMPLATES_DIR, source).replaceAll("\\", "/");
-    if (sourceRelative.startsWith("workflows/")) continue;
-    const destination = join(targetDir, ".github", sourceRelative);
-    if (sourceRelative === "dependabot.yml" && profile.dependencyEcosystems?.length === 0) {
-      result.skipped.push(relative(targetDir, destination));
-      continue;
+  if (hints.communityAssets !== false) {
+    for (const source of filesBelow(TEMPLATES_DIR)) {
+      const sourceRelative = relative(TEMPLATES_DIR, source).replaceAll("\\", "/");
+      if (sourceRelative.startsWith("workflows/")) continue;
+      const destination = join(targetDir, ".github", sourceRelative);
+      if (sourceRelative === "dependabot.yml" && profile.dependencyEcosystems?.length === 0) {
+        result.skipped.push(relative(targetDir, destination));
+        continue;
+      }
+      if (copyRenderedFile(source, destination, profile, Boolean(hints.dryRun))) {
+        result.created.push(relative(targetDir, destination));
+      } else {
+        result.skipped.push(relative(targetDir, destination));
+      }
     }
-    if (copyRenderedFile(source, destination, profile, Boolean(hints.dryRun))) {
-      result.created.push(relative(targetDir, destination));
-    } else {
-      result.skipped.push(relative(targetDir, destination));
-    }
-  }
 
-  const changelogSource = join(TEMPLATES_DIR, "../CHANGELOG.md");
-  const changelogDestination = join(targetDir, "CHANGELOG.md");
-  if (
-    existsSync(changelogSource) &&
-    copyRenderedFile(changelogSource, changelogDestination, profile, Boolean(hints.dryRun))
-  ) {
-    result.created.push("CHANGELOG.md");
-  } else if (existsSync(changelogDestination)) {
-    result.skipped.push("CHANGELOG.md");
+    const changelogSource = join(TEMPLATES_DIR, "../CHANGELOG.md");
+    const changelogDestination = join(targetDir, "CHANGELOG.md");
+    if (
+      existsSync(changelogSource) &&
+      copyRenderedFile(changelogSource, changelogDestination, profile, Boolean(hints.dryRun))
+    ) {
+      result.created.push("CHANGELOG.md");
+    } else if (existsSync(changelogDestination)) {
+      result.skipped.push("CHANGELOG.md");
+    }
+  } else {
+    result.skipped.push(".github community files (sync only; run --scaffold to provision)");
+    result.skipped.push("CHANGELOG.md (sync only; run --scaffold to provision)");
   }
 
   const selectedWorkflows = selectGitHubWorkflowTemplates(profile);

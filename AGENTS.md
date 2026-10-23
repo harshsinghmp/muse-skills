@@ -67,9 +67,16 @@ Code and skill frontmatter are canonical when docs drift.
 - Tool-independent mechanisms with Default-stack lines where a stack was chosen
 - No secrets or personal values in shipped files
 
-<!-- muse-secretary-router:start -->
-## 🏛️ Autonomous Agency Orchestration (Secretary Protocol)
-- **Default Session Orchestrator**: On session start or when receiving non-trivial agency tasks (coding, design, marketing, operations, reviews), immediately activate **`secretary:dispatch`** (`view_file ~/.agents/skills/secretary/references/dispatch.md` or `.agents/skills/secretary/references/dispatch.md`).
-- **Autonomous Routing**: Triage user intent against the 46 canonical Muse departments, adopt the designated Council Lead persona (**Sol**, **Jasper**, **Crew**, **Nexus**), and selectively load only the matching `references/<mode>.md` before writing code.
-- **Verification Gate**: All work must pass the pre-merge contract (`bun test`, lint, zero secret exposure) before claiming completion.
-<!-- muse-secretary-router:end -->
+[//]: # (muse-secretary-router:start)
+## Secretary Protocol
+
+At the first prompt and every new task, activate `secretary:dispatch` by reading `~/.agents/skills/secretary/references/dispatch.md` (or the project copy at `.agents/skills/secretary/references/dispatch.md`). Triage the request, select the department and mode, read the selected skill's `SKILL.md` and mode reference, then act. Route through configured Council roles. Secretary dispatches by instruction; it is not a background process.
+
+Route Coach when its coaching modes fit; it is not a background process and does not replace task closeout.
+[//]: # (muse-secretary-router:end)
+
+[//]: # (updateagents:imported-instructions-router:start)
+## Imported Agent Instructions
+
+Read `.agents/context/imported-agent-instructions.md` before every task when present. It preserves user-authored rules from earlier agent systems with source-path provenance; apply each within its recorded scope and ask the user about conflicts.
+[//]: # (updateagents:imported-instructions-router:end)

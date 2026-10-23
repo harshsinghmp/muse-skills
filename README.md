@@ -1,13 +1,15 @@
 <div align="center">
 
+<img src="assets/banner.svg" alt="Muse Skills — 46 production-grade agent departments" width="100%" />
+
 # 🏛️ Muse Skills
 
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-7.4.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-7.4.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
-[![Tests Passing](https://img.shields.io/badge/Tests-233%2F233%20Passing-brightgreen.svg?style=for-the-badge)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
 </div>
@@ -16,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 57 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 56 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -27,7 +29,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
-Front-end performance budgets inside the launch gate (`qa-launch:performance`), Shape Up appetite-based scoping (`ops:shape`), and a community & companion skills catalog — across 233 verified tests.
+Front-end performance budgets inside the launch gate (`qa-launch:performance`), Shape Up appetite-based scoping (`ops:shape`), and a community & companion skills catalog — all verified by the CI suite (`bun test` + lint + type-check + secret-scan).
 See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---
@@ -81,7 +83,7 @@ flowchart TD
     end
 
     subgraph QualityGates ["🛡️ Nexus Pre-Merge Verification Contract"]
-        EngSkills --> Gate["Executable Verification Suite (bun test: 124/124 Pass)"]
+        EngSkills --> Gate["Executable Verification Suite — bun test + lint + type-check + secret-scan green in CI"]
         DesignSkills --> Gate
         OpsSkills --> Gate
         QualitySkills --> Gate
@@ -160,7 +162,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 | Skill | Description |
 |:---|:---|
-| [`accounts`](skills/agency-delivery/accounts/README.md) | Full financial operations department: client invoicing, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 7 modes. |
+| [`accounts`](skills/agency-delivery/accounts/README.md) | Full financial operations department: client invoicing, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 6 modes. |
 | [`analytics`](skills/agency-delivery/analytics/README.md) | Full data and measurement department: event tracking, KPI dashboards, marketing attribution, and conversion rate optimization across 5 modes. |
 | [`animate`](skills/design-interface/animate/README.md) | Complete motion design, micro-interactions, layout transitions, animated SVGs, and interactive 3D WebGL scenes via Three.js. |
 | [`audit`](skills/quality-review/audit/README.md) | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. |
@@ -201,7 +203,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`sales-enablement`](skills/agency-delivery/sales-enablement/README.md) | Pre-sale sales enablement department: demo scripts, objection-handling handbooks, one-pagers, and sales playbooks across 4 modes. |
 | [`secretary`](skills/context-orchestration/secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 46 departments. |
 | [`seo`](skills/agency-delivery/seo/README.md) | Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, and AI answer engine optimization across 7 modes. |
-| [`smm`](skills/agency-delivery/smm/README.md) | Full organic social department: platform strategy, editorial calendars, post writing, community management, viral carousel generation, and Postiz automation across 10 modes. |
+| [`smm`](skills/agency-delivery/smm/README.md) | Full organic social department: platform strategy, editorial calendars, post writing, community management, viral carousel generation, and Postiz automation across 11 modes. |
 | [`telegram`](skills/agency-delivery/telegram/README.md) | Telegram messaging department: pure-bash bot alerts, approval boards via curl + jq, and Claude Code hook integration across 5 modes. |
 | [`updateagents`](skills/core-engine/updateagents/README.md) | Universal agent context synchronization and repository AI-readiness engine: 13-asset audit, Stage-0 Fast-Skip, synthetic ADE sanitization, and standards synchronization. |
 | [`updatedocs`](skills/core-engine/updatedocs/README.md) | Project-wide documentation synchronization, drift detection, and governance engine aligning documentation with repository code. |
@@ -211,19 +213,16 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 ---
 
-## 🔗 Community & Companion Skills
+## 🔗 Companion & Community Skills
 
-Independently maintained skills that sit **outside** this suite — not vendored here, and not part of the 46-skill registry, so the zero-dependency portability rule still holds.
+Skills an agent can reach **outside** this source tree. None of them are vendored into `skills/`, and none touch the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) — the zero-dependency portability rule and registry parity both hold.
 
-| Skill | What it adds |
-|:---|:---|
-| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. |
+| Skill | What it adds | Install |
+|:---|:---|:---|
+| [`muse-skills`](https://github.com/harshsinghmp/muse-skills) | **This suite** — 46 departments. Install everything, or a single department with `--skill <name>` (e.g. `--skill qa-launch`). | `npx skills add harshsinghmp/muse-skills` |
+| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. | `npx skills add echennells/sparkbtcbot` |
 
-```bash
-npx skills add echennells/sparkbtcbot
-```
-
-> **Handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
+> **sparkbtcbot handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
 
 ---
 
@@ -253,10 +252,17 @@ bun run setup
 ```
 
 Once installed, invoke any skill or mode directly in your agent:
-- `/crm` or `/crm:onboard`
-- `/webdev` or `/webdev:funnel`
-- `/design:uikit` or `/design:saas`
-- `/smm:carousel` or `/ops:obsidian`
+
+```text
+/webdev            # one flat command per skill (46 per-skill commands)
+/design uikit      # mode without an alias: pass the mode as an argument
+/refactor perf     # ... same for /database index, /animate review, /seo local
+/funnel            # the webdev funnel mode, via its alias
+```
+
+- **46 per-skill commands**: the exporter writes flat filenames (`webdev.md` → `/webdev`). There is no `/<skill>:<mode>` colon form — colon-form commands never resolve.
+- **Mode routing by argument**: modes without an alias are passed as an argument — `/design uikit`, `/design ux`, `/refactor perf`, `/database index`.
+- **10 mode aliases**: `/carousel` (smm), `/funnel` (webdev), `/obsidian` (ops), `/wrangler` (devops), `/pr` (growth), `/aso` (mobile), `/delight` (animate), `/podcast` (content), `/aeo` (seo), `/dispatch` (secretary).
 
 ### Option 3: Install Individual Skills
 
@@ -282,7 +288,7 @@ npx skills add harshsinghmp/muse-skills --skill git
 Every skill in Muse Skills is validated through an automated test suite guaranteeing functional reliability, documentation parity, and security compliance:
 
 ```bash
-# Run complete test suite (124 tests, 2,855 assertions across 7 test suites)
+# Run the full test suite — the CI gate; a red run blocks merge
 bun test
 
 # Run code linter and formatting checks
@@ -295,7 +301,7 @@ bun run type-check
 bun run sync-dispatch --check
 ```
 
-- **100% Green Test Suite**: 124 tests across 7 comprehensive test files validating end-to-end multi-skill execution.
+- **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, and secret-scan as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).
 - **Zero-Secret Leakage Guarantee**: Enforced by pre-commit hooks and automated credential scanning pipelines.
 - **Zero-Drift Dispatch Guarantee**: CI strictly enforces that `secretary/references/dispatch.md` and harness commands stay in 100% lockstep with repository code.
 
