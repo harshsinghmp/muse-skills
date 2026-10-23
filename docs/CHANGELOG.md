@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [7.4.1] - 2026-10-23
 
 ### Added
 
@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Historical Snapshots Excluded From the Link Linter**: `docs/README-v5.0.0.md` is a frozen v5.0.0 snapshot whose relative links were correct against the tree as it stood at capture time — the pre-v6 flat skill layout (`updatedocs/README.md`, `refactor-ui/README.md`, `handoff/...`). Link-lint treated it as live documentation and reported 83 false positives, masking the real breakage in the live changelogs. The archive is now classified HISTORICAL under the updatedocs ownership model: audited, never rewritten.
 - **`bun run lint` Now Runs a Real Linter**: neither binary in the lint script was resolvable. `biome` was never a dependency, and `ruff` resolved to the unrelated npm package `coderaiser/ruff` (an environment-variable manager), so `bun run lint` died with "command not found" on both halves. In CI the failure was *silent* — `bunx biome` resolves the package literally named `biome` (0.3.3, the env-var tool) rather than `@biomejs/biome`, so the lint job exited 0 without linting a single file. `@biomejs/biome@2.6.2` and `typescript` are now pinned devDependencies, `scripts/ruff-check.sh` runs Astral's ruff with modern-first resolution (`uvx` → `ruff` → `pipx`, propagating the exit code verbatim), and CI runs `bun run lint` so the local and CI gates are the same command. The Biome config is migrated to the 2.6 schema (`preset: "recommended"`), with Markdown and YAML excluded from the formatter — Markdown formatting would rewrite every skill document, and the workflow templates carry GitHub Actions expressions the YAML parser cannot read.
 
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.4.0...v7.4.1
+
+---
 
 ## [7.4.0] - 2026-10-22
 
