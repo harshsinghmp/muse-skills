@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **git skill 1.3.1**: four release-proven lessons wired into the git skill — annotated tag and back-merge commits carry the tagger/committer identity (GitHub email-privacy rejects the push otherwise), verify the current branch before any write/amend/tag/push (checkout can silently fall through), `gh pr merge --delete-branch` requires the branch not be checked out locally, and process-spawning tests need explicit timeout headroom (a clean-tree timeout is slowness, not a regression).
+
+### Changed
+
+-
+
+### Fixed
+
+-
+
 ## [7.6.0] - 2026-10-24
 
 ### Added
