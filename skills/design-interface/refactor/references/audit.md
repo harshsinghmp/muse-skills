@@ -31,3 +31,4 @@
 ## Sources
 
 - `code-review` skill (this suite) — Torvalds severity calibration and surgical-diff doctrine
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 408 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 409 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -262,7 +262,7 @@ Once installed, invoke any skill or mode directly in your agent:
 ```
 
 - **46 per-skill commands**: the exporter writes flat filenames (`webdev.md` → `/webdev`). There is no `/<skill>:<mode>` colon form — colon-form commands never resolve.
-- **352 `<skill>-<mode>` commands**: one generated command per routable `references/<mode>.md`, derived from the same source the secretary dispatch directory is generated from. The skill prefix makes every name unique and self-describing, so modes that repeat across departments — **35 skills ship an `audit` mode**, each reachable as `/git-audit`, `/webdev-audit`, `/design-audit`, `/crm-audit`, ... — never shadow each other, and no mode is unreachable because another skill claimed the bare name.
+- **353 `<skill>-<mode>` commands**: one generated command per routable `references/<mode>.md`, derived from the same source the secretary dispatch directory is generated from. The skill prefix makes every name unique and self-describing, so modes that repeat across departments — **36 skills ship an `audit` mode**, each reachable as `/git-audit`, `/webdev-audit`, `/design-audit`, `/crm-audit`, ... — never shadow each other, and no mode is unreachable because another skill claimed the bare name.
 - **Mode routing by argument**: modes without an alias are passed as an argument — `/design uikit`, `/design ux`, `/refactor perf`, `/database index`.
 - **10 mode aliases**: `/carousel` (smm), `/funnel` (webdev), `/obsidian` (ops), `/wrangler` (devops), `/pr` (growth), `/aso` (mobile), `/delight` (animate), `/podcast` (content), `/aeo` (seo), `/dispatch` (secretary).
 

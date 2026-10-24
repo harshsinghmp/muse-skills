@@ -38,3 +38,4 @@
 ## Sources
 
 - `references/claim-verification-taxonomy.md` — grounding hierarchy used for confidence classes
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

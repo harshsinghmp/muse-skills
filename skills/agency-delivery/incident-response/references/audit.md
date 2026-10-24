@@ -34,3 +34,4 @@
 - NIST SP 800-61r3 — Incident Response Recommendations (CSF 2.0 profile): policy elements, ID.IM-01/02/03 improvement loop
 - CISA — Cybersecurity Incident & Vulnerability Response Playbooks (playbook format)
 - NIST SP 800-84 — Test, Training, and Exercise Programs (tabletop cadence)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

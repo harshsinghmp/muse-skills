@@ -87,3 +87,4 @@ console.table(overflowing);
 - W3C Mobile Accessibility Guidelines & WCAG 2.5.5 Target Size.
 - Apple Human Interface Guidelines (Touch Targets & Safe Areas).
 - MDN Responsive Design & CSS Container Queries Specification.
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

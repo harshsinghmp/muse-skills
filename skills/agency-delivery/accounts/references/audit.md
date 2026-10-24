@@ -65,3 +65,4 @@ A Financial Hygiene Audit Scorecard identifying leakage vectors, gross margin co
 
 - `EveryInc/charlie-cfo-skill` — Bootstrapped CFO cost containment and capital efficiency.
 - `indranilbanerjee/digital-marketing-pro` — Agency operational audit and revenue leakage frameworks.
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

@@ -105,3 +105,8 @@ Before our design and development teams can start production, please resolve the
 - [ ] Quantitative score and formal verdict (`READY_FOR_BUILD`, `NEEDS_CLARIFICATION`, or `BLOCKED`) recorded.
 - [ ] Missing items mapped to concrete clarification questions.
 - [ ] Audit report saved to `.agents/artifacts/brand/readiness-audit.md`.
+
+## Sources
+
+- `brand/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

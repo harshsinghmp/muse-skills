@@ -33,3 +33,4 @@
 
 - OWASP — Secrets Management guidance (no secrets in logs/history; encrypted at rest)
 - this skill's own mode-600 config and zero-secret delivery contract (SKILL.md, setup mode)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

@@ -47,3 +47,4 @@
 - Kawaa / DeliverabilityChecker — Email Deliverability Audit (SPF ≤10 lookups, DKIM 2048-bit, DMARC policy progression)
 - Reform — CRM Setup for Email Deliverability (Google/Yahoo bulk-sender requirements; 30%/yr B2B data decay)
 - Salesforce research — contact-record completeness figures cited above
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

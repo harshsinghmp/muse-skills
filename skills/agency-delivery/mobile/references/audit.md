@@ -40,4 +40,9 @@ Source: `Community-Access/accessibility-agents` `mobile-accessibility`, raw SKIL
 
 ## Output
 
-`.agents/artifacts/audit-mobile-<ts>.md` with findings table per canonical spec: `../skills/references/audit-mode-guidance.md`.
+`.agents/artifacts/audit-mobile-<ts>.md` with findings table per canonical spec: `skills/references/audit-mode-guidance.md`.
+
+## Sources
+
+- `mobile/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — companion authority referenced above

@@ -54,4 +54,9 @@
 
 ## Output
 
-`.agents/artifacts/audit-gtm-<ts>.md` with findings table per canonical spec: `../skills/references/audit-mode-guidance.md`.
+`.agents/artifacts/audit-gtm-<ts>.md` with findings table per canonical spec: `skills/references/audit-mode-guidance.md`.
+
+## Sources
+
+- `gtm/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — companion authority referenced above

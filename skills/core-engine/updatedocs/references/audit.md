@@ -33,3 +33,4 @@
 
 - `audit` skill (this suite) — link-integrity, secret-scan, and remediation-matrix standards
 - `skills/core-engine/updatedocs/references/AUDIT-CHECKLIST.md` — the governed-docs checklist this mode operationalizes
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

@@ -32,3 +32,4 @@
 
 - AgencyPro — Client Communication Best Practices (bidirectional SLAs in SOW; quarterly 20-minute communication audit)
 - Productized Services — Client Communication Playbook (10-minute thread quality audit, response-time baselines)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

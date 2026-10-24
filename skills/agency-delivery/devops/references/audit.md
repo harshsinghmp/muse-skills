@@ -36,3 +36,4 @@
 - OWASP — Top 10 CI/CD Security Risks (CICD-SEC-1…10) and CI/CD Security Cheat Sheet
 - OWASP DevSecOps Guideline — CI/CD Pipeline Security (PPE, PBAC, protected pipeline definitions)
 - Open Security Architecture SP-028 — Secure DevOps Pipeline Pattern (NIST 800-53 control mapping)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

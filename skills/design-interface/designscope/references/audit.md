@@ -33,3 +33,4 @@
 - Componiq — 50-Point Design System Audit (token/component/docs/process/tooling dimensions)
 - OverlayQA — Design QA Checklist (state matrix: default/hover/focus/active/disabled/loading/error/empty)
 - WCAG 2.2 — contrast 4.5:1 text / 3:1 components, targets ≥24×24 CSS px
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

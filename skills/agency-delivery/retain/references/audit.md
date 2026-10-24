@@ -51,3 +51,4 @@
 - Eru — *How to Run a Churn Audit* (five questions, 90-day leading-indicator lookback, predictability thresholds)
 - xpiCRM — Churn Risk Review (red-flag rubric, five signal families)
 - Umbrex — Customer Retention Playbook (health-score architecture)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

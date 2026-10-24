@@ -30,3 +30,4 @@
 ## Sources
 
 - this skill's own protected-path and dry-run purge contract (SKILL.md)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)
