@@ -42,16 +42,18 @@ Code and skill frontmatter are canonical when docs drift.
   <owner>/<repo>`).
 - Universal Copywriting & SEO/AEO Mandate: every piece of agency copy (social, email, lifecycle, newsletter, blog, landing, VSL, sales collateral) must follow the formula selector and frameworks in `content:copy` (`content/references/copy.md`). All public-facing content must also optimize for both Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: Perplexity, ChatGPT Search, Gemini AI Overviews, Claude) enforcing CORE-EEAT, the 18-token standalone quotability rule, answer-first density under headers, and structured semantic markup.
 - Test gate: `bun test` must pass before any merge.
-- Session Report Protocol: every completed task ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Additive; never replaces the technical report.
+- Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
 
 ## Session Report Protocol
 
-Every completed task ends with two reports, in this order:
+**Scope:** emit the Layman Report only for top-level, user-facing work. Suppress it entirely in agent-to-agent communication, subagent results, internal tool flows, and background/automated runs (those carry the technical report alone). When unsure whether the user wants the plain-language version, finish the technical report, then ask once ("Want the plain-language summary too?") and append it only on confirmation.
+
+Every completed task ends with two reports, in this order (user-facing only):
 
 1. **Technical report** — files changed, commands run, tests, evidence, verification. Canonical record.
 2. **Layman Report (appendix)** — the same work in plain language: one bullet per file/skill/task touched, stating what changed and why it matters to the user, no jargon, no code. Group by area when more than ~8 bullets.
 
-The Layman Report is additive: it never replaces, truncates, or reorders the technical report. A report without the Layman appendix is incomplete; a report with only the Layman appendix is not acceptable.
+The Layman Report is additive: it never replaces, truncates, or reorders the technical report. For user-facing work, a report without the Layman appendix is incomplete; a report with only the Layman appendix is never acceptable. (Agent-to-agent flows carry the technical report alone.)
 
 ## Verification
 
