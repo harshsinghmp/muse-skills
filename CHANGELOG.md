@@ -2,6 +2,28 @@
 
 All notable changes to this project are documented in this file.
 
+## [7.5.0] - 2026-10-24
+
+### Added
+
+- **Generated `<skill>-<mode>` Command Surface (#231)**: the exporter now emits one slash command per routable mode reference — `/<skill>-<mode>` — on top of the 46 per-skill commands and 10 curated aliases: **409 commands per harness** across OpenCode, Antigravity/Gemini, Cursor, and Windsurf. The skill prefix makes every name unique and self-describing, so modes that repeat across departments can no longer shadow each other: previously only ONE `audit` command could exist, leaving every other department's audit mode unreachable as a slash command. A new naming convention (`isModeRefFile`) defines a routable mode as a lowercase kebab-case `references/<mode>.md` — uppercase files (`POLICY`, `SECURITY`, `TROUBLESHOOTING`) are governance documents, not modes — and both the command exporter and the dispatch generator now share that definition, so the command surface and the routing surface cannot disagree. The generator throws on duplicate or colliding command names instead of shipping a shadowed file.
+- **Audit Modes for 15 More Departments (#233, #235)**: `updatedocs`, `updateagents`, `evidence-ledger`, `refactor`, `designscope`, `clean-system-cache`, `design`, `incident-response`, `retain`, `client-comms`, `automation`, `devops`, `crm`, `telegram`, and `periodic-retreat` each ship a domain-specific `audit` mode — **36 of 46 skills now do** — every one reachable as `/<skill>-audit`. Each is grounded in named external standards and cites them in a `## Sources` section: OWASP Top 10 for LLM Applications and the AI Agent Security Cheat Sheet (`automation`), OWASP Top 10 CI/CD Security Risks CICD-SEC-1…10 (`devops`), NIST SP 800-61r3 / CSF 2.0 with CISA playbooks (`incident-response`), WCAG 2.2 plus design-QA checklists (`design`, `designscope`), churn-audit rubrics with 90-day leading indicators and a predictability bar (`retain`), deliverability authentication thresholds — SPF ≤10 lookups, DKIM ≥2048-bit, DMARC past `p=none` (`crm`), and bidirectional SOW SLAs (`client-comms`).
+
+### Fixed
+
+- **Per-Skill Mode Counts Reconciled — Twice (#229, #230)**: the README catalog understated 7 skills by omitting each one's shipped `audit` mode, and the injected router prose claimed "47 canonical Muse departments" against a 46-skill registry. Both corrected; then the deeper fix: per-skill counts are hand-written claims that rot, so they are now **CI-pinned to the generated surface** — a test asserts every catalog claim equals `getModesForSkill(skill).length`, the exact function `dispatch.md` is generated from. 12 rows corrected to the generated truth.
+- **Uniform `## Modes` Contract Across All 46 Skills (#232)**: four incompatible heading variants (`## Modes — quick commands`, `### Modes Quick-Commands`, `### Operating Modes`, and 7 skills with no modes documentation at all) normalized to one exact H2 heading; 7 skills received a generated canonical section; `humanize`'s incomplete metadata block completed. A contract test now requires the heading, resolvable reference links, and the full metadata key set from every future skill.
+- **Audit-Mode Substance Contract + 27 Dead Paths (#235)**: every shipped `audit.md` is test-enforced for substance (scope/when section, procedure-or-checklist body, output/severity/routing, Sources — two legitimate document shapes accepted). Sources blocks added corpus-wide, derived from each file's own referenced authorities. 14 fabricated `references/references/` doubled paths and 13 pre-existing `../skills/` dead paths repaired — both defect classes found by a gauntlet-loop Fresh-Critic sweep and now covered by backticked-path checking, which markdown-link-only validation cannot see.
+- **`paidads` extra-platforms Reference Restored (#236)**: the mode shipped as a single newline-stripped 2,896-character line — complete content, unusable rendering. Restored to 51 structured lines with real Sources.
+
+### Changed
+
+- **CI Runner Headroom (#234)**: the two process-spawning tests that transiently failed the v7.4.1 release workflow (`clean-system-cache` dry-run at 15015ms vs its 15000ms cap; `agent-engine` Part E provisioning on the default 5s) now carry explicit headroom. Assertions unchanged.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.4.1...v7.5.0
+
+---
+
 ## [7.4.1] - 2026-10-23
 
 ### Added
