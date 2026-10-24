@@ -42,4 +42,9 @@ Classic SERP/technical SEO covers where you rank, not what generative engines sa
 
 ## Output
 
-`.agents/artifacts/audit-seo-<ts>.md` with findings table per canonical spec: `../skills/references/audit-mode-guidance.md`.
+`.agents/artifacts/audit-seo-<ts>.md` with findings table per canonical spec: `skills/references/audit-mode-guidance.md`.
+
+## Sources
+
+- `seo/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — companion authority referenced above

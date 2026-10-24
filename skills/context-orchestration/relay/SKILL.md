@@ -41,6 +41,15 @@ metadata:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`ambient-handoff`** | "relay ambient-handoff", "ambient-handoff" | Ambient Continuity & Live Handoff File Contract | [references/ambient-handoff.md](references/ambient-handoff.md) |
+| **`resumption-protocol`** | "relay resumption-protocol", "resumption-protocol" | Inbound Session Resumption & Boundary Protection Protocol | [references/resumption-protocol.md](references/resumption-protocol.md) |
+
 ## When to Use
 
 ### Mode A: Inbound Session Resumption

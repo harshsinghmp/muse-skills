@@ -33,7 +33,7 @@ One head skill for client-serving research: understand a client's users, market,
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

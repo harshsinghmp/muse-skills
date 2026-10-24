@@ -40,7 +40,7 @@ see the load-map column below; loading nothing extra is the default.
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly one mode, routed on the *verb* and *scope of
 change* — review depth scales with blast radius. Load only the listed references.

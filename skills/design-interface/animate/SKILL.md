@@ -40,7 +40,7 @@ Three principles govern everything:
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to one of seven modes. Route on the *verb*, not the noun:
 

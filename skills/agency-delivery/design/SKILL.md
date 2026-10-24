@@ -33,7 +33,7 @@ One head skill for the whole design department. Creates original design from an 
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
@@ -50,6 +50,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **uikit** | "uikit", "ui kit", "component library", "starwind-ui", "stitch-design-taste", "design system components", "primitives" | Component libraries, headless primitives, Starwind UI / Tailwind component kits, tokens-to-components | [references/uikit.md](references/uikit.md) |
 | **story** | "visual storytelling", "visual narrative", "storyboard", "data storytelling", "infographic narrative", "emotional journey" | Visual narrative design: story arcs (setup → conflict → resolution), video storyboards, infographics/data storytelling, emotional journeys, cross-platform visual adaptations | [references/story.md](references/story.md) |
 | **3d** | "3d scene", "spline", "three.js", "r3f", "blender model", "3d asset optimization" | Interactive 3D web scenes, Spline embeds, Three.js/R3F setups, and glTF optimization | [references/3d.md](references/3d.md) |
+| **audit** | "design audit", "design QA", "audit this screen", "contrast check", "design handoff review" | Score the view against hierarchy, contrast, states, tokens, and responsive integrity; severity-routed fixes | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

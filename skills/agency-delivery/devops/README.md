@@ -31,6 +31,7 @@ Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero T
 | **monitoring** | monitoring & alerting | Monitoring: metrics, logs, traces, and alerts that are actionable. |
 | **incident** | incident response / postmortem | Incident: stabilize first, then a blameless postmortem with tracked actions. |
 | **cloudflare** | cloudflare edge, workers, pages & living deliverables | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, Wrangler CLI, and living deliverables with workerd preview containers. |
+| **`audit`** | CI/CD security audit / deployment gate audit | OWASP CICD-SEC-1..10: gates, IAM, credential hygiene, artifact integrity. |
 
 ## How it works
 

@@ -33,7 +33,7 @@ metadata:
 
 ---
 
-## Operating Modes
+## Modes
 
 | Mode | Purpose | Council Lead | Reference Document |
 | :--- | :--- | :--- | :--- |

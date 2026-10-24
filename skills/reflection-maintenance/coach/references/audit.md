@@ -32,3 +32,8 @@ bun skills/reflection-maintenance/coach/scripts/coach.ts --audit
 1. **Critical Blocker**: Leaked secrets or broken frontmatter. Auto-repaired or blocked immediately.
 2. **Warning**: Missing Git commit references or ungrounded claims in standups. Flags warning.
 3. **Notice**: Standup files exceeding 7 days without archival to `.agents/archive/`. Suggests cleanup.
+
+## Sources
+
+- `coach/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — companion authority referenced above

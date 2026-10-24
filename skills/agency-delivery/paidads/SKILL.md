@@ -33,7 +33,7 @@ One head skill for the whole paid advertising department. Channel modes share on
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

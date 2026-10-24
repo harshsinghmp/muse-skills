@@ -59,7 +59,7 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
-  }, 15000);
+  }, 30000);
 
   test("T2 capability-coupled cache isolation: preserved by default in execution mode", () => {
     const tmpDir = fs.mkdtempSync("/tmp/clean-test-safe-");

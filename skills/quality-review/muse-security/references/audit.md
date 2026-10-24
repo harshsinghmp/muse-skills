@@ -34,3 +34,8 @@ A senior security audit assessment synthesizing:
 
 - Immediate vulnerability patching → `remediate` mode.
 - WAF configuration → `cloud-waf` mode.
+
+## Sources
+
+- `muse-security/SKILL.md` — the department contract this audit verifies
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

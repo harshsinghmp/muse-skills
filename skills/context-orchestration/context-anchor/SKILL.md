@@ -46,6 +46,20 @@ The layering contract between them is normative — see [references/layering-pro
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`ast-pinning-guide`** | "context-anchor ast-pinning-guide", "ast-pinning-guide" | AST Attention Pinning Guide — Combating Orientation Burn & Attention Loss | [references/ast-pinning-guide.md](references/ast-pinning-guide.md) |
+| **`attention-hygiene`** | "context-anchor attention-hygiene", "attention-hygiene" | Attention Hygiene & Context Sinks — Mitigating Drift & Hallucination | [references/attention-hygiene.md](references/attention-hygiene.md) |
+| **`deadlock-breaker`** | "context-anchor deadlock-breaker", "deadlock-breaker" | Deadlock Breaker & Toxic Retry Rollback Guide | [references/deadlock-breaker.md](references/deadlock-breaker.md) |
+| **`layering-protocol`** | "context-anchor layering-protocol", "layering-protocol" | Layering Protocol — Anchors vs. HANDOFF.md | [references/layering-protocol.md](references/layering-protocol.md) |
+| **`observation-masking`** | "context-anchor observation-masking", "observation-masking" | Observation Masking & Tool-Output Hashing Guide | [references/observation-masking.md](references/observation-masking.md) |
+| **`prompt-cache-partitioning`** | "context-anchor prompt-cache-partitioning", "prompt-cache-partitioning" | Prompt-Cache-Aware Anchor Partitioning Guide | [references/prompt-cache-partitioning.md](references/prompt-cache-partitioning.md) |
+| **`task-interruption-and-recovery`** | "context-anchor task-interruption-and-recovery", "task-interruption-and-recovery" | context-anchor:task-interruption-and-recovery — Mid-Task Checkpointing & Resumption Protocol | [references/task-interruption-and-recovery.md](references/task-interruption-and-recovery.md) |
+
 ## When to Use
 
 - Before switching tasks or workstreams mid-session.

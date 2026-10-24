@@ -36,6 +36,16 @@ metadata:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`coupling-matrix`** | "coupling-router coupling-matrix", "coupling-matrix" | Coupling Analysis Matrix Reference | [references/coupling-matrix.md](references/coupling-matrix.md) |
+| **`skill-compatibility-matrix`** | "coupling-router skill-compatibility-matrix", "skill-compatibility-matrix" | Skill Compatibility & Conflict Matrix Reference | [references/skill-compatibility-matrix.md](references/skill-compatibility-matrix.md) |
+| **`worktree-lease-protocol`** | "coupling-router worktree-lease-protocol", "worktree-lease-protocol" | Worktree Lease Protocol | [references/worktree-lease-protocol.md](references/worktree-lease-protocol.md) |
+
 ## When to Use
 
 ### Trigger Conditions

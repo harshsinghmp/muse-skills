@@ -33,6 +33,16 @@ Capture a failed or blocked task before context clears. Categorizes failure mode
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`circuit-breaker`** | "dead-letter circuit-breaker", "circuit-breaker" | Toxic Task Circuit Breaker & Concurrency Safety | [references/circuit-breaker.md](references/circuit-breaker.md) |
+| **`record-schema`** | "dead-letter record-schema", "record-schema" | Dead-Letter Record Schema | [references/record-schema.md](references/record-schema.md) |
+| **`sweep-protocol`** | "dead-letter sweep-protocol", "sweep-protocol" | Status Sweep & Cluster Triage Protocol | [references/sweep-protocol.md](references/sweep-protocol.md) |
+
 ## When to Use
 
 - An agent returns *"I can't proceed"*, *"blocked on"*, *"error:"*, or a partial result.

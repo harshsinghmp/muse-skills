@@ -33,4 +33,10 @@
 
 ## Output
 
-`.agents/artifacts/audit-database-<ts>.md` with findings table per canonical spec: `../skills/references/audit-mode-guidance.md`.
+`.agents/artifacts/audit-database-<ts>.md` with findings table per canonical spec: `skills/references/audit-mode-guidance.md`.
+
+## Sources
+
+- `database/SKILL.md` — the department contract this audit verifies
+- `references/references/query.md` — companion authority referenced above
+- `skills/references/audit-mode-guidance.md` — companion authority referenced above

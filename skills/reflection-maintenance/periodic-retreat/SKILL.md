@@ -33,6 +33,16 @@ metadata:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`retreat-framework`** | "periodic-retreat retreat-framework", "retreat-framework" | Quarterly Retreat Framework Reference | [references/retreat-framework.md](references/retreat-framework.md) |
+| **`retreat-protocol`** | "periodic-retreat retreat-protocol", "retreat-protocol" | Strategic Retreat Facilitation & Debt Purge Protocol | [references/retreat-protocol.md](references/retreat-protocol.md) |
+| **`audit`** | "periodic-retreat audit", "retreat readiness audit", "audit project health", "decision verification audit" | Verify the evidence a retreat will deliberate on is current; verify past decisions shipped artifacts; score health signals | [references/audit.md](references/audit.md) |
+
 ## When to Use
 
 ### Trigger Conditions
