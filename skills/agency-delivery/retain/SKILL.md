@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **review-ask** | "ask for review", "testimonial", "review request", "google review" | Review/testimonial ask timed at the delight peak — this skill owns the review pipe | [references/review-ask.md](references/review-ask.md) |
 | **referral-rebuy** | "referral", "refer a friend", "repurchase", "repeat purchase", "renewal offer" | Referral or repurchase/renewal offer after value is proven | [references/referral-rebuy.md](references/referral-rebuy.md) |
 | **churn-watch** | "gone quiet", "churn risk", "usage drop", "silence", "at-risk client" | Churn-signal triage (usage drop, silence >14d) → `growth` churn mode | [references/churn-watch.md](references/churn-watch.md) |
+| **`audit`** | "churn audit", "retention audit", "audit portfolio risk" | Five-question churn audit + leading-indicator rubric across the book; predictability and instrumentation gaps. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

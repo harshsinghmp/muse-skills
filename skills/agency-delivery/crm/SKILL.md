@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **deliverability** | "deliverability audit", "spf dkim setup", "dmarc policy", "domain warming", "spam score" | Bulk sender DNS authentication, IP/domain warming curves, and bounce webhooks | [references/deliverability.md](references/deliverability.md) |
 | **sms** | "sms marketing", "whatsapp notifications", "sms triggers", "text broadcast" | Transactional order alerts and high-conversion broadcast SMS/WhatsApp campaigns | [references/sms.md](references/sms.md) |
 | **contacts** | "customer segments", "rfm scoring", "custom properties", "list hygiene" | Audience segmentation, RFM customer tiers, custom properties, and list cleaning | [references/contacts.md](references/contacts.md) |
+| **`audit`** | "CRM audit", "deliverability audit", "audit contact data" | Authentication-first deliverability pass (SPF/DKIM/DMARC) + list hygiene, decay, and lifecycle flows. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

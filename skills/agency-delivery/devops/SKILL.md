@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **security** | "harden security", "security headers", "infrastructure security", "least privilege" | Infrastructure and application security hardening | [references/security.md](references/security.md) |
 | **monitoring** | "monitoring", "alerts", "observability", "uptime", "logging" | Monitoring, logging, and actionable alerting | [references/monitoring.md](references/monitoring.md) |
 | **incident** | "incident", "outage", "postmortem", "site is down", "production issue" | Incident response and blameless postmortem | [references/incident.md](references/incident.md) |
+| **`audit`** | "CI/CD security audit", "audit the pipeline", "deployment gate audit" | OWASP CICD-SEC-1..10 pass: flow control, IAM, credential hygiene, PPE, artifact integrity, drift. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

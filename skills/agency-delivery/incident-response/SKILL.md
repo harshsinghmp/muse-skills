@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **mitigate** | "stop the bleeding", "mitigate the outage", "roll back", "site is down", "data loss" | Stop-the-bleeding playbooks per incident class | [references/mitigate.md](references/mitigate.md) |
 | **communicate** | "status page update", "tell the client", "incident comms", "draft the update" | Status-page and client comms with severity-linked cadence | [references/communicate.md](references/communicate.md) |
 | **retro** | "postmortem", "blameless retro", "what went wrong", "action items" | Blameless postmortem feeding ops/retro with tracked actions | [references/retro.md](references/retro.md) |
+| **`audit`** | "IR readiness audit", "audit incident response", "post-incident controls audit" | NIST 800-61r3 readiness: policy, playbooks, exercises, authority boundaries; improvement actions verified landed. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

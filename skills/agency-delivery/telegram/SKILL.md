@@ -50,6 +50,7 @@ Every invocation resolves to exactly one mode:
 || **hook** | "claude code hooks", "session start/end", "tool use notification", "hook telegram" | Claude Code hook integration: register hook scripts that call Telegram on session start, end, tool use, or errors | [references/hook.md](references/hook.md) |
 || **route** | "route events to telegram", "kafka events to telegram", "alert routing", "event stream" | Kafka event routing: shape structured events into Telegram messages, ack the event, dispatch to the right chat/bot/target per config | [references/route.md](references/route.md) |
 || **setup** | "create a telegram bot", "bot token", "telegram setup", "configure telegram" | Stand up a Telegram bot token config: config file layout, mode-600, env binding, recovery docs | [references/setup.md](references/setup.md) |
+| **audit** | "telegram audit", "bot security audit", "audit bot config", "token exposure check" | Security and delivery reliability pass: token hygiene, mode-600, routing, approvals, hooks, rate limits | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded.
 
