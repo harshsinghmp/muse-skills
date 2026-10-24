@@ -257,9 +257,11 @@ Used when sandboxing restricts worktrees or for simple isolated edits:
    ```
 4. Commit using Conventional Commits format:
    ```bash
-   git add -A
+   git status --short          # review every line before staging
+   git add <explicit paths>    # never `git add -A` / `git add .`
    git commit -m "feat(<scope>): <imperative summary> (Closes #<issue-id>)"
    ```
+   The commit message must match `git show --stat HEAD`.
 
 ### Phase 4: Documentation Synchronization (`updatedocs`)
 1. Invoke `updatedocs` to synchronize project context with new code behavior:
@@ -454,6 +456,7 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
 - **Never Include Unredacted Credentials**: Scan diffs for `.env` files, API keys (`sk-*`, `ghp_*`), and private tokens before pushing.
 - **No Vague Commit Messages**: Messages like "fixes bug" or "updates" are strictly forbidden. Always use Conventional Commits with scope and rationale.
 - **Never Force-Push Shared Branches**: `--force-with-lease` is permissible only on isolated feature branches; force-pushing `dev` or `master` is catastrophic.
+- **Landing Gate (delivery is not commitment)**: A commit is not a delivery. Work is LANDED only when reachable from the integration branch on the remote; until then it is LOCAL. The words landed/shipped/merged/released/deployed/"verified on <branch>" may be used only after the gate exits 0 in the same session. Verdicts that cannot be confused: `LANDED`/`LOCAL`, `REVIEWABLE`/`NOT REVIEWABLE` — never "NOT LANDED" (it contains "LANDED"). Run `bun run check:landed` (or the repo's equivalent) and include the Remote state block in the close-out. If you cannot push, say `LOCAL`. Full standard: `.agents/standards/landing-gate.md`.
 - **Stuck?** See [Troubleshooting](references/TROUBLESHOOTING.md) for symptom → one-command fix → deeper link.
 
 ---
@@ -468,6 +471,7 @@ Before marking this skill complete, verify:
 5. GitHub release is published with valid tag `vX.Y.Z` (or `{package}-vX.Y.Z` in monorepos).
 6. Obsolete feature branches and worktrees have been deleted locally and remotely.
 7. Delivery uses the [run report template](references/report-template.md) — fill it at delivery.
+8. Landing Gate exits 0 (or the report says LOCAL with the remaining steps).
 
 ---
 
