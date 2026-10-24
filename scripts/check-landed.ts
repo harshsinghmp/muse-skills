@@ -41,7 +41,24 @@ if (mode === "post-merge") {
   const unpushed = run("git", ["rev-list", "--count", `origin/${branch}..HEAD`]);
   const unpushedCount = unpushed.code === 0 ? unpushed.out.trim() : "?";
   const landed = ancestor.code === 0 && intSha !== "unknown";
-  const pr = run("gh", ["pr", "view", head || branch, "--json", "number,state", "-q", '"#\\(.number) \\(.state)"']);
+  // The PR that most recently carried work onto the integration branch
+  // (the state this post-merge gate is judging). `gh pr view <branch>`
+  // resolves to an arbitrary head-branch PR — the stale-#146 bug.
+  // `gh pr list` feeds jq an array, so the template must iterate with `.[]`.
+  const pr = run("gh", [
+    "pr",
+    "list",
+    "--state",
+    "merged",
+    "--base",
+    branch,
+    "--limit",
+    "1",
+    "--json",
+    "number,state",
+    "-q",
+    '.[] | "#\\(.number) \\(.state)"',
+  ]);
   table([
     ["Branch + sha", `${process.env.GITHUB_REF_NAME ?? branch} @ ${headSha}`],
     ["Integration branch + sha", `${branch} @ ${intSha}`],
@@ -49,7 +66,7 @@ if (mode === "post-merge") {
       "Landed? (exact command + exit code)",
       `${landed ? "LANDED" : "LOCAL"} — git merge-base --is-ancestor HEAD origin/${branch} (exit ${ancestor.code})`,
     ],
-    ["PR number + state", pr.code === 0 ? pr.out.trim() : "none"],
+    ["PR number + state", pr.code === 0 && pr.out.trim() ? pr.out.trim() : "none"],
     ["Unpushed count", unpushedCount],
     ["Gate result", landed ? "LANDED" : "LOCAL"],
   ]);
