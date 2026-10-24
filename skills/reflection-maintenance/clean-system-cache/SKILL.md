@@ -41,7 +41,11 @@ Requires **zero external runtimes** (no Python, no Node, no dependencies):
 
 ## Modes
 
-This department ships no routed mode references — it operates as a single procedure through this SKILL.md. The generated `<skill>-<mode>` command surface and the secretary dispatch directory are the complete routing truth.
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`audit`** | "cache audit", "inventory caches", "pre-purge audit" | Classify purge candidates safe/protected/ask-first with du-verified reclaim estimates; dry-run only. | [references/audit.md](references/audit.md) |
 
 ## When to Use
 

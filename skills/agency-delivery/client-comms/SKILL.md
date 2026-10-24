@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **change** | "change request", "scope change", "client wants extra" | Change-request triage: impact, options, scoped approval before work | [references/change.md](references/change.md) |
 | **handover** | "hand over the project", "handover docs", "client training" | Project handover: docs, credentials, training, and support terms | [references/handover.md](references/handover.md) |
 | **feedback** | "collect feedback", "client review", "satisfaction check" | Client feedback intake: structured capture, triage, and response plan | [references/feedback.md](references/feedback.md) |
+| **`audit`** | "communication audit", "audit client comms", "SLA audit" | Bidirectional SLA conformance, cadence integrity, channel discipline, unresolved threads, escalation signals. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

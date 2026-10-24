@@ -50,6 +50,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **database** | "refactor schema", "zero-downtime migration", "normalize tables", "fix N+1 queries", "db refactor" | Data layer refactoring: non-breaking column migrations, query optimization, indexing strategy, and ORM query batching | [references/database.md](references/database.md) |
 | **sweep** | "sweep consistency", "unify all pages", "standardize components across app", "design consistency" | Multi-page consistency refactoring (strictly on-demand, never runs automatically): sweeping duplicate components into single sources of truth, aligning button styles, cards, and patterns across the app | [references/sweep.md](references/sweep.md) |
 | **polish** | "final polish before release", "clean up deprecated code", "pre-merge polish", "ship readiness" | Pre-launch refactoring pass: dead-letter triage, deprecated API cleanup, lint/formatting sweep, and edge-case hardening | [references/polish.md](references/polish.md) |
+| **`audit`** | "pre-refactor audit", "audit codebase health", "refactor scope audit" | Measured pain, test-covered seams, blast radius, surgical-diff and rollback discipline — before code moves. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run. Note: `sweep` mode carries codebase-wide blast radius and is strictly on-demand; automated agents must never run it automatically without explicit user direction.
 

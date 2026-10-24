@@ -62,6 +62,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`evidence-entry-schema`** | "evidence-ledger evidence-entry-schema", "evidence-entry-schema" | Evidence Entry Schema | [references/evidence-entry-schema.md](references/evidence-entry-schema.md) |
 | **`skill-orchestration`** | "evidence-ledger skill-orchestration", "skill-orchestration" | Skill Orchestration Map | [references/skill-orchestration.md](references/skill-orchestration.md) |
 | **`staleness-rules`** | "evidence-ledger staleness-rules", "staleness-rules" | Staleness Rules | [references/staleness-rules.md](references/staleness-rules.md) |
+| **`audit`** | "ledger integrity audit", "audit claims", "verify evidence" | Trace every shipped claim to a sourced, dated ledger entry; flag unsourced, stale, or contradicted entries. | [references/audit.md](references/audit.md) |
 
 ## When to Use
 

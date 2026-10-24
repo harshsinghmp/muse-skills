@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **integrations** | "connect two apps", "api integration", "webhook", "sync systems", "webhook payload" | Third-party API/webhook integrations, payload byte-size limiter, and data sync | [references/integrations.md](references/integrations.md) |
 | **prompt** | "write a prompt", "prompt engineering", "improve this prompt", "eval a prompt" | Prompt design, iteration, and evaluation | [references/prompt.md](references/prompt.md) |
 | **voice** | "voice agent", "phone bot", "retell ai", "bland ai", "call assistant", "telephony", "voice ai" | Conversational voice AI agents, Retell/Bland pipelines, Twilio SIP, and real-time STT/TTS | [references/voice.md](references/voice.md) |
+| **`audit`** | "agent security audit", "audit the automation", "OWASP LLM audit" | OWASP LLM Top-10 pass: injection, excessive agency, output handling, sandboxing, evals-as-gate. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

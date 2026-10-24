@@ -53,6 +53,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`layout-tree-extraction`** | "designscope layout-tree-extraction", "layout-tree-extraction" | Layout Tree Extraction Reference | [references/layout-tree-extraction.md](references/layout-tree-extraction.md) |
 | **`output-template`** | "designscope output-template", "output-template" | Output Template — The design.md template | [references/output-template.md](references/output-template.md) |
 | **`token-extraction`** | "designscope token-extraction", "token-extraction" | Token Extraction — How to infer tokens with rigor | [references/token-extraction.md](references/token-extraction.md) |
+| **`audit`** | "design system audit", "audit tokens", "design-code agreement audit" | Score tokens/components/docs/process/tooling; verify design-code state agreement and extraction fidelity. | [references/audit.md](references/audit.md) |
 
 ## When to Use
 
