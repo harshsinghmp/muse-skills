@@ -72,6 +72,10 @@ The central principle is:
 
 > **Document the project that exists, using evidence from the project that exists, while changing only the documentation that is actually affected.**
 
+### Report phase output
+
+A completed sync ends with two reports, in order: (1) the technical report (files changed, evidence, verification), then (2) a **Layman Report** appendix — one plain-language bullet per file/skill/task touched, saying what changed and why it matters to the user, no jargon, no code. The Layman Report is additive and never replaces the technical report. (See the Session Report Protocol in `AGENTS.md`.)
+
 ---
 
 ## 🚨 NON-NEGOTIABLE GOVERNANCE RULES
