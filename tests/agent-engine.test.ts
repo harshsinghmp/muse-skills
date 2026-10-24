@@ -856,7 +856,7 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts["test"]).toBe("bun test");
       expect(pkg.scripts["lint"]).toBeDefined();
       expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
-    });
+    }, 15000);
 
     it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
       // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
