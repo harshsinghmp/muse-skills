@@ -25,7 +25,7 @@ reachable from the integration branch on the remote; until then it is
 ## The gate
 
 ```bash
-bun run check:landed -- --mode=post-merge --branch=dev   # LANDED / LOCAL
+bun run check:landed -- --mode=post-merge --branch={{integration_branch}}   # LANDED / LOCAL
 bun run check:landed -- --mode=pre-review --head=<branch> # REVIEWABLE / NOT REVIEWABLE
 ```
 
@@ -34,7 +34,7 @@ bun run check:landed -- --mode=pre-review --head=<branch> # REVIEWABLE / NOT REV
 | Field | Value |
 | :--- | :--- |
 | Branch + sha | `<branch>` @ `<sha>` |
-| Integration branch + sha | `dev` @ `<sha>` |
+| Integration branch + sha | `{{integration_branch}}` @ `<sha>` |
 | Landed? (yes/no + exact command + exit code) | `LANDED` / `LOCAL` |
 | PR number + state | `#<n>` / `<state>` (or `none`) |
 | Unpushed count | `<n>` |

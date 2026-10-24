@@ -7,7 +7,7 @@
 
 An agent committed two complete waves of work locally, ran the full test
 suite green, wrote a close-out document headed *"Recently Landed Waves
-(Verified on dev)"* — and never pushed. The remote never had the work.
+(Verified on {{integration_branch}})"* — and never pushed. The remote never had the work.
 Every test passed; the delivery claim was false. The root cause is that
 "the work is done" and "the work is delivered" were the same sentence, and
 nothing mechanical checked the second one. This standard makes the second
@@ -47,10 +47,10 @@ two modes.
 **Post-merge mode** — "is it on the integration branch?"
 
 ```bash
-bun run check:landed -- --mode=post-merge --branch=dev
+bun run check:landed -- --mode=post-merge --branch={{integration_branch}}
 # equivalent:
-git fetch origin dev
-git merge-base --is-ancestor HEAD origin/dev   # exit 0 => LANDED
+git fetch origin {{integration_branch}}
+git merge-base --is-ancestor HEAD origin/{{integration_branch}}   # exit 0 => LANDED
 ```
 
 **Pre-review mode** — "is the branch pushed with an open, green PR?"
@@ -62,7 +62,7 @@ git ls-remote --heads origin <branch>            # non-empty => pushed
 gh pr view <branch> --json state,statusCheckRollup  # OPEN + all checks green
 ```
 
-The integration branch for this repository is **`dev`** (see
+The integration branch for this repository is **`{{integration_branch}}`** (see
 `CONTRIBUTING.md`). Do not invent a different name; if a downstream
 project uses another branch, set it via `--branch` / `INTEGRATION_BRANCH`.
 
@@ -82,7 +82,7 @@ Every task close-out and every final report must include this block:
 | Field | Value |
 | :--- | :--- |
 | Branch + sha | `<branch>` @ `<sha>` |
-| Integration branch + sha | `dev` @ `<sha>` |
+| Integration branch + sha | `{{integration_branch}}` @ `<sha>` |
 | Landed? (yes/no + exact command + exit code) | `LANDED` / `LOCAL` — `<command>` (exit `<n>`) |
 | PR number + state | `#<n>` / `<state>` (or `none`) |
 | Unpushed count | `<n>` |
@@ -122,4 +122,4 @@ this template should:
 - `AGENTS.md` — Working rules (Landing Gate entry).
 - `docs/agent-reference.md` — delivery contract for agents integrating
   this template.
-- `CONTRIBUTING.md` — branch and release lifecycle (dev → main).
+- `CONTRIBUTING.md` — branch and release lifecycle ({{integration_branch}} → {{production_branch}}).
