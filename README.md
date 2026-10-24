@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 56 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 394 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -255,12 +255,14 @@ Once installed, invoke any skill or mode directly in your agent:
 
 ```text
 /webdev            # one flat command per skill (46 per-skill commands)
-/design uikit      # mode without an alias: pass the mode as an argument
-/refactor perf     # ... same for /database index, /animate review, /seo local
-/funnel            # the webdev funnel mode, via its alias
+/webdev-audit      # every skill-mode as its own command: /<skill>-<mode>
+/git-audit         # ... every shipped audit mode: /seo-audit, /ops-audit, /database-audit ...
+/design uikit      # shortcut: pass the mode as an argument
+/funnel            # the webdev funnel mode, via its flat alias
 ```
 
 - **46 per-skill commands**: the exporter writes flat filenames (`webdev.md` → `/webdev`). There is no `/<skill>:<mode>` colon form — colon-form commands never resolve.
+- **338 `<skill>-<mode>` commands**: one generated command per routable `references/<mode>.md`, derived from the same source the secretary dispatch directory is generated from. The skill prefix makes every name unique and self-describing, so modes that repeat across departments — each skill's `audit` mode ships as `/git-audit`, `/webdev-audit`, `/seo-audit`, `/ops-audit`, ... (21 skills ship one) — never shadow each other, and no mode is unreachable because another skill claimed the bare name.
 - **Mode routing by argument**: modes without an alias are passed as an argument — `/design uikit`, `/design ux`, `/refactor perf`, `/database index`.
 - **10 mode aliases**: `/carousel` (smm), `/funnel` (webdev), `/obsidian` (ops), `/wrangler` (devops), `/pr` (growth), `/aso` (mobile), `/delight` (animate), `/podcast` (content), `/aeo` (seo), `/dispatch` (secretary).
 

@@ -3,11 +3,13 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
+  commandSurfaceCounts,
   exportAntigravityCommands,
   exportCursorCommands,
   exportOpenCodeCommands,
   exportSkills,
   exportWindsurfWorkflows,
+  getSkillModeCommands,
   getSkills,
   resolveSkillSourceDir,
   SUBMODE_ALIASES,
@@ -16,10 +18,12 @@ import {
 
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 
-/** 46 per-skill commands + 10 flat mode aliases, per harness. */
+/** 46 per-skill commands + one generated <skill>-<mode> command per routable reference + 10 flat aliases. */
 const EXPECTED_SKILL_COMMANDS = 46;
 const EXPECTED_ALIAS_COMMANDS = 10;
-const EXPECTED_TOTAL_COMMANDS = EXPECTED_SKILL_COMMANDS + EXPECTED_ALIAS_COMMANDS;
+const SKILL_MODE_COMMANDS = getSkillModeCommands(getSkills());
+const EXPECTED_SKILL_MODE_COMMANDS = SKILL_MODE_COMMANDS.length;
+const EXPECTED_TOTAL_COMMANDS = EXPECTED_SKILL_COMMANDS + EXPECTED_SKILL_MODE_COMMANDS + EXPECTED_ALIAS_COMMANDS;
 
 const COMMAND_EXPORTERS: Array<[string, (dest: string, skills: ReturnType<typeof getSkills>) => number]> = [
   ["OpenCode", exportOpenCodeCommands],
@@ -76,7 +80,7 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
     expect(() => exportSkills(path.join(sandbox, "broken"), broken)).toThrow(/missing/);
   });
 
-  it("exports 46 skills + 10 aliases for every implemented harness", () => {
+  it("exports 46 skills + every skill-mode command + 10 aliases for every implemented harness", () => {
     const skills = getSkills();
 
     for (const [harness, exporter] of COMMAND_EXPORTERS) {
@@ -84,11 +88,61 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
       expect(exporter(dest, skills)).toBe(EXPECTED_TOTAL_COMMANDS);
       const files = fs.readdirSync(dest).filter((f) => f.endsWith(".md"));
       expect(files.length).toBe(EXPECTED_TOTAL_COMMANDS);
+      // The generated layer lands in every harness: <skill>-<mode>.md files.
+      for (const entry of SKILL_MODE_COMMANDS) {
+        expect(files).toContain(`${entry.command}.md`);
+      }
     }
 
     const windsurfDest = path.join(sandbox, "windsurf");
     expect(exportWindsurfWorkflows(windsurfDest, skills)).toBe(EXPECTED_TOTAL_COMMANDS);
     expect(fs.readdirSync(windsurfDest).filter((f) => f.endsWith(".md")).length).toBe(EXPECTED_TOTAL_COMMANDS);
+  });
+
+  it("exposes every skill's audit mode as a unique <skill>-audit command", () => {
+    const skills = getSkills();
+    const auditCommands = SKILL_MODE_COMMANDS.filter((e) => e.mode === "audit");
+    expect(auditCommands.length).toBeGreaterThan(0);
+
+    // One command per skill that ships references/audit.md, each pointing at
+    // its OWN skill's audit reference — never a shared shadowed command.
+    for (const entry of auditCommands) {
+      expect(entry.command).toBe(`${entry.skill}-audit`);
+      const owner = skills.find((s) => s.name === entry.skill);
+      if (!owner) {
+        throw new Error(`skill-mode command '${entry.command}' points at unknown skill '${entry.skill}'`);
+      }
+      expect(fs.existsSync(path.join(resolveSkillSourceDir(owner), "references", "audit.md"))).toBe(true);
+    }
+
+    // The motivating examples land with the skill prefix intact.
+    const commands = new Set(SKILL_MODE_COMMANDS.map((e) => e.command));
+    for (const want of ["webdev-audit", "git-audit", "smm-carousel", "git-pr-checks"]) {
+      expect(commands.has(want)).toBe(true);
+    }
+  });
+
+  it("skill-mode command names are globally unique and collide with nothing", () => {
+    const skills = getSkills();
+    const perSkill = new Set(skills.map((s) => s.name));
+    const aliasCommands = new Set(SUBMODE_ALIASES.map((a) => a.command));
+
+    const seen = new Set<string>();
+    for (const entry of SKILL_MODE_COMMANDS) {
+      expect(seen.has(entry.command)).toBe(false);
+      expect(perSkill.has(entry.command)).toBe(false);
+      expect(aliasCommands.has(entry.command)).toBe(false);
+      seen.add(entry.command);
+    }
+  });
+
+  it("commandSurfaceCounts agrees with the generated layers", () => {
+    const skills = getSkills();
+    const counts = commandSurfaceCounts(skills);
+    expect(counts.perSkill).toBe(skills.length);
+    expect(counts.skillModes).toBe(SKILL_MODE_COMMANDS.length);
+    expect(counts.aliases).toBe(SUBMODE_ALIASES.length);
+    expect(counts.total).toBe(skills.length + SKILL_MODE_COMMANDS.length + SUBMODE_ALIASES.length);
   });
 
   it("round-trips: every path an exported command references exists after exportSkills", () => {

@@ -18,16 +18,17 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { SUBMODE_ALIASES } from "../scripts/export-commands";
+import { getSkillModeCommands, getSkills, SUBMODE_ALIASES } from "../scripts/export-commands";
 
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const EXPORTER_CLI = path.join(REPO_ROOT, "scripts/export-commands.ts");
 const REPO_AGENTS_MD = path.join(REPO_ROOT, "AGENTS.md");
 
-/** Documented contract: 46 canonical skills + 10 sub-mode aliases = 56 commands per harness. */
+/** Documented contract: 46 canonical skills + every generated <skill>-<mode> command + 10 aliases, per harness. */
 const EXPECTED_SKILLS = 46;
 const EXPECTED_ALIASES = 10;
-const EXPECTED_COMMANDS_PER_HARNESS = EXPECTED_SKILLS + EXPECTED_ALIASES;
+const SKILL_MODE_COMMANDS = getSkillModeCommands(getSkills());
+const EXPECTED_COMMANDS_PER_HARNESS = EXPECTED_SKILLS + SKILL_MODE_COMMANDS.length + EXPECTED_ALIASES;
 
 const SECRETARY_START = "[//]: # (muse-secretary-router:start)";
 const SECRETARY_END = "[//]: # (muse-secretary-router:end)";
@@ -180,12 +181,13 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     }
   });
 
-  it("writes 56 commands per detected harness (46 skills + 10 aliases), derived not hardcoded", () => {
+  it("writes the full command surface per detected harness (46 skills + every skill-mode + 10 aliases), derived not hardcoded", () => {
     const stdout = cleanRun();
     const skills = readRegistry();
     const harnesses = harnessTargets(fakeHome, fakeWorkspace);
     const expectedFiles = [
       ...skills.map((skill) => `${skill.name}.md`),
+      ...SKILL_MODE_COMMANDS.map((entry) => `${entry.command}.md`),
       ...SUBMODE_ALIASES.map((alias) => `${alias.command}.md`),
     ].sort();
 
@@ -239,7 +241,9 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
 
     expect(missing).toEqual([]);
     expect(fileRefs).toBe(EXPECTED_COMMANDS_PER_HARNESS * harnesses.length);
-    expect(modeRefs).toBe(EXPECTED_ALIASES * harnesses.length);
+    // Every mode-command and alias names its references/<mode>.md; per-skill
+    // commands reference SKILL.md only, so they contribute no mode refs.
+    expect(modeRefs).toBe((EXPECTED_ALIASES + SKILL_MODE_COMMANDS.length) * harnesses.length);
   });
 
   it("does not append a duplicate secretary router to a workspace AGENTS.md", () => {
