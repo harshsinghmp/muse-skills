@@ -1,7 +1,7 @@
 ---
 name: research
 aliases: ["user-research", "market-pulse", "entity-dossier", "client-research"]
-description: "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through three modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics)."
+description: "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through five modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics)."
 argument-hint: "[user-research|market-pulse|entity-dossier]"
 user-invocable: true
 version: 1.0.0
@@ -47,6 +47,13 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/research-<file>` commands (not separate routed modes):
+
+- [competitor-analysis.md](references/competitor-analysis.md)
 
 ## When to Use
 

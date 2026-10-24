@@ -59,6 +59,21 @@ In **review / improve / audit / find**, load `references/review-checklist.md` an
 
 ---
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/animate-<file>` commands (not separate routed modes):
+
+- [mobile.md](references/mobile.md)
+- [principles.md](references/principles.md)
+- [motion-dev.md](references/motion-dev.md)
+- [performance.md](references/performance.md)
+- [other-libraries.md](references/other-libraries.md)
+- [css-animations.md](references/css-animations.md)
+- [gsap.md](references/gsap.md)
+- [accessibility.md](references/accessibility.md)
+- [technical-diagrams.md](references/technical-diagrams.md)
+
 ## When to Use
 
 - Asked to **animate / add motion / build a transition / make something feel alive**.

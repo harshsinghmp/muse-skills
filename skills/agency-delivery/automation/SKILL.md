@@ -1,7 +1,7 @@
 ---
 name: automation
 aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering"]
-description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through seven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics)."
+description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through nine modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics)."
 argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"
 user-invocable: true
 version: 1.1.0
@@ -51,6 +51,13 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/automation-<file>` commands (not separate routed modes):
+
+- [browser-relay.md](references/browser-relay.md)
 
 ## When to Use
 

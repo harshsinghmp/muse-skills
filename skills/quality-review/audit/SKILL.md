@@ -113,6 +113,14 @@ Route findings to the skill that owns the fix. If a companion is not installed, 
 
 ---
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/audit-<file>` commands (not separate routed modes):
+
+- [remediation-matrix.md](references/remediation-matrix.md)
+- [hygiene-rules.md](references/hygiene-rules.md)
+
 ## Procedure
 
 ### 📶 Progress Reporting Protocol (applies to Steps 2–6)

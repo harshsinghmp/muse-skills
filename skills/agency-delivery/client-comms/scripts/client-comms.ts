@@ -7,7 +7,7 @@
  *   bun client-comms.ts --changelog [since-git-ref] [--staging-url <url>]
  */
 
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 export interface FeedbackContract {
   feedbackId: string;
@@ -233,7 +233,7 @@ if (import.meta.main) {
 
     let commits: string[] = [];
     try {
-      const out = execSync(`git log ${ref} --oneline --no-merges`, { encoding: "utf8" });
+      const out = execFileSync("git", ["log", ref, "--oneline", "--no-merges"], { encoding: "utf8" });
       commits = out
         .split("\n")
         .map((l) => l.replace(/^[a-f0-9]+\s+/, "").trim())

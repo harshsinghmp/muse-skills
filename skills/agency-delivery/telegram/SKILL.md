@@ -43,13 +43,13 @@ Default stack: Telegram Bot API via curl + jq, no SDK, no pip. Defaults: config-
 
 Every invocation resolves to exactly one mode:
 
-|| Mode | Trigger phrases | Behavior | Reference |
-||:---|:---|:---|:---|
-|| **notify** | "send a telegram message", "notify the chat", "push a message", "alert the team" | Send a message to a configured chat: text, optional formatting, optional target routing via config | [references/notify.md](references/notify.md) |
-|| **approve** | "approve/deploy button", "confirm before continuing", "long-running task with approval", "resume after approval" | Long-running task pause: send a message with approve/reject buttons, wait for the user callback, resume or abort | [references/approve.md](references/approve.md) |
-|| **hook** | "claude code hooks", "session start/end", "tool use notification", "hook telegram" | Claude Code hook integration: register hook scripts that call Telegram on session start, end, tool use, or errors | [references/hook.md](references/hook.md) |
-|| **route** | "route events to telegram", "kafka events to telegram", "alert routing", "event stream" | Kafka event routing: shape structured events into Telegram messages, ack the event, dispatch to the right chat/bot/target per config | [references/route.md](references/route.md) |
-|| **setup** | "create a telegram bot", "bot token", "telegram setup", "configure telegram" | Stand up a Telegram bot token config: config file layout, mode-600, env binding, recovery docs | [references/setup.md](references/setup.md) |
+| Mode | Trigger phrases | Behavior | Reference |
+|:---|:---|:---|:---|
+| **notify** | "send a telegram message", "notify the chat", "push a message", "alert the team" | Send a message to a configured chat: text, optional formatting, optional target routing via config | [references/notify.md](references/notify.md) |
+| **approve** | "approve/deploy button", "confirm before continuing", "long-running task with approval", "resume after approval" | Long-running task pause: send a message with approve/reject buttons, wait for the user callback, resume or abort | [references/approve.md](references/approve.md) |
+| **hook** | "claude code hooks", "session start/end", "tool use notification", "hook telegram" | Claude Code hook integration: register hook scripts that call Telegram on session start, end, tool use, or errors | [references/hook.md](references/hook.md) |
+| **route** | "route events to telegram", "kafka events to telegram", "alert routing", "event stream" | Kafka event routing: shape structured events into Telegram messages, ack the event, dispatch to the right chat/bot/target per config | [references/route.md](references/route.md) |
+| **setup** | "create a telegram bot", "bot token", "telegram setup", "configure telegram" | Stand up a Telegram bot token config: config file layout, mode-600, env binding, recovery docs | [references/setup.md](references/setup.md) |
 | **audit** | "telegram audit", "bot security audit", "audit bot config", "token exposure check" | Security and delivery reliability pass: token hygiene, mode-600, routing, approvals, hooks, rate limits | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded.
@@ -91,13 +91,13 @@ Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 
 ### Routing ladder
 
-|| Request shape | Mode |
-||:---|:---|
-|| 'Send this text to chat X' | notify |
-|| 'Pause and ask me before continuing' | approve |
-|| 'Mirror Claude Code sessions/tools to Telegram' | hook |
-|| 'Route these events to the right chat' | route |
-|| 'Set up a new bot' | setup |
+| Request shape | Mode |
+|:---|:---|
+| 'Send this text to chat X' | notify |
+| 'Pause and ask me before continuing' | approve |
+| 'Mirror Claude Code sessions/tools to Telegram' | hook |
+| 'Route these events to the right chat' | route |
+| 'Set up a new bot' | setup |
 
 ### Setup order
 

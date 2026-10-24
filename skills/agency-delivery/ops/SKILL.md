@@ -1,7 +1,7 @@
 ---
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown"]
-description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through eleven modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through fourteen modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
 argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"
 user-invocable: true
 version: 1.6.0
@@ -54,6 +54,15 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/ops-<file>` commands (not separate routed modes):
+
+- [contracts.md](references/contracts.md)
+- [meeting-notes.md](references/meeting-notes.md)
+- [product-marketing-template.md](references/product-marketing-template.md)
 
 ## When to Use
 

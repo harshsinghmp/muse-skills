@@ -1,7 +1,7 @@
 ---
 name: smm
 aliases: ["organic-social", "social-media", "social-media-marketing", "community-management", "influencer-marketing", "ugc", "social-media-posts", "carousel", "carousel-growth-engine", "tiktok-carousel"]
-description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, X (Twitter) account growth, and social analytics — routed through eleven modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, grow an X account from cold start to monetization, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
+description: "Full organic social department: platform strategy, editorial calendars, post and caption writing, community management, influencer collaboration, UGC pipelines, automated multi-channel dispatch via Postiz, autonomous 6-slide viral carousel generation via Gemini and Upload-Post, X (Twitter) account growth, and social analytics — routed through thirteen modes. Use when asked to grow an organic social presence, plan a posting calendar, write social posts, schedule posts across 28+ channels via Postiz API/CLI, generate viral TikTok/Instagram carousels from website URLs, manage comments and community, run an influencer or UGC program, grow an X account from cold start to monetization, or report on social performance. Not for paid ads (paidads) or blog/email content (content)."
 argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|x|audit]"
 user-invocable: true
 version: 1.4.0
@@ -54,6 +54,14 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/smm-<file>` commands (not separate routed modes):
+
+- [creator-vetting.md](references/creator-vetting.md)
+- [social-intel.md](references/social-intel.md)
 
 ## When to Use
 
