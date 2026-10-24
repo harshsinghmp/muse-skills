@@ -45,7 +45,10 @@ if (mode === "post-merge") {
   table([
     ["Branch + sha", `${process.env.GITHUB_REF_NAME ?? branch} @ ${headSha}`],
     ["Integration branch + sha", `${branch} @ ${intSha}`],
-    ["Landed? (exact command + exit code)", `${landed ? "LANDED" : "LOCAL"} — git merge-base --is-ancestor HEAD origin/${branch} (exit ${ancestor.code})`],
+    [
+      "Landed? (exact command + exit code)",
+      `${landed ? "LANDED" : "LOCAL"} — git merge-base --is-ancestor HEAD origin/${branch} (exit ${ancestor.code})`,
+    ],
     ["PR number + state", pr.code === 0 ? pr.out.trim() : "none"],
     ["Unpushed count", unpushedCount],
     ["Gate result", landed ? "LANDED" : "LOCAL"],
@@ -60,7 +63,9 @@ if (mode === "post-merge") {
   }
   const pushed = run("git", ["ls-remote", "--heads", "origin", headRef]);
   const isPushed = pushed.code === 0 && pushed.out.trim().length > 0;
-  const prJson = run("gh", ["pr", "view", headRef, "--json", "number,state,statusCheckRollup"], { GH_TOKEN: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? "" });
+  const prJson = run("gh", ["pr", "view", headRef, "--json", "number,state,statusCheckRollup"], {
+    GH_TOKEN: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? "",
+  });
   let prState = "none";
   let checksGreen = false;
   if (prJson.code === 0) {
@@ -70,11 +75,11 @@ if (mode === "post-merge") {
       const rollup = Array.isArray(j.statusCheckRollup) ? j.statusCheckRollup : [];
       checksGreen =
         rollup.length > 0 &&
-        rollup.every((c: any) => {
-          const conclusion = (c.conclusion ?? c.state ?? "").toUpperCase();
+        rollup.every((c: Record<string, unknown>) => {
+          const conclusion = String(c.conclusion ?? c.state ?? "").toUpperCase();
           return ["SUCCESS", "NEUTRAL", "SKIPPED", "COMPLETED"].includes(conclusion);
         }) &&
-        rollup.some((c: any) => (c.conclusion ?? c.state ?? "").toUpperCase() === "SUCCESS");
+        rollup.some((c: Record<string, unknown>) => String(c.conclusion ?? c.state ?? "").toUpperCase() === "SUCCESS");
     } catch {
       prState = "parse-error";
     }
@@ -85,7 +90,10 @@ if (mode === "post-merge") {
   table([
     ["Branch + sha", `${headRef} @ ${headSha}`],
     ["Integration branch + sha", `${branch} @ ${sha(`origin/${branch}`)}`],
-    ["Landed? (exact command + exit code)", `${reviewable ? "REVIEWABLE" : "NOT REVIEWABLE"} — git ls-remote --heads origin ${headRef} (exit ${pushed.code})`],
+    [
+      "Landed? (exact command + exit code)",
+      `${reviewable ? "REVIEWABLE" : "NOT REVIEWABLE"} — git ls-remote --heads origin ${headRef} (exit ${pushed.code})`,
+    ],
     ["PR number + state", prState],
     ["Unpushed count", isPushed ? "0 (pushed)" : "unpushed"],
     ["Gate result", reviewable ? "REVIEWABLE" : "NOT REVIEWABLE"],
