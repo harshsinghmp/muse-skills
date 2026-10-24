@@ -35,3 +35,4 @@
 - OWASP — Top 10 for LLM Applications (LLM01/02/05/06/07/08/10) and AI Agent Security Cheat Sheet
 - OWASP DevSecOps Guideline — AI/LLM Application Security Testing (indirect injection, blast radius, evals-as-gate)
 - OWASP secure-agent-playbook — agent-security-audit play
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

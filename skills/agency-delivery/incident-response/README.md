@@ -28,6 +28,7 @@ Draft the status page update for this SEV-1 outage.
 | **mitigate** | stop the bleeding / roll back / site is down | Mitigation: class-specific playbook run (outage, breach, data-loss, perf-collapse). |
 | **communicate** | status page update / incident comms | Comms: severity-linked updates and templates, internal plus external. |
 | **retro** | postmortem / blameless retro | Retro: blameless postmortem with owned, dated action items. |
+| **`audit`** | IR readiness audit / post-incident controls audit | NIST 800-61r3 readiness: policy, playbooks, exercises, improvement loop. |
 
 ## How it works
 

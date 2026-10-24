@@ -11,6 +11,7 @@ Customer relationship management and event-driven marketing flow engine: audienc
 - `deliverability`: Bulk sender DNS authentication, IP/domain warming curves, and bounce webhooks.
 - `sms`: Transactional order alerts and high-conversion broadcast SMS/WhatsApp campaigns.
 - `contacts`: Audience segmentation, RFM customer tiers, custom properties, and list cleaning.
+- `audit`: Authentication-first deliverability audit (SPF/DKIM/DMARC), list hygiene, data decay, and lifecycle-flow checks.
 
 ## Installation & Usage
 

@@ -28,6 +28,7 @@ The client wants three extra pages — triage the change request before we agree
 | **change** | change request / scope change | Change: impact, options, and scoped approval before work starts. |
 | **handover** | handover / project docs / training | Handover: docs, credentials, training, and support terms. |
 | **feedback** | feedback / client review | Feedback: structured intake, triage, and response plan. |
+| **`audit`** | communication audit / SLA audit | Bidirectional SLAs, cadence integrity, channel discipline, escalations. |
 
 ### Specialized References
 

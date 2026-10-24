@@ -51,3 +51,4 @@ Grade each asset on the 4-tier matrix (0 absent · 1 stub · 2 partial · 3 cano
 ## Sources
 
 - this skill's own 13-asset / 4-tier grading matrix (SKILL.md) — the audit's grading authority
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

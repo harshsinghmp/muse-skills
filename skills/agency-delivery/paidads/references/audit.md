@@ -40,3 +40,4 @@ Audit report: structure review (campaign/object mapping), tracking verification 
 ## Sources
 
 Reference URLs provided for this mode are listed here. When a cited source conflicts with a default above, the source wins — record the override and why.
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

@@ -30,6 +30,7 @@ Build a support chatbot grounded in our help docs with evaluation tests.
 | **rag** | RAG pipeline | RAG: retrieval + grounded generation with citations and evaluation. |
 | **integrations** | API / webhook integration | Integrations: reliable API/webhook connections with auth, payload byte-size limiter, and error handling. |
 | **prompt** | prompt engineering / evals | Prompt: engineered, versioned, and evaluated prompts. |
+| **`audit`** | agent security audit / OWASP LLM audit | OWASP LLM Top-10: injection, agency, output handling, evals-as-gate. |
 
 ### Specialized References
 

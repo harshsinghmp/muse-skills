@@ -37,3 +37,4 @@
 - Desisle — UI Design Checklist (typography scale, line length 45–75ch, semantic color conventions)
 - WCAG 2.2 — contrast 4.5:1/3:1, focus visibility, target size
 - Tcules — How to Audit a Design System (design↔code state agreement)
+- `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)

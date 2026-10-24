@@ -273,6 +273,53 @@ describe("Invocation UX & conventions", () => {
     expect(problems).toEqual([]);
   });
 
+  test("every shipped audit.md meets the audit-mode substance contract", () => {
+    // Substance, not identical headings: the corpus legitimately uses two
+    // shapes (checklist style and the mode-playbook Intake/Deliverable/
+    // Procedure style). Required is: a scope/when statement, a procedure or
+    // checklist body, an output/severity/routing section, and a Sources block.
+    const registry = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8")) as {
+      skills: Array<{ name: string; path: string }>;
+    };
+    const problems: string[] = [];
+
+    for (const skill of registry.skills) {
+      const auditFile = path.join(path.dirname(path.join(REPO_ROOT, skill.path)), "references", "audit.md");
+      if (!fs.existsSync(auditFile)) continue; // not every department ships one
+      const t = fs.readFileSync(auditFile, "utf8");
+
+      const hasScope = /^## (When to Use|Scope|Intake|Purpose)/im.test(t) || /^# .*(audit|gate|auditor)/im.test(t);
+      const hasBody = /^## .*(checklist|procedure|quality gate|scorecard)/im.test(t);
+      const hasOutput = /^#{2,3} .*(severity|routing|tiers|scoring|verdict|quality gate)/im.test(t);
+      const hasSources = /^## Sources/m.test(t);
+      if (!hasScope) problems.push(`${skill.name}/audit.md: no scope/when section`);
+      if (!hasBody) problems.push(`${skill.name}/audit.md: no procedure/checklist section`);
+      if (!hasOutput) problems.push(`${skill.name}/audit.md: no output/severity/routing section`);
+      if (!hasSources) problems.push(`${skill.name}/audit.md: no Sources section`);
+
+      const refDir = path.dirname(auditFile);
+      for (const m of t.matchAll(/\[references\/([A-Za-z0-9_-]+)\.md\]/g)) {
+        if (!fs.existsSync(path.join(refDir, `${m[1]}.md`))) {
+          problems.push(`${skill.name}/audit.md: dead link references/${m[1]}.md`);
+        }
+      }
+      // Backticked plain-text paths too (markdown-link-only checks miss these):
+      // any `references/<name>.md` mention must resolve in this skill's
+      // references/ dir; the shared canonical spec lives at skills/references/.
+      for (const m of t.matchAll(/`([^`]*\breferences\/[A-Za-z0-9_-]+\.md)`/g)) {
+        const mentioned = m[1];
+        const base = mentioned.replace(/^.*\breferences\//, "");
+        const inSkill = fs.existsSync(path.join(refDir, base));
+        const canonical = /^skills\/references\//.test(mentioned) && fs.existsSync(path.join(REPO_ROOT, mentioned));
+        if (!inSkill && !canonical) {
+          problems.push(`${skill.name}/audit.md: dead path '${mentioned}'`);
+        }
+      }
+    }
+
+    expect(problems).toEqual([]);
+  });
+
   test("secretary/references/orchestration.md exists and encodes delegation, fast-path, and message contracts", () => {
     const orchPath = path.join(REPO_ROOT, "skills/context-orchestration/secretary/references/orchestration.md");
     expect(fs.existsSync(orchPath)).toBe(true);

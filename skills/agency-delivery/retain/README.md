@@ -30,6 +30,7 @@ Run the QBR from this transcript and ask for a review at the close.
 | **review-ask** | review / testimonial ask | Review ask: timed at the delight peak, one direct link, outcome logged. |
 | **referral-rebuy** | referral / repurchase offer | One timed offer after value proven; won deals hand to `ops` as new SOW. |
 | **churn-watch** | churn risk / client gone quiet | Triage: signal named with numbers, >14d silence escalates to `growth`. |
+| **`audit`** | churn audit / portfolio risk audit | Five-question churn audit + 90-day leading-indicator rubric. |
 
 ## How it works
 
