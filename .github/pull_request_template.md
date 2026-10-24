@@ -31,3 +31,4 @@
 - [ ] No synthetic ADE/IDE artifacts (`[[ORCA_RICH_MD:...]]`, Cursor/Claude wrappers)
 - [ ] Commit messages follow Conventional Commits (`<type>(<scope>): summary`)
 - [ ] Ruled-out alternatives documented where non-obvious
+- [ ] Landing Gate: `bun run check:landed` exits 0, or the report says LOCAL with the remaining steps
