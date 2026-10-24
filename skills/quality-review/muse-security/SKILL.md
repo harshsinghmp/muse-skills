@@ -35,7 +35,7 @@ While in-development code adheres to secure-by-design patterns (IDOR/SSRF/SQLi p
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

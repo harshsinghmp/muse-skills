@@ -33,7 +33,7 @@ One head skill for measurement. Decide the question before the tool. Every metri
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

@@ -35,7 +35,7 @@ One head skill for content. Every piece starts from a source of truth — a keyw
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

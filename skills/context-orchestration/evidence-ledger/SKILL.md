@@ -51,6 +51,18 @@ metadata:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`academic-citation-protocol`** | "evidence-ledger academic-citation-protocol", "academic-citation-protocol" | Academic Citation & Claim Receipt Protocol | [references/academic-citation-protocol.md](references/academic-citation-protocol.md) |
+| **`claim-verification-taxonomy`** | "evidence-ledger claim-verification-taxonomy", "claim-verification-taxonomy" | Claim Verification Taxonomy & Epistemological Grounding | [references/claim-verification-taxonomy.md](references/claim-verification-taxonomy.md) |
+| **`evidence-entry-schema`** | "evidence-ledger evidence-entry-schema", "evidence-entry-schema" | Evidence Entry Schema | [references/evidence-entry-schema.md](references/evidence-entry-schema.md) |
+| **`skill-orchestration`** | "evidence-ledger skill-orchestration", "skill-orchestration" | Skill Orchestration Map | [references/skill-orchestration.md](references/skill-orchestration.md) |
+| **`staleness-rules`** | "evidence-ledger staleness-rules", "staleness-rules" | Staleness Rules | [references/staleness-rules.md](references/staleness-rules.md) |
+
 ## When to Use
 
 ### Trigger Conditions

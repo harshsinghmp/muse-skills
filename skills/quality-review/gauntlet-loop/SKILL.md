@@ -37,6 +37,16 @@ metadata:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`bar-selection-and-blind-critique`** | "gauntlet-loop bar-selection-and-blind-critique", "bar-selection-and-blind-critique" | The Bar Selection & Blind Critique Protocol | [references/bar-selection-and-blind-critique.md](references/bar-selection-and-blind-critique.md) |
+| **`gauntlet-protocol`** | "gauntlet-loop gauntlet-protocol", "gauntlet-protocol" | Gauntlet Loop Protocol Reference | [references/gauntlet-protocol.md](references/gauntlet-protocol.md) |
+| **`web-security-visual-gate`** | "gauntlet-loop web-security-visual-gate", "web-security-visual-gate" | Web Application Security & Visual Regression Gate Reference | [references/web-security-visual-gate.md](references/web-security-visual-gate.md) |
+
 ## When to Use
 
 ### Trigger Conditions

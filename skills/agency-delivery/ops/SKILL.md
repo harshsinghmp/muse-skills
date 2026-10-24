@@ -33,7 +33,7 @@ One head skill for agency operations. Protect both the client's outcome and the 
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

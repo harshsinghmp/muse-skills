@@ -33,7 +33,7 @@ One head skill for infrastructure. Make deploys boring: reproducible, reversible
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

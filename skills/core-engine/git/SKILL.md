@@ -75,7 +75,7 @@ Do **NOT** use this skill for:
 │ 11. Branch Cleanup & Linked Issue Closure                                   │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
-### Modes Quick-Commands
+## Modes
 
 | Mode | Covers | Loads ONLY |
 | :--- | :--- | :--- |

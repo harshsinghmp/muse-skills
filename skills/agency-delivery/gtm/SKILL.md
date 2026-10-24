@@ -33,7 +33,7 @@ One head skill for outbound and developer go-to-market. Pipeline is built, not f
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

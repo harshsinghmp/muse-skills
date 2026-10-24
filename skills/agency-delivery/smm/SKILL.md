@@ -33,7 +33,7 @@ One head skill for organic social. Earn attention by being worth following, not 
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

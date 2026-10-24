@@ -33,7 +33,7 @@ One head skill for the assets a client's sales team needs to win deals: a demo t
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

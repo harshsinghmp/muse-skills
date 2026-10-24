@@ -35,7 +35,7 @@ Operates as the executive financial engine within the **Agency Council** (suppor
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

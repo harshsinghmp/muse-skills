@@ -33,7 +33,7 @@ One head skill for automation and AI. Automate the boring, keep humans on judgme
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

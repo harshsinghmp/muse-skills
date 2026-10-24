@@ -39,7 +39,7 @@ Default stack: Telegram Bot API via curl + jq, no SDK, no pip. Defaults: config-
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly one mode:
 

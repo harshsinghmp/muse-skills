@@ -50,6 +50,16 @@ Interactive project creator and Project Operating System provisioner. Implements
 5. **Stage 5: Client Intake Brief**: Writes `Client-Intake/00-Intake-Brief.md` (employee checklist pre-filled from scaffold answers + agent instructions). Intake docs and `start-here.md` are written by the AI agent AFTER scaffolding, from real employee answers.
 6. **Stage 6: Closeout**: Synchronizes `.agents/context/` (decisions ADRs, product, current, architecture) and runs the health check.
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`integration-blueprints`** | "new-project integration-blueprints", "integration-blueprints" | Companion Integration & Scaffolding Blueprints | [references/integration-blueprints.md](references/integration-blueprints.md) |
+| **`project-os-architecture`** | "new-project project-os-architecture", "project-os-architecture" | Project Operating System & Progressive Disclosure DOX Architecture | [references/project-os-architecture.md](references/project-os-architecture.md) |
+| **`skill-extraction`** | "new-project skill-extraction", "skill-extraction" | Self-Improvement Skill Extraction Architecture | [references/skill-extraction.md](references/skill-extraction.md) |
+
 ## Audit routing
 
 new-project embeds audit at two stages:

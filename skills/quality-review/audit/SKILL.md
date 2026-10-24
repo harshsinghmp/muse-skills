@@ -87,7 +87,7 @@ Do NOT use this skill when:
 | `REPORT-ONLY` | Document the finding with evidence and suggested owner | Default for contradictions between documents and for anything owned by another workflow |
 | `DEFER-ROUTE` | Log to the routing table for a companion skill | Finding is real but belongs to another skill's mandate |
 
-### Operating Modes
+## Modes
 
 | Mode | Scope | Checkpoints | Output |
 |:---|:---|:---|:---|
