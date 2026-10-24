@@ -42,6 +42,20 @@ Code and skill frontmatter are canonical when docs drift.
   <owner>/<repo>`).
 - Universal Copywriting & SEO/AEO Mandate: every piece of agency copy (social, email, lifecycle, newsletter, blog, landing, VSL, sales collateral) must follow the formula selector and frameworks in `content:copy` (`content/references/copy.md`). All public-facing content must also optimize for both Search Engine Optimization (SEO) and modern AI Engine Optimization (AEO: Perplexity, ChatGPT Search, Gemini AI Overviews, Claude) enforcing CORE-EEAT, the 18-token standalone quotability rule, answer-first density under headers, and structured semantic markup.
 - Test gate: `bun test` must pass before any merge.
+- Test-Failure Audit (core invariant): when the same test/failure fails on 2+ consecutive runs, stop editing, self-audit own outputs (did edit land? test exercising it? pre-existing on clean tree? flaky/env?), triage root cause, then apply targeted fix and re-run full suite. Verdicts: SELF-AUDIT COMPLETE / SELF-AUDIT PENDING. Full standard: `.agents/standards/test-failure-audit.md`.
+- Landing Gate (core invariant): a commit is not a delivery. Work is LANDED only when reachable from the integration branch (`dev`) on the remote; until then it is LOCAL. Forbidden words (landed/shipped/merged/released/deployed/"verified on <branch>") only after the gate exits 0. Verdicts: LANDED/LOCAL, REVIEWABLE/NOT REVIEWABLE. Full standard: `.agents/standards/landing-gate.md`. Gate: `bun run check:landed`.
+- Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
+
+## Session Report Protocol
+
+**Scope:** emit the Layman Report only for top-level, user-facing work. Suppress it entirely in agent-to-agent communication, subagent results, internal tool flows, and background/automated runs (those carry the technical report alone). When unsure whether the user wants the plain-language version, finish the technical report, then ask once ("Want the plain-language summary too?") and append it only on confirmation.
+
+Every completed task ends with two reports, in this order (user-facing only):
+
+1. **Technical report** — files changed, commands run, tests, evidence, verification. Canonical record.
+2. **Layman Report (appendix)** — the same work in plain language: one bullet per file/skill/task touched, stating what changed and why it matters to the user, no jargon, no code. Group by area when more than ~8 bullets.
+
+The Layman Report is additive: it never replaces, truncates, or reorders the technical report. For user-facing work, a report without the Layman appendix is incomplete; a report with only the Layman appendix is never acceptable. (Agent-to-agent flows carry the technical report alone.)
 
 ## Verification
 

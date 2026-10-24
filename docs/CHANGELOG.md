@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.6.0] - 2026-10-24
+
+### Added
+
+- **Landing Gate — Delivery Is Not Commitment (#240, #242)**: a new core invariant and standard (`.agents/standards/landing-gate.md`) making "the work is done" and "the work is delivered" mechanically distinct. Work is LANDED only when reachable from the integration branch on the remote; until then it is LOCAL. Verdicts are `LANDED`/`LOCAL` and `REVIEWABLE`/`NOT REVIEWABLE` (never "NOT LANDED"). A `bun run check:landed` gate (post-merge and pre-review modes) is shipped in `scripts/check-landed.ts` and wired into `.github/workflows/ci.yml` (pre-review on `pull_request` against `github.head_ref`, post-merge on `push` to the integration branch against `github.ref_name`), with `fetch-depth: 0` and `GH_TOKEN` as required. The PR template gains a checklist line. The gate is scaffolded into every project via `selectGitHubWorkflowTemplates` (now always includes `landing-gate.yml`).
+- **Test-Failure Audit Standard (#243)**: `.agents/standards/test-failure-audit.md` — when the same test/failure fails on two or more consecutive runs, the agent must stop editing, self-audit its own outputs (did the edit land, is the test exercising it, pre-existing on clean tree, flaky/env), triage the root cause, then apply a targeted fix and re-run the full suite. Verdicts: `SELF-AUDIT COMPLETE` / `SELF-AUDIT PENDING`.
+- **Session Report Protocol (#238, #239)**: every completed task now ends with two reports — the technical report, then a Layman Report appendix (plain language, one bullet per file/skill/task, what changed + why). The Layman Report is suppressed in agent-to-agent communication, subagent results, and internal tool flows; when unsure, the agent asks once before appending.
+- **sync-engine-safety as a Project Skill**: the scaffolder/sync-engine safety procedure now ships in the template's `.agents/skills/` so it is available in every scaffolded project (then reverted to project-only on request — kept in this repo's `.agents/skills/` only).
+
+### Changed
+
+- **Standards Count 19 → 21**: `landing-gate.md` and `test-failure-audit.md` added to the template's `.agents/standards/`; `agent-engine.test.ts` updated to 21.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.5.0...v7.6.0
+
 ## [7.5.0] - 2026-10-24
 
 ### Added

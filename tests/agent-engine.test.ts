@@ -30,10 +30,11 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(existsSync(join(UPDATEAGENTS_TEMPLATES, "Client-Intake/00-Intake-Brief.md"))).toBe(true);
     });
 
-    it("updateagents/templates contains all 19 modular standards including backend-wordpress.md", () => {
+    it("updateagents/templates contains all 21 modular standards including backend-wordpress.md, landing-gate.md, and test-failure-audit.md", () => {
       const standardsDir = join(UPDATEAGENTS_TEMPLATES, ".agents/standards");
       const files = readdirSync(standardsDir);
-      expect(files.length).toBe(19);
+      expect(files.length).toBe(21);
+      expect(files).toContain("test-failure-audit.md");
       expect(files).toContain("backend-wordpress.md");
       expect(files).toContain("backend-workers-hono.md");
       expect(files).toContain("frontend-nextjs.md");
@@ -41,6 +42,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
       expect(files).toContain("tech-stacks.md");
       expect(files).toContain("boundary-governance.md");
       expect(files).toContain("fintech-gateways.md");
+      expect(files).toContain("landing-gate.md");
       expect(files).toContain("client-reporting.md");
       expect(files).toContain("motion-diagrams.md");
       expect(files).toContain("anti-patterns.md");
@@ -90,7 +92,7 @@ describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
         "Initializing Agent Governance & Progressive Disclosure DOX (from updateagents/templates)",
       );
       expect(res.stdout).toContain("Archetype:          WORDPRESS");
-      expect(res.stdout).toContain("Synced: ./.agents/standards/ (19 standards, including WordPress)");
+      expect(res.stdout).toContain("Synced: ./.agents/standards/ (21 standards, including WordPress)");
     });
 
     it("supports 1-Click Agency Presets (powerhouse, visual, instatic, mobile, atomic-payload)", () => {

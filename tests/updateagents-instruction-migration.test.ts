@@ -323,7 +323,7 @@ describe("updateagents instruction migration", () => {
       writeFileSync(join(ROOT, "CLAUDE.md"), "# Legacy Rules\nAlways run tests before push.\n");
 
       const auditRun = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--audit"], { encoding: "utf8" });
-      expect(auditRun.stdout).toContain("Unpromoted legacy instruction file(s) detected: CLAUDE.md");
+      expect(auditRun.stdout).toContain("Found 1 unpromoted foreign-harness file(s): CLAUDE.md");
       expect(auditRun.stdout).toContain("Legacy-Harness Instruction Warning");
 
       // 3. Promote it
