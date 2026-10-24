@@ -64,7 +64,7 @@ describe("GitHub scaffold adaptation", () => {
     expect(workflows).toContain("ci-node.yml");
     expect(workflows).not.toContain("ci-python.yml");
     expect(workflows).not.toContain("cli-release.yml");
-    expect(selectGitHubWorkflowTemplates({ packageScripts: { dev: "vite" } })).toEqual([]);
+    expect(selectGitHubWorkflowTemplates({ packageScripts: { dev: "vite" } })).toEqual(["landing-gate.yml"]);
   });
 
   it("selects a Python workflow only when Python project files are detected", () => {
