@@ -67,14 +67,25 @@ Run when the change has a reasonable chance of affecting what future agents need
 
 | Mode | Focus | Key Output | Reference Document |
 | :--- | :--- | :--- | :--- |
-| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 19 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
-| **`audit`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
+| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 21 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **`scorecard`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
 | **`promote`** | Intercept & promote foreign-harness instruction writes to DOX standards/context | Promoted standards/context, preserved archive, resynced router | [references/legacy-promotion.md](references/legacy-promotion.md) |
 | **`audit`** | "repo AI-readiness audit", "audit the 13 assets", "grade agent context" | Grade the 13 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/updateagents-<file>` commands (not separate routed modes):
+
+- [discovery-commands.md](references/discovery-commands.md)
+- [skill-authoring.md](references/skill-authoring.md)
+- [global-atoms.md](references/global-atoms.md)
+- [advanced-audit-passes.md](references/advanced-audit-passes.md)
+- [onboard.md](references/onboard.md)
 
 ## Quick Reference
 

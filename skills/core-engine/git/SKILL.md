@@ -81,9 +81,9 @@ Do **NOT** use this skill for:
 | :--- | :--- | :--- |
 | `triage` | Issue intake + triage + thread read + dup sweep | `anti-slop-triage.md` + `issue-to-pr-discipline.md` |
 | `branch` | Branch creation + worktree lanes | `branching-and-release-matrix.md` + `worktree-parallel-lanes.md` |
-|| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
-|| `pr-check` | Inspect CI checks on open PR, pull failure logs, extract failure snippet, `--json` machine-readable output | `pr-checks.md` |
-|| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
+| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
+| `pr-check` | Inspect CI checks on open PR, pull failure logs, extract failure snippet, `--json` machine-readable output | `pr-checks.md` |
+| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
 | `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
@@ -91,6 +91,13 @@ Do **NOT** use this skill for:
 | `mine` | "mine conventions", "extract PR rules", "audit commit", "synthesize guidelines" | `convention-mining.md` |
 
 Token rule: in a mode, load only the references in its row — never the full set.
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/git-<file>` commands (not separate routed modes):
+
+- [report-template.md](references/report-template.md)
 
 ## Verification
 

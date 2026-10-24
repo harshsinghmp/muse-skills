@@ -595,6 +595,13 @@ Mode selection is made once at Step 1 and stated in the final report. A mode may
 
 ---
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/updatedocs-<file>` commands (not separate routed modes):
+
+- [audit.md](references/audit.md)
+
 ## Procedure
 
 ### Step 1 — Establish Repository Boundary and Select Mode

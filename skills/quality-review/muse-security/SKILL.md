@@ -4,7 +4,7 @@ aliases: ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "cl
 description: "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops)."
 argument-hint: "[cve|remediate|cloud-waf|sast|runtime|audit]"
 user-invocable: true
-version: 1.0.0
+version: 1.0.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]

@@ -1,7 +1,7 @@
 ---
 name: brand
 aliases: ["brand-onboarding", "client-intake", "brand-research", "brand-dossier", "sales-pipeline", "brand-lifecycle", "client-offboarding", "cross-border-ecommerce", "amazon-operations", "marketplace-operations"]
-description: "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops)."
+description: "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through nine modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops)."
 argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|audit]"
 user-invocable: true
 version: 1.0.0
@@ -51,6 +51,13 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/brand-<file>` commands (not separate routed modes):
+
+- [persona.md](references/persona.md)
 
 ## When to Use
 

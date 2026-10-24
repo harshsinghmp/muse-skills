@@ -1,7 +1,7 @@
 ---
 name: database
 aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning", "database-optimizer"]
-description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through six modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
+description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through ten modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
 argument-hint: "[query|diagnose|index|guard|operate|optimize]"
 user-invocable: true
 version: 1.0.0
@@ -60,6 +60,13 @@ Mode behavior is fixed; these extend a resolved mode when the request dips deepe
 
 Load alongside `operate` for vector basics or `query` for aggregation routing.
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/database-<file>` commands (not separate routed modes):
+
+- [tuning.md](references/tuning.md)
+
 ## Verification
 
 Run before reporting completion:
@@ -100,13 +107,13 @@ Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 
 ### Routing ladder (decide before any mode)
 
-|| Question | Mode |
-||:---|:---|
-|| 'Run this query and show me the results' | query |
-|| 'Which query is slow, and what does its plan say?' | diagnose |
-|| 'What index makes this fast without breaking writes?' | index |
-|| 'Who may see this row, and is it proven?' | guard |
-|| 'Will production stay healthy under load?' | operate |
+| Question | Mode |
+|:---|:---|
+| 'Run this query and show me the results' | query |
+| 'Which query is slow, and what does its plan say?' | diagnose |
+| 'What index makes this fast without breaking writes?' | index |
+| 'Who may see this row, and is it proven?' | guard |
+| 'Will production stay healthy under load?' | operate |
 
 Order: query → diagnose → index → guard → operate. Get the data, find the bottleneck, fix access paths, lock down rows, then harden operations.
 

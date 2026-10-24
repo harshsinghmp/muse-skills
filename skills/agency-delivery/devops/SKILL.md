@@ -1,7 +1,7 @@
 ---
 name: devops
 aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform", "cloudflare", "devops-engineer", "wrangler"]
-description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through seven modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
+description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through eight modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
 argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare]"
 user-invocable: true
 version: 1.2.0

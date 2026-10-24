@@ -1,7 +1,7 @@
 ---
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
-description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through fifteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, deploy, and responsive audits — routed through eighteen modes. Use when asked to build or refactor web features or apps, design APIs or data models, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
 argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|deploy|audit]"
 user-invocable: true
 version: 1.6.0
@@ -61,6 +61,14 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 `prototype` → `spec` → `implement` → `qa-launch` gate. Prototype answers the riskiest technical unknown (throwaway); spec turns the verdict into a labeled packet; implement rebuilds slice by slice (prototype code never merges); `qa-launch` verifies the shipped result. Design-side (visual/clickable) prototyping lives in `design` prototype — referenced, never duplicated here.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/webdev-<file>` commands (not separate routed modes):
+
+- [technical-resilience.md](references/technical-resilience.md)
+- [security-headers.md](references/security-headers.md)
 
 ## When to Use
 

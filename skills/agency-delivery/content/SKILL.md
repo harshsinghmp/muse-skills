@@ -1,7 +1,7 @@
 ---
 name: content
 aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial"]
-description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through eight modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
+description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through twelve modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
 argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch]"
 user-invocable: true
 version: 1.2.0
@@ -54,6 +54,14 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/content-<file>` commands (not separate routed modes):
+
+- [thumbnails.md](references/thumbnails.md)
+- [voice-archetypes.md](references/voice-archetypes.md)
 
 ## When to Use
 

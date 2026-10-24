@@ -144,11 +144,17 @@ describe("README command-surface claims", () => {
     const mismatched: string[] = [];
     for (const line of readme.split("\n")) {
       const row = /^\|\s*\[`([a-z0-9-]+)`\]\(skills\//.exec(line);
-      const claim = /across\s+(\d+)\s+modes/.exec(line);
-      if (!row || !claim) continue;
+      // Gate both grammars: "across N modes" and hyphenated "N-mode"/"N modes"
+      // ("Universal 7-mode refactoring engine" sailed through the old regex).
+      const claims = [...line.matchAll(/\bacross\s+(\d+)\s+modes?\b/g), ...line.matchAll(/\b(\d+)[\s-]modes?\b/g)]
+        .map((m) => m[1])
+        .filter((v, i, a) => a.indexOf(v) === i);
+      if (!row || claims.length === 0) continue;
       const expected = getModesForSkill(row[1]).length;
-      if (Number(claim[1]) !== expected) {
-        mismatched.push(`${row[1]}: README claims ${claim[1]}, generated surface has ${expected}`);
+      for (const claimNum of claims) {
+        if (Number(claimNum) !== expected) {
+          mismatched.push(`${row[1]}: README claims ${claimNum}, generated surface has ${expected}`);
+        }
       }
     }
     expect(mismatched).toEqual([]);

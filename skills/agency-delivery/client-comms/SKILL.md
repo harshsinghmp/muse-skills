@@ -1,7 +1,7 @@
 ---
 name: client-comms
 aliases: ["client-communication", "status-update", "change-request", "project-handover", "client-feedback", "handover-docs"]
-description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through four modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth)."
+description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through seven modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth)."
 argument-hint: "[status|change|handover|feedback]"
 user-invocable: true
 version: 1.3.0
@@ -48,6 +48,14 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/client-comms-<file>` commands (not separate routed modes):
+
+- [inbox-triage.md](references/inbox-triage.md)
+- [factual-reporting.md](references/factual-reporting.md)
 
 ## When to Use
 
