@@ -26,6 +26,7 @@ import { describe, expect, test } from "bun:test";
 import fs from "node:fs";
 import path from "node:path";
 import * as exporter from "../scripts/export-commands";
+import { commandSurfaceCounts, getSkills } from "../scripts/export-commands";
 import { getModesForSkill } from "../scripts/sync-dispatch";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -96,7 +97,7 @@ describe("README command-surface claims", () => {
 
     expect(resolvableAliases.length).toBeGreaterThan(0);
     expect(Number(match[1])).toBe(registry.skills.length);
-    expect(Number(match[2])).toBe(registry.skills.length + resolvableAliases.length);
+    expect(Number(match[2])).toBe(commandSurfaceCounts(getSkills()).total);
   });
 
   test("every registered skill has a catalog row linking to its companion README", () => {

@@ -11,7 +11,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { exportAntigravityCommands, exportOpenCodeCommands, getSkills } from "./export-commands";
+import { exportAntigravityCommands, exportOpenCodeCommands, getSkills, isModeRefFile } from "./export-commands";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const DISPATCH_MD_PATH = path.join(
@@ -80,9 +80,11 @@ export function getModesForSkill(skillName: string): string[] {
     ? path.join(REPO_ROOT, path.dirname(found.path), "references")
     : path.join(REPO_ROOT, skillName, "references");
   if (!fs.existsSync(refDir)) return [];
+  // Same convention as the command exporter: only lowercase kebab-case
+  // reference files are routable modes; uppercase files are governance docs.
   return fs
     .readdirSync(refDir)
-    .filter((f) => f.endsWith(".md") && !f.startsWith("."))
+    .filter((f) => isModeRefFile(f))
     .map((f) => f.replace(/\.md$/, ""))
     .sort();
 }

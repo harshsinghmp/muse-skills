@@ -2,10 +2,13 @@
 /**
  * export-commands.ts — Universal Multi-Harness Command Exporter & Onboarding Engine
  *
- * Scans all 46 canonical Muse skills + 10 high-leverage sub-mode aliases from
- * skills.json, and exports first-class native slash commands into the harnesses
- * this engine actually implements — OpenCode, Gemini/Antigravity, Windsurf and
- * Cursor (every destination is existence-gated).
+ * Scans all 46 canonical Muse skills from skills.json and exports first-class
+ * native slash commands into the harnesses this engine actually implements —
+ * OpenCode, Gemini/Antigravity, Windsurf and Cursor (every destination is
+ * existence-gated). The surface is three layers: one command per skill, one
+ * generated `<skill>-<mode>` command per references/<mode>.md (unique by
+ * default, so no mode — including every skill's `audit` mode — is shadowed by
+ * another skill's), and 10 curated flat aliases on top.
  *
  * Usage:
  *   bun scripts/export-commands.ts --setup           # Auto-detect harnesses, install skills & export commands
@@ -145,6 +148,107 @@ export const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: stri
   },
 ];
 
+// ─── Generated Skill-Mode Command Surface ────────────────────────────────────
+export interface SkillModeCommand {
+  command: string;
+  skill: string;
+  mode: string;
+  desc: string;
+}
+
+/** First markdown heading of a reference file, cleaned into a command description. */
+function referenceHeadline(refFile: string): string | null {
+  if (!fs.existsSync(refFile)) return null;
+  for (const line of fs.readFileSync(refFile, "utf8").split("\n")) {
+    const heading = /^#{1,3}\s+(.*)$/.exec(line);
+    if (!heading) continue;
+    const cleaned = heading[1]
+      .replace(/^[^\w]+/, "") // leading emoji/decorations
+      .replace(/[*`_]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return cleaned || null;
+  }
+  return null;
+}
+
+/**
+ * Mode-reference naming convention: a routable mode reference is lowercase
+ * kebab-case (`<mode>.md`). Uppercase files in references/ (POLICY, SECURITY,
+ * CHECKLIST, ...) are governance/support documents, not routable modes — they
+ * are deliberately excluded from the command surface, dispatch.md, and mode
+ * counts so all three agree on one definition.
+ */
+export function isModeRefFile(fileName: string): boolean {
+  return /^[a-z0-9-]+\.md$/.test(fileName);
+}
+
+/**
+ * The full generated skill-mode surface: one `<skill>-<mode>` command per
+ * routable references/<mode>.md. This is the same source dispatch.md is
+ * drift-gated against (getModesForSkill), so the command surface and the
+ * routing surface can never disagree. Names are prefixed with the skill so
+ * modes that repeat across departments (every skill ships an `audit` mode)
+ * stay unique and self-describing instead of shadowing each other.
+ */
+export function getSkillModeCommands(skills: SkillItem[]): SkillModeCommand[] {
+  const reserved = new Set<string>([...skills.map((s) => s.name), ...SUBMODE_ALIASES.map((a) => a.command)]);
+  const entries: SkillModeCommand[] = [];
+  const seen = new Set<string>();
+
+  for (const skill of skills) {
+    const refDir = path.join(resolveSkillSourceDir(skill), "references");
+    if (!fs.existsSync(refDir)) continue;
+    for (const file of fs.readdirSync(refDir).filter(isModeRefFile).sort()) {
+      const mode = file.replace(/\.md$/, "");
+      const command = `${skill.name}-${mode}`;
+      if (seen.has(command)) {
+        throw new Error(`getSkillModeCommands: duplicate skill-mode command '${command}'`);
+      }
+      if (reserved.has(command)) {
+        throw new Error(`getSkillModeCommands: '${command}' collides with an existing per-skill or alias command`);
+      }
+      seen.add(command);
+      const desc = referenceHeadline(path.join(refDir, file)) ?? `${skill.name} — ${mode} mode`;
+      entries.push({ command, skill: skill.name, mode, desc });
+    }
+  }
+
+  return entries;
+}
+
+/** Command-surface breakdown per harness: per-skill + generated skill-mode + curated aliases. */
+export function commandSurfaceCounts(skills: SkillItem[]): {
+  perSkill: number;
+  skillModes: number;
+  aliases: number;
+  total: number;
+} {
+  const skillModes = getSkillModeCommands(skills).length;
+  return {
+    perSkill: skills.length,
+    skillModes,
+    aliases: SUBMODE_ALIASES.length,
+    total: skills.length + skillModes + SUBMODE_ALIASES.length,
+  };
+}
+
+/** Write the generated `<skill>-<mode>` layer into a harness destination. */
+function writeSkillModeCommands(
+  destDir: string,
+  skills: SkillItem[],
+  generate: (skill: SkillItem, mode: string, desc: string) => string,
+): number {
+  let count = 0;
+  for (const entry of getSkillModeCommands(skills)) {
+    const parent = skills.find((s) => s.name === entry.skill);
+    if (!parent) continue; // unreachable: entries are derived from `skills`
+    fs.writeFileSync(path.join(destDir, `${entry.command}.md`), generate(parent, entry.mode, entry.desc));
+    count++;
+  }
+  return count;
+}
+
 export function getSkills(): SkillItem[] {
   if (!fs.existsSync(SKILLS_JSON_PATH)) {
     throw new Error(`skills.json not found at ${SKILLS_JSON_PATH}`);
@@ -211,6 +315,8 @@ export function exportOpenCodeCommands(destDir: string, skills: SkillItem[]): nu
     }
   }
 
+  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
+
   return count;
 }
 
@@ -232,6 +338,8 @@ export function exportWindsurfWorkflows(destDir: string, skills: SkillItem[]): n
       count++;
     }
   }
+
+  count += writeSkillModeCommands(destDir, skills, generateWorkflowMarkdown);
 
   return count;
 }
@@ -255,6 +363,8 @@ export function exportCursorCommands(destDir: string, skills: SkillItem[]): numb
     }
   }
 
+  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
+
   return count;
 }
 
@@ -276,6 +386,8 @@ export function exportAntigravityCommands(destDir: string, skills: SkillItem[]):
       count++;
     }
   }
+
+  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
 
   return count;
 }
