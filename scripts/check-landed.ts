@@ -73,13 +73,16 @@ if (mode === "post-merge") {
       const j = JSON.parse(prJson.out.trim());
       prState = `#${j.number} ${j.state}`;
       const rollup = Array.isArray(j.statusCheckRollup) ? j.statusCheckRollup : [];
+      // Only judge checks that have already concluded; ignore in-progress ones
+      // (including this gate's own job) so the gate can run after the others.
+      const concluded = rollup.filter((c: Record<string, unknown>) => c.conclusion);
       checksGreen =
-        rollup.length > 0 &&
-        rollup.every((c: Record<string, unknown>) => {
-          const conclusion = String(c.conclusion ?? c.state ?? "").toUpperCase();
-          return ["SUCCESS", "NEUTRAL", "SKIPPED", "COMPLETED"].includes(conclusion);
+        concluded.length > 0 &&
+        concluded.every((c: Record<string, unknown>) => {
+          const conclusion = String(c.conclusion ?? "").toUpperCase();
+          return ["SUCCESS", "NEUTRAL", "SKIPPED"].includes(conclusion);
         }) &&
-        rollup.some((c: Record<string, unknown>) => String(c.conclusion ?? c.state ?? "").toUpperCase() === "SUCCESS");
+        concluded.some((c: Record<string, unknown>) => String(c.conclusion ?? "").toUpperCase() === "SUCCESS");
     } catch {
       prState = "parse-error";
     }

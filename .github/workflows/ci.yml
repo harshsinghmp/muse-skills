@@ -124,6 +124,7 @@ jobs:
   landing-gate:
     name: landing-gate
     runs-on: ubuntu-latest
+    needs: [lint, type-check, test, secret-scan]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
@@ -142,8 +143,8 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
-          GITHUB_HEAD_REF: ${{ github.head_ref }}
-        run: bun run check:landed -- --mode=pre-review --head=${{ github.head_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: bun run check:landed -- --mode=pre-review --head="$HEAD"
 
       # Post-merge gate: only on push to the integration branch (against github.ref_name).
       - name: Post-merge gate (push)
