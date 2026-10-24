@@ -29,3 +29,4 @@
 - [ ] No unrequested changes outside the stated scope
 - [ ] User data, generated files, and project-specific instructions are preserved
 - [ ] Ruled-out alternatives documented where non-obvious
+- [ ] Landing Gate: `bun run check:landed` (or this repo's equivalent) exits 0, or the report says LOCAL with the remaining steps
