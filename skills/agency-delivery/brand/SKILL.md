@@ -33,7 +33,7 @@ One unified department for client and brand lifecycle management. Every agency e
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

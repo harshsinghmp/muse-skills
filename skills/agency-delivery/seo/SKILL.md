@@ -33,7 +33,7 @@ One head skill for the search department. Organic visibility is earned through a
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

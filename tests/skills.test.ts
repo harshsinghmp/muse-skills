@@ -203,6 +203,76 @@ describe("Invocation UX & conventions", () => {
     expect(res.stdout).toContain("perfect sync");
   });
 
+  test("every SKILL.md carries the uniform '## Modes' contract with resolvable reference links and full metadata", () => {
+    const registry = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8")) as {
+      skills: Array<{ name: string; path: string }>;
+    };
+    // The universal SKILL.md standard: an H2 '## Modes' section (exact heading)
+    // whose reference links resolve, plus a complete metadata block. The
+    // complete routable mode surface itself is generated (dispatch.md +
+    // <skill>-<mode> commands) and drift-gated separately.
+    const requiredTop = [
+      "name",
+      "description",
+      "argument-hint",
+      "user-invocable",
+      "version",
+      "author",
+      "license",
+      "platforms",
+      "category",
+    ];
+    const requiredMeta = ["category", "priority", "aliases", "suggested_skills", "hermes", "openclaw", "compatibility"];
+    const problems: string[] = [];
+
+    for (const skill of registry.skills) {
+      const skFile = path.join(REPO_ROOT, skill.path);
+      const src = fs.readFileSync(skFile, "utf8");
+      const lines = src.split("\n");
+
+      const modesIdx = lines.findIndex((l) => /^## Modes\s*$/.test(l));
+      if (modesIdx === -1) {
+        problems.push(`${skill.name}: missing '## Modes' section`);
+        continue;
+      }
+
+      let end = lines.length;
+      for (let i = modesIdx + 1; i < lines.length; i++) {
+        if (/^##\s/.test(lines[i])) {
+          end = i;
+          break;
+        }
+      }
+      const refDir = path.join(path.dirname(skFile), "references");
+      for (const line of lines.slice(modesIdx, end)) {
+        for (const m of line.matchAll(/\[references\/([A-Za-z0-9_-]+)\.md\]/g)) {
+          if (!fs.existsSync(path.join(refDir, `${m[1]}.md`))) {
+            problems.push(`${skill.name}: Modes section links missing references/${m[1]}.md`);
+          }
+        }
+      }
+
+      const fm = src.slice(0, src.indexOf("\n---\n", 4));
+      const top = new Set<string>();
+      const meta = new Set<string>();
+      let inMeta = false;
+      for (const line of fm.split("\n")) {
+        if (/^\S/.test(line) && line !== "---") {
+          inMeta = line.startsWith("metadata:");
+          const k = /^([A-Za-z_-]+):/.exec(line);
+          if (k && !inMeta) top.add(k[1]);
+        } else if (inMeta && /^\s{2}\S/.test(line)) {
+          const k = /^\s{2}([A-Za-z_-]+):/.exec(line);
+          if (k) meta.add(k[1]);
+        }
+      }
+      for (const key of requiredTop) if (!top.has(key)) problems.push(`${skill.name}: frontmatter missing '${key}'`);
+      for (const key of requiredMeta) if (!meta.has(key)) problems.push(`${skill.name}: metadata missing '${key}'`);
+    }
+
+    expect(problems).toEqual([]);
+  });
+
   test("secretary/references/orchestration.md exists and encodes delegation, fast-path, and message contracts", () => {
     const orchPath = path.join(REPO_ROOT, "skills/context-orchestration/secretary/references/orchestration.md");
     expect(fs.existsSync(orchPath)).toBe(true);

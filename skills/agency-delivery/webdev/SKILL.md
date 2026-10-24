@@ -33,7 +33,7 @@ One head skill for web engineering. The stack is whatever the project already us
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

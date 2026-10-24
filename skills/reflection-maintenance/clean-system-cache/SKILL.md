@@ -39,6 +39,10 @@ Requires **zero external runtimes** (no Python, no Node, no dependencies):
 
 ---
 
+## Modes
+
+This department ships no routed mode references — it operates as a single procedure through this SKILL.md. The generated `<skill>-<mode>` command surface and the secretary dispatch directory are the complete routing truth.
+
 ## When to Use
 
 ### Trigger Conditions

@@ -35,7 +35,7 @@ Default stack: self-hosted Postgres 16+ with `pg_stat_statements` enabled for th
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

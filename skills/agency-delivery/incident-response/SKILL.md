@@ -33,7 +33,7 @@ One head skill for live incidents. Triage the severity, stop the bleeding, tell 
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

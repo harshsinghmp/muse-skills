@@ -24,6 +24,7 @@ metadata:
     suggested_skills: [updatedocs, code-review, evidence-ledger, secretary]
     primary_triggers: ["humanize prose","remove AI writing patterns","de-ai text","audit prose for AI slop","make writing sound natural"]
     requires_tools: [view_file, write_to_file, replace_file_content]
+  compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
 
 # Humanize (`humanize`)
@@ -43,7 +44,7 @@ This skill is an **editorial system**, not a detector-evasion system. AI-style s
 * **Code & PR Reviews**: Auditing documentation PRs or changelogs for formulaic structures, binary contrasts, or placeholder text.
 * **Audit & Triage**: Evaluating external submissions or community PRs to identify low-effort AI slop vs. authentic contributions.
 
-### Operating Modes
+## Modes
 1. **Rewrite**: Reconstruct supplied prose while strictly locking claims, facts, stance, and audience.
 2. **Edit (Default)**: Surgical minimum effective diff. Preserve strong human sentences; edit only formulaic or low-signal clauses.
 3. **Detect (Audit-Only)**: Pinpoint exact spans, pattern categories, and concise fixes without changing text.

@@ -44,6 +44,16 @@ It does three things:
 
 ---
 
+## Modes
+
+Every invocation resolves to exactly one mode. Load **only** the matched reference:
+
+| Mode | Trigger phrases | Behavior | Reference |
+| :--- | :--- | :--- | :--- |
+| **`audit`** | "pua audit", "audit" | audit — pua audit mode (Performance Improvement Plan audit) | [references/audit.md](references/audit.md) |
+| **`flavor-packs`** | "pua flavor-packs", "flavor-packs" | Corporate Flavor Packs & Situational Auto-Selector | [references/flavor-packs.md](references/flavor-packs.md) |
+| **`receipt-verification`** | "pua receipt-verification", "receipt-verification" | Receipt Verification & Anti-Thrashing Protocol | [references/receipt-verification.md](references/receipt-verification.md) |
+
 ## When to Use
 
 ### Trigger Conditions

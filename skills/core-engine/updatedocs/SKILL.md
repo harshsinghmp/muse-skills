@@ -576,7 +576,7 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **`.agents/artifacts/`** | `DO NOT TOUCH` | Session-owned research/planning working state, not documentation. Durable findings are promoted to `.agents/context/` via `updateagents`. |
 | **LICENSE** | `DO NOT TOUCH` | Never automatically modify unless explicitly requested. |
 
-### Operating Modes
+## Modes
 
 | Mode | Context & Trigger | Operational Focus | Pipeline Steps | Report |
 |:---|:---|:---|:---|:---|

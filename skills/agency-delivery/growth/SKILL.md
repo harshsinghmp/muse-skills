@@ -33,7 +33,7 @@ One head skill for strategy and scaling. Win by choosing where to compete and wh
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 

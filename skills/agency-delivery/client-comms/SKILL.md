@@ -33,7 +33,7 @@ One head skill for client-facing communication. Keep the client informed, price 
 
 ---
 
-## Modes — quick commands
+## Modes
 
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
