@@ -26,6 +26,7 @@ import { describe, expect, test } from "bun:test";
 import fs from "node:fs";
 import path from "node:path";
 import * as exporter from "../scripts/export-commands";
+import { getModesForSkill } from "../scripts/sync-dispatch";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const README_PATH = path.join(REPO_ROOT, "README.md");
@@ -132,5 +133,23 @@ describe("README command-surface claims", () => {
       .filter((alias) => !isResolvable(alias) && mentionsCommand(readme, alias.command))
       .map((alias) => `/${alias.command} -> ${referencePath(alias) ?? "unknown skill"}`);
     expect(phantom).toEqual([]);
+  });
+
+  test("per-skill 'across N modes' claims match the generated dispatch surface", () => {
+    // The routing surface dispatch.md advertises is generated from each skill's
+    // references/ directory (scripts/sync-dispatch.ts getModesForSkill) — the
+    // same source the secretary router resolves modes from. Hand-written
+    // per-skill counts rotted before (#229); they are now pinned to that source.
+    const mismatched: string[] = [];
+    for (const line of readme.split("\n")) {
+      const row = /^\|\s*\[`([a-z0-9-]+)`\]\(skills\//.exec(line);
+      const claim = /across\s+(\d+)\s+modes/.exec(line);
+      if (!row || !claim) continue;
+      const expected = getModesForSkill(row[1]).length;
+      if (Number(claim[1]) !== expected) {
+        mismatched.push(`${row[1]}: README claims ${claim[1]}, generated surface has ${expected}`);
+      }
+    }
+    expect(mismatched).toEqual([]);
   });
 });
