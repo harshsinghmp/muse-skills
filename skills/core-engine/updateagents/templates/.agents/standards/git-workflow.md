@@ -3,19 +3,19 @@
 ## 1. Branch Architecture & Rules
 
 ### Branch Hierarchy
-- `master`: Production branch. **Never commit directly to master.**
-- `dev`: Staging/integration branch.
-- `feature/*`: Created from `dev` for individual features or tasks.
-- `release/*`: Created from `dev` when changes are ready for production; merged into `master`, then back into `dev`.
-- `hotfix/*`: Created from `master` for urgent production fixes; merged into both `master` and `dev`.
+- `{{production_branch}}`: Production branch. **Never commit directly to {{production_branch}}.**
+- `{{integration_branch}}`: Staging/integration branch.
+- `feature/*`: Created from `{{integration_branch}}` for individual features or tasks.
+- `release/*`: Created from `{{integration_branch}}` when changes are ready for production; merged into `{{production_branch}}`, then back into `{{integration_branch}}`.
+- `hotfix/*`: Created from `{{production_branch}}` for urgent production fixes; merged into both `{{production_branch}}` and `{{integration_branch}}`.
 
 ### Branching Rules
-1. Feature branches must always be created from `dev`.
+1. Feature branches must always be created from `{{integration_branch}}`.
 2. Use descriptive branch names (`feat/auth-session`, `fix/db-pool-leak`).
-3. Every merge into `dev` or `master` requires a Pull Request and code review.
-4. Do not rewrite or force-push `master` or `dev` history.
+3. Every merge into `{{integration_branch}}` or `{{production_branch}}` requires a Pull Request and code review.
+4. Do not rewrite or force-push `{{production_branch}}` or `{{integration_branch}}` history.
 5. Prefer `git rebase` within feature branches to keep history clean and linear.
-6. For production bugs, use `hotfix/*` rather than merging unfinished work from `dev`.
+6. For production bugs, use `hotfix/*` rather than merging unfinished work from `{{integration_branch}}`.
 7. Prefer a new revert commit over rewriting shared history.
 8. **Atomic PR per Feature Protocol**: Give each independently deliverable feature its own dedicated feature branch and PR. Keep coordinated changes needed for that feature together; never batch unrelated features or workstreams into one PR. This rule is per feature, not per skill.
 
@@ -60,18 +60,18 @@ All development moves across 4 deterministic lifecycle phases:
 
 ```
 [ 📋 Requested ] ──► [ 📅 Planned ] ──► [ ⚡ In Progress ] ──► [ ✅ Done ]
- (Issues / PRs)     (Sprint Backlog)    (Active PR / Milestone)  (Shipped to Main)
+ (Issues / PRs)     (Sprint Backlog)    (Active PR / Milestone)  (Shipped)
 ```
 
 1. **📋 Requested**: Community proposals, PR suggestions, and ecosystem requests pending sprint triage.
 2. **📅 Planned**: Scoped SOW items selected for the upcoming sprint.
 3. **⚡ In Progress**:
-   - Feature branch created from `dev` (`feat/*`).
-   - Dedicated GitHub milestone created and draft PR opened against `dev`.
+   - Feature branch created from `{{integration_branch}}` (`feat/*`).
+   - Dedicated GitHub milestone created and draft PR opened against `{{integration_branch}}`.
    - Item moved to *In Progress* on the roadmap board.
 4. **✅ Done**:
    - Tests and static typing pass cleanly (`bun test`, `tsc --noEmit`).
-   - PR merged into `dev`, fast-forwarded to `master`, and milestone closed.
+   - PR merged into `{{integration_branch}}`, fast-forwarded to `{{production_branch}}`, and milestone closed.
    - Item moved to *Done* on the roadmap board.
 
 ---
@@ -86,7 +86,8 @@ All releases and git tags follow strict `vX.Y.Z` semantic versioning:
 
 ### Release Invariants
 - Sync `package.json` `version` with the `vX.Y.Z` tag in the release commit.
-- Stage on `release/vX.Y.Z` from `dev` → merge to `master` → back-merge to `dev`.
+- **Derived-artifact sync**: any version bump regenerates the repo's declared derived artifacts **in the same commit**. Every derived artifact is declared together with (a) the command that regenerates it and (b) the equivalent `--check` gate that fails CI on drift; declare each bundle as `{{artifact_name}}` ↔ regenerate: `{{regen_command}}` ↔ check: `{{check_command}}` (placeholders, filled by the project. One repo's instance — not law: `claims.json` ↔ regenerate `bun run claims:generate` ↔ check `bun run claims:check`).
+- Stage on `release/v{{SEMVER}}` from `{{integration_branch}}` → merge to `{{production_branch}}` → back-merge to `{{integration_branch}}`.
 - CI publishes on `v*` tag push (`git tag -a vX.Y.Z -m "release: vX.Y.Z"`). Never publish manually.
 - **README "What's New" Rule**:
   - Keep only current release/feature highlights in `README.md` under `## 🚀 What's New` under 5 line.

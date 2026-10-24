@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--
+- **DOX Engine template: derived-artifact sync + branch placeholders**: the scaffolded git-workflow standard's Release Invariants gain a generalized derived-artifact rule — any version bump regenerates declared derived artifacts **in the same commit**, each artifact declared with (a) its regenerate command and (b) the `--check` gate that fails CI on drift (rule provenance: the musememory v3.1.0 release, where bumping `package.json` to 3.1.0 red-flagged `claims:check` until `claims.json` was regenerated in the same commit). Template branch names (`master`/`dev`) become `{{integration_branch}}` / `{{production_branch}}` placeholders across the git-workflow, landing-gate, agent-reference, and execution-kernel standards. Existing projects adopt on their next `updateagents` update pass.
 
 ### Fixed
 
