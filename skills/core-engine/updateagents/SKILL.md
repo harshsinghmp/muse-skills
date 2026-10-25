@@ -288,6 +288,10 @@ When an agent or harness attempts to write or update a prohibited legacy instruc
 ### Anti-Bloat Rules
 Do not add entire package manifests, full dependency lists, complete directory trees, full source snippets, logs, stack traces, session transcripts, or generic tutorials. Document only what agents repeatedly need.
 
+### Canon Refresh (new capability)
+* **`--check-canon` reports divergence, not drift.** A repo that adopted the canon legitimately localizes placeholders (`{{integration_branch}}` → `dev`, `{{SEMVER}}` → `X.Y.Z`); those files are `diverged` in the report but must not be auto-refreshed. Inspect the diff first; only `--refresh <name>` a standard when the divergence is stale canon, not localization.
+* **Established standards are curated, not overwritten.** The sync engine never refreshes an existing `.agents/standards/` file — it only provisions missing ones. Canon updates require an explicit `--refresh <name>` (or `--force`); a normal sync run will silently leave stale standards in place. Run `--check-canon` first to see what is out of date.
+
 ### Failure Handling
 * **No Agent File Found**: Create canonical DOX files only when the repository clearly benefits.
 * **Multiple Files Found**: Determine scopes and relationships; do not automatically consolidate.
