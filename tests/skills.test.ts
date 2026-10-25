@@ -2921,26 +2921,57 @@ build/
   test("🐙 git skill: pr-convention-miner CLI mines commits, synthesizes conventions, and audits commit messages", () => {
     const scriptPath = "skills/core-engine/git/scripts/pr-convention-miner.ts";
 
-    // 1. Mine conventions from local repo
-    const mineRes = spawnSync("bun", [scriptPath, "--mine", REPO_ROOT, "--limit", "20", "--json"], {
-      encoding: "utf8",
-      cwd: REPO_ROOT,
-    });
-    expect(mineRes.status).toBe(0);
-    const mineData = JSON.parse(mineRes.stdout);
-    expect(mineData.totalCommitsAnalyzed).toBeGreaterThan(0);
-    expect(mineData.conventionalPercentage).toBeGreaterThan(80);
-    expect(mineData.topTypes.length).toBeGreaterThan(0);
-    expect(mineData.recommendedTemplate).toContain("<type>");
+    // Seed a deterministic fixture repo. Mining the live checkout's history
+    // made this assertion environment-shaped: squash merges ("Release vX (#n),
+    // "merge: back-merge…") depress conventionalPercentage on main (16/20 →
+    // exactly 80 → `>80` boundary failure) while dev passed with 100%. The
+    // fixture pins the miner's behavior to a known corpus.
+    const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "convention-fixture-"));
+    const commit = (msg: string) =>
+      spawnSync("git", ["-c", "user.name=T", "-c", "user.email=t@example.com", "commit", "--allow-empty", "-m", msg], {
+        encoding: "utf8",
+        cwd: fixture,
+      });
+    spawnSync("git", ["init", "-q"], { cwd: fixture });
+    const conventional = [
+      "feat(git): add automated pr convention miner\n\n- Why: Teams need automated convention extraction.\n- What: Add miner script.\n- Verification: Tests pass.\n",
+      "fix(gate): resolve merged PR from the integration branch\n\n- Why: Post-merge PR row lied.\n- What: Fix lookup.\n- Verification: Tests pass.\n",
+      "docs(readme): document the command surface\n\n- Why: Users need discovery.\n- What: Update README.\n- Verification: Rendered.\n",
+      "test(miner): cover boundary cases\n\n- Why: Assertions drift otherwise.\n- What: Add cases.\n- Verification: Green.\n",
+      "chore(deps): bump toolchain\n\n- Why: Security.\n- What: Pin SHAs.\n- Verification: Built.\n",
+      "refactor(core): extract shared writer\n\n- Why: Deduplicate.\n- What: Extract function.\n- Verification: Tests pass.\n",
+      "perf(cli): cut startup cost\n\n- Why: Faster loops.\n- What: Lazy imports.\n- Verification: Bench.\n",
+      "feat(ui): add command palette\n\n- Why: Discovery.\n- What: Add component.\n- Verification: Tests pass.\n",
+      "fix(docs): repair dead links\n\n- Why: Integrity.\n- What: Fix paths.\n- Verification: Link lint.\n",
+      "ci(workflow): pin actions to SHAs\n\n- Why: Supply chain.\n- What: Pin refs.\n- Verification: CI green.\n",
+    ];
+    const nonConventional = ["fixed some stuff and updated docs", "updates"];
+    for (const m of [...conventional, ...nonConventional]) commit(m);
 
-    // 2. Synthesize conventions markdown
-    const synthRes = spawnSync("bun", [scriptPath, "--synthesize", REPO_ROOT], {
-      encoding: "utf8",
-      cwd: REPO_ROOT,
-    });
-    expect(synthRes.status).toBe(0);
-    expect(synthRes.stdout).toContain("Mined Git & PR Conventions");
-    expect(synthRes.stdout).toContain("Dominant Commit Pattern");
+    try {
+      // 1. Mine conventions from the deterministic fixture
+      const mineRes = spawnSync("bun", [scriptPath, "--mine", fixture, "--limit", "20", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(mineRes.status).toBe(0);
+      const mineData = JSON.parse(mineRes.stdout);
+      expect(mineData.totalCommitsAnalyzed).toBe(12);
+      expect(mineData.conventionalPercentage).toBeGreaterThan(80);
+      expect(mineData.topTypes.length).toBeGreaterThan(0);
+      expect(mineData.recommendedTemplate).toContain("<type>");
+
+      // 2. Synthesize conventions markdown from the fixture
+      const synthRes = spawnSync("bun", [scriptPath, "--synthesize", fixture], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(synthRes.status).toBe(0);
+      expect(synthRes.stdout).toContain("Mined Git & PR Conventions");
+      expect(synthRes.stdout).toContain("Dominant Commit Pattern");
+    } finally {
+      fs.rmSync(fixture, { recursive: true, force: true });
+    }
 
     // 3. Audit valid and invalid commit messages
     const validCommit =
