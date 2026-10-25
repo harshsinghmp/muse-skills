@@ -72,6 +72,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
 | **`promote`** | Intercept & promote foreign-harness instruction writes to DOX standards/context | Promoted standards/context, preserved archive, resynced router | [references/legacy-promotion.md](references/legacy-promotion.md) |
+| **`onboard`** | Run the interactive identity onboarding interview (`--onboard` with `--global` or `--project`) | Identity profiles (`user.md`, `assistant.md`, `vision.md`, `rules.md`) | [references/onboard.md](references/onboard.md) |
 | **`audit`** | "repo AI-readiness audit", "audit the 13 assets", "grade agent context" | Grade the 13 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
 
 ---
@@ -85,8 +86,6 @@ Loadable by topic; also routable as `/updateagents-<file>` commands (not separat
 - [skill-authoring.md](references/skill-authoring.md)
 - [global-atoms.md](references/global-atoms.md)
 - [advanced-audit-passes.md](references/advanced-audit-passes.md)
-- [onboard.md](references/onboard.md)
-
 ## Quick Reference
 
 ### Core Principle

@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **podcast** | "podcast", "podcast script", "show notes", "guest interview", "podcast episode" | Full podcast lifecycle: show concept, guest prep, interview & solo scripting, audio specs (-16 LUFS), show notes, and chaptering | [references/podcast.md](references/podcast.md) |
 | **case-study** | "case study", "success story", "customer story" | Customer case study: outcome, proof, and narrative | [references/case-study.md](references/case-study.md) |
 | **humanize** | "humanize this", "remove AI writing", "make it sound natural", "de-slop" | Editorial pass removing AI-sounding prose without changing facts or voice | [references/humanize.md](references/humanize.md) |
+| **thumbnails** | "youtube thumbnail", "thumbnail prompt", "high-CTR thumbnail" | High-CTR YouTube thumbnail generation and prompt engineering | [references/thumbnails.md](references/thumbnails.md) |
 | **launch** | "product launch", "launch announcement", "feature release", "launch copy" | Launch copy kit: headline, offer, key messages, and channel-ready assets | [references/launch.md](references/launch.md) |
 | **audit** | "audit content", "content audit", "fact check", "slop audit", "style guide audit" | Content-quality audit (anti-slop scan, fact verification, brand voice, readability) | [references/audit.md](references/audit.md) |
 
@@ -60,7 +61,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 Loadable by topic; also routable as `/content-<file>` commands (not separate routed modes):
 
-- [thumbnails.md](references/thumbnails.md)
 - [voice-archetypes.md](references/voice-archetypes.md)
 
 ## When to Use
