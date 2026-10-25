@@ -1,8 +1,8 @@
 ---
 name: refactor
 aliases: ["refactor-ui", "refactoring", "code-refactor", "ui-polish", "ui-audit", "architecture-refactor", "perf-refactor", "database-refactor", "refactor-anything"]
-description: "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through seven execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security)."
-argument-hint: "[ui|code|architecture|perf|database|sweep|polish]"
+description: "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security)."
+argument-hint: "[ui|code|architecture|perf|database|sweep|polish|audit]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -55,6 +55,24 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run. Note: `sweep` mode carries codebase-wide blast radius and is strictly on-demand; automated agents must never run it automatically without explicit user direction.
 
 ---
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/refactor-<file>` commands (not separate routed modes):
+
+- [06-visual-clutter.md](references/06-visual-clutter.md)
+- [11-five-state-anti-slop.md](references/11-five-state-anti-slop.md)
+- [08-shadows-elevation.md](references/08-shadows-elevation.md)
+- [03-color-palette.md](references/03-color-palette.md)
+- [04-spacing-layout.md](references/04-spacing-layout.md)
+- [05-button-hierarchy.md](references/05-button-hierarchy.md)
+- [modern-techniques.md](references/modern-techniques.md)
+- [02-typography-scale.md](references/02-typography-scale.md)
+- [09-contrast-accessibility.md](references/09-contrast-accessibility.md)
+- [07-empty-states.md](references/07-empty-states.md)
+- [01-visual-hierarchy.md](references/01-visual-hierarchy.md)
+- [10-grouping-alignment.md](references/10-grouping-alignment.md)
 
 ## When to Use
 

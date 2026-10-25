@@ -209,10 +209,10 @@ This sanitization invariant applies to all proprietary or synthetic IDE/ADE inje
 
 #### Layer A: Proactive Prevention (Angle-Bracket Invariant)
 When authoring documentation, templates, or instructions, **NEVER** write naked template angle brackets in prose or table cells. Always enclose template variables in backticks:
-- ❌ **Forbidden**: `Cut branch from dev: feat/<issue-id>-<slug>`
-- ✅ **Required**: `Cut branch from dev: feat/\`<issue-id>\`-\`<slug>\`` or code-fenced:
+- ❌ **Forbidden**: `Cut branch from {{integration_branch}}: feat/<issue-id>-<slug>`
+- ✅ **Required**: `Cut branch from {{integration_branch}}: feat/\`<issue-id>\`-\`<slug>\`` or code-fenced:
   ```bash
-  git checkout -b feat/<issue-id>-<slug> dev
+  git checkout -b feat/<issue-id>-<slug> {{integration_branch}}
   ```
 Fenced code blocks and inline backticks instruct ADE markdown engines not to parse the content as HTML elements.
 

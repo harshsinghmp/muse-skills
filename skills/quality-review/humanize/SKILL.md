@@ -66,6 +66,16 @@ When editorial goals or rules conflict, adhere to this strict hierarchy:
 
 ---
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/humanize-<file>` commands (not separate routed modes):
+
+- [style-guide.md](references/style-guide.md)
+- [patterns.md](references/patterns.md)
+- [ast-shield-and-cadence.md](references/ast-shield-and-cadence.md)
+- [verification.md](references/verification.md)
+
 ## Quick Reference
 
 ### Anti-Slop Pattern Cheat Sheet (Inspect & Fix)

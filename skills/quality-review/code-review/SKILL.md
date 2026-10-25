@@ -72,6 +72,15 @@ is strictly on-demand and is NEVER executed automatically during standard review
 
 ---
 
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/code-review-<file>` commands (not separate routed modes):
+
+- [review-render.md](references/review-render.md)
+- [triage-matrix.md](references/triage-matrix.md)
+- [boundary-governance.md](references/boundary-governance.md)
+
 ## When to Use
 
 ### Trigger Conditions

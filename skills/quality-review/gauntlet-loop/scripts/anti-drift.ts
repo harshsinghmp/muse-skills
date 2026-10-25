@@ -7,7 +7,7 @@
  *   bun anti-drift.ts --check-scope [since-git-ref]
  */
 
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -87,7 +87,7 @@ export function scanDuplicateUtilities(targetDir = process.cwd()): AntiDriftRepo
 export function checkRefactorScope(sinceRef = "HEAD~1"): { fileCount: number; files: string[]; exceedsLimit: boolean } {
   let files: string[] = [];
   try {
-    const out = execSync(`git diff --name-only ${sinceRef}`, { encoding: "utf8" });
+    const out = execFileSync("git", ["diff", "--name-only", sinceRef], { encoding: "utf8" });
     files = out
       .split("\n")
       .map((f) => f.trim())

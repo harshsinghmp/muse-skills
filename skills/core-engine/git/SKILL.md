@@ -4,7 +4,7 @@ aliases: ["git-flow","git-lifecycle","github-workflow","git-workflow","github-re
 description: "Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. Trigger when asked to: 'manage git workflow', 'triage issues', 'create PR', 'release project', 'cut release', 'run git', 'sync github seo', or 'execute release lifecycle'."
 argument-hint: "[triage|branch|pr|pr-check|release|cleanup|resolve|history|audit|mine]"
 user-invocable: true
-version: 1.3.0
+version: 1.3.1
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -81,9 +81,9 @@ Do **NOT** use this skill for:
 | :--- | :--- | :--- |
 | `triage` | Issue intake + triage + thread read + dup sweep | `anti-slop-triage.md` + `issue-to-pr-discipline.md` |
 | `branch` | Branch creation + worktree lanes | `branching-and-release-matrix.md` + `worktree-parallel-lanes.md` |
-|| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
-|| `pr-check` | Inspect CI checks on open PR, pull failure logs, extract failure snippet, `--json` machine-readable output | `pr-checks.md` |
-|| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
+| `pr` | Surgical gate + docs + SEO + PR open + staging + honest CI | `issue-to-pr-discipline.md` + `github-seo-and-presentation.md` |
+| `pr-check` | Inspect CI checks on open PR, pull failure logs, extract failure snippet, `--json` machine-readable output | `pr-checks.md` |
+| `release` | Release branch + sanitization + semver + tag + back-merge | `monorepo-and-sanitization.md` + `branching-and-release-matrix.md` |
 | `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
@@ -91,6 +91,13 @@ Do **NOT** use this skill for:
 | `mine` | "mine conventions", "extract PR rules", "audit commit", "synthesize guidelines" | `convention-mining.md` |
 
 Token rule: in a mode, load only the references in its row — never the full set.
+
+
+### Support references (load on topic)
+
+Loadable by topic; also routable as `/git-<file>` commands (not separate routed modes):
+
+- [report-template.md](references/report-template.md)
 
 ## Verification
 
@@ -456,6 +463,10 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
 - **Never Include Unredacted Credentials**: Scan diffs for `.env` files, API keys (`sk-*`, `ghp_*`), and private tokens before pushing.
 - **No Vague Commit Messages**: Messages like "fixes bug" or "updates" are strictly forbidden. Always use Conventional Commits with scope and rationale.
 - **Never Force-Push Shared Branches**: `--force-with-lease` is permissible only on isolated feature branches; force-pushing `dev` or `master` is catastrophic.
+- **Annotated tag pushes carry tagger identity.** A `git tag -a` stores the committer's email in the tag object, so the same email-privacy rule as commits applies: use the noreply address (the repo's configured identity) or the push is rejected. Lightweight tags (`git tag vX.Y.Z`) do not, but annotated tags do. The same applies to merge commits (e.g. back-merging `main` into `dev`) — set the identity or amend with `--reset-author`.
+- **Verify the current branch before any write, amend, or push.** `git checkout <branch>` can silently fall through to `dev` when the target is missing or ambiguous. Run `git branch --show-current` immediately before committing, amending, tagging, or pushing; a merge/amend/tag created on the wrong branch wastes a release cycle.
+- **`gh pr merge --delete-branch` fails when that branch is checked out.** Switch off the branch (e.g. `git checkout dev`) before merging, or delete the branch in a separate step after the merge.
+- **Process-spawning tests need explicit timeout headroom.** CLI/process tests that spawn subprocesses routinely exceed default 5s caps on CI (e.g. 15015ms vs 15000ms). Give explicit headroom in the test rather than weakening assertions; flaky red on a clean tree is a timeout, not a regression.
 - **Landing Gate (delivery is not commitment)**: A commit is not a delivery. Work is LANDED only when reachable from the integration branch on the remote; until then it is LOCAL. The words landed/shipped/merged/released/deployed/"verified on <branch>" may be used only after the gate exits 0 in the same session. Verdicts that cannot be confused: `LANDED`/`LOCAL`, `REVIEWABLE`/`NOT REVIEWABLE` — never "NOT LANDED" (it contains "LANDED"). Run `bun run check:landed` (or the repo's equivalent) and include the Remote state block in the close-out. If you cannot push, say `LOCAL`. Full standard: `.agents/standards/landing-gate.md`.
 - **Stuck?** See [Troubleshooting](references/TROUBLESHOOTING.md) for symptom → one-command fix → deeper link.
 

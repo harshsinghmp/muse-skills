@@ -60,7 +60,8 @@ read_input() {
     user_val="$default_val"
   fi
 
-  eval "$__resultvar=\"$user_val\""
+  # nameref assignment — never eval user input (hostile tty strings are code otherwise)
+  printf -v "$__resultvar" '%s' "$user_val"
 }
 
 # ─── 3. Parse CLI Flags or Prompt Interactively ──────────────────────────────

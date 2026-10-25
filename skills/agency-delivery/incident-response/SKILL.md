@@ -1,7 +1,7 @@
 ---
 name: incident-response
 aliases: ["incident-command", "outage-response", "sev-response", "incident-triage", "postmortem", "stop-the-bleeding"]
-description: "Live incident command: severity triage with first-15-minutes checklist, stop-the-bleeding mitigation playbooks for outage breach data-loss and perf-collapse, severity-linked status-page and client communication, and blameless postmortem with tracked actions, routed through four modes. Use when production is down, breached, losing data, or collapsing in performance. Not for planned QA (qa-launch), security audits (audit/code-review), routine client status (client-comms), or infra builds (devops)."
+description: "Live incident command: severity triage with first-15-minutes checklist, stop-the-bleeding mitigation playbooks for outage breach data-loss and perf-collapse, severity-linked status-page and client communication, and blameless postmortem with tracked actions, routed through five modes. Use when production is down, breached, losing data, or collapsing in performance. Not for planned QA (qa-launch), security audits (audit/code-review), routine client status (client-comms), or infra builds (devops)."
 argument-hint: "[triage|mitigate|communicate|retro]"
 user-invocable: true
 version: 1.0.0

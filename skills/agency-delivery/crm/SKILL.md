@@ -1,7 +1,7 @@
 ---
 name: crm
 aliases: ["flows", "customer-flows", "lifecycle-flows", "email-flows", "retention-flows", "customer-journeys"]
-description: "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain)."
+description: "Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through eight modes. Use when managing client customer databases, building automated email/SMS flows in Klaviyo, Customer.io, Resend, or Postmark, rescuing abandoned carts, setting up DNS deliverability records, or segmenting user cohorts. Not for writing standalone editorial blog content (content) or agency-to-client retention QBRs (retain)."
 argument-hint: "[onboard|abandon|nurture|winback|deliverability|sms|contacts]"
 user-invocable: true
 version: 1.0.0
