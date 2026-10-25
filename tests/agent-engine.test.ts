@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
@@ -1491,6 +1492,42 @@ Custom billing engine for healthcare providers.
       expect(newProjectScript).toContain(
         "Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
       );
+    });
+  });
+  describe("Part H: Canon-drift detection", () => {
+    it("check-canon exits 0 on a freshly scaffolded (identical) standards set", () => {
+      const sandbox = join(tmpdir(), `canon-check-${Date.now()}`);
+      mkdirSync(join(sandbox, ".agents", "standards"), { recursive: true });
+      const canonDir = join(UPDATEAGENTS_TEMPLATES, ".agents", "standards");
+      for (const f of readdirSync(canonDir)) {
+        if (f.endsWith(".md")) copyFileSync(join(canonDir, f), join(sandbox, ".agents", "standards", f));
+      }
+      const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, sandbox, "--check-canon"], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("Canon in sync");
+      rmSync(sandbox, { recursive: true, force: true });
+    });
+
+    it("check-canon classifies placeholder->concrete substitution as localized (not drift)", () => {
+      const sandbox = join(tmpdir(), `canon-loc-${Date.now()}`);
+      mkdirSync(join(sandbox, ".agents", "standards"), { recursive: true });
+      const canonDir = join(UPDATEAGENTS_TEMPLATES, ".agents", "standards");
+      for (const f of readdirSync(canonDir)) {
+        if (f.endsWith(".md")) copyFileSync(join(canonDir, f), join(sandbox, ".agents", "standards", f));
+      }
+      const gw = join(sandbox, ".agents", "standards", "git-workflow.md");
+      writeFileSync(
+        gw,
+        readFileSync(gw, "utf8")
+          .replace(/\{\{integration_branch\}\}/g, "dev")
+          .replace(/\{\{production_branch\}\}/g, "main"),
+      );
+      const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, sandbox, "--check-canon", "--json"], { encoding: "utf8" });
+      const parsed = JSON.parse(res.stdout);
+      expect(parsed.diverged).toEqual([]);
+      expect(parsed.missing).toEqual([]);
+      expect(parsed.localized.length).toBeGreaterThan(0);
+      rmSync(sandbox, { recursive: true, force: true });
     });
   });
 });

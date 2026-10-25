@@ -5569,7 +5569,7 @@ exit 0
 
       // 3.13 Update package.json
       const pkgPath = join(resolvedTarget, "package.json");
-      let pkg: any = null;
+      let pkg: Record<string, unknown> | null = null;
       if (existsSync(pkgPath)) {
         try {
           pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
