@@ -66,7 +66,7 @@ function writeLease(body: string): void {
 }
 
 function acquire(owner: string, scope: string): void {
-  const branch = execGit("rev-parse --abbrev-ref HEAD") ?? "unknown";
+  const branch = execGit(["rev-parse", "--abbrev-ref", "HEAD"]) ?? "unknown";
   const body = [
     "# WORKTREE LEASE",
     `owner: ${owner}`,
@@ -87,7 +87,7 @@ function refreshHeartbeat(): void {
 }
 
 function takeover(l: LeaseInfo, owner: string, scope: string): void {
-  const branch = execGit("rev-parse --abbrev-ref HEAD") ?? "unknown";
+  const branch = execGit(["rev-parse", "--abbrev-ref", "HEAD"]) ?? "unknown";
   const body = [
     "# WORKTREE LEASE",
     `owner: ${owner}`,
@@ -101,10 +101,10 @@ function takeover(l: LeaseInfo, owner: string, scope: string): void {
   writeLease(body);
 }
 
-function execGit(args: string): string | null {
+function execGit(args: string[]): string | null {
   try {
     return (
-      Bun.spawnSync(["git", ...args.split(" ")], { stdout: "pipe" })
+      Bun.spawnSync(["git", ...args], { stdout: "pipe" })
         .stdout.toString()
         .trim() || null
     );
