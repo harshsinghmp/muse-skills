@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **updatedocs 2.7.0 — `--capability-sweep` (the sync half mechanized)**: the docs engine could score 100/100 on an audit while capabilities shipped in recent PRs/issues/commits were documented nowhere (clean scores conceal absence, not presence — surfaced by the 2026-10-25 capability-sync pass). The new sweep enumerates every asset added since the last release tag (skill reference files, skills, scripts, workflows) plus `feat:` commits, and fails CI listing each capability documented nowhere (`reference-file-invisible-in-skill`, `undocumented-skill`, `undocumented-workflow`, `undocumented-asset`, `feat-commit-undocumented`) with suggested doc targets. The audited repo now carries a live CI daemon test pinning capability-doc sync. The sweep detects; the agent authors the missing sections with surgical diffs per updatedocs' no-blind-regeneration doctrine.
+
 ## [7.7.0] - 2026-10-25
 
 ### Added
