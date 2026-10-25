@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [7.7.0] - 2026-10-25
 
 ### Added
 
@@ -17,6 +17,8 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **Fresh Critic (gauntlet-loop) findings, rounds 1–3**: deleted the stale `refactor/references/modes.md` router (v1.1.0, wrong mode set, wrong version stamp) so the SKILL.md Modes table is the single router, and restored `audit` to refactor's `argument-hint`; corrected README's totals to the regenerated surface (409→408 commands per harness, 353→352 `<skill>-<mode>` commands, refactor "7-mode"→20-mode) and widened `tests/readme-claims.test.ts` to gate the hyphenated "N-mode" grammar so that phrasing can no longer escape CI; resolved the duplicate `audit` mode row in `updateagents` (CI-gating row renamed `scorecard`) and its "sync 19 standards" copy (→21); made 56 previously invisible routable reference files across 20 skills visible via an idempotent `### Support references (load on topic)` subsection inside each `## Modes`; corrected 21 stale mode counts in frontmatter descriptions with byte-parity across `skills.json` and `llms.txt`; added the untrusted-content boundary note to the three web-scraping references (brand/research, smm/creator-vetting, research/competitor-analysis); replaced three string-built/interactive shell-execution paths with arg-array or nameref equivalents (`scripts/install.sh` eval → `printf -v`, `gauntlet-loop/scripts/anti-drift.ts` and `client-comms/scripts/client-comms.ts` interpolated `execSync` → arg-array `execFileSync`; template `landing-gate.yml` pre-review gate moved to the env-var pattern); normalized 24 corrupted `^||`-prefixed table rows in the git, telegram, and database SKILL.md files; fixed the README's dead link to git-ignored report state.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.6.0...v7.7.0
 
 ## [7.6.0] - 2026-10-24
 
