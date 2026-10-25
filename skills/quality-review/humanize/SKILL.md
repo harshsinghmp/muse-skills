@@ -51,6 +51,7 @@ This skill is an **editorial system**, not a detector-evasion system. AI-style s
 4. **File**: Operate directly on repository files, altering prose only while strictly preserving code blocks, YAML frontmatter, tables, and URLs.
 5. **Repo Audit**: Survey a directory or docset to identify dominant anti-slop patterns without performing blind bulk rewrites.
 6. **Embedded**: Act as an internal quality filter within a multi-skill pipeline, returning clean prose directly.
+7. **Audit**: Certify prose or a docset against the structural-signal audit checklist (shape, rhythm, tells, false-positive guard) without editing; severity-routed fixes via Rewrite/Edit.
 
 ### Core Priority Order
 When editorial goals or rules conflict, adhere to this strict hierarchy:
