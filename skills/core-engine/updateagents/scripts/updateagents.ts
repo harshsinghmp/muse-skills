@@ -1261,10 +1261,23 @@ if (values["check-canon"]) {
 
   const identical: string[] = [];
   const diverged: string[] = [];
+  const localized: string[] = []; // differs only by placeholder->concrete substitution (intentional)
   const missing: string[] = []; // in canon, not locally
   const extra: string[] = []; // locally, not in canon
 
-  // of {{...}} placeholders (e.g. {{integration_branch}} -> dev). That is the
+  // A file is "localized" when its only divergence from canon is the substitution
+  // of {{...}} placeholders into concrete values (e.g. {{integration_branch}} -> dev).
+  const isLocalized = (canon: string, local: string): boolean => {
+    if (canon.split("\n").length !== local.split("\n").length) return false;
+    const sentinel = "\u0000PH\u0000";
+    const escaped = canon.replace(/\{\{[^}]+\}\}/g, sentinel).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = escaped.split(sentinel).join("[^\\n]*?");
+    try {
+      return new RegExp(`^${pattern}$`, "s").test(local);
+    } catch {
+      return false;
+    }
+  };
 
   for (const f of masterFiles) {
     if (!localSet.has(f)) {
@@ -1274,6 +1287,7 @@ if (values["check-canon"]) {
     const a = readFileSync(join(masterStandardsDir, f), "utf8");
     const b = readFileSync(join(localStandardsDir, f), "utf8");
     if (a === b) identical.push(f);
+    else if (isLocalized(a, b)) localized.push(f);
     else diverged.push(f);
   }
   for (const f of localFiles) {
@@ -1281,12 +1295,13 @@ if (values["check-canon"]) {
   }
 
   if (values.json) {
-    console.log(JSON.stringify({ identical, diverged, missing, extra }, null, 2));
+    console.log(JSON.stringify({ identical, localized, diverged, missing, extra }, null, 2));
   } else {
     console.log("\n🔍 Canon-drift check: .agents/standards/ vs master canon");
     console.log(
-      `   ${identical.length} identical · ${diverged.length} diverged · ${missing.length} missing · ${extra.length} local-only`,
+      `   ${identical.length} identical · ${localized.length} localized · ${diverged.length} diverged · ${missing.length} missing · ${extra.length} local-only`,
     );
+    if (localized.length) console.log(`   Localized (placeholder->concrete, intentional): ${localized.join(", ")}`);
     if (diverged.length) console.log(`   Diverged: ${diverged.join(", ")}`);
     if (missing.length) console.log(`   Missing:  ${missing.join(", ")}`);
     if (extra.length) console.log(`   Local-only (not in canon): ${extra.join(", ")}`);
@@ -1294,7 +1309,7 @@ if (values["check-canon"]) {
 
   const inSync = diverged.length === 0 && missing.length === 0;
   if (inSync) {
-    console.log("✅ Canon in sync: no drift detected.");
+    if (!values.json) console.log("✅ Canon in sync: no drift detected.");
     process.exit(0);
   } else {
     console.log(
