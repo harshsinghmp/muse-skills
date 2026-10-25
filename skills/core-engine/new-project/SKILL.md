@@ -59,6 +59,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`integration-blueprints`** | "new-project integration-blueprints", "integration-blueprints" | Companion Integration & Scaffolding Blueprints | [references/integration-blueprints.md](references/integration-blueprints.md) |
 | **`project-os-architecture`** | "new-project project-os-architecture", "project-os-architecture" | Project Operating System & Progressive Disclosure DOX Architecture | [references/project-os-architecture.md](references/project-os-architecture.md) |
 | **`skill-extraction`** | "new-project skill-extraction", "skill-extraction" | Self-Improvement Skill Extraction Architecture | [references/skill-extraction.md](references/skill-extraction.md) |
+| **`audit`** | "new-project audit", "audit provisioned project", "agent readiness audit" | Certify a provisioned or inherited project's agent infrastructure against the readiness-level checklist (L1–L4, evidence per check, contiguous levels) | [references/audit.md](references/audit.md) |
 
 ## Audit routing
 

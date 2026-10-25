@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.8.0] - 2026-10-25
+
+### Added
+
+- **Audit modes for the deferred batch where they genuinely help — 39 of 46 skills now ship one**: `humanize:audit` (prose audit graded on **structural signals** — the durable signal per the SlopShape study, where word-level detection is brittle under rewording — with a false-positive guard, since human readers score near chance; grounded in Wikipedia's *Signs of AI writing* field guide, SlopShape, Reinhart et al. PNAS 2025, RAID); `new-project:audit` (post-provision certification of a project's agent infrastructure on the readiness-level lens — L1 Baseline → L4 Optimized, evidence per check, skipped-checks-excluded and contiguous-level rules from the Larridin/Kodus/agent-readiness frameworks); `relay:audit` (handoff trustworthiness: verify handoff claims against live state per the state-source ladder — "the audit matters more than the plan" — five-section completeness, executable-by-a-stranger test, spot check; grounded in Eon's DR-audit doctrine and Tallyfy's verification mechanics). Judgment-driven exclusions stand: `dead-letter` (its `sweep-protocol` mode *is* the audit) and `coupling-router` (its `coupling-matrix` mode is) — 7 of 46 skills documented audit-free. Command surface: 46 skills + 355 `<skill>-<mode>` commands + 10 aliases = **411 per harness**.
+- **`skill:mode` rows promoted to routed Modes tables (#256)**: `content:thumbnails`, `ops:contracts`, `smm:creator-vetting`, `client-comms:inbox-triage`, and `updateagents:onboard` gained routed quick-commands rows (they counted as routable modes in dispatch and the README but were invisible on each skill's own surface); `updatedocs:audit`'s row now references its actual `references/audit.md` instead of prose.
+
+### Changed
+
+- **Dogfood adoption (#255)**: this repo's sync run provisioned its own `.github/workflows/landing-gate.yml` (now committed — the repo runs the exact gate every scaffolded project gets), and the repo's local `git-workflow.md` standard hand-adopted the derived-artifact invariant with real branch names; `worktree-lease.ts` exec hardened to argv-array signature. **Engine finding recorded**: the sync engine treats existing standards as curated and never refreshes their content — adoption of canon changes into already-provisioned standards is a hand-merge (the changelog promise in #247 was incomplete; the local adoption is done, the engine-side improvement is a future task).
+- **Setup-python pin refreshed**: `actions/setup-python` re-pinned to the current `v6` tag head (the tag advanced after the original pin — pins verified against the live API before this release).
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.7.1...v7.8.0
+
 ## [7.7.1] - 2026-10-25
 
 ### Added
