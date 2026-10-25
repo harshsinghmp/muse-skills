@@ -90,6 +90,13 @@ bun path/to/updateagents/scripts/updateagents.ts --lint-rules
 # Archive completed historical milestones (>14d) into .agents/archive/milestones/
 bun path/to/updateagents/scripts/updateagents.ts --archive-sprints
 
+# Canon-drift check: compare .agents/standards/ against master canon (no writes; exits 1 on drift)
+bun path/to/updateagents/scripts/updateagents.ts --check-canon
+
+# Selectively adopt the master-canon version of one standard (or "all")
+bun path/to/updateagents/scripts/updateagents.ts --refresh <name>   # e.g. git-workflow.md
+bun path/to/updateagents/scripts/updateagents.ts --refresh all
+
 # Run in simulation mode without writing files
 bun path/to/updateagents/scripts/updateagents.ts --dry-run
 ```

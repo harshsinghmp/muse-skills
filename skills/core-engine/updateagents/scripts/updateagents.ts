@@ -91,7 +91,7 @@ export function ensureSecretaryRouter(content: string): { updatedContent: string
 
   const separator = content.endsWith("\n\n") ? "" : content.endsWith("\n") ? "\n" : "\n\n";
   return {
-    updatedContent: content + separator + SECRETARY_ROUTER_BLOCK + "\n",
+    updatedContent: `${content}${separator}${SECRETARY_ROUTER_BLOCK}\n`,
     modified: true,
   };
 }
@@ -144,6 +144,8 @@ const { values, positionals } = parseArgs({
     content: { type: "string", default: "" },
     "lint-rules": { type: "boolean", default: false },
     "archive-sprints": { type: "boolean", default: false },
+    "check-canon": { type: "boolean", default: false },
+    refresh: { type: "string", default: "" },
     "report-html": { type: "boolean", default: false },
     "report-out": { type: "string", default: "" },
     "dry-run": { type: "boolean", default: false },
@@ -185,6 +187,8 @@ Options:
   --sync-ide       Compile .agents/standards/ into .cursor/rules/*.mdc and .github/copilot-instructions.md
   --lint-rules     Validate standards and context rules against installed package.json dependencies
   --archive-sprints Move completed milestones (>14d) from current.md to .agents/archive/milestones/
+  --check-canon     Verify local .agents/standards against the master canon without modifying (exits 0 if in sync, 1 if drift)
+  --refresh <name>  Adopt the master-canon version of one standard (or "all" for every diverged one) — selective, agent-reviewed
   --report-html    Generate a standalone single-file HTML work report for employees, agents, or clients
   --report-out <f> Custom destination path for HTML work report
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
@@ -1132,7 +1136,7 @@ export function archiveHistoricalSprints(
     ? ""
     : `# 📦 Archived Milestones — ${yearMonth}\n\nHistorical completed milestones and shipped state older than ${maxAgeDays} days.\n\n---\n\n`;
 
-  appendFileSync(archiveFile, archiveHeader + archivedEntries.join("\n\n") + "\n\n", "utf8");
+  appendFileSync(archiveFile, `${archiveHeader + archivedEntries.join("\n\n")}\n\n`, "utf8");
 
   // Ensure kept current.md has pointer
   let updatedContent = keptLines.join("\n");
@@ -1235,6 +1239,110 @@ if (values.check) {
     console.log("⚠️ Context Drift Detected: Context files have been modified since last sync.");
     process.exit(1);
   }
+}
+
+// Early handler: Canon-drift check (--check-canon)
+// Compares the project's .agents/standards/ against the master canon in
+// skills/core-engine/updateagents/templates/.agents/standards/ WITHOUT modifying
+// anything. Exits 0 when every canon standard present is byte-identical (and no
+// canon standard is missing locally); exits 1 with a classified per-file report
+// otherwise. Detection half of the canon-refresh capability.
+if (values["check-canon"]) {
+  const masterStandardsDir = join(TEMPLATES_DIR, ".agents", "standards");
+  const localStandardsDir = join(workspaceDir, ".agents", "standards");
+  const masterFiles = existsSync(masterStandardsDir)
+    ? readdirSync(masterStandardsDir).filter((f) => f.endsWith(".md"))
+    : [];
+  const localFiles = existsSync(localStandardsDir)
+    ? readdirSync(localStandardsDir).filter((f) => f.endsWith(".md"))
+    : [];
+  const localSet = new Set(localFiles);
+  const masterSet = new Set(masterFiles);
+
+  const identical: string[] = [];
+  const diverged: string[] = [];
+  const missing: string[] = []; // in canon, not locally
+  const extra: string[] = []; // locally, not in canon
+
+  // of {{...}} placeholders (e.g. {{integration_branch}} -> dev). That is the
+
+  for (const f of masterFiles) {
+    if (!localSet.has(f)) {
+      missing.push(f);
+      continue;
+    }
+    const a = readFileSync(join(masterStandardsDir, f), "utf8");
+    const b = readFileSync(join(localStandardsDir, f), "utf8");
+    if (a === b) identical.push(f);
+    else diverged.push(f);
+  }
+  for (const f of localFiles) {
+    if (!masterSet.has(f)) extra.push(f);
+  }
+
+  if (values.json) {
+    console.log(JSON.stringify({ identical, diverged, missing, extra }, null, 2));
+  } else {
+    console.log("\n🔍 Canon-drift check: .agents/standards/ vs master canon");
+    console.log(
+      `   ${identical.length} identical · ${diverged.length} diverged · ${missing.length} missing · ${extra.length} local-only`,
+    );
+    if (diverged.length) console.log(`   Diverged: ${diverged.join(", ")}`);
+    if (missing.length) console.log(`   Missing:  ${missing.join(", ")}`);
+    if (extra.length) console.log(`   Local-only (not in canon): ${extra.join(", ")}`);
+  }
+
+  const inSync = diverged.length === 0 && missing.length === 0;
+  if (inSync) {
+    console.log("✅ Canon in sync: no drift detected.");
+    process.exit(0);
+  } else {
+    console.log(
+      "⚠️ Canon drift detected. Use --refresh <name> (or --refresh all) to adopt canon selectively, or --force to overwrite everything.",
+    );
+    process.exit(1);
+  }
+}
+
+// Early handler: Selective canon refresh (--refresh <name>|all)
+if (values.refresh) {
+  const target = values.refresh;
+  const masterStandardsDir = join(TEMPLATES_DIR, ".agents", "standards");
+  const localStandardsDir = join(workspaceDir, ".agents", "standards");
+  if (!existsSync(masterStandardsDir)) {
+    console.error("❌ Master canon standards directory not found.");
+    process.exit(1);
+  }
+  if (!existsSync(localStandardsDir)) mkdirSync(localStandardsDir, { recursive: true });
+
+  const masterFiles = readdirSync(masterStandardsDir).filter((f) => f.endsWith(".md"));
+  const toRefresh: string[] = target === "all" ? masterFiles : [target.endsWith(".md") ? target : `${target}.md`];
+
+  const unknown = toRefresh.filter((f) => !masterFiles.includes(f));
+  if (unknown.length) {
+    console.error(`❌ Unknown canon standard(s): ${unknown.join(", ")}`);
+    console.error(`   Available: ${masterFiles.join(", ")}`);
+    process.exit(1);
+  }
+
+  for (const std of toRefresh) {
+    const src = join(masterStandardsDir, std);
+    const dest = join(localStandardsDir, std);
+    assertNotMemory(dest);
+    if (isDryRun) {
+      console.log(`   [dry-run] would refresh ${std}`);
+      continue;
+    }
+    cpSync(src, dest);
+    logExplicitModification({
+      file: `.agents/standards/${std}`,
+      changeType: "updated",
+      section: "Canon Refresh",
+      diffSummary: `Adopted master-canon version of standard "${std}" via --refresh`,
+    });
+    console.log(`✅ Refreshed .agents/standards/${std} from master canon.`);
+  }
+  process.exit(0);
 }
 
 // Early handler: Sync IDE Adapters
@@ -2497,11 +2605,11 @@ if (existsSync(pkgJsonPath)) {
     if (pkg.scripts) projectScripts = pkg.scripts;
     dependencies = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
 
-    if (dependencies["astro"]) frameworkDetected = "astro";
-    else if (dependencies["next"]) frameworkDetected = "nextjs";
-    else if (dependencies["hono"]) frameworkDetected = "hono";
-    else if (dependencies["vite"]) frameworkDetected = "vite";
-    else if (dependencies["react"]) frameworkDetected = "react";
+    if (dependencies.astro) frameworkDetected = "astro";
+    else if (dependencies.next) frameworkDetected = "nextjs";
+    else if (dependencies.hono) frameworkDetected = "hono";
+    else if (dependencies.vite) frameworkDetected = "vite";
+    else if (dependencies.react) frameworkDetected = "react";
 
     console.log(`  ✅ Parsed package.json: Name="${projectName}", Framework="${frameworkDetected}"`);
   } catch {}
