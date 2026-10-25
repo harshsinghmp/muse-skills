@@ -23,7 +23,7 @@ import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
-import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -169,7 +169,7 @@ Options:
 const isDryRun = values["dry-run"] || false;
 const isForce = values.force || false;
 const isNonInteractive = values["non-interactive"] || false;
-const skipInstall = values["skip-install"] || false;
+const _skipInstall = values["skip-install"] || false;
 const noCache = values["no-cache"] || false;
 const useLatest = values.latest || false;
 let githubProjectEnabled: boolean | undefined = values.github ? true : values["no-github"] ? false : undefined;
@@ -2427,7 +2427,7 @@ async function main() {
             if (colorsData.color?.accent) {
               colorsData.color.accent.$value = pal.accent;
             }
-            writeFileSync(colorsJsonPath, JSON.stringify(colorsData, null, 2) + "\n", "utf8");
+            writeFileSync(colorsJsonPath, `${JSON.stringify(colorsData, null, 2)}\n`, "utf8");
           } catch {
             // Non-fatal if parsing fails
           }
@@ -2667,7 +2667,7 @@ async function main() {
             layouts: "src/layouts",
             pages: "src/pages",
           };
-          writeFileSync(join(resolvedTarget, "instatic.json"), JSON.stringify(instaticJson, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "instatic.json"), `${JSON.stringify(instaticJson, null, 2)}\n`, "utf8");
 
           const layoutHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -2712,7 +2712,7 @@ title: ${projectName} - Instatic Builder
               instatic: "^1.0.0",
             },
           };
-          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify(pkgJson, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "package.json"), `${JSON.stringify(pkgJson, null, 2)}\n`, "utf8");
         }
       } else if (config.framework === "wordpress") {
         const hasComposer = spawnSync("which", ["composer"], { stdio: "ignore" }).status === 0;
@@ -2760,7 +2760,7 @@ title: ${projectName} - Instatic Builder
 
     // 3.1 UnoCSS with Wind 4 Preset Injection
     if (config.styling === "unocss" || config.styling === "hybrid") {
-      depsToAdd["unocss"] = "^66.0.0";
+      depsToAdd.unocss = "^66.0.0";
       depsToAdd["@unocss/preset-wind4"] = "^66.0.0";
       depsToAdd["@unocss/preset-icons"] = "^66.0.0";
 
@@ -2829,7 +2829,7 @@ export default defineConfig({
           imports.push("import studioCMS from 'studiocms';");
           integrations.push("studioCMS()");
           needsServer = true;
-          depsToAdd["studiocms"] = "^0.4.4";
+          depsToAdd.studiocms = "^0.4.4";
           depsToAdd["@astrojs/node"] = "^9.0.0";
         }
         if (config.cms === "wollycms") {
@@ -2839,9 +2839,9 @@ export default defineConfig({
         }
         if (config.cms === "emdash") {
           needsServer = true;
-          depsToAdd["emdash"] = "^0.36.0";
+          depsToAdd.emdash = "^0.36.0";
           depsToAdd["@astrojs/react"] = "^6.0.5";
-          depsToAdd["react"] = "^19.2.4";
+          depsToAdd.react = "^19.2.4";
           depsToAdd["react-dom"] = "^19.2.4";
           devDepsToAdd["@types/react"] = "^19.0.0";
           devDepsToAdd["@types/react-dom"] = "^19.0.0";
@@ -2851,7 +2851,7 @@ export default defineConfig({
             depsToAdd["@emdash-cms/cloudflare"] = "^0.36.0";
             depsToAdd["@emdash-cms/plugin-forms"] = "^0.2.5";
             depsToAdd["@emdash-cms/plugin-webhook-notifier"] = "^0.2.0";
-            devDepsToAdd["wrangler"] = "^4.129.0";
+            devDepsToAdd.wrangler = "^4.129.0";
             devDepsToAdd["@cloudflare/workers-types"] = "^4.20260702.1";
 
             imports.push("import cloudflare from '@astrojs/cloudflare';");
@@ -2902,7 +2902,7 @@ ${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
+  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? `\n    ${integrations.join(",\n    ")},\n  ` : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
@@ -2913,7 +2913,7 @@ export default defineConfig({
     // 3.2 CMS & Visual Builder Integration
     // 3.2.1 Payload CMS 3.0
     if (config.cms === "payload") {
-      depsToAdd["payload"] = "^3.24.0";
+      depsToAdd.payload = "^3.24.0";
       depsToAdd["@payloadcms/next"] = "^3.24.0";
       depsToAdd["@payloadcms/richtext-lexical"] = "^3.24.0";
       const isPg = config.db === "postgres" || config.db === "neon" || config.db === "supabase";
@@ -2922,7 +2922,7 @@ export default defineConfig({
       } else {
         depsToAdd["@payloadcms/db-sqlite"] = "^3.24.0";
       }
-      depsToAdd["graphql"] = "^16.10.0";
+      depsToAdd.graphql = "^16.10.0";
 
       const collectionsDir = join(resolvedTarget, "src", "collections");
       mkdirSync(collectionsDir, { recursive: true });
@@ -2999,7 +2999,7 @@ export const Pages: CollectionConfig = {
       );
 
       if (config.ecommerce === "payload") {
-        depsToAdd["stripe"] = "^17.7.0";
+        depsToAdd.stripe = "^17.7.0";
 
         // Products.ts
         writeFileSync(
@@ -3235,7 +3235,7 @@ export const OPTIONS = REST_OPTIONS(config);
             tsconfig.compilerOptions = tsconfig.compilerOptions || {};
             tsconfig.compilerOptions.paths = tsconfig.compilerOptions.paths || {};
             tsconfig.compilerOptions.paths["@payload-config"] = ["./src/payload.config.ts"];
-            writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + "\n", "utf8");
+            writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`, "utf8");
           } catch {}
         }
 
@@ -3400,7 +3400,7 @@ const PrerenderedPage = makePage(config);
           );
           writeFileSync(
             join(resolvedTarget, "package.json"),
-            JSON.stringify(
+            `${JSON.stringify(
               {
                 name: projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
                 version: "0.1.0",
@@ -3410,7 +3410,7 @@ const PrerenderedPage = makePage(config);
               },
               null,
               2,
-            ) + "\n",
+            )}\n`,
             "utf8",
           );
           writeFileSync(
@@ -3435,7 +3435,7 @@ const PrerenderedPage = makePage(config);
               ariaPkg.dependencies = ariaPkg.dependencies || {};
               if (!ariaPkg.dependencies["@unocss/preset-wind4"])
                 ariaPkg.dependencies["@unocss/preset-wind4"] = useLatest ? "latest" : "^66.0.0";
-              writeFileSync(ariaPkgPath, JSON.stringify(ariaPkg, null, 2) + "\n", "utf8");
+              writeFileSync(ariaPkgPath, `${JSON.stringify(ariaPkg, null, 2)}\n`, "utf8");
             } catch {}
             console.log("  ✅ UnoCSS: Wind 4 preset enabled in `./uno.user.config.ts`");
           } else {
@@ -3543,7 +3543,7 @@ const PrerenderedPage = makePage(config);
               sharp: "^0.35.2",
             },
           };
-          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify(fallbackPkg, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "package.json"), `${JSON.stringify(fallbackPkg, null, 2)}\n`, "utf8");
           writeFileSync(
             join(resolvedTarget, "next.config.ts"),
             `import { withPayload } from '@payloadcms/next/withPayload'\n\nconst nextConfig = {}\n\nexport default withPayload(nextConfig, { devBundleServerPackages: false })\n`,
@@ -3579,7 +3579,7 @@ const PrerenderedPage = makePage(config);
 
     // 3.2.3 StudioCMS (Astro)
     if (config.cms === "studiocms") {
-      depsToAdd["studiocms"] = "^0.4.4";
+      depsToAdd.studiocms = "^0.4.4";
       depsToAdd["@astrojs/node"] = "^9.0.0";
       const studioCmsConfig = `// @ts-check
 import { defineStudioCMSConfig } from 'studiocms/config';
@@ -3735,7 +3735,7 @@ declare module "emdash" {
         content: [
           {
             collection: "posts",
-            slug: "welcome-to-" + slug,
+            slug: `welcome-to-${slug}`,
             status: "published",
             data: {
               title: `Welcome to ${projectName}`,
@@ -3756,7 +3756,7 @@ declare module "emdash" {
           },
         ],
       };
-      writeFileSync(join(seedDir, "seed.json"), JSON.stringify(seedData, null, 2) + "\n", "utf8");
+      writeFileSync(join(seedDir, "seed.json"), `${JSON.stringify(seedData, null, 2)}\n`, "utf8");
 
       // Live content collections
       writeFileSync(
@@ -3814,7 +3814,7 @@ export default {
             crons: ["* * * * *"],
           },
         };
-        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), JSON.stringify(wranglerConfig, null, 2) + "\n", "utf8");
+        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), `${JSON.stringify(wranglerConfig, null, 2)}\n`, "utf8");
       }
 
       // Visual admin redirects (/admin and /emdash)
@@ -4409,7 +4409,7 @@ export * from './schema';
 `;
         writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
       } else if (config.db === "postgres") {
-        depsToAdd["postgres"] = "^3.4.5";
+        depsToAdd.postgres = "^3.4.5";
         const dbContent = `import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
@@ -4459,7 +4459,7 @@ export default defineConfig({
   out: './drizzle',
   dialect: '${config.db === "sqlite" ? "sqlite" : "postgresql"}',
   dbCredentials: {
-    url: process.env.DATABASE_URL || '${config.db === "sqlite" ? "database.sqlite" : "postgres://postgres:postgres@localhost:5432/" + projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-") + "-db"}',
+    url: process.env.DATABASE_URL || '${config.db === "sqlite" ? "database.sqlite" : `postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db`}',
   },
 });
 `;
@@ -4474,7 +4474,7 @@ export default defineConfig({
 
       if (config.ecommerce === "medusa") {
         depsToAdd["@medusajs/js-sdk"] = "^2.5.0";
-        devDepsToAdd["concurrently"] = "^9.1.0";
+        devDepsToAdd.concurrently = "^9.1.0";
         const medusaClient = `import Medusa from '@medusajs/js-sdk';
 
 const getEnv = (key: string): string | undefined => {
@@ -4528,7 +4528,7 @@ export const medusa = new Medusa({
             typescript: "^5.6.0",
           },
         };
-        writeFileSync(join(backendDir, "package.json"), JSON.stringify(backendPkg, null, 2) + "\n", "utf8");
+        writeFileSync(join(backendDir, "package.json"), `${JSON.stringify(backendPkg, null, 2)}\n`, "utf8");
 
         // backend/medusa-config.ts
         const medusaConfig = `import { defineConfig, loadEnv } from '@medusajs/framework/utils';
@@ -4647,7 +4647,7 @@ export const GET = (req: MedusaRequest, res: MedusaResponse) => {
           "  ✅ Auto-wired: `./backend/` (Full Medusa 2.0 Sovereign Backend Engine with Docker, PostgreSQL, Redis, and medusa-config.ts)",
         );
       } else if (config.ecommerce === "stripe") {
-        depsToAdd["stripe"] = "^17.0.0";
+        depsToAdd.stripe = "^17.0.0";
         depsToAdd["@stripe/stripe-js"] = "^5.0.0";
         const stripeClient = `import Stripe from 'stripe';
 
@@ -4932,7 +4932,7 @@ export const ALL: APIRoute = async (ctx) => {
 
     // 3.6 NanoStores State
     if (config.state === "nanostores") {
-      depsToAdd["nanostores"] = "^0.11.3";
+      depsToAdd.nanostores = "^0.11.3";
       if (config.framework === "astro" || config.framework === "nextjs") {
         depsToAdd["@nanostores/react"] = "^0.8.4";
       }
@@ -5051,7 +5051,7 @@ export default config;
         envVars.push(`CMS_ENCRYPTION_KEY=${randomBytes(32).toString("base64url")}`);
         envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
       } else if (config.cms === "emdash") {
-        const emdashKey = "emdash_enc_v1_" + randomBytes(32).toString("base64url");
+        const emdashKey = `emdash_enc_v1_${randomBytes(32).toString("base64url")}`;
         envVars.push(`EMDASH_ENCRYPTION_KEY=${emdashKey}`);
       }
       if (config.auth === "better-auth") {
@@ -5080,10 +5080,10 @@ export default config;
         return v;
       });
       const envExamplePath = join(resolvedTarget, ".env.example");
-      writeFileSync(envExamplePath, envVarsExample.join("\n") + "\n", "utf8");
+      writeFileSync(envExamplePath, `${envVarsExample.join("\n")}\n`, "utf8");
       const envLocalPath = join(resolvedTarget, ".env");
       if (!existsSync(envLocalPath)) {
-        writeFileSync(envLocalPath, envVars.join("\n") + "\n", "utf8");
+        writeFileSync(envLocalPath, `${envVars.join("\n")}\n`, "utf8");
       }
       // 3.9 Day-1 Proof-of-Life Starter Dashboard UI
       if (config.framework === "nextjs" || existsSync(join(resolvedTarget, "src/app"))) {
@@ -5465,7 +5465,7 @@ pages_build_output_dir = "${config.framework === "nextjs" ? ".next" : "dist"}"
             },
           ],
         };
-        writeFileSync(join(resolvedTarget, "vercel.json"), JSON.stringify(vercelConfig, null, 2) + "\n", "utf8");
+        writeFileSync(join(resolvedTarget, "vercel.json"), `${JSON.stringify(vercelConfig, null, 2)}\n`, "utf8");
         console.log("  ✅ Auto-wired: `vercel.json` (Vercel deployment & security headers)");
       }
 
@@ -5506,7 +5506,7 @@ describe("🏥 Project OS Health & Baseline Verification", () => {
         formatter: { enabled: true, indentStyle: "space", indentWidth: 2 },
         linter: { enabled: true, rules: { recommended: true } },
       };
-      writeFileSync(join(resolvedTarget, "biome.json"), JSON.stringify(biomeConfig, null, 2) + "\n", "utf8");
+      writeFileSync(join(resolvedTarget, "biome.json"), `${JSON.stringify(biomeConfig, null, 2)}\n`, "utf8");
       console.log("  ✅ Auto-wired: `biome.json` (High-speed modern linter & formatter)");
 
       // 3.12 Day-1 Secret Defense (Vibeguard Pre-Commit Hook)
@@ -5614,20 +5614,20 @@ exit 0
           pkg.devDependencies[k] = useLatest ? "latest" : v;
         }
 
-        pkg.scripts["test"] = "bun test";
-        pkg.scripts["lint"] = "biome check src";
-        pkg.scripts["format"] = "biome format --write src";
-        pkg.scripts["precommit"] = "bash scripts/pre-commit.sh";
+        pkg.scripts.test = "bun test";
+        pkg.scripts.lint = "biome check src";
+        pkg.scripts.format = "biome format --write src";
+        pkg.scripts.precommit = "bash scripts/pre-commit.sh";
 
         if (config.db === "postgres" && config.ecommerce !== "medusa") {
-          pkg.scripts["setup"] = "bun install && docker compose up -d && bun run db:push";
+          pkg.scripts.setup = "bun install && docker compose up -d && bun run db:push";
         } else if (config.ecommerce === "medusa") {
-          pkg.scripts["setup"] =
+          pkg.scripts.setup =
             "bun install && docker compose -f backend/docker-compose.yml up -d && cd backend && npm run build && npx medusa db:migrate";
         } else if (config.framework === "html") {
-          pkg.scripts["setup"] = "bun install";
+          pkg.scripts.setup = "bun install";
         } else {
-          pkg.scripts["setup"] = "bun install && bun run build";
+          pkg.scripts.setup = "bun install && bun run build";
         }
 
         if (config.mobile === "capacitor") {
@@ -5648,22 +5648,22 @@ exit 0
         }
 
         if (config.cms === "payload") {
-          pkg.scripts["payload"] = "payload";
+          pkg.scripts.payload = "payload";
         }
 
         if (config.cms === "ariabuilder") {
-          pkg.scripts["dev"] = "node --import tsx aria/scripts/project-command.ts dev";
+          pkg.scripts.dev = "node --import tsx aria/scripts/project-command.ts dev";
           pkg.scripts["dev:local"] = "node --import tsx aria/scripts/project-command.ts dev:local";
           pkg.scripts["dev:edge"] = "node --import tsx aria/scripts/project-command.ts dev:edge";
-          pkg.scripts["build"] = "node --import tsx aria/scripts/project-command.ts build";
-          pkg.scripts["preview"] = "node --import tsx aria/scripts/project-command.ts preview";
+          pkg.scripts.build = "node --import tsx aria/scripts/project-command.ts build";
+          pkg.scripts.preview = "node --import tsx aria/scripts/project-command.ts preview";
         }
 
         if (config.cms === "emdash") {
           pkg.emdash = { seed: "seed/seed.json" };
-          pkg.scripts["typecheck"] = "astro check";
+          pkg.scripts.typecheck = "astro check";
           if (config.deploy === "cloudflare") {
-            pkg.scripts["deploy"] = "astro build && wrangler deploy";
+            pkg.scripts.deploy = "astro build && wrangler deploy";
           }
         }
 
@@ -5677,7 +5677,7 @@ exit 0
           pkg.scripts["docker:down"] = "docker compose -f backend/docker-compose.yml down";
         }
 
-        writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
+        writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
         console.log("  ✅ Synchronized: `./package.json` with official companion dependencies and scripts");
 
         if (!skipInstall && existsSync(pkgPath) && config.framework !== "none") {
@@ -5731,7 +5731,7 @@ exit 0
     mkdirSync(stylesDir, { recursive: true });
 
     // 4.1 tokens.css with Wide-Gamut OKLCH and Fluid clamp() scales
-    const pal = PALETTES[colorPalette] || PALETTES["slate"];
+    const pal = PALETTES[colorPalette] || PALETTES.slate;
     const scaleVars = (pal.scale || []).map((c, idx) => `  --color-scale-${idx + 1}: ${c};`).join("\n");
     const tokensCssContent = `/**
  * 🎨 Modern Wide-Gamut OKLCH Tokens & Fluid Scales (${colorPalette.toUpperCase()})

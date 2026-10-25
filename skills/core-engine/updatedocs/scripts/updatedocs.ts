@@ -654,7 +654,7 @@ export function sweepUndocumentedCapabilities(targetDir: string): CapabilitySwee
         .filter(Boolean)) {
         checked++;
         const base = rel.split("/").pop() ?? rel;
-        const suggested: string[] = ["README.md", "CHANGELOG.md"];
+        const _suggested: string[] = ["README.md", "CHANGELOG.md"];
         if (rel.includes("skills/") && base.endsWith(".md") && KEBAB_MD.test(base)) {
           // a reference/mode file — its own SKILL.md must surface it
           const skillDir = rel.split("/").slice(0, 2).join("/");

@@ -7,7 +7,7 @@ const REPO_ROOT = join(import.meta.dir, "..");
 const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
 const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
 const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
-const TEST_SANDBOX = join("/tmp", "agent-engine-test-sandbox-" + Date.now());
+const TEST_SANDBOX = join("/tmp", `agent-engine-test-sandbox-${Date.now()}`);
 
 describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
   beforeEach(() => {
@@ -854,10 +854,10 @@ Custom billing engine for healthcare providers.
       // 6. One-Command Setup Script in package.json
       expect(existsSync(join(target, "package.json"))).toBe(true);
       const pkg = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
-      expect(pkg.scripts["setup"]).toBeDefined();
-      expect(pkg.scripts["test"]).toBe("bun test");
-      expect(pkg.scripts["lint"]).toBeDefined();
-      expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
+      expect(pkg.scripts.setup).toBeDefined();
+      expect(pkg.scripts.test).toBe("bun test");
+      expect(pkg.scripts.lint).toBeDefined();
+      expect(pkg.scripts.precommit).toBe("bash scripts/pre-commit.sh");
     }, 15000);
 
     it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
@@ -971,7 +971,7 @@ Custom billing engine for healthcare providers.
       expect(astroCfg).toContain('output: "server"');
       expect(astroCfg).toContain("studioCMS()");
       const studioPkg = JSON.parse(readFileSync(join(targetStudio, "package.json"), "utf8"));
-      expect(studioPkg.dependencies["studiocms"]).toBeDefined();
+      expect(studioPkg.dependencies.studiocms).toBeDefined();
       expect(studioPkg.dependencies["@studiocms/core"]).toBeUndefined();
       expect(studioPkg.dependencies["@astrojs/node"]).toBeDefined();
 
@@ -1063,7 +1063,7 @@ Custom billing engine for healthcare providers.
       expect(htmlDoc).toContain("src/styles/tokens.css");
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
-      expect(htmlPkg.scripts["dev"]).toContain("serve");
+      expect(htmlPkg.scripts.dev).toContain("serve");
     }, 120000);
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
