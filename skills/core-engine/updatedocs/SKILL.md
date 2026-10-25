@@ -4,7 +4,7 @@ aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates."
 argument-hint: "[Quick|Change|Release|Sprint|Full]"
 user-invocable: true
-version: 2.6.0
+version: 2.7.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -588,7 +588,7 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **Change** | Feature, API, migration, or config change | Full impact analysis, dependency propagation, targeted sync, and verification. | All 20 | Full report |
 | **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. | 1–5, 8, 11 (CHANGELOG/README focus), 14–15, 19, 20 | Full report |
 | **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 20 | Full report |
-| **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt. | All 20 | Full report |
+| **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt — **plus undocumented-capability sync**: recent PRs, issues, commits, and releases whose features/capabilities are absent from docs get written in, not just checked | All 20 + capability sweep | Full report |
 | **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | AUDIT-CHECKLIST + governance docs | brain-audit-report.md |
 
 Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated.
@@ -764,6 +764,14 @@ For each meaningful repository change:
 ```
 
 Evaluate impact across: End Users, Developers, Contributors, Operators, API Consumers, Maintainers, AI Agents, Clients / Stakeholders.
+
+**Capability-absence sweep (the sync half of the job — a 100/100 audit score is not evidence of sync):** changed-source tracing above only maps changes a doc *already* relates to. Also sweep for capabilities that exist and are simply **missing from docs with no diff relation to catch**: recent merged PRs since the last release tag, shipped issues, new CLI flags/subcommands, new standards and skills, generated surfaces (commands, registries). For each, ask "which document should describe this, and does it?" Run it mechanically first:
+
+```bash
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts <targetPath> --capability-sweep
+```
+
+Exit 1 + a gap list means a capability is documented nowhere (`[reference-file-invisible-in-skill | undocumented-workflow | undocumented-asset | feat-commit-undocumented]`, each with suggested doc targets). Then **write the missing sections** (What's New, feature lists, operational-standards lists, `llms.txt` for agent-facing capabilities) — the sweep detects; the agent authors with surgical diffs; never auto-generate prose into hand-curated docs. A capability documented nowhere and flagged by no diff is exactly the drift class a clean audit score conceals.
 
 ---
 

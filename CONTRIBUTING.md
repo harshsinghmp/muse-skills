@@ -171,7 +171,12 @@ git commit -m "feat(<skill-name>): <imperative summary> (#issue)"
 
 # 6. Push and open your atomic PR against dev
 git push origin feat/<skill-name>-<feature>
+
+# 7. Prove delivery (Landing Gate) — a commit is not a delivery.
+bun run check:landed -- --mode=pre-review --head="$(git branch --show-current)"
 ```
+
+The gate's verdicts are `REVIEWABLE` / `NOT REVIEWABLE` before merge and `LANDED` / `LOCAL` after it; until the gate exits 0, say LOCAL — never "landed". Full standard: [`.agents/standards/landing-gate.md`](.agents/standards/landing-gate.md).
 
 ---
 

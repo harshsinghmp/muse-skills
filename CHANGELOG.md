@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [7.7.1] - 2026-10-25
+
+### Added
+
+- **updatedocs 2.7.0 — `--capability-sweep` (the sync half mechanized)**: the docs engine could score 100/100 on an audit while capabilities shipped in recent PRs/issues/commits were documented nowhere (clean scores conceal absence, not presence — surfaced by the 2026-10-25 capability-sync pass). The new sweep enumerates every asset added since the last release tag (skill reference files, skills, scripts, workflows) plus `feat:` commits, and fails CI listing each capability documented nowhere (`reference-file-invisible-in-skill`, `undocumented-skill`, `undocumented-workflow`, `undocumented-asset`, `feat-commit-undocumented`) with suggested doc targets. The audited repo now carries a live CI daemon test pinning capability-doc sync. The sweep detects; the agent authors the missing sections with surgical diffs per updatedocs' no-blind-regeneration doctrine.
+
+### Changed
+
+- **Capability-sync docs pass (#252)**: the README (`What's New`, Verification, command surface), CONTRIBUTING (Landing Gate step), and `llms.txt` (Operational Standards section) now document the capabilities shipped in v7.6.0–v7.7.0 that the docs audit could not see were missing; updatedocs' Step 7 gained the capability-absence sweep doctrine ("a 100/100 audit score is not evidence of sync").
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.7.0...v7.7.1
+
 ## [7.7.0] - 2026-10-25
 
 ### Added
