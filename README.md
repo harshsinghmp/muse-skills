@@ -29,8 +29,11 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
-Front-end performance budgets inside the launch gate (`qa-launch:performance`), Shape Up appetite-based scoping (`ops:shape`), and a community & companion skills catalog — all verified by the CI suite (`bun test` + lint + type-check + secret-scan).
-See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
+- **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
+- **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only).
+- **Command surface**: 46 skills + 352 `<skill>-<mode>` commands + 10 aliases = **408 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **muse-security 1.0.1**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution.
+All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
 ---
 
@@ -266,6 +269,8 @@ Once installed, invoke any skill or mode directly in your agent:
 - **Mode routing by argument**: modes without an alias are passed as an argument — `/design uikit`, `/design ux`, `/refactor perf`, `/database index`.
 - **10 mode aliases**: `/carousel` (smm), `/funnel` (webdev), `/obsidian` (ops), `/wrangler` (devops), `/pr` (growth), `/aso` (mobile), `/delight` (animate), `/podcast` (content), `/aeo` (seo), `/dispatch` (secretary).
 
+- **Support-reference commands**: every lowercase-kebab reference file also exposes a `<skill>-<file>` command on 20 skills (e.g. `/humanize-style-guide`, `/updateagents-onboard`) — loadable by topic without being routed modes; each skill's SKILL.md `### Support references (load on topic)` subsection lists them.
+
 ### Option 3: Install Individual Skills
 
 Pick and install only the specific skills your project requires:
@@ -301,11 +306,16 @@ bun run type-check
 
 # Verify zero-drift across secretary:dispatch and skills catalog
 bun run sync-dispatch --check
+
+# Verify delivery: is HEAD reachable from the integration branch on the remote? (LANDED / LOCAL)
+bun run check:landed
 ```
 
 - **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, and secret-scan as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).
 - **Zero-Secret Leakage Guarantee**: Enforced by pre-commit hooks and automated credential scanning pipelines.
 - **Zero-Drift Dispatch Guarantee**: CI strictly enforces that `secretary/references/dispatch.md` and harness commands stay in 100% lockstep with repository code.
+- **Landing Gate (delivery is not commitment)**: work is LANDED only when reachable from the integration branch on the remote; until then it is LOCAL. `bun run check:landed` (with the `LANDED`/`LOCAL` and `REVIEWABLE`/`NOT REVIEWABLE` verdicts) runs as a required CI job and is auto-provisioned into every scaffolded project (`.agents/standards/landing-gate.md`).
+- **Test-Failure Audit**: when the same test/failure fails on two or more consecutive runs, the agent stops editing, self-audits its own outputs, then triages the root cause — verdicts `SELF-AUDIT COMPLETE` / `SELF-AUDIT PENDING` (`.agents/standards/test-failure-audit.md`).
 
 ---
 
