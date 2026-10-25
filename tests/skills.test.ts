@@ -2229,6 +2229,77 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     }
   });
 
+  test("updatedocs --capability-sweep detects capabilities documented nowhere and gates CI (fixture + live repo)", () => {
+    // Scenario A/B: deterministic fixture — an undocumented capability is a
+    // gap (exit 1); the moment its docs are written it passes (exit 0).
+    const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "cap-sweep-"));
+    const run = (dir: string) =>
+      spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", dir, "--capability-sweep"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+    const g = (...a: string[]) =>
+      spawnSync("git", ["-c", "user.name=T", "-c", "user.email=t@example.com", ...a], {
+        cwd: fixture,
+        encoding: "utf8",
+      });
+    try {
+      fs.writeFileSync(path.join(fixture, "README.md"), "# Fixture\n\nBaseline docs only.\n", "utf8");
+      fs.writeFileSync(path.join(fixture, "CHANGELOG.md"), "# Changelog\n\n## [1.0.0]\n- baseline\n", "utf8");
+      g("init", "-q");
+      g("add", "-A");
+      g("commit", "-qm", "chore: baseline");
+      g("tag", "v1.0.0");
+
+      // Ship a capability after the tag, documented nowhere.
+      fs.mkdirSync(path.join(fixture, "skills/newthing/references"), { recursive: true });
+      fs.mkdirSync(path.join(fixture, "scripts"), { recursive: true });
+      fs.writeFileSync(path.join(fixture, "skills/newthing/references/fancy-mode.md"), "# fancy-mode\n", "utf8");
+      fs.writeFileSync(
+        path.join(fixture, "skills/newthing/SKILL.md"),
+        "# newthing\n\n## Modes\n\n| Mode | Reference |\n| :--- | :--- |\n| basic | [references/basic.md](references/basic.md) |\n",
+        "utf8",
+      );
+      fs.writeFileSync(path.join(fixture, "scripts/new-widget.ts"), "// undocumented script\n", "utf8");
+      g("add", "-A");
+      g("commit", "-qm", "feat(sweeper): add the new widget and its fancy-mode reference");
+
+      const gapRes = run(fixture);
+      expect(gapRes.status).toBe(1);
+      expect(gapRes.stdout).toContain("Capability-Absence Sweep");
+      expect(gapRes.stdout).toContain("fancy-mode.md"); // invisible in its SKILL.md
+      expect(gapRes.stdout).toContain("new-widget.ts"); // asset documented nowhere
+      expect(gapRes.stdout).toContain("feat(sweeper)"); // feat commit undocumented
+
+      // Scenario B: document the capabilities — the same sweep passes.
+      const readme = path.join(fixture, "README.md");
+      fs.writeFileSync(
+        readme,
+        fs.readFileSync(readme, "utf8") +
+          "\nNew: sweeper ships the new widget (`new-widget.ts`); the newthing skill and its fancy-mode reference; feat(sweeper) coverage.\n",
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(fixture, "skills/newthing/SKILL.md"),
+        "# newthing\n\n## Modes\n\n| Mode | Reference |\n| :--- | :--- |\n| basic | [references/basic.md](references/basic.md) |\n| fancy | [fancy-mode.md](references/fancy-mode.md) |\n",
+        "utf8",
+      );
+      g("add", "-A");
+      g("commit", "-qm", "docs: document the new capabilities");
+      const fixedRes = run(fixture);
+      expect(fixedRes.status).toBe(0);
+      expect(fixedRes.stdout).toContain("Every shipped capability surfaces");
+    } finally {
+      fs.rmSync(fixture, { recursive: true, force: true });
+    }
+
+    // Scenario C: live daemon — this repo's docs are sync-complete over the
+    // post-tag surface; a future undocumented capability turns CI red.
+    const liveRes = run(REPO_ROOT);
+    expect(liveRes.status).toBe(0);
+    expect(liveRes.stdout).toContain("Capability-Doc Sync Score");
+  });
+
   test("git pre-flight gate CLI supports --preflight-check and --preflight-run with token-saving skip", () => {
     const helpRes = spawnSync("bun", ["skills/core-engine/git/scripts/git-preflight.ts", "--help"], {
       encoding: "utf8",

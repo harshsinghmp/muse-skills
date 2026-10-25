@@ -52,6 +52,7 @@ const { values, positionals } = parseArgs({
     "check-freshness": { type: "boolean", default: false },
     "sanitize-jargon": { type: "boolean", default: false },
     "credits-sync": { type: "boolean", default: false },
+    "capability-sweep": { type: "boolean", default: false },
     "fail-under": { type: "string" },
     "dry-run": { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
@@ -84,6 +85,7 @@ Core Capabilities:
       --check-freshness     Token-saving cache check: exit 0 if docs fresh from recent turn
       --sanitize-jargon     Sanitize internal ticket IDs (PROJ-123) and secrets from client docs
       --credits-sync        Sync CREDITS.md open-source attribution with package.json dependencies
+      --capability-sweep    Sweep assets added since the last release tag and fail on capabilities documented nowhere (the sync half: audit checks written, sweep hunts missing)
       --fail-under <score>  Fail CI if doc health score is below threshold (default: 80)
       --dry-run             Simulate changes without writing files
   -f, --force               Bypass fast-skip gate and force full execution
@@ -591,6 +593,140 @@ export interface DualAudienceResult {
   hasAgentsMd: boolean;
   inSync: boolean;
   missingInLlms: string[];
+}
+
+// =========================================================================
+// Capability-Absence Sweep — the sync half of the job
+// =========================================================================
+// An audit score of 100/100 is not evidence of sync: the audit checks what is
+// *written*; this sweep hunts capabilities that exist and are documented
+// *nowhere* (no diff relation to catch). It mechanically enumerates assets
+// added since the last release tag and verifies each surfaces in a discovery
+// document (README, CHANGELOG, the skill's own SKILL.md, llms.txt).
+
+export interface CapabilitySweepResult {
+  baseline: string;
+  checked: number;
+  gaps: Array<{ asset: string; kind: string; suggestedDocs: string[]; evidence: string }>;
+  score: number;
+}
+
+const KEBAB_MD = /^[a-z0-9]+(-[a-z0-9]+)*\.md$/;
+
+function gitIn(targetDir: string, args: string[]): { code: number; out: string } {
+  const r = spawnSync("git", args, { cwd: targetDir, encoding: "utf8" });
+  return { code: r.status ?? 1, out: (r.stdout ?? "") + (r.stderr ?? "") };
+}
+
+function lastTag(targetDir: string): string | null {
+  const r = gitIn(targetDir, ["describe", "--tags", "--abbrev=0"]);
+  return r.code === 0 ? r.out.trim() : null;
+}
+
+export function sweepUndocumentedCapabilities(targetDir: string): CapabilitySweepResult {
+  const baseline = lastTag(targetDir);
+  const gaps: CapabilitySweepResult["gaps"] = [];
+  let checked = 0;
+
+  const readme = existsSync(join(targetDir, "README.md")) ? readFileSync(join(targetDir, "README.md"), "utf8") : "";
+  const changelog = existsSync(join(targetDir, "CHANGELOG.md"))
+    ? readFileSync(join(targetDir, "CHANGELOG.md"), "utf8")
+    : "";
+  const llms = existsSync(join(targetDir, "llms.txt")) ? readFileSync(join(targetDir, "llms.txt"), "utf8") : "";
+  const mention = (needle: string, ...docs: string[]) => docs.some((d) => d.includes(needle));
+
+  if (baseline) {
+    // 1. Added assets since the baseline tag
+    const added = gitIn(targetDir, [
+      "diff",
+      "--name-only",
+      "--diff-filter=A",
+      `${baseline}..HEAD`,
+      "--",
+      "skills/",
+      "scripts/",
+      ".github/",
+    ]);
+    if (added.code === 0) {
+      for (const rel of added.out
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)) {
+        checked++;
+        const base = rel.split("/").pop() ?? rel;
+        const suggested: string[] = ["README.md", "CHANGELOG.md"];
+        if (rel.includes("skills/") && base.endsWith(".md") && KEBAB_MD.test(base)) {
+          // a reference/mode file — its own SKILL.md must surface it
+          const skillDir = rel.split("/").slice(0, 2).join("/");
+          const skPath = join(targetDir, skillDir, "SKILL.md");
+          if (existsSync(skPath)) {
+            const sk = readFileSync(skPath, "utf8");
+            if (!sk.includes(base)) {
+              gaps.push({
+                asset: rel,
+                kind: "reference-file-invisible-in-skill",
+                suggestedDocs: [`${skillDir}/SKILL.md ## Modes`],
+                evidence: `${base} added after ${baseline} but absent from the skill's Modes section`,
+              });
+              continue;
+            }
+            checked--;
+            continue; // skill-internal coverage verified; README need not name every ref
+          }
+        }
+        if (rel.startsWith(".github/workflows/") && !mention(base, readme, changelog)) {
+          gaps.push({
+            asset: rel,
+            kind: "undocumented-workflow",
+            suggestedDocs: ["README.md", "CHANGELOG.md"],
+            evidence: `${base} added after ${baseline}, mentioned in neither README nor CHANGELOG`,
+          });
+          continue;
+        }
+        const isNewSkill = /^skills\/[a-z0-9-]+\/SKILL\.md$/.test(rel);
+        const skillName = isNewSkill ? rel.split("/")[1] : base;
+        if ((rel.startsWith("scripts/") || rel.startsWith("skills/")) && !mention(skillName, readme, changelog, llms)) {
+          gaps.push({
+            asset: rel,
+            kind: isNewSkill ? "undocumented-skill" : "undocumented-asset",
+            suggestedDocs: isNewSkill ? ["README.md catalog", "llms.txt"] : ["README.md", "CHANGELOG.md", "llms.txt"],
+            evidence: `${skillName} added after ${baseline}, found in no discovery doc`,
+          });
+        }
+      }
+    }
+
+    // 2. feat-commits since baseline must reach a discovery doc
+    const log = gitIn(targetDir, ["log", "--format=%s", `${baseline}..HEAD`]);
+    if (log.code === 0) {
+      for (const subject of log.out
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => /^feat(\([^)]*\))?\b/i.test(l))) {
+        checked++;
+        const scope = /^feat\(([^)]*)\)/i.exec(subject)?.[1] ?? "";
+        const token = (
+          scope ||
+          subject
+            .replace(/^feat(\([^)]*\))?:?/i, "")
+            .trim()
+            .split(/\s+/)[0]
+        ).replace(/[^a-zA-Z0-9-]/g, "");
+        if (token.length >= 4 && !mention(token, readme, changelog, llms)) {
+          gaps.push({
+            asset: subject,
+            kind: "feat-commit-undocumented",
+            suggestedDocs: ["CHANGELOG.md", "README.md"],
+            evidence: `feat commit since ${baseline}; "${token}" appears in no discovery doc`,
+          });
+        }
+      }
+    }
+  }
+
+  const audited = checked + gaps.length;
+  const score = audited === 0 ? 100 : Math.round(((audited - gaps.length) / audited) * 100);
+  return { baseline: baseline ?? "no-tags", checked, gaps, score };
 }
 
 export function auditDualAudienceSync(targetDir: string): DualAudienceResult {
@@ -1136,6 +1272,25 @@ if (isFastSkip && !isForce && existsSync(docsHashFile)) {
 }
 
 // Execution Modes
+if (values["capability-sweep"]) {
+  console.log("🏷️  Running Capability-Absence Sweep (assets added since last release tag)...");
+  const res = sweepUndocumentedCapabilities(targetDir);
+  console.log(`  • Baseline (last release tag):   ${res.baseline}`);
+  console.log(`  • Assets/feat-commits swept:     ${res.checked + res.gaps.length}`);
+  console.log(`  • Capabilities documented nowhere: ${res.gaps.length}`);
+  for (const g of res.gaps) {
+    console.log(`    ❌ [${g.kind}] ${g.asset}`);
+    console.log(`       ➔ ${g.evidence}; write it into: ${g.suggestedDocs.join(", ")}`);
+  }
+  console.log(`  📊 Capability-Doc Sync Score:    ${res.score}%`);
+  if (res.gaps.length === 0) {
+    console.log("  ✅ Every shipped capability surfaces in a discovery document.");
+  } else {
+    console.log("  ⚠️  An audit score of 100 is not evidence of sync — write the missing sections.");
+  }
+  process.exit(res.gaps.length > 0 ? 1 : 0);
+}
+
 if (values["env-audit"]) {
   console.log("🔍 Running Environment Variable Documentation Audit...");
   const res = auditEnvironmentVariables(targetDir);
