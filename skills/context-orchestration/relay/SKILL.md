@@ -49,6 +49,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | :--- | :--- | :--- | :--- |
 | **`ambient-handoff`** | "relay ambient-handoff", "ambient-handoff" | Ambient Continuity & Live Handoff File Contract | [references/ambient-handoff.md](references/ambient-handoff.md) |
 | **`resumption-protocol`** | "relay resumption-protocol", "resumption-protocol" | Inbound Session Resumption & Boundary Protection Protocol | [references/resumption-protocol.md](references/resumption-protocol.md) |
+| **`audit`** | "relay audit", "audit the handoff", "is this handoff trustworthy" | Certify an inbound or outbound handoff against the verification-over-trust checklist (live-state checks, five-section completeness, spot check, staleness sweep) | [references/audit.md](references/audit.md) |
 
 ## When to Use
 
