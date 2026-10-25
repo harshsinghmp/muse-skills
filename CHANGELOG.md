@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [7.8.0] - 2026-10-25
 
 ### Added
 
@@ -12,6 +12,9 @@ All notable changes to this project are documented in this file.
 ### Changed
 
 - **Dogfood adoption (#255)**: this repo's sync run provisioned its own `.github/workflows/landing-gate.yml` (now committed — the repo runs the exact gate every scaffolded project gets), and the repo's local `git-workflow.md` standard hand-adopted the derived-artifact invariant with real branch names; `worktree-lease.ts` exec hardened to argv-array signature. **Engine finding recorded**: the sync engine treats existing standards as curated and never refreshes their content — adoption of canon changes into already-provisioned standards is a hand-merge (the changelog promise in #247 was incomplete; the local adoption is done, the engine-side improvement is a future task).
+- **Setup-python pin refreshed**: `actions/setup-python` re-pinned to the current `v6` tag head (the tag advanced after the original pin — pins verified against the live API before this release).
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.7.1...v7.8.0
 
 ## [7.7.1] - 2026-10-25
 
