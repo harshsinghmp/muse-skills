@@ -44,6 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **handover** | "hand over the project", "handover docs", "client training" | Project handover: docs, credentials, training, and support terms | [references/handover.md](references/handover.md) |
 | **feedback** | "collect feedback", "client review", "satisfaction check" | Client feedback intake: structured capture, triage, and response plan | [references/feedback.md](references/feedback.md) |
 | **`audit`** | "communication audit", "audit client comms", "SLA audit" | Bidirectional SLA conformance, cadence integrity, channel discipline, unresolved threads, escalation signals. | [references/audit.md](references/audit.md) |
+| **`inbox-triage`** | "triage the inbox", "client emails", "executive email triage" | Executive email triage and follow-up protocols | [references/inbox-triage.md](references/inbox-triage.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
@@ -54,7 +55,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 Loadable by topic; also routable as `/client-comms-<file>` commands (not separate routed modes):
 
-- [inbox-triage.md](references/inbox-triage.md)
 - [factual-reporting.md](references/factual-reporting.md)
 
 ## When to Use

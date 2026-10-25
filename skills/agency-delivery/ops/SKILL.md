@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **shape** | "shape this ask", "set an appetite", "is this sized yet", "grab-bag project", "unsized request" | Shape an ambiguous ask before it is priced: named problem, appetite band, no-gos, de-risked pitch | [references/shape.md](references/shape.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
+| **contracts** | "draft a contract", "MSA", "NDA", "legal doc" | Legal document and contract drafting standards | [references/contracts.md](references/contracts.md) |
 | **vendor** | "vendor", "subcontractor", "freelancer management", "procurement", "tooling spend", "manage vendors" | Vendor/subcontractor scorecard, spend control, and tooling consolidation | [references/vendor.md](references/vendor.md) |
 | **obsidian** | "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "daily note" | Obsidian PKM vault operations, wikilinks, callouts, embeds, frontmatter properties, CLI commands, and plugin dev | [references/obsidian.md](references/obsidian.md) |
 | **legal** | "agency contract", "msa", "subcontractor agreement", "ip assignment", "nda", "legal templates", "privacy policy" | Master Services Agreements (MSAs), subcontractor IP assignments, NDAs, and AI compliance | [references/legal.md](references/legal.md) |
@@ -60,7 +61,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 Loadable by topic; also routable as `/ops-<file>` commands (not separate routed modes):
 
-- [contracts.md](references/contracts.md)
 - [meeting-notes.md](references/meeting-notes.md)
 - [product-marketing-template.md](references/product-marketing-template.md)
 

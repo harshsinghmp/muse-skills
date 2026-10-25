@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **influencer** | "influencer", "creator collab", "sponsored post" | Creator selection, briefs, contracts, disclosure, measurement | [references/influencer.md](references/influencer.md) |
 | **ugc** | "ugc", "user generated content", "creator content pipeline" | UGC sourcing, rights, and paid/organic reuse pipeline | [references/ugc.md](references/ugc.md) |
 | **analytics** | "social analytics", "social report", "engagement metrics" | Performance reporting, metric definitions, iteration loop | [references/analytics.md](references/analytics.md) |
+| **creator-vetting** | "vet a creator", "creator safety audit", "brand-safe influencer" | 25-point creator vetting scorecard, red-flag detection, brand-safety audit | [references/creator-vetting.md](references/creator-vetting.md) |
 | **postiz** | "postiz", "schedule with postiz", "multi-channel postiz dispatch", "postiz queue" | Automated multi-channel publishing & queue management via Postiz API/CLI | [references/postiz.md](references/postiz.md) |
 | **carousel** | "carousel", "carousel growth engine", "tiktok carousel", "instagram carousel", "6-slide carousel", "carousel generator", "aspect ratio" | Autonomous 6-slide viral carousel generation (Hook → Problem → Agitation → Solution → Feature → CTA), 9:16 aspect ratio guard, and Upload-Post API | [references/carousel.md](references/carousel.md) |
 | **x** | "grow my x account", "x growth", "twitter growth", "x cold start", "x algorithm", "for you feed", "grow on twitter" | X account growth: storefront audit, positioning triangle, content archetypes, For You algorithm leverage, cold-start playbook, engagement strategy, monetization pyramid, 80/20 review | [references/x.md](references/x.md) |
@@ -60,7 +61,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 Loadable by topic; also routable as `/smm-<file>` commands (not separate routed modes):
 
-- [creator-vetting.md](references/creator-vetting.md)
 - [social-intel.md](references/social-intel.md)
 
 ## When to Use

@@ -589,7 +589,7 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. | 1–5, 8, 11 (CHANGELOG/README focus), 14–15, 19, 20 | Full report |
 | **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 20 | Full report |
 | **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt — **plus undocumented-capability sync**: recent PRs, issues, commits, and releases whose features/capabilities are absent from docs get written in, not just checked | All 20 + capability sweep | Full report |
-| **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | AUDIT-CHECKLIST + governance docs | brain-audit-report.md |
+| **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | [references/audit.md](references/audit.md) | brain-audit-report.md |
 
 Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated.
 
@@ -598,9 +598,7 @@ Mode selection is made once at Step 1 and stated in the final report. A mode may
 
 ### Support references (load on topic)
 
-Loadable by topic; also routable as `/updatedocs-<file>` commands (not separate routed modes):
-
-- [audit.md](references/audit.md)
+All routed references for this skill have Modes-table rows above; topical deep-dives (governance policies) live in uppercase files (`AUDIT-CHECKLIST.md`, `CHANGELOG-POLICY.md`, …) and load by name.
 
 ## Procedure
 
