@@ -51,6 +51,7 @@ Execute this skill when:
 2. **Architecture Debt Accumulation**: Subsystems have become bloated with legacy shims, unused dependencies, or obsolete documentation.
 3. **Strategic Re-alignment**: Re-evaluating current operating state against the principal's ideal TELOS state.
 4. **Deprecation & Purge Cycles**: Systematically sunsetting zombie repos, dead configs, or outdated agent rules.
+5. **Wisdom Compounding & Retrospective Synthesis**: Synthesizing milestone learnings into durable Muse Memory wiki frames (`~/.memory/wiki/`) and active constraints in `~/.memory/USER.md` (`bun skills/reflection-maintenance/periodic-retreat/scripts/wisdom-updater.ts --synthesize`).
 
 ### Anti-Triggers
 Do NOT use this skill when:

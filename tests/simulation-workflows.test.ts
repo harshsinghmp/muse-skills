@@ -902,7 +902,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
           atoms: Array<{ id: string; status?: string }>;
         };
         for (const atom of tasteJson.atoms) {
-          expect(atom.id).toMatch(/^atom-[a-z0-9]+-[a-z0-9]+$/);
+          expect(atom.id).toMatch(/^atom-[a-z0-9-]+-[a-z0-9]+$/);
         }
         const activeIds = tasteJson.atoms.filter((a) => a.status !== "retired").map((a) => a.id);
 

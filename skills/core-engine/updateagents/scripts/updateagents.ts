@@ -9,7 +9,7 @@
  *     scoped rules into canonical context, adapts runtime files, and provisions the lean root AGENTS.md router.
  *   - Day N (Sync): Synchronizes 19 standards and brand tokens, enforces MuseMemory hard boundary,
  *     and validates size and invariant invariants.
- *   - Audit Mode (--audit): Audits 13 tracked assets across AI Context, Dev Workflow, and Governance,
+ *   - Audit Mode (--audit): Audits 14 tracked assets across AI Context, Dev Workflow, and Governance,
  *     with Stage-0 Fast-Skip gate, maturity scoring, and CI --fail-under gating.
  *   - Sanitization Mode (--sanitize): Scans and unwraps synthetic ADE/IDE markers (ORCA_RICH_MD, Cursor, etc.).
  *   - Direct Scaffolding (--scaffold): Surgically provisions missing DOX, .github, and configuration files.
@@ -168,7 +168,7 @@ Usage:
   bun updateagents.ts [targetPath] [options]
 
 Options:
-  --audit          Audit 13 tracked assets, modern tools & synthetic artifacts (AI-readiness)
+  --audit          Audit 14 tracked assets, modern tools & synthetic artifacts (AI-readiness)
   -s, --scaffold   Scaffold missing Agent Engine assets (DOX container, AGENTS.md, .github templates, .env.example)
   --promote <path> Intercept and promote foreign-harness instruction writes into .agents/
   --content <text> Explicit content string for promotion (alternative to reading file/stdin)
@@ -1699,7 +1699,7 @@ export function generateWorkReportHtml(workspaceDir: string, outPath?: string): 
     }
 
     <footer>
-      Produced by Agency Council Engine (updateagents:report-html) • LifeOS Sovereign Runtime
+      Produced by Agency Council Engine (updateagents:report-html) • Muse Sovereign Runtime
     </footer>
   </div>
 </body>
@@ -1814,6 +1814,10 @@ export interface AssetCheck {
   details: string;
 }
 
+import { auditTerrain, CANONICAL_TERRAIN_MAPS, type TerrainAuditResult } from "./terrain-audit";
+
+export { auditTerrain, CANONICAL_TERRAIN_MAPS, type TerrainAuditResult };
+
 export function auditWorkspace(target: string): AssetCheck[] {
   const origin = spawnSync("git", ["remote", "get-url", "origin"], { cwd: target, encoding: "utf8" });
   let packageRepository = "";
@@ -1894,6 +1898,8 @@ export function auditWorkspace(target: string): AssetCheck[] {
       }
     }
   } catch {}
+
+  const terrainAudit = auditTerrain(target);
 
   const checks: AssetCheck[] = [
     {
@@ -2027,6 +2033,14 @@ export function auditWorkspace(target: string): AssetCheck[] {
         ? "Artifacts container with contract stub present (research/planning stay out of the repo tree)"
         : "Missing .agents/artifacts/ or its README.md contract stub",
     },
+    {
+      id: 14,
+      name: "Workspace Terrain Maps (Wave 23)",
+      category: "AI Context",
+      path: ".agents/terrain/",
+      passed: terrainAudit.valid,
+      details: terrainAudit.details,
+    },
   ];
 
   return checks;
@@ -2066,6 +2080,7 @@ export function scaffoldAgentEngine(
     "research",
     "skills",
     "standards",
+    "terrain",
     "workflows",
   ];
 
@@ -2142,6 +2157,24 @@ export function scaffoldAgentEngine(
         created.push(`.agents/context/${ctx}`);
       } else {
         skipped.push(`.agents/context/${ctx}`);
+      }
+    }
+  }
+
+  // 4b. Copy terrain maps if missing
+  const masterTerrain = join(TEMPLATES_DIR, ".agents/terrain");
+  if (existsSync(masterTerrain)) {
+    const destTerrain = join(agentsDir, "terrain");
+    if (!existsSync(destTerrain) && !dry) mkdirSync(destTerrain, { recursive: true });
+    for (const terr of readdirSync(masterTerrain)) {
+      const src = join(masterTerrain, terr);
+      const dest = join(destTerrain, terr);
+      assertNotMemory(dest);
+      if (!existsSync(dest) || force) {
+        if (!dry) cpSync(src, dest);
+        created.push(`.agents/terrain/${terr}`);
+      } else {
+        skipped.push(`.agents/terrain/${terr}`);
       }
     }
   }

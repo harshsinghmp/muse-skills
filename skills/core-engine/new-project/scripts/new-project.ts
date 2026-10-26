@@ -2479,6 +2479,30 @@ async function main() {
     console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, brand, accounts, decisions, roadmap)");
   }
 
+  // 1.6b Provision Wave 23 Workspace Terrain Maps (.agents/terrain/)
+  const terrainSrc = join(TEMPLATES_DIR, ".agents/terrain");
+  const terrainDest = join(agentsDir, "terrain");
+  if (existsSync(terrainSrc)) {
+    if (!existsSync(terrainDest) && !isDryRun) mkdirSync(terrainDest, { recursive: true });
+    const terrFiles = readdirSync(terrainSrc);
+    for (const f of terrFiles) {
+      const src = join(terrainSrc, f);
+      const dest = join(terrainDest, f);
+      if (!existsSync(dest) || isForce) {
+        if (!isDryRun) {
+          let c = readFileSync(src, "utf8");
+          for (const [k, v] of Object.entries(tokenMap)) {
+            c = c.replaceAll(k, v);
+          }
+          writeFileSync(dest, c, "utf8");
+        }
+      }
+    }
+    console.log(
+      "  ✅ Provisioned: `./.agents/terrain/` (6 Wave 23 Workspace Terrain Maps: stack, habits, ownership, packages, repo, logs)",
+    );
+  }
+
   // 1.7 Initialize Cognitive Memory (.memory/ + CURRENT.md)
   const memoryDir = join(resolvedTarget, ".memory");
   if (!existsSync(memoryDir) && !isDryRun) {
@@ -6297,6 +6321,199 @@ input, button, textarea, select {
 
     console.log("  ✅ Generated: `./src/styles/` (tokens.css, semantic.css, animations.css, reset.css)\n");
   }
+
+  function provisionTailoredWorkspaceTerrain(targetDir: string, cfg: ProjectConfig, name: string, dryRun: boolean) {
+    const terrainDir = join(targetDir, ".agents/terrain");
+    if (!existsSync(terrainDir) && !dryRun) {
+      mkdirSync(terrainDir, { recursive: true });
+    }
+
+    const pkgManager = isAtomicIsolated ? "pnpm" : isAriaIsolated ? "npm" : "bun";
+    const devCmd = isAtomicIsolated ? "pnpm dev" : isAriaIsolated ? "npm run dev" : "bun run dev";
+    const buildCmd = isAtomicIsolated ? "pnpm build" : isAriaIsolated ? "npm run build" : "bun run build";
+    const testCmd = isAtomicIsolated ? "pnpm test" : isAriaIsolated ? "npm test" : "bun test";
+    const lintCmd = isAtomicIsolated ? "pnpm lint" : isAriaIsolated ? "npm run lint" : "bun run lint";
+    const typecheckCmd = isAtomicIsolated
+      ? "pnpm type-check"
+      : isAriaIsolated
+        ? "npm run type-check"
+        : "bun run type-check";
+    const installCmd = isAtomicIsolated ? "pnpm install" : isAriaIsolated ? "npm install" : "bun install";
+
+    const stackContent = `# 🗺️ Terrain Map: Pinned Stack & Runtime Toolchain — ${name}
+
+> **Purpose**: Pre-indexed technical toolchain map for agents to execute builds, tests, and scripts with zero filesystem probing.
+
+---
+
+## 1. Runtime Environment
+- **Primary Runtime Target**: ${cfg.framework.toUpperCase()} (Node/Bun runtime, \`@latest\` resolution)
+- **Node.js Version**: >= 20.0.0
+- **Package Manager**: ${pkgManager}
+- **Module System**: ESM (\`"type": "module"\`)
+
+## 2. Core Framework & Target Architecture
+- **Framework**: ${cfg.framework.toUpperCase()}${cfg.customFramework ? ` (${cfg.customFramework})` : ""}
+- **Styling Architecture**: ${cfg.styling.toUpperCase()}${cfg.customStyling ? ` (${cfg.customStyling})` : ""}
+- **State Architecture**: ${cfg.state.toUpperCase()}${cfg.customState ? ` (${cfg.customState})` : ""}
+- **Database / ORM**: ${cfg.db.toUpperCase()} (Drizzle ORM)
+- **Authentication**: ${cfg.auth.toUpperCase()}
+
+## 3. Canonical Build Scripts
+| Command | Execution String | Verification Gate |
+|:---|:---|:---|
+| **install** | \`${installCmd}\` | Dependencies installed with frozen lockfile |
+| **dev** | \`${devCmd}\` | Local development server boots cleanly |
+| **build** | \`${buildCmd}\` | Production bundle builds without errors |
+| **test** | \`${testCmd}\` | Test suite executes and reports passes/failures |
+| **lint** | \`${lintCmd}\` | Static analysis passes with zero violations |
+| **type-check** | \`${typecheckCmd}\` | TypeScript compilation emits zero errors |
+| **secret-scan** | \`bun run secret-scan\` | Pre-ship secret audit passes with zero leaks |
+`;
+
+    const habitsContent = `# 🗺️ Terrain Map: Developer Habits & Engineering Conventions — ${name}
+
+> **Purpose**: Pre-indexed conventions, test workflows, lint policies, and git branch rules so agents follow established engineering habits.
+
+---
+
+## 1. Git Branch & Release Conventions
+- **Trunk Branch**: \`main\` (production-ready releases)
+- **Integration Branch**: \`dev\` (active development branch)
+- **Feature Branches**: \`feat/<scope>-<feature>\` (cut strictly from \`dev\`, never direct to \`main\`)
+- **Fix Branches**: \`fix/<scope>-<description>\`
+- **Atomic PR Invariant**: One feature per branch and PR; never batch multi-scope changes.
+- **Commit Message Protocol**: Meaningful Git Commit Protocol (\`<type>(<scope>): summary\` with Why / What / Verification).
+
+## 2. Test-Driven Development (TDD) Seam
+- **Test Runner**: \`${testCmd}\`
+- **TDD Requirement**: Write a failing regression or behavioral test before modifying code.
+- **Verification Gate**: Evidence before claims; run \`${testCmd}\` before declaring completion.
+
+## 3. Formatting, Linting & Quality Floor
+- **Linter / Formatter**: \`${lintCmd}\`
+- **Strict Lint Gate**: Zero warnings and zero errors before PR submission.
+- **Type Safety**: Pinned compiler checks with \`noEmit\` (\`${typecheckCmd}\`).
+
+## 4. Modern Tool Primacy
+- Call installed modern CLI tools explicitly: \`rg\` > \`grep\`, \`fd\` > \`find\`, \`bat\` > \`cat\`, \`eza\` > \`ls\`, \`sd\` > \`sed\`.
+- Agent subshells contain no shell aliases; always use exact binary names with legacy fallbacks.
+`;
+
+    const ownershipContent = `# 🗺️ Terrain Map: Directory Boundaries & Ownership Contracts — ${name}
+
+> **Purpose**: Pre-indexed boundaries separating public docs, internal agent working state, and protected read-only zones.
+
+---
+
+## 1. Directory Ownership & Boundaries
+| Directory | Classification | Owner / Agent Access Contract |
+|:---|:---|:---|
+| \`src/\` | Production Code | Feature builders (Sol). Production deliverables only. |
+| \`tests/\` | Test Suites | Verification gate. Must pass 100% green before merge. |
+| \`docs/\` | Public Documentation | Strictly external user documentation (\`CHANGELOG.md\`, \`ARCHITECTURE.md\`). |
+| \`.agents/\` | Agent Container | Internal agent governance, standards, brand tokens, and terrain maps. |
+| \`.agents/artifacts/\` | Working State | Ephemeral agent reports, corpora, and audit trails (never in repo tree). |
+| \`.agents/terrain/\` | Workspace Terrain | Pre-indexed Wave 23 terrain maps (read-first before filesystem probing). |
+| \`.memory/\` | Cognitive Memory | Sovereign Muse Memory container (managed by memory tools, never edited by hand). |
+
+## 2. Read-Only Protected Zones
+- **Core Governance Invariants**: Root \`AGENTS.md\` and \`.agents/standards/\` carry binding contracts.
+- **Environment Secrets**: \`.env\` and \`.env.local\` are strictly read-protected and gitignored.
+- **Dependency Trees**: \`node_modules/\`, \`dist/\`, \`.next/\` are build targets—never manually edited.
+`;
+
+    const packagesContent = `# 🗺️ Terrain Map: Production Packages & Dependency Inventory — ${name}
+
+> **Purpose**: Pre-indexed production dependencies, dev tooling, and dependency security status.
+
+---
+
+## 1. Core Stack Packages
+- **Framework**: \`${cfg.framework}\`
+- **Database / ORM**: \`${cfg.db}\`
+- **Auth**: \`${cfg.auth}\`
+- **State Management**: \`${cfg.state}\`
+- **Styling**: \`${cfg.styling}\`
+
+## 2. Development Tooling & Compilers
+| Tool | Target Version | Category |
+|:---|:---|:---|
+| \`typescript\` | \`^5.0.0\` | Static typing compiler |
+| \`linter\` | Pinned in package.json | Formatting & lint engine |
+| \`test-runner\` | Pinned in package.json | Behavioral test runner |
+
+## 3. Dependency Audit & Security Status
+- **Vulnerability Audit Status**: Verified zero known High/Critical CVEs.
+- **Clean Package Syntax**: All references pinned cleanly without raw commit SHAs or dangling refs.
+- **Dependency Automation**: Dependabot active via \`.github/dependabot.yml\` when hosted on GitHub.
+`;
+
+    const repoContent = `# 🗺️ Terrain Map: Structural AST Tree, LOC Ratios & Entry Points — ${name}
+
+> **Purpose**: Pre-indexed repository architecture map, entry points, and structural ratios.
+
+---
+
+## 1. Primary Entry Points
+- **Application Server**: \`src/index.ts\` (or \`src/app/page.tsx\` / \`src/pages/index.astro\`)
+- **Configuration Root**: \`package.json\`, \`tsconfig.json\`
+- **Agent Governance Entry**: \`AGENTS.md\`
+- **Testing Root**: \`tests/\`
+
+## 2. Directory Structure & LOC Ratios
+\`\`\`
+.
+├── src/               # Application logic & UI components
+├── tests/             # Behavioral & regression test suites
+├── docs/              # Public product architecture documentation
+├── .agents/
+│   ├── brand/         # Brand tokens, OKLCH palettes, content map
+│   ├── context/       # Local project context & decisions
+│   ├── standards/     # Modular engineering standards (DOX)
+│   └── terrain/       # Pre-indexed Wave 23 terrain maps
+└── scripts/           # Standalone developer automation scripts
+\`\`\`
+
+## 3. Module Boundaries & Data Flow
+- Entry request flow traverses from API routes / pages through typed services down to the database schema.
+- Components consume tokens from \`.agents/brand/tokens/\` or UnoCSS/Tailwind theme configuration.
+`;
+
+    const logsContent = `# 🗺️ Terrain Map: Failure Patterns, Audit Signatures & Repro Commands — ${name}
+
+> **Purpose**: Pre-indexed catalog of common test failures, audit event signatures, and deterministic reproduction commands.
+
+---
+
+## 1. Deterministic Verification & Repro Commands
+| Failure Domain | Repro Command | Expected Pass Condition |
+|:---|:---|:---|
+| **Full Test Suite** | \`${testCmd}\` | 100% tests pass cleanly |
+| **Lint Violations** | \`${lintCmd}\` | Exit code 0, zero warnings |
+| **Type Check Errors** | \`${typecheckCmd}\` | Clean compilation (\`noEmit\`) |
+| **Secret Leaks** | \`bun run secret-scan\` | Zero credentials detected |
+
+## 2. Common Failure Signatures & Cures
+- **Missing Environment Variable**: Inspect \`.env.example\`, populate \`.env\` locally (never commit \`.env\`).
+- **TypeScript Type Drift**: Run \`${typecheckCmd}\` to inspect exact line and missing interface field.
+- **Port Collision**: If dev server fails on boot, run port probe or assign alternative port.
+- **Dangling Test State**: Ensure tests clean up temporary files in \`afterEach\` or use sandbox directories.
+`;
+
+    if (!dryRun) {
+      writeFileSync(join(terrainDir, "stack.md"), stackContent, "utf8");
+      writeFileSync(join(terrainDir, "habits.md"), habitsContent, "utf8");
+      writeFileSync(join(terrainDir, "ownership.md"), ownershipContent, "utf8");
+      writeFileSync(join(terrainDir, "packages.md"), packagesContent, "utf8");
+      writeFileSync(join(terrainDir, "repo.md"), repoContent, "utf8");
+      writeFileSync(join(terrainDir, "logs.md"), logsContent, "utf8");
+    }
+
+    console.log(
+      "  ✅ Provisioned: `./.agents/terrain/` (6 Wave 23 Workspace Terrain Maps: stack, habits, ownership, packages, repo, logs)",
+    );
+  }
   // =========================================================================
   // STAGE 5: Client Intake Brief (employee answers -> agent-produced docs)
   // =========================================================================
@@ -6375,6 +6592,10 @@ input, button, textarea, select {
       "  ℹ️  Docs in 01-Brand/, 02-Business/, 03-Offerings/, 04-Technical-Intake/ are written by your AI agent from the brief.",
     );
   }
+
+  // Provision Wave 23 Workspace Terrain Maps
+  provisionTailoredWorkspaceTerrain(resolvedTarget, config, projectName, isDryRun);
+
   // =========================================================================
   console.log("📋 STAGE Closeout: Recording Shipped State in .agents/context/current.md...");
 

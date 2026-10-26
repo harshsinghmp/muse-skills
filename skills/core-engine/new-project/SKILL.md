@@ -254,6 +254,7 @@ The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled wi
 4. Sync answers into `.agents/context/product.md` and `.agents/context/accounts.md`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
 
 **Durable DOX Closeout (engine-run at scaffold)**:
+- Provisions `.agents/terrain/` with the 6 canonical Wave 23 Workspace Terrain Maps (`stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`) pre-indexing technical reality so future agents never waste tokens probing.
 - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
 - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
 - Provisions `.agents/brand/CONTENT_MAP.md` establishing the Zero-Hardcoded-Strings CMS Hand-Off Blueprint (mapping UI components to content files or CMS collections for non-technical client editing).
