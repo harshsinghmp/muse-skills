@@ -44,6 +44,10 @@ All notable changes to this project are documented in this file.
   - **Edge Runtime Architecture (`edge.md`)**: Added serverless edge computing reference implementing Hono v4 type-safe routers, Cloudflare D1 parameterized SQL queries (`db.prepare().bind().all()`), SWR edge KV caching, and sub-10ms cold start invariants.
   - **Edge Rate Limiting & Abuse Defense (`rate-limit.md`)**: Implemented sliding-window counter algorithm protecting against boundary-burst exploits, IETF RateLimit headers (`RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Reset`, `Retry-After`), tiered route limits (`auth`: 5/min, `ai`: 20/min, `api`: 120/min), and honeypot bot tarpit defenses.
   - **Command Surface & Dispatch**: Expanded `webdev` to 20 modes, incrementing command surface to 417 slash commands per harness.
+- **Realtime Event Streaming & SSE Architecture (`automation:realtime`)**:
+  - **Realtime Streaming Playbook (`realtime.md`)**: Added comprehensive streaming architecture reference covering bidirectional WebSockets (`ws://`/`wss://`) and lightweight Server-Sent Events (`text/event-stream`), SSE heartbeat frames (`: ping\n\n`), connection lifecycle states, and tenant-isolated channel authorization.
+  - **Resilient Reconnection Engine**: Implemented exponential backoff with full jitter algorithm (`min(maxBackoff, baseBackoff * 2^attempt) * random()`) preventing reconnect storms and thundering herd failures.
+  - **Command Surface & Dispatch**: Expanded `automation` to 10 modes, incrementing command surface to 418 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
