@@ -101,7 +101,7 @@ export function checkModernToolsAvailability(): { installed: string[]; missing: 
 }
 
 export function detectAgentTemplateProfile(targetDir: string, hints: AgentTemplateHints = {}): AgentTemplateProfile {
-  let packageJson: Record<string, any> = {};
+  let packageJson: Record<string, unknown> = {};
   const pkgPath = join(targetDir, "package.json");
   if (existsSync(pkgPath)) {
     try {
@@ -110,7 +110,7 @@ export function detectAgentTemplateProfile(targetDir: string, hints: AgentTempla
       // Invalid optional metadata is ignored; verified hints and file markers remain usable.
     }
   }
-  let composerJson: Record<string, any> = {};
+  let composerJson: Record<string, unknown> = {};
   const composerPath = join(targetDir, "composer.json");
   if (existsSync(composerPath)) {
     try {
