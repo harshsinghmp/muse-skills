@@ -75,6 +75,8 @@ Execute this skill when:
 5. **Auditing Technical & Statistical Claims** (`/evidence audit`): Verifying documentation, proposals, or deliverables for ungrounded assertions, hallucinated benchmarks, or missing citations.
 6. **Context-Switching Between Projects** (`/evidence brief`): Generating a structured briefing to quickly understand a project's current factual state before diving in.
 
+7. **Sweeping Commitments & Deadlines** (`/evidence sweep`): Running autonomous sweeps over project artifacts and issues to auto-detect client commitments, 48h clock-stop triggers, and stamp overdue alerts (`bun skills/context-orchestration/evidence-ledger/scripts/commitment-sweep.ts`).
+
 ### Anti-Triggers
 Do NOT use this skill when:
 - Writing pure fictional or creative narrative copy.
@@ -334,6 +336,15 @@ See `references/evidence-entry-schema.md` for the full canonical schema. Every e
 Entries are separated by horizontal rules (`---`). Superseded entries retain their content but append `[SUPERSEDED by EVD-{NNN}]` to the Status line. Entries are never deleted.
 
 ---
+
+---
+
+## 🧠 Memory Engine Dual-Scope Interop
+
+The evidence ledger integrates seamlessly with Muse Memory's dual-scope architecture:
+- **Global User Truth**: Read from `~/.memory/USER.md` via `get_context(query=...)`. Never invent cross-project facts.
+- **Local Project Constraints**: Read and write project-specific facts to `./.memory/` and `CURRENT.md` (or `.agents/context/current.md`).
+- **No Direct YAML Mutation**: Strictly prohibits modifying internal raw YAML or database files directly. Always invoke MCP tools (`memory_capture`, `search`, `get_context`) or sovereign CLI commands.
 
 ## Pitfalls
 

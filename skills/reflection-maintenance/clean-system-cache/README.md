@@ -75,7 +75,7 @@ clean-system-cache\scripts\clean-cache.cmd /tool browser
 1. **Three-Tier Capability Classification**:
    - **T1 Regenerable**: Disposable build layers, download tarballs, HTTP caches. Safe to purge silently.
    - **T2 Capability-Coupled**: Installed plugin packages, skill trees, MCP schemas, LSPs. **Preserved by default.** Only purged via explicit `--include-coupled` / `/include-coupled` opt-in, accompanied by a deterministic Rehydration Manifest.
-   - **T3 Irreplaceable**: Auth credentials, session databases, agent memory (`.memory/**`), LifeOS config, git repos. **Never touched.**
+   - **T3 Irreplaceable**: Auth credentials, session databases, agent memory (`.memory/**`), sovereign configs, git repos. **Never touched.**
 2. **Running Session Protection**: If an application, browser, or agent runtime is running, cleanup is skipped in execution mode so active sessions, websockets, and tools are never interrupted.
 3. **Capability Inventory Contract**: Verifies before-and-after capability counts in safe mode, guaranteeing zero tool/skill regressions.
 4. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.

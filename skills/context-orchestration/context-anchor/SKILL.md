@@ -230,6 +230,15 @@ Anchors capture raw working context and may be committed, synced, or read by con
 
 ---
 
+---
+
+## 🧠 Memory Engine Dual-Scope Interop
+
+Context anchor operations strictly adhere to Muse Memory's dual-scope architecture:
+- **Global User Truth**: Read from `~/.memory/USER.md` via `get_context(query=...)`. Anchors must never contradict global user guidelines.
+- **Local Project Constraints**: Read and write local project state to `./.memory/` and `CURRENT.md` (or `.agents/context/current.md`).
+- **No Direct YAML Mutation**: Strictly prohibits modifying internal raw YAML or memory database files directly. Always invoke MCP tools (`memory_capture`, `search`, `get_context`) or sovereign CLI commands.
+
 ## Pitfalls
 
 - **Verbosity & Noise**: Every line must be load-bearing. Delete filler.

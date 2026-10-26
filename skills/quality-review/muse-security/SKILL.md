@@ -96,7 +96,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 2. **Resolve Mode**: Match request against the mode table (cve, remediate, cloud-waf, sast, runtime, audit).
 3. **Execute Mode Playbook**: Load `references/<mode>.md` and execute its step-by-step procedure.
 4. **Evidence Collection**: Capture exact CVSS scores, vulnerability IDs, scanner logs, or WAF rule states.
-5. **Quality Gate & Verification**: Ensure zero secret leakage (Vibeguard Protocol) and verify that all remediation playbooks are idempotent with dry-run verification.
+5. **Quality Gate & Verification**: Run standalone pre-ship secret scan (`bun run secret-scan [path]`) to verify zero credential leakage (Vibeguard Protocol) across tokens (`sk-*`, `ghp_*`), private keys, and database URLs; verify that all remediation playbooks are idempotent with dry-run verification.
 
 ---
 

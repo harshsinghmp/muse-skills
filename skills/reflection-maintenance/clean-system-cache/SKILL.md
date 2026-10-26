@@ -56,6 +56,7 @@ Execute this skill when:
 3. **Bloated Web Browser Caches**: Google Chrome, Mozilla Firefox, Zen, Brave, or Microsoft Edge disk caches grow to multiple gigabytes of stale HTTP responses.
 4. **Stale Designer Scratch Files**: Adobe Premiere, After Effects, Audition (`.cfa` / `.pek` audio peak caches), or Figma desktop app caches lock up storage.
 5. **Dormant `node_modules` Directories**: Old, abandoned repository folders hog dozens of gigabytes across user project directories.
+6. **Host Vitals & Machine Inventory (`host-vitals`)**: Deterministically inspecting hardware vitals (CPU cores, GPU PCIe bus, kernel version, display resolution, RAM) via `bun skills/reflection-maintenance/clean-system-cache/scripts/host-vitals.ts`.
 
 ### Anti-Triggers
 Do **NOT** use this skill for:
@@ -96,7 +97,7 @@ Do **NOT** use this skill for:
 | :--- | :--- | :--- |
 | **T1** | **Regenerable Build Artifacts** | Pure download archives, build layers, compiler caches, and HTTP caches (uv wheels, npm download tarballs, cargo crates, browser cache2). **Safe to purge silently.** |
 | **T2** | **Capability-Coupled Caches** | Caches that back live agent capabilities, installed plugin packages, language server binaries, and remote skill payloads (e.g. `~/.cache/opencode/packages`, `~/.cache/opencode/npm`, `~/.cache/claude`, `~/.continue/cache`). **PRESERVED BY DEFAULT.** Purging removes working functionality until network rehydration. Purged ONLY with explicit `--include-coupled` / `/include-coupled` opt-in, and never without emitting a deterministic Rehydration Manifest. |
-| **T3** | **Irreplaceable State & Auth** | Session databases, auth/credential stores, configurations, agent cognitive memory (`.memory/**`), LifeOS configs (`~/.config/LIFEOS/USER`), and git repositories. **NEVER TOUCHED UNDER ANY CIRCUMSTANCES.** |
+| **T3** | **Irreplaceable State & Auth** | Session databases, auth/credential stores, configurations, agent cognitive memory (`.memory/**`), sovereign configs (`~/.memory/` and `~/.config/muse/`), and git repositories. **NEVER TOUCHED UNDER ANY CIRCUMSTANCES.** |
 
 ### Safety & Running Session Protection Contracts
 
@@ -105,7 +106,7 @@ Do **NOT** use this skill for:
 | **Active Browser Sessions & Live Tabs** | **PROTECTED.** Process detection checks if any browser is running (`pgrep` / `tasklist`). Active sessions are skipped in execution mode so running tabs and websockets are never disrupted. |
 | **Active Agent Runtime Sessions** | **PROTECTED.** Process detection checks running agents (`opencode`, `claude`, `cursor`, `code`, `gemini`, `codex`, `continue`, `aider`). Running agent sessions are skipped in execution mode to prevent dropping live tools or skills mid-task. |
 | **T2 Capability-Coupled Caches** | **PRESERVED BY DEFAULT.** Plugin packages, language servers, MCP schemas, and downloaded skill trees are preserved. Only purged with explicit `--include-coupled` / `/include-coupled` opt-in and an accompanying Rehydration Manifest. |
-| **T3 Agent Memory, Auth & State** | **NEVER TOUCHED.** Credentials (`~/.claude/settings.json`, `~/.gemini/settings.json`), session databases, agent memory (`.memory/**`), LifeOS config (`~/.config/LIFEOS/USER`), and conversation histories are strictly forbidden. |
+| **T3 Agent Memory, Auth & State** | **NEVER TOUCHED.** Credentials (`~/.claude/settings.json`, `~/.gemini/settings.json`), session databases, agent memory (`.memory/**`), sovereign configs (`~/.memory/USER.md`, `~/.config/muse/`), and conversation histories are strictly forbidden. |
 | **Browser Cookies, Passwords & History** | **NEVER TOUCHED.** Purges purely disposable HTTP cache (`Cache_Data`, `cache2/entries`). User profiles, cookies, logins, and bookmarks remain 100% intact. |
 | **Project Repositories & Source Code** | **NEVER TOUCHED.** Does not alter active git working directories or files. |
 | **Virtual Environments (`.venv`)** | **PRESERVED.** Cleans package download wheels only; never touches virtual environments. |

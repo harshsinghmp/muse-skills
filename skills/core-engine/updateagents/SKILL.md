@@ -238,6 +238,9 @@ When authoring, scaffolding, or updating agent skills or behavioral guidance, en
 ### Step 13c — Keep Secretary Dispatch Explicit
 Generated `AGENTS.md` instructs agents to invoke `secretary:dispatch` on the first prompt and each new task, triage the request, and read the selected skill and mode. This is prompt-driven routing, not a background process. Route Coach only when relevant; it does not replace task closeout.
 
+### Step 13d — Wave 23 Workspace Terrain Verification
+Verify that the 6 canonical workspace terrain maps in `.agents/terrain/` (`stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`) exist, are up-to-date with current toolchain reality, and contain zero credential leaks or hardcoded machine paths. Run `updateagents --audit` to audit terrain health.
+
 ### GitHub project assets
 When scaffolding or synchronizing a confirmed GitHub project, render community files and `CHANGELOG.md` from the shared templates using verified project/repository metadata. Workflow templates currently cover Node/Bun scripts, Python manifests, and Composer/PHP; preserve user-edited files and do not invent workflows for other stacks. If `origin` is not GitHub and `.github/workflows/` exists, ask before removing anything; removal is limited to files in that directory and requires explicit confirmation (`--confirm-remove-github-workflows`). If the host, contact, contributor identity, or workflow choice is unknown, ask the user, record their answer, and continue without guessing. With no repository evidence, interactive scaffolding asks; non-interactive runs defer GitHub assets until confirmed with `--github` or `--no-github`. Never copy this source repository's username, slug, or credentials into the target.
 

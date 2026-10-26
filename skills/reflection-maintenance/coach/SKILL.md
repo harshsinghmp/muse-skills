@@ -59,6 +59,7 @@ Execute this skill when:
 2. **Client Scope-Creep or Anxiety Flare (`coach:client`)**: A client asks for "just one small change", becomes anxious about progress, delays critical assets, or requires an executive progress digest.
 3. **Founder Burnout & Bottleneck Review (`coach:founder`)**: The agency principal is overwhelmed with tactical code fires, revenue feast-or-famine cycles occur, or deals require founder presence to close.
 4. **Hygiene & Verification Audit (`coach:audit`)**: Verifying that standup artifacts, evidence links, and effort logs remain pristine and secret-free.
+5. **Weekly Wisdom Compounding & Retrospective Synthesis**: Compounding durable insights across engineering and agency domains directly into Muse Memory's `~/.memory/wiki/` and `~/.memory/USER.md` (`bun skills/reflection-maintenance/coach/scripts/wisdom-updater.ts --weekly-retrospective`).
 
 ### Anti-Triggers
 Do NOT use this skill when:
