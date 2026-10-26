@@ -1,6 +1,6 @@
 # 💬 client-comms
 
-The client communication department head: one skill across eight modes — status, change, handover, feedback, proposal, audit, inbox-triage, and factual-reporting. Pitch proposals, report progress, control scope, hand over cleanly, and listen well. Outward voice to the client, in plain language.
+The client communication department head: one skill across nine modes — status, change, handover, feedback, proposal, intake, audit, inbox-triage, and factual-reporting. Pitch proposals, report progress, control scope, ingest client onboarding questionnaires, hand over cleanly, and listen well. Outward voice to the client, in plain language.
 
 ## Install
 
@@ -33,6 +33,7 @@ Scaffold a high-converting B2B proposal for Acme Global with 48h stop-the-clock 
 | **handover** | handover / project docs / training | Handover: docs, credentials, training, and support terms. |
 | **feedback** | feedback / client review | Feedback: structured intake, triage, and response plan. |
 | **proposal** | client proposal / pitch deck / B2B proposal | High-converting pitch, PAS/AIDA/QUEST architecture, stop-the-clock terms, and milestone proof gates. |
+| **intake** | client intake / onboarding questionnaire | Ingestion: scope boundary extraction, anti-scope fencing, and vault scaffolding. |
 | **`audit`** | communication audit / SLA audit | Bidirectional SLAs, cadence integrity, channel discipline, escalations. |
 | **`inbox-triage`** | inbox triage / email triage | Executive inbox triage and follow-up protocols. |
 

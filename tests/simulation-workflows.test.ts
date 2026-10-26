@@ -1573,5 +1573,65 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(ref).toContain("Identity Resolution & Deduplication Rules");
       expect(ref).toContain("Right to Erasure (Forget Me)");
     });
+
+    test("client-comms intake mode processes client briefs and auto-scaffolds context vault", () => {
+      const intakePath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/intake.md");
+      expect(fs.existsSync(intakePath)).toBe(true);
+      const intakeContent = fs.readFileSync(intakePath, "utf8");
+      expect(intakeContent).toContain("Zero-Jargon Intake Normalization (INT-001)");
+      expect(intakeContent).toContain("Bilateral Scope Fencing (INT-002)");
+      expect(intakeContent).toContain("Vault Auto-Scaffold Contract (INT-003)");
+      expect(intakeContent).toContain("48-Hour Stop-The-Clock Protocol (INT-004)");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/scripts/client-comms.ts");
+      const res = spawnSync(
+        "bun",
+        [
+          scriptPath,
+          "--intake",
+          "Company: Horizon Health. Goal: Launch custom patient intake dashboard and HIPAA-compliant portal.",
+          "--client-id",
+          "horizon-health",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(res.status).toBe(0);
+      const data = JSON.parse(res.stdout);
+      expect(data.clientId).toBe("horizon-health");
+      expect(data.companyName).toBe("Horizon Health");
+      expect(data.boundary.inScope.length).toBeGreaterThanOrEqual(4);
+      expect(data.boundary.outOfScope.length).toBeGreaterThanOrEqual(4);
+      expect(data.briefMarkdown).toContain("Horizon Health");
+      expect(data.dependenciesMarkdown).toContain("48-Hour Stop-The-Clock");
+
+      // Verify vault scaffolding in temp directory
+      const tempVault = fs.mkdtempSync(path.join(os.tmpdir(), "vault-test-"));
+      try {
+        const scaffoldRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--intake",
+            "Company: Horizon Health",
+            "--client-id",
+            "horizon-health",
+            "--scaffold-dir",
+            tempVault,
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        const scaffoldData = JSON.parse(scaffoldRes.stdout);
+        expect(scaffoldData.scaffold.createdFiles.length).toBe(4);
+        expect(fs.existsSync(path.join(tempVault, "horizon-health", "profile.json"))).toBe(true);
+        expect(fs.existsSync(path.join(tempVault, "horizon-health", "boundary.json"))).toBe(true);
+        expect(fs.existsSync(path.join(tempVault, "horizon-health", "brief.md"))).toBe(true);
+        expect(fs.existsSync(path.join(tempVault, "horizon-health", "dependencies.md"))).toBe(true);
+      } finally {
+        fs.rmSync(tempVault, { recursive: true, force: true });
+      }
+    });
   });
 });

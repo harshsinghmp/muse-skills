@@ -73,6 +73,11 @@ All notable changes to this project are documented in this file.
   - **The 4 Anti-Thin Content Invariants (PSE-001–PSE-004)**: Enforced 30% unique non-templated data density threshold, search intent deduplication, dynamic contextual FAQ generation, and above-the-fold answer-first hierarchy.
   - **Dynamic Schema.org & Sitemap Partitioning**: Implemented automated JSON-LD structured data (`BreadcrumbList`, `FAQPage`, `SoftwareApplication`) and segmented `<sitemapindex>` partitioning (≤ 10k URLs per file) with phased cohort indexation pacing.
   - **Command Surface & Dispatch**: Expanded `seo` to 8 modes, bumping version to 1.4.0 and incrementing command surface to 423 slash commands per harness.
+- **Client Onboarding Questionnaire Ingestion & Vault Scaffolding (`client-comms:intake`)**:
+  - **Client Intake Pipeline (`intake.md`)**: Added automated questionnaire ingestion, normalizing conversational client inputs into structured technical briefs, SLA tiers, and bilateral scope partitions.
+  - **The 4 Intake Invariants (INT-001–INT-004)**: Enforced Zero-Jargon normalization, Bilateral Scope Fencing (`inScope` vs `outOfScope` Anti-Scope Fence), Client Vault Auto-Scaffolding (`profile.json`, `boundary.json`, `brief.md`, `dependencies.md`), and the 48-Hour Stop-The-Clock protocol.
+  - **Intake & Vault Scaffolding CLI**: Added `--intake` CLI flag to `client-comms.ts` supporting `--client-id`, `--scaffold-dir`, and `--json`.
+  - **Command Surface & Dispatch**: Expanded `client-comms` to 9 modes, bumping version to 1.5.0 and incrementing command surface to 424 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

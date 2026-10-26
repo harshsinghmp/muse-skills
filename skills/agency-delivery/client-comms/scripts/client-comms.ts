@@ -8,6 +8,8 @@
  */
 
 import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 export interface FeedbackContract {
   feedbackId: string;
@@ -300,6 +302,207 @@ Any client dependency unfulfilled for >48 hours automatically holds scheduled co
   };
 }
 
+export interface ClientIntakeInput {
+  clientId?: string;
+  companyName?: string;
+  rawText?: string;
+  industry?: string;
+  objectives?: string[];
+  techPreferences?: string[];
+  timelineDays?: number;
+  budget?: string;
+}
+
+export interface ClientIntakeResult {
+  clientId: string;
+  companyName: string;
+  profile: {
+    clientId: string;
+    companyName: string;
+    industry: string;
+    slaTier: "STANDARD" | "PRIORITY" | "ENTERPRISE";
+    primaryChannel: "Slack" | "Discord" | "Email";
+    assignedLead: "Sol" | "Jasper" | "Crew" | "Nexus";
+    stopTheClockHours: 48;
+    createdAt: string;
+  };
+  boundary: {
+    inScope: string[];
+    outOfScope: string[];
+    changeOrderPolicy: string;
+  };
+  briefMarkdown: string;
+  dependenciesMarkdown: string;
+}
+
+export function processClientIntake(input: string | ClientIntakeInput, explicitClientId?: string): ClientIntakeResult {
+  let rawText = "";
+  let companyName = "Acme Corp";
+  let industry = "General B2B / Technology";
+  let clientId = explicitClientId;
+
+  if (typeof input === "string") {
+    if (fs.existsSync(input)) {
+      try {
+        const fileContent = fs.readFileSync(input, "utf8");
+        if (input.endsWith(".json")) {
+          const parsed = JSON.parse(fileContent);
+          return processClientIntake(parsed, explicitClientId);
+        }
+        rawText = fileContent;
+      } catch {
+        rawText = input;
+      }
+    } else {
+      rawText = input;
+    }
+  } else {
+    companyName = input.companyName || companyName;
+    industry = input.industry || industry;
+    clientId = clientId || input.clientId;
+    rawText = input.rawText || (input.objectives ? input.objectives.join(" ") : "");
+  }
+
+  const compMatch = rawText.match(/(?:company|client|brand|name)\s*[:=]\s*([^\n,.]+)/i);
+  if (compMatch && (typeof input === "string" || !input.companyName)) {
+    companyName = compMatch[1].trim();
+  }
+
+  if (!clientId) {
+    clientId = companyName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    if (!clientId) clientId = "client-intake";
+  }
+
+  const lower = rawText.toLowerCase();
+
+  let assignedLead: "Sol" | "Jasper" | "Crew" | "Nexus" = "Crew";
+  let slaTier: "STANDARD" | "PRIORITY" | "ENTERPRISE" = "STANDARD";
+  let primaryChannel: "Slack" | "Discord" | "Email" = "Slack";
+
+  const inScope: string[] = [
+    "Responsive design system (Mobile 390px + Desktop 1440px) with fluid typography",
+    "Headless content management and schema architecture",
+    "Production edge deployment and automated continuous integration pipeline",
+    "SEO/AEO semantic structure, OpenGraph cards, and Core-EEAT density",
+  ];
+
+  const outOfScope: string[] = [
+    "Native iOS / Android mobile application development",
+    "Legacy database unindexed data migration (>5,000 records)",
+    "Uncontracted third-party API integration or custom ERP synchronization",
+    "Manual data entry or ad-hoc unapproved copywriting cycles",
+  ];
+
+  if (lower.includes("ecommerce") || lower.includes("shopify") || lower.includes("store") || lower.includes("cart")) {
+    industry = "E-Commerce / Direct-to-Consumer";
+    assignedLead = "Sol";
+    inScope.push("Product catalog layout, cart interactions, and Stripe/payment gateway webhook handler");
+    outOfScope.push("Physical inventory warehouse hardware integration");
+  } else if (
+    lower.includes("saas") ||
+    lower.includes("platform") ||
+    lower.includes("app") ||
+    lower.includes("dashboard")
+  ) {
+    industry = "B2B SaaS / Software Platform";
+    assignedLead = "Sol";
+    inScope.push("Customer authentication flow, dashboard layout, and tenant isolation fencing");
+    outOfScope.push("Multi-region active-active database sharding");
+  } else if (
+    lower.includes("brand") ||
+    lower.includes("creative") ||
+    lower.includes("animation") ||
+    lower.includes("gsap")
+  ) {
+    industry = "Brand Creative / High-End Portfolio";
+    assignedLead = "Jasper";
+    inScope.push("Awwwards-quality micro-interactions, GSAP ScrollTrigger pacing, and OKLCH color token system");
+    outOfScope.push("Custom 3D WebGL shader programming from scratch");
+  }
+
+  if (lower.includes("enterprise") || lower.includes("urgent") || lower.includes("sla")) {
+    slaTier = "ENTERPRISE";
+    primaryChannel = "Slack";
+  } else if (lower.includes("priority")) {
+    slaTier = "PRIORITY";
+  }
+
+  const briefMarkdown = `# Client Intake Brief: ${companyName} (${clientId})
+
+> **Industry**: ${industry}  
+> **SLA Tier**: ${slaTier} (Assigned Lead: ${assignedLead})  
+> **Primary Channel**: ${primaryChannel}  
+> **Intake Date**: ${new Date().toISOString().split("T")[0]}  
+
+## Executive Summary
+${companyName} engaged the agency to engineer a high-performance modern web ecosystem. The project objectives focus on quantifiable conversion lift, brand authority, and maintainable software architecture.
+
+## Technical Architecture Baseline
+- Framework target: Modern static / hybrid edge runtime (Astro v7 or Next.js)
+- Styling: Hybrid UnoCSS Wind 4 + BEM with OKLCH token system
+- Lead Architect: **${assignedLead}**
+`;
+
+  const dependenciesMarkdown = `# Client Dependency Register: ${companyName}
+
+> **48-Hour Stop-The-Clock Protocol Active**: Failure to deliver these required assets within 48 hours of formal request freezes active milestone delivery schedules day-for-day without penalty.
+
+1. **Domain Registrar & DNS Access**: Cloudflare / Route53 delegation or records configuration.
+2. **Brand Assets**: Primary vector marks (.svg), typography licenses (.woff2), and approved color palette.
+3. **Third-Party API Credentials**: Payment gateway (Stripe) and transactional email tokens.
+4. **Content / Copywriting**: High-resolution imagery and canonical service descriptions.
+`;
+
+  return {
+    clientId,
+    companyName,
+    profile: {
+      clientId,
+      companyName,
+      industry,
+      slaTier,
+      primaryChannel,
+      assignedLead,
+      stopTheClockHours: 48,
+      createdAt: new Date().toISOString(),
+    },
+    boundary: {
+      inScope,
+      outOfScope,
+      changeOrderPolicy:
+        "Any request outside explicit inScope deliverables requires a formal written Change Order with budget & timeline impact before work commences.",
+    },
+    briefMarkdown,
+    dependenciesMarkdown,
+  };
+}
+
+export function scaffoldClientVault(
+  result: ClientIntakeResult,
+  baseDir = ".agents/vault",
+): { createdFiles: string[]; targetDir: string } {
+  const targetDir = path.join(baseDir, result.clientId);
+  fs.mkdirSync(targetDir, { recursive: true });
+
+  const profilePath = path.join(targetDir, "profile.json");
+  const boundaryPath = path.join(targetDir, "boundary.json");
+  const briefPath = path.join(targetDir, "brief.md");
+  const depPath = path.join(targetDir, "dependencies.md");
+
+  fs.writeFileSync(profilePath, JSON.stringify(result.profile, null, 2), "utf8");
+  fs.writeFileSync(boundaryPath, JSON.stringify(result.boundary, null, 2), "utf8");
+  fs.writeFileSync(briefPath, result.briefMarkdown, "utf8");
+  fs.writeFileSync(depPath, result.dependenciesMarkdown, "utf8");
+
+  return {
+    targetDir,
+    createdFiles: [profilePath, boundaryPath, briefPath, depPath],
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   if (args.includes("--translate-feedback")) {
@@ -376,9 +579,50 @@ if (import.meta.main) {
     } else {
       console.log(proposal.markdown);
     }
+  } else if (args.includes("--intake")) {
+    const idx = args.indexOf("--intake");
+    const rawInput = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "";
+    const clientIdx = args.indexOf("--client-id") !== -1 ? args.indexOf("--client-id") : args.indexOf("--client");
+    const explicitClientId = clientIdx !== -1 ? args[clientIdx + 1] : undefined;
+    const scaffoldIdx = args.indexOf("--scaffold-dir");
+    const scaffoldDir =
+      scaffoldIdx !== -1 ? args[scaffoldIdx + 1] : args.includes("--scaffold-vault") ? ".agents/vault" : undefined;
+
+    const result = processClientIntake(rawInput, explicitClientId);
+
+    if (scaffoldDir) {
+      const scaffoldRes = scaffoldClientVault(result, scaffoldDir);
+      if (args.includes("--json")) {
+        console.log(JSON.stringify({ ...result, scaffold: scaffoldRes }, null, 2));
+      } else {
+        console.log(`\n🏛️ Client Intake & Vault Scaffolded: ${result.companyName} (${result.clientId})`);
+        console.log(`  Directory: ${scaffoldRes.targetDir}`);
+        console.log(`  Created Files:`);
+        for (const f of scaffoldRes.createdFiles) {
+          console.log(`    - ${f}`);
+        }
+      }
+    } else {
+      if (args.includes("--json")) {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        console.log(`\n📋 Client Intake Ingestion: ${result.companyName} (${result.clientId})`);
+        console.log(`  Industry: ${result.profile.industry}`);
+        console.log(`  Assigned Lead: ${result.profile.assignedLead} | SLA: ${result.profile.slaTier}`);
+        console.log(`  Channel: ${result.profile.primaryChannel} | 48h Clock-Stop: Active`);
+        console.log(`\n🎯 In-Scope (${result.boundary.inScope.length} items):`);
+        for (const s of result.boundary.inScope) {
+          console.log(`  - ✅ ${s}`);
+        }
+        console.log(`\n🛡️ Out-Of-Scope / Anti-Scope Fence (${result.boundary.outOfScope.length} items):`);
+        for (const s of result.boundary.outOfScope) {
+          console.log(`  - ❌ ${s}`);
+        }
+      }
+    }
   } else {
     console.log(
-      "Usage: bun client-comms.ts --translate-feedback '<text>' | --draft-pushback <scenario> [--client <name>] | --changelog [since-ref] | --proposal [--client <name>] [--project <title>] [--framework <pas|aida|quest>]",
+      "Usage: bun client-comms.ts --translate-feedback '<text>' | --draft-pushback <scenario> [--client <name>] | --changelog [since-ref] | --proposal [--client <name>] [--project <title>] [--framework <pas|aida|quest>] | --intake <form-or-text> [--client-id <id>] [--scaffold-dir <dir>]",
     );
   }
 }

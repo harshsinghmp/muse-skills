@@ -1130,9 +1130,9 @@
     },
     {
       "name": "client-comms",
-      "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, and B2B proposals with stop-the-clock terms \u2014 routed through eight modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, or collect client feedback. Not for internal agency ops (ops) or pricing strategy (growth).",
+      "description": "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, B2B proposals with stop-the-clock terms, and automated onboarding intake with scope boundaries \u2014 routed through nine modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, collect client feedback, or ingest a new client intake form. Not for internal agency ops (ops) or pricing strategy (growth).",
       "path": "skills/agency-delivery/client-comms/SKILL.md",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [
