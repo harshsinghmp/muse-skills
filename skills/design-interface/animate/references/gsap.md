@@ -218,3 +218,79 @@ gsap.from(st.chars, { opacity: 0, yPercent: 120, stagger: 0.02 });
 - `elastic`/`back` easing on UI reads as slop — reserve for delight-tier moments.
 - Clean up all tweens/triggers on unmount (useGSAP handles this; manual `gsap.context` needs `.revert()`).
 - Respect `prefers-reduced-motion` — `ScrollTrigger.matchMedia()` can branch to static/instant states.
+
+---
+
+## 9. FLIP (First, Last, Invert, Play) Layout Transitions
+
+Use `gsap/Flip` when elements change grid placement, flex order, parent container, or expand from thumbnail to modal:
+
+```js
+import gsap from "gsap";
+import { Flip } from "gsap/Flip";
+gsap.registerPlugin(Flip);
+
+// 1. Capture initial state
+const state = Flip.getState(".gallery-item, .modal-container");
+
+// 2. Mutate DOM / toggle CSS classes
+gridContainer.classList.toggle("grid-expanded");
+
+// 3. Animate smoothly between layout states
+Flip.from(state, {
+  duration: 0.6,
+  ease: "power3.inOut",
+  stagger: 0.04,
+  absolute: true, // prevents layout disruption during transition
+  onComplete: () => ScrollTrigger.refresh(), // recalculate scroll boundaries
+});
+```
+
+- `absolute: true` is crucial for grid/flex transitions: it temporarily takes animating elements out of the normal flow so siblings don't jump.
+- Always call `ScrollTrigger.refresh()` after layout morphs complete.
+
+---
+
+## 10. Strict Reduced-Motion Accessibility Gate
+
+Motion must never induce nausea or vertigo. Any layout scroll-jacking or full-screen parallax must respect `prefers-reduced-motion`:
+
+```js
+const mm = gsap.matchMedia();
+
+// Full animation experience for standard users
+mm.add("(prefers-reduced-motion: no-preference)", () => {
+  gsap.to(".pinned-panel", {
+    scrollTrigger: {
+      trigger: ".pinned-panel",
+      start: "top top",
+      end: "+=150%",
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+    },
+    xPercent: -100,
+    ease: "none",
+  });
+});
+
+// Static / instant accessibility fallback
+mm.add("(prefers-reduced-motion: reduce)", () => {
+  // Reveal static content without motion or pinning
+  gsap.set(".pinned-panel", { xPercent: 0, opacity: 1 });
+  // Kill any scroll pinning
+  ScrollTrigger.getAll().forEach((t) => t.disable(false, true));
+});
+```
+
+---
+
+## 11. GSAP Verification Checklist
+
+Before certifying GSAP animation code:
+- [ ] Registered plugins: `gsap.registerPlugin(ScrollTrigger, Flip, useGSAP)` called before instantiation.
+- [ ] Memory isolation: all timelines/triggers bound inside `useGSAP()` or explicit `ctx.revert()` teardown.
+- [ ] No CSS transition collision: zero CSS `transition: transform` or `transition: all` on animated nodes.
+- [ ] Reduced motion: `prefers-reduced-motion: reduce` verified to bypass parallax and pinning.
+- [ ] Pin anti-jump: `anticipatePin: 1` configured on all top-pinned ScrollTriggers.
+- [ ] Refresh lifecycle: `ScrollTrigger.refresh()` called after dynamic asset/font loads.

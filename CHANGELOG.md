@@ -23,6 +23,10 @@ All notable changes to this project are documented in this file.
   - **Boundary Audit Engine (`boundary-audit.ts`)**: Added CLI and engine in `skills/quality-review/muse-security/scripts/boundary-audit.ts` auditing 5 core isolation invariants: symlink workspace escapes (BND-001), shared git worktree lease collisions and stale heartbeats (BND-002), file permission fences for keys and environment configs (BND-003, BND-004), process argv credential scrubbing (BND-005), and cross-client directory traversal (BND-006).
   - **Boundary Mode Playbook (`references/boundary.md`)**: Complete subagent sandboxing reference documenting POSIX permission fences, lease arbitration, and multi-tenant isolation.
   - **Security Mode Expansion**: Expanded `muse-security` to 7 modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 413 slash commands per harness.
+- **Jasper Creative Division: GSAP Animation Mode (`animate:gsap`)**:
+  - **GSAP 3 Choreography Engine**: Promoted `animate:gsap` to a primary routed mode in `animate` (`skills/design-interface/animate/references/gsap.md`).
+  - **ScrollTrigger & FLIP Layouts**: Documented layout pinning with `anticipatePin: 1` anti-jump, `fastScrollEnd`, `gsap/Flip` morphing, and `useGSAP()` automatic lifecycle cleanup.
+  - **Reduced-Motion Invariants**: Enforced strict `prefers-reduced-motion: reduce` gates with `gsap.matchMedia()` falling back to instant/static reveals.
 
 ## [7.8.0] - 2026-10-25
 

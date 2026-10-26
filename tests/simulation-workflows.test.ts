@@ -356,6 +356,21 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("prefers-reduced-motion");
     });
 
+    test("Jasper: animate gsap mode enforces ScrollTrigger, Flip, and reduced-motion invariants", () => {
+      const gsapPath = path.join(REPO_ROOT, "skills/design-interface/animate", "references", "gsap.md");
+      const animateSkill = path.join(REPO_ROOT, "skills/design-interface/animate", "SKILL.md");
+      expect(fs.existsSync(gsapPath)).toBe(true);
+      const content = fs.readFileSync(gsapPath, "utf8");
+      const skill = fs.readFileSync(animateSkill, "utf8");
+
+      expect(skill).toContain("**gsap**");
+      expect(content).toContain("ScrollTrigger");
+      expect(content).toContain("Flip");
+      expect(content).toContain("anticipatePin");
+      expect(content).toContain("prefers-reduced-motion");
+      expect(content).toContain("useGSAP");
+    });
+
     test("Jasper: smm social-intel harvests multi-platform sentiment and viral hooks at zero cost", () => {
       const intelPath = path.join(REPO_ROOT, "skills/agency-delivery/smm", "references", "social-intel.md");
       expect(fs.existsSync(intelPath)).toBe(true);
