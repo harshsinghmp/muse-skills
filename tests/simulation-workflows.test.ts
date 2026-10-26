@@ -476,6 +476,39 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(slaContent).toContain("80% Burn");
     });
 
+    test("Nexus: coupling-router federation mode manages multi-tenant worktree fleets with collision protection", () => {
+      const fedPath = path.join(
+        REPO_ROOT,
+        "skills/context-orchestration/coupling-router",
+        "references",
+        "federation.md",
+      );
+      const routerSkill = path.join(REPO_ROOT, "skills/context-orchestration/coupling-router", "SKILL.md");
+      const fedScript = path.join(
+        REPO_ROOT,
+        "skills/context-orchestration/coupling-router/scripts",
+        "worktree-federation.ts",
+      );
+
+      expect(fs.existsSync(fedPath)).toBe(true);
+      expect(fs.existsSync(fedScript)).toBe(true);
+
+      const skillContent = fs.readFileSync(routerSkill, "utf8");
+      const fedContent = fs.readFileSync(fedPath, "utf8");
+
+      expect(skillContent).toContain("**`federation`**");
+      expect(skillContent).toContain("references/federation.md");
+      expect(skillContent).toContain('argument-hint: "[route|decouple|skill-audit|worktree-lease|federation]"');
+
+      expect(fedContent).toContain("Worktree Federation Architecture");
+      expect(fedContent).toContain("The 4 Federation Invariants");
+      expect(fedContent).toContain("FED-001");
+      expect(fedContent).toContain("FED-002");
+      expect(fedContent).toContain("FED-003");
+      expect(fedContent).toContain("FED-004");
+      expect(fedContent).toContain("WORKTREE-FEDERATION.json");
+    });
+
     test("Sol: database tuning runs semantic parameter optimization loops against real metrics", () => {
       const tuningPath = path.join(REPO_ROOT, "skills/agency-delivery/database", "references", "tuning.md");
       expect(fs.existsSync(tuningPath)).toBe(true);
