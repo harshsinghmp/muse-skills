@@ -86,7 +86,7 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 | **`pua`** | Put your AI on a Performance Improvement Plan. | **Sol** |
 | **`audit`** | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. | **Nexus** |
 | **`humanize`** | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. | **Jasper** |
-| **`muse-security`** | Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. | **Nexus** |
+| **`muse-security`** | Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, and runtime defense guardrails — routed through seven modes. | **Nexus** |
 
 ---
 
