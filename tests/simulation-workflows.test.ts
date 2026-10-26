@@ -556,7 +556,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(autoSkill).toContain("| **voice** |");
       expect(autoSkill).toContain("references/voice.md");
       expect(autoSkill).toContain(
-        'argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|audit]"',
+        'argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|alerts|audit]"',
       );
 
       const voiceRef = fs.readFileSync(
@@ -1632,6 +1632,88 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       } finally {
         fs.rmSync(tempVault, { recursive: true, force: true });
       }
+    });
+
+    test("automation:alerts mode defines 4-tier matrix and alert-router CLI formats multi-channel payloads", () => {
+      const alertsRefPath = path.join(REPO_ROOT, "skills/agency-delivery/automation/references/alerts.md");
+      expect(fs.existsSync(alertsRefPath)).toBe(true);
+      const content = fs.readFileSync(alertsRefPath, "utf8");
+      expect(content).toContain("Zero-Spam Sliding-Window Deduplication (ALT-001)");
+      expect(content).toContain("4-Tier Priority & Escalation Matrix (ALT-002)");
+      expect(content).toContain("Native Multi-Platform Payload Formatting (ALT-003)");
+      expect(content).toContain("Failure-Safe Circuit Breaker & Dead-Letter Fallback (ALT-004)");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/automation/scripts/alert-router.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      // 1. Test dispatch dry-run
+      const res = spawnSync(
+        "bun",
+        [
+          scriptPath,
+          "--dispatch",
+          "--tier",
+          "P1",
+          "--title",
+          "Database Connection Spike",
+          "--message",
+          "Active pool utilization at 98%",
+          "--channels",
+          "slack,discord,telegram",
+          "--json",
+        ],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(res.status).toBe(0);
+      const data = JSON.parse(res.stdout);
+      expect(data.tier).toBe("P1");
+      expect(data.dedupSuppressed).toBe(false);
+      expect(data.channelsDispatched).toContain("slack");
+      expect(data.channelsDispatched).toContain("discord");
+      expect(data.channelsDispatched).toContain("telegram");
+
+      // 2. Test format discord
+      const discordRes = spawnSync(
+        "bun",
+        [scriptPath, "--format", "discord", "--tier", "P1", "--title", "Test", "--message", "Msg"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(discordRes.status).toBe(0);
+      const discordData = JSON.parse(discordRes.stdout);
+      expect(discordData.embeds.length).toBe(1);
+      expect(discordData.content).toContain("@here");
+
+      // 3. Test format slack
+      const slackRes = spawnSync(
+        "bun",
+        [scriptPath, "--format", "slack", "--tier", "P2", "--title", "Test", "--message", "Msg"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(slackRes.status).toBe(0);
+      const slackData = JSON.parse(slackRes.stdout);
+      expect(slackData.blocks.length).toBeGreaterThanOrEqual(3);
+
+      // 4. Test format telegram
+      const teleRes = spawnSync(
+        "bun",
+        [scriptPath, "--format", "telegram", "--tier", "P3", "--title", "Test", "--message", "Msg"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(teleRes.status).toBe(0);
+      const teleData = JSON.parse(teleRes.stdout);
+      expect(teleData.parse_mode).toBe("HTML");
+
+      // 5. Test deduplication check
+      const dedupRes = spawnSync(
+        "bun",
+        [scriptPath, "--dedup-check", "--signature", "sig-test-123", "--window-sec", "300"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(dedupRes.status).toBe(0);
+      const dedupData = JSON.parse(dedupRes.stdout);
+      expect(dedupData.run1.shouldSend).toBe(true);
+      expect(dedupData.run2.shouldSend).toBe(false);
+      expect(dedupData.run2.occurrences).toBe(2);
     });
   });
 });
