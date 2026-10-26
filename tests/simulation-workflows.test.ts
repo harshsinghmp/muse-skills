@@ -595,6 +595,35 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(auditRef).toContain("100dvh");
     });
 
+    test("Sol: webdev edge and rate-limit modes enforce Hono v4, D1 parameterized SQL, and sliding-window limits", () => {
+      const edgePath = path.join(REPO_ROOT, "skills/agency-delivery/webdev", "references", "edge.md");
+      const rateLimitPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev", "references", "rate-limit.md");
+      const webdevSkill = path.join(REPO_ROOT, "skills/agency-delivery/webdev", "SKILL.md");
+
+      expect(fs.existsSync(edgePath)).toBe(true);
+      expect(fs.existsSync(rateLimitPath)).toBe(true);
+
+      const edgeContent = fs.readFileSync(edgePath, "utf8");
+      const rateLimitContent = fs.readFileSync(rateLimitPath, "utf8");
+      const skillContent = fs.readFileSync(webdevSkill, "utf8");
+
+      expect(skillContent).toContain("**edge**");
+      expect(skillContent).toContain("**rate-limit**");
+
+      // edge invariants
+      expect(edgeContent).toContain("Hono v4");
+      expect(edgeContent).toContain("D1Database");
+      expect(edgeContent).toContain("Server-Timing");
+      expect(edgeContent).toContain("Edge Runtime Boundary Rules");
+
+      // rate-limit invariants
+      expect(rateLimitContent).toContain("Sliding-Window");
+      expect(rateLimitContent).toContain("RateLimit-Limit");
+      expect(rateLimitContent).toContain("RateLimit-Remaining");
+      expect(rateLimitContent).toContain("Retry-After");
+      expect(rateLimitContent).toContain("Honeypot");
+    });
+
     test("webdev: frontend mode implements Jakub Czakon 7-block developer homepage standard", () => {
       const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/webdev", "SKILL.md"), "utf8");
       expect(webdevSkill).toContain("developer homepage");
