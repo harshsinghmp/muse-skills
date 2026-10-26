@@ -302,9 +302,9 @@
     },
     {
       "name": "coupling-router",
-      "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, then analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, while auditing installed skills to suppress redundant instructions, resolve prompt contradictions, and eliminate token bloat. Completion claims require verification receipts. Enforces a shared-worktree lease so two agent sessions in one git checkout never collide on branches, stashes, or shared files.",
+      "description": "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, and manages multi-tenant worktree federation and lease arbitration across concurrent subagent fleets. Completion claims require verification receipts.",
       "path": "skills/context-orchestration/coupling-router/SKILL.md",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "category": "context-orchestration",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"],
       "tags": [

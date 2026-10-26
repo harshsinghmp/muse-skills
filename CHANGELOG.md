@@ -63,6 +63,11 @@ All notable changes to this project are documented in this file.
   - **The Bug vs Enhancement Triage Gate**: Enforced deterministic 3-part defect invariant (verifiable non-conformance, deterministic reproducibility, zero environmental modification) versus billable enhancement scope.
   - **Capacity Burn-Down & Roll-Over Governance**: Established pacing alerts at 50%, 80%, and 100% capacity burn, alongside strict 20% roll-over ceiling with 60-day expiration rules.
   - **Command Surface & Dispatch**: Expanded `retain` to 8 modes, bumping version to 1.1.0 and incrementing command surface to 421 slash commands per harness.
+- **Multi-Tenant Worktree Federation & Fleet Manager (`coupling-router:federation`)**:
+  - **Federation Engine (`worktree-federation.ts`)**: Built autonomous multi-client worktree discovery, spawning, lease binding, and safe lifecycle sweeping CLI.
+  - **The 4 Federation Invariants (FED-001–FED-004)**: Enforced Zero-Branch Collision prevention across concurrent subagents, hermetic environment fencing without `.env` secret leakage, worktree heartbeat leasing, and safe pruning preserving dirty WIP.
+  - **Federation Playbook (`federation.md`)**: Complete operating doctrine covering multi-tenant fleet discovery, lifecycle states (`ACTIVE`, `IDLE`, `DIRTY_LOCKED`, `STALE`), and schema specification.
+  - **Command Surface & Dispatch**: Bumped `coupling-router` to 1.5.0 and incrementing command surface to 422 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
