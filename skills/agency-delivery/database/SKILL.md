@@ -1,8 +1,8 @@
 ---
 name: database
 aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning", "database-optimizer"]
-description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through ten modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
-argument-hint: "[query|diagnose|index|guard|operate|optimize]"
+description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, zero-downtime migration locking guards, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through eleven modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, guard database migrations, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
+argument-hint: "[query|diagnose|index|guard|operate|optimize|migrations|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -47,6 +47,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **guard** | "write an RLS policy", "verify RLS", "security invoker", "PK strategy", "row visible to wrong tenant" | RLS authoring with verification tests, security_invoker views, PK and identifier rules | [references/guard.md](references/guard.md) |
 | **operate** | "pooling", "partition this table", "pgvector", "locks", "vacuum tuning", "connection exhaustion" | Pooling, partitioning, pgvector basics, lock triage, and monitoring | [references/operate.md](references/operate.md) |
 | **optimize** | "optimize query", "database tuning", "slow query optimization", "work_mem", "buffer pool", "database-optimizer" | Deep performance tuning: execution plan diffing, memory tuning (shared_buffers, work_mem), query rewriting, and deadlock elimination | [references/optimize.md](references/optimize.md) |
+| **migrations** | "database migration", "zero-downtime migration", "DDL locks", "table rewrite", "unindexed FK" | Zero-downtime migration guard: DDL lock simulation, table rewrite prevention, non-blocking constraints, and unindexed foreign key share-lock protection | [references/migrations.md](references/migrations.md) |
 | **audit** | "audit the database", "query audit", "performance audit", "debug slow queries" | Query audit (read-only verification, config paths) + performance audit (EXPLAIN plans, index gaps) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -74,6 +75,7 @@ Run before reporting completion:
 - [ ] Query config path verified — `references/query.md` config discovery resolved
 - [ ] Output row/col limits respected (default 100 rows × 10 cols)
 - [ ] Single-statement enforced (no `;`-chained writes)
+- [ ] Migrations checked with migration guard (zero table rewrites, lock_timeout set, concurrent indexing, non-blocking FKs)
 - [ ] Connection closed after query
 - [ ] For diagnosis: `pg_stat_statements` ranked before `EXPLAIN ANALYZE`
 

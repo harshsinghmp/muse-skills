@@ -15,6 +15,10 @@ All notable changes to this project are documented in this file.
   - **Wisdom Compounding Engine (`wisdom-updater.ts`)**: Absorbed into `coach` and `periodic-retreat` (`skills/reflection-maintenance/coach/scripts/wisdom-updater.ts` and `skills/reflection-maintenance/periodic-retreat/scripts/wisdom-updater.ts`) for weekly retrospective compounding into Muse Memory.
   - **Host Vitals Inspector (`host-vitals.ts`)**: Absorbed ATLAS machine inventory into `clean-system-cache` (`skills/reflection-maintenance/clean-system-cache/scripts/host-vitals.ts`) deterministically inspecting CPU, GPU, kernel, display resolution, and memory.
   - **Dual-Scope Memory Architecture**: Documented strict contract prohibiting direct YAML edits across `evidence-ledger`, `context-anchor`, `secretary`, and `relay`.
+- **Database Zero-Downtime Migration & Locking Guard (`database:migrations`)**:
+  - **DDL Lock Simulation & Guard Engine (`migration-guard.ts`)**: Added CLI and engine in `skills/agency-delivery/database/scripts/migration-guard.ts` simulating Postgres/MySQL/SQLite DDL lock levels (Levels 1–8), blocking table rewrites, enforcing `lock_timeout`, requiring `CONCURRENTLY` for index operations, non-blocking foreign key addition with `NOT VALID` / `VALIDATE CONSTRAINT`, and scanning unindexed foreign keys on child tables to prevent catastrophic SHARE locks.
+  - **Migration Playbook (`references/migrations.md`)**: Full zero-downtime database migration doctrine covering the 5-phase Expand/Contract deployment pattern, lock matrix, safe column/table operations, and batch backfilling.
+  - **Database Mode Expansion**: Expanded `database` to 11 modes with `database:migrations` routing and synchronized `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 412 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
