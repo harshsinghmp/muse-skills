@@ -40,6 +40,10 @@ All notable changes to this project are documented in this file.
   - **Form Friction Reduction & Trust Halos**: Enforced <= 4 inputs for lead capture, progressive multi-step disclosure, inline validation on blur, and CTA trust halos within 24px.
   - **Quantitative CRO Scorecard**: Added 100-point heuristic evaluation rubric across Hero Value Density, Anti-Slop Copy, CTA Physics, Form Friction, and Trust Proof.
   - **Command Surface & Dispatch**: Expanded `growth` to 12 modes, incrementing command surface to 415 slash commands per harness.
+- **Full-Stack Edge & Rate Limiting Architecture (`webdev:edge` & `webdev:rate-limit`)**:
+  - **Edge Runtime Architecture (`edge.md`)**: Added serverless edge computing reference implementing Hono v4 type-safe routers, Cloudflare D1 parameterized SQL queries (`db.prepare().bind().all()`), SWR edge KV caching, and sub-10ms cold start invariants.
+  - **Edge Rate Limiting & Abuse Defense (`rate-limit.md`)**: Implemented sliding-window counter algorithm protecting against boundary-burst exploits, IETF RateLimit headers (`RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Reset`, `Retry-After`), tiered route limits (`auth`: 5/min, `ai`: 20/min, `api`: 120/min), and honeypot bot tarpit defenses.
+  - **Command Surface & Dispatch**: Expanded `webdev` to 20 modes, incrementing command surface to 417 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

@@ -1,6 +1,6 @@
 # 🛠️ webdev
 
-The web engineering department head: one skill, fifteen modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, onboard, audit. Stack-agnostic: uses what the project uses.
+The web engineering department head: one skill across twenty modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, edge, rate-limit, onboard, audit, hydration-polish, technical-resilience, and security-headers. Stack-agnostic: uses what the project uses.
 
 ## Install
 
@@ -14,6 +14,10 @@ Describe the task in plain language; the frontmatter triggers discovery:
 
 ```text
 Build a pricing page with a plan-comparison table in our Next.js app.
+```
+
+```text
+Deploy a low-latency Hono v4 API on Cloudflare Workers with D1 bindings.
 ```
 
 ```text
@@ -37,6 +41,8 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 | **implement** | spec-to-shipped builds | Implement: vertical tracer slices, TDD at seams, review chain before done. |
 | **deploy** | app-side ship, static upload | Deploy: one-command full-stack deploy, static-upload fallback, object-storage contract. |
 | **funnel** | sales & conversion funnels | Funnel: high-converting lead capture, upsell/downsell sequences, and order bumps. |
+| **edge** | edge runtime, cloudflare workers, hono | Edge: Hono v4, Cloudflare D1 parameterized queries, edge KV caching, and sub-10ms cold starts. |
+| **rate-limit** | rate limit, sliding window, ddos defense | Rate Limit: sliding-window counters, IETF RateLimit headers, and honeypot bot tarpits. |
 | **onboard** | developer repo onboarding | Onboard: rapid codebase orientation, architecture map, and first PR readiness. |
 | **audit** | responsive & technical web audit | Audit: mobile responsiveness matrix, touch target audit, and security headers. |
 
