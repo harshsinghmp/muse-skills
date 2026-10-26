@@ -457,7 +457,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const autoSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/automation", "SKILL.md"), "utf8");
       expect(autoSkill).toContain("| **voice** |");
       expect(autoSkill).toContain("references/voice.md");
-      expect(autoSkill).toContain('argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"');
+      expect(autoSkill).toContain(
+        'argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|audit]"',
+      );
 
       const voiceRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/automation", "references", "voice.md"),
@@ -468,6 +470,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(voiceRef).toContain("Bland AI");
       expect(voiceRef).toContain("Twilio Voice + Media Streams");
       expect(voiceRef).toContain("Human Warm Transfer & Escalation Guardrails");
+    });
+
+    test("Sol: automation realtime mode covers WebSockets, SSE streaming, and jittered reconnection backoff", () => {
+      const autoSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/automation", "SKILL.md"), "utf8");
+      expect(autoSkill).toContain("| **realtime** |");
+      expect(autoSkill).toContain("references/realtime.md");
+
+      const realtimeRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/automation", "references", "realtime.md"),
+        "utf8",
+      );
+      expect(realtimeRef).toContain("Server-Sent Events (SSE)");
+      expect(realtimeRef).toContain("WebSocket");
+      expect(realtimeRef).toContain("calculateBackoffWithJitter");
+      expect(realtimeRef).toContain("Thundering Herd");
+      expect(realtimeRef).toContain("Tenant Channel Isolation Fence");
     });
 
     test("Nexus: code-review boundary-governance strictly enforces the 5 checkpoints", () => {
