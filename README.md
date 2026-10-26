@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 418 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 419 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -31,7 +31,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only).
-- **Command surface**: 46 skills + 362 `<skill>-<mode>` commands + 10 aliases = **418 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 363 `<skill>-<mode>` commands + 10 aliases = **419 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.0.1**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -165,7 +165,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 | Skill | Description |
 |:---|:---|
-| [`accounts`](skills/agency-delivery/accounts/README.md) | Full financial operations department: client invoicing, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 6 modes. |
+| [`accounts`](skills/agency-delivery/accounts/README.md) | Full financial operations department: client invoicing, automated dunning, bookkeeping, margin analysis, cashflow forecasting, and tax compliance across 7 modes. |
 | [`analytics`](skills/agency-delivery/analytics/README.md) | Full data and measurement department: event tracking, KPI dashboards, marketing attribution, and conversion rate optimization across 6 modes. |
 | [`animate`](skills/design-interface/animate/README.md) | Complete motion design, micro-interactions, layout transitions, animated SVGs, and interactive 3D WebGL scenes via Three.js. |
 | [`audit`](skills/quality-review/audit/README.md) | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. |

@@ -48,6 +48,12 @@ All notable changes to this project are documented in this file.
   - **Realtime Streaming Playbook (`realtime.md`)**: Added comprehensive streaming architecture reference covering bidirectional WebSockets (`ws://`/`wss://`) and lightweight Server-Sent Events (`text/event-stream`), SSE heartbeat frames (`: ping\n\n`), connection lifecycle states, and tenant-isolated channel authorization.
   - **Resilient Reconnection Engine**: Implemented exponential backoff with full jitter algorithm (`min(maxBackoff, baseBackoff * 2^attempt) * random()`) preventing reconnect storms and thundering herd failures.
   - **Command Surface & Dispatch**: Expanded `automation` to 10 modes, incrementing command surface to 418 slash commands per harness.
+- **Agency Financial Hardening & Automated Dunning (`accounts:dunning`)**:
+  - **Delinquency Escalation Playbook (`dunning.md`)**: Added multi-tier automated debt recovery ladder (Day 1 courtesy reminder, Day 7 formal notice with 1.5% late interest terms, Day 14 pause-on-delinquency trigger, Day 30 formal demand letter and legal escalation).
+  - **Payment Gateway Smart Retries**: Integrated machine learning retry configuration and webhook pipelines (`invoice.payment_failed`, `charge.failed`, `customer.subscription.deleted`) for automated recovery and self-serve billing portal generation.
+  - **Pause-on-Delinquency Infrastructure**: Enforced Cloudflare Worker HTTP 402 staging preview interception, GitHub Action PR merge blocking on client workstreams, and sprint stop-the-clock freezes.
+  - **Statutory Tax Credit & Bad Debt Write-Off**: Standardized GST/VAT statutory Credit Note generation (`CN-YYYY-XXXX`) to reclaim remitted sales tax alongside GAAP/IFRS bad debt write-off journal entries.
+  - **Command Surface & Dispatch**: Expanded `accounts` to 7 modes, bumping version to 1.4.0 and incrementing command surface to 419 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
