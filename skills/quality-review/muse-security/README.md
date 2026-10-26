@@ -1,6 +1,6 @@
 # muse-security
 
-Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes.
+Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, and runtime defense guardrails — routed through seven modes.
 
 ## Modes
 
@@ -9,6 +9,7 @@ Unified security authority and governance engine for the agency: CVE vulnerabili
 - `cloud-waf`: GCP Cloud Armor & Cloudflare WAF architecture across all 6 Well-Architected pillars.
 - `sast`: Static application security testing, dependency vulnerability trees, and MITRE ATT&CK mapping.
 - `runtime`: AST command interception, destructive action prevention, and zero-secret isolation.
+- `boundary`: Subagent tenant boundary & worktree isolation auditing (symlink escapes, lease collisions, key permissions).
 - `audit`: 360° comprehensive security posture audit.
 
 ## Installation & Usage

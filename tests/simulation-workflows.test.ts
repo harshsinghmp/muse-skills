@@ -11,16 +11,26 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     const securityDir = path.join(REPO_ROOT, "skills/quality-review/muse-security");
     const skillPath = path.join(securityDir, "SKILL.md");
 
-    test("muse-security declares all 6 core operating modes and matching references", () => {
+    test("muse-security declares all 7 core operating modes and matching references", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const skillContent = fs.readFileSync(skillPath, "utf8");
 
-      const expectedModes = ["cve", "remediate", "cloud-waf", "sast", "runtime", "audit"];
+      const expectedModes = ["cve", "remediate", "cloud-waf", "sast", "runtime", "boundary", "audit"];
       for (const mode of expectedModes) {
         expect(skillContent).toContain(`**${mode}**`);
         const refPath = path.join(securityDir, "references", `${mode}.md`);
         expect(fs.existsSync(refPath)).toBe(true);
       }
+    });
+
+    test("Boundary mode enforces 5 core isolation invariants", () => {
+      const boundaryRef = fs.readFileSync(path.join(securityDir, "references", "boundary.md"), "utf8");
+      expect(boundaryRef).toContain("Symlink & Path Traversal Fence");
+      expect(boundaryRef).toContain("Shared Git Worktree Lease Arbitration");
+      expect(boundaryRef).toContain("File Permission Fences");
+      expect(boundaryRef).toContain("Process Argv Credential Hygiene");
+      expect(boundaryRef).toContain("Multi-Tenant Workspace Isolation");
+      expect(boundaryRef).toContain("boundary-audit.ts");
     });
 
     test("CVE severity triage logic correctly scores CVSS and exploitability", () => {
