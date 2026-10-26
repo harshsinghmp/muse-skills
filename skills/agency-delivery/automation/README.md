@@ -1,6 +1,6 @@
 # 🤖 automation
 
-The automation and AI services department head: one skill across ten modes — workflow, chatbot, agents, rag, integrations, prompt, voice, realtime, audit, and browser-relay. Deterministic where possible, AI where it earns its place.
+The automation and AI services department head: one skill across eleven modes — workflow, chatbot, agents, rag, integrations, prompt, voice, realtime, alerts, audit, and browser-relay. Deterministic where possible, AI where it earns its place.
 
 ## Install
 
@@ -36,6 +36,7 @@ Stream real-time AI agent telemetry over WebSockets with exponential reconnect b
 | **prompt** | prompt engineering / evals | Prompt: engineered, versioned, and evaluated prompts. |
 | **voice** | voice agent / telephony | Voice: conversational voice AI agents, Retell/Bland pipelines, and Twilio SIP. |
 | **realtime** | realtime / event streaming / websockets | Realtime: WebSockets, SSE event multiplexing, reconnection backoff with jitter, and Redis Pub/Sub. |
+| **alerts** | alerts / notifications / alert router | Alerts: multi-channel real-time notification routing across Discord, Slack, and Telegram with 4-tier escalation. |
 | **`audit`** | agent security audit / OWASP LLM audit | OWASP LLM Top-10: injection, agency, output handling, evals-as-gate. |
 
 ### Specialized References

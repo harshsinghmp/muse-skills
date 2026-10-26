@@ -78,6 +78,11 @@ All notable changes to this project are documented in this file.
   - **The 4 Intake Invariants (INT-001–INT-004)**: Enforced Zero-Jargon normalization, Bilateral Scope Fencing (`inScope` vs `outOfScope` Anti-Scope Fence), Client Vault Auto-Scaffolding (`profile.json`, `boundary.json`, `brief.md`, `dependencies.md`), and the 48-Hour Stop-The-Clock protocol.
   - **Intake & Vault Scaffolding CLI**: Added `--intake` CLI flag to `client-comms.ts` supporting `--client-id`, `--scaffold-dir`, and `--json`.
   - **Command Surface & Dispatch**: Expanded `client-comms` to 9 modes, bumping version to 1.5.0 and incrementing command surface to 424 slash commands per harness.
+- **Real-Time Multi-Channel Notification & Alert Router (`automation:alerts`)**:
+  - **Multi-Channel Alert Router (`alerts.md`)**: Added real-time notification engine dispatching structured alerts across Discord, Slack, and Telegram with 4-tier priority escalation (P1–P4).
+  - **The 4 Alert Routing Invariants (ALT-001–ALT-004)**: Enforced Zero-Spam Sliding-Window Deduplication (fingerprinting with occurrence aggregation `[x8 in 5m]`), 4-Tier Priority Matrix (P1 Catastrophic, P2 High, P3 Warning, P4 Info), Native Multi-Platform Payload Formatting (Discord rich embeds with tier colors, Slack Block Kit, Telegram semantic HTML), and Failure-Safe Circuit Breaker with dead-letter queue fallback.
+  - **Alert Router CLI (`alert-router.ts`)**: Built autonomous CLI engine in `skills/agency-delivery/automation/scripts/alert-router.ts` supporting `--dispatch`, `--format`, `--dedup-check`, and JSON output.
+  - **Command Surface & Dispatch**: Expanded `automation` to 11 modes, bumping version to 1.3.0 and incrementing command surface to 425 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
