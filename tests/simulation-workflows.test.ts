@@ -1142,11 +1142,11 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
   describe("8. Brand Lifecycle & Client Onboarding Engine (brand)", () => {
     const brandDir = path.join(REPO_ROOT, "skills/agency-delivery/brand");
 
-    test("brand SKILL.md registers all 8 modes in table and frontmatter", () => {
+    test("brand SKILL.md registers all 9 modes in table and frontmatter", () => {
       const skillMd = fs.readFileSync(path.join(brandDir, "SKILL.md"), "utf8");
       expect(skillMd).toContain("name: brand");
       expect(skillMd).toContain(
-        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|audit]"',
+        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit]"',
       );
 
       // Modes table
@@ -1157,6 +1157,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillMd).toContain("| **brief** |");
       expect(skillMd).toContain("| **ecommerce** |");
       expect(skillMd).toContain("| **offboard** |");
+      expect(skillMd).toContain("| **assets** |");
       expect(skillMd).toContain("| **audit** |");
 
       // Verify companion files
@@ -1164,7 +1165,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(fs.existsSync(path.join(brandDir, "agents", "openai.yaml"))).toBe(true);
     });
 
-    test("all 8 mode reference documents exist with actionable agency playbooks", () => {
+    test("all 9 mode reference documents exist with actionable agency playbooks", () => {
       const expectedModes = [
         "intake",
         "research",
@@ -1173,6 +1174,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         "brief",
         "ecommerce",
         "offboard",
+        "assets",
         "audit",
       ];
       for (const mode of expectedModes) {
@@ -1731,6 +1733,63 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(devopsSkill).toContain(
         'argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|audit]"',
       );
+    });
+
+    test("brand:assets mode audits font licenses, sanitizes SVGs, and certifies OKLCH contrast", () => {
+      const assetsRefPath = path.join(REPO_ROOT, "skills/agency-delivery/brand/references/assets.md");
+      expect(fs.existsSync(assetsRefPath)).toBe(true);
+      const content = fs.readFileSync(assetsRefPath, "utf8");
+      expect(content).toContain("Brand Asset Isolation & Fencing (BAS-001)");
+      expect(content).toContain("Modern Webfont & License Packaging Gate (BAS-002)");
+      expect(content).toContain("Vector SVG Sanitization & ViewBox Integrity (BAS-003)");
+      expect(content).toContain("Color Palette & OKLCH Contrast Certification (BAS-004)");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/brand/scripts/asset-auditor.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      // 1. Contrast check
+      const contrastRes = spawnSync("bun", [scriptPath, "--contrast", "#1E293B", "#F8FAFC", "--json"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(contrastRes.status).toBe(0);
+      const contrastData = JSON.parse(contrastRes.stdout);
+      expect(contrastData.ratio).toBeGreaterThanOrEqual(10);
+      expect(contrastData.aaPass).toBe(true);
+      expect(contrastData.aaaPass).toBe(true);
+
+      // 2. Font check
+      const fontRes = spawnSync("bun", [scriptPath, "--check-font", "brand-heading.woff2"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(fontRes.status).toBe(0);
+      const fontData = JSON.parse(fontRes.stdout);
+      expect(fontData.format).toBe("WOFF2");
+      expect(fontData.isWebReady).toBe(true);
+
+      // 3. SVG Sanitizer test in temp dir
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "brand-asset-test-"));
+      try {
+        const dirtySvgPath = path.join(tempDir, "brand-logo-mark.svg");
+        fs.writeFileSync(
+          dirtySvgPath,
+          '<svg viewBox="0 0 100 100"><script>alert(1)</script><circle cx="50" cy="50" r="40" onclick="evil()"/></svg>',
+          "utf8",
+        );
+        const cleanSvgPath = path.join(tempDir, "clean.svg");
+        const sanitizeRes = spawnSync("bun", [scriptPath, "--sanitize-svg", dirtySvgPath, "--out", cleanSvgPath], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(sanitizeRes.status).toBe(0);
+        const cleanContent = fs.readFileSync(cleanSvgPath, "utf8");
+        expect(cleanContent).not.toContain("<script>");
+        expect(cleanContent).not.toContain("onclick=");
+        expect(cleanContent).toContain('viewBox="0 0 100 100"');
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
     });
   });
 });

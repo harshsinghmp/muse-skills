@@ -88,6 +88,11 @@ All notable changes to this project are documented in this file.
   - **The 4 Living Deliverable Invariants (PRV-001–PRV-004)**: Enforced Zero Cloud Overhead & local edge execution, Cryptographic Token-Gated Ingress (HTTP 401 Unauthorized rejection on missing/invalid review tokens), Deterministic 48-Hour TTL Expiration (terminating with HTTP 410 Gone post-TTL), and Non-Destructive Review Overlay with responsive viewport frame switcher (Mobile 390px, Tablet 820px, Desktop 100%) and client feedback ingestion.
   - **Living Deliverable CLI**: Wire `--scaffold` and `--check-expiry` in `devops/scripts/living-deliverable.ts`.
   - **Command Surface & Dispatch**: Expanded `devops` to 9 modes, bumping version to 1.3.0 and incrementing command surface to 426 slash commands per harness.
+- **Brand Asset Fencing, Font License Isolation & Contrast Certification (`brand:assets`)**:
+  - **Brand Asset Architecture (`assets.md`)**: Added brand asset governance and quality assurance playbook covering vector sanitization, font packaging, and accessibility compliance.
+  - **The 4 Brand Asset Invariants (BAS-001–BAS-004)**: Enforced Brand Asset Isolation & Fencing (`.agents/brand/<client-slug>/` with `<client>-<category>-<desc>.<ext>` naming), Modern Webfont & License Packaging Gate (`.woff2` requirement, desktop conversion alerts, font-display swap), Vector SVG Sanitization & ViewBox Integrity (strips stored XSS, script tags, event handlers, and embedded base64 raster bloat), and Color Palette & OKLCH Contrast Certification (WCAG 2.2 AA/AAA 4.5:1/7.0:1 gates).
+  - **Asset Auditor CLI (`asset-auditor.ts`)**: Built autonomous CLI engine in `skills/agency-delivery/brand/scripts/asset-auditor.ts` supporting `--audit-dir`, `--sanitize-svg`, `--contrast`, `--check-font`, and JSON output.
+  - **Command Surface & Dispatch**: Expanded `brand` to 10 modes, bumping version to 1.1.0 and incrementing command surface to 427 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

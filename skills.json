@@ -1378,9 +1378,9 @@
     },
     {
       "name": "brand",
-      "description": "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding \u2014 routed through nine modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs for design/webdev/content/paidads, scaling cross-border e-commerce across Amazon/Shopee/TikTok Shop, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops).",
+      "description": "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, offboarding, and brand asset fencing/font auditing \u2014 routed through ten modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs, scaling cross-border e-commerce, auditing brand asset fencing and font licenses, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops).",
       "path": "skills/agency-delivery/brand/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [
