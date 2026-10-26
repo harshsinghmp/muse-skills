@@ -1283,8 +1283,23 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"',
       );
+    });
+
+    test("ops references/vault.md implements 5 Vault Fencing Invariants, worktree arbitration, and credential masking", () => {
+      const refPath = path.join(opsDir, "references", "vault.md");
+      expect(fs.existsSync(refPath)).toBe(true);
+      const ref = fs.readFileSync(refPath, "utf8");
+      expect(ref).toContain("Context Vault Architecture");
+      expect(ref).toContain("The 5 Vault Fencing Invariants");
+      expect(ref).toContain("VLT-001");
+      expect(ref).toContain("VLT-002");
+      expect(ref).toContain("VLT-003");
+      expect(ref).toContain("VLT-004");
+      expect(ref).toContain("VLT-005");
+      expect(ref).toContain("worktree-lease.json");
+      expect(ref).toContain("[REDACTED:<CLIENT_SLUG>:<SERVICE>]");
     });
 
     test("ops references/obsidian.md comprehensively covers OFM syntax, wikilinks, callouts, and CLI", () => {

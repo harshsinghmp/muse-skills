@@ -54,6 +54,10 @@ All notable changes to this project are documented in this file.
   - **Pause-on-Delinquency Infrastructure**: Enforced Cloudflare Worker HTTP 402 staging preview interception, GitHub Action PR merge blocking on client workstreams, and sprint stop-the-clock freezes.
   - **Statutory Tax Credit & Bad Debt Write-Off**: Standardized GST/VAT statutory Credit Note generation (`CN-YYYY-XXXX`) to reclaim remitted sales tax alongside GAAP/IFRS bad debt write-off journal entries.
   - **Command Surface & Dispatch**: Expanded `accounts` to 7 modes, bumping version to 1.4.0 and incrementing command surface to 419 slash commands per harness.
+- **Multi-Client Context Vault & Asset Fencing (`ops:vault`)**:
+  - **Context Vault Architecture (`vault.md`)**: Added enterprise multi-client context vault playbook enforcing airtight directory segregation (`~/Projects/clients/<brand>/`), brand asset isolation, worktree lease arbitration, and multi-tenant credential masking.
+  - **The 5 Vault Invariants (VLT-001–VLT-005)**: Formalized absolute directory fences, canonical brand asset naming (`<brand>-<category>-<desc>.<ext>`), shared worktree lease heartbeats, tenant-scoped token redaction (`[REDACTED:<CLIENT_SLUG>:<SERVICE>]`), and 4-step context switch flush.
+  - **Command Surface & Dispatch**: Expanded `ops` to 15 modes, bumping version to 1.7.0 and incrementing command surface to 420 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

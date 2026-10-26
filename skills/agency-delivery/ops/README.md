@@ -1,6 +1,6 @@
 # 🗂️ ops
 
-The agency operations department head: one skill, eleven modes — onboarding, proposal, sow, milestone, shape, retro, multi-client, vendor, obsidian, legal, audit. Clean intake, written scope, shaped asks, tracked delivery, honest retrospectives, and Obsidian PKM vault automation.
+The agency operations department head: one skill, twelve modes — onboarding, proposal, sow, milestone, shape, retro, multi-client, vault, vendor, obsidian, legal, audit. Clean intake, written scope, shaped asks, tracked delivery, honest retrospectives, client context vault isolation, and Obsidian PKM vault automation.
 
 ## Install
 
@@ -35,6 +35,7 @@ Structure our Obsidian client vault with wikilinks, callouts, and frontmatter pr
 | **shape** | shape an unsized ask | Shape: named problem, appetite band, no-gos, and a de-risked pitch before pricing. |
 | **retro** | project retrospective | Retro: blameless review producing tracked process improvements. |
 | **multi-client** | multi-client portfolio | Multi-client: one view across engagements, capacity, and risk. |
+| **vault** | client vault & context isolation | Vault: airtight multi-client context segregation, brand asset fencing, and worktree lease arbitration. |
 | **vendor** | vendor management | Vendor: contractor scorecards, spend control, and tooling consolidation. |
 | **obsidian** | obsidian vault & markdown | Obsidian: OFM grammar, wikilinks, callouts, embeds, CLI automation, and plugin dev. |
 | **legal** | agency legal templates | Legal: MSAs, subcontractor IP assignments, NDAs, and AI compliance templates. |

@@ -1,10 +1,10 @@
 ---
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown"]
-description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through fourteen modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
-argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"
+description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, multi-client context vault and asset fencing, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through fifteen modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, enforce client context vault isolation, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"
 user-invocable: true
-version: 1.6.0
+version: 1.7.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **shape** | "shape this ask", "set an appetite", "is this sized yet", "grab-bag project", "unsized request" | Shape an ambiguous ask before it is priced: named problem, appetite band, no-gos, de-risked pitch | [references/shape.md](references/shape.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
+| **vault** | "client vault", "context isolation", "asset fencing", "cross-client bleed", "worktree lease", "credential masking" | Multi-client context vault, brand asset fencing, shared worktree lease arbitration, and multi-tenant credential masking | [references/vault.md](references/vault.md) |
 | **contracts** | "draft a contract", "MSA", "NDA", "legal doc" | Legal document and contract drafting standards | [references/contracts.md](references/contracts.md) |
 | **vendor** | "vendor", "subcontractor", "freelancer management", "procurement", "tooling spend", "manage vendors" | Vendor/subcontractor scorecard, spend control, and tooling consolidation | [references/vendor.md](references/vendor.md) |
 | **obsidian** | "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "daily note" | Obsidian PKM vault operations, wikilinks, callouts, embeds, frontmatter properties, CLI commands, and plugin dev | [references/obsidian.md](references/obsidian.md) |
