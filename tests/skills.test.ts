@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -1729,7 +1729,7 @@ Disallow: /
     }
   });
 
-  test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", () => {
+  test("gauntlet-loop protocol and anti-drift CLI detect duplicate utilities and scope expansion", async () => {
     const protoPath = path.join(REPO_ROOT, "skills/quality-review/gauntlet-loop/references/gauntlet-protocol.md");
     expect(fs.existsSync(protoPath)).toBe(true);
     const content = fs.readFileSync(protoPath, "utf8");
@@ -1843,15 +1843,36 @@ Disallow: /
       expect(cmsReport.cmsDetected).toBe(true);
       expect(cmsReport.violations.length).toBeGreaterThanOrEqual(1);
 
-      // 6. Deploy verification test
-      const deployRes = spawnSync("bun", [scriptPath, "--verify-deploy", "https://example.com", "--json"], {
-        encoding: "utf8",
-        cwd: REPO_ROOT,
+      // 6. Deploy verification test (hermetic local mock server)
+      const mockServer = Bun.serve({
+        port: 0,
+        fetch() {
+          return new Response("<html><body>Deploy OK</body></html>", {
+            status: 200,
+            headers: { "Content-Type": "text/html" },
+          });
+        },
       });
-      expect(deployRes.status).toBe(0);
-      const deployReport = JSON.parse(deployRes.stdout);
-      expect(deployReport.ok).toBe(true);
-      expect(deployReport.status).toBe(200);
+      try {
+        const { stdout, status } = await new Promise<{ stdout: string; status: number }>((resolve) => {
+          const cp = spawn("bun", [scriptPath, "--verify-deploy", `http://localhost:${mockServer.port}`, "--json"], {
+            cwd: REPO_ROOT,
+          });
+          let out = "";
+          cp.stdout.on("data", (d) => {
+            out += d.toString();
+          });
+          cp.on("close", (code) => {
+            resolve({ stdout: out, status: code ?? 0 });
+          });
+        });
+        expect(status).toBe(0);
+        const deployReport = JSON.parse(stdout);
+        expect(deployReport.ok).toBe(true);
+        expect(deployReport.status).toBe(200);
+      } finally {
+        mockServer.stop(true);
+      }
     } finally {
       fs.rmSync(tempDir2, { recursive: true, force: true });
     }
