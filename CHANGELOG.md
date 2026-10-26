@@ -83,6 +83,11 @@ All notable changes to this project are documented in this file.
   - **The 4 Alert Routing Invariants (ALT-001–ALT-004)**: Enforced Zero-Spam Sliding-Window Deduplication (fingerprinting with occurrence aggregation `[x8 in 5m]`), 4-Tier Priority Matrix (P1 Catastrophic, P2 High, P3 Warning, P4 Info), Native Multi-Platform Payload Formatting (Discord rich embeds with tier colors, Slack Block Kit, Telegram semantic HTML), and Failure-Safe Circuit Breaker with dead-letter queue fallback.
   - **Alert Router CLI (`alert-router.ts`)**: Built autonomous CLI engine in `skills/agency-delivery/automation/scripts/alert-router.ts` supporting `--dispatch`, `--format`, `--dedup-check`, and JSON output.
   - **Command Surface & Dispatch**: Expanded `automation` to 11 modes, bumping version to 1.3.0 and incrementing command surface to 425 slash commands per harness.
+- **Living Deliverable Edge Previews & Client Portals (`devops:preview`)**:
+  - **Living Deliverable Playbook (`preview.md`)**: Added ephemeral edge preview container workflow running local `workerd` / Miniflare instances coupled with Cloudflare Quick Tunnels.
+  - **The 4 Living Deliverable Invariants (PRV-001–PRV-004)**: Enforced Zero Cloud Overhead & local edge execution, Cryptographic Token-Gated Ingress (HTTP 401 Unauthorized rejection on missing/invalid review tokens), Deterministic 48-Hour TTL Expiration (terminating with HTTP 410 Gone post-TTL), and Non-Destructive Review Overlay with responsive viewport frame switcher (Mobile 390px, Tablet 820px, Desktop 100%) and client feedback ingestion.
+  - **Living Deliverable CLI**: Wire `--scaffold` and `--check-expiry` in `devops/scripts/living-deliverable.ts`.
+  - **Command Surface & Dispatch**: Expanded `devops` to 9 modes, bumping version to 1.3.0 and incrementing command surface to 426 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
