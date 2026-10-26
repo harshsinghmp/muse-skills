@@ -140,6 +140,28 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("Google Gemini/AI Overviews");
       expect(content).toContain("Claude");
     });
+
+    test("seo programmatic reference enforces anti-thin invariants, dynamic schema, and sitemap partitioning", () => {
+      const progPath = path.join(REPO_ROOT, "skills/agency-delivery/seo", "references", "programmatic.md");
+      const seoSkill = path.join(REPO_ROOT, "skills/agency-delivery/seo", "SKILL.md");
+
+      expect(fs.existsSync(progPath)).toBe(true);
+
+      const skillContent = fs.readFileSync(seoSkill, "utf8");
+      const progContent = fs.readFileSync(progPath, "utf8");
+
+      expect(skillContent).toContain("**programmatic**");
+      expect(skillContent).toContain("references/programmatic.md");
+      expect(skillContent).toContain('argument-hint: "[technical|onpage|content|local|links|aeo|programmatic|audit]"');
+
+      expect(progContent).toContain("The 4 Anti-Thin Content Invariants");
+      expect(progContent).toContain("PSE-001");
+      expect(progContent).toContain("PSE-002");
+      expect(progContent).toContain("PSE-003");
+      expect(progContent).toContain("PSE-004");
+      expect(progContent).toContain("generateProgrammaticSchema");
+      expect(progContent).toContain("Hub-and-Spoke Internal Linking");
+    });
   });
 
   describe("5. Cognitive & Execution Low-Hanging Enrichments", () => {

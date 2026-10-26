@@ -68,6 +68,11 @@ All notable changes to this project are documented in this file.
   - **The 4 Federation Invariants (FED-001–FED-004)**: Enforced Zero-Branch Collision prevention across concurrent subagents, hermetic environment fencing without `.env` secret leakage, worktree heartbeat leasing, and safe pruning preserving dirty WIP.
   - **Federation Playbook (`federation.md`)**: Complete operating doctrine covering multi-tenant fleet discovery, lifecycle states (`ACTIVE`, `IDLE`, `DIRTY_LOCKED`, `STALE`), and schema specification.
   - **Command Surface & Dispatch**: Bumped `coupling-router` to 1.5.0 and incrementing command surface to 422 slash commands per harness.
+- **Programmatic SEO Engine & Schema Automation (`seo:programmatic`)**:
+  - **Programmatic Landing Page Architecture (`programmatic.md`)**: Added dataset-driven landing page scaling playbook covering directory archetypes, SaaS comparison matrices, and integration hubs.
+  - **The 4 Anti-Thin Content Invariants (PSE-001–PSE-004)**: Enforced 30% unique non-templated data density threshold, search intent deduplication, dynamic contextual FAQ generation, and above-the-fold answer-first hierarchy.
+  - **Dynamic Schema.org & Sitemap Partitioning**: Implemented automated JSON-LD structured data (`BreadcrumbList`, `FAQPage`, `SoftwareApplication`) and segmented `<sitemapindex>` partitioning (≤ 10k URLs per file) with phased cohort indexation pacing.
+  - **Command Surface & Dispatch**: Expanded `seo` to 8 modes, bumping version to 1.4.0 and incrementing command surface to 423 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

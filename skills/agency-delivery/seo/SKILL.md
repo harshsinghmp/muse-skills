@@ -1,10 +1,10 @@
 ---
 name: seo
 aliases: ["search-engine-optimization", "seo-department", "aeo", "geo", "organic-search", "link-building", "local-seo"]
-description: "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), and full audits — routed through seven modes. Use when asked to improve organic search visibility, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics)."
-argument-hint: "[technical|onpage|content|local|links|aeo|audit]"
+description: "Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, answer-engine optimization (AEO/GEO for AI search), programmatic SEO landing page scaling, and full audits — routed through eight modes. Use when asked to improve organic search visibility, generate programmatic comparison or directory pages, fix crawlability or indexing issues, optimize pages or content for search, build or disavow links, optimize for local/maps visibility, or make a site citable by AI answer engines (ChatGPT, Perplexity, AI Overviews). Not for paid ads (paidads) or analytics setup (analytics)."
+argument-hint: "[technical|onpage|content|local|links|aeo|programmatic|audit]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **local** | "local seo", "google business profile", "maps ranking", "nap consistency" | GBP, local citations, NAP, local landing pages | [references/local.md](references/local.md) |
 | **links** | "link building", "backlinks", "disavow", "digital pr" | Link profile analysis, acquisition (earned), toxic-link handling | [references/links.md](references/links.md) |
 | **aeo** | "aeo", "geo", "ai overviews", "chatgpt visibility", "perplexity citations", "llm seo" | Answer-engine citability: entities, extractable facts, schema, prompt-set testing | [references/aeo.md](references/aeo.md) |
+| **programmatic** | "programmatic seo", "pseo", "dataset landing pages", "scale comparison pages", "directory seo", "sitemap splitting" | Large-scale dataset-driven landing pages, anti-thin content invariants, dynamic schema, and hub-and-spoke clusters | [references/programmatic.md](references/programmatic.md) |
 | **audit** | "full seo audit", "site audit", "why did traffic drop", "search health check" | Full search-health audit: all modes synthesized | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
