@@ -130,7 +130,7 @@ export function formatDiscordPayload(alert: AlertPayload, occurrences = 1): Disc
         description: alert.message,
         color: TIER_COLORS[alert.tier] ?? 0x7289da,
         fields,
-        footer: { text: "Muse Skills Alert Router • LifeOS Sovereign Engine" },
+        footer: { text: "Muse Skills Alert Router • Sovereign Engine" },
         timestamp: ts,
       },
     ],
