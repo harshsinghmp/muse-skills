@@ -1,10 +1,10 @@
 ---
 name: client-comms
 aliases: ["client-communication", "status-update", "change-request", "project-handover", "client-feedback", "handover-docs"]
-description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, and client feedback intake — routed through seven modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, or collect client feedback. Not for internal agency ops (ops) or proposals and pricing (growth)."
-argument-hint: "[status|change|handover|feedback]"
+description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, and B2B proposals with stop-the-clock terms — routed through eight modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, or collect client feedback. Not for internal agency ops (ops) or pricing strategy (growth)."
+argument-hint: "[status|change|handover|feedback|proposal|audit|inbox-triage]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **change** | "change request", "scope change", "client wants extra" | Change-request triage: impact, options, scoped approval before work | [references/change.md](references/change.md) |
 | **handover** | "hand over the project", "handover docs", "client training" | Project handover: docs, credentials, training, and support terms | [references/handover.md](references/handover.md) |
 | **feedback** | "collect feedback", "client review", "satisfaction check" | Client feedback intake: structured capture, triage, and response plan | [references/feedback.md](references/feedback.md) |
+| **proposal** | "client proposal", "pitch deck", "project pitch", "B2B proposal" | High-converting client proposal and pitch: PAS/AIDA/QUEST architecture, stop-the-clock terms, and milestone proof gates | [references/proposal.md](references/proposal.md) |
 | **`audit`** | "communication audit", "audit client comms", "SLA audit" | Bidirectional SLA conformance, cadence integrity, channel discipline, unresolved threads, escalation signals. | [references/audit.md](references/audit.md) |
 | **`inbox-triage`** | "triage the inbox", "client emails", "executive email triage" | Executive email triage and follow-up protocols | [references/inbox-triage.md](references/inbox-triage.md) |
 
@@ -63,11 +64,12 @@ Loadable by topic; also routable as `/client-comms-<file>` commands (not separat
 - Triaging a scope-change request with impact and approval.
 - Handing over a finished project with docs and training.
 - Collecting and acting on client feedback.
+- Generating high-converting B2B client proposals and pitch decks with strict stop-the-clock terms.
 
 ### Anti-Triggers
 
 - Internal agency ops, onboarding, SOWs, milestones, retros → `ops`.
-- Proposals and pricing strategy → `growth` (change mode scopes the single request; `growth` owns pricing strategy).
+- Pricing strategy and value metrics behind proposals → `growth` (proposal mode structures the pitch and boundaries; `growth` owns rate calibration).
 - Measuring campaign or product metrics → `analytics`.
 - Session handoffs between agents → `handoff`.
 
@@ -79,12 +81,13 @@ Loadable by topic; also routable as `/client-comms-<file>` commands (not separat
 
 | Question | Mode |
 |:---|:---|
+| 'How do we present a high-converting pitch and protect scope before signing?' | proposal |
 | 'What do we tell the client about progress?' | status |
 | 'The client wants something extra — what now?' | change |
 | 'How do we give them the keys?' | handover |
 | 'What does the client think, and what do we do about it?' | feedback |
 
-Order: status → change → handover → feedback. Report, control scope, hand over, then listen.
+Order: proposal → status → change → handover → feedback. Pitch, report, control scope, hand over, then listen.
 
 ### Verification gate (every mode)
 

@@ -371,6 +371,41 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("useGSAP");
     });
 
+    test("Jasper & Crew: client-comms proposal mode scaffolds high-converting proposals with stop-the-clock terms", () => {
+      const proposalPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms", "references", "proposal.md");
+      const commsSkill = path.join(REPO_ROOT, "skills/agency-delivery/client-comms", "SKILL.md");
+      expect(fs.existsSync(proposalPath)).toBe(true);
+      const content = fs.readFileSync(proposalPath, "utf8");
+      const skill = fs.readFileSync(commsSkill, "utf8");
+
+      expect(skill).toContain("**proposal**");
+      expect(content).toContain("PAS");
+      expect(content).toContain("AIDA");
+      expect(content).toContain("QUEST");
+      expect(content).toContain("Stop-the-Clock");
+      expect(content).toContain("Scope Boundaries");
+      expect(content).toContain("Milestone Delivery & Acceptance Receipts");
+
+      // CLI execution test
+      const cliPath = "skills/agency-delivery/client-comms/scripts/client-comms.ts";
+      const res = spawnSync(
+        "bun",
+        [cliPath, "--proposal", "--client", "Alpha Corp", "--framework", "QUEST", "--json"],
+        {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        },
+      );
+      expect(res.status).toBe(0);
+      const parsed = JSON.parse(res.stdout);
+      expect(parsed.client).toBe("Alpha Corp");
+      expect(parsed.framework).toBe("QUEST");
+      expect(parsed.stopTheClockHours).toBe(48);
+      expect(parsed.milestones.length).toBeGreaterThanOrEqual(3);
+      expect(parsed.inScope.length).toBeGreaterThan(0);
+      expect(parsed.outOfScope.length).toBeGreaterThan(0);
+    });
+
     test("Jasper: smm social-intel harvests multi-platform sentiment and viral hooks at zero cost", () => {
       const intelPath = path.join(REPO_ROOT, "skills/agency-delivery/smm", "references", "social-intel.md");
       expect(fs.existsSync(intelPath)).toBe(true);

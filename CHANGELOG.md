@@ -27,6 +27,12 @@ All notable changes to this project are documented in this file.
   - **GSAP 3 Choreography Engine**: Promoted `animate:gsap` to a primary routed mode in `animate` (`skills/design-interface/animate/references/gsap.md`).
   - **ScrollTrigger & FLIP Layouts**: Documented layout pinning with `anticipatePin: 1` anti-jump, `fastScrollEnd`, `gsap/Flip` morphing, and `useGSAP()` automatic lifecycle cleanup.
   - **Reduced-Motion Invariants**: Enforced strict `prefers-reduced-motion: reduce` gates with `gsap.matchMedia()` falling back to instant/static reveals.
+- **Client Proposal & Pitch Generator (`client-comms:proposal`)**:
+  - **High-Converting Proposal Architecture (`proposal.md`)**: Added B2B proposal and pitch deck generator in `skills/agency-delivery/client-comms/references/proposal.md` supporting Jasper's PAS, AIDA, and QUEST copywriting frameworks, answer-first executive summaries, and Core-EEAT/AEO structure.
+  - **Stop-the-Clock Terms**: Contractual 48-hour Stop-the-Clock protocol holding target delivery dates day-for-day upon pending client dependencies.
+  - **Milestone Definition of Done Receipts**: Explicit milestone delivery proof gates (Figma signoff, staging URL, clean test run, Lighthouse >= 90).
+  - **Proposal Scaffolder CLI**: Added `--proposal` and `--scaffold-proposal` flag to `client-comms.ts` supporting `--client`, `--project`, and `--framework` with JSON/Markdown output.
+  - **Command Surface & Dispatch**: Expanded `client-comms` to 8 modes, incrementing command surface to 414 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 

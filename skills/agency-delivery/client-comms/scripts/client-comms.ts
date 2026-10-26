@@ -185,6 +185,121 @@ export function draftPushback(
   }
 }
 
+export interface ProposalContract {
+  client: string;
+  projectTitle: string;
+  framework: "PAS" | "AIDA" | "QUEST";
+  problemStatement: string;
+  solutionArchitecture: string[];
+  inScope: string[];
+  outOfScope: string[];
+  stopTheClockHours: number;
+  milestones: Array<{
+    name: string;
+    duration: string;
+    proofReceipt: string;
+    paymentPercentage: number;
+  }>;
+  markdown: string;
+}
+
+export function scaffoldProposal(options?: {
+  client?: string;
+  projectTitle?: string;
+  framework?: "PAS" | "AIDA" | "QUEST";
+}): ProposalContract {
+  const client = options?.client || "Acme Global";
+  const projectTitle = options?.projectTitle || "Modern Digital Platform Architecture";
+  const framework = options?.framework || "PAS";
+
+  const inScope = [
+    "Custom responsive design system (Mobile 390px + Desktop 1440px)",
+    "Production Astro v7 / Next.js architecture with TypeScript",
+    "Headless Payload CMS collections and structured schema",
+    "Stripe checkout / webhook payment integration",
+    "Mobile Lighthouse performance optimization (>= 90 score)",
+  ];
+
+  const outOfScope = [
+    "Native iOS/Android application builds (handled via separate SOW)",
+    "Legacy database migrations exceeding 10,000 unformatted records",
+    "Bespoke 3D WebGL asset modeling or video production",
+    "Third-party enterprise ERP/SAP synchronization",
+  ];
+
+  const milestones = [
+    {
+      name: "Milestone 1: Discovery & Architecture",
+      duration: "Week 1-2",
+      proofReceipt: "Signed Architecture Spec + Approved Figma UI Prototype",
+      paymentPercentage: 35,
+    },
+    {
+      name: "Milestone 2: Core Engineering & CMS",
+      duration: "Week 3-4",
+      proofReceipt: "Staging deployment preview URL + clean bun test suite run",
+      paymentPercentage: 35,
+    },
+    {
+      name: "Milestone 3: Launch, QA & Handover",
+      duration: "Week 5",
+      proofReceipt: "Production DNS cutover + Lighthouse >= 90 audit report + Handover signoff",
+      paymentPercentage: 30,
+    },
+  ];
+
+  let problemStatement = "";
+  if (framework === "PAS") {
+    problemStatement = `Problem: ${client}'s current legacy platform suffers from high bounce rates and rigid content updates.\nAgitation: Every month of delay bleeds qualified pipeline to faster-moving competitors and incurs mounting maintenance overhead.\nSolution: A sovereign, ultra-fast web architecture with instant headless publishing and sub-second page loads.`;
+  } else if (framework === "AIDA") {
+    problemStatement = `Attention: Capture decisive market share with an Awwwards-caliber digital experience.\nInterest: Modern customers expect instant interactions and seamless mobile checkouts.\nDesire: Position ${client} as the unquestioned category leader with a bespoke design system.\nAction: Mobilize the architecture sprint to deploy within 30 days.`;
+  } else {
+    problemStatement = `Qualify: Validated fit for high-growth enterprise scale.\nUnderstand: Systemic analysis of ${client}'s digital customer journey.\nEducate: The commercial necessity of headless architecture and Core Web Vitals.\nStimulate: Unlocking +35% higher pipeline conversion through friction-free UI.\nTransition: Phased three-milestone deployment with zero downtime.`;
+  }
+
+  const markdown = `# Strategic Proposal: ${projectTitle}
+**Client**: ${client}
+**Framework**: ${framework}
+**Stop-the-Clock Agreement**: 48 Hours
+
+### 1. Executive Summary & Narrative (${framework})
+${problemStatement}
+
+### 2. Definitive Scope Boundaries
+#### In-Scope Deliverables
+${inScope.map((s) => `- ${s}`).join("\n")}
+
+#### Out-of-Scope (Requires Change Order)
+${outOfScope.map((s) => `- ${s}`).join("\n")}
+
+### 3. Milestone Delivery & Acceptance Receipts
+| Milestone | Timeline | Verification Receipt (DoD) | Tranche |
+| :--- | :--- | :--- | :--- |
+${milestones.map((m) => `| ${m.name} | ${m.duration} | ${m.proofReceipt} | ${m.paymentPercentage}% |`).join("\n")}
+
+### 4. 48-Hour Stop-the-Clock Terms
+Any client dependency unfulfilled for >48 hours automatically holds scheduled completion dates day-for-day plus a 3-business-day rescheduling buffer.
+`;
+
+  return {
+    client,
+    projectTitle,
+    framework,
+    problemStatement,
+    solutionArchitecture: [
+      "Astro v7 / Next.js modern frontend",
+      "Tailwind / UnoCSS responsive layout",
+      "Headless CMS (Payload / Contentful)",
+      "Edge-deployed infrastructure",
+    ],
+    inScope,
+    outOfScope,
+    stopTheClockHours: 48,
+    milestones,
+    markdown,
+  };
+}
+
 if (import.meta.main) {
   const args = process.argv.slice(2);
   if (args.includes("--translate-feedback")) {
@@ -246,9 +361,24 @@ if (import.meta.main) {
       ];
     }
     console.log(generateClientChangelog(commits, stagingUrl));
+  } else if (args.includes("--proposal") || args.includes("--scaffold-proposal")) {
+    const clientIdx = args.indexOf("--client");
+    const client = clientIdx !== -1 ? args[clientIdx + 1] : "Acme Global";
+    const projectIdx = args.indexOf("--project");
+    const projectTitle = projectIdx !== -1 ? args[projectIdx + 1] : "Modern Digital Platform Architecture";
+    const frameworkIdx = args.indexOf("--framework");
+    const rawFw = (frameworkIdx !== -1 ? args[frameworkIdx + 1] : "PAS").toUpperCase();
+    const framework = (rawFw === "AIDA" || rawFw === "QUEST" ? rawFw : "PAS") as "PAS" | "AIDA" | "QUEST";
+
+    const proposal = scaffoldProposal({ client, projectTitle, framework });
+    if (args.includes("--json")) {
+      console.log(JSON.stringify(proposal, null, 2));
+    } else {
+      console.log(proposal.markdown);
+    }
   } else {
     console.log(
-      "Usage: bun client-comms.ts --translate-feedback '<text>' | --draft-pushback <scenario> [--client <name>] | --changelog [since-ref]",
+      "Usage: bun client-comms.ts --translate-feedback '<text>' | --draft-pushback <scenario> [--client <name>] | --changelog [since-ref] | --proposal [--client <name>] [--project <title>] [--framework <pas|aida|quest>]",
     );
   }
 }
