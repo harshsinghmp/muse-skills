@@ -1715,5 +1715,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(dedupData.run2.shouldSend).toBe(false);
       expect(dedupData.run2.occurrences).toBe(2);
     });
+
+    test("devops:preview mode defines living deliverable protocol and enforces 48h TTL and token gating", () => {
+      const previewRefPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/references/preview.md");
+      expect(fs.existsSync(previewRefPath)).toBe(true);
+      const content = fs.readFileSync(previewRefPath, "utf8");
+      expect(content).toContain("Zero Cloud Overhead & Local Edge Execution (PRV-001)");
+      expect(content).toContain("Cryptographic Token-Gated Ingress (PRV-002)");
+      expect(content).toContain("Deterministic 48-Hour TTL Expiration (PRV-003)");
+      expect(content).toContain("Non-Destructive Review Overlay & Viewport Switcher (PRV-004)");
+
+      const devopsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/devops/SKILL.md"), "utf8");
+      expect(devopsSkill).toContain("| **preview** |");
+      expect(devopsSkill).toContain("references/preview.md");
+      expect(devopsSkill).toContain(
+        'argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|audit]"',
+      );
+    });
   });
 });
