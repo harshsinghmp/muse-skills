@@ -1,6 +1,6 @@
 # 📈 growth
 
-The strategy and scaling department head: one skill, ten modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, audit. Choose the playing field, then make the bets measurable.
+The strategy and scaling department head: one skill across twelve modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
 
 ## Install
 
@@ -20,6 +20,10 @@ Sharpen our positioning against two established competitors and reset pricing ti
 Plan the go-to-market launch for our new product with a full funnel map.
 ```
 
+```text
+Run a CRO audit on our landing page hero section, enforce anti-slop copy, and check mobile CTA contrast.
+```
+
 ## Modes
 
 | Mode | Request it with | Deliverable |
@@ -33,6 +37,7 @@ Plan the go-to-market launch for our new product with a full funnel map.
 | **retention** | churn reduction & renewals | Voluntary/involuntary churn prevention, dunning cadences, and winback flows. |
 | **pr** | public relations & press releases | AP-style press releases, journalist pitches, crisis holding statements, and bylines. |
 | **community** | community architecture & rituals | Discord/Skool/Slack community onboarding, weekly engagement loops, and AutoMod guardrails. |
+| **cro** | conversion rate optimization / landing page audit | CRO: hero section 5-second test, 5-state anti-slop copy gate, CTA contrast, and form friction reduction. |
 | **audit** | growth experiment audit | Rigorous experiment and acquisition channel audit (CAC, LTV, hypotheses). |
 
 ## How it works
