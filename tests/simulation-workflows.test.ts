@@ -453,6 +453,29 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("Viral Hook Bank");
     });
 
+    test("Crew: retain sla mode implements 30-day bug warranty defense, bug vs enhancement triage, and capacity burn-down", () => {
+      const slaPath = path.join(REPO_ROOT, "skills/agency-delivery/retain", "references", "sla.md");
+      const retainSkill = path.join(REPO_ROOT, "skills/agency-delivery/retain", "SKILL.md");
+      expect(fs.existsSync(slaPath)).toBe(true);
+
+      const skillContent = fs.readFileSync(retainSkill, "utf8");
+      const slaContent = fs.readFileSync(slaPath, "utf8");
+
+      expect(skillContent).toContain("**sla**");
+      expect(skillContent).toContain("references/sla.md");
+      expect(skillContent).toContain(
+        'argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|audit]"',
+      );
+
+      expect(slaContent).toContain("30-Day Post-Launch Bug Warranty vs Retainer SLA");
+      expect(slaContent).toContain("The Bug vs Enhancement Triage Gate");
+      expect(slaContent).toContain("Verifiable Non-Conformance");
+      expect(slaContent).toContain("Tiered Retainer Service Level Agreement");
+      expect(slaContent).toContain("P1 — Critical");
+      expect(slaContent).toContain("20% Roll-Over Ceiling");
+      expect(slaContent).toContain("80% Burn");
+    });
+
     test("Sol: database tuning runs semantic parameter optimization loops against real metrics", () => {
       const tuningPath = path.join(REPO_ROOT, "skills/agency-delivery/database", "references", "tuning.md");
       expect(fs.existsSync(tuningPath)).toBe(true);

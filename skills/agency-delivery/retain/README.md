@@ -1,6 +1,6 @@
 # 🔁 retain
 
-The post-delivery retention department head: one skill, six modes — check-in, value-note, qbr, review-ask, referral-rebuy, churn-watch. Delivery wins the project; the loop wins the next one.
+The post-delivery retention department head: one skill, eight modes — check-in, value-note, qbr, review-ask, referral-rebuy, churn-watch, sla, audit. Delivery wins the project; the loop wins the next one.
 
 ## Install
 
@@ -30,6 +30,7 @@ Run the QBR from this transcript and ask for a review at the close.
 | **review-ask** | review / testimonial ask | Review ask: timed at the delight peak, one direct link, outcome logged. |
 | **referral-rebuy** | referral / repurchase offer | One timed offer after value proven; won deals hand to `ops` as new SOW. |
 | **churn-watch** | churn risk / client gone quiet | Triage: signal named with numbers, >14d silence escalates to `growth`. |
+| **sla** | retainer SLAs & warranty governance | Retainer SLAs: 30-day bug warranty defense, bug vs enhancement triage, and capacity burn-down. |
 | **`audit`** | churn audit / portfolio risk audit | Five-question churn audit + 90-day leading-indicator rubric. |
 
 ## How it works

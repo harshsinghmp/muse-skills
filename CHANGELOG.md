@@ -58,6 +58,11 @@ All notable changes to this project are documented in this file.
   - **Context Vault Architecture (`vault.md`)**: Added enterprise multi-client context vault playbook enforcing airtight directory segregation (`~/Projects/clients/<brand>/`), brand asset isolation, worktree lease arbitration, and multi-tenant credential masking.
   - **The 5 Vault Invariants (VLT-001–VLT-005)**: Formalized absolute directory fences, canonical brand asset naming (`<brand>-<category>-<desc>.<ext>`), shared worktree lease heartbeats, tenant-scoped token redaction (`[REDACTED:<CLIENT_SLUG>:<SERVICE>]`), and 4-step context switch flush.
   - **Command Surface & Dispatch**: Expanded `ops` to 15 modes, bumping version to 1.7.0 and incrementing command surface to 420 slash commands per harness.
+- **Client Retainer SLAs & Warranty Governance (`retain:sla`)**:
+  - **Retainer SLA Playbook (`sla.md`)**: Added comprehensive post-launch warranty and ongoing retainer governance covering 30-day bug warranty boundaries, Tiered Retainer SLAs (P1 < 1h, P2 < 4h, P3 < 24h, P4 < 48h), and client redirection scripts.
+  - **The Bug vs Enhancement Triage Gate**: Enforced deterministic 3-part defect invariant (verifiable non-conformance, deterministic reproducibility, zero environmental modification) versus billable enhancement scope.
+  - **Capacity Burn-Down & Roll-Over Governance**: Established pacing alerts at 50%, 80%, and 100% capacity burn, alongside strict 20% roll-over ceiling with 60-day expiration rules.
+  - **Command Surface & Dispatch**: Expanded `retain` to 8 modes, bumping version to 1.1.0 and incrementing command surface to 421 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
