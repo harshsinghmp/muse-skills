@@ -7,7 +7,7 @@
  * Database connection strings, AWS keys, Stripe, Slack, and credentials with
  * native high-precision regex matching and optional TruffleHog integration.
  *
- * Does NOT rely on legacy external LifeOS scripts.
+ * Standalone sovereign implementation with zero external harness dependencies.
  *
  * Usage:
  *   bun skills/quality-review/muse-security/scripts/secret-scan.ts [path]

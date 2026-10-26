@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## [7.9.0] - 2026-10-26
+
+### Added
+
+- **Wave 23 Workspace Terrain Engine & Absolute Sovereignty**:
+  - **Zero-LifeOS Policy**: Completely purged all legacy `@LIFEOS` imports, paths, and tool calls across all skills, templates, and root `AGENTS.md`.
+  - **Standalone Vibeguard Secret Scanner (`secret-scan.ts`)**: Autonomous pre-ship secret scanner in `skills/quality-review/muse-security/scripts/secret-scan.ts` and `scripts/secret-scan.ts` (`bun run secret-scan .`), detecting tokens (`sk-*`, `ghp_*`), private keys, and database connection strings using native regex with zero external dependencies.
+  - **Workspace Terrain Maps**: Six canonical workspace terrain templates added in `skills/core-engine/updateagents/templates/.agents/terrain/`: `stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, and `logs.md`. Scaffolding wired into `new-project` Stage 1 and Stage 5/6.
+  - **Terrain Audit Engine (`terrain-audit.ts`)**: Added Asset 14 to `updateagents` (`skills/core-engine/updateagents/scripts/terrain-audit.ts`) auditing terrain maps for missing files, credential leaks, and hardcoded machine paths.
+  - **Commitment & Milestone Tracking (`commitment-sweep.ts`)**: Absorbed into `evidence-ledger` (`skills/context-orchestration/evidence-ledger/scripts/commitment-sweep.ts` via `/evidence sweep`) to detect client milestones, deliverables, 48h clock-stop triggers, and overdue warnings.
+  - **Wisdom Compounding Engine (`wisdom-updater.ts`)**: Absorbed into `coach` and `periodic-retreat` (`skills/reflection-maintenance/coach/scripts/wisdom-updater.ts` and `skills/reflection-maintenance/periodic-retreat/scripts/wisdom-updater.ts`) for weekly retrospective compounding into Muse Memory.
+  - **Host Vitals Inspector (`host-vitals.ts`)**: Absorbed ATLAS machine inventory into `clean-system-cache` (`skills/reflection-maintenance/clean-system-cache/scripts/host-vitals.ts`) deterministically inspecting CPU, GPU, kernel, display resolution, and memory.
+  - **Dual-Scope Memory Architecture**: Documented strict contract prohibiting direct YAML edits across `evidence-ledger`, `context-anchor`, `secretary`, and `relay`.
+
 ## [7.8.0] - 2026-10-25
 
 ### Added

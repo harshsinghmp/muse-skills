@@ -2,7 +2,7 @@
 /**
  * 📜 commitment-sweep.ts — Sovereign Commitment & Deadline Tracking Engine
  *
- * Absorbs legacy LifeOS CommitmentSweep into the evidence-ledger department.
+ * Absorbs legacy external CommitmentSweep into the evidence-ledger department.
  * Scans evidence ledgers, current state documents, intake briefs, and git issues
  * to auto-detect:
  *   1. Promised client milestones

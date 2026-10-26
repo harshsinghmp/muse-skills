@@ -2,7 +2,7 @@
 /**
  * 🧠 wisdom-updater.ts — Sovereign Wisdom Compounding Engine for Muse Memory
  *
- * Absorbs legacy LifeOS WisdomFrameUpdater into sovereign Muse tooling.
+ * Absorbs legacy WisdomFrameUpdater into sovereign Muse tooling.
  * Collects observations, categorizes them across engineering & agency domains,
  * and compounds weekly retrospective insights directly into Muse Memory's
  * dual-scope architecture:

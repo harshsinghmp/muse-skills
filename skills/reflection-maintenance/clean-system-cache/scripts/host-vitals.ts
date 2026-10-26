@@ -2,7 +2,7 @@
 /**
  * 🗺️ host-vitals.ts — Deterministic Host Vitals & Atlas Machine Inventory Engine
  *
- * Absorbs legacy LifeOS ATLAS machine inspection logic into clean-system-cache
+ * Absorbs legacy ATLAS machine inspection logic into clean-system-cache
  * and workspace terrain tooling. Deterministically reports hardware vitals:
  *   - CPU cores, model & architecture
  *   - GPU bus & device info (NVIDIA, AMD, Apple Silicon, Intel)

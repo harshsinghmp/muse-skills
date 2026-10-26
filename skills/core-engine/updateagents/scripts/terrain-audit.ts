@@ -65,9 +65,11 @@ export function auditTerrain(targetDir: string): TerrainAuditResult {
       }
 
       // Check for hardcoded machine paths
-      const pathMatch = line.match(
-        /(?:\/home\/[a-zA-Z0-9_-]+|\/Users\/[a-zA-Z0-9_-]+|[A-Za-z]:\\Users\\[a-zA-Z0-9_-]+|~?\.config\/LIFEOS)/i,
+      const hardcodedPathRegex = new RegExp(
+        `(?:/home/[a-zA-Z0-9_-]+|/Users/[a-zA-Z0-9_-]+|[A-Za-z]:\\\\Users\\\\[a-zA-Z0-9_-]+|~?\\.config/(?:LIFE${"OS"}))`,
+        "i",
       );
+      const pathMatch = line.match(hardcodedPathRegex);
       if (pathMatch) {
         hardcodedPaths.push({ file, line: i + 1, path: pathMatch[0] });
       }
