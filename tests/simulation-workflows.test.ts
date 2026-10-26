@@ -233,16 +233,36 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     const accountsDir = path.join(REPO_ROOT, "skills/agency-delivery/accounts");
     const skillPath = path.join(accountsDir, "SKILL.md");
 
-    test("accounts declares all 6 core operating modes and matching references", () => {
+    test("accounts declares all 7 core operating modes and matching references", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const skillContent = fs.readFileSync(skillPath, "utf8");
 
-      const expectedModes = ["invoicing", "bookkeeping", "client-pnl", "cashflow", "tax-compliance", "audit"];
+      const expectedModes = [
+        "invoicing",
+        "dunning",
+        "bookkeeping",
+        "client-pnl",
+        "cashflow",
+        "tax-compliance",
+        "audit",
+      ];
       for (const mode of expectedModes) {
         expect(skillContent).toContain(`**${mode}**`);
         const refPath = path.join(accountsDir, "references", `${mode}.md`);
         expect(fs.existsSync(refPath)).toBe(true);
       }
+    });
+
+    test("dunning reference implements 4-tier escalation, gateway smart retries, and pause triggers", () => {
+      const dunningRef = fs.readFileSync(path.join(accountsDir, "references", "dunning.md"), "utf8");
+      expect(dunningRef).toContain("Day 1: Courtesy Friendly Reminder");
+      expect(dunningRef).toContain("Day 7: Formal Notice & Late Fee Warning");
+      expect(dunningRef).toContain("Day 14: Pause-on-Delinquency Execution");
+      expect(dunningRef).toContain("Day 30: Formal Demand Letter");
+      expect(dunningRef).toContain("Stripe Smart Retries Configuration");
+      expect(dunningRef).toContain("402 Payment Required");
+      expect(dunningRef).toContain("Statutory Credit Note Issuance");
+      expect(dunningRef).toContain("Bad Debt Expense");
     });
 
     test("invoicing reference defines DSO compression dunning ladder and upfront deposit mandate", () => {
