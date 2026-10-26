@@ -406,6 +406,22 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(parsed.outOfScope.length).toBeGreaterThan(0);
     });
 
+    test("Jasper & Crew: growth cro mode enforces 5-second hero test, anti-slop copy gates, and CTA contrast", () => {
+      const croPath = path.join(REPO_ROOT, "skills/agency-delivery/growth", "references", "cro.md");
+      const growthSkill = path.join(REPO_ROOT, "skills/agency-delivery/growth", "SKILL.md");
+      expect(fs.existsSync(croPath)).toBe(true);
+      const content = fs.readFileSync(croPath, "utf8");
+      const skill = fs.readFileSync(growthSkill, "utf8");
+
+      expect(skill).toContain("**cro**");
+      expect(content).toContain("5-Second Test");
+      expect(content).toContain("5-State Anti-Slop Copy Gate");
+      expect(content).toContain("WCAG AAA Contrast");
+      expect(content).toContain("Thumb-Zone");
+      expect(content).toContain("Field Penalty Law");
+      expect(content).toContain("CRO Evaluation Rubric");
+    });
+
     test("Jasper: smm social-intel harvests multi-platform sentiment and viral hooks at zero cost", () => {
       const intelPath = path.join(REPO_ROOT, "skills/agency-delivery/smm", "references", "social-intel.md");
       expect(fs.existsSync(intelPath)).toBe(true);
@@ -675,7 +691,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain(
-        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|audit]"',
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|audit]"',
       );
       expect(growthSkill).toContain("| **community** |");
       expect(growthSkill).toContain("references/community.md");

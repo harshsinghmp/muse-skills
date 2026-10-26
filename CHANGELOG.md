@@ -33,6 +33,13 @@ All notable changes to this project are documented in this file.
   - **Milestone Definition of Done Receipts**: Explicit milestone delivery proof gates (Figma signoff, staging URL, clean test run, Lighthouse >= 90).
   - **Proposal Scaffolder CLI**: Added `--proposal` and `--scaffold-proposal` flag to `client-comms.ts` supporting `--client`, `--project`, and `--framework` with JSON/Markdown output.
   - **Command Surface & Dispatch**: Expanded `client-comms` to 8 modes, incrementing command surface to 414 slash commands per harness.
+- **Conversion-Rate Optimizer (`growth:cro`)**:
+  - **Landing Page CRO Engine (`cro.md`)**: Added autonomous conversion-rate optimization playbook in `skills/agency-delivery/growth/references/cro.md` covering the 5-Second hero test, above-the-fold visual hierarchy (1440px desktop & 390px mobile), and 18-token standalone quotability rule.
+  - **5-State Anti-Slop Copy Gate**: Enforced rigorous transformation standards eliminating corporate buzzwords ("game-changing", "supercharge", "all-in-one") in favor of quantified user superpower metrics.
+  - **CTA Contrast & Mobile Thumb-Zone**: Enforced WCAG AAA (>= 7:1) / AA (>= 4.5:1) text-to-button contrast, 48px touch targets, and sticky bottom thumb-zone bars on mobile.
+  - **Form Friction Reduction & Trust Halos**: Enforced <= 4 inputs for lead capture, progressive multi-step disclosure, inline validation on blur, and CTA trust halos within 24px.
+  - **Quantitative CRO Scorecard**: Added 100-point heuristic evaluation rubric across Hero Value Density, Anti-Slop Copy, CTA Physics, Form Friction, and Trust Proof.
+  - **Command Surface & Dispatch**: Expanded `growth` to 12 modes, incrementing command surface to 415 slash commands per harness.
 
 ## [7.8.0] - 2026-10-25
 
