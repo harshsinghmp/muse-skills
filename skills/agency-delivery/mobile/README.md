@@ -1,6 +1,6 @@
 # 📱 mobile
 
-The mobile department head: one skill, five modes — ios, android, cross, pwa, aso. Stack-honest path selection, then platform-native delivery discipline.
+The mobile department head: one skill, seven modes — ios, android, cross, pwa, aso, expo, audit. Stack-honest path selection, then platform-native delivery discipline.
 
 ## Install
 
@@ -29,6 +29,8 @@ Build a React Native inventory app with offline barcode scanning.
 | **cross** | cross-platform (Expo/React Native/Flutter) | Cross-platform: Expo for React teams, Flutter for fresh starts — one codebase, both stores. |
 | **pwa** | PWA conversion | PWA: installable, offline-capable web app — service worker, manifest, storage strategy. |
 | **aso** | app store visibility (ASO) | ASO: keyword optimization, listing assets, ratings loop, review responses. |
+| **expo** | Universal Expo SDK 52 (React Native) | Universal Expo SDK 52 app: expo-router v4, New Architecture, NativeWind v4, deep links, hardware mocking. |
+| **audit** | mobile app and compliance audit | App Store audit (keywords, listing, ratings, compliance) + mobile accessibility audit. |
 
 ## How it works
 
