@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Server-Side Event Ingestion & Privacy Scrubber (`analytics:events`)**:
+  - **Core Invariants EVT-001–EVT-004**: Enforces edge PII scrubbing for emails, phone numbers, auth secrets, and credit cards (EVT-001); strict JSON schema validation, Object-Action snake_case naming, and deterministic SHA-256 idempotency deduplication (EVT-002); dual-rail transport with browser sendBeacon and non-blocking edge queue ingestion under 15ms (EVT-003); and deterministic multi-touch attribution preserving UTM parameters and referring campaigns (EVT-004).
+  - **Event Collector CLI (`event-collector.ts`)**: Built standalone CLI in `skills/agency-delivery/analytics/scripts/event-collector.ts` supporting `--validate`, `--scrub`, `--fingerprint`, and `--generate-payload`.
+  - **Analytics Mode Expansion**: Expanded `analytics` to 7 modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 428 slash commands per harness.
+
 - **Wave 23 Workspace Terrain Engine & Absolute Sovereignty**:
   - **Zero-LifeOS Policy**: Completely purged all legacy `@LIFEOS` imports, paths, and tool calls across all skills, templates, and root `AGENTS.md`.
   - **Standalone Vibeguard Secret Scanner (`secret-scan.ts`)**: Autonomous pre-ship secret scanner in `skills/quality-review/muse-security/scripts/secret-scan.ts` and `scripts/secret-scan.ts` (`bun run secret-scan .`), detecting tokens (`sk-*`, `ghp_*`), private keys, and database connection strings using native regex with zero external dependencies.

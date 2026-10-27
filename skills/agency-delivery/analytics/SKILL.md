@@ -1,10 +1,10 @@
 ---
 name: analytics
-aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attribution", "cro", "reporting"]
-description: "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, and conversion-rate optimization — routed through six modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, or run a CRO audit and experiment. Not for ad platform management (paidads) or content performance alone (smm analytics)."
-argument-hint: "[tracking|dashboards|attribution|reporting|cro]"
+aliases: ["data-analytics", "measurement", "tracking", "dashboards", "attribution", "cro", "reporting", "events", "event-collector"]
+description: "Full data and analytics department: measurement tracking, dashboards, marketing attribution, performance reporting, conversion-rate optimization, and server-side event ingestion — routed through seven modes. Use when asked to set up analytics or event tracking, build a KPI dashboard, work out which channel drives conversions, report on marketing performance, run a CRO audit, or ingest server-side events. Not for ad platform management (paidads) or content performance alone (smm analytics)."
+argument-hint: "[tracking|dashboards|attribution|reporting|cro|events]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -44,6 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **attribution** | "attribution", "which channel converts", "marketing mix", "hero channel" | Multi-touch attribution and channel contribution analysis | [references/attribution.md](references/attribution.md) |
 | **reporting** | "marketing report", "monthly report", "performance report", "client report" | Recurring performance reports that end in decisions | [references/reporting.md](references/reporting.md) |
 | **cro** | "increase conversions", "cro", "a/b test", "funnel audit", "conversion audit" | Funnel audit and conversion experiments | [references/cro.md](references/cro.md) |
+| **events** | "event ingestion", "server-side events", "event tracking", "pii scrub", "schema validation", "event payload", "idempotency" | Server-side event ingestion, privacy PII scrubbing, JSON schema validation, and deterministic multi-touch attribution | [references/events.md](references/events.md) |
 | **audit** | "audit analytics", "data audit", "event audit", "definition drift" | Data audit (events firing, definitions match implementation) + reporting audit (dashboards accurate) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
