@@ -1,10 +1,10 @@
 ---
 name: qa-launch
 aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check"]
-description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist (HTML/CSS/fonts/images/JS/server budgets), release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through six modes. Use when asked to QA a site before launch, verify a release candidate, run the front-end performance checklist, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
-argument-hint: "[matrix|functional|performance|gate|regression|audit]"
+description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist (HTML/CSS/fonts/images/JS/server budgets), release-gate checklist with Block-or-Ship verdict, post-fix regression, and Playwright synthetic user journey smoke suites — routed through seven modes. Use when asked to QA a site before launch, verify a release candidate, run the front-end performance checklist, plan browser and device coverage, run headless Playwright smoke tests, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
+argument-hint: "[matrix|functional|performance|gate|regression|e2e|audit]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -44,6 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **performance** | "front-end performance checklist", "is it fast enough", "perf budget before launch", "Lighthouse before ship" | Front-end performance checklist across HTML/CSS/fonts/images/JS/Server with severity-ranked findings and budget readings | [references/performance.md](references/performance.md) |
 | **gate** | "ready to ship?", "release gate", "block or ship", "launch checklist" | Release-gate checklist ending in a Block-or-Ship verdict | [references/gate.md](references/gate.md) |
 | **regression** | "re-verify after fixes", "regression check", "did the fix break anything" | Post-fix regression: fixed issues plus adjacent blast radius | [references/regression.md](references/regression.md) |
+| **e2e** | "e2e tests", "playwright smoke suite", "synthetic user journey", "headless checkout test", "audit test locators" | Playwright synthetic journey test suite, accessible role locators, and headless smoke runner | [references/e2e.md](references/e2e.md) |
 | **audit** | "audit qa", "quality gate audit", "launch audit", "pre-launch check" | Quality-gate audit (functional + regression + UAT sign-off) + launch-gate audit (rollback plan, perf budget, docs) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -76,9 +77,10 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 | 'Does the release candidate work?' | functional |
 | 'Is it fast enough / under the perf budget?' | performance |
 | 'Are we cleared to ship?' | gate |
+| 'Do critical user journeys pass headless smoke?' | e2e |
 | 'Did the fixes hold without breaking anything?' | regression |
 
-Order: matrix → functional → performance → gate → regression. Plan coverage, verify, measure perf, verdict, then re-verify.
+Order: matrix → functional → e2e → performance → gate → regression. Plan coverage, verify, measure perf, verdict, then re-verify.
 
 ### Verification gate (every mode)
 
