@@ -2193,5 +2193,78 @@ test('bad test', async ({ page }) => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Sol: webdev offline mode implements two-tier caching, offline mutation queue, and manifest compliance", () => {
+      const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/webdev", "SKILL.md"), "utf8");
+      expect(webdevSkill).toContain("| **offline** |");
+      expect(webdevSkill).toContain("references/offline.md");
+      expect(webdevSkill).toContain("offline");
+
+      const offlineRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/webdev", "references", "offline.md"),
+        "utf8",
+      );
+      expect(offlineRef).toContain("PWA-001: Two-Tier Caching Architecture");
+      expect(offlineRef).toContain("PWA-002: Offline Mutation Queue & Optimistic UI");
+      expect(offlineRef).toContain("PWA-003: Background Sync & Auto-Reconnection Lifecycle");
+      expect(offlineRef).toContain("PWA-004: Manifest & Installation Compliance");
+      expect(offlineRef).toContain("CacheFirst");
+      expect(offlineRef).toContain("NetworkFirst");
+      expect(offlineRef).toContain("sync-mutations");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/scripts/sw-generator.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "webdev-offline-test-"));
+      try {
+        // 1. Generate Service Worker
+        const swFile = path.join(tempDir, "sw.js");
+        const swRes = spawnSync("bun", [scriptPath, "--generate-sw", "--output", swFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(swRes.status).toBe(0);
+        expect(fs.existsSync(swFile)).toBe(true);
+        const swContent = fs.readFileSync(swFile, "utf8");
+        expect(swContent).toContain("CACHE_VERSION");
+        expect(swContent).toContain("offline.html");
+        expect(swContent).toContain("sync-mutations");
+
+        // 2. Generate Manifest
+        const manifestFile = path.join(tempDir, "manifest.webmanifest");
+        const manRes = spawnSync(
+          "bun",
+          [scriptPath, "--generate-manifest", "--name", "Acme PWA", "--output", manifestFile, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(manRes.status).toBe(0);
+        expect(fs.existsSync(manifestFile)).toBe(true);
+        const manifestJson = JSON.parse(fs.readFileSync(manifestFile, "utf8"));
+        expect(manifestJson.name).toBe("Acme PWA");
+        expect(manifestJson.display).toBe("standalone");
+        expect(manifestJson.icons.length).toBeGreaterThanOrEqual(3);
+
+        // 3. Create mock offline fallback shell and icons
+        fs.writeFileSync(path.join(tempDir, "offline.html"), "<h1>Offline</h1>", "utf8");
+        const iconsDir = path.join(tempDir, "icons");
+        fs.mkdirSync(iconsDir, { recursive: true });
+        fs.writeFileSync(path.join(iconsDir, "icon-192x192.png"), "mock", "utf8");
+
+        // 4. Audit PWA readiness
+        const auditRes = spawnSync("bun", [scriptPath, "--audit-pwa", tempDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditRes.status).toBe(0);
+        const auditReport = JSON.parse(auditRes.stdout);
+        expect(auditReport.passed).toBe(true);
+        expect(auditReport.hasServiceWorker).toBe(true);
+        expect(auditReport.hasManifest).toBe(true);
+        expect(auditReport.hasOfflineHtml).toBe(true);
+        expect(auditReport.score).toBeGreaterThanOrEqual(80);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });

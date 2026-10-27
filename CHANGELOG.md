@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Full-Stack Web Engineering: Progressive Web App & Offline Architecture (`webdev:offline`)**:
+  - **PWA Architecture Playbook (`offline.md`)**: Enforces Two-Tier Caching Architecture with `CacheFirst` for static immutable hashed assets and `NetworkFirst` with 3s timeout for dynamic documents and APIs (PWA-001); Offline Form Mutation Queue with IndexedDB persistence, UUID idempotency tokens, and optimistic UI state badging (PWA-002); Background Sync & Auto-Reconnection Lifecycle with full jitter backoff (PWA-003); and Manifest & Installation Compliance with standalone display, maskable icons, and OKLCH token sync (PWA-004).
+  - **Service Worker Generator CLI (`sw-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/webdev/scripts/sw-generator.ts` supporting `--generate-sw`, `--generate-manifest`, `--audit-pwa`, and `--json`.
+  - **WebDev Mode Expansion**: Expanded `webdev` to 21 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 432 slash commands per harness.
+
 - **Quality Assurance & Pre-Launch: Playwright Synthetic User Journey & Headless Smoke Runner (`qa-launch:e2e`)**:
   - **E2E Architecture Playbook (`e2e.md`)**: Enforces Semantic & Accessible Locators First (`getByRole`, `getByLabel`, `getByText`, explicit `data-testid` fallback, banning brittle CSS hierarchy, Tailwind classes, and XPath) with zero arbitrary sleeps (E2E-001); Critical Journey Smoke Matrix covering guest-to-auth, shopping-to-checkout, onboarding funnel, password reset, and account deletion/compliance (E2E-002); State Isolation & Ephemeral Seeding with dynamic run tokens, storage state reuse, and deterministic teardown (E2E-003); and Visual & Network Artifacts with trace on first retry, failure screenshots, and console/5xx error guards (E2E-004).
   - **E2E Runner CLI (`e2e-runner.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/e2e-runner.ts` supporting `--audit-selectors`, `--scaffold-journey`, `--smoke-check`, and `--json`.
