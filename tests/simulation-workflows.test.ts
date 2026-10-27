@@ -1791,5 +1791,116 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("analytics:events mode audits PII scrubbing, schema validation, and SHA-256 idempotency", () => {
+      const analyticsSkill = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/analytics", "SKILL.md"),
+        "utf8",
+      );
+      expect(analyticsSkill).toContain("| **events** |");
+      expect(analyticsSkill).toContain("references/events.md");
+      expect(analyticsSkill).toContain('argument-hint: "[tracking|dashboards|attribution|reporting|cro|events]"');
+
+      const eventsRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/analytics", "references", "events.md"),
+        "utf8",
+      );
+      expect(eventsRef).toContain("EVT-001: Zero-PII Ingestion Gate");
+      expect(eventsRef).toContain("EVT-002: Strict Schema Validation & Idempotency");
+      expect(eventsRef).toContain("EVT-003: Dual-Rail Transport & Non-Blocking Edge Ingestion");
+      expect(eventsRef).toContain("EVT-004: Deterministic Multi-Touch Attribution Binding");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/analytics/scripts/event-collector.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "analytics-event-test-"));
+      try {
+        // 1. Schema Validation (Valid payload)
+        const validPayload = {
+          event: "order_completed",
+          timestamp: "2026-10-27T10:00:00.000Z",
+          distinct_id: "usr_9988",
+          properties: {
+            revenue: 149.0,
+            currency: "USD",
+          },
+        };
+        const validPath = path.join(tempDir, "valid-event.json");
+        fs.writeFileSync(validPath, JSON.stringify(validPayload), "utf8");
+
+        const validRes = spawnSync("bun", [scriptPath, "--validate", validPath, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(validRes.status).toBe(0);
+        const validData = JSON.parse(validRes.stdout);
+        expect(validData.valid).toBe(true);
+        expect(validData.eventId).toBeDefined();
+
+        // 2. Schema Validation (Invalid event name violating snake_case Object-Action)
+        const invalidPayload = {
+          event: "BadEventName",
+          timestamp: "invalid-date",
+          distinct_id: "",
+          properties: "not-an-object",
+        };
+        const invalidPath = path.join(tempDir, "invalid-event.json");
+        fs.writeFileSync(invalidPath, JSON.stringify(invalidPayload), "utf8");
+
+        const invalidRes = spawnSync("bun", [scriptPath, "--validate", invalidPath, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(invalidRes.status).toBe(1);
+        const invalidData = JSON.parse(invalidRes.stdout);
+        expect(invalidData.valid).toBe(false);
+        expect(invalidData.errors.length).toBeGreaterThanOrEqual(3);
+
+        // 3. PII Scrubbing
+        const dirtyPayload = {
+          event: "user_updated",
+          timestamp: "2026-10-27T10:00:00.000Z",
+          distinct_id: "usr_123",
+          properties: {
+            email: "client@agencycorp.io",
+            phone: "+1 (555) 234-5678",
+            password: "super_secret_password",
+            auth_token: "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+            page_url: "https://agencycorp.io/dashboard?token=xyz123&user=42",
+          },
+        };
+        const dirtyPath = path.join(tempDir, "dirty-event.json");
+        fs.writeFileSync(dirtyPath, JSON.stringify(dirtyPayload), "utf8");
+
+        const scrubRes = spawnSync("bun", [scriptPath, "--scrub", dirtyPath, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(scrubRes.status).toBe(0);
+        const cleanData = JSON.parse(scrubRes.stdout);
+        expect(cleanData.properties.email).toBe("[REDACTED_EMAIL]");
+        expect(cleanData.properties.phone).toBe("[REDACTED_PHONE]");
+        expect(cleanData.properties.password).toBe("[REDACTED]");
+        expect(cleanData.properties.auth_token).toBe("[REDACTED_SECRET]");
+        expect(cleanData.properties.page_url).toContain("token=%5BREDACTED%5D");
+
+        // 4. Generate Payload CLI
+        const genRes = spawnSync(
+          "bun",
+          [scriptPath, "--generate-payload", "--event", "checkout_completed", "--user-id", "usr_777", "--json"],
+          {
+            encoding: "utf8",
+            cwd: REPO_ROOT,
+          },
+        );
+        expect(genRes.status).toBe(0);
+        const genData = JSON.parse(genRes.stdout);
+        expect(genData.event).toBe("checkout_completed");
+        expect(genData.distinct_id).toBe("usr_777");
+        expect(genData.context.utm.source).toBe("google");
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });
