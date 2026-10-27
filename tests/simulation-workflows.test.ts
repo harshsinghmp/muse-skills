@@ -837,7 +837,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain(
-        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|audit]"',
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|audit]"',
       );
       expect(growthSkill).toContain("| **community** |");
       expect(growthSkill).toContain("references/community.md");
@@ -2522,6 +2522,143 @@ window.alert('Blocking modal');`,
         expect(goodReport.categories.cls.passed).toBe(true);
         expect(goodReport.categories.lcp.passed).toBe(true);
         expect(goodReport.categories.fonts.passed).toBe(true);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("Jasper: growth viral mode implements K-factor triangulation, cycle time compression, and incentive scaffolds", () => {
+      const viralRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/growth", "references", "viral.md"),
+        "utf8",
+      );
+      expect(viralRef).toContain("VIR-001: Mathematical $K$-Factor Triangulation & Loop Dynamics");
+      expect(viralRef).toContain("VIR-002: Viral Cycle Time ($ct$) Compression Fences");
+      expect(viralRef).toContain("VIR-003: Double-Sided Asymmetric Incentive Architecture");
+      expect(viralRef).toContain('VIR-004: Contextual "Aha!" Trigger Placement (Zero Cold Asks)');
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/growth/scripts/viral-engine.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "growth-viral-test-"));
+      try {
+        // 1. Calculate K-Factor
+        const calcRes = spawnSync(
+          "bun",
+          [scriptPath, "--calc-k", "--invites", "3.0", "--conversion", "0.20", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(calcRes.status).toBe(0);
+        const calcData = JSON.parse(calcRes.stdout);
+        expect(calcData.kFactor).toBe(0.6);
+        expect(calcData.multiplier).toBe(2.5);
+        expect(calcData.isViable).toBe(true);
+        expect(calcData.classification).toBe("STRONG_AMPLIFIER");
+
+        // 2. Simulate Viral Loop Cohorts
+        const simRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--simulate-loop",
+            "--users",
+            "1000",
+            "--k",
+            "0.5",
+            "--cycle-days",
+            "3",
+            "--horizon-days",
+            "30",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(simRes.status).toBe(0);
+        const simData = JSON.parse(simRes.stdout);
+        expect(simData.totalCycles).toBe(10);
+        expect(simData.finalCumulativeUsers).toBeGreaterThanOrEqual(1900);
+        expect(simData.netOrganicMultiplier).toBeGreaterThanOrEqual(1.9);
+
+        // 3. Audit Referral Program (Compliant vs Flawed)
+        const goodConfig = path.join(tempDir, "good-referral.json");
+        fs.writeFileSync(
+          goodConfig,
+          JSON.stringify({
+            invitationRate: 2.5,
+            conversionRate: 0.2,
+            cycleTimeHours: 36,
+            incentiveStructure: {
+              isDoubleSided: true,
+              inviterMilestoneGated: true,
+            },
+            triggerPlacement: {
+              promptAtSignup: false,
+              promptAtAhaMoment: true,
+            },
+            fraudDefense: {
+              disposableEmailBlocked: true,
+              velocityRateLimits: true,
+            },
+          }),
+          "utf8",
+        );
+
+        const goodAuditRes = spawnSync("bun", [scriptPath, "--audit-referral", goodConfig, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(goodAuditRes.status).toBe(0);
+        const goodAuditData = JSON.parse(goodAuditRes.stdout);
+        expect(goodAuditData.passed).toBe(true);
+        expect(goodAuditData.verdict).toBe("APPROVED");
+        expect(goodAuditData.healthScore).toBeGreaterThanOrEqual(80);
+
+        const badConfig = path.join(tempDir, "bad-referral.json");
+        fs.writeFileSync(
+          badConfig,
+          JSON.stringify({
+            invitationRate: 0.5,
+            conversionRate: 0.05,
+            cycleTimeHours: 96,
+            incentiveStructure: {
+              isDoubleSided: false,
+              inviterMilestoneGated: false,
+            },
+            triggerPlacement: {
+              promptAtSignup: true,
+              promptAtAhaMoment: false,
+            },
+            fraudDefense: {
+              disposableEmailBlocked: false,
+              velocityRateLimits: false,
+            },
+          }),
+          "utf8",
+        );
+
+        const badAuditRes = spawnSync("bun", [scriptPath, "--audit-referral", badConfig, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(badAuditRes.status).toBe(1);
+        const badAuditData = JSON.parse(badAuditRes.stdout);
+        expect(badAuditData.passed).toBe(false);
+        expect(badAuditData.verdict).toBe("REJECTED");
+        expect(badAuditData.issues.length).toBeGreaterThanOrEqual(3);
+
+        // 4. Scaffold Incentive Schedule
+        const schedFile = path.join(tempDir, "referral-schedule.md");
+        const schedRes = spawnSync(
+          "bun",
+          [scriptPath, "--scaffold-incentives", "--model", "agency", "--output", schedFile, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(schedRes.status).toBe(0);
+        expect(fs.existsSync(schedFile)).toBe(true);
+        const schedContent = fs.readFileSync(schedFile, "utf8");
+        expect(schedContent).toContain("Double-Sided Referral & Expansion Architecture");
+        expect(schedContent).toContain("Target Invitation Rate");
+        expect(schedContent).toContain("Viral Loop Economics");
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }

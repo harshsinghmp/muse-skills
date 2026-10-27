@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Division: Viral Loop Coefficient & Referral Mechanics Engine (`growth:viral`)**:
+  - **Viral Loop Playbook (`viral.md`)**: Enforces Mathematical $K$-Factor Triangulation ($K = i \times c$) modeling exponential virality ($K \ge 1.0$) and organic amplification multipliers ($\frac{1}{1 - K}$) with a $K \ge 0.15$ viability floor (VIR-001); Viral Cycle Time ($ct$) compression fences mandating $ct \le 72\text{h}$ with frictionless invitee landings (VIR-002); Asymmetric Double-Sided Incentive Architecture with instant invitee gratification and milestone/activation-gated inviter rewards plus anti-sybil fraud defense (VIR-003); and Contextual "Aha!" Trigger Placement banning cold asks at signup and anchoring referral prompts to dopamine peak moments (VIR-004).
+  - **Viral Engine CLI (`viral-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/growth/scripts/viral-engine.ts` supporting `--calc-k`, `--simulate-loop`, `--audit-referral`, `--scaffold-incentives`, and `--json`.
+  - **Growth Mode Expansion**: Expanded `growth` to 12 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 435 slash commands per harness.
+
 - **Nexus Technical Director: Core Web Vitals Auditor & Production Gate (`qa-launch:vitals`)**:
   - **Core Web Vitals Playbook (`vitals.md`)**: Enforces Sub-200ms INP Gate with main-thread long task decomposition and mandatory passive/throttled event listeners (VIT-001); Zero-CLS Layout Shift Fences with explicit image/media dimensions, CSS `aspect-ratio`, and pre-reserved dynamic slot containers (VIT-002); Sub-2.5s LCP Boundary prioritizing hero assets with `fetchpriority="high"`, `loading="eager"`, and zero render-blocking script waterfalls (VIT-003); and Web Font FOUC/FOIT Elimination with `font-display: swap/optional`, WOFF2-only payloads, and 100KB budget certification (VIT-004).
   - **Vitals Guard CLI (`vitals-guard.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/vitals-guard.ts` supporting `--audit-vitals`, `--check-cls`, `--check-inp`, `--check-lcp`, `--check-fonts`, and `--json`.
