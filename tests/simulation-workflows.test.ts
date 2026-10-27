@@ -1902,5 +1902,99 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("content:vsl mode implements Jasper 6-beat spine, two-column storyboard, and anti-slop pacing", () => {
+      const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/content", "SKILL.md"), "utf8");
+      expect(contentSkill).toContain("| **vsl** |");
+      expect(contentSkill).toContain("references/vsl.md");
+      expect(contentSkill).toContain("vsl");
+
+      const vslRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/content", "references", "vsl.md"),
+        "utf8",
+      );
+      expect(vslRef).toContain("VSL-001: The 3-Second Retention Law");
+      expect(vslRef).toContain("VSL-002: Jasper 6-Beat Narrative Spine");
+      expect(vslRef).toContain("VSL-003: Two-Column Audio/Visual Storyboard Standard");
+      expect(vslRef).toContain("VSL-004: Anti-Slop Conversion Copy Gate");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/content/scripts/vsl-generator.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "content-vsl-test-"));
+      try {
+        // 1. Scaffold VSL script to file
+        const scriptFile = path.join(tempDir, "sample-vsl.md");
+        const scaffoldRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-vsl",
+            "--product",
+            "Autonomous Agency OS",
+            "--target",
+            "B2B Agencies",
+            "--mechanism",
+            "Tri-Vector Edge Routing",
+            "--out",
+            scriptFile,
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        expect(fs.existsSync(scriptFile)).toBe(true);
+
+        const scaffoldContent = fs.readFileSync(scriptFile, "utf8");
+        expect(scaffoldContent).toContain("Jasper 6-Beat Narrative Spine");
+        expect(scaffoldContent).toContain("Two-Column A/V Production Storyboard");
+        expect(scaffoldContent).toContain("Tri-Vector Edge Routing");
+
+        // 2. Audit valid script
+        const auditRes = spawnSync("bun", [scriptPath, "--audit-script", scriptFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditRes.status).toBe(0);
+        const auditData = JSON.parse(auditRes.stdout);
+        expect(auditData.valid).toBe(true);
+        expect(auditData.hasHook).toBe(true);
+        expect(auditData.hasTwoColumnTable).toBe(true);
+        expect(auditData.detectedBeats.length).toBeGreaterThanOrEqual(4);
+        expect(auditData.buzzwordsFound.length).toBe(0);
+
+        // 3. Timing calculation
+        const timingRes = spawnSync("bun", [scriptPath, "--timing", scriptFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(timingRes.status).toBe(0);
+        const timings = JSON.parse(timingRes.stdout);
+        expect(timings.length).toBeGreaterThanOrEqual(5);
+        expect(timings[0].words).toBeGreaterThan(0);
+        expect(timings[0].estimatedSeconds).toBeGreaterThan(0);
+
+        // 4. Audit dirty script with banned buzzwords
+        const dirtyFile = path.join(tempDir, "dirty-vsl.md");
+        fs.writeFileSync(
+          dirtyFile,
+          `# VSL
+| Scene | Visual Direction | Spoken Dialogue |
+| :--- | :--- | :--- |
+| 01 | [Shot: Close] | This revolutionary cutting-edge product is a game-changer! |
+`,
+          "utf8",
+        );
+        const dirtyRes = spawnSync("bun", [scriptPath, "--audit-script", dirtyFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(dirtyRes.status).toBe(1);
+        const dirtyData = JSON.parse(dirtyRes.stdout);
+        expect(dirtyData.valid).toBe(false);
+        expect(dirtyData.buzzwordsFound.length).toBeGreaterThanOrEqual(2);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });
