@@ -255,12 +255,13 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     const accountsDir = path.join(REPO_ROOT, "skills/agency-delivery/accounts");
     const skillPath = path.join(accountsDir, "SKILL.md");
 
-    test("accounts declares all 7 core operating modes and matching references", () => {
+    test("accounts declares all 8 core operating modes and matching references", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const skillContent = fs.readFileSync(skillPath, "utf8");
 
       const expectedModes = [
         "invoicing",
+        "pricing",
         "dunning",
         "bookkeeping",
         "client-pnl",
@@ -2262,6 +2263,99 @@ test('bad test', async ({ page }) => {
         expect(auditReport.hasManifest).toBe(true);
         expect(auditReport.hasOfflineHtml).toBe(true);
         expect(auditReport.score).toBeGreaterThanOrEqual(80);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("Crew: accounts pricing mode implements value triangulation, delivery models, and margin floor checks", () => {
+      const accountsSkill = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/accounts", "SKILL.md"),
+        "utf8",
+      );
+      expect(accountsSkill).toContain("| **pricing** |");
+      expect(accountsSkill).toContain("references/pricing.md");
+      expect(accountsSkill).toContain("pricing");
+
+      const pricingRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/accounts", "references", "pricing.md"),
+        "utf8",
+      );
+      expect(pricingRef).toContain("PRC-001: Value-Based Pricing Triangulation");
+      expect(pricingRef).toContain("PRC-002: Delivery Model Architecture Matrix");
+      expect(pricingRef).toContain("PRC-003: Guaranteed Margin Floor");
+      expect(pricingRef).toContain("PRC-004: Proposal Pricing Schedule Generator");
+      expect(pricingRef).toContain("Fixed-Scope Milestone");
+      expect(pricingRef).toContain("Weekly Sprint Retainer");
+      expect(pricingRef).toContain("Performance / Rev-Share Hybrid");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/accounts/scripts/pricing-calculator.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "accounts-pricing-test-"));
+      try {
+        // 1. Calculate value-based model
+        const calcRes = spawnSync(
+          "bun",
+          [scriptPath, "--calc-model", "--cost", "4000", "--upside", "80000", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(calcRes.status).toBe(0);
+        const calcData = JSON.parse(calcRes.stdout);
+        expect(calcData.marginHealthy).toBe(true);
+        expect(calcData.clientRoiMultiplier).toBeGreaterThanOrEqual(5.0);
+        expect(calcData.tiers.tier1.price).toBeGreaterThanOrEqual(8888);
+        expect(calcData.tiers.tier2.margin).toBeGreaterThanOrEqual(55);
+
+        // 2. Audit Healthy Quote
+        const healthyRes = spawnSync(
+          "bun",
+          [scriptPath, "--audit-quote", "--quote", "18000", "--hours", "80", "--direct-cost", "6000", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(healthyRes.status).toBe(0);
+        const healthyData = JSON.parse(healthyRes.stdout);
+        expect(healthyData.verdict).toBe("APPROVED");
+        expect(healthyData.grossMarginPercent).toBe(67);
+        expect(healthyData.effectiveHourlyRate).toBe(225);
+
+        // 3. Audit Unhealthy Quote (low margin & low EHR)
+        const unhealthyRes = spawnSync(
+          "bun",
+          [scriptPath, "--audit-quote", "--quote", "7000", "--hours", "90", "--direct-cost", "4500", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(unhealthyRes.status).toBe(1);
+        const unhealthyData = JSON.parse(unhealthyRes.stdout);
+        expect(unhealthyData.verdict).toBe("REJECTED_LOW_MARGIN");
+        expect(unhealthyData.grossMarginPercent).toBeLessThan(55);
+        expect(unhealthyData.issues.length).toBeGreaterThanOrEqual(1);
+
+        // 4. Scaffold Pricing Schedule Document
+        const scheduleFile = path.join(tempDir, "pricing-schedule.md");
+        const schedRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-pricing-schedule",
+            "--client",
+            "Vanguard Logistics",
+            "--base-fee",
+            "20000",
+            "--output",
+            scheduleFile,
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(schedRes.status).toBe(0);
+        expect(fs.existsSync(scheduleFile)).toBe(true);
+        const scheduleContent = fs.readFileSync(scheduleFile, "utf8");
+        expect(scheduleContent).toContain("Investment & Pricing Schedule: Vanguard Logistics");
+        expect(scheduleContent).toContain("Tier 1: Core Foundation");
+        expect(scheduleContent).toContain("Tier 2: Growth & Velocity");
+        expect(scheduleContent).toContain("Tier 3: Dedicated Sprint Pod Retainer");
+        expect(scheduleContent).toContain("48h Stop-the-Clock Standard");
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }

@@ -1,10 +1,11 @@
 # accounts
 
-Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance — routed through seven modes.
+Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance — routed through eight modes.
 
 ## Modes
 
 - `invoicing`: Milestone billing, retainer schedules, deposit terms, AutoCollect virtual accounts, payment gateway links, and upfront deposit terms.
+- `pricing`: Value-based pricing triangulation (min 5x ROI), delivery model matrix (fixed milestone vs sprint retainer vs rev-share), and margin floor enforcement.
 - `dunning`: Automated multi-tier escalation ladder (Day 1, 7, 14, 30), gateway smart retries, pause-on-delinquency triggers (staging freeze, sprint stop), and statutory bad debt tax credit write-offs.
 - `bookkeeping`: Standard agency & client Chart of Accounts (COA), double-entry ledger classification, OpenAccountants 3-outcome protocol, and multi-gateway clearing (Stripe, Razorpay, Cashfree, PayU, Paytm).
 - `client-pnl`: True client & project gross margin calculation, scope-creep margin leakage detection, and Effective Hourly Rate (EHR).

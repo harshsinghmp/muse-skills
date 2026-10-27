@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Agency Financial Operations: Value-Based Pricing Architecture & Profitability Calculator (`accounts:pricing`)**:
+  - **Pricing Architecture Playbook (`pricing.md`)**: Enforces Value-Based Pricing Triangulation with min 5.0x client ROI requirement and 10–20% economic value capture (PRC-001); Delivery Model Architecture Matrix comparing Fixed-Scope Milestones (50% deposit, 20% contingency buffer, 48h Stop-the-Clock) vs Dedicated Weekly Sprint Retainers vs Performance Hybrid (PRC-002); Guaranteed Gross Margin Floor (>= 55%) and minimum Effective Hourly Rate ($125/hr floor) (PRC-003); and standardized 3-Tier Proposal Pricing Schedule generation (PRC-004).
+  - **Pricing Calculator CLI (`pricing-calculator.ts`)**: Built standalone CLI in `skills/agency-delivery/accounts/scripts/pricing-calculator.ts` supporting `--calc-model`, `--audit-quote`, `--scaffold-pricing-schedule`, and `--json`.
+  - **Accounts Mode Expansion**: Expanded `accounts` to 8 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 433 slash commands per harness.
+
 - **Full-Stack Web Engineering: Progressive Web App & Offline Architecture (`webdev:offline`)**:
   - **PWA Architecture Playbook (`offline.md`)**: Enforces Two-Tier Caching Architecture with `CacheFirst` for static immutable hashed assets and `NetworkFirst` with 3s timeout for dynamic documents and APIs (PWA-001); Offline Form Mutation Queue with IndexedDB persistence, UUID idempotency tokens, and optimistic UI state badging (PWA-002); Background Sync & Auto-Reconnection Lifecycle with full jitter backoff (PWA-003); and Manifest & Installation Compliance with standalone display, maskable icons, and OKLCH token sync (PWA-004).
   - **Service Worker Generator CLI (`sw-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/webdev/scripts/sw-generator.ts` supporting `--generate-sw`, `--generate-manifest`, `--audit-pwa`, and `--json`.
