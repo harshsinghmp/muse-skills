@@ -532,6 +532,86 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(fedContent).toContain("WORKTREE-FEDERATION.json");
     });
 
+    test("Sol: worktree-federation CLI enforces zero collision, namespaced workers, pulse heartbeat, and WIP quarantine", () => {
+      const sandbox = path.join(os.tmpdir(), `fed-test-sandbox-${Date.now()}`);
+      fs.mkdirSync(sandbox, { recursive: true });
+      spawnSync("git", ["init", "-q"], { cwd: sandbox });
+      spawnSync("git", ["config", "user.email", "agent@agency.test"], { cwd: sandbox });
+      spawnSync("git", ["config", "user.name", "Agent"], { cwd: sandbox });
+      fs.writeFileSync(path.join(sandbox, "README.md"), "# Test Sandbox\n");
+      spawnSync("git", ["add", "README.md"], { cwd: sandbox });
+      spawnSync("git", ["commit", "-m", "initial commit"], { cwd: sandbox });
+      spawnSync("git", ["branch", "-M", "dev"], { cwd: sandbox });
+
+      const {
+        spawnFederatedWorktree,
+        pulseLease,
+        quarantineWorktree,
+        sweepFederatedWorktrees,
+      } = require("../skills/context-orchestration/coupling-router/scripts/worktree-federation");
+
+      // 1. Spawn primary worktree
+      const res1 = spawnFederatedWorktree({
+        repo: sandbox,
+        branch: "feat/auth",
+        base: "dev",
+        owner: "subagent-sol",
+      });
+      expect(res1.success).toBe(true);
+      expect(fs.existsSync(res1.path)).toBe(true);
+
+      // 2. Collision detection (FED-001)
+      const resCollision = spawnFederatedWorktree({
+        repo: sandbox,
+        branch: "feat/auth",
+        owner: "subagent-nexus",
+      });
+      expect(resCollision.success).toBe(false);
+      expect(resCollision.message).toContain("Branch collision (FED-001)");
+
+      // 3. Namespaced allocation
+      const resNamespaced = spawnFederatedWorktree({
+        repo: sandbox,
+        branch: "feat/auth",
+        owner: "subagent-nexus",
+        namespaced: true,
+      });
+      expect(resNamespaced.success).toBe(true);
+      expect(resNamespaced.branch).toContain("feat/auth-worker-");
+
+      // 4. Pulse heartbeat (FED-003)
+      const pulseRes = pulseLease(res1.path, "subagent-sol");
+      expect(pulseRes.success).toBe(true);
+      expect(pulseRes.heartbeat.length).toBeGreaterThan(0);
+
+      // 5. Quarantine uncommitted dirty changes (FED-004)
+      fs.writeFileSync(path.join(res1.path, "dirty-wip.ts"), "const wip = 123;");
+      const qRes = quarantineWorktree(res1.path, "Test quarantine");
+      expect(qRes.success).toBe(true);
+      expect(qRes.quarantineRef).toContain("refs/quarantine/");
+      expect(fs.existsSync(path.join(res1.path, ".agents/artifacts/QUARANTINE_LEDGER.md"))).toBe(true);
+
+      // 6. Safe sweep
+      const sweepRes = sweepFederatedWorktrees(
+        [
+          {
+            path: resNamespaced.path,
+            repo: sandbox,
+            branch: resNamespaced.branch,
+            headCommit: "abc1234",
+            isBare: false,
+            isClean: true,
+            status: "STALE",
+            ageDays: 8,
+          },
+        ],
+        { prune: true, maxAgeDays: 7 },
+      );
+      expect(sweepRes.prunedCount).toBe(1);
+
+      fs.rmSync(sandbox, { recursive: true, force: true });
+    });
+
     test("Sol: database tuning runs semantic parameter optimization loops against real metrics", () => {
       const tuningPath = path.join(REPO_ROOT, "skills/agency-delivery/database", "references", "tuning.md");
       expect(fs.existsSync(tuningPath)).toBe(true);

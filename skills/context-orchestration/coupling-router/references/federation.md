@@ -43,20 +43,21 @@ Enterprise-grade git worktree fleet management, multi-client workspace federatio
 ## 🔒 The 4 Federation Invariants
 
 ### 1. The Zero-Branch Collision Invariant (FED-001)
-Git strictly forbids checking out the same local branch in two worktrees simultaneously (`fatal: '<branch>' is already checked out at '<path>'`). The Federation Engine verifies branch availability across all registered worktrees before spawning a worker. If a branch is already leased, it either attaches the session to the existing worktree or creates a namespaced topic branch (`<branch>-worker-<id>`).
+Git strictly forbids checking out the same local branch in two worktrees simultaneously (`fatal: '<branch>' is already checked out at '<path>'`). The Federation Engine verifies branch availability across all registered worktrees before spawning a worker. If a branch is already leased, it either attaches the session to the existing worktree or creates a namespaced worker branch (`<branch>-worker-<id>`) when `--namespaced` is specified.
 
 ### 2. Hermetic Environment Fencing (FED-002)
 Worktrees must never copy or symlink unvetted credentials:
 - Shared dependencies (`node_modules`) may be symlinked or shared via package manager stores (e.g. Bun/pnpm global store).
 - `.env` files are never copied automatically; only `.env.example` is scaffolded, requiring explicit token injection via `context-anchor` or vault secrets.
 
-### 3. Worktree Heartbeat & Lease Binding (FED-003)
-Every active worktree maintains a registered lease in `.agents/artifacts/WORKTREE-LEASE.md` or the federation registry. Subagents update the heartbeat timestamp upon every milestone. Unclaimed worktrees with heartbeats > 30 minutes are marked `TAKEOVER_ELIGIBLE`.
+### 3. Worktree Heartbeat & Advisory Leases (FED-003)
+Every active worktree maintains a registered lease in `.agents/artifacts/WORKTREE-LEASE.md` or the federation registry. Subagents pulse their heartbeat daemon (`--pulse`) at least every 60s. Any lease without an active pulse for > 300s (5 minutes) transitions to `STALE` and becomes eligible for automated takeover or quarantine recovery.
 
-### 4. Safe Pruning Invariant (FED-004)
-The sweeper command will **never** delete a worktree that contains uncommitted changes, untracked source files, or unpushed commits:
+### 4. Automated Quarantine & Safe Pruning Invariant (FED-004)
+The sweeper command will **never** cause unrecoverable data loss for worktrees that contain uncommitted changes, untracked source files, or unpushed commits:
 - Clean + merged branches → Auto-prunable (`git worktree remove`).
-- Dirty or unpushed worktrees → Marked `DIRTY_LOCKED` and preserved in the quarantine ledger.
+- Dirty or unpushed worktrees → Marked `DIRTY_LOCKED` and preserved in the quarantine ledger (`.agents/artifacts/QUARANTINE_LEDGER.md`).
+- Stale dirty worktrees swept with `--quarantine-stale` → WIP is automatically snapshotted to an isolated Git quarantine ref (`refs/quarantine/<slug>-<timestamp>`), recorded in the ledger, and safely unlinked.
 
 ---
 
@@ -66,19 +67,33 @@ The accompanying CLI tool manages worktree fleets across multiple client reposit
 
 ```bash
 # 1. Discover all active worktrees across client workspaces
-bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts list
+bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts list [--json]
 
-# 2. Spawn an isolated worktree for a specific client branch
+# 2. Spawn an isolated worktree for a specific client branch (or allocate namespaced worker branch on collision)
 bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts spawn \
   --repo ~/Projects/clients/acme-corp \
   --branch feat/payment-v2 \
-  --base dev
+  --base dev \
+  [--namespaced]
 
-# 3. Check health and active lease status across all federated worktrees
-bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts status
+# 3. Pulse active heartbeat daemon to maintain lease possession
+bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts pulse \
+  --path ~/Projects/clients/acme-corp/.worktrees/feat-payment-v2 \
+  --owner subagent-sol-8291
 
-# 4. Safely sweep and prune stale, clean worktrees older than 7 days
-bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts sweep --prune
+# 4. Check health and active lease status across all federated worktrees
+bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts status [--json]
+
+# 5. Quarantine uncommitted dirty changes into refs/quarantine/* and ledger
+bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts quarantine \
+  --path ~/Projects/clients/acme-corp/.worktrees/feat-payment-v2 \
+  --reason "stale subagent timeout"
+
+# 6. Safely sweep and prune stale worktrees (with optional automated quarantine)
+bun skills/context-orchestration/coupling-router/scripts/worktree-federation.ts sweep \
+  --prune \
+  --max-age 7 \
+  [--quarantine-stale]
 ```
 
 ---
