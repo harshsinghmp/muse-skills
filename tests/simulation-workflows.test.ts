@@ -2838,5 +2838,120 @@ window.alert('Blocking modal');`,
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Sol: mobile expo mode implements SDK 52 universal architecture, NativeWind v4, deep linking, and expo-scaffold CLI", () => {
+      const mobileSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/mobile", "SKILL.md"), "utf8");
+      expect(mobileSkill).toContain("| **expo** |");
+      expect(mobileSkill).toContain("references/expo.md");
+      expect(mobileSkill).toContain('argument-hint: "[ios|android|cross|pwa|aso|expo|audit]"');
+
+      const expoRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/mobile", "references", "expo.md"),
+        "utf8",
+      );
+      expect(expoRef).toContain("EXP-001: Modern Expo SDK 52 Universal Architecture");
+      expect(expoRef).toContain("EXP-002: NativeWind v4 & OKLCH Theme Integration");
+      expect(expoRef).toContain("EXP-003: Deep Linking & Universal Links / App Links Architecture");
+      expect(expoRef).toContain("EXP-004: Native Hardware Access & Ephemeral Mocking Fences");
+      expect(expoRef).toContain("expo-router");
+      expect(expoRef).toContain("newArchEnabled: true");
+      expect(expoRef).toContain("useSafeAreaInsets");
+      expect(expoRef).toContain("applinks:");
+      expect(expoRef).toContain("flowchart TD");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/mobile/scripts/expo-scaffold.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mobile-expo-test-"));
+      try {
+        // 1. Scaffold App
+        const scaffoldRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-app",
+            "--name",
+            "Apex Universal",
+            "--slug",
+            "apex-universal",
+            "--scheme",
+            "apexapp",
+            "--bundle-id",
+            "com.agency.apex",
+            "--output",
+            tempDir,
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        const scaffoldData = JSON.parse(scaffoldRes.stdout);
+        expect(scaffoldData.success).toBe(true);
+        expect(scaffoldData.filesWritten.length).toBeGreaterThanOrEqual(8);
+        expect(fs.existsSync(path.join(tempDir, "app.json"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "package.json"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "tailwind.config.js"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "app/_layout.tsx"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "app/index.tsx"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "app/(auth)/callback.tsx"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "app/pay/confirm.tsx"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "components/hardware-fence.tsx"))).toBe(true);
+
+        // 2. Audit App (Valid)
+        const validAuditRes = spawnSync("bun", [scriptPath, "--audit-app", tempDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(validAuditRes.status).toBe(0);
+        const validAudit = JSON.parse(validAuditRes.stdout);
+        expect(validAudit.passed).toBe(true);
+        expect(validAudit.verdict).toBe("PASS");
+        expect(validAudit.score).toBeGreaterThanOrEqual(90);
+        expect(validAudit.newArchEnabled).toBe(true);
+        expect(validAudit.hermesEnabled).toBe(true);
+        expect(validAudit.hasScheme).toBe(true);
+        expect(validAudit.hasDeepLinks).toBe(true);
+        expect(validAudit.hasEdgeToEdge).toBe(true);
+
+        // 3. Audit App (Defective config)
+        const defectiveAppJsonPath = path.join(tempDir, "defective-app.json");
+        fs.writeFileSync(
+          defectiveAppJsonPath,
+          JSON.stringify({
+            expo: {
+              name: "Defective",
+              newArchEnabled: false,
+              jsEngine: "jsc",
+            },
+          }),
+          "utf8",
+        );
+        const defectiveAuditRes = spawnSync("bun", [scriptPath, "--audit-app", defectiveAppJsonPath, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(defectiveAuditRes.status).toBe(1);
+        const defectiveAudit = JSON.parse(defectiveAuditRes.stdout);
+        expect(defectiveAudit.passed).toBe(false);
+        expect(defectiveAudit.verdict).toBe("BLOCK");
+        expect(defectiveAudit.issues.length).toBeGreaterThanOrEqual(4);
+
+        // 4. Verify Deep Links
+        const linksRes = spawnSync(
+          "bun",
+          [scriptPath, "--verify-deep-links", path.join(tempDir, "app.json"), "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(linksRes.status).toBe(0);
+        const linksData = JSON.parse(linksRes.stdout);
+        expect(linksData.valid).toBe(true);
+        expect(linksData.schemes).toContain("apexapp");
+        expect(linksData.universalLinks.iosDomains).toContain("apex-universal.example.com");
+        expect(linksData.universalLinks.androidHosts).toContain("apex-universal.example.com");
+        expect(linksData.universalLinks.autoVerify).toBe(true);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });

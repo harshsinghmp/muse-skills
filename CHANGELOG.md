@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Sol Product Architect: Universal Mobile App & Expo SDK 52 Architecture (`mobile:expo`)**:
+  - **Expo Universal Playbook (`expo.md`)**: Enforces Modern Expo SDK 52 Universal Architecture with file-based routing via `expo-router` v4, Hermes engine, `newArchEnabled: true`, edge-to-edge Android 15 support, and iOS 15.1+ minimum deployment target (EXP-001); NativeWind v4 & OKLCH Theme Integration with CSS compiled to React Native StyleSheets and safe area insets fencing via `useSafeAreaInsets` (EXP-002); Deep Linking & Universal Links / App Links Architecture with custom app schemes, iOS `applinks:<domain>`, Android `assetlinks.json`, and auth/payment callback routes (EXP-003); and Native Hardware Access & Ephemeral Mocking Fences for Camera, SecureStore, Haptics, and LocalAuthentication with simulator fallbacks (EXP-004).
+  - **Expo Scaffold CLI (`expo-scaffold.ts`)**: Built standalone CLI in `skills/agency-delivery/mobile/scripts/expo-scaffold.ts` supporting `--scaffold-app`, `--audit-app`, `--verify-deep-links`, and `--json`.
+  - **Mobile Mode Expansion**: Expanded `mobile` to 7 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 437 slash commands per harness.
+
 - **Agency Operations & Media Buying: Omnichannel Blended CAC & ROAS Attribution Triangulation (`paidads:roas`)**:
   - **ROAS Architecture Playbook (`roas.md`)**: Enforces Omnichannel Blended CAC and Marketing Efficiency Ratio (MER) Triangulation with an absolute MER floor $\ge 3.0\times$ (target $\ge 4.5\times$) and Blended CAC payback $\le 90\text{ days}$ (ROAS-001); In-Platform ROAS Haircut Discounts (Meta $-25\%$, Google PMax/Brand $-35\%$, TikTok $-30\%$) and Contribution Margin protection ($> 20\%$) (ROAS-002); 4-Tier Ad Spend Pacing & Scaling Gates (max $+20\%$ per 48h, emergency circuit breaker throttling spend 50% if MER $< 2.0\times$) (ROAS-003); and Post-iOS 14 Server-Side Tracking & First-Party Data Hygiene (CAPI) with EMQ $\ge 7.5/10$ (ROAS-004).
   - **ROAS Calculator CLI (`roas-calculator.ts`)**: Built standalone CLI in `skills/agency-delivery/paidads/scripts/roas-calculator.ts` supporting `--calc-mer`, `--triangulate-roas`, `--audit-spend`, `--scaffold-pacing`, and `--json`.
