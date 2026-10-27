@@ -1,6 +1,6 @@
 # 🛠️ webdev
 
-The web engineering department head: one skill across twenty modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, edge, rate-limit, onboard, audit, hydration-polish, technical-resilience, and security-headers. Stack-agnostic: uses what the project uses.
+The web engineering department head: one skill across twenty-one modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, edge, rate-limit, offline, onboard, audit, hydration-polish, technical-resilience, and security-headers. Stack-agnostic: uses what the project uses.
 
 ## Install
 
@@ -43,6 +43,7 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 | **funnel** | sales & conversion funnels | Funnel: high-converting lead capture, upsell/downsell sequences, and order bumps. |
 | **edge** | edge runtime, cloudflare workers, hono | Edge: Hono v4, Cloudflare D1 parameterized queries, edge KV caching, and sub-10ms cold starts. |
 | **rate-limit** | rate limit, sliding window, ddos defense | Rate Limit: sliding-window counters, IETF RateLimit headers, and honeypot bot tarpits. |
+| **offline** | pwa, service worker, offline caching | Offline: PWA CacheFirst & NetworkFirst strategies, IndexedDB mutation queues, and manifest compliance. |
 | **onboard** | developer repo onboarding | Onboard: rapid codebase orientation, architecture map, and first PR readiness. |
 | **audit** | responsive & technical web audit | Audit: mobile responsiveness matrix, touch target audit, and security headers. |
 

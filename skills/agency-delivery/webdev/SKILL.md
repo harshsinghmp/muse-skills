@@ -1,10 +1,10 @@
 ---
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
-description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, edge runtime architecture, edge rate limiting, deploy, and responsive audits — routed through twenty modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy low-latency Hono edge micro-APIs, enforce sliding-window rate limiting, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|deploy|audit]"
+description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, high-converting funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, deploy, and responsive audits — routed through twenty-one modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy low-latency Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, implement e-commerce or CMS functionality, build interactive funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|offline|deploy|audit]"
 user-invocable: true
-version: 1.7.0
+version: 1.8.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -53,6 +53,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **funnel** | "build funnel", "sales funnel", "checkout flow", "multi-step form", "upsell flow", "funnel engineering", "conversion tracking" | Full-stack funnel engineering: multi-step form state machines, 1-click upsells/downsells, Stripe checkout, server-side tracking pixels (CAPI), and CRM webhooks | [references/funnel.md](references/funnel.md) |
 | **edge** | "edge runtime", "cloudflare workers", "hono edge", "d1 sql", "sub-10ms cold start" | Serverless edge computing: Hono v4, Cloudflare D1 parameterized queries, edge KV caching, and sub-10ms cold starts | [references/edge.md](references/edge.md) |
 | **rate-limit** | "rate limit", "sliding window", "ddos defense", "abuse mitigation", "api rate limiter", "honeypot" | Edge rate limiting & abuse defense: sliding-window counters, IETF RateLimit headers, and honeypot bot tarpits | [references/rate-limit.md](references/rate-limit.md) |
+| **offline** | "offline mode", "pwa", "service worker", "offline caching", "background sync", "offline form queue", "sw generator" | Progressive Web App architecture: CacheFirst static assets, NetworkFirst API routing, IndexedDB mutation queues, and background sync | [references/offline.md](references/offline.md) |
 | **deploy** | "ship the build", "static upload", "one-command deploy", "deploy the frontend" | App-side ship: one-command full-stack deploy, static-upload fallback, object-storage contract (pipelines live in `devops`) | [references/deploy.md](references/deploy.md) |
 | **audit** | "audit responsiveness", "responsiveness-check", "mobile responsiveness", "viewport audit", "touch targets", "overflow check" | Responsive design audits (responsiveness-check), mobile viewports (375px–1920px), touch targets, and code health | [references/audit.md](references/audit.md) |
 
@@ -124,6 +125,8 @@ A change is not done until the gate is green. If no gate exists, say so and add 
 | `bun webdev.ts --port-clean <port>` | Cleanly release occupied dev port | Terminates orphaned zombie process (`SIGTERM` → `SIGKILL`) |
 | `bun webdev.ts --verify-package <name>` | Audit dependency against hallucinated/typosquatted names | Protects package integrity before `bun add` |
 | `bun webdev.ts --ssr-boundary-scan [dir]` | Scan codebase for top-level browser global violations | Catches `window is not defined` and hydration errors |
+| `bun sw-generator.ts --generate-sw` | Generate production Service Worker with CacheFirst & NetworkFirst | `sw.js` with offline fallback shell |
+| `bun sw-generator.ts --audit-pwa [dir]` | Audit target codebase for PWA compliance (SW, manifest, icons) | Structured scorecard (0-100) with remediation steps |
 
 ### Sourcing rule
 
