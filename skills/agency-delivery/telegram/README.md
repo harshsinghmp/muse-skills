@@ -9,6 +9,7 @@ This directory is the Telegram department for the agency: bot alerts, approval b
 - **hook** — register Claude Code hooks so Telegram gets session/tool/error notices.
 - **route** — route structured events to the right chat/bot/target, with ack before dispatch.
 - **setup** — create a bot token config file with mode-600 and recovery docs.
+- **webhook** — zero-dependency HTTP webhook receiver: timing-safe secret token verification, replay protection, update deduplication, and fast HTTP 200 ack.
 - **audit** — bot security audit / token exposure check: Token hygiene/mode-600, routing, approvals, hooks, rate limits.
 
 ## When to use it
