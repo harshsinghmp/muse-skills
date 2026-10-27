@@ -710,9 +710,9 @@
     },
     {
       "name": "paidads",
-      "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic \u2014 plus cross-channel retargeting, budget pacing, and account audits \u2014 routed through eleven modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
+      "description": "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic \u2014 plus cross-channel retargeting, ROAS attribution and blended CAC pacing, and account audits \u2014 routed through twelve modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics).",
       "path": "skills/agency-delivery/paidads/SKILL.md",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [

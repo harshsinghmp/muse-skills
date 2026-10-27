@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Agency Operations & Media Buying: Omnichannel Blended CAC & ROAS Attribution Triangulation (`paidads:roas`)**:
+  - **ROAS Architecture Playbook (`roas.md`)**: Enforces Omnichannel Blended CAC and Marketing Efficiency Ratio (MER) Triangulation with an absolute MER floor $\ge 3.0\times$ (target $\ge 4.5\times$) and Blended CAC payback $\le 90\text{ days}$ (ROAS-001); In-Platform ROAS Haircut Discounts (Meta $-25\%$, Google PMax/Brand $-35\%$, TikTok $-30\%$) and Contribution Margin protection ($> 20\%$) (ROAS-002); 4-Tier Ad Spend Pacing & Scaling Gates (max $+20\%$ per 48h, emergency circuit breaker throttling spend 50% if MER $< 2.0\times$) (ROAS-003); and Post-iOS 14 Server-Side Tracking & First-Party Data Hygiene (CAPI) with EMQ $\ge 7.5/10$ (ROAS-004).
+  - **ROAS Calculator CLI (`roas-calculator.ts`)**: Built standalone CLI in `skills/agency-delivery/paidads/scripts/roas-calculator.ts` supporting `--calc-mer`, `--triangulate-roas`, `--audit-spend`, `--scaffold-pacing`, and `--json`.
+  - **PaidAds Mode Expansion**: Expanded `paidads` to 12 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 436 slash commands per harness.
+
 - **Jasper Creative Division: Viral Loop Coefficient & Referral Mechanics Engine (`growth:viral`)**:
   - **Viral Loop Playbook (`viral.md`)**: Enforces Mathematical $K$-Factor Triangulation ($K = i \times c$) modeling exponential virality ($K \ge 1.0$) and organic amplification multipliers ($\frac{1}{1 - K}$) with a $K \ge 0.15$ viability floor (VIR-001); Viral Cycle Time ($ct$) compression fences mandating $ct \le 72\text{h}$ with frictionless invitee landings (VIR-002); Asymmetric Double-Sided Incentive Architecture with instant invitee gratification and milestone/activation-gated inviter rewards plus anti-sybil fraud defense (VIR-003); and Contextual "Aha!" Trigger Placement banning cold asks at signup and anchoring referral prompts to dopamine peak moments (VIR-004).
   - **Viral Engine CLI (`viral-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/growth/scripts/viral-engine.ts` supporting `--calc-k`, `--simulate-loop`, `--audit-referral`, `--scaffold-incentives`, and `--json`.
