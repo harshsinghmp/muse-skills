@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Nexus Technical Director: Core Web Vitals Auditor & Production Gate (`qa-launch:vitals`)**:
+  - **Core Web Vitals Playbook (`vitals.md`)**: Enforces Sub-200ms INP Gate with main-thread long task decomposition and mandatory passive/throttled event listeners (VIT-001); Zero-CLS Layout Shift Fences with explicit image/media dimensions, CSS `aspect-ratio`, and pre-reserved dynamic slot containers (VIT-002); Sub-2.5s LCP Boundary prioritizing hero assets with `fetchpriority="high"`, `loading="eager"`, and zero render-blocking script waterfalls (VIT-003); and Web Font FOUC/FOIT Elimination with `font-display: swap/optional`, WOFF2-only payloads, and 100KB budget certification (VIT-004).
+  - **Vitals Guard CLI (`vitals-guard.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/vitals-guard.ts` supporting `--audit-vitals`, `--check-cls`, `--check-inp`, `--check-lcp`, `--check-fonts`, and `--json`.
+  - **QA-Launch Mode Expansion**: Expanded `qa-launch` to 8 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 434 slash commands per harness.
+
 - **Jasper Creative Division: Omnichannel 30-Day Content Matrix & Editorial Engine (`smm:calendar`)**:
   - **Editorial Architecture Playbook (`calendar.md`)**: Enforces 30-day Omnichannel Matrix Architecture balancing the 40/30/20/10 content pillar ratio across LinkedIn, X, Instagram, and YouTube (CAL-001); CORE-EEAT & 18-token standalone quotability gate for AI Engine Optimization and social shares (CAL-002); 1-to-5 Pillar Asset Repurposing Multiplier generating native platform cuts from technical case studies (CAL-003); and Anti-Fatigue Cadence with weekly reactive slack buffers and 7-day draft lead times (CAL-004).
   - **Calendar Matrix CLI (`calendar-matrix.ts`)**: Built standalone CLI in `skills/agency-delivery/smm/scripts/calendar-matrix.ts` supporting `--scaffold-matrix`, `--audit-schedule`, `--repurpose-cascade`, and `--json`.
