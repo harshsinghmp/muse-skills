@@ -6,6 +6,10 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Division: Omnichannel 30-Day Content Matrix & Editorial Engine (`smm:calendar`)**:
+  - **Editorial Architecture Playbook (`calendar.md`)**: Enforces 30-day Omnichannel Matrix Architecture balancing the 40/30/20/10 content pillar ratio across LinkedIn, X, Instagram, and YouTube (CAL-001); CORE-EEAT & 18-token standalone quotability gate for AI Engine Optimization and social shares (CAL-002); 1-to-5 Pillar Asset Repurposing Multiplier generating native platform cuts from technical case studies (CAL-003); and Anti-Fatigue Cadence with weekly reactive slack buffers and 7-day draft lead times (CAL-004).
+  - **Calendar Matrix CLI (`calendar-matrix.ts`)**: Built standalone CLI in `skills/agency-delivery/smm/scripts/calendar-matrix.ts` supporting `--scaffold-matrix`, `--audit-schedule`, `--repurpose-cascade`, and `--json`.
+
 - **Agency Financial Operations: Value-Based Pricing Architecture & Profitability Calculator (`accounts:pricing`)**:
   - **Pricing Architecture Playbook (`pricing.md`)**: Enforces Value-Based Pricing Triangulation with min 5.0x client ROI requirement and 10–20% economic value capture (PRC-001); Delivery Model Architecture Matrix comparing Fixed-Scope Milestones (50% deposit, 20% contingency buffer, 48h Stop-the-Clock) vs Dedicated Weekly Sprint Retainers vs Performance Hybrid (PRC-002); Guaranteed Gross Margin Floor (>= 55%) and minimum Effective Hourly Rate ($125/hr floor) (PRC-003); and standardized 3-Tier Proposal Pricing Schedule generation (PRC-004).
   - **Pricing Calculator CLI (`pricing-calculator.ts`)**: Built standalone CLI in `skills/agency-delivery/accounts/scripts/pricing-calculator.ts` supporting `--calc-model`, `--audit-quote`, `--scaffold-pricing-schedule`, and `--json`.

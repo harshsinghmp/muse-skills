@@ -2360,5 +2360,57 @@ test('bad test', async ({ page }) => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Jasper: smm calendar mode implements 30-day matrix, 18-token quotable gate, and repurposing cascade", () => {
+      const calendarRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/smm", "references", "calendar.md"),
+        "utf8",
+      );
+      expect(calendarRef).toContain("CAL-001: Omnichannel 30-Day Matrix Architecture");
+      expect(calendarRef).toContain("CAL-002: CORE-EEAT & 18-Token Standalone Quotability Gate");
+      expect(calendarRef).toContain("CAL-003: Pillar Asset Repurposing Multiplier");
+      expect(calendarRef).toContain("CAL-004: Anti-Fatigue Cadence & 7-Day Slack Buffer");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/smm/scripts/calendar-matrix.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "smm-calendar-test-"));
+      try {
+        // 1. Scaffold 30-day matrix
+        const matrixFile = path.join(tempDir, "calendar-matrix.md");
+        const scaffoldRes = spawnSync(
+          "bun",
+          [scriptPath, "--scaffold-matrix", "--topic", "AI Agent Engineering", "--output", matrixFile, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        expect(fs.existsSync(matrixFile)).toBe(true);
+        const matrixData = JSON.parse(scaffoldRes.stdout);
+        expect(matrixData.totalEntries).toBe(30);
+        expect(matrixData.pillarDistribution.contrarianAuthority).toBeGreaterThanOrEqual(35);
+
+        // 2. Audit Scaffolded Schedule
+        const auditRes = spawnSync("bun", [scriptPath, "--audit-schedule", matrixFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditRes.status).toBe(0);
+        const auditData = JSON.parse(auditRes.stdout);
+        expect(auditData.passed).toBe(true);
+        expect(auditData.hasSlackSlots).toBe(true);
+
+        // 3. Repurposing Cascade
+        const repRes = spawnSync(
+          "bun",
+          [scriptPath, "--repurpose-cascade", "--pillar-title", "Database Zero Downtime", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(repRes.status).toBe(0);
+        const repData = JSON.parse(repRes.stdout);
+        expect(repData.derivatives.length).toBe(5);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });
