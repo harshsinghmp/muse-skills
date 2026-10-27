@@ -1,6 +1,6 @@
 # 📈 growth
 
-The strategy and scaling department head: one skill across twelve modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
+The strategy and scaling department head: one skill across thirteen modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, viral, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
 
 ## Install
 
@@ -38,6 +38,7 @@ Run a CRO audit on our landing page hero section, enforce anti-slop copy, and ch
 | **pr** | public relations & press releases | AP-style press releases, journalist pitches, crisis holding statements, and bylines. |
 | **community** | community architecture & rituals | Discord/Skool/Slack community onboarding, weekly engagement loops, and AutoMod guardrails. |
 | **cro** | conversion rate optimization / landing page audit | CRO: hero section 5-second test, 5-state anti-slop copy gate, CTA contrast, and form friction reduction. |
+| **viral** | viral loop / k factor / referral loop | Viral: mathematical K-factor triangulation ($K = i \times c$), cycle time ($ct \le 72\text{h}$) compression, asymmetric double-sided incentives, and 'Aha!' trigger placement. |
 | **audit** | growth experiment audit | Rigorous experiment and acquisition channel audit (CAC, LTV, hypotheses). |
 
 ## How it works
