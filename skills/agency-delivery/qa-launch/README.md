@@ -1,6 +1,6 @@
 # 🛡️ qa-launch
 
-The pre-launch quality gate: one skill, seven modes — matrix, functional, performance, gate, regression, e2e, audit. Plan the coverage, verify the candidate, measure performance, verdict the release, re-verify the fixes, and run Playwright synthetic smoke journeys. Finds defects; routes them — never fixes inline.
+The pre-launch quality gate: one skill, eight modes — matrix, functional, performance, gate, regression, e2e, vitals, audit. Plan the coverage, verify the candidate, measure performance, audit Core Web Vitals, verdict the release, re-verify the fixes, and run Playwright synthetic smoke journeys. Finds defects; routes them — never fixes inline.
 
 ## Install
 
@@ -30,6 +30,7 @@ QA the release candidate and give me a Block-or-Ship verdict.
 | **gate** | release gate / Block-or-Ship | Gate: checklist with an explicit Ship or Block verdict. |
 | **regression** | re-verify after fixes | Regression: fixed issues plus adjacent blast radius, re-verified. |
 | **e2e** | e2e tests / playwright smoke suite | E2E: Playwright synthetic user journeys, accessible role locators, and headless smoke runner. |
+| **vitals** | core web vitals / inp audit / cls check | Vitals: Core Web Vitals audit (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, font budgets) and Block-or-Ship production gate. |
 | **audit** | audit the quality gate / launch audit | Audit: functional + regression + UAT sign-off, then a launch-gate audit (rollback plan, perf budget, docs). |
 
 ## How it works

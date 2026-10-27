@@ -2110,7 +2110,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
       expect(qaSkill).toContain("| **e2e** |");
       expect(qaSkill).toContain("references/e2e.md");
-      expect(qaSkill).toContain('argument-hint: "[matrix|functional|performance|gate|regression|e2e|audit]"');
+      expect(qaSkill).toContain('argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|audit]"');
 
       const e2eRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "e2e.md"),
@@ -2408,6 +2408,120 @@ test('bad test', async ({ page }) => {
         expect(repRes.status).toBe(0);
         const repData = JSON.parse(repRes.stdout);
         expect(repData.derivatives.length).toBe(5);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("Nexus: qa-launch vitals mode enforces sub-200ms INP, zero-CLS fences, sub-2.5s LCP, and font budgets", () => {
+      const vitalsRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "vitals.md"),
+        "utf8",
+      );
+      expect(vitalsRef).toContain("VIT-001: Sub-200ms INP Gate & Long Task Elimination");
+      expect(vitalsRef).toContain("VIT-002: Zero-CLS Layout Shift & Aspect-Ratio Fences");
+      expect(vitalsRef).toContain("VIT-003: Sub-2.5s LCP Boundary & Critical Resource Prioritization");
+      expect(vitalsRef).toContain("VIT-004: Web Font FOUC/FOIT Elimination & Real User Monitoring (RUM) Budget");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/scripts/vitals-guard.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qa-vitals-test-"));
+      try {
+        // 1. Defective release candidate
+        const badDir = path.join(tempDir, "defective");
+        fs.mkdirSync(badDir, { recursive: true });
+        fs.writeFileSync(
+          path.join(badDir, "index.html"),
+          `<!DOCTYPE html>
+<html>
+<head>
+  <script src="/analytics.js"></script>
+</head>
+<body>
+  <div class="hero-section">
+    <img src="/hero.jpg" alt="Hero" loading="lazy">
+  </div>
+  <iframe src="https://embed.example.com"></iframe>
+</body>
+</html>`,
+          "utf8",
+        );
+        fs.writeFileSync(
+          path.join(badDir, "app.ts"),
+          `window.addEventListener('scroll', () => { console.log('scrolled'); });
+window.alert('Blocking modal');`,
+          "utf8",
+        );
+        fs.writeFileSync(
+          path.join(badDir, "styles.css"),
+          `@font-face {
+  font-family: 'LegacyFont';
+  src: url('/fonts/legacy.ttf');
+}`,
+          "utf8",
+        );
+
+        const badAuditRes = spawnSync("bun", [scriptPath, "--audit-vitals", badDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(badAuditRes.status).toBe(1);
+        const badReport = JSON.parse(badAuditRes.stdout);
+        expect(badReport.verdict).toBe("BLOCK");
+        expect(badReport.blockingCount).toBeGreaterThanOrEqual(4);
+        expect(badReport.categories.inp.passed).toBe(false);
+        expect(badReport.categories.cls.passed).toBe(false);
+        expect(badReport.categories.lcp.passed).toBe(false);
+        expect(badReport.categories.fonts.passed).toBe(false);
+
+        // 2. Certified compliant release candidate
+        const goodDir = path.join(tempDir, "compliant");
+        fs.mkdirSync(goodDir, { recursive: true });
+        fs.writeFileSync(
+          path.join(goodDir, "index.html"),
+          `<!DOCTYPE html>
+<html>
+<head>
+  <script defer src="/analytics.js"></script>
+</head>
+<body>
+  <div class="hero-section">
+    <img src="/hero.jpg" alt="Hero" width="1200" height="630" fetchpriority="high" loading="eager">
+  </div>
+  <iframe src="https://embed.example.com" width="800" height="450" class="aspect-video"></iframe>
+</body>
+</html>`,
+          "utf8",
+        );
+        fs.writeFileSync(
+          path.join(goodDir, "app.ts"),
+          `window.addEventListener('scroll', () => { requestAnimationFrame(() => {}); }, { passive: true });`,
+          "utf8",
+        );
+        fs.writeFileSync(
+          path.join(goodDir, "styles.css"),
+          `@font-face {
+  font-family: 'ModernFont';
+  src: url('/fonts/modern.woff2') format('woff2');
+  font-display: swap;
+}`,
+          "utf8",
+        );
+
+        const goodAuditRes = spawnSync("bun", [scriptPath, "--audit-vitals", goodDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(goodAuditRes.status).toBe(0);
+        const goodReport = JSON.parse(goodAuditRes.stdout);
+        expect(goodReport.verdict).toBe("PASS");
+        expect(goodReport.blockingCount).toBe(0);
+        expect(goodReport.overallScore).toBeGreaterThanOrEqual(80);
+        expect(goodReport.categories.inp.passed).toBe(true);
+        expect(goodReport.categories.cls.passed).toBe(true);
+        expect(goodReport.categories.lcp.passed).toBe(true);
+        expect(goodReport.categories.fonts.passed).toBe(true);
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }

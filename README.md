@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 433 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 434 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -31,7 +31,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only).
-- **Command surface**: 46 skills + 377 `<skill>-<mode>` commands + 10 aliases = **433 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 378 `<skill>-<mode>` commands + 10 aliases = **434 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.0.1**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -198,7 +198,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`paidads`](skills/agency-delivery/paidads/README.md) | Full paid advertising department: campaign planning, ad copy, pixel tracking, and cross-channel retargeting across Google, Meta, LinkedIn, TikTok, and YouTube across 11 modes. |
 | [`periodic-retreat`](skills/reflection-maintenance/periodic-retreat/README.md) | Quarterly personal and project strategic retreat facilitator conducting multi-scale audits of project health, architecture debt, and OKR handoffs. |
 | [`pua`](skills/quality-review/pua/README.md) | Performance Improvement Plan engine forcing exhaustive problem-solving and structured debugging when tasks stall. |
-| [`qa-launch`](skills/agency-delivery/qa-launch/README.md) | Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist, release checklist with a Block-or-Ship verdict, regression sweeps, and Playwright synthetic smoke journeys across 7 modes. |
+| [`qa-launch`](skills/agency-delivery/qa-launch/README.md) | Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist, Core Web Vitals audit and production gate (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, font budgets), release checklist with a Block-or-Ship verdict, regression sweeps, and Playwright synthetic smoke journeys across 8 modes. |
 | [`refactor`](skills/design-interface/refactor/README.md) | Universal refactoring engine routable across 20 modes: UI components, code cleanup, architectural decoupling, runtime performance, and database schemas. |
 | [`relay`](skills/context-orchestration/relay/README.md) | Bidirectional agent handoff and session resumption engine with ambient continuity maintaining an always-current HANDOFF.md live-state file. |
 | [`research`](skills/agency-delivery/research/README.md) | Client-serving research department: user research, market sizing, competitive intelligence, and due-diligence entity dossiers across 5 modes. |
