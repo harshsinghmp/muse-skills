@@ -2105,5 +2105,93 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+    test("qa-launch:e2e mode enforces semantic accessible locators, critical smoke matrix, and error guards", () => {
+      const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
+      expect(qaSkill).toContain("| **e2e** |");
+      expect(qaSkill).toContain("references/e2e.md");
+      expect(qaSkill).toContain('argument-hint: "[matrix|functional|performance|gate|regression|e2e|audit]"');
+
+      const e2eRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "e2e.md"),
+        "utf8",
+      );
+      expect(e2eRef).toContain("E2E-001: Semantic & Accessible Locators First");
+      expect(e2eRef).toContain("E2E-002: Critical Journey Smoke Matrix");
+      expect(e2eRef).toContain("E2E-003: State Isolation & Ephemeral Seeding");
+      expect(e2eRef).toContain("E2E-004: Visual & Network Artifacts");
+      expect(e2eRef).toContain("getByRole");
+      expect(e2eRef).toContain("trace: 'on-first-retry'");
+
+      const runnerPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/scripts/e2e-runner.ts");
+      expect(fs.existsSync(runnerPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qa-launch-e2e-test-"));
+      try {
+        // 1. Scaffold Journey
+        const scaffoldFile = path.join(tempDir, "checkout.spec.ts");
+        const scaffoldRes = spawnSync(
+          "bun",
+          [runnerPath, "--scaffold-journey", "Checkout & Order Flow", "--output", scaffoldFile, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        expect(fs.existsSync(scaffoldFile)).toBe(true);
+
+        const scaffoldContent = fs.readFileSync(scaffoldFile, "utf8");
+        expect(scaffoldContent).toContain("getByRole");
+        expect(scaffoldContent).toContain("tester-");
+        expect(scaffoldContent).toContain("page.on('console'");
+        expect(scaffoldContent).toContain("page.on('response'");
+
+        // 2. Audit Scaffolded Clean Test File (Should pass with 100/100 score)
+        const auditCleanRes = spawnSync("bun", [runnerPath, "--audit-selectors", scaffoldFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditCleanRes.status).toBe(0);
+        const cleanReport = JSON.parse(auditCleanRes.stdout);
+        expect(cleanReport.passed).toBe(true);
+        expect(cleanReport.criticalCount).toBe(0);
+        expect(cleanReport.healthScore).toBe(100);
+
+        // 3. Audit Dirty Test File with Anti-Patterns
+        const dirtyFile = path.join(tempDir, "flaky.spec.ts");
+        fs.writeFileSync(
+          dirtyFile,
+          `
+import { test } from '@playwright/test';
+test('bad test', async ({ page }) => {
+  await page.waitForTimeout(5000); // Critical sleep
+  const xpathBtn = page.locator('//div[3]/button'); // Critical xpath
+  const chainEl = page.locator('div > section > div > button:nth-child(2)'); // Warning hierarchy
+  const tailwindEl = page.locator('.flex.items-center.bg-blue-600'); // Warning tailwind
+});
+`,
+          "utf8",
+        );
+
+        const auditDirtyRes = spawnSync("bun", [runnerPath, "--audit-selectors", dirtyFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditDirtyRes.status).toBe(1); // Fails due to critical issues
+        const dirtyReport = JSON.parse(auditDirtyRes.stdout);
+        expect(dirtyReport.passed).toBe(false);
+        expect(dirtyReport.criticalCount).toBeGreaterThanOrEqual(2);
+        expect(dirtyReport.healthScore).toBeLessThan(60);
+
+        // 4. Smoke check matrix
+        const smokeRes = spawnSync("bun", [runnerPath, "--smoke-check", "--target", tempDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        // It detects checkout.spec.ts as covering shopping-to-checkout
+        const smokeReport = JSON.parse(smokeRes.stdout);
+        const checkoutJourney = smokeReport.journeys.find((j: { category: string }) => j.category === "checkout");
+        expect(checkoutJourney?.covered).toBe(true);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });

@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Quality Assurance & Pre-Launch: Playwright Synthetic User Journey & Headless Smoke Runner (`qa-launch:e2e`)**:
+  - **E2E Architecture Playbook (`e2e.md`)**: Enforces Semantic & Accessible Locators First (`getByRole`, `getByLabel`, `getByText`, explicit `data-testid` fallback, banning brittle CSS hierarchy, Tailwind classes, and XPath) with zero arbitrary sleeps (E2E-001); Critical Journey Smoke Matrix covering guest-to-auth, shopping-to-checkout, onboarding funnel, password reset, and account deletion/compliance (E2E-002); State Isolation & Ephemeral Seeding with dynamic run tokens, storage state reuse, and deterministic teardown (E2E-003); and Visual & Network Artifacts with trace on first retry, failure screenshots, and console/5xx error guards (E2E-004).
+  - **E2E Runner CLI (`e2e-runner.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/e2e-runner.ts` supporting `--audit-selectors`, `--scaffold-journey`, `--smoke-check`, and `--json`.
+  - **QA-Launch Mode Expansion**: Expanded `qa-launch` to 7 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 431 slash commands per harness.
+
 - **Retainer Contract Renewal & Scope Expansion Engine (`retain:renewal`)**:
   - **Renewal Architecture Playbook (`renewal.md`)**: Enforces proactive 60-day calendar sequence (T-60 audit, T-45 champion alignment, T-30 proposal, T-14 lock) (RNW-001); cumulative economic impact & verified ROI receipts ledger with >= 3.0x return requirement (RNW-002); three-tier expansion proposal architecture (Baseline, Velocity +25%, and Dedicated Pod +75%) (RNW-003); and scope creep retro recalibrating EHR and pricing floors to guarantee >= 55% gross margin (RNW-004).
   - **Renewal Engine CLI (`renewal-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/retain/scripts/renewal-engine.ts` supporting `--scaffold-renewal`, `--audit-contract`, and `--roi-ledger`.
