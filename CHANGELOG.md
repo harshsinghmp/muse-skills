@@ -6,6 +6,16 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Automation & Real-Time Telephony: High-Concurrency Voice Agent Bridge (`automation:voice`)**:
+  - **Voice Bridge CLI (`voice-bridge.ts`)**: Built standalone CLI in `skills/agency-delivery/automation/scripts/voice-bridge.ts` enforcing sub-600ms latency budgets with TTFT backchanneling (VOC-001), mandatory two-party consent notice and TCPA/E.164 compliance (VOC-002), hot telephony provider failover in <1200ms (VOC-003), and live sentiment scoring with automated human warm transfer (VOC-004).
+
+- **Coupling Router: Federated Worktree Lease Arbitration & Safe Quarantine (`coupling-router:federation`)**:
+  - **Federation CLI (`worktree-federation.ts`)**: Enhanced worktree federation with advisory lock acquisition, 300s TTL pulse daemon, dirty WIP safe quarantine (`refs/quarantine/*`), and auto-namespacing (`--namespaced`).
+
+- **Core Engine & DOX Scaffolding: Universal GitHub Templates & Intelligent Archetype Pruning (`updateagents` & `new-project`)**:
+  - **Universal GitHub Templates**: Provisioned starter templates including `FUNDING.yml` (multi-platform sponsor configs), `codeql.yml` (CodeQL static analysis), `trivy.yml` (container and dependency vulnerability scanning), `docs-sync.yml` (POSIX documentation link integrity), and `ai-slop.yml` (automated PR scan for synthetic placeholders and LLM residue).
+  - **Intelligent Archetype Pruning Protocol**: Added `auditProjectArchetypePruning` to `github-scaffold.ts` dynamically auditing and recommending file pruning based on project archetypes (`agency-client`, `oss-library`, `internal-tool`).
+
 - **Sol Product Architect: Production Telegram Webhook Ingress & Idempotent Event Receiver (`telegram:webhook`)**:
   - **Webhook Playbook (`webhook.md`)**: Enforces Pure-Runtime Webhook Listener with `/webhook` receiver, `/healthz` and `/ready` probes, zero external framework dependencies, and graceful shutdown handling (WBK-001); Constant-Time Secret Token Header Gate verifying `X-Telegram-Bot-Api-Secret-Token` via `crypto.timingSafeEqual` with minimum 32-character high-entropy secret token requirements and mandatory HTTPS ingress (WBK-002); Replay Attack & Timestamp Drift Mitigation with sliding time-window verification (`max_drift_seconds: 300`) and LRU deduplication cache for Telegram `update_id`s (WBK-003); and Idempotent Event Ingestion & Fast HTTP 200 OK Acknowledgement (< 200ms) with asynchronous decoupling of update dispatching to memory/Redis/Kafka streams (WBK-004).
   - **Webhook Receiver CLI (`webhook-receiver.ts`)**: Built standalone CLI in `skills/agency-delivery/telegram/scripts/webhook-receiver.ts` supporting `--listen-webhook`, `--verify-secret`, `--register-webhook`, `--audit-config`, `--scaffold-receiver`, `--generate-secret`, and `--json`.
