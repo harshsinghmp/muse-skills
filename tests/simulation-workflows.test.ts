@@ -649,6 +649,81 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(voiceRef).toContain("Bland AI");
       expect(voiceRef).toContain("Twilio Voice + Media Streams");
       expect(voiceRef).toContain("Human Warm Transfer & Escalation Guardrails");
+      expect(voiceRef).toContain("VOC-001");
+      expect(voiceRef).toContain("VOC-002");
+      expect(voiceRef).toContain("VOC-003");
+      expect(voiceRef).toContain("VOC-004");
+      expect(voiceRef).toContain("voice-bridge.ts");
+    });
+
+    test("Sol & Crew: voice-bridge CLI enforces sub-600ms latency, TCPA consent, provider failover, and warm transfer", () => {
+      const {
+        calculateLatencyBudget,
+        auditTelephonyCompliance,
+        simulateProviderFailover,
+        evaluateSentimentAndEscalation,
+        scaffoldTwimlMediaStream,
+      } = require("../skills/agency-delivery/automation/scripts/voice-bridge");
+
+      // 1. Latency budget (VOC-001)
+      const optimal = calculateLatencyBudget(100, 180, 100, 30);
+      expect(optimal.isBudgetMet).toBe(true);
+      expect(optimal.totalRttMs).toBe(410);
+      expect(optimal.backchannelRequired).toBe(false);
+
+      const slowLlm = calculateLatencyBudget(120, 420, 110, 40);
+      expect(slowLlm.backchannelRequired).toBe(true);
+      expect(slowLlm.recommendations.some((r: string) => r.includes("backchanneling"))).toBe(true);
+
+      const breach = calculateLatencyBudget(200, 350, 180, 50);
+      expect(breach.isBudgetMet).toBe(false);
+      expect(breach.status).toBe("LATENCY_BREACH");
+
+      // 2. Telephony & TCPA compliance audit (VOC-002)
+      const passedCompliance = auditTelephonyCompliance(
+        "+18005550199",
+        "This call is recorded and assisted by an AI agent for quality assurance.",
+        3,
+        false,
+      );
+      expect(passedCompliance.status).toBe("PASSED");
+      expect(passedCompliance.isConsentTimingCompliant).toBe(true);
+      expect(passedCompliance.hasTwoPartyDisclosure).toBe(true);
+
+      const failedCompliance = auditTelephonyCompliance("+18005550199", "Hello there!", 7, true);
+      expect(failedCompliance.status).toBe("NON_COMPLIANT");
+      expect(failedCompliance.violations.length).toBeGreaterThanOrEqual(3);
+
+      // 3. Multi-provider hot fallback (VOC-003)
+      const primaryOk = simulateProviderFailover(false);
+      expect(primaryOk.activeProvider).toBe("retell");
+      expect(primaryOk.failoverTriggered).toBe(false);
+
+      const failover = simulateProviderFailover(true, 300, 450);
+      expect(failover.activeProvider).toBe("bland");
+      expect(failover.failoverTriggered).toBe(true);
+      expect(failover.isSeamless).toBe(true); // <1200ms
+      expect(failover.callPreserved).toBe(true);
+
+      // 4. Real-time sentiment & warm transfer (VOC-004)
+      const normalCall = evaluateSentimentAndEscalation("I'd like to book an appointment next Tuesday please.");
+      expect(normalCall.warmTransferTriggered).toBe(false);
+
+      const angryCall = evaluateSentimentAndEscalation(
+        "I demand to speak to a real person and supervisor immediately!",
+        "+18005550199",
+      );
+      expect(angryCall.warmTransferTriggered).toBe(true);
+      expect(angryCall.frustrationKeywordsDetected).toContain("real person");
+      expect(angryCall.frustrationKeywordsDetected).toContain("supervisor");
+      expect(angryCall.twimlDialPayload).toContain("<Dial");
+      expect(angryCall.twimlDialPayload).toContain("+18005550199");
+
+      // 5. TwiML scaffolding
+      const twiml = scaffoldTwimlMediaStream("wss://voice.agency.internal/media-stream");
+      expect(twiml).toContain("<Response>");
+      expect(twiml).toContain('<Stream url="wss://voice.agency.internal/media-stream">');
+      expect(twiml).toContain("<Say");
     });
 
     test("Sol: automation realtime mode covers WebSockets, SSE streaming, and jittered reconnection backoff", () => {
