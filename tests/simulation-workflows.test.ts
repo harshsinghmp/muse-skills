@@ -2953,5 +2953,203 @@ window.alert('Blocking modal');`,
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Sol: telegram webhook mode implements production webhook receiver, timing-safe verification, and deduplication", async () => {
+      const tgSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/telegram", "SKILL.md"), "utf8");
+      expect(tgSkill).toContain("| **webhook** |");
+      expect(tgSkill).toContain("references/webhook.md");
+      expect(tgSkill).toContain('argument-hint: "[notify|approve|hook|route|setup|webhook]"');
+
+      const webhookRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/telegram", "references", "webhook.md"),
+        "utf8",
+      );
+      expect(webhookRef).toContain("WBK-001 (Pure-Runtime Webhook Listener & Health Probe)");
+      expect(webhookRef).toContain("WBK-002 (Timing-Safe Secret Token Verification)");
+      expect(webhookRef).toContain("WBK-003 (Replay Attack & Timestamp Drift Mitigation)");
+      expect(webhookRef).toContain("WBK-004 (Idempotent Event Ingestion & Backpressure Queue)");
+      expect(webhookRef).toContain("X-Telegram-Bot-Api-Secret-Token");
+      expect(webhookRef).toContain("crypto.timingSafeEqual");
+      expect(webhookRef).toContain("max_drift_seconds");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/telegram/scripts/webhook-receiver.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "tg-webhook-test-"));
+      try {
+        // 1. Generate Secret CLI
+        const genRes = spawnSync("bun", [scriptPath, "--generate-secret", "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(genRes.status).toBe(0);
+        const genData = JSON.parse(genRes.stdout);
+        expect(genData.valid).toBe(true);
+        expect(genData.length).toBeGreaterThanOrEqual(32);
+        expect(genData.entropyBitsApprox).toBeGreaterThanOrEqual(192);
+
+        const testSecret = genData.secret_token;
+
+        // 2. Verify Secret CLI (Valid & Invalid)
+        const validVerifyRes = spawnSync(
+          "bun",
+          [scriptPath, "--verify-secret", "--secret", testSecret, "--header", testSecret, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(validVerifyRes.status).toBe(0);
+        const validVerify = JSON.parse(validVerifyRes.stdout);
+        expect(validVerify.valid).toBe(true);
+
+        const invalidVerifyRes = spawnSync(
+          "bun",
+          [scriptPath, "--verify-secret", "--secret", testSecret, "--header", "wrong-secret-token", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(invalidVerifyRes.status).toBe(1);
+        const invalidVerify = JSON.parse(invalidVerifyRes.stdout);
+        expect(invalidVerify.valid).toBe(false);
+
+        // 3. Register Webhook CLI
+        const regRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--register-webhook",
+            "--url",
+            "https://api.agency.com/telegram/webhook",
+            "--secret",
+            testSecret,
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(regRes.status).toBe(0);
+        const regData = JSON.parse(regRes.stdout);
+        expect(regData.payload.url).toBe("https://api.agency.com/telegram/webhook");
+        expect(regData.payload.secret_token).toBe(testSecret);
+        expect(regData.curl).toContain("setWebhook");
+
+        // 4. Scaffold Receiver CLI
+        const scaffoldDir = path.join(tempDir, "scaffolded-receiver");
+        const scaffoldRes = spawnSync("bun", [scriptPath, "--scaffold-receiver", "--output", scaffoldDir, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(scaffoldRes.status).toBe(0);
+        const scaffoldData = JSON.parse(scaffoldRes.stdout);
+        expect(scaffoldData.filesCreated).toContain("server.ts");
+        expect(scaffoldData.filesCreated).toContain(".env.example");
+        expect(scaffoldData.filesCreated).toContain("README.md");
+        expect(fs.existsSync(path.join(scaffoldDir, "server.ts"))).toBe(true);
+
+        // 5. Audit Webhook Config CLI
+        const configPath = path.join(tempDir, "tg-config.json");
+        fs.writeFileSync(
+          configPath,
+          JSON.stringify({
+            secret_token: testSecret,
+            webhook_url: "https://api.agency.com/telegram/webhook",
+            bot_token: "123456789:ABCDEF_mock_token",
+          }),
+          "utf8",
+        );
+        fs.chmodSync(configPath, 0o600);
+
+        const auditRes = spawnSync("bun", [scriptPath, "--audit-config", "--config", configPath, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditRes.status).toBe(0);
+        const auditData = JSON.parse(auditRes.stdout);
+        expect(auditData.passed).toBe(true);
+        expect(auditData.checks.fileExists).toBe(true);
+        expect(auditData.checks.filePermissionsMode600).toBe(true);
+        expect(auditData.checks.hasSecretToken).toBe(true);
+        expect(auditData.checks.secretEntropyValid).toBe(true);
+        expect(auditData.checks.urlIsHttps).toBe(true);
+
+        // 6. Test In-Process Webhook Listener & Deduplication
+        const { createWebhookListener } = await import("../skills/agency-delivery/telegram/scripts/webhook-receiver");
+        let receivedUpdateId = 0;
+        const testPort = 19876;
+        const testServer = createWebhookListener({
+          port: testPort,
+          secretToken: testSecret,
+          onUpdate: (update) => {
+            receivedUpdateId = update.update_id;
+          },
+        });
+
+        await new Promise<void>((resolve) => testServer.listen(testPort, "127.0.0.1", () => resolve()));
+
+        try {
+          // Health check probe
+          const healthRes = await fetch(`http://127.0.0.1:${testPort}/healthz`);
+          expect(healthRes.status).toBe(200);
+          const healthJson = await healthRes.json();
+          expect(healthJson.status).toBe("ok");
+
+          // Webhook POST with valid secret token
+          const postRes = await fetch(`http://127.0.0.1:${testPort}/webhook`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Telegram-Bot-Api-Secret-Token": testSecret,
+            },
+            body: JSON.stringify({
+              update_id: 998877,
+              message: {
+                message_id: 1,
+                date: Math.floor(Date.now() / 1000),
+                text: "/start",
+              },
+            }),
+          });
+          expect(postRes.status).toBe(200);
+          const postJson = await postRes.json();
+          expect(postJson.ok).toBe(true);
+          expect(postJson.update_id).toBe(998877);
+
+          // Wait small tick for async dispatch
+          await new Promise((r) => setTimeout(r, 50));
+          expect(receivedUpdateId).toBe(998877);
+
+          // Replay duplicate update_id -> returns deduplicated: true
+          const dupRes = await fetch(`http://127.0.0.1:${testPort}/webhook`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Telegram-Bot-Api-Secret-Token": testSecret,
+            },
+            body: JSON.stringify({
+              update_id: 998877,
+              message: {
+                message_id: 1,
+                date: Math.floor(Date.now() / 1000),
+                text: "/start",
+              },
+            }),
+          });
+          expect(dupRes.status).toBe(200);
+          const dupJson = await dupRes.json();
+          expect(dupJson.deduplicated).toBe(true);
+
+          // Unauthorized POST -> 403 Forbidden
+          const unauthRes = await fetch(`http://127.0.0.1:${testPort}/webhook`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Telegram-Bot-Api-Secret-Token": "bad-token",
+            },
+            body: JSON.stringify({ update_id: 112233 }),
+          });
+          expect(unauthRes.status).toBe(403);
+        } finally {
+          await new Promise<void>((resolve) => testServer.close(() => resolve()));
+        }
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });
