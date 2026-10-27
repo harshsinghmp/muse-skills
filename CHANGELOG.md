@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Division: Video Sales Letter Script & Storyboard Engine (`content:vsl`)**:
+  - **VSL Architecture Playbook (`vsl.md`)**: Enforces the 3-second tri-layer retention hook (VSL-001); Jasper's 6-beat narrative spine (Pattern Interrupt, Villain, Paradigm Shift, Unique Mechanism, Proof Stacking, and Dual CTA) (VSL-002); mandatory Two-Column Audio/Visual storyboard production tables with visual cues and verbatim dialogue (VSL-003); and conversational WPM pacing gates (130–145 WPM) with strict anti-slop buzzword bans (VSL-004).
+  - **VSL Generator CLI (`vsl-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/content/scripts/vsl-generator.ts` supporting `--scaffold-vsl`, `--audit-script`, and `--timing`.
+  - **Content Mode Expansion**: Expanded `content` to 11 active modes (13 dispatch references), updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 429 slash commands per harness.
+
 - **Server-Side Event Ingestion & Privacy Scrubber (`analytics:events`)**:
   - **Event Ingestion Playbook (`events.md`)**: Enforces edge PII scrubbing for emails, phone numbers, auth secrets, and credit cards (EVT-001); strict JSON schema validation, Object-Action snake_case naming, and deterministic SHA-256 idempotency deduplication (EVT-002); dual-rail transport with browser sendBeacon and non-blocking edge queue ingestion under 15ms (EVT-003); and deterministic multi-touch attribution preserving UTM parameters and referring campaigns (EVT-004).
   - **Event Collector CLI (`event-collector.ts`)**: Built standalone CLI in `skills/agency-delivery/analytics/scripts/event-collector.ts` supporting `--validate`, `--scrub`, `--fingerprint`, and `--generate-payload`.
