@@ -1,6 +1,6 @@
 # 📈 growth
 
-The strategy and scaling department head: one skill across twelve modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
+The strategy and scaling department head: one skill across thirteen modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, viral, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
 
 ## Install
 
