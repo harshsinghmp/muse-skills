@@ -2663,5 +2663,180 @@ window.alert('Blocking modal');`,
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Crew: paidads roas mode implements MER triangulation, haircut discounts, pacing gates, and CAPI tracking", () => {
+      const paidadsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/paidads", "SKILL.md"), "utf8");
+      expect(paidadsSkill).toContain("| **roas** |");
+      expect(paidadsSkill).toContain("references/roas.md");
+      expect(paidadsSkill).toContain("version: 1.1.0");
+
+      const roasRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/paidads", "references", "roas.md"),
+        "utf8",
+      );
+      expect(roasRef).toContain("ROAS-001: Omnichannel Blended CAC & Marketing Efficiency Ratio (MER) Triangulation");
+      expect(roasRef).toContain("ROAS-002: In-Platform ROAS Haircut Discounts & Multi-Touch Attribution Calibration");
+      expect(roasRef).toContain("ROAS-003: 4-Tier Ad Spend Pacing & Scaling Gates");
+      expect(roasRef).toContain("ROAS-004: Post-iOS 14 Server-Side Tracking & First-Party Data Hygiene (CAPI)");
+      expect(roasRef).toContain("flowchart TD");
+      expect(roasRef).toContain("EMQ");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/paidads/scripts/roas-calculator.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "paidads-roas-test-"));
+      try {
+        // 1. Calculate MER & Blended CAC
+        const calcRes = spawnSync(
+          "bun",
+          [scriptPath, "--calc-mer", "--revenue", "45000", "--spend", "10000", "--customers", "250", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(calcRes.status).toBe(0);
+        const calcData = JSON.parse(calcRes.stdout);
+        expect(calcData.mer).toBe(4.5);
+        expect(calcData.blendedCac).toBe(40);
+        expect(calcData.isFloorMet).toBe(true);
+        expect(calcData.isTargetMet).toBe(true);
+        expect(calcData.status).toBe("OPTIMAL");
+
+        // 2. Triangulate Channel ROAS with in-platform haircuts
+        const triRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--triangulate-roas",
+            "--meta-spend",
+            "5000",
+            "--meta-roas",
+            "3.8",
+            "--google-spend",
+            "3500",
+            "--google-roas",
+            "4.2",
+            "--tiktok-spend",
+            "1500",
+            "--tiktok-roas",
+            "2.9",
+            "--total-rev",
+            "42000",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(triRes.status).toBe(0);
+        const triData = JSON.parse(triRes.stdout);
+        expect(triData.blendedMer).toBe(4.2);
+        expect(triData.totalAdSpend).toBe(10000);
+        expect(triData.netContribution).toBe(32000);
+        expect(triData.contributionMarginPercent).toBe(76.2);
+        expect(triData.isContributionMarginHealthy).toBe(true);
+        expect(triData.channels.length).toBe(3);
+
+        // 3. Audit Ad Spend Config (Valid vs Invalid)
+        const validConfig = path.join(tempDir, "valid-config.json");
+        fs.writeFileSync(
+          validConfig,
+          JSON.stringify({
+            clientName: "Alpha E-Commerce",
+            monthlyBudget: 25000,
+            targetMer: 4.5,
+            merFloor: 3.0,
+            haircutDiscountsApplied: true,
+            pacingLimits: {
+              tier1TestingLimit: 100,
+              tier2StabilizationMin: 100,
+              tier2StabilizationMax: 500,
+              maxVerticalScalePercentPer48h: 20,
+            },
+            serverSideTracking: {
+              metaCapiActive: true,
+              googleEnhancedConversionsActive: true,
+              tiktokEventsApiActive: true,
+              eventMatchQualityScore: 8.4,
+            },
+            circuitBreaker: {
+              enabled: true,
+              merThreshold: 2.0,
+              sustainedDays: 3,
+              throttlePercent: 50,
+            },
+          }),
+          "utf8",
+        );
+
+        const validAuditRes = spawnSync("bun", [scriptPath, "--audit-spend", validConfig, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(validAuditRes.status).toBe(0);
+        const validAuditData = JSON.parse(validAuditRes.stdout);
+        expect(validAuditData.passed).toBe(true);
+        expect(validAuditData.verdict).toBe("APPROVED");
+        expect(validAuditData.healthScore).toBe(100);
+
+        const invalidConfig = path.join(tempDir, "invalid-config.json");
+        fs.writeFileSync(
+          invalidConfig,
+          JSON.stringify({
+            clientName: "Unsafe Ad Setup",
+            targetMer: 1.8,
+            merFloor: 1.5,
+            haircutDiscountsApplied: false,
+            pacingLimits: {
+              maxVerticalScalePercentPer48h: 60,
+            },
+            serverSideTracking: {
+              metaCapiActive: false,
+              eventMatchQualityScore: 4.0,
+            },
+            circuitBreaker: {
+              enabled: false,
+            },
+          }),
+          "utf8",
+        );
+
+        const invalidAuditRes = spawnSync("bun", [scriptPath, "--audit-spend", invalidConfig, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(invalidAuditRes.status).toBe(1);
+        const invalidAuditData = JSON.parse(invalidAuditRes.stdout);
+        expect(invalidAuditData.passed).toBe(false);
+        expect(invalidAuditData.verdict).toBe("REJECTED_HIGH_RISK");
+        expect(invalidAuditData.issues.length).toBeGreaterThanOrEqual(4);
+
+        // 4. Scaffold Pacing Schedule
+        const pacingFile = path.join(tempDir, "pacing-schedule.md");
+        const pacingRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-pacing",
+            "--budget",
+            "30000",
+            "--target-mer",
+            "4.5",
+            "--client",
+            "Delta Growth",
+            "--output",
+            pacingFile,
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(pacingRes.status).toBe(0);
+        expect(fs.existsSync(pacingFile)).toBe(true);
+        const pacingContent = fs.readFileSync(pacingFile, "utf8");
+        expect(pacingContent).toContain("Delta Growth");
+        expect(pacingContent).toContain("ROAS-001 through ROAS-004");
+        expect(pacingContent).toContain("Tier 1: Testing & Exploration");
+        expect(pacingContent).toContain("Tier 4: Circuit Breaker");
+        expect(pacingContent).toContain("Event Match Quality (EMQ)");
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });
