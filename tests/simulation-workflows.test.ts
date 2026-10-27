@@ -486,7 +486,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillContent).toContain("**sla**");
       expect(skillContent).toContain("references/sla.md");
       expect(skillContent).toContain(
-        'argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|audit]"',
+        'argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|renewal|audit]"',
       );
 
       expect(slaContent).toContain("30-Day Post-Launch Bug Warranty vs Retainer SLA");
@@ -1992,6 +1992,115 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         const dirtyData = JSON.parse(dirtyRes.stdout);
         expect(dirtyData.valid).toBe(false);
         expect(dirtyData.buzzwordsFound.length).toBeGreaterThanOrEqual(2);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("retain:renewal mode enforces 60-day calendar, 3.0x ROI threshold, and 3-tier expansion", () => {
+      const retainSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/retain", "SKILL.md"), "utf8");
+      expect(retainSkill).toContain("| **renewal** |");
+      expect(retainSkill).toContain("references/renewal.md");
+      expect(retainSkill).toContain("renewal");
+
+      const renewalRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/retain", "references", "renewal.md"),
+        "utf8",
+      );
+      expect(renewalRef).toContain("RNW-001: 60-Day Proactive Timeline Gate");
+      expect(renewalRef).toContain("RNW-002: Cumulative Economic Impact & ROI Ledger");
+      expect(renewalRef).toContain("RNW-003: Three-Tier Expansion Proposal Architecture");
+      expect(renewalRef).toContain("RNW-004: Scope Creep Retro & Margin Calibration");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/retain/scripts/renewal-engine.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "retain-renewal-test-"));
+      try {
+        // 1. Audit Healthy Contract
+        const healthyRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--audit-contract",
+            "--contract-mrr",
+            "9000",
+            "--delivered-hours",
+            "50",
+            "--out-of-scope-hours",
+            "2",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(healthyRes.status).toBe(0);
+        const healthyData = JSON.parse(healthyRes.stdout);
+        expect(healthyData.marginHealthy).toBe(true);
+        expect(healthyData.effectiveHourlyRate).toBe(180);
+        expect(healthyData.estimatedGrossMargin).toBeGreaterThanOrEqual(55);
+
+        // 2. Audit Unhealthy Contract with excessive scope creep
+        const unhealthyRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--audit-contract",
+            "--contract-mrr",
+            "4000",
+            "--delivered-hours",
+            "50",
+            "--out-of-scope-hours",
+            "15",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(unhealthyRes.status).toBe(0);
+        const unhealthyData = JSON.parse(unhealthyRes.stdout);
+        expect(unhealthyData.marginHealthy).toBe(false);
+        expect(unhealthyData.effectiveHourlyRate).toBe(80);
+        expect(unhealthyData.issues.length).toBeGreaterThanOrEqual(2);
+
+        // 3. ROI Ledger calculation (>= 3.0x test)
+        const roiRes = spawnSync(
+          "bun",
+          [scriptPath, "--roi-ledger", "--cost", "72000", "--value-generated", "288000", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(roiRes.status).toBe(0);
+        const roiData = JSON.parse(roiRes.stdout);
+        expect(roiData.roiMultiplier).toBe(4);
+        expect(roiData.meetsThreshold).toBe(true);
+
+        // 4. Scaffold Renewal Document
+        const memoFile = path.join(tempDir, "renewal-memo.md");
+        const scaffoldRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-renewal",
+            "--client",
+            "Acme Enterprise",
+            "--current-mrr",
+            "7500",
+            "--delivered-hours",
+            "45",
+            "--out",
+            memoFile,
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        expect(fs.existsSync(memoFile)).toBe(true);
+
+        const memoContent = fs.readFileSync(memoFile, "utf8");
+        expect(memoContent).toContain("Retainer Renewal Memorandum: Acme Enterprise");
+        expect(memoContent).toContain("RNW-001: 60-Day Proactive Timeline");
+        expect(memoContent).toContain("RNW-002: Cumulative Economic Impact & ROI Ledger");
+        expect(memoContent).toContain("RNW-003: Three-Tier Expansion Options");
+        expect(memoContent).toContain("Tier 1: Baseline Retainer");
+        expect(memoContent).toContain("Tier 2: Feature Velocity & Growth");
+        expect(memoContent).toContain("Tier 3: Dedicated Autonomous Pod");
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }

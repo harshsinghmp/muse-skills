@@ -1,10 +1,10 @@
 ---
 name: retain
-aliases: ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals"]
-description: "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, churn-watch signals, and retainer SLAs with 30-day bug warranty governance — routed through eight modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review or testimonial, win a referral or repeat purchase, manage client retainer SLAs and warranty boundaries, or spot churn risk from usage drops or client silence. Not for churn strategy itself (growth retention mode) or status reporting (client-comms)."
-argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|audit]"
+aliases: ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals", "renewal", "contract-renewal"]
+description: "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, delight-peak review asks, referral and repurchase offers, churn-watch signals, retainer SLAs, and proactive 60-day contract renewals — routed through nine modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review, win a referral, manage client retainer SLAs, or execute a 60-day retainer contract renewal with 3-tier expansion. Not for churn strategy itself (growth retention mode) or status reporting (client-comms)."
+argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|renewal|audit]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **referral-rebuy** | "referral", "refer a friend", "repurchase", "repeat purchase", "renewal offer" | Referral or repurchase/renewal offer after value is proven | [references/referral-rebuy.md](references/referral-rebuy.md) |
 | **churn-watch** | "gone quiet", "churn risk", "usage drop", "silence", "at-risk client" | Churn-signal triage (usage drop, silence >14d) → `growth` churn mode | [references/churn-watch.md](references/churn-watch.md) |
 | **sla** | "sla", "warranty", "bug or feature", "retainer hours", "rollover hours", "response time" | Retainer SLAs, 30-day post-launch warranty governance, bug vs enhancement triage, and capacity burn-down tracking | [references/sla.md](references/sla.md) |
+| **renewal** | "retainer renewal", "contract renewal", "60-day renewal", "scope creep retro", "expand retainer", "3-tier renewal" | Proactive 60-day retainer renewal cadence, cumulative ROI receipts ledger, scope creep retro, and 3-tier expansion proposals | [references/renewal.md](references/renewal.md) |
 | **audit** | "churn audit", "retention audit", "audit portfolio risk" | Five-question churn audit + leading-indicator rubric across the book; predictability and instrumentation gaps. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

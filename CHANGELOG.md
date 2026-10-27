@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Retainer Contract Renewal & Scope Expansion Engine (`retain:renewal`)**:
+  - **Renewal Architecture Playbook (`renewal.md`)**: Enforces proactive 60-day calendar sequence (T-60 audit, T-45 champion alignment, T-30 proposal, T-14 lock) (RNW-001); cumulative economic impact & verified ROI receipts ledger with >= 3.0x return requirement (RNW-002); three-tier expansion proposal architecture (Baseline, Velocity +25%, and Dedicated Pod +75%) (RNW-003); and scope creep retro recalibrating EHR and pricing floors to guarantee >= 55% gross margin (RNW-004).
+  - **Renewal Engine CLI (`renewal-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/retain/scripts/renewal-engine.ts` supporting `--scaffold-renewal`, `--audit-contract`, and `--roi-ledger`.
+  - **Retain Mode Expansion**: Expanded `retain` to 9 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 430 slash commands per harness.
+
 - **Jasper Creative Division: Video Sales Letter Script & Storyboard Engine (`content:vsl`)**:
   - **VSL Architecture Playbook (`vsl.md`)**: Enforces the 3-second tri-layer retention hook (VSL-001); Jasper's 6-beat narrative spine (Pattern Interrupt, Villain, Paradigm Shift, Unique Mechanism, Proof Stacking, and Dual CTA) (VSL-002); mandatory Two-Column Audio/Visual storyboard production tables with visual cues and verbatim dialogue (VSL-003); and conversational WPM pacing gates (130–145 WPM) with strict anti-slop buzzword bans (VSL-004).
   - **VSL Generator CLI (`vsl-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/content/scripts/vsl-generator.ts` supporting `--scaffold-vsl`, `--audit-script`, and `--timing`.
