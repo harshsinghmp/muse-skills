@@ -18,6 +18,7 @@ export interface GitHubScaffoldProfile {
   agentName?: string;
   contributors?: string[];
   intent?: string;
+  projectArchetype?: "agency-client" | "oss-library" | "internal-tool" | "generic";
   framework?: string;
   deploy?: string;
   packageManager?: string;
@@ -147,6 +148,12 @@ export function selectGitHubWorkflowTemplates(profile: GitHubScaffoldProfile): s
   if (profile.hasPythonProject) selected.push("ci-python.yml");
   if (profile.hasComposerProject) selected.push("ci-composer.yml");
   if (profile.intent === "oss" && profile.packageScripts?.test) selected.push("cli-test.yml");
+  if (profile.intent === "oss" || profile.projectArchetype === "oss-library") {
+    selected.push("ai-slop.yml");
+    selected.push("codeql.yml");
+    selected.push("trivy.yml");
+    selected.push("docs-sync.yml");
+  }
   return [...new Set(selected)];
 }
 
@@ -431,6 +438,23 @@ export function scaffoldGitHubAssets(targetDir: string, hints: GitHubScaffoldPro
         result.skipped.push(relative(targetDir, destination));
         continue;
       }
+      // FUNDING.yml is only for OSS projects, never for agency clients or internal tools
+      const isClientOrInternal =
+        profile.projectArchetype === "agency-client" ||
+        profile.projectArchetype === "internal-tool" ||
+        profile.intent === "agency-client" ||
+        profile.intent === "commercial" ||
+        profile.intent === "ecommerce" ||
+        profile.intent === "webapp";
+      if (
+        sourceRelative === "FUNDING.yml" &&
+        isClientOrInternal &&
+        profile.intent !== "oss" &&
+        profile.projectArchetype !== "oss-library"
+      ) {
+        result.skipped.push(relative(targetDir, destination));
+        continue;
+      }
       if (copyRenderedFile(source, destination, profile, Boolean(hints.dryRun))) {
         result.created.push(relative(targetDir, destination));
       } else {
@@ -461,11 +485,19 @@ export function scaffoldGitHubAssets(targetDir: string, hints: GitHubScaffoldPro
         ? "landing-gate.yml"
         : workflow === "cli-test.yml"
           ? "cli-test.yml"
-          : workflow === "ci-python.yml" && selectedWorkflows.includes("ci-node.yml")
-            ? "ci-python.yml"
-            : workflow === "ci-composer.yml"
-              ? "ci-php.yml"
-              : "ci.yml";
+          : workflow === "codeql.yml"
+            ? "codeql.yml"
+            : workflow === "trivy.yml"
+              ? "trivy.yml"
+              : workflow === "docs-sync.yml"
+                ? "docs-sync.yml"
+                : workflow === "ai-slop.yml"
+                  ? "ai-slop.yml"
+                  : workflow === "ci-python.yml" && selectedWorkflows.includes("ci-node.yml")
+                    ? "ci-python.yml"
+                    : workflow === "ci-composer.yml"
+                      ? "ci-php.yml"
+                      : "ci.yml";
     const destination = join(workflowsDir, name);
     if (existsSync(source) && copyRenderedFile(source, destination, profile, Boolean(hints.dryRun))) {
       result.created.push(relative(targetDir, destination));
@@ -475,4 +507,151 @@ export function scaffoldGitHubAssets(targetDir: string, hints: GitHubScaffoldPro
   }
 
   return result;
+}
+
+export interface PruningRecommendation {
+  file: string;
+  action: "remove" | "retain" | "replace-internal" | "add";
+  reason: string;
+}
+
+/**
+ * Intelligent Project Pruning & Customization Protocol.
+ * Audits repository assets against the project archetype (agency-client vs oss-library vs internal-tool)
+ * and generates actionable recommendations for agents.
+ */
+export function auditProjectArchetypePruning(
+  targetDir: string,
+  archetype: "agency-client" | "oss-library" | "internal-tool" | "generic" = "agency-client",
+): PruningRecommendation[] {
+  const recommendations: PruningRecommendation[] = [];
+  const githubDir = join(targetDir, ".github");
+  const fundingPath = join(githubDir, "FUNDING.yml");
+  const cocPath = join(githubDir, "CODE_OF_CONDUCT.md");
+  const contributingPath = join(githubDir, "CONTRIBUTING.md");
+  const rootContributingPath = join(targetDir, "CONTRIBUTING.md");
+  const securityPath = join(githubDir, "SECURITY.md");
+  const rootSecurityPath = join(targetDir, "SECURITY.md");
+  const showcasePath = join(githubDir, "ISSUE_TEMPLATE/showcase_submission.yml");
+  const aiSlopPath = join(githubDir, "workflows/ai-slop.yml");
+  const docsSyncPath = join(githubDir, "workflows/docs-sync.yml");
+
+  if (archetype === "agency-client" || archetype === "internal-tool") {
+    // 1. Funding
+    if (existsSync(fundingPath)) {
+      recommendations.push({
+        file: ".github/FUNDING.yml",
+        action: "remove",
+        reason: "Proprietary client deliverables must not solicit community donations or display sponsor buttons.",
+      });
+    }
+
+    // 2. Code of Conduct
+    if (existsSync(cocPath)) {
+      recommendations.push({
+        file: ".github/CODE_OF_CONDUCT.md",
+        action: "remove",
+        reason:
+          "Public open-source conduct covenants are inapplicable to private teams governed by client/employee agreements.",
+      });
+    }
+
+    // 3. Community Showcase Issue Template
+    if (existsSync(showcasePath)) {
+      recommendations.push({
+        file: ".github/ISSUE_TEMPLATE/showcase_submission.yml",
+        action: "remove",
+        reason: "Public showcase submissions do not belong on private client repositories.",
+      });
+    }
+
+    // 4. Contributing Guidelines
+    if (existsSync(contributingPath) || existsSync(rootContributingPath)) {
+      const path = existsSync(contributingPath) ? ".github/CONTRIBUTING.md" : "CONTRIBUTING.md";
+      recommendations.push({
+        file: path,
+        action: "replace-internal",
+        reason:
+          "Public contribution guidelines invite unsolicited external pull requests; replace with private internal workflow (.agents/standards/workflows.md).",
+      });
+    }
+
+    // 5. Security Policy
+    if (existsSync(securityPath) || existsSync(rootSecurityPath)) {
+      const path = existsSync(securityPath) ? ".github/SECURITY.md" : "SECURITY.md";
+      recommendations.push({
+        file: path,
+        action: "retain",
+        reason: "Private responsible disclosure channel for client security reporting.",
+      });
+    } else {
+      recommendations.push({
+        file: ".github/SECURITY.md",
+        action: "add",
+        reason: "Security disclosure policy is mandatory for production client systems.",
+      });
+    }
+  } else if (archetype === "oss-library") {
+    // 1. Funding
+    if (!existsSync(fundingPath)) {
+      recommendations.push({
+        file: ".github/FUNDING.yml",
+        action: "add",
+        reason:
+          "Open-source projects should configure funding channels (GitHub Sponsors, Ko-fi, Open Collective) to support sustainable maintenance.",
+      });
+    } else {
+      recommendations.push({
+        file: ".github/FUNDING.yml",
+        action: "retain",
+        reason: "Configured community funding channels drive open-source sustainability.",
+      });
+    }
+
+    // 2. Contributing
+    if (!existsSync(contributingPath) && !existsSync(rootContributingPath)) {
+      recommendations.push({
+        file: ".github/CONTRIBUTING.md",
+        action: "add",
+        reason: "Community contribution guidelines establish PR standards, code style, and test requirements.",
+      });
+    }
+
+    // 3. Security
+    if (!existsSync(securityPath) && !existsSync(rootSecurityPath)) {
+      recommendations.push({
+        file: ".github/SECURITY.md",
+        action: "add",
+        reason: "Responsible disclosure policy is required to prevent public disclosure of 0-day vulnerabilities.",
+      });
+    } else {
+      const path = existsSync(securityPath) ? ".github/SECURITY.md" : "SECURITY.md";
+      recommendations.push({
+        file: path,
+        action: "retain",
+        reason: "Responsible disclosure policy is active.",
+      });
+    }
+
+    // 4. AI Slop gate
+    if (!existsSync(aiSlopPath)) {
+      recommendations.push({
+        file: ".github/workflows/ai-slop.yml",
+        action: "add",
+        reason:
+          "AI slop scanner protects maintainers from low-effort automated AI pull requests and synthetic placeholders.",
+      });
+    }
+
+    // 5. Docs sync gate
+    if (!existsSync(docsSyncPath)) {
+      recommendations.push({
+        file: ".github/workflows/docs-sync.yml",
+        action: "add",
+        reason: "Docs sync validator prevents broken relative Markdown links in project documentation.",
+      });
+    }
+  }
+
+  return recommendations;
 }

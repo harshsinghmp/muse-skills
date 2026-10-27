@@ -3,6 +3,10 @@ import { spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import {
+  auditProjectArchetypePruning,
+  selectGitHubWorkflowTemplates,
+} from "../skills/core-engine/updateagents/scripts/github-scaffold";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
@@ -1528,6 +1532,76 @@ Custom billing engine for healthcare providers.
       expect(parsed.missing).toEqual([]);
       expect(parsed.localized.length).toBeGreaterThan(0);
       rmSync(sandbox, { recursive: true, force: true });
+    });
+  });
+
+  /* ========================================================================= */
+  /* PART I: Universal GitHub Templates & Intelligent Archetype Pruning        */
+  /* ========================================================================= */
+  describe("Part I: Universal GitHub Templates & Intelligent Archetype Pruning Protocol", () => {
+    it("updateagents/templates/github contains FUNDING.yml and universal workflows", () => {
+      const githubTemplates = join(UPDATEAGENTS_TEMPLATES, "github");
+      const workflowsDir = join(githubTemplates, "workflows");
+
+      expect(existsSync(join(githubTemplates, "FUNDING.yml"))).toBe(true);
+      const fundingContent = readFileSync(join(githubTemplates, "FUNDING.yml"), "utf8");
+      expect(fundingContent).toContain("github:");
+      expect(fundingContent).toContain("ko_fi:");
+      expect(fundingContent).toContain("open_collective:");
+
+      // Universal workflow templates
+      expect(existsSync(join(workflowsDir, "codeql.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "trivy.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "docs-sync.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "ai-slop.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "landing-gate.yml"))).toBe(true);
+    });
+
+    it("selectGitHubWorkflowTemplates includes security and anti-slop workflows for OSS projects", () => {
+      const ossWorkflows = selectGitHubWorkflowTemplates({
+        intent: "oss",
+        packageScripts: { test: "bun test" },
+      });
+
+      expect(ossWorkflows).toContain("landing-gate.yml");
+      expect(ossWorkflows).toContain("cli-test.yml");
+      expect(ossWorkflows).toContain("codeql.yml");
+      expect(ossWorkflows).toContain("trivy.yml");
+      expect(ossWorkflows).toContain("docs-sync.yml");
+      expect(ossWorkflows).toContain("ai-slop.yml");
+    });
+
+    it("auditProjectArchetypePruning recommends removing public community/donation assets on agency-client projects", () => {
+      const clientDir = join(TEST_SANDBOX, "client-repo");
+      mkdirSync(join(clientDir, ".github", "ISSUE_TEMPLATE"), { recursive: true });
+      writeFileSync(join(clientDir, ".github", "FUNDING.yml"), "github: client");
+      writeFileSync(join(clientDir, ".github", "CODE_OF_CONDUCT.md"), "# Code of Conduct");
+      writeFileSync(join(clientDir, ".github", "CONTRIBUTING.md"), "# Contributing");
+      writeFileSync(join(clientDir, ".github", "ISSUE_TEMPLATE", "showcase_submission.yml"), "name: Showcase");
+
+      const recs = auditProjectArchetypePruning(clientDir, "agency-client");
+      const recMap = new Map(recs.map((r) => [r.file, r]));
+
+      expect(recMap.get(".github/FUNDING.yml")?.action).toBe("remove");
+      expect(recMap.get(".github/CODE_OF_CONDUCT.md")?.action).toBe("remove");
+      expect(recMap.get(".github/ISSUE_TEMPLATE/showcase_submission.yml")?.action).toBe("remove");
+      expect(recMap.get(".github/CONTRIBUTING.md")?.action).toBe("replace-internal");
+      expect(recMap.get(".github/SECURITY.md")?.action).toBe("add");
+    });
+
+    it("auditProjectArchetypePruning recommends adding funding and anti-slop gates for open source libraries", () => {
+      const ossDir = join(TEST_SANDBOX, "oss-repo");
+      mkdirSync(join(ossDir, ".github", "workflows"), { recursive: true });
+      writeFileSync(join(ossDir, ".github", "SECURITY.md"), "# Security Policy");
+
+      const recs = auditProjectArchetypePruning(ossDir, "oss-library");
+      const recMap = new Map(recs.map((r) => [r.file, r]));
+
+      expect(recMap.get(".github/FUNDING.yml")?.action).toBe("add");
+      expect(recMap.get(".github/CONTRIBUTING.md")?.action).toBe("add");
+      expect(recMap.get(".github/SECURITY.md")?.action).toBe("retain");
+      expect(recMap.get(".github/workflows/ai-slop.yml")?.action).toBe("add");
+      expect(recMap.get(".github/workflows/docs-sync.yml")?.action).toBe("add");
     });
   });
 });
