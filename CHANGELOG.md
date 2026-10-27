@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Division: Direct-Response UGC Video Scripting & Creator Brief Engine (`content:ugc`)**:
+  - **UGC Playbook (`ugc.md`)**: Enforces 4-Hook Matrix for algorithmic split-testing across Negative Curiosity, Direct Problem, Unpopular Opinion, and Before/After payoffs (UGC-001); Jasper 5-Beat Narrative Storyboard Spine spanning 0-3s Hook, 3-8s Agitated Problem, 8-15s Discovery Pivot, 15-25s Proof & Demo, and 25-30s Frictionless CTA (UGC-002); Retention Pacing and 9:16 Vertical Safe Zones with 130-160 WPM delivery, 2.0-3.5s visual cut cadence, and platform icon boundary fences (UGC-003); and Production-Ready Creator Brief Export with rigid technical specs, DOs/DON'Ts, shot lists, and native caption copy (UGC-004).
+  - **UGC Generator CLI (`ugc-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/content/scripts/ugc-generator.ts` supporting `--scaffold-ugc`, `--score-pacing`, `--export-brief`, `--audit-script`, and `--json`.
+  - **Content Mode Expansion**: Expanded `content` to 12 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 439 slash commands per harness.
+
 - **Automation & Real-Time Telephony: High-Concurrency Voice Agent Bridge (`automation:voice`)**:
   - **Voice Bridge CLI (`voice-bridge.ts`)**: Built standalone CLI in `skills/agency-delivery/automation/scripts/voice-bridge.ts` enforcing sub-600ms latency budgets with TTFT backchanneling (VOC-001), mandatory two-party consent notice and TCPA/E.164 compliance (VOC-002), hot telephony provider failover in <1200ms (VOC-003), and live sentiment scoring with automated human warm transfer (VOC-004).
 

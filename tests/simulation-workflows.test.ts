@@ -2153,6 +2153,142 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       }
     });
 
+    test("content:ugc mode implements Jasper 4-hook matrix, 5-beat storyboard spine, retention pacing, and creator brief export", () => {
+      const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/content", "SKILL.md"), "utf8");
+      expect(contentSkill).toContain("| **ugc** |");
+      expect(contentSkill).toContain("references/ugc.md");
+      expect(contentSkill).toContain("twelve modes");
+
+      const ugcRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/content", "references", "ugc.md"),
+        "utf8",
+      );
+      expect(ugcRef).toContain("UGC-001");
+      expect(ugcRef).toContain("UGC-002");
+      expect(ugcRef).toContain("UGC-003");
+      expect(ugcRef).toContain("UGC-004");
+      expect(ugcRef).toContain("4-Hook Matrix");
+      expect(ugcRef).toContain("5-Beat Narrative Storyboard Spine");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/content/scripts/ugc-generator.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "content-ugc-test-"));
+      try {
+        // 1. Scaffold UGC script
+        const scriptFile = path.join(tempDir, "sample-ugc.md");
+        const scaffoldRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-ugc",
+            "--product",
+            "SpeedCRM",
+            "--target",
+            "Agency Founders",
+            "--pain",
+            "slow lead responses",
+            "--solution",
+            "instant AI voice qualification",
+            "--offer",
+            "Use code SPEED30 for 30% off",
+            "--out",
+            scriptFile,
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(scaffoldRes.status).toBe(0);
+        expect(fs.existsSync(scriptFile)).toBe(true);
+
+        const scaffoldContent = fs.readFileSync(scriptFile, "utf8");
+        expect(scaffoldContent).toContain("4-Hook Matrix");
+        expect(scaffoldContent).toContain("Negative Curiosity");
+        expect(scaffoldContent).toContain("Direct Problem");
+        expect(scaffoldContent).toContain("5-Beat Narrative Storyboard Spine");
+        expect(scaffoldContent).toContain("OST Safe Zone");
+
+        // 2. Audit valid script
+        const auditRes = spawnSync("bun", [scriptPath, "--audit-script", scriptFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(auditRes.status).toBe(0);
+        const auditData = JSON.parse(auditRes.stdout);
+        expect(auditData.valid).toBe(true);
+        expect(auditData.hasHookMatrix).toBe(true);
+        expect(auditData.hasSafeZoneVisuals).toBe(true);
+        expect(auditData.detectedBeats.length).toBe(5);
+        expect(auditData.buzzwordsFound.length).toBe(0);
+        expect(auditData.score).toBe(100);
+
+        // 3. Pacing & retention scoring
+        const pacingRes = spawnSync(
+          "bun",
+          [scriptPath, "--score-pacing", "--product", "SpeedCRM", "--duration-seconds", "30", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(pacingRes.status).toBe(0);
+        const pacingData = JSON.parse(pacingRes.stdout);
+        expect(pacingData.status).toBe("OPTIMAL");
+        expect(pacingData.isWpmOptimal).toBe(true);
+        expect(pacingData.visualCutCount).toBeGreaterThanOrEqual(4);
+
+        // 4. Export creator production brief
+        const briefFile = path.join(tempDir, "creator-brief.md");
+        const briefRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--export-brief",
+            "--product",
+            "SpeedCRM",
+            "--target",
+            "Agency Founders",
+            "--pain",
+            "slow lead responses",
+            "--solution",
+            "instant AI voice qualification",
+            "--creator",
+            "Sarah",
+            "--out",
+            briefFile,
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(briefRes.status).toBe(0);
+        expect(fs.existsSync(briefFile)).toBe(true);
+        const briefContent = fs.readFileSync(briefFile, "utf8");
+        expect(briefContent).toContain("Sarah");
+        expect(briefContent).toContain("9:16 Vertical Video");
+        expect(briefContent).toContain("DOs and DON'Ts");
+        expect(briefContent).toContain("Take A (Negative Curiosity)");
+        expect(briefContent).toContain("#speedcrm");
+
+        // 5. Audit dirty script with banned corporate buzzwords
+        const dirtyFile = path.join(tempDir, "dirty-ugc.md");
+        fs.writeFileSync(
+          dirtyFile,
+          `# UGC Script
+| Scene & Time | Visual Direction | Spoken Dialogue |
+| :--- | :--- | :--- |
+| Beat 1 | [Shot: Front] | Our revolutionary product is a game-changer! |
+`,
+          "utf8",
+        );
+        const dirtyRes = spawnSync("bun", [scriptPath, "--audit-script", dirtyFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(dirtyRes.status).toBe(1);
+        const dirtyData = JSON.parse(dirtyRes.stdout);
+        expect(dirtyData.valid).toBe(false);
+        expect(dirtyData.buzzwordsFound).toContain("revolutionary");
+        expect(dirtyData.buzzwordsFound).toContain("game-changer");
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
     test("retain:renewal mode enforces 60-day calendar, 3.0x ROI threshold, and 3-tier expansion", () => {
       const retainSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/retain", "SKILL.md"), "utf8");
       expect(retainSkill).toContain("| **renewal** |");

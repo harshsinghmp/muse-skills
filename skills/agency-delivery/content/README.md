@@ -1,6 +1,6 @@
 # ✍️ content
 
-The content studio department head: one skill, eleven modes — blog, copy, email, video, case-study, humanize, launch, podcast, thumbnails, vsl, audit. Source-anchored writing, then an editorial pass that keeps it human.
+The content studio department head: one skill, twelve modes — blog, copy, email, video, case-study, humanize, launch, podcast, thumbnails, vsl, ugc, audit. Source-anchored writing, then an editorial pass that keeps it human.
 
 ## Install
 
@@ -34,6 +34,7 @@ Record a podcast episode outline with broadcast engineering standards, or run a 
 | **podcast** | podcast script & audio engineering | Podcast: multi-segment interview/solo scripts with EBU R128 loudness standards. |
 | **thumbnails** | high-CTR youtube thumbnails | Thumbnails: generation prompts, composition hierarchies, and CTR split-testing. |
 | **vsl** | video sales letter script | VSL: 6-beat narrative spine, 3-second retention hook, and two-column A/V storyboards. |
+| **ugc** | direct-response UGC script / creator brief | UGC: 4-hook matrix, 5-beat narrative storyboard spine, 9:16 vertical safe zones, and creator production briefs. |
 | **audit** | content & copy audit | Audit: readability metrics, hook strength, and conversion leak detection. |
 
 ## How it works
