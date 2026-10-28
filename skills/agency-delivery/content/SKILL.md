@@ -4,7 +4,7 @@ aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video
 description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, prose humanization, high-converting video sales letters, and direct-response UGC video scripts — routed through twelve modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, script a VSL, draft UGC scripts and creator briefs, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
 argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch|thumbnails|vsl|ugc]"
 user-invocable: true
-version: 1.3.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
