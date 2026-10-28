@@ -1,10 +1,10 @@
 ---
 name: brand
 aliases: ["brand-onboarding", "client-intake", "brand-research", "brand-dossier", "sales-pipeline", "brand-lifecycle", "client-offboarding", "cross-border-ecommerce", "amazon-operations", "marketplace-operations"]
-description: "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, offboarding, and brand asset fencing/font auditing — routed through ten modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs, scaling cross-border e-commerce, auditing brand asset fencing and font licenses, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops)."
-argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit]"
+description: "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, offboarding, brand asset fencing/font auditing, and multimodal story engine genesis — routed through eleven modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs, scaling cross-border e-commerce, generating brand narrative archetypes and OKLCH story matrices, auditing brand asset fencing and font licenses, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops)."
+argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -47,6 +47,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **ecommerce** | "cross-border ecommerce", "amazon listing", "shopee store", "tiktok shop", "global ecommerce", "international logistics", "fba", "vat compliance" | Multi-platform cross-border e-commerce operations: Amazon, Shopee, Lazada, Temu, TikTok Shop, international logistics/warehousing, VAT/EPR compliance, multilingual listing optimization, and unit economics modeling | [references/ecommerce.md](references/ecommerce.md) |
 | **offboard** | "offboard client", "client offboarding", "revoke access", "project handover" | Access revocation, asset export packaging, DNS handover, and client NPS reviews | [references/offboard.md](references/offboard.md) |
 | **assets** | "brand assets", "font licensing", "vector logo check", "brand asset fencing", "color contrast certification", "asset audit" | Brand asset fencing, font license isolation, SVG sanitization, and OKLCH color contrast certification | [references/assets.md](references/assets.md) |
+| **story-engine** | "brand genesis", "story engine", "founder story", "brand narrative", "brand archetype", "voice constitution" | Multimodal brand narrative genesis, founder archetype synthesis, OKLCH visual color resonance, tagline matrix, and voice constitution | [references/story-engine.md](references/story-engine.md) |
 | **audit** | "brand audit", "readiness check", "intake checklist", "missing brand info" | Pre-flight brand readiness gate auditing completeness before teams begin work | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

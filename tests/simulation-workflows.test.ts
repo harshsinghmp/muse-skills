@@ -1400,11 +1400,11 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
   describe("8. Brand Lifecycle & Client Onboarding Engine (brand)", () => {
     const brandDir = path.join(REPO_ROOT, "skills/agency-delivery/brand");
 
-    test("brand SKILL.md registers all 9 modes in table and frontmatter", () => {
+    test("brand SKILL.md registers all 10 modes in table and frontmatter", () => {
       const skillMd = fs.readFileSync(path.join(brandDir, "SKILL.md"), "utf8");
       expect(skillMd).toContain("name: brand");
       expect(skillMd).toContain(
-        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit]"',
+        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]"',
       );
 
       // Modes table
@@ -1416,6 +1416,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillMd).toContain("| **ecommerce** |");
       expect(skillMd).toContain("| **offboard** |");
       expect(skillMd).toContain("| **assets** |");
+      expect(skillMd).toContain("| **story-engine** |");
       expect(skillMd).toContain("| **audit** |");
 
       // Verify companion files
@@ -1423,7 +1424,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(fs.existsSync(path.join(brandDir, "agents", "openai.yaml"))).toBe(true);
     });
 
-    test("all 9 mode reference documents exist with actionable agency playbooks", () => {
+    test("all 10 mode reference documents exist with actionable agency playbooks", () => {
       const expectedModes = [
         "intake",
         "research",
@@ -1433,6 +1434,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         "ecommerce",
         "offboard",
         "assets",
+        "story-engine",
         "audit",
       ];
       for (const mode of expectedModes) {
@@ -4228,6 +4230,97 @@ NextApp relies on RedisCache
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
+    });
+
+    test("Jasper: brand story-engine mode implements founder archetypes, OKLCH resonance curves, tagline matrix, and voice constitution", () => {
+      const storyRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/brand", "references", "story-engine.md"),
+        "utf8",
+      );
+      expect(storyRef).toContain("STR-001");
+      expect(storyRef).toContain("STR-002");
+      expect(storyRef).toContain("STR-003");
+      expect(storyRef).toContain("STR-004");
+      expect(storyRef).toContain("Jasper");
+
+      const brandSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/brand", "SKILL.md"), "utf8");
+      expect(brandSkill).toContain("story-engine");
+      expect(brandSkill).toContain("version: 1.2.0");
+      expect(brandSkill).toContain(
+        "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]",
+      );
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/brand/scripts/story-engine.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      // Programmatic verification of StoryEngine
+      const { StoryEngine } = require(scriptPath);
+      const engine = new StoryEngine();
+
+      // STR-001 Archetype resolution
+      const hero = engine.getArchetypeProfile("hero");
+      expect(hero.id).toBe("hero");
+      expect(hero.narrativeFramework).toContain("Hero's Journey");
+      expect(hero.primaryEmotions).toContain("authority");
+
+      const rebel = engine.getArchetypeProfile("rebel");
+      expect(rebel.id).toBe("rebel");
+      expect(rebel.narrativeFramework).toContain("David vs. Goliath");
+
+      // STR-002 OKLCH Palette and Resonance
+      const { palette, resonance } = engine.generatePaletteAndResonance("creator");
+      expect(palette.length).toBe(6);
+      expect(palette[0].role).toBe("primary");
+      expect(palette[0].cssString).toContain("oklch(");
+      expect(palette[0].contrastOnBackground).toBeGreaterThan(4.5);
+      expect(resonance.intrigue).toBeGreaterThanOrEqual(0.9);
+
+      // STR-003 Tagline Matrix & Elevator Pitches
+      const genesis = engine.generateBrandGenesis({
+        brandName: "Aetheric AI",
+        founderName: "Julian Reed",
+        industry: "Autonomous Workspaces",
+        archetype: "creator",
+        catalystDescription: "Frustration with fragile multi-agent frameworks",
+        coreOffering: "Zero-dependency agent runtime",
+        targetAudience: "Lead AI Engineers",
+        customForbiddenWords: ["silver-bullet"],
+      });
+
+      expect(genesis.taglines.direct).toContain("Aetheric AI");
+      expect(genesis.taglines.aspirational).toContain("sovereign agency");
+      expect(genesis.taglines.provocative).toContain("Stop settling");
+      expect(genesis.taglines.metaphorical).toContain("architectural spine");
+      expect(genesis.taglines.quantifiable).toContain("10x higher");
+
+      expect(genesis.pitches.pitch15s.length).toBeGreaterThan(30);
+      expect(genesis.pitches.pitch30s.length).toBeGreaterThan(100);
+      expect(genesis.pitches.pitch60s.length).toBeGreaterThan(250);
+
+      // STR-004 Brand Voice Constitution & Linting
+      const constitution = genesis.constitution;
+      expect(constitution.forbiddenWords).toContain("synergy");
+      expect(constitution.forbiddenWords).toContain("silver-bullet");
+
+      // Lint copy with violations
+      const dirtyCopy =
+        "Aetheric provides cutting-edge synergy. We delve into revolutionary game-changer frameworks and leverage deep tech.";
+      const dirtyAudit = engine.lintProse(dirtyCopy, constitution);
+      expect(dirtyAudit.passed).toBe(false);
+      expect(dirtyAudit.forbiddenWordsFound.length).toBeGreaterThan(0);
+      expect(dirtyAudit.violations.some((v: { ruleId: string }) => v.ruleId === "VOICE-001")).toBe(true);
+
+      // Lint clean copy
+      const cleanCopy =
+        "Aetheric builds durable systems. We reject bloated frameworks and deliver verifiable deterministic execution.";
+      const cleanAudit = engine.lintProse(cleanCopy, constitution);
+      expect(cleanAudit.passed).toBe(true);
+      expect(cleanAudit.forbiddenWordsFound.length).toBe(0);
+
+      // CLI execution test
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Brand Genesis Blueprint");
     });
   });
 });
