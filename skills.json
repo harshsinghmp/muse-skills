@@ -1329,7 +1329,7 @@
     },
     {
       "name": "muse-security",
-      "description": "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, and runtime defense guardrails \u2014 routed through seven modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', 'audit subagent boundary', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops).",
+      "description": "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, and dynamic MCP server governance & tool poisoning defense \u2014 routed through eight modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', 'audit subagent boundary', 'audit mcp servers', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops).",
       "path": "skills/quality-review/muse-security/SKILL.md",
       "version": "1.0.1",
       "category": "quality-review",
