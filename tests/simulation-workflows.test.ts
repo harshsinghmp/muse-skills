@@ -2658,7 +2658,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(qaSkill).toContain("| **e2e** |");
       expect(qaSkill).toContain("references/e2e.md");
       expect(qaSkill).toContain(
-        'argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|evals|audit]"',
+        'argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|evals|chaos|audit]"',
       );
 
       const e2eRef = fs.readFileSync(
@@ -4321,6 +4321,87 @@ NextApp relies on RedisCache
       const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Brand Genesis Blueprint");
+    });
+
+    test("Nexus: qa-launch chaos mode implements latency degradation, upstream drops, DB throttling, and zero data loss audit", async () => {
+      const chaosRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "chaos.md"),
+        "utf8",
+      );
+      expect(chaosRef).toContain("CHS-001");
+      expect(chaosRef).toContain("CHS-002");
+      expect(chaosRef).toContain("CHS-003");
+      expect(chaosRef).toContain("CHS-004");
+      expect(chaosRef).toContain("Nexus");
+
+      const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
+      expect(qaSkill).toContain("chaos");
+      expect(qaSkill).toContain("version: 1.6.0");
+      expect(qaSkill).toContain("[matrix|functional|performance|gate|regression|e2e|vitals|evals|chaos|audit]");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/scripts/chaos-runner.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { ChaosRunner } = require(scriptPath);
+      const runner = new ChaosRunner();
+
+      // CHS-001 Latency Jitter
+      const latencyReport = await runner.simulateLatencyJitter("/api/v1/checkout", {
+        minMs: 500,
+        maxMs: 3000,
+        samples: 6,
+      });
+      expect(latencyReport.endpoint).toBe("/api/v1/checkout");
+      expect(latencyReport.minJitterMs).toBe(500);
+      expect(latencyReport.maxJitterMs).toBe(3000);
+      expect(latencyReport.averageLatencyMs).toBeGreaterThan(500);
+      expect(latencyReport.uiFallbackTriggered).toBe(true);
+      expect(latencyReport.passed).toBe(true);
+
+      // CHS-002 Upstream 502/504 Drop
+      const blackoutReport = runner.simulateUpstreamBlackout("/api/v1/orders", {
+        status: 502,
+        fallbackAvailable: true,
+      });
+      expect(blackoutReport.injectedStatus).toBe(502);
+      expect(blackoutReport.fallbackCacheEngaged).toBe(true);
+      expect(blackoutReport.rawErrorLeakedToClient).toBe(false);
+      expect(blackoutReport.passed).toBe(true);
+
+      // CHS-003 DB Throttling
+      const throttleReport = runner.simulateDbThrottling({
+        poolSize: 5,
+        requestCount: 20,
+        maxRetries: 3,
+      });
+      expect(throttleReport.poolCapacity).toBe(5);
+      expect(throttleReport.throttledRequests).toBe(15);
+      expect(throttleReport.retriesAttempted).toBeGreaterThan(0);
+      expect(throttleReport.successfulAfterRetry).toBeGreaterThan(0);
+      expect(throttleReport.passed).toBe(true);
+
+      // CHS-004 Zero Data Loss
+      const mutations = [
+        { id: "m-1", action: "saveDraft", payload: { title: "Draft 1" }, timestamp: Date.now() },
+        { id: "m-2", action: "saveDraft", payload: { title: "Draft 2" }, timestamp: Date.now() + 10 },
+        { id: "m-3", action: "publish", payload: { id: "p-1" }, timestamp: Date.now() + 20 },
+      ];
+      const dataLossReport = runner.auditZeroDataLoss(mutations, { interruptAt: 1 });
+      expect(dataLossReport.totalMutations).toBe(3);
+      expect(dataLossReport.persistedToOfflineQueue).toBe(2);
+      expect(dataLossReport.successfullyReplayed).toBe(3);
+      expect(dataLossReport.droppedMutations).toBe(0);
+      expect(dataLossReport.passed).toBe(true);
+
+      // Full Chaos Suite
+      const suiteReport = await runner.runChaosSuite();
+      expect(suiteReport.overallPassed).toBe(true);
+      expect(suiteReport.summaryMarkdown).toContain("Chaos Resilience Audit Report");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Chaos Resilience Audit Report");
     });
   });
 });
