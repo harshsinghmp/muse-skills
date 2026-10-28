@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Nexus Technical Director & Sol Product Architect: Ephemeral Mutual TLS & Zero-Trust Subagent Attestation (`muse-security:zero-trust`)**:
+  - **Zero-Trust Playbook (`zero-trust.md`)**: Enforces SPIFFE/SPIRE Identity Attestation issuing short-lived SVID tokens with bounded TTL <= 60m (ZTR-001); Least-Privilege Capability Scope Gating with tool allowlists, path traversal jails, and database table fences (ZTR-002); Mutual TLS Verification for inter-agent network/RPC communication with pinned modern cipher suites (ZTR-003); and Continuous Cryptographic Audit Trail recording tamper-evident SHA-256 linked blocks with HMAC signatures (ZTR-004).
+  - **Zero-Trust CLI (`zero-trust.ts`)**: Built standalone CLI in `skills/quality-review/muse-security/scripts/zero-trust.ts` supporting `--attest`, `--verify-mtls`, `--audit-chain`, and `--json`.
+  - **Muse-Security Mode Expansion**: Expanded `muse-security` to v1.1.0 across 9 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`. Command surface increased to 449 slash commands per harness.
+
 - **Nexus Technical Director: Synthetic Fault Injection & System Resilience Testing (`qa-launch:chaos`)**:
   - **Chaos Playbook (`chaos.md`)**: Enforces Synthetic Latency Degradation injecting 500ms–3000ms jitter to verify UI skeleton fallbacks and client timeout SLAs (CHS-001); Upstream 502/504 Service Drop Simulation with stale-while-revalidate caching and sanitized error boundaries (CHS-002); Database Throttling & Connection Pool Starvation with jittered exponential backoff and circuit breaker safety (CHS-003); and Zero Data Loss Audit certifying offline mutation buffering, post-recovery replay, and zero dropped mutations (CHS-004).
   - **Chaos Runner CLI (`chaos-runner.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/chaos-runner.ts` supporting `--latency`, `--blackout`, `--db-throttle`, `--zero-data-loss`, and `--json`.
