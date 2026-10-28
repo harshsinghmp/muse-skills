@@ -1,6 +1,6 @@
 # 🛠️ devops
 
-The infrastructure and reliability department head: one skill, seven modes — hosting, cicd, domains, security, monitoring, incident, cloudflare. Reproducible deploys, edge compute, and Zero Trust security.
+The infrastructure and reliability department head: one skill, nine modes — hosting, cicd, domains, security, monitoring, incident, cloudflare, preview, audit. Reproducible deploys, edge compute, and Zero Trust security.
 
 ## Install
 
@@ -31,6 +31,7 @@ Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero T
 | **monitoring** | monitoring & alerting | Monitoring: metrics, logs, traces, and alerts that are actionable. |
 | **incident** | incident response / postmortem | Incident: stabilize first, then a blameless postmortem with tracked actions. |
 | **cloudflare** | cloudflare edge, workers, pages & living deliverables | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, Wrangler CLI, and living deliverables with workerd preview containers. |
+| **preview** | living deliverable / preview link / client portal | Preview: ephemeral workerd review containers, token-gated links, multi-viewport switcher, and 48-hour expiration. |
 | **`audit`** | CI/CD security audit / deployment gate audit | OWASP CICD-SEC-1..10: gates, IAM, credential hygiene, artifact integrity. |
 
 ## How it works

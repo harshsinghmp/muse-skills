@@ -1,10 +1,10 @@
 ---
 name: accounts
 aliases: ["finance", "invoicing", "billing", "bookkeeping", "cfo", "agency-accounts"]
-description: "Agency and client financial operations engine: milestone invoicing, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, and cross-border digital tax compliance — routed through six modes. Use when asked to send or schedule an invoice, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev)."
-argument-hint: "[invoicing|bookkeeping|client-pnl|cashflow|tax-compliance|audit]"
+description: "Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, sovereign usage-based metering, and cross-border digital tax compliance — routed through nine modes. Use when asked to calculate value-based pricing proposals, compare sprint retainer vs fixed-scope contracts, send or schedule an invoice, execute automated dunning for overdue accounts, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev)."
+argument-hint: "[invoicing|pricing|dunning|bookkeeping|client-pnl|cashflow|tax-compliance|billing-engine|audit]"
 user-invocable: true
-version: 1.3.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -41,11 +41,14 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
-| **invoicing** | "send invoice", "retainer billing", "milestone payment", "stripe invoice", "payment reminder" | Milestone billing, retainer schedules, deposit/prepayment terms, payment gateway links, and automated dunning cadence (T-3, Day 0, T+3, T+7, T+14) | [references/invoicing.md](references/invoicing.md) |
+| **invoicing** | "send invoice", "retainer billing", "milestone payment", "stripe invoice", "payment reminder" | Milestone billing, retainer schedules, deposit/prepayment terms, payment gateway links, and upfront deposit terms | [references/invoicing.md](references/invoicing.md) |
+| **pricing** | "pricing model", "agency pricing", "value-based pricing", "profitability calculator", "sprint retainer vs fixed scope", "pricing schedule" | Value-based pricing triangulation (min 5x ROI), delivery model matrix (fixed milestone vs sprint retainer vs rev-share), and margin floor enforcement | [references/pricing.md](references/pricing.md) |
+| **dunning** | "dunning", "overdue invoice", "late payment", "pause delinquent client", "payment retry", "bad debt write-off" | Automated multi-tier escalation ladder (Day 1, 7, 14, 30), gateway smart retries, pause-on-delinquency triggers, and statutory bad debt tax credit write-offs | [references/dunning.md](references/dunning.md) |
 | **bookkeeping** | "chart of accounts", "reconcile transactions", "categorize expenses", "double entry", "receipt matching" | Standard agency & client Chart of Accounts (COA), double-entry ledger classification, SaaS subscription audits, and contractor payouts | [references/bookkeeping.md](references/bookkeeping.md) |
 | **client-pnl** | "client profitability", "project margin", "effective hourly rate", "scope billing adjustment" | True client & project gross margin calculation (Revenue minus direct contractor fees, dedicated API tokens, infra costs), scope-creep margin leakage detection, and EHR | [references/client-pnl.md](references/client-pnl.md) |
 | **cashflow** | "cash runway", "burn rate", "cash flow forecast", "DSO", "reserve buffer", "operating capital" | Bootstrapped CFO cash forecasting, Days Sales Outstanding (DSO) compression, AR aging analysis, and 3–6 month operating reserve + tax allocation buffers | [references/cashflow.md](references/cashflow.md) |
 | **tax-compliance** | "gst vat digital services", "contractor withholding", "w8ben 1099", "reverse charge", "statutory invoice" | Cross-border digital services tax rules (GST/VAT export zero-rating, reverse charge mechanism, place-of-supply), invoice statutory requirements, and contractor tax documentation | [references/tax-compliance.md](references/tax-compliance.md) |
+| **billing-engine** | "usage based billing", "metered billing", "telemetry metering", "billing engine", "dunning escalation", "circuit breaker billing" | Sovereign usage-based metering, SHA-256 event deduplication, graduated tiered pricing, spend circuit breakers, Stripe tax sync, and 3-tier dunning | [references/billing-engine.md](references/billing-engine.md) |
 | **audit** | "financial audit", "audit expenses", "revenue leakage", "zombie subscriptions", "fx drag" | Comprehensive financial hygiene audit for agency or client accounts: detecting zombie subscriptions, unbilled deliverables, gateway payout delays, and FX drag | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

@@ -184,7 +184,7 @@ export function syncDispatchMarkdown(dryRun: boolean = false): boolean {
   }
 
   const generatedDir = buildDirectoryMarkdown();
-  const newContent = content.slice(0, startIndex + startMarker.length) + "\n" + generatedDir + content.slice(endIndex);
+  const newContent = `${content.slice(0, startIndex + startMarker.length)}\n${generatedDir}${content.slice(endIndex)}`;
 
   if (content === newContent) {
     return false; // Zero drift

@@ -36,7 +36,7 @@ PRINCIPAL_*.md
 DA_IDENTITY.md
 *.personal.*
 *.identity.*
-.lifeos/
+.muse/
 .pulse/
 pulse-state/
 

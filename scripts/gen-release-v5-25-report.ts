@@ -294,5 +294,5 @@ writeFileSync(targetFile, html, "utf8");
 copyFileSync(targetFile, archiveFile);
 
 console.log("✅ Generated reports:");
-console.log("   - " + targetFile);
-console.log("   - " + archiveFile);
+console.log(`   - ${targetFile}`);
+console.log(`   - ${archiveFile}`);

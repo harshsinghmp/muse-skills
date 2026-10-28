@@ -71,10 +71,13 @@
     "check:landed": "bun scripts/check-landed.ts"
   },
   "type": "module",
-  "version": "7.8.0",
+  "version": "8.0.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.2",
     "bun-types": "^1.4.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "musememory": "^3.0.2"
   }
 }

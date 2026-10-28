@@ -221,6 +221,15 @@ On resume, load this file first and restore minimum awareness before accepting n
 
 ---
 
+---
+
+## 🧠 Memory Engine Dual-Scope Interop
+
+Secretary orchestration operates under Muse Memory's dual-scope architecture:
+- **Global User Truth**: Loaded on session start from `~/.memory/USER.md` via `get_context(query=...)` to ground agency council leads (Sol, Jasper, Crew, Nexus).
+- **Local Project Constraints**: Read and write local project invariants to `./.memory/` and `CURRENT.md` (or `.agents/context/current.md`).
+- **No Direct YAML Mutation**: Strictly prohibits modifying internal raw YAML or cognitive memory files directly. Always invokes MCP tools (`memory_capture`, `search`, `get_context`) or sovereign CLI commands.
+
 ## Pitfalls
 
 - **Confirmation Bias & Rubber-Stamping**: Accepting user premises uncritically without running the 3-prong devil's advocate challenge.

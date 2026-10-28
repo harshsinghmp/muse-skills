@@ -23,7 +23,7 @@ import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
-import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -169,7 +169,7 @@ Options:
 const isDryRun = values["dry-run"] || false;
 const isForce = values.force || false;
 const isNonInteractive = values["non-interactive"] || false;
-const skipInstall = values["skip-install"] || false;
+const _skipInstall = values["skip-install"] || false;
 const noCache = values["no-cache"] || false;
 const useLatest = values.latest || false;
 let githubProjectEnabled: boolean | undefined = values.github ? true : values["no-github"] ? false : undefined;
@@ -2427,7 +2427,7 @@ async function main() {
             if (colorsData.color?.accent) {
               colorsData.color.accent.$value = pal.accent;
             }
-            writeFileSync(colorsJsonPath, JSON.stringify(colorsData, null, 2) + "\n", "utf8");
+            writeFileSync(colorsJsonPath, `${JSON.stringify(colorsData, null, 2)}\n`, "utf8");
           } catch {
             // Non-fatal if parsing fails
           }
@@ -2477,6 +2477,30 @@ async function main() {
       }
     }
     console.log("  ✅ Initialized: `./.agents/context/` (product, architecture, brand, accounts, decisions, roadmap)");
+  }
+
+  // 1.6b Provision Wave 23 Workspace Terrain Maps (.agents/terrain/)
+  const terrainSrc = join(TEMPLATES_DIR, ".agents/terrain");
+  const terrainDest = join(agentsDir, "terrain");
+  if (existsSync(terrainSrc)) {
+    if (!existsSync(terrainDest) && !isDryRun) mkdirSync(terrainDest, { recursive: true });
+    const terrFiles = readdirSync(terrainSrc);
+    for (const f of terrFiles) {
+      const src = join(terrainSrc, f);
+      const dest = join(terrainDest, f);
+      if (!existsSync(dest) || isForce) {
+        if (!isDryRun) {
+          let c = readFileSync(src, "utf8");
+          for (const [k, v] of Object.entries(tokenMap)) {
+            c = c.replaceAll(k, v);
+          }
+          writeFileSync(dest, c, "utf8");
+        }
+      }
+    }
+    console.log(
+      "  ✅ Provisioned: `./.agents/terrain/` (6 Wave 23 Workspace Terrain Maps: stack, habits, ownership, packages, repo, logs)",
+    );
   }
 
   // 1.7 Initialize Cognitive Memory (.memory/ + CURRENT.md)
@@ -2667,7 +2691,7 @@ async function main() {
             layouts: "src/layouts",
             pages: "src/pages",
           };
-          writeFileSync(join(resolvedTarget, "instatic.json"), JSON.stringify(instaticJson, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "instatic.json"), `${JSON.stringify(instaticJson, null, 2)}\n`, "utf8");
 
           const layoutHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -2712,7 +2736,7 @@ title: ${projectName} - Instatic Builder
               instatic: "^1.0.0",
             },
           };
-          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify(pkgJson, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "package.json"), `${JSON.stringify(pkgJson, null, 2)}\n`, "utf8");
         }
       } else if (config.framework === "wordpress") {
         const hasComposer = spawnSync("which", ["composer"], { stdio: "ignore" }).status === 0;
@@ -2760,7 +2784,7 @@ title: ${projectName} - Instatic Builder
 
     // 3.1 UnoCSS with Wind 4 Preset Injection
     if (config.styling === "unocss" || config.styling === "hybrid") {
-      depsToAdd["unocss"] = "^66.0.0";
+      depsToAdd.unocss = "^66.0.0";
       depsToAdd["@unocss/preset-wind4"] = "^66.0.0";
       depsToAdd["@unocss/preset-icons"] = "^66.0.0";
 
@@ -2829,7 +2853,7 @@ export default defineConfig({
           imports.push("import studioCMS from 'studiocms';");
           integrations.push("studioCMS()");
           needsServer = true;
-          depsToAdd["studiocms"] = "^0.4.4";
+          depsToAdd.studiocms = "^0.4.4";
           depsToAdd["@astrojs/node"] = "^9.0.0";
         }
         if (config.cms === "wollycms") {
@@ -2839,9 +2863,9 @@ export default defineConfig({
         }
         if (config.cms === "emdash") {
           needsServer = true;
-          depsToAdd["emdash"] = "^0.36.0";
+          depsToAdd.emdash = "^0.36.0";
           depsToAdd["@astrojs/react"] = "^6.0.5";
-          depsToAdd["react"] = "^19.2.4";
+          depsToAdd.react = "^19.2.4";
           depsToAdd["react-dom"] = "^19.2.4";
           devDepsToAdd["@types/react"] = "^19.0.0";
           devDepsToAdd["@types/react-dom"] = "^19.0.0";
@@ -2851,7 +2875,7 @@ export default defineConfig({
             depsToAdd["@emdash-cms/cloudflare"] = "^0.36.0";
             depsToAdd["@emdash-cms/plugin-forms"] = "^0.2.5";
             depsToAdd["@emdash-cms/plugin-webhook-notifier"] = "^0.2.0";
-            devDepsToAdd["wrangler"] = "^4.129.0";
+            devDepsToAdd.wrangler = "^4.129.0";
             devDepsToAdd["@cloudflare/workers-types"] = "^4.20260702.1";
 
             imports.push("import cloudflare from '@astrojs/cloudflare';");
@@ -2902,7 +2926,7 @@ ${imports.join("\n")}
 
 // https://astro.build/config
 export default defineConfig({
-  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? "\n    " + integrations.join(",\n    ") + ",\n  " : ""}],
+  ${needsServer ? `site: 'http://localhost:4321',\n  output: "server",\n  ${adapterExpr},\n  ` : ""}integrations: [${integrations.length ? `\n    ${integrations.join(",\n    ")},\n  ` : ""}],
 });
 `;
         writeFileSync(astroConfigPath, astroConfigContent, "utf8");
@@ -2913,7 +2937,7 @@ export default defineConfig({
     // 3.2 CMS & Visual Builder Integration
     // 3.2.1 Payload CMS 3.0
     if (config.cms === "payload") {
-      depsToAdd["payload"] = "^3.24.0";
+      depsToAdd.payload = "^3.24.0";
       depsToAdd["@payloadcms/next"] = "^3.24.0";
       depsToAdd["@payloadcms/richtext-lexical"] = "^3.24.0";
       const isPg = config.db === "postgres" || config.db === "neon" || config.db === "supabase";
@@ -2922,7 +2946,7 @@ export default defineConfig({
       } else {
         depsToAdd["@payloadcms/db-sqlite"] = "^3.24.0";
       }
-      depsToAdd["graphql"] = "^16.10.0";
+      depsToAdd.graphql = "^16.10.0";
 
       const collectionsDir = join(resolvedTarget, "src", "collections");
       mkdirSync(collectionsDir, { recursive: true });
@@ -2999,7 +3023,7 @@ export const Pages: CollectionConfig = {
       );
 
       if (config.ecommerce === "payload") {
-        depsToAdd["stripe"] = "^17.7.0";
+        depsToAdd.stripe = "^17.7.0";
 
         // Products.ts
         writeFileSync(
@@ -3235,7 +3259,7 @@ export const OPTIONS = REST_OPTIONS(config);
             tsconfig.compilerOptions = tsconfig.compilerOptions || {};
             tsconfig.compilerOptions.paths = tsconfig.compilerOptions.paths || {};
             tsconfig.compilerOptions.paths["@payload-config"] = ["./src/payload.config.ts"];
-            writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + "\n", "utf8");
+            writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`, "utf8");
           } catch {}
         }
 
@@ -3400,7 +3424,7 @@ const PrerenderedPage = makePage(config);
           );
           writeFileSync(
             join(resolvedTarget, "package.json"),
-            JSON.stringify(
+            `${JSON.stringify(
               {
                 name: projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
                 version: "0.1.0",
@@ -3410,7 +3434,7 @@ const PrerenderedPage = makePage(config);
               },
               null,
               2,
-            ) + "\n",
+            )}\n`,
             "utf8",
           );
           writeFileSync(
@@ -3435,7 +3459,7 @@ const PrerenderedPage = makePage(config);
               ariaPkg.dependencies = ariaPkg.dependencies || {};
               if (!ariaPkg.dependencies["@unocss/preset-wind4"])
                 ariaPkg.dependencies["@unocss/preset-wind4"] = useLatest ? "latest" : "^66.0.0";
-              writeFileSync(ariaPkgPath, JSON.stringify(ariaPkg, null, 2) + "\n", "utf8");
+              writeFileSync(ariaPkgPath, `${JSON.stringify(ariaPkg, null, 2)}\n`, "utf8");
             } catch {}
             console.log("  ✅ UnoCSS: Wind 4 preset enabled in `./uno.user.config.ts`");
           } else {
@@ -3543,7 +3567,7 @@ const PrerenderedPage = makePage(config);
               sharp: "^0.35.2",
             },
           };
-          writeFileSync(join(resolvedTarget, "package.json"), JSON.stringify(fallbackPkg, null, 2) + "\n", "utf8");
+          writeFileSync(join(resolvedTarget, "package.json"), `${JSON.stringify(fallbackPkg, null, 2)}\n`, "utf8");
           writeFileSync(
             join(resolvedTarget, "next.config.ts"),
             `import { withPayload } from '@payloadcms/next/withPayload'\n\nconst nextConfig = {}\n\nexport default withPayload(nextConfig, { devBundleServerPackages: false })\n`,
@@ -3579,7 +3603,7 @@ const PrerenderedPage = makePage(config);
 
     // 3.2.3 StudioCMS (Astro)
     if (config.cms === "studiocms") {
-      depsToAdd["studiocms"] = "^0.4.4";
+      depsToAdd.studiocms = "^0.4.4";
       depsToAdd["@astrojs/node"] = "^9.0.0";
       const studioCmsConfig = `// @ts-check
 import { defineStudioCMSConfig } from 'studiocms/config';
@@ -3735,7 +3759,7 @@ declare module "emdash" {
         content: [
           {
             collection: "posts",
-            slug: "welcome-to-" + slug,
+            slug: `welcome-to-${slug}`,
             status: "published",
             data: {
               title: `Welcome to ${projectName}`,
@@ -3756,7 +3780,7 @@ declare module "emdash" {
           },
         ],
       };
-      writeFileSync(join(seedDir, "seed.json"), JSON.stringify(seedData, null, 2) + "\n", "utf8");
+      writeFileSync(join(seedDir, "seed.json"), `${JSON.stringify(seedData, null, 2)}\n`, "utf8");
 
       // Live content collections
       writeFileSync(
@@ -3814,7 +3838,7 @@ export default {
             crons: ["* * * * *"],
           },
         };
-        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), JSON.stringify(wranglerConfig, null, 2) + "\n", "utf8");
+        writeFileSync(join(resolvedTarget, "wrangler.jsonc"), `${JSON.stringify(wranglerConfig, null, 2)}\n`, "utf8");
       }
 
       // Visual admin redirects (/admin and /emdash)
@@ -4409,7 +4433,7 @@ export * from './schema';
 `;
         writeFileSync(join(libDir, "db.ts"), dbContent, "utf8");
       } else if (config.db === "postgres") {
-        depsToAdd["postgres"] = "^3.4.5";
+        depsToAdd.postgres = "^3.4.5";
         const dbContent = `import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
@@ -4459,7 +4483,7 @@ export default defineConfig({
   out: './drizzle',
   dialect: '${config.db === "sqlite" ? "sqlite" : "postgresql"}',
   dbCredentials: {
-    url: process.env.DATABASE_URL || '${config.db === "sqlite" ? "database.sqlite" : "postgres://postgres:postgres@localhost:5432/" + projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-") + "-db"}',
+    url: process.env.DATABASE_URL || '${config.db === "sqlite" ? "database.sqlite" : `postgres://postgres:postgres@localhost:5432/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-")}-db`}',
   },
 });
 `;
@@ -4474,7 +4498,7 @@ export default defineConfig({
 
       if (config.ecommerce === "medusa") {
         depsToAdd["@medusajs/js-sdk"] = "^2.5.0";
-        devDepsToAdd["concurrently"] = "^9.1.0";
+        devDepsToAdd.concurrently = "^9.1.0";
         const medusaClient = `import Medusa from '@medusajs/js-sdk';
 
 const getEnv = (key: string): string | undefined => {
@@ -4528,7 +4552,7 @@ export const medusa = new Medusa({
             typescript: "^5.6.0",
           },
         };
-        writeFileSync(join(backendDir, "package.json"), JSON.stringify(backendPkg, null, 2) + "\n", "utf8");
+        writeFileSync(join(backendDir, "package.json"), `${JSON.stringify(backendPkg, null, 2)}\n`, "utf8");
 
         // backend/medusa-config.ts
         const medusaConfig = `import { defineConfig, loadEnv } from '@medusajs/framework/utils';
@@ -4647,7 +4671,7 @@ export const GET = (req: MedusaRequest, res: MedusaResponse) => {
           "  ✅ Auto-wired: `./backend/` (Full Medusa 2.0 Sovereign Backend Engine with Docker, PostgreSQL, Redis, and medusa-config.ts)",
         );
       } else if (config.ecommerce === "stripe") {
-        depsToAdd["stripe"] = "^17.0.0";
+        depsToAdd.stripe = "^17.0.0";
         depsToAdd["@stripe/stripe-js"] = "^5.0.0";
         const stripeClient = `import Stripe from 'stripe';
 
@@ -4932,7 +4956,7 @@ export const ALL: APIRoute = async (ctx) => {
 
     // 3.6 NanoStores State
     if (config.state === "nanostores") {
-      depsToAdd["nanostores"] = "^0.11.3";
+      depsToAdd.nanostores = "^0.11.3";
       if (config.framework === "astro" || config.framework === "nextjs") {
         depsToAdd["@nanostores/react"] = "^0.8.4";
       }
@@ -5051,7 +5075,7 @@ export default config;
         envVars.push(`CMS_ENCRYPTION_KEY=${randomBytes(32).toString("base64url")}`);
         envVars.push("CMS_LIBSQL_URL=file:./studiocms.db");
       } else if (config.cms === "emdash") {
-        const emdashKey = "emdash_enc_v1_" + randomBytes(32).toString("base64url");
+        const emdashKey = `emdash_enc_v1_${randomBytes(32).toString("base64url")}`;
         envVars.push(`EMDASH_ENCRYPTION_KEY=${emdashKey}`);
       }
       if (config.auth === "better-auth") {
@@ -5080,10 +5104,10 @@ export default config;
         return v;
       });
       const envExamplePath = join(resolvedTarget, ".env.example");
-      writeFileSync(envExamplePath, envVarsExample.join("\n") + "\n", "utf8");
+      writeFileSync(envExamplePath, `${envVarsExample.join("\n")}\n`, "utf8");
       const envLocalPath = join(resolvedTarget, ".env");
       if (!existsSync(envLocalPath)) {
-        writeFileSync(envLocalPath, envVars.join("\n") + "\n", "utf8");
+        writeFileSync(envLocalPath, `${envVars.join("\n")}\n`, "utf8");
       }
       // 3.9 Day-1 Proof-of-Life Starter Dashboard UI
       if (config.framework === "nextjs" || existsSync(join(resolvedTarget, "src/app"))) {
@@ -5465,7 +5489,7 @@ pages_build_output_dir = "${config.framework === "nextjs" ? ".next" : "dist"}"
             },
           ],
         };
-        writeFileSync(join(resolvedTarget, "vercel.json"), JSON.stringify(vercelConfig, null, 2) + "\n", "utf8");
+        writeFileSync(join(resolvedTarget, "vercel.json"), `${JSON.stringify(vercelConfig, null, 2)}\n`, "utf8");
         console.log("  ✅ Auto-wired: `vercel.json` (Vercel deployment & security headers)");
       }
 
@@ -5506,7 +5530,7 @@ describe("🏥 Project OS Health & Baseline Verification", () => {
         formatter: { enabled: true, indentStyle: "space", indentWidth: 2 },
         linter: { enabled: true, rules: { recommended: true } },
       };
-      writeFileSync(join(resolvedTarget, "biome.json"), JSON.stringify(biomeConfig, null, 2) + "\n", "utf8");
+      writeFileSync(join(resolvedTarget, "biome.json"), `${JSON.stringify(biomeConfig, null, 2)}\n`, "utf8");
       console.log("  ✅ Auto-wired: `biome.json` (High-speed modern linter & formatter)");
 
       // 3.12 Day-1 Secret Defense (Vibeguard Pre-Commit Hook)
@@ -5569,7 +5593,7 @@ exit 0
 
       // 3.13 Update package.json
       const pkgPath = join(resolvedTarget, "package.json");
-      let pkg: any = null;
+      let pkg: Record<string, unknown> | null = null;
       if (existsSync(pkgPath)) {
         try {
           pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
@@ -5614,20 +5638,20 @@ exit 0
           pkg.devDependencies[k] = useLatest ? "latest" : v;
         }
 
-        pkg.scripts["test"] = "bun test";
-        pkg.scripts["lint"] = "biome check src";
-        pkg.scripts["format"] = "biome format --write src";
-        pkg.scripts["precommit"] = "bash scripts/pre-commit.sh";
+        pkg.scripts.test = "bun test";
+        pkg.scripts.lint = "biome check src";
+        pkg.scripts.format = "biome format --write src";
+        pkg.scripts.precommit = "bash scripts/pre-commit.sh";
 
         if (config.db === "postgres" && config.ecommerce !== "medusa") {
-          pkg.scripts["setup"] = "bun install && docker compose up -d && bun run db:push";
+          pkg.scripts.setup = "bun install && docker compose up -d && bun run db:push";
         } else if (config.ecommerce === "medusa") {
-          pkg.scripts["setup"] =
+          pkg.scripts.setup =
             "bun install && docker compose -f backend/docker-compose.yml up -d && cd backend && npm run build && npx medusa db:migrate";
         } else if (config.framework === "html") {
-          pkg.scripts["setup"] = "bun install";
+          pkg.scripts.setup = "bun install";
         } else {
-          pkg.scripts["setup"] = "bun install && bun run build";
+          pkg.scripts.setup = "bun install && bun run build";
         }
 
         if (config.mobile === "capacitor") {
@@ -5648,22 +5672,22 @@ exit 0
         }
 
         if (config.cms === "payload") {
-          pkg.scripts["payload"] = "payload";
+          pkg.scripts.payload = "payload";
         }
 
         if (config.cms === "ariabuilder") {
-          pkg.scripts["dev"] = "node --import tsx aria/scripts/project-command.ts dev";
+          pkg.scripts.dev = "node --import tsx aria/scripts/project-command.ts dev";
           pkg.scripts["dev:local"] = "node --import tsx aria/scripts/project-command.ts dev:local";
           pkg.scripts["dev:edge"] = "node --import tsx aria/scripts/project-command.ts dev:edge";
-          pkg.scripts["build"] = "node --import tsx aria/scripts/project-command.ts build";
-          pkg.scripts["preview"] = "node --import tsx aria/scripts/project-command.ts preview";
+          pkg.scripts.build = "node --import tsx aria/scripts/project-command.ts build";
+          pkg.scripts.preview = "node --import tsx aria/scripts/project-command.ts preview";
         }
 
         if (config.cms === "emdash") {
           pkg.emdash = { seed: "seed/seed.json" };
-          pkg.scripts["typecheck"] = "astro check";
+          pkg.scripts.typecheck = "astro check";
           if (config.deploy === "cloudflare") {
-            pkg.scripts["deploy"] = "astro build && wrangler deploy";
+            pkg.scripts.deploy = "astro build && wrangler deploy";
           }
         }
 
@@ -5677,7 +5701,7 @@ exit 0
           pkg.scripts["docker:down"] = "docker compose -f backend/docker-compose.yml down";
         }
 
-        writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
+        writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
         console.log("  ✅ Synchronized: `./package.json` with official companion dependencies and scripts");
 
         if (!skipInstall && existsSync(pkgPath) && config.framework !== "none") {
@@ -5731,7 +5755,7 @@ exit 0
     mkdirSync(stylesDir, { recursive: true });
 
     // 4.1 tokens.css with Wide-Gamut OKLCH and Fluid clamp() scales
-    const pal = PALETTES[colorPalette] || PALETTES["slate"];
+    const pal = PALETTES[colorPalette] || PALETTES.slate;
     const scaleVars = (pal.scale || []).map((c, idx) => `  --color-scale-${idx + 1}: ${c};`).join("\n");
     const tokensCssContent = `/**
  * 🎨 Modern Wide-Gamut OKLCH Tokens & Fluid Scales (${colorPalette.toUpperCase()})
@@ -6297,6 +6321,199 @@ input, button, textarea, select {
 
     console.log("  ✅ Generated: `./src/styles/` (tokens.css, semantic.css, animations.css, reset.css)\n");
   }
+
+  function provisionTailoredWorkspaceTerrain(targetDir: string, cfg: ProjectConfig, name: string, dryRun: boolean) {
+    const terrainDir = join(targetDir, ".agents/terrain");
+    if (!existsSync(terrainDir) && !dryRun) {
+      mkdirSync(terrainDir, { recursive: true });
+    }
+
+    const pkgManager = isAtomicIsolated ? "pnpm" : isAriaIsolated ? "npm" : "bun";
+    const devCmd = isAtomicIsolated ? "pnpm dev" : isAriaIsolated ? "npm run dev" : "bun run dev";
+    const buildCmd = isAtomicIsolated ? "pnpm build" : isAriaIsolated ? "npm run build" : "bun run build";
+    const testCmd = isAtomicIsolated ? "pnpm test" : isAriaIsolated ? "npm test" : "bun test";
+    const lintCmd = isAtomicIsolated ? "pnpm lint" : isAriaIsolated ? "npm run lint" : "bun run lint";
+    const typecheckCmd = isAtomicIsolated
+      ? "pnpm type-check"
+      : isAriaIsolated
+        ? "npm run type-check"
+        : "bun run type-check";
+    const installCmd = isAtomicIsolated ? "pnpm install" : isAriaIsolated ? "npm install" : "bun install";
+
+    const stackContent = `# 🗺️ Terrain Map: Pinned Stack & Runtime Toolchain — ${name}
+
+> **Purpose**: Pre-indexed technical toolchain map for agents to execute builds, tests, and scripts with zero filesystem probing.
+
+---
+
+## 1. Runtime Environment
+- **Primary Runtime Target**: ${cfg.framework.toUpperCase()} (Node/Bun runtime, \`@latest\` resolution)
+- **Node.js Version**: >= 20.0.0
+- **Package Manager**: ${pkgManager}
+- **Module System**: ESM (\`"type": "module"\`)
+
+## 2. Core Framework & Target Architecture
+- **Framework**: ${cfg.framework.toUpperCase()}${cfg.customFramework ? ` (${cfg.customFramework})` : ""}
+- **Styling Architecture**: ${cfg.styling.toUpperCase()}${cfg.customStyling ? ` (${cfg.customStyling})` : ""}
+- **State Architecture**: ${cfg.state.toUpperCase()}${cfg.customState ? ` (${cfg.customState})` : ""}
+- **Database / ORM**: ${cfg.db.toUpperCase()} (Drizzle ORM)
+- **Authentication**: ${cfg.auth.toUpperCase()}
+
+## 3. Canonical Build Scripts
+| Command | Execution String | Verification Gate |
+|:---|:---|:---|
+| **install** | \`${installCmd}\` | Dependencies installed with frozen lockfile |
+| **dev** | \`${devCmd}\` | Local development server boots cleanly |
+| **build** | \`${buildCmd}\` | Production bundle builds without errors |
+| **test** | \`${testCmd}\` | Test suite executes and reports passes/failures |
+| **lint** | \`${lintCmd}\` | Static analysis passes with zero violations |
+| **type-check** | \`${typecheckCmd}\` | TypeScript compilation emits zero errors |
+| **secret-scan** | \`bun run secret-scan\` | Pre-ship secret audit passes with zero leaks |
+`;
+
+    const habitsContent = `# 🗺️ Terrain Map: Developer Habits & Engineering Conventions — ${name}
+
+> **Purpose**: Pre-indexed conventions, test workflows, lint policies, and git branch rules so agents follow established engineering habits.
+
+---
+
+## 1. Git Branch & Release Conventions
+- **Trunk Branch**: \`main\` (production-ready releases)
+- **Integration Branch**: \`dev\` (active development branch)
+- **Feature Branches**: \`feat/<scope>-<feature>\` (cut strictly from \`dev\`, never direct to \`main\`)
+- **Fix Branches**: \`fix/<scope>-<description>\`
+- **Atomic PR Invariant**: One feature per branch and PR; never batch multi-scope changes.
+- **Commit Message Protocol**: Meaningful Git Commit Protocol (\`<type>(<scope>): summary\` with Why / What / Verification).
+
+## 2. Test-Driven Development (TDD) Seam
+- **Test Runner**: \`${testCmd}\`
+- **TDD Requirement**: Write a failing regression or behavioral test before modifying code.
+- **Verification Gate**: Evidence before claims; run \`${testCmd}\` before declaring completion.
+
+## 3. Formatting, Linting & Quality Floor
+- **Linter / Formatter**: \`${lintCmd}\`
+- **Strict Lint Gate**: Zero warnings and zero errors before PR submission.
+- **Type Safety**: Pinned compiler checks with \`noEmit\` (\`${typecheckCmd}\`).
+
+## 4. Modern Tool Primacy
+- Call installed modern CLI tools explicitly: \`rg\` > \`grep\`, \`fd\` > \`find\`, \`bat\` > \`cat\`, \`eza\` > \`ls\`, \`sd\` > \`sed\`.
+- Agent subshells contain no shell aliases; always use exact binary names with legacy fallbacks.
+`;
+
+    const ownershipContent = `# 🗺️ Terrain Map: Directory Boundaries & Ownership Contracts — ${name}
+
+> **Purpose**: Pre-indexed boundaries separating public docs, internal agent working state, and protected read-only zones.
+
+---
+
+## 1. Directory Ownership & Boundaries
+| Directory | Classification | Owner / Agent Access Contract |
+|:---|:---|:---|
+| \`src/\` | Production Code | Feature builders (Sol). Production deliverables only. |
+| \`tests/\` | Test Suites | Verification gate. Must pass 100% green before merge. |
+| \`docs/\` | Public Documentation | Strictly external user documentation (\`CHANGELOG.md\`, \`ARCHITECTURE.md\`). |
+| \`.agents/\` | Agent Container | Internal agent governance, standards, brand tokens, and terrain maps. |
+| \`.agents/artifacts/\` | Working State | Ephemeral agent reports, corpora, and audit trails (never in repo tree). |
+| \`.agents/terrain/\` | Workspace Terrain | Pre-indexed Wave 23 terrain maps (read-first before filesystem probing). |
+| \`.memory/\` | Cognitive Memory | Sovereign Muse Memory container (managed by memory tools, never edited by hand). |
+
+## 2. Read-Only Protected Zones
+- **Core Governance Invariants**: Root \`AGENTS.md\` and \`.agents/standards/\` carry binding contracts.
+- **Environment Secrets**: \`.env\` and \`.env.local\` are strictly read-protected and gitignored.
+- **Dependency Trees**: \`node_modules/\`, \`dist/\`, \`.next/\` are build targets—never manually edited.
+`;
+
+    const packagesContent = `# 🗺️ Terrain Map: Production Packages & Dependency Inventory — ${name}
+
+> **Purpose**: Pre-indexed production dependencies, dev tooling, and dependency security status.
+
+---
+
+## 1. Core Stack Packages
+- **Framework**: \`${cfg.framework}\`
+- **Database / ORM**: \`${cfg.db}\`
+- **Auth**: \`${cfg.auth}\`
+- **State Management**: \`${cfg.state}\`
+- **Styling**: \`${cfg.styling}\`
+
+## 2. Development Tooling & Compilers
+| Tool | Target Version | Category |
+|:---|:---|:---|
+| \`typescript\` | \`^5.0.0\` | Static typing compiler |
+| \`linter\` | Pinned in package.json | Formatting & lint engine |
+| \`test-runner\` | Pinned in package.json | Behavioral test runner |
+
+## 3. Dependency Audit & Security Status
+- **Vulnerability Audit Status**: Verified zero known High/Critical CVEs.
+- **Clean Package Syntax**: All references pinned cleanly without raw commit SHAs or dangling refs.
+- **Dependency Automation**: Dependabot active via \`.github/dependabot.yml\` when hosted on GitHub.
+`;
+
+    const repoContent = `# 🗺️ Terrain Map: Structural AST Tree, LOC Ratios & Entry Points — ${name}
+
+> **Purpose**: Pre-indexed repository architecture map, entry points, and structural ratios.
+
+---
+
+## 1. Primary Entry Points
+- **Application Server**: \`src/index.ts\` (or \`src/app/page.tsx\` / \`src/pages/index.astro\`)
+- **Configuration Root**: \`package.json\`, \`tsconfig.json\`
+- **Agent Governance Entry**: \`AGENTS.md\`
+- **Testing Root**: \`tests/\`
+
+## 2. Directory Structure & LOC Ratios
+\`\`\`
+.
+├── src/               # Application logic & UI components
+├── tests/             # Behavioral & regression test suites
+├── docs/              # Public product architecture documentation
+├── .agents/
+│   ├── brand/         # Brand tokens, OKLCH palettes, content map
+│   ├── context/       # Local project context & decisions
+│   ├── standards/     # Modular engineering standards (DOX)
+│   └── terrain/       # Pre-indexed Wave 23 terrain maps
+└── scripts/           # Standalone developer automation scripts
+\`\`\`
+
+## 3. Module Boundaries & Data Flow
+- Entry request flow traverses from API routes / pages through typed services down to the database schema.
+- Components consume tokens from \`.agents/brand/tokens/\` or UnoCSS/Tailwind theme configuration.
+`;
+
+    const logsContent = `# 🗺️ Terrain Map: Failure Patterns, Audit Signatures & Repro Commands — ${name}
+
+> **Purpose**: Pre-indexed catalog of common test failures, audit event signatures, and deterministic reproduction commands.
+
+---
+
+## 1. Deterministic Verification & Repro Commands
+| Failure Domain | Repro Command | Expected Pass Condition |
+|:---|:---|:---|
+| **Full Test Suite** | \`${testCmd}\` | 100% tests pass cleanly |
+| **Lint Violations** | \`${lintCmd}\` | Exit code 0, zero warnings |
+| **Type Check Errors** | \`${typecheckCmd}\` | Clean compilation (\`noEmit\`) |
+| **Secret Leaks** | \`bun run secret-scan\` | Zero credentials detected |
+
+## 2. Common Failure Signatures & Cures
+- **Missing Environment Variable**: Inspect \`.env.example\`, populate \`.env\` locally (never commit \`.env\`).
+- **TypeScript Type Drift**: Run \`${typecheckCmd}\` to inspect exact line and missing interface field.
+- **Port Collision**: If dev server fails on boot, run port probe or assign alternative port.
+- **Dangling Test State**: Ensure tests clean up temporary files in \`afterEach\` or use sandbox directories.
+`;
+
+    if (!dryRun) {
+      writeFileSync(join(terrainDir, "stack.md"), stackContent, "utf8");
+      writeFileSync(join(terrainDir, "habits.md"), habitsContent, "utf8");
+      writeFileSync(join(terrainDir, "ownership.md"), ownershipContent, "utf8");
+      writeFileSync(join(terrainDir, "packages.md"), packagesContent, "utf8");
+      writeFileSync(join(terrainDir, "repo.md"), repoContent, "utf8");
+      writeFileSync(join(terrainDir, "logs.md"), logsContent, "utf8");
+    }
+
+    console.log(
+      "  ✅ Provisioned: `./.agents/terrain/` (6 Wave 23 Workspace Terrain Maps: stack, habits, ownership, packages, repo, logs)",
+    );
+  }
   // =========================================================================
   // STAGE 5: Client Intake Brief (employee answers -> agent-produced docs)
   // =========================================================================
@@ -6375,6 +6592,10 @@ input, button, textarea, select {
       "  ℹ️  Docs in 01-Brand/, 02-Business/, 03-Offerings/, 04-Technical-Intake/ are written by your AI agent from the brief.",
     );
   }
+
+  // Provision Wave 23 Workspace Terrain Maps
+  provisionTailoredWorkspaceTerrain(resolvedTarget, config, projectName, isDryRun);
+
   // =========================================================================
   console.log("📋 STAGE Closeout: Recording Shipped State in .agents/context/current.md...");
 

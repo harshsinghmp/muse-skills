@@ -212,13 +212,16 @@ For work spanning sessions, attach a wayfinder map to the timestamped packet (so
 - Refresh only on real state change (checkpoint, decision, reversal); not on every tool call.
 - Silent writes: ambient handoff never narrates itself.
 
-### 🧠 Memory System Hooks
+### 🧠 Muse Memory Dual-Scope Architecture Hooks
 
-Handoff integrates with whatever memory system the runtime provides (e.g. musememory's write/recall tools), without ever touching `.memory/**` directly — that path is owned exclusively by `musememory`:
+Handoff integrates with Muse Memory's dual-scope architecture, without ever touching `.memory/**` raw files directly — that path is owned exclusively by `musememory`:
 
-1. **On outbound handoff or full flush**: push *durable decisions only* (not the file dump) through the runtime's memory-write tool call when one exists. Ephemeral state stays in HANDOFF.md; durable rules and decisions go to memory.
-2. **On workspace entry (ladder rung 2)**: memory recall is a lookup, filtered strictly to the current directory boundary.
-3. **When no memory tool exists**: durable findings are reported in the output and recorded in `.agents/context/` via `updateagents` conventions — never written to `.memory/` by hand.
+1. **Global User Truth**: On session start or workspace entry, query global identity and user preferences from `~/.memory/USER.md` via `get_context(query=...)`.
+2. **Local Project Constraints**: Local project constraints and active in-flight boundaries read and write to `./.memory/` and `CURRENT.md` (or `.agents/context/current.md`).
+3. **No Direct YAML Mutation**: Never read, write, or modify internal `.memory/**` YAML files directly by hand. Always invoke the MCP tools (`memory_capture`, `search`, `get_context`) or sovereign CLI commands (`memory capture`, `memory search`).
+4. **On outbound handoff or full flush**: Push *durable decisions only* (not the file dump) through `memory_capture(type="decision"|"constraint")`. Ephemeral state stays in `HANDOFF.md`; durable rules and decisions go to memory.
+5. **On workspace entry (ladder rung 2)**: Memory recall is a lookup, filtered strictly to the current directory boundary.
+6. **When no memory tool exists**: Durable findings are reported in the output and recorded in `.agents/context/` via `updateagents` conventions — never written to `.memory/` by hand.
 
 ### Neighboring Skill Boundaries
 

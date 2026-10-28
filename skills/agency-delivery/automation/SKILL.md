@@ -1,10 +1,10 @@
 ---
 name: automation
 aliases: ["ai-services", "ai-automation", "workflow-automation", "chatbots", "agents", "rag", "prompt-engineering"]
-description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, and conversational voice AI agents — routed through nine modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics)."
-argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice]"
+description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, prompt engineering, conversational voice AI agents, real-time event streaming, and multi-channel alert routing — routed through eleven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, stream real-time events via WebSockets/SSE, route real-time alerts across Slack/Discord/Telegram, connect systems via APIs/webhooks, engineer prompts, or deploy voice AI agents with telephony. Not for hosting/CI (devops) or data tracking (analytics)."
+argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|alerts|audit]"
 user-invocable: true
-version: 1.1.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **integrations** | "connect two apps", "api integration", "webhook", "sync systems", "webhook payload" | Third-party API/webhook integrations, payload byte-size limiter, and data sync | [references/integrations.md](references/integrations.md) |
 | **prompt** | "write a prompt", "prompt engineering", "improve this prompt", "eval a prompt" | Prompt design, iteration, and evaluation | [references/prompt.md](references/prompt.md) |
 | **voice** | "voice agent", "phone bot", "retell ai", "bland ai", "call assistant", "telephony", "voice ai" | Conversational voice AI agents, Retell/Bland pipelines, Twilio SIP, and real-time STT/TTS | [references/voice.md](references/voice.md) |
+| **realtime** | "realtime", "event streaming", "websockets", "sse", "pubsub", "reconnect backoff" | Real-time event streaming: WebSockets, SSE event multiplexing, reconnection backoff with jitter, and Redis Pub/Sub | [references/realtime.md](references/realtime.md) |
+| **alerts** | "multi-channel alerts", "notification router", "webhook alerts", "discord webhook", "slack webhook", "alert escalation" | Real-time multi-channel notification and alert escalation router across Discord, Slack, and Telegram | [references/alerts.md](references/alerts.md) |
 | **`audit`** | "agent security audit", "audit the automation", "OWASP LLM audit" | OWASP LLM Top-10 pass: injection, excessive agency, output handling, sandboxing, evals-as-gate. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

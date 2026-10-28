@@ -1,10 +1,10 @@
 ---
 name: ops
-aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown"]
-description: "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through fourteen modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
-argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vendor|obsidian|legal|audit]"
+aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "sku", "productized-sku"]
+description: "Internal agency operations department: client onboarding, proposals, statements of work, productized agency SKU packaging and value triangulation, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, multi-client context vault and asset fencing, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through sixteen modes. Use when asked to onboard a new client, write a proposal or SOW, package productized agency service SKUs, triangulate outcome-based pricing, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, enforce client context vault isolation, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
+argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"
 user-invocable: true
-version: 1.6.0
+version: 1.8.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 33
-  aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "agency-legal", "contracts", "msa"]
+  aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "agency-legal", "contracts", "msa", "sku", "productized-sku"]
   suggested_skills: ["relay", "context-anchor", "secretary", "evidence-ledger", "git"]
   hermes:
-    tags: ["operations", "agency-ops", "onboarding", "proposal", "sow", "scope", "milestones", "retrospective", "multi-client", "project-management", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "wikilinks", "callouts", "knowledge-management", "pkm", "legal", "msa", "contracts", "subcontractor-agreement", "nda"]
+    tags: ["operations", "agency-ops", "onboarding", "proposal", "sow", "scope", "milestones", "retrospective", "multi-client", "project-management", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "wikilinks", "callouts", "knowledge-management", "pkm", "legal", "msa", "contracts", "subcontractor-agreement", "nda", "sku", "productized-sku"]
     related_skills: ["relay", "context-anchor", "secretary", "evidence-ledger", "git"]
     suggested_skills: ["relay", "context-anchor", "secretary", "evidence-ledger", "git"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["relay", "context-anchor", "secretary", "evidence-ledger", "git"]
-    primary_triggers: ["onboard a client", "write a proposal", "statement of work", "track milestones", "project retro", "manage multiple clients", "scope a project", "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "agency contract", "msa", "nda", "subcontractor agreement"]
+    primary_triggers: ["onboard a client", "write a proposal", "statement of work", "track milestones", "project retro", "manage multiple clients", "scope a project", "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "agency contract", "msa", "nda", "subcontractor agreement", "productized sku", "sku packager", "turnkey service", "value pricing triangulation"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -42,10 +42,12 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **onboarding** | "onboard a client", "new client", "kickoff", "client intake" | Client intake and isolated workspace setup | [references/onboarding.md](references/onboarding.md) |
 | **proposal** | "write a proposal", "pitch a client", "win this project", "proposal doc" | Client proposal that connects outcome to plan and price | [references/proposal.md](references/proposal.md) |
 | **sow** | "statement of work", "sow", "scope document", "contract scope" | Statement of work: scope, deliverables, terms, change process | [references/sow.md](references/sow.md) |
+| **sku** | "productized sku", "sku packager", "turnkey service", "fixed-scope packaging", "value pricing triangulation", "sow generator", "client intake brief", "milestone sign-off" | Turnkey productized agency SKU packager, outcome-based value triangulation (5.0x ROI floor), automated SOW and intake brief generation, and milestone verification packets | [references/sku.md](references/sku.md) |
 | **milestone** | "track milestones", "scope creep", "project tracking", "delivery status" | Milestone and scope tracking with change control | [references/milestone.md](references/milestone.md) |
 | **shape** | "shape this ask", "set an appetite", "is this sized yet", "grab-bag project", "unsized request" | Shape an ambiguous ask before it is priced: named problem, appetite band, no-gos, de-risked pitch | [references/shape.md](references/shape.md) |
 | **retro** | "retro", "retrospective", "project review", "what went wrong" | Blameless project retrospective with tracked actions | [references/retro.md](references/retro.md) |
 | **multi-client** | "multiple clients", "portfolio", "manage all clients", "capacity planning" | Multi-client portfolio management and capacity planning | [references/multi-client.md](references/multi-client.md) |
+| **vault** | "client vault", "context isolation", "asset fencing", "cross-client bleed", "worktree lease", "credential masking" | Multi-client context vault, brand asset fencing, shared worktree lease arbitration, and multi-tenant credential masking | [references/vault.md](references/vault.md) |
 | **contracts** | "draft a contract", "MSA", "NDA", "legal doc" | Legal document and contract drafting standards | [references/contracts.md](references/contracts.md) |
 | **vendor** | "vendor", "subcontractor", "freelancer management", "procurement", "tooling spend", "manage vendors" | Vendor/subcontractor scorecard, spend control, and tooling consolidation | [references/vendor.md](references/vendor.md) |
 | **obsidian** | "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "daily note" | Obsidian PKM vault operations, wikilinks, callouts, embeds, frontmatter properties, CLI commands, and plugin dev | [references/obsidian.md](references/obsidian.md) |

@@ -37,14 +37,20 @@ function fail(msg: string): never {
   process.exit(2);
 }
 
-function resolveSelection(reg: any, sel: string): string[] {
-  const skills: any[] = reg.skills ?? [];
+interface SkillReg {
+  skills?: Array<{ scope?: string; category?: string; name?: string }>;
+  selections?: Record<string, { resolve?: string }>;
+  categories?: Array<{ id: string }>;
+}
+
+function resolveSelection(reg: SkillReg, sel: string): string[] {
+  const skills = reg.skills ?? [];
   const named = reg.selections?.[sel];
   if (named) {
     const rule: string = named.resolve ?? "";
     const [kind, arg] = [rule.slice(0, rule.indexOf(":")), rule.slice(rule.indexOf(":") + 1)];
-    if (kind === "scope") return skills.filter((s) => s.scope === arg).map((s) => s.name);
-    if (kind === "category") return skills.filter((s) => s.category === arg).map((s) => s.name);
+    if (kind === "scope") return skills.filter((s) => s.scope === arg).map((s) => s.name ?? "");
+    if (kind === "category") return skills.filter((s) => s.category === arg).map((s) => s.name ?? "");
     if (kind === "names")
       return arg
         .split(",")
@@ -52,14 +58,14 @@ function resolveSelection(reg: any, sel: string): string[] {
         .filter(Boolean);
     fail(`selection "${sel}" has unknown resolve rule: ${rule}`);
   }
-  if (sel === "all") return skills.map((s) => s.name);
+  if (sel === "all") return skills.map((s) => s.name ?? "");
   if (sel === "categories" || sel === "categories list") {
-    return (reg.categories ?? []).map((c: any) => c.id);
+    return (reg.categories ?? []).map((c) => c.id);
   }
-  const cat = (reg.categories ?? []).find((c: any) => c.id === sel);
-  if (cat) return skills.filter((s) => s.category === cat.id).map((s) => s.name);
+  const cat = (reg.categories ?? []).find((c) => c.id === sel);
+  if (cat) return skills.filter((s) => s.category === cat.id).map((s) => s.name ?? "");
   const single = skills.find((s) => s.name === sel);
-  if (single) return [single.name];
+  if (single) return [single.name ?? ""];
   fail(`unknown selection "${sel}". Run: bun scripts/select-skills.ts list`);
 }
 
@@ -73,7 +79,8 @@ function main(): void {
 
   if (sel === "list") {
     console.log("Named selections:");
-    for (const [k, v] of Object.entries<any>(reg.selections ?? {})) console.log(`  ${k.padEnd(10)} ${v.description}`);
+    for (const [k, v] of Object.entries(reg.selections ?? {}))
+      console.log(`  ${k.padEnd(10)} ${(v as { description?: string }).description}`);
     console.log("\nCategories (usable as selections):");
     for (const c of reg.categories ?? []) console.log(`  ${c.id.padEnd(10)} ${c.label}`);
     console.log("  all        Every skill in the suite");

@@ -1,10 +1,10 @@
 ---
 name: muse-security
-aliases: ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "clawsec"]
-description: "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), and runtime defense guardrails — routed through six modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops)."
-argument-hint: "[cve|remediate|cloud-waf|sast|runtime|audit]"
+aliases: ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "clawsec", "mcp-guard", "mcp-security", "tool-poisoning"]
+description: "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, dynamic MCP server governance & tool poisoning defense, and ephemeral mutual TLS zero-trust subagent attestation — routed through nine modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', 'audit subagent boundary', 'audit mcp servers', 'zero trust attestation', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops)."
+argument-hint: "[cve|remediate|cloud-waf|sast|runtime|boundary|mcp-guard|zero-trust|audit]"
 user-invocable: true
-version: 1.0.1
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,9 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **cloud-waf** | "cloud waf", "cloud armor", "cloudflare waf", "waf pillars", "ddos rules" | GCP Cloud Armor & Cloudflare WAF architecture across all 6 Well-Architected Framework pillars | [references/cloud-waf.md](references/cloud-waf.md) |
 | **sast** | "sast audit", "static analysis", "dependency audit", "mitre attack" | Source code security review, dependency vulnerability trees, and MITRE ATT&CK / ATLAS control mapping | [references/sast.md](references/sast.md) |
 | **runtime** | "runtime defense", "destructive command check", "zero-secret enforcement" | AST command interception (blocking `rm -rf /`, `terraform destroy`) and process environment isolation | [references/runtime.md](references/runtime.md) |
+| **boundary** | "subagent boundary", "worktree isolation", "symlink escape", "permission fence", "tenant isolation" | Subagent tenant boundary & worktree isolation auditor: symlink traversal fences, shared worktree lease arbitration, permission fences, and argv hygiene | [references/boundary.md](references/boundary.md) |
+| **mcp-guard** | "mcp guard", "mcp security", "tool poisoning", "owasp mcp03", "sanitize mcp", "mcp audit" | Dynamic MCP server governance, OWASP MCP03 tool poisoning scanner, transport isolation, and credential tripwires | [references/mcp-guard.md](references/mcp-guard.md) |
+| **zero-trust** | "zero trust", "spiffe", "spire", "subagent attestation", "mtls", "capability scope", "tamper evident audit" | Ephemeral mutual TLS zero-trust subagent attestation: SPIFFE SVIDs, least-privilege capability scope jails, mTLS verification, and linked cryptographic audit chains | [references/zero-trust.md](references/zero-trust.md) |
 | **audit** | "full security audit", "security posture", "compliance review" | End-to-end security posture evaluation synthesizing CVE, SAST, WAF, and runtime controls | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -96,7 +99,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 2. **Resolve Mode**: Match request against the mode table (cve, remediate, cloud-waf, sast, runtime, audit).
 3. **Execute Mode Playbook**: Load `references/<mode>.md` and execute its step-by-step procedure.
 4. **Evidence Collection**: Capture exact CVSS scores, vulnerability IDs, scanner logs, or WAF rule states.
-5. **Quality Gate & Verification**: Ensure zero secret leakage (Vibeguard Protocol) and verify that all remediation playbooks are idempotent with dry-run verification.
+5. **Quality Gate & Verification**: Run standalone pre-ship secret scan (`bun run secret-scan [path]`) to verify zero credential leakage (Vibeguard Protocol) across tokens (`sk-*`, `ghp_*`), private keys, and database URLs; verify that all remediation playbooks are idempotent with dry-run verification.
 
 ---
 
@@ -115,5 +118,6 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - [ ] CVEs validated against official NVD / vendor advisories with CVSS scores.
 - [ ] Remediation playbooks tested with `--check` / dry-run before execution.
 - [ ] Cloud WAF evaluated across all 6 Well-Architected Framework pillars.
+- [ ] Subagent boundary audit passed (zero symlink escapes, valid worktree leases, strict key permissions).
 - [ ] Zero secret leaks in output logs (Vibeguard standard).
 - [ ] All audit findings recorded into the evidence ledger.

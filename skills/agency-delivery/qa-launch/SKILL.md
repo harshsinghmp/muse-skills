@@ -1,10 +1,10 @@
 ---
 name: qa-launch
-aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check"]
-description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist (HTML/CSS/fonts/images/JS/server budgets), release-gate checklist with Block-or-Ship verdict, and post-fix regression — routed through six modes. Use when asked to QA a site before launch, verify a release candidate, run the front-end performance checklist, plan browser and device coverage, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
-argument-hint: "[matrix|functional|performance|gate|regression|audit]"
+aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check", "vitals-guard", "web-vitals", "agent-evals", "eval-runner"]
+description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist (HTML/CSS/fonts/images/JS/server budgets), Core Web Vitals audit and production gate (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, zero-FOUC web font budget), AI agent evaluation and synthetic edge testing (dual-model consensus, minimal repro packs, regression scorecards), synthetic chaos fault injection and resilience testing (latency jitter, 502/504 drop simulation, database throttling, zero data loss audit), release-gate checklist with Block-or-Ship verdict, post-fix regression, and Playwright synthetic user journey smoke suites — routed through ten modes. Use when asked to QA a site before launch, verify a release candidate, run the front-end performance checklist, audit Core Web Vitals (INP/CLS/LCP/fonts), evaluate AI agent pipelines, run synthetic edge test batteries, test chaos fault injection and resilience, scaffold minimal failing repro packs, plan browser and device coverage, run headless Playwright smoke tests, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
+argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|evals|chaos|audit]"
 user-invocable: true
-version: 1.2.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 35
-  aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check"]
+  aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix", "regression-check", "vitals-guard", "web-vitals", "agent-evals", "eval-runner"]
   suggested_skills: ["webdev", "mobile", "refactor-ui", "devops", "code-review"]
   hermes:
-    tags: ["qa", "launch-qa", "quality-gate", "cross-browser", "device-matrix", "functional-testing", "release-gate", "regression", "verification", "block-or-ship"]
+    tags: ["qa", "launch-qa", "quality-gate", "cross-browser", "device-matrix", "functional-testing", "release-gate", "regression", "verification", "block-or-ship", "core-web-vitals", "inp", "cls", "lcp", "vitals-guard", "agent-evals", "eval-runner"]
     related_skills: ["webdev", "mobile", "refactor-ui", "devops", "code-review"]
     suggested_skills: ["webdev", "mobile", "refactor-ui", "devops", "code-review"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["webdev", "mobile", "refactor-ui", "devops", "code-review"]
-    primary_triggers: ["QA a site before launch", "verify a release candidate", "browser and device coverage", "release gate checklist", "Block-or-Ship verdict", "re-verify after fixes", "regression check", "pre-launch quality gate"]
+    primary_triggers: ["QA a site before launch", "verify a release candidate", "browser and device coverage", "release gate checklist", "Block-or-Ship verdict", "core web vitals", "inp audit", "cls layout shift", "vitals guard", "re-verify after fixes", "regression check", "pre-launch quality gate", "ai agent evals", "eval runner", "synthetic edge testing", "dual model consensus"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -44,6 +44,10 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **performance** | "front-end performance checklist", "is it fast enough", "perf budget before launch", "Lighthouse before ship" | Front-end performance checklist across HTML/CSS/fonts/images/JS/Server with severity-ranked findings and budget readings | [references/performance.md](references/performance.md) |
 | **gate** | "ready to ship?", "release gate", "block or ship", "launch checklist" | Release-gate checklist ending in a Block-or-Ship verdict | [references/gate.md](references/gate.md) |
 | **regression** | "re-verify after fixes", "regression check", "did the fix break anything" | Post-fix regression: fixed issues plus adjacent blast radius | [references/regression.md](references/regression.md) |
+| **e2e** | "e2e tests", "playwright smoke suite", "synthetic user journey", "headless checkout test", "audit test locators" | Playwright synthetic journey test suite, accessible role locators, and headless smoke runner | [references/e2e.md](references/e2e.md) |
+| **vitals** | "core web vitals", "inp audit", "cls layout shift", "lcp optimization", "web font founc", "vitals guard", "sub-200ms inp" | Core Web Vitals audit (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, font budgets) and Block-or-Ship production gate | [references/vitals.md](references/vitals.md) |
+| **evals** | "ai agent evals", "eval runner", "synthetic edge testing", "evaluator-optimizer loop", "dual model consensus", "repro pack", "agent regression test" | AI agent evaluation engine, synthetic edge battery generation, dual-model blind consensus scoring, minimal failing repro pack scaffolding, and regression scorecards | [references/evals.md](references/evals.md) |
+| **chaos** | "chaos test", "fault injection", "resilience testing", "latency jitter", "upstream drop", "database throttling", "zero data loss audit" | Synthetic fault injection testing: latency jitter (500-3000ms), upstream 502/504 drop simulation, database pool throttling, and zero data loss audit | [references/chaos.md](references/chaos.md) |
 | **audit** | "audit qa", "quality gate audit", "launch audit", "pre-launch check" | Quality-gate audit (functional + regression + UAT sign-off) + launch-gate audit (rollback plan, perf budget, docs) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -75,10 +79,12 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 | 'What should we test on?' | matrix |
 | 'Does the release candidate work?' | functional |
 | 'Is it fast enough / under the perf budget?' | performance |
+| 'Do Core Web Vitals meet sub-200ms INP and zero-CLS budgets?' | vitals |
 | 'Are we cleared to ship?' | gate |
+| 'Do critical user journeys pass headless smoke?' | e2e |
 | 'Did the fixes hold without breaking anything?' | regression |
 
-Order: matrix → functional → performance → gate → regression. Plan coverage, verify, measure perf, verdict, then re-verify.
+Order: matrix → functional → e2e → performance → gate → regression. Plan coverage, verify, measure perf, verdict, then re-verify.
 
 ### Verification gate (every mode)
 

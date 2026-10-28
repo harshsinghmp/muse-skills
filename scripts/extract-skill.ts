@@ -514,7 +514,7 @@ export function extractSkill(options: ExtractionOptions): {
     if (existsSync(skillsJsonPath)) {
       try {
         const data = JSON.parse(readFileSync(skillsJsonPath, "utf8"));
-        const isTopLevel = data.skills?.some((s: any) => s.path && !s.path.startsWith(".agents/"));
+        const isTopLevel = data.skills?.some((s: { path?: string }) => s.path && !s.path.startsWith(".agents/"));
         if (isTopLevel) {
           skillDir = join(cwd, options.name);
         }
@@ -601,7 +601,7 @@ export function extractSkill(options: ExtractionOptions): {
         const content = readFileSync(skillsJsonPath, "utf8");
         const json = JSON.parse(content);
         if (Array.isArray(json.skills)) {
-          const exists = json.skills.some((s: any) => s.name === options.name);
+          const exists = json.skills.some((s: { name?: string }) => s.name === options.name);
           if (!exists) {
             json.skills.push({
               name: options.name,

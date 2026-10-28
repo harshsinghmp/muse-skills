@@ -1,10 +1,10 @@
 ---
 name: content
-aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial"]
-description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, and prose humanization — routed through twelve modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
-argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch]"
+aliases: ["content-studio", "copywriting", "blogging", "email-marketing", "video-scripting", "podcast", "editorial", "vsl", "vsl-scripting", "ugc", "ugc-scripts", "creator-brief"]
+description: "Full content studio: SEO-aware blog posts, conversion and brand copy, email campaigns, video scripts, podcast episodes, customer case studies, prose humanization, high-converting video sales letters, and direct-response UGC video scripts — routed through twelve modes. Use when asked to write a blog post or article, draft website or landing copy, build an email sequence, script a video, produce a podcast, document a customer story, script a VSL, draft UGC scripts and creator briefs, or remove AI-sounding prose from a draft. Not for organic social posts (smm) or ad copy (paidads)."
+argument-hint: "[blog|copy|email|video|podcast|case-study|humanize|launch|thumbnails|vsl|ugc]"
 user-invocable: true
-version: 1.2.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -50,6 +50,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **humanize** | "humanize this", "remove AI writing", "make it sound natural", "de-slop" | Editorial pass removing AI-sounding prose without changing facts or voice | [references/humanize.md](references/humanize.md) |
 | **thumbnails** | "youtube thumbnail", "thumbnail prompt", "high-CTR thumbnail" | High-CTR YouTube thumbnail generation and prompt engineering | [references/thumbnails.md](references/thumbnails.md) |
 | **launch** | "product launch", "launch announcement", "feature release", "launch copy" | Launch copy kit: headline, offer, key messages, and channel-ready assets | [references/launch.md](references/launch.md) |
+| **vsl** | "vsl script", "video sales letter", "vsl storyboard", "vsl framework", "sales script", "6-beat script" | High-converting Video Sales Letter (VSL) scripts, 6-beat narrative spine, and two-column A/V storyboards | [references/vsl.md](references/vsl.md) |
+| **ugc** | "ugc script", "ugc creator brief", "user generated content", "ugc storyboard", "tiktok ad script", "reels ad script" | Direct-response UGC video scripts, 4-hook variations, 5-beat narrative storyboards, and creator briefs | [references/ugc.md](references/ugc.md) |
 | **audit** | "audit content", "content audit", "fact check", "slop audit", "style guide audit" | Content-quality audit (anti-slop scan, fact verification, brand voice, readability) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

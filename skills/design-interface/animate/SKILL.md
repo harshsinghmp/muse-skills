@@ -2,7 +2,7 @@
 name: animate
 aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions", "scroll-experience", "animation-on-scroll", "gsap"]
 description: "Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. Use when asked to animate something, add motion, build a transition, make a component feel alive, review/audit/improve existing motion, or find places that should animate. Defaults to Motion (motion.dev, formerly Framer Motion) for React and CSS for quick fixes; uses any animation library already present in the project first; GSAP, WebGL, and native-mobile (Reanimated/SwiftUI/Compose/Flutter) are loaded only on explicit request."
-argument-hint: "[build|review|improve|audit|audit-deep|threejs|delight|find]"
+argument-hint: "[build|review|improve|audit|audit-deep|threejs|delight|gsap|find]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -42,7 +42,7 @@ Three principles govern everything:
 
 ## Modes
 
-Every invocation resolves to one of seven modes. Route on the *verb*, not the noun:
+Every invocation resolves to one of nine modes. Route on the *verb*, not the noun:
 
 | Mode | Trigger phrases | Behavior | Reference |
 |:---|:---|:---|:---|
@@ -52,10 +52,11 @@ Every invocation resolves to one of seven modes. Route on the *verb*, not the no
 | **audit** | "audit the motion", "animation audit" | Same as **improve**: severity-ordered findings + self-contained remediation plans | [review-checklist.md](references/review-checklist.md) |
 | **audit-deep** | "deep audit", "accessibility audit", "performance audit" | Reduced-motion check, vestibular triggers, performance budget, jank detection | [references/audit.md](references/audit.md) |
 | **threejs** | "threejs", "three.js", "webgl", "3d canvas", "glsl shader", "r3f", "interactive 3d" | Interactive 3D WebGL scenes, PBR materials, custom shaders, GLTF/Draco pipelines, post-processing, and GPU memory lifecycle | [references/threejs.md](references/threejs.md) |
+| **gsap** | "gsap", "scrolltrigger", "scroll trigger", "pin layout", "timeline", "flip plugin", "svg morph" | High-performance GSAP 3 animation: ScrollTrigger pinning, complex timelines, FLIP layout transitions, SVG morphing, and strict reduced-motion invariants | [references/gsap.md](references/gsap.md) |
 | **delight** | "delight", "whimsy", "easter egg", "micro-delight", "playful interaction", "confetti", "celebration" | Purposeful whimsy, personality spectrum, delightful empty states, celebratory feedback, and accessible micro-interactions | [references/delight.md](references/delight.md) |
 | **find** | "what could animate here?", "make this more alive" | Gate-driven hunt; rejects most candidates, proposes only high-leverage motion | [review-checklist.md](references/review-checklist.md) |
 
-In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. In **threejs**, load `references/threejs.md` for 3D/WebGL workflows. In **delight**, load `references/delight.md` for purposeful whimsy and celebratory feedback. Only **build** edits code.
+In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. In **threejs**, load `references/threejs.md` for 3D/WebGL workflows. In **delight**, load `references/delight.md` for purposeful whimsy and celebratory feedback. In **gsap**, load `references/gsap.md` for GSAP 3 timelines and scroll pinning. Only **build** edits code.
 
 ---
 

@@ -1,6 +1,6 @@
 # brand
 
-Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, and offboarding — routed through eight modes.
+Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, offboarding, brand asset fencing/font auditing, and multimodal story engine genesis — routed through eleven modes.
 
 ## Modes
 
@@ -11,6 +11,8 @@ Client and brand lifecycle engine: comprehensive brand intake, autonomous web re
 - `brief`: Master Cross-Department Synthesis Dossier producing tailored downstream briefs for `design`, `webdev`, `content`, `paidads`, and `qa-launch`.
 - `ecommerce`: Multi-platform cross-border e-commerce operations: Amazon, Shopee, Lazada, Temu, TikTok Shop, international logistics/warehousing, VAT/EPR compliance, multilingual listing optimization, and unit economics modeling.
 - `offboard`: Graceful client offboarding: access revocation checklist, deliverable packaging, DNS handover, and NPS/review asks.
+- `assets`: Brand asset fencing, font license isolation, vector SVG sanitization, and OKLCH color contrast certification.
+- `story-engine`: Multimodal brand narrative genesis, founder archetype synthesis, OKLCH visual color resonance, tagline matrix, and voice constitution.
 - `audit`: Brand readiness gate & completeness audit: Line-by-line verification ensuring all critical parameters are complete before teams begin work.
 
 ## Installation & Usage

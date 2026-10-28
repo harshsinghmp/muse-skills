@@ -1,10 +1,10 @@
 ---
 name: retain
-aliases: ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals"]
-description: "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews with transcripts, delight-peak review asks, referral and repurchase offers, and churn-watch signals — routed through seven modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review or testimonial, win a referral or repeat purchase, or spot churn risk from usage drops or client silence. Not for churn strategy itself (growth retention mode) or status reporting (client-comms)."
-argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch]"
+aliases: ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals", "renewal", "contract-renewal", "client-health", "churn-radar", "health-telemetry"]
+description: "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, delight-peak review asks, referral and repurchase offers, churn-watch signals, retainer SLAs, proactive 60-day contract renewals, and client health telemetry — routed through ten modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review, win a referral, manage client retainer SLAs, audit account health scores, or execute a 60-day retainer contract renewal with 3-tier expansion. Not for churn strategy itself (growth retention mode) or status reporting (client-comms)."
+argument-hint: "[check-in|value-note|qbr|review-ask|referral-rebuy|churn-watch|sla|renewal|health|audit]"
 user-invocable: true
-version: 1.0.0
+version: 1.2.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -45,7 +45,10 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **review-ask** | "ask for review", "testimonial", "review request", "google review" | Review/testimonial ask timed at the delight peak — this skill owns the review pipe | [references/review-ask.md](references/review-ask.md) |
 | **referral-rebuy** | "referral", "refer a friend", "repurchase", "repeat purchase", "renewal offer" | Referral or repurchase/renewal offer after value is proven | [references/referral-rebuy.md](references/referral-rebuy.md) |
 | **churn-watch** | "gone quiet", "churn risk", "usage drop", "silence", "at-risk client" | Churn-signal triage (usage drop, silence >14d) → `growth` churn mode | [references/churn-watch.md](references/churn-watch.md) |
-| **`audit`** | "churn audit", "retention audit", "audit portfolio risk" | Five-question churn audit + leading-indicator rubric across the book; predictability and instrumentation gaps. | [references/audit.md](references/audit.md) |
+| **sla** | "sla", "warranty", "bug or feature", "retainer hours", "rollover hours", "response time" | Retainer SLAs, 30-day post-launch warranty governance, bug vs enhancement triage, and capacity burn-down tracking | [references/sla.md](references/sla.md) |
+| **renewal** | "retainer renewal", "contract renewal", "60-day renewal", "scope creep retro", "expand retainer", "3-tier renewal" | Proactive 60-day retainer renewal cadence, cumulative ROI receipts ledger, scope creep retro, and 3-tier expansion proposals | [references/renewal.md](references/renewal.md) |
+| **health** | "client health", "account health", "churn radar", "health score", "stop the clock", "account telemetry" | Tri-vector health scoring (Product 40%, Sentiment 30%, Financial 30%), Churn Early Warning Radar, and 48h Stop-the-Clock interventions | [references/health.md](references/health.md) |
+| **audit** | "churn audit", "retention audit", "audit portfolio risk" | Five-question churn audit + leading-indicator rubric across the book; predictability and instrumentation gaps. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

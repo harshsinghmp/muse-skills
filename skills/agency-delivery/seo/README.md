@@ -1,6 +1,6 @@
 # 🔎 seo
 
-The search department head: one skill, seven modes — technical, onpage, content, local, links, aeo, audit. Covers classic SEO and AEO/GEO for AI answer engines.
+The search department head: one skill, eight modes — technical, onpage, content, local, links, aeo, programmatic, audit. Covers classic SEO, programmatic page scaling, and AEO/GEO for AI answer engines.
 
 ## Install
 
@@ -30,6 +30,7 @@ Make our competitor comparison page citable by ChatGPT and Perplexity.
 | **local** | local/maps visibility work | Local SEO: GBP optimization, citations, NAP consistency, local pages. |
 | **links** | link profile work and acquisition | Links: profile analysis, earned-link acquisition, toxic-link triage. |
 | **aeo** | AI answer engine visibility (AEO/GEO) | AEO/GEO: entity clarity, extractable facts, and AI-citability testing. |
+| **programmatic** | programmatic SEO & directory scaling | Programmatic SEO: dataset-driven landing pages, anti-thin content invariants, and dynamic schema. |
 | **audit** | full search-health audit | Full audit: technical + onpage + links + AEO synthesized into one prioritized plan. |
 
 ## How it works

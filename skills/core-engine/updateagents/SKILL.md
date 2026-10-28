@@ -4,7 +4,7 @@ aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready",
 description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards."
 argument-hint: "[sync|audit|sanitize|scaffold|promote]"
 user-invocable: true
-version: 2.4.0
+version: 2.4.1
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -238,8 +238,17 @@ When authoring, scaffolding, or updating agent skills or behavioral guidance, en
 ### Step 13c — Keep Secretary Dispatch Explicit
 Generated `AGENTS.md` instructs agents to invoke `secretary:dispatch` on the first prompt and each new task, triage the request, and read the selected skill and mode. This is prompt-driven routing, not a background process. Route Coach only when relevant; it does not replace task closeout.
 
-### GitHub project assets
-When scaffolding or synchronizing a confirmed GitHub project, render community files and `CHANGELOG.md` from the shared templates using verified project/repository metadata. Workflow templates currently cover Node/Bun scripts, Python manifests, and Composer/PHP; preserve user-edited files and do not invent workflows for other stacks. If `origin` is not GitHub and `.github/workflows/` exists, ask before removing anything; removal is limited to files in that directory and requires explicit confirmation (`--confirm-remove-github-workflows`). If the host, contact, contributor identity, or workflow choice is unknown, ask the user, record their answer, and continue without guessing. With no repository evidence, interactive scaffolding asks; non-interactive runs defer GitHub assets until confirmed with `--github` or `--no-github`. Never copy this source repository's username, slug, or credentials into the target.
+### Step 13d — Wave 23 Workspace Terrain Verification
+Verify that the 6 canonical workspace terrain maps in `.agents/terrain/` (`stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`) exist, are up-to-date with current toolchain reality, and contain zero credential leaks or hardcoded machine paths. Run `updateagents --audit` to audit terrain health.
+
+### GitHub project assets & Intelligent Archetype Pruning
+When scaffolding or synchronizing a confirmed GitHub project, render community files and `CHANGELOG.md` from the shared templates using verified project/repository metadata.
+- **Universal Workflows**: Includes `landing-gate.yml`, `codeql.yml` (SAST), `trivy.yml` (Vibeguard secret/vuln scan), `docs-sync.yml` (Markdown relative link check), and `ai-slop.yml` (synthetic placeholder and AI chat residue scanner).
+- **Intelligent Pruning (`auditProjectArchetypePruning`)**: When auditing or learning a project's archetype, proactively advise on asset hygiene:
+  - *Agency Client (`agency-client`)*: Prune `.github/FUNDING.yml`, `.github/CODE_OF_CONDUCT.md`, and public issue templates; route contributor rules to internal delivery standards (`.agents/standards/workflows.md`); retain `SECURITY.md` for confidential vulnerability disclosure.
+  - *Open Source (`oss-library`)*: Retain and configure `.github/FUNDING.yml` (GitHub Sponsors, Ko-fi, Open Collective), public `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and enforce `ai-slop.yml` to filter spam pull requests.
+  - *Internal Tool (`internal-tool`)*: Prune community donation/contribution files; retain minimal CI and landing gates.
+Workflow templates currently cover Node/Bun scripts, Python manifests, and Composer/PHP; preserve user-edited files and do not invent workflows for other stacks. If `origin` is not GitHub and `.github/workflows/` exists, ask before removing anything; removal is limited to files in that directory and requires explicit confirmation (`--confirm-remove-github-workflows`). If the host, contact, contributor identity, or workflow choice is unknown, ask the user, record their answer, and continue without guessing. With no repository evidence, interactive scaffolding asks; non-interactive runs defer GitHub assets until confirmed with `--github` or `--no-github`. Never copy this source repository's username, slug, or credentials into the target.
 
 ### Step 14 — Synchronize Related Knowledge
 Propagate downstream effects (e.g. API changes affecting types and tests) when future agent behavior should change.
@@ -287,6 +296,13 @@ When an agent or harness attempts to write or update a prohibited legacy instruc
 
 ### Anti-Bloat Rules
 Do not add entire package manifests, full dependency lists, complete directory trees, full source snippets, logs, stack traces, session transcripts, or generic tutorials. Document only what agents repeatedly need.
+
+### Canon Refresh (new capability)
+* **`--check-canon` distinguishes localization from drift automatically.** A file is classified `localized` (not `diverged`) when its only difference from canon is `{{...}}` → concrete substitution, detected by replacing each placeholder with a line-bounded wildcard (`[^\\n]*?`) and regex-matching the local file byte-for-byte (line counts must match). Localized files do not fail the gate (exit 0). Inspect the diff only for genuinely `diverged` files.
+* **`--json` mode must be machine-clean.** Suppress all human-facing banners (headers, "✅ Canon in sync", warnings) when `--json` is set; emit only the JSON object. Any stray text breaks downstream `JSON.parse`.
+* **CI tests must not depend on gitignored local state.** A test that reads `.agents/standards/` passes locally (the dir exists from a prior dogfood run) but fails in CI (the dir is gitignored and absent). Scaffold the fixture in the test itself (copy canon into a temp dir) so the test is deterministic across environments.
+* **Established standards are curated, not overwritten.** The sync engine never refreshes an existing `.agents/standards/` file — it only provisions missing ones. Canon updates require an explicit `--refresh <name>` (or `--force`); a normal sync run will silently leave stale standards in place. Run `--check-canon` first to see what is out of date.
+* **Tightening `any` → `Record<string, unknown>` cascades.** Replacing `any` with a record type turns every downstream property access into `unknown`, breaking compilation. Either define a proper interface with the fields you access, or keep `any` with a biome-ignore comment. Do not half-migrate.
 
 ### Failure Handling
 * **No Agent File Found**: Create canonical DOX files only when the repository clearly benefits.

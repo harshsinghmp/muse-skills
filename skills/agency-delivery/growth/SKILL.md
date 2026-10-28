@@ -1,10 +1,10 @@
 ---
 name: growth
-aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
-description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, and growth audits — routed through eleven modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|audit]"
+aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt", "viral-loop", "k-factor"]
+description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, conversion rate optimization (CRO), viral loop coefficient engineering (K-factor), and growth audits — routed through thirteen modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, audit landing page conversion rates, model viral loops and K-factors, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit]"
 user-invocable: true
-version: 1.0.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,17 +12,17 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 34
-  aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt"]
+  aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt", "viral-loop", "k-factor"]
   suggested_skills: ["analytics", "content", "paidads", "seo"]
   hermes:
-    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt", "pr", "public-relations", "earned-media", "press-release", "community", "community-building", "discord", "skool", "slack"]
+    tags: ["growth", "strategy", "positioning", "messaging", "funnels", "pricing", "launch", "go-to-market", "competitor-analysis", "market", "scaling", "value-proposition", "producthunt", "product-hunt", "pr", "public-relations", "earned-media", "press-release", "community", "community-building", "discord", "skool", "slack", "viral-loop", "k-factor", "referral-mechanics"]
     related_skills: ["analytics", "content", "paidads", "seo"]
     suggested_skills: ["analytics", "content", "paidads", "seo"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["analytics", "content", "paidads", "seo"]
-    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch", "press release", "public relations", "media pitch", "crisis comms", "community", "discord community", "skool", "slack community"]
+    primary_triggers: ["positioning", "value proposition", "funnel strategy", "pricing strategy", "product launch", "go to market", "competitor analysis", "market analysis", "producthunt", "product hunt launch", "press release", "public relations", "media pitch", "crisis comms", "community", "discord community", "skool", "slack community", "viral loop", "viral coefficient", "k factor", "referral engine"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -47,6 +47,9 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **retention** | "churn", "reduce churn", "retention", "win back", "cancel flow", "dunning" | Churn prevention and renewal strategy (voluntary vs involuntary) | [references/retention.md](references/retention.md) |
 | **pr** | "press release", "public relations", "media pitch", "journalist outreach", "crisis comms", "thought leadership", "earned media" | Media outreach, AP-style press releases, crisis response, and executive bylines | [references/pr.md](references/pr.md) |
 | **community** | "community", "discord community", "skool", "slack community", "community onboarding", "engagement loops", "moderation", "member retention" | Community architecture, onboarding rituals, engagement loops, and moderation guardrails across Discord, Skool, Slack, and Circle | [references/community.md](references/community.md) |
+| **cro** | "cro", "conversion rate", "landing page audit", "conversion optimization", "hero audit", "anti-slop copy" | Conversion-rate optimization: hero density (5-second rule), 5-state anti-slop copy gate, CTA contrast, and form friction reduction | [references/cro.md](references/cro.md) |
+| **viral** | "viral loop", "viral coefficient", "k factor", "referral loop", "viral mechanics", "cycle time compression", "invitation rate", "viral growth model" | Mathematical Viral Loop ($K = i \times c$) modeling, cycle time ($ct \le 72\text{h}$) compression, asymmetric double-sided incentives, and 'Aha!' trigger placement | [references/viral.md](references/viral.md) |
+| **programmatic-cro** | "programmatic cro", "bandit cro", "multi armed bandit", "thompson sampling", "dynamic ab test" | Bayesian Thompson Sampling dynamic variant traffic allocation, zero-CLS layout shift fences, statistical significance gates, and revenue triangulation | [references/programmatic-cro.md](references/programmatic-cro.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -67,6 +70,7 @@ Loadable by topic; also routable as `/growth-<file>` commands (not separate rout
 - Setting, testing, or restructuring pricing.
 - Planning a product, feature, or market launch.
 - Analyzing competitors and the competitive landscape.
+- Auditing and optimizing landing page conversion rates (CRO) and hero value proposition density.
 
 ### Anti-Triggers
 
@@ -85,14 +89,16 @@ Loadable by topic; also routable as `/growth-<file>` commands (not separate rout
 |:---|:---|
 | 'Who is this for and why choose us?' | positioning |
 | 'How do we turn strangers into customers?' | funnels |
+| 'How do we convert landing page visitors into customers?' | cro |
 | 'What should we charge, and how?' | pricing |
 | 'How do we take this to market?' | launch |
 | 'What is everyone else doing?' | competitor |
 | 'How do we grow via referrals/partners?' | referral |
+| 'How do we engineer viral compounding and K-factor loops?' | viral |
 | 'How do we keep what we won?' | retention |
 | 'How do we build belonging and peer rituals?' | community |
 
-Order: competitor → positioning → funnels → pricing → launch → referral → retention → community. Know the landscape, choose the position, build the path, then protect and compound what you earn.
+Order: competitor → positioning → cro → funnels → pricing → launch → referral → retention → community. Know the landscape, choose the position, optimize conversion, build the path, then protect and compound what you earn.
 
 ### Verification gate (every mode)
 

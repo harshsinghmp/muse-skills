@@ -1,10 +1,10 @@
 ---
 name: paidads
 aliases: ["paid-ads", "ads", "advertising", "ppc", "sem", "google-ads", "meta-ads", "paid-media", "media-buying"]
-description: "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, budget pacing, and account audits — routed through eleven modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics)."
-argument-hint: "[google|meta|linkedin|reddit|tiktok|snapchat|youtube|programmatic|retargeting|audit|extra-platforms]"
+description: "Full paid advertising department: builds and manages campaigns across Google, Meta (Facebook/Instagram), LinkedIn, Reddit, TikTok, Snapchat, YouTube, and programmatic — plus cross-channel retargeting, ROAS attribution and blended CAC pacing, and account audits — routed through twelve modes. Use when asked to create or optimize ad campaigns, write ad copy, plan budgets or bids, set up tracking pixels and conversion events, build retargeting funnels, or audit ad account performance. Not for organic social strategy (smm), SEO, or analytics dashboards (analytics)."
+argument-hint: "[google|meta|linkedin|reddit|tiktok|snapchat|youtube|programmatic|retargeting|roas|audit|extra-platforms]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -15,14 +15,14 @@ metadata:
   aliases: ["paid-ads", "ads", "advertising", "ppc", "sem", "google-ads", "meta-ads", "paid-media", "media-buying"]
   suggested_skills: ["analytics", "content", "smm", "evidence-ledger"]
   hermes:
-    tags: ["paid-advertising", "google-ads", "meta-ads", "facebook-ads", "instagram-ads", "linkedin-ads", "reddit-ads", "tiktok-ads", "snapchat-ads", "youtube-ads", "ppc", "sem", "programmatic", "retargeting", "remarketing", "budget", "bidding", "ad-copy", "conversion-tracking", "audiences"]
+    tags: ["paid-advertising", "google-ads", "meta-ads", "facebook-ads", "instagram-ads", "linkedin-ads", "reddit-ads", "tiktok-ads", "snapchat-ads", "youtube-ads", "ppc", "sem", "programmatic", "retargeting", "remarketing", "budget", "bidding", "ad-copy", "conversion-tracking", "audiences", "roas", "mer", "blended-cac", "attribution", "spend-pacing"]
     related_skills: ["analytics", "content", "smm", "evidence-ledger"]
     suggested_skills: ["analytics", "content", "smm", "evidence-ledger"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch", "run_command"]
   openclaw:
     category: agency-delivery
     suggested_skills: ["analytics", "content", "smm", "evidence-ledger"]
-    primary_triggers: ["google ads campaign", "meta ads", "facebook ad", "linkedin ad", "tiktok ad", "reddit ad", "snapchat ad", "youtube ads", "ppc", "paid campaign", "ad budget", "retargeting campaign", "audit the ad account", "ad copy"]
+    primary_triggers: ["google ads campaign", "meta ads", "facebook ad", "linkedin ad", "tiktok ad", "reddit ad", "snapchat ad", "youtube ads", "ppc", "paid campaign", "ad budget", "retargeting campaign", "audit the ad account", "ad copy", "roas", "blended cac", "mer", "ad spend pacing"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch", "run_command"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **youtube** | "youtube ads", "video campaign", "skippable in-stream" | Skippable in-stream, shorts, discovery video campaigns | [references/youtube.md](references/youtube.md) |
 | **programmatic** | "programmatic", "dsp", "display at scale" | DSP-based display/video buying with brand safety | [references/programmatic.md](references/programmatic.md) |
 | **retargeting** | "retargeting", "remarketing", "bring back visitors" | Cross-channel remarketing from audience pools | [references/retargeting.md](references/retargeting.md) |
+| **roas** | "roas", "blended cac", "mer", "ad attribution", "spend pacing" | Omnichannel MER triangulation, blended CAC, in-platform haircuts, and 4-tier pacing gates | [references/roas.md](references/roas.md) |
 | **audit** | "audit the ad account", "why is CPA up", "account health check" | Structured account audit: structure → tracking → creative → budget | [references/audit.md](references/audit.md) |
 | **extra-platforms** | microsoft ads, pinterest ads, retail media, audio ads, ctv | Secondary platforms: Microsoft, Pinterest, X, Apple Search, retail, native, audio, CTV, Local Services | [references/extra-platforms.md](references/extra-platforms.md) |
 
@@ -62,6 +63,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Writing platform-native ad copy and creative briefs.
 - Setting up conversion tracking, pixels, and events before launch.
 - Building retargeting/remarketing funnels from audiences.
+- Triangulating blended MER and CAC across channels or enforcing 4-tier spend pacing gates.
 - Auditing an underperforming ad account or scaling a working one.
 
 ### Anti-Triggers

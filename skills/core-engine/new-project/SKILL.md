@@ -220,8 +220,18 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 - **Day-1 Proof-of-Life Starter Dashboard UI**:
   - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js), `src/pages/index.astro` (Astro), or `index.html` (Pure HTML): Generates an interactive live dashboard that immediately exercises the selected stack upon startup.
   - `src/app/page.tsx` & `src/app/layout.tsx` (Next.js) or `src/pages/index.astro` (Astro): Generates an interactive live dashboard that immediately exercises the selected stack upon `bun run dev` (Drizzle DB status, Better Auth client SDK status, Stripe checkout trigger, and quick-launch links to `/admin`, `/keystatic`, or `/puck`).
-- **GitHub project assets & CI/CD**:
-  - The shared renderer adapts `CHANGELOG.md` and `.github/{CONTRIBUTING,SECURITY,SUPPORT,CODE_OF_CONDUCT,GOVERNANCE,FAQ}.md` plus issue templates to verified project/repository identity; it does not copy this source repository's identity or credentials.
+- **GitHub project assets, CI/CD & Intelligent Project Pruning**:
+  - The shared renderer adapts `CHANGELOG.md` and `.github/{CONTRIBUTING,SECURITY,SUPPORT,CODE_OF_CONDUCT,GOVERNANCE,FAQ,FUNDING}.md` plus issue templates to verified project/repository identity; it does not copy this source repository's identity or credentials.
+  - **Universal Workflows Suite**:
+    - `landing-gate.yml`: Pre-review and post-merge delivery gates enforcing verifiable ancestor commits.
+    - `codeql.yml`: GitHub CodeQL SAST security analysis for JS/TS, Python, and Actions.
+    - `trivy.yml`: Aquasec Trivy filesystem, vulnerability, and secret scanner enforcing the Vibeguard zero-leakage protocol.
+    - `docs-sync.yml`: Zero-dependency POSIX shell relative link integrity validator across Markdown documentation.
+    - `ai-slop.yml`: AI slop and synthetic placeholder gate blocking PRs containing unfinished `TODO: implement`, `ORCA_RICH_MD`, or chat residue.
+  - **Intelligent Archetype Pruning Protocol (`auditProjectArchetypePruning`)**:
+    - *Agency Client / Proprietary Deliverables (`agency-client` / `commercial`)*: Proactively prunes `.github/FUNDING.yml`, `.github/CODE_OF_CONDUCT.md`, and community showcase templates; replaces public `CONTRIBUTING.md` with internal `.agents/standards/workflows.md`; retains private `SECURITY.md`, `landing-gate.yml`, and `trivy.yml`.
+    - *Public Open-Source Libraries (`oss-library`)*: Provisions `.github/FUNDING.yml` (GitHub Sponsors, Ko-fi, Open Collective), public `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, and activates `ai-slop.yml` + `docs-sync.yml`.
+    - *Internal Tools / Daemons (`internal-tool`)*: Prunes community donation and contribution files, retaining minimal CI and landing gates.
   - Workflow templates currently cover Node/Bun projects with actual verification scripts, Python manifests, and Composer/PHP projects. Select from detected files and project choices; never emit a passing placeholder (`|| true`) or run checks the project does not define. Existing user-edited files are preserved. For other stacks, ask before selecting a workflow.
   - Interactive setup asks whether the project will use GitHub when no repository signal exists; non-interactive runs require `--github` or `--no-github`. If hosting, contributor names, security contact, or workflow applicability cannot be determined, ask the user, apply their answer, and continue. If updateagents later detects a non-GitHub origin with workflow files, ask before removing them; remove only after explicit confirmation.
   - `Dockerfile` & `.dockerignore`: Multi-stage production container for Node/Bun with unprivileged non-root user (`--deploy=docker`).
@@ -254,6 +264,7 @@ The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled wi
 4. Sync answers into `.agents/context/product.md` and `.agents/context/accounts.md`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
 
 **Durable DOX Closeout (engine-run at scaffold)**:
+- Provisions `.agents/terrain/` with the 6 canonical Wave 23 Workspace Terrain Maps (`stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`) pre-indexing technical reality so future agents never waste tokens probing.
 - Populates `.agents/context/decisions.md` with dynamic Architectural Decision Records (ADR-001 through ADR-006).
 - Populates `.agents/context/product.md` with dynamic project vision, target audience, problem statement, and catalog offerings.
 - Provisions `.agents/brand/CONTENT_MAP.md` establishing the Zero-Hardcoded-Strings CMS Hand-Off Blueprint (mapping UI components to content files or CMS collections for non-technical client editing).

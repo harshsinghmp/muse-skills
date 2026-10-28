@@ -1,6 +1,6 @@
 # Database — for the humans who run this skill.
 
-This directory is the database department for the agency: query read-only, diagnose slow queries, design indexes, guard rows with RLS, operate infrastructure, and tune parameters — across Postgres, MySQL, MSSQL, and SQLite, through six modes.
+This directory is the database department for the agency: query read-only, diagnose slow queries, design indexes, guard rows with RLS, operate infrastructure, tune parameters, and guard zero-downtime migrations — across Postgres, MySQL, MSSQL, and SQLite, through seven modes.
 
 ## What you get
 
@@ -10,6 +10,7 @@ This directory is the database department for the agency: query read-only, diagn
 - **guard** — RLS policies with verification tests, `security_invoker` views, PK and identifier rules. Auth calls wrapped in `(select ...)` to avoid per-row full scans.
 - **operate** — pooling sizing, partitioning, pgvector basics, lock triage, and monitoring queries the operator keeps. Mutating commands flagged before handoff.
 - **tuning** — automated semantic parameter optimization for connection pools, cache TTLs, worker concurrency, and vector quantization with controlled benchmark feedback loops.
+- **migrations** — zero-downtime migration guard: DDL lock simulation, table rewrite prevention, non-blocking constraints, and unindexed foreign key share-lock protection.
 
 ## When to use it
 
@@ -19,6 +20,7 @@ This directory is the database department for the agency: query read-only, diagn
 - You want RLS policies written and verified (allowed, denied, wrong-tenant rows).
 - You want pooling sized, a table partitioned, locks triaged, or vector search stood up.
 - You want production health checked: vacuum health, dead tuples, autovacuum tuning for churn tables.
+- You want a schema migration audited before deployment to ensure zero table rewrites, non-blocking locks, and safe index creation.
 
 ## What it does NOT do
 
@@ -43,7 +45,11 @@ You run a full-service creative web marketing agency with multiple projects, mul
 
 6. **Tune system parameters.** When latency, throughput, or infrastructure costs require optimization, the `tuning` mode uses semantic parameter reasoning (rather than naive brute-force grid search) to tune connection pools, cache TTLs, worker concurrency, and vector quantization against controlled benchmark loops.
 
-A single skill, six modes, four database types. The agent resolves the mode from the request, loads only that mode's reference, and follows the playbook.
+7. **Guard migrations against table lockouts.** When schemas evolve, the `migrations` mode and `migration-guard.ts` simulate DDL lock levels, detect table rewrites, flag missing `CONCURRENTLY` modifiers, require `NOT VALID` on constraints, and catch unindexed foreign key share-lock hazards before production DDL runs.
+
+8. **Traverse cognitive knowledge graphs.** When architecture decisions, entity relations, and technical rules require semantic exploration, the `graph` mode and `cognitive-graph.ts` build in-memory bi-directional SPO triples (`(Entity)-[RELATION]->(Entity)`), enforce temporal validity & supersession edges, traverse $k$-hop neighborhoods in sub-10ms, and maintain cryptographic multi-tenant vault fencing.
+
+A single skill, seven core modes, four database types. The agent resolves the mode from the request, loads only that mode's reference, and follows the playbook.
 
 ### Specialized Deep-Dive References
 

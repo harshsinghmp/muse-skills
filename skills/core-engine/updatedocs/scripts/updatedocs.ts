@@ -654,12 +654,22 @@ export function sweepUndocumentedCapabilities(targetDir: string): CapabilitySwee
         .filter(Boolean)) {
         checked++;
         const base = rel.split("/").pop() ?? rel;
-        const suggested: string[] = ["README.md", "CHANGELOG.md"];
+        const _suggested: string[] = ["README.md", "CHANGELOG.md"];
         if (rel.includes("skills/") && base.endsWith(".md") && KEBAB_MD.test(base)) {
           // a reference/mode file — its own SKILL.md must surface it
-          const skillDir = rel.split("/").slice(0, 2).join("/");
-          const skPath = join(targetDir, skillDir, "SKILL.md");
-          if (existsSync(skPath)) {
+          let skillDir = "";
+          let cur = dirname(rel);
+          while (cur?.startsWith("skills") && cur !== "skills") {
+            if (existsSync(join(targetDir, cur, "SKILL.md"))) {
+              skillDir = cur;
+              break;
+            }
+            const parent = dirname(cur);
+            if (parent === cur) break;
+            cur = parent;
+          }
+          if (skillDir) {
+            const skPath = join(targetDir, skillDir, "SKILL.md");
             const sk = readFileSync(skPath, "utf8");
             if (!sk.includes(base)) {
               gaps.push({

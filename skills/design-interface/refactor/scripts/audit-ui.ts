@@ -115,9 +115,7 @@ function main() {
     });
   }
 
-  console.log(
-    `\naudit-ui: ${files.length} file(s) scanned, ${findings} finding(s)` + (findings === 0 ? " — clean" : ""),
-  );
+  console.log(`\naudit-ui: ${files.length} file(s) scanned, ${findings} finding(s)${findings === 0 ? " — clean" : ""}`);
   process.exit(findings > 0 ? 2 : 0);
 }
 

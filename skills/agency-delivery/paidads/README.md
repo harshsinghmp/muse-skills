@@ -1,6 +1,6 @@
 # 📣 paidads
 
-The paid advertising department head: one skill, ten channel and ops modes. Shared campaign doctrine first, then the per-platform playbook — Google, Meta, LinkedIn, Reddit, TikTok, Snapchat, YouTube, programmatic, retargeting, and account audit.
+The paid advertising department head: one skill, twelve channel, ops, and attribution modes. Shared campaign doctrine first, then the per-platform playbook — Google, Meta, LinkedIn, Reddit, TikTok, Snapchat, YouTube, programmatic, retargeting, ROAS attribution, and account audit.
 
 ## Install
 
@@ -33,7 +33,9 @@ Audit our Meta ads account — CPMs doubled this quarter.
 | **youtube** | YouTube video campaigns | YouTube Ads: skippable in-stream, Shorts, discovery — hook-driven video structure. |
 | **programmatic** | programmatic/DSP display and video | Programmatic: DSP display/video buying, brand safety, supply path. |
 | **retargeting** | cross-channel retargeting funnels | Retargeting: audience pools, frequency caps, cross-channel funnels. |
+| **roas** | ROAS, blended CAC, MER, spend pacing, attribution audit | ROAS engine: blended MER triangulation, platform haircut discounts, and 4-tier spend pacing gates. |
 | **audit** | audit an ad account | Account audit: structure, tracking, creative, budget — findings with evidence. |
+| **extra-platforms** | secondary ad platforms | Secondary platforms: Microsoft, Pinterest, X, Apple Search, retail media, native, audio, CTV. |
 
 ## How it works
 

@@ -1,10 +1,10 @@
 ---
 name: devops
 aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform", "cloudflare", "devops-engineer", "wrangler"]
-description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, security hardening, monitoring and alerting, and incident response — routed through eight modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, harden security, add monitoring and alerts, or respond to and learn from an outage. Not for writing application code (webdev) or release/versioning workflows (git)."
-argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare]"
+description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, distributed Anycast routing mesh, security hardening, monitoring and alerting, incident response, and living deliverable preview sandboxes — routed through ten modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, model edge Anycast routing and SWR caching, harden security, add monitoring and alerts, respond to an outage, or scaffold an ephemeral client review portal with token gating. Not for writing application code (webdev) or release/versioning workflows (git)."
+argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|edge-mesh|audit]"
 user-invocable: true
-version: 1.2.0
+version: 1.4.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **security** | "harden security", "security headers", "infrastructure security", "least privilege" | Infrastructure and application security hardening | [references/security.md](references/security.md) |
 | **monitoring** | "monitoring", "alerts", "observability", "uptime", "logging" | Monitoring, logging, and actionable alerting | [references/monitoring.md](references/monitoring.md) |
 | **incident** | "incident", "outage", "postmortem", "site is down", "production issue" | Incident response and blameless postmortem | [references/incident.md](references/incident.md) |
+| **preview** | "living deliverable", "preview link", "client review link", "ephemeral preview", "workerd preview", "client portal" | Ephemeral workerd preview containers, token-gated review tunnels, multi-viewport switcher, and 48-hour expiration gates | [references/preview.md](references/preview.md) |
+| **edge-mesh** | "edge mesh", "anycast routing", "edge cache", "swr cache", "pop failover", "cloudflare mesh", "iac terraform" | Distributed Cloudflare Workers Anycast routing mesh, geographic proximity routing, edge KV/D1 SWR caching, sub-500ms failover, and declarative IaC scaffolding | [references/edge-mesh.md](references/edge-mesh.md) |
 | **`audit`** | "CI/CD security audit", "audit the pipeline", "deployment gate audit" | OWASP CICD-SEC-1..10 pass: flow control, IAM, credential hygiene, PPE, artifact integrity, drift. | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
@@ -59,6 +61,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 - Configuring domains, DNS, and TLS.
 - Hardening an application or infrastructure's security.
 - Adding monitoring, logging, and alerts.
+- Scaffolding living deliverable preview links with token gating and 48-hour expiration.
 - Managing or post-morteming an incident.
 
 ### Anti-Triggers

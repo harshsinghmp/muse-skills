@@ -1,13 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
+import {
+  auditProjectArchetypePruning,
+  selectGitHubWorkflowTemplates,
+} from "../skills/core-engine/updateagents/scripts/github-scaffold";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const UPDATEAGENTS_TEMPLATES = join(REPO_ROOT, "skills/core-engine/updateagents/templates");
 const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
 const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
-const TEST_SANDBOX = join("/tmp", "agent-engine-test-sandbox-" + Date.now());
+const TEST_SANDBOX = join("/tmp", `agent-engine-test-sandbox-${Date.now()}`);
 
 describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
   beforeEach(() => {
@@ -854,10 +859,10 @@ Custom billing engine for healthcare providers.
       // 6. One-Command Setup Script in package.json
       expect(existsSync(join(target, "package.json"))).toBe(true);
       const pkg = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
-      expect(pkg.scripts["setup"]).toBeDefined();
-      expect(pkg.scripts["test"]).toBe("bun test");
-      expect(pkg.scripts["lint"]).toBeDefined();
-      expect(pkg.scripts["precommit"]).toBe("bash scripts/pre-commit.sh");
+      expect(pkg.scripts.setup).toBeDefined();
+      expect(pkg.scripts.test).toBe("bun test");
+      expect(pkg.scripts.lint).toBeDefined();
+      expect(pkg.scripts.precommit).toBe("bash scripts/pre-commit.sh");
     }, 15000);
 
     it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
@@ -971,7 +976,7 @@ Custom billing engine for healthcare providers.
       expect(astroCfg).toContain('output: "server"');
       expect(astroCfg).toContain("studioCMS()");
       const studioPkg = JSON.parse(readFileSync(join(targetStudio, "package.json"), "utf8"));
-      expect(studioPkg.dependencies["studiocms"]).toBeDefined();
+      expect(studioPkg.dependencies.studiocms).toBeDefined();
       expect(studioPkg.dependencies["@studiocms/core"]).toBeUndefined();
       expect(studioPkg.dependencies["@astrojs/node"]).toBeDefined();
 
@@ -1063,7 +1068,7 @@ Custom billing engine for healthcare providers.
       expect(htmlDoc).toContain("src/styles/tokens.css");
       expect(existsSync(join(targetHtml, "package.json"))).toBe(true);
       const htmlPkg = JSON.parse(readFileSync(join(targetHtml, "package.json"), "utf8"));
-      expect(htmlPkg.scripts["dev"]).toContain("serve");
+      expect(htmlPkg.scripts.dev).toContain("serve");
     }, 120000);
 
     it("provisions enhanced brand guardian onboarding and supports --no-cache latest fetch mode", () => {
@@ -1491,6 +1496,112 @@ Custom billing engine for healthcare providers.
       expect(newProjectScript).toContain(
         "Record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system",
       );
+    });
+  });
+  describe("Part H: Canon-drift detection", () => {
+    it("check-canon exits 0 on a freshly scaffolded (identical) standards set", () => {
+      const sandbox = join(tmpdir(), `canon-check-${Date.now()}`);
+      mkdirSync(join(sandbox, ".agents", "standards"), { recursive: true });
+      const canonDir = join(UPDATEAGENTS_TEMPLATES, ".agents", "standards");
+      for (const f of readdirSync(canonDir)) {
+        if (f.endsWith(".md")) copyFileSync(join(canonDir, f), join(sandbox, ".agents", "standards", f));
+      }
+      const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, sandbox, "--check-canon"], { encoding: "utf8" });
+      expect(res.status).toBe(0);
+      expect(res.stdout).toContain("Canon in sync");
+      rmSync(sandbox, { recursive: true, force: true });
+    });
+
+    it("check-canon classifies placeholder->concrete substitution as localized (not drift)", () => {
+      const sandbox = join(tmpdir(), `canon-loc-${Date.now()}`);
+      mkdirSync(join(sandbox, ".agents", "standards"), { recursive: true });
+      const canonDir = join(UPDATEAGENTS_TEMPLATES, ".agents", "standards");
+      for (const f of readdirSync(canonDir)) {
+        if (f.endsWith(".md")) copyFileSync(join(canonDir, f), join(sandbox, ".agents", "standards", f));
+      }
+      const gw = join(sandbox, ".agents", "standards", "git-workflow.md");
+      writeFileSync(
+        gw,
+        readFileSync(gw, "utf8")
+          .replace(/\{\{integration_branch\}\}/g, "dev")
+          .replace(/\{\{production_branch\}\}/g, "main"),
+      );
+      const res = spawnSync("bun", [UPDATEAGENTS_SCRIPT, sandbox, "--check-canon", "--json"], { encoding: "utf8" });
+      const parsed = JSON.parse(res.stdout);
+      expect(parsed.diverged).toEqual([]);
+      expect(parsed.missing).toEqual([]);
+      expect(parsed.localized.length).toBeGreaterThan(0);
+      rmSync(sandbox, { recursive: true, force: true });
+    });
+  });
+
+  /* ========================================================================= */
+  /* PART I: Universal GitHub Templates & Intelligent Archetype Pruning        */
+  /* ========================================================================= */
+  describe("Part I: Universal GitHub Templates & Intelligent Archetype Pruning Protocol", () => {
+    it("updateagents/templates/github contains FUNDING.yml and universal workflows", () => {
+      const githubTemplates = join(UPDATEAGENTS_TEMPLATES, "github");
+      const workflowsDir = join(githubTemplates, "workflows");
+
+      expect(existsSync(join(githubTemplates, "FUNDING.yml"))).toBe(true);
+      const fundingContent = readFileSync(join(githubTemplates, "FUNDING.yml"), "utf8");
+      expect(fundingContent).toContain("github:");
+      expect(fundingContent).toContain("ko_fi:");
+      expect(fundingContent).toContain("open_collective:");
+
+      // Universal workflow templates
+      expect(existsSync(join(workflowsDir, "codeql.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "trivy.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "docs-sync.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "ai-slop.yml"))).toBe(true);
+      expect(existsSync(join(workflowsDir, "landing-gate.yml"))).toBe(true);
+    });
+
+    it("selectGitHubWorkflowTemplates includes security and anti-slop workflows for OSS projects", () => {
+      const ossWorkflows = selectGitHubWorkflowTemplates({
+        intent: "oss",
+        packageScripts: { test: "bun test" },
+      });
+
+      expect(ossWorkflows).toContain("landing-gate.yml");
+      expect(ossWorkflows).toContain("cli-test.yml");
+      expect(ossWorkflows).toContain("codeql.yml");
+      expect(ossWorkflows).toContain("trivy.yml");
+      expect(ossWorkflows).toContain("docs-sync.yml");
+      expect(ossWorkflows).toContain("ai-slop.yml");
+    });
+
+    it("auditProjectArchetypePruning recommends removing public community/donation assets on agency-client projects", () => {
+      const clientDir = join(TEST_SANDBOX, "client-repo");
+      mkdirSync(join(clientDir, ".github", "ISSUE_TEMPLATE"), { recursive: true });
+      writeFileSync(join(clientDir, ".github", "FUNDING.yml"), "github: client");
+      writeFileSync(join(clientDir, ".github", "CODE_OF_CONDUCT.md"), "# Code of Conduct");
+      writeFileSync(join(clientDir, ".github", "CONTRIBUTING.md"), "# Contributing");
+      writeFileSync(join(clientDir, ".github", "ISSUE_TEMPLATE", "showcase_submission.yml"), "name: Showcase");
+
+      const recs = auditProjectArchetypePruning(clientDir, "agency-client");
+      const recMap = new Map(recs.map((r) => [r.file, r]));
+
+      expect(recMap.get(".github/FUNDING.yml")?.action).toBe("remove");
+      expect(recMap.get(".github/CODE_OF_CONDUCT.md")?.action).toBe("remove");
+      expect(recMap.get(".github/ISSUE_TEMPLATE/showcase_submission.yml")?.action).toBe("remove");
+      expect(recMap.get(".github/CONTRIBUTING.md")?.action).toBe("replace-internal");
+      expect(recMap.get(".github/SECURITY.md")?.action).toBe("add");
+    });
+
+    it("auditProjectArchetypePruning recommends adding funding and anti-slop gates for open source libraries", () => {
+      const ossDir = join(TEST_SANDBOX, "oss-repo");
+      mkdirSync(join(ossDir, ".github", "workflows"), { recursive: true });
+      writeFileSync(join(ossDir, ".github", "SECURITY.md"), "# Security Policy");
+
+      const recs = auditProjectArchetypePruning(ossDir, "oss-library");
+      const recMap = new Map(recs.map((r) => [r.file, r]));
+
+      expect(recMap.get(".github/FUNDING.yml")?.action).toBe("add");
+      expect(recMap.get(".github/CONTRIBUTING.md")?.action).toBe("add");
+      expect(recMap.get(".github/SECURITY.md")?.action).toBe("retain");
+      expect(recMap.get(".github/workflows/ai-slop.yml")?.action).toBe("add");
+      expect(recMap.get(".github/workflows/docs-sync.yml")?.action).toBe("add");
     });
   });
 });

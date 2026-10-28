@@ -24,6 +24,8 @@ A runtime defense verification report detailing:
      - Dangerous network exfiltration: `curl ... | bash` or piping sensitive files to public endpoints.
 
 2. **Zero-Secret Isolation (Varlock & Vibeguard Standard)**:
+   - Standalone Pre-Ship Scanner: Run autonomous scanner via `bun run secret-scan [path]` or `bun skills/quality-review/muse-security/scripts/secret-scan.ts [path]`.
+   - Standalone native regex engine detects tokens (`sk-*`, `ghp_*`), private keys (`BEGIN PRIVATE KEY`), and database connection strings (`postgres://`, `mysql://`) with zero external service dependencies.
    - Ensure the LLM inspects environment keys and schema types only (`.env.schema`).
    - Secrets are injected out-of-band at runtime process spawn time, never written in plaintext to repo files.
    - Filter all stdout, stderr, and debug transcripts with automated regex masking (`[REDACTED]`).

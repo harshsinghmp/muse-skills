@@ -1,10 +1,10 @@
 ---
 name: telegram
 aliases: ["tg", "telegram-bot", "telegram-skill", "telegram-notify"]
-description: "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, and Claude Code hook integration for session start/end/tool-use/error notices. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, or stand up a bot with a config-file token. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only)."
-argument-hint: "[notify|approve|hook|route|setup]"
+description: "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, Claude Code hook integration for session start/end/tool-use/error notices, and production webhook ingress receiver with timing-safe token verification and deduplication. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, stand up a bot with a config-file token, or deploy a webhook receiver. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only)."
+argument-hint: "[notify|approve|hook|route|setup|webhook]"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -50,6 +50,7 @@ Every invocation resolves to exactly one mode:
 | **hook** | "claude code hooks", "session start/end", "tool use notification", "hook telegram" | Claude Code hook integration: register hook scripts that call Telegram on session start, end, tool use, or errors | [references/hook.md](references/hook.md) |
 | **route** | "route events to telegram", "kafka events to telegram", "alert routing", "event stream" | Kafka event routing: shape structured events into Telegram messages, ack the event, dispatch to the right chat/bot/target per config | [references/route.md](references/route.md) |
 | **setup** | "create a telegram bot", "bot token", "telegram setup", "configure telegram" | Stand up a Telegram bot token config: config file layout, mode-600, env binding, recovery docs | [references/setup.md](references/setup.md) |
+| **webhook** | "telegram webhook", "webhook listener", "setWebhook", "verify secret token", "telegram ingress" | Zero-dependency HTTP webhook receiver: timing-safe secret token verification, replay protection, update deduplication, fast HTTP 200 ack | [references/webhook.md](references/webhook.md) |
 | **audit** | "telegram audit", "bot security audit", "audit bot config", "token exposure check" | Security and delivery reliability pass: token hygiene, mode-600, routing, approvals, hooks, rate limits | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded.
@@ -98,6 +99,7 @@ Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 | 'Mirror Claude Code sessions/tools to Telegram' | hook |
 | 'Route these events to the right chat' | route |
 | 'Set up a new bot' | setup |
+| 'Receive incoming updates via webhook' | webhook |
 
 ### Setup order
 
