@@ -2,6 +2,40 @@
 
 All notable changes to this project are documented in this file.
 
+## [7.10.0] - 2026-10-28
+
+### Added
+
+- **Jasper Creative Technologist & Crew Operations: Autonomous AI Audio Showrunner & Dialogue Synthesis Engine (`content:podcast`)**:
+  - **Podcast Showrunner Playbook (`podcast.md`)**: Enforces Two-Host Dialectical Tension generating host and guest perspectives with distinct vocal personalities, cognitive styles, and unscripted natural conversational turns (POD-001); SSML Pacing & Prosody Annotation injecting explicit `<break time="..."/>` pauses ($<350$ms), rate inflection, and emotional emphasis markers (POD-002); 18-Token Standalone Quotability Gate embedding memorability-scored soundbites across all chapters (POD-003); and Monotonic Chapter & Show Notes Generation outputting accurate timestamp markers, key takeaways, and guest bios (POD-004).
+  - **Podcast Showrunner CLI (`podcast-showrunner.ts`)**: Built standalone CLI in `skills/agency-delivery/content/scripts/podcast-showrunner.ts` supporting `--brief`, `--hosts`, `--duration`, `--format`, and `--json`.
+  - **Content Mode Expansion**: Expanded `content` to v1.4.0 across 12 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
+- **Jasper Creative Technologist & Nexus Technical Director: Multi-Armed Bandit Dynamic Optimization Engine (`growth:programmatic-cro`)**:
+  - **Programmatic CRO Playbook (`programmatic-cro.md`)**: Enforces Bayesian Thompson Sampling dynamically routing traffic across variants according to posterior success probability with a 10% exploration floor (MAB-001); Statistical Significance Gate requiring $P \ge 95\%$ confidence and $N \ge 1,000$ impressions before variant promotion or kill (MAB-002); Zero-CLS Layout Shift Fences guaranteeing cumulative layout shift $CLS \le 0.05$ with pre-reserved aspect-ratio containers and skeleton fallbacks (MAB-003); and Revenue Lift Triangulation measuring conversion rate delta and incremental revenue per visitor (MAB-004).
+  - **Bandit CRO CLI (`bandit-cro.ts`)**: Built standalone CLI in `skills/agency-delivery/growth/scripts/bandit-cro.ts` supporting `--variants`, `--traffic-split`, `--significance`, `--cls-guard`, and `--json`.
+  - **Growth Mode Expansion**: Expanded `growth` to v1.3.0 across 13 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
+- **Crew Operations & Sol Product Architect: Sovereign Usage-Based Metering & Automated Dunning Engine (`accounts:billing-engine`)**:
+  - **Billing Engine Playbook (`billing-engine.md`)**: Enforces Idempotent Telemetry Ingestion hashing event payloads via SHA-256 to guarantee exactly-once processing (BIL-001); Tiered Usage-Based Metering with automated 80% soft warnings and 100% hard limit circuit breakers (BIL-002); Automated Invoice & Tax Reconciliation synchronizing tiered line items with Stripe Billing and Stripe Tax (BIL-003); and Smart Dunning Ladder executing a 4-stage recovery schedule achieving $\ge 70\%$ involuntary churn recovery (BIL-004).
+  - **Metering Engine CLI (`metering-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/accounts/scripts/metering-engine.ts` supporting `--ingest-events`, `--calculate-bill`, `--dunning-schedule`, and `--json`.
+  - **Accounts Mode Expansion**: Expanded `accounts` to v1.6.0 across 9 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
+- **Sol Product Architect: Distributed WebSockets & Server-Sent Events Engine (`webdev:realtime-bus`)**:
+  - **Realtime Bus Playbook (`realtime-bus.md`)**: Enforces Distributed Pub/Sub Backplane supporting WebSockets and SSE with Redis/Cloudflare Durable Objects message brokering (BUS-001); Guaranteed Monotonic Sequence IDs with automated gap reconciliation and message retransmission on reconnection (BUS-002); Active Heartbeat & Ghost Socket Pruning with 45s ping/pong intervals (BUS-003); and Sub-50ms Global Fanout SLA under concurrent broadcast load (BUS-004).
+  - **Realtime Bus CLI (`realtime-bus.ts`)**: Built standalone CLI in `skills/agency-delivery/webdev/scripts/realtime-bus.ts` supporting `--channel`, `--protocol`, `--backplane`, `--simulate-clients`, and `--json`.
+  - **Webdev Mode Expansion**: Expanded `webdev` to v1.9.0 across 22 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
+- **Sol Product Architect: Distributed Cloudflare Workers Anycast Routing Mesh (`devops:edge-mesh`)**:
+  - **Edge Mesh Playbook (`edge-mesh.md`)**: Enforces Geographic Anycast Proximity Routing routing user requests to nearest edge POP via Haversine distance calculations (MSH-001); Edge KV & D1 Stale-While-Revalidate Caching achieving $\ge 90\%$ cache hit ratios (MSH-002); Sub-500ms Edge Failover Health Checks probing origin servers every 10s and rerouting on consecutive failures (MSH-003); and Declarative Infrastructure-as-Code Scaffolding outputting validated `wrangler.jsonc` and Terraform configurations (MSH-004).
+  - **Edge Mesh CLI (`edge-mesh.ts`)**: Built standalone CLI in `skills/agency-delivery/devops/scripts/edge-mesh.ts` supporting `--regions`, `--origins`, `--cache-strategy`, `--scaffold-iac`, and `--json`.
+  - **Devops Mode Expansion**: Expanded `devops` to v1.4.0 across 10 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
+- **Crew Operations & Jasper Creative Technologist: Autonomous C-Suite Weekly Briefing Generator (`client-comms:executive-pulse`)**:
+  - **Executive Pulse Playbook (`executive-pulse.md`)**: Enforces Layman Impact Translation converting complex engineering tickets into plain-language business outcomes without technical jargon (PLS-001); Sprint Velocity & Financial Runway Tracking calculating story points completed, sprint burn rate, and runway months (PLS-002); Active Blocker & Risk Radar scoring risk levels and enforcing 48-hour mitigation SLAs (PLS-003); and Print-Ready HTML One-Pager Scaffolding generating executive summaries with responsive layout, OKLCH styling, and print stylesheets (PLS-004).
+  - **Executive Pulse CLI (`executive-pulse.ts`)**: Built standalone CLI in `skills/agency-delivery/client-comms/scripts/executive-pulse.ts` supporting `--sprint-data`, `--metrics`, `--risks`, `--format`, and `--json`.
+  - **Client-Comms Mode Expansion**: Expanded `client-comms` to v1.6.0 across 10 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`.
+
 ## [7.9.0] - 2026-10-26
 
 ### Added
