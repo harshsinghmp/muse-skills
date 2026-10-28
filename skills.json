@@ -1305,7 +1305,7 @@
     },
     {
       "name": "retain",
-      "description": "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, delight-peak review asks, referral and repurchase offers, churn-watch signals, retainer SLAs, and proactive 60-day contract renewals \u2014 routed through nine modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review, win a referral, manage client retainer SLAs, or execute a 60-day retainer contract renewal with 3-tier expansion. Not for churn strategy itself (growth retention mode) or status reporting (client-comms).",
+      "description": "Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, delight-peak review asks, referral and repurchase offers, churn-watch signals, retainer SLAs, proactive 60-day contract renewals, and client health telemetry \u2014 routed through ten modes. Use when asked to follow up after delivery, prove ongoing value, run a QBR, ask for a review, win a referral, manage client retainer SLAs, audit account health scores, or execute a 60-day retainer contract renewal with 3-tier expansion. Not for churn strategy itself (growth retention mode) or status reporting (client-comms).",
       "path": "skills/agency-delivery/retain/SKILL.md",
       "version": "1.2.0",
       "category": "agency-delivery",

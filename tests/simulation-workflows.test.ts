@@ -2397,6 +2397,158 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("retain:health mode enforces tri-vector health scoring, churn early warning radar, stop-the-clock intervention, and nrr modeling", () => {
+      const retainSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/retain", "SKILL.md"), "utf8");
+      expect(retainSkill).toContain("| **health** |");
+      expect(retainSkill).toContain("references/health.md");
+      expect(retainSkill).toContain("ten modes");
+
+      const healthRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/retain", "references", "health.md"),
+        "utf8",
+      );
+      expect(healthRef).toContain("HLT-001");
+      expect(healthRef).toContain("HLT-002");
+      expect(healthRef).toContain("HLT-003");
+      expect(healthRef).toContain("HLT-004");
+      expect(healthRef).toContain("Tri-Vector Health Scoring");
+      expect(healthRef).toContain("Churn Early Warning Radar");
+      expect(healthRef).toContain("Stop-the-Clock Intervention Plan");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/retain/scripts/client-health-telemetry.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "retain-health-test-"));
+      try {
+        // 1. Direct function calculations (HLT-001 & HLT-002)
+        const {
+          calculateHealthScore,
+          evaluateAccountHealth,
+          calculateNrr,
+          generatePortfolioScorecard,
+        } = require("../skills/agency-delivery/retain/scripts/client-health-telemetry");
+
+        const greenScore = calculateHealthScore(90, 85, 95);
+        expect(greenScore.compositeScore).toBe(90);
+        expect(greenScore.tier).toBe("GREEN");
+        expect(greenScore.isExpansionReady).toBe(true);
+        expect(greenScore.isChurnRisk).toBe(false);
+
+        const amberScore = calculateHealthScore(65, 60, 70);
+        expect(amberScore.compositeScore).toBe(65);
+        expect(amberScore.tier).toBe("AMBER");
+        expect(amberScore.isExpansionReady).toBe(false);
+        expect(amberScore.isChurnRisk).toBe(true);
+
+        const redScore = calculateHealthScore(40, 35, 45);
+        expect(redScore.compositeScore).toBe(40);
+        expect(redScore.tier).toBe("RED");
+        expect(redScore.requiresIntervention).toBe(true);
+
+        // 2. Account Evaluation & Churn Radar
+        const criticalAccount = evaluateAccountHealth({
+          accountName: "AtRisk Client",
+          monthlyRevenue: 15000,
+          productTelemetry: 45,
+          sentimentScore: 40,
+          financialVelocity: 42,
+          hasSponsorTurnover: true,
+          overdueDays: 20,
+          hasOverdueInvoice: true,
+        });
+        expect(criticalAccount.interventionRequired).toBe(true);
+        expect(criticalAccount.riskFactors.some((r: string) => r.includes("Sponsor Turnover"))).toBe(true);
+        expect(criticalAccount.riskFactors.some((r: string) => r.includes("Overdue Invoice"))).toBe(true);
+
+        // 3. CLI --calc-health
+        const calcRes = spawnSync(
+          "bun",
+          [scriptPath, "--calc-health", "--telemetry", "88", "--sentiment", "82", "--financial", "90", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(calcRes.status).toBe(0);
+        const calcData = JSON.parse(calcRes.stdout);
+        expect(calcData.compositeScore).toBe(86.8);
+        expect(calcData.tier).toBe("GREEN");
+
+        // 4. CLI --scaffold-cap (HLT-003)
+        const capFile = path.join(tempDir, "sample-cap.md");
+        const capRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--scaffold-cap",
+            "--account",
+            "Delta Logistics",
+            "--revenue",
+            "20000",
+            "--telemetry",
+            "40",
+            "--sentiment",
+            "35",
+            "--financial",
+            "40",
+            "--sponsor-turnover",
+            "--overdue-days",
+            "18",
+            "--out",
+            capFile,
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(capRes.status).toBe(0);
+        expect(fs.existsSync(capFile)).toBe(true);
+        const capContent = fs.readFileSync(capFile, "utf8");
+        expect(capContent).toContain("Stop-the-Clock Intervention Plan");
+        expect(capContent).toContain("Delta Logistics");
+        expect(capContent).toContain("Billing Clock Frozen");
+        expect(capContent).toContain("SLA Penalty Timers Paused");
+        expect(capContent).toContain("Mandatory 48-Hour Corrective Action Sequence");
+
+        // 5. CLI & direct function --calc-nrr (HLT-004)
+        const directNrr = calculateNrr(500000, 100000, 10000, 20000);
+        expect(directNrr.netRetentionRate).toBe(114);
+        expect(directNrr.isHealthyNrr).toBe(false); // <115
+
+        const nrrRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--calc-nrr",
+            "--starting-arr",
+            "1000000",
+            "--expansion-arr",
+            "200000",
+            "--contraction-arr",
+            "30000",
+            "--churn-arr",
+            "40000",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(nrrRes.status).toBe(0);
+        const nrrData = JSON.parse(nrrRes.stdout);
+        expect(nrrData.netRetentionRate).toBe(113);
+        expect(nrrData.grossRetentionRate).toBe(93);
+
+        // 6. Portfolio Scorecard
+        const portfolio = generatePortfolioScorecard([
+          { accountName: "A", monthlyRevenue: 10000, productTelemetry: 90, sentimentScore: 90, financialVelocity: 90 },
+          { accountName: "B", monthlyRevenue: 15000, productTelemetry: 60, sentimentScore: 60, financialVelocity: 60 },
+          { accountName: "C", monthlyRevenue: 20000, productTelemetry: 40, sentimentScore: 40, financialVelocity: 40 },
+        ]);
+        expect(portfolio.totalAccounts).toBe(3);
+        expect(portfolio.totalMonthlyRevenue).toBe(45000);
+        expect(portfolio.distribution.green.count).toBe(1);
+        expect(portfolio.distribution.amber.count).toBe(1);
+        expect(portfolio.distribution.red.count).toBe(1);
+        expect(portfolio.atRiskRevenue).toBe(20000);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
     test("qa-launch:e2e mode enforces semantic accessible locators, critical smoke matrix, and error guards", () => {
       const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
       expect(qaSkill).toContain("| **e2e** |");
