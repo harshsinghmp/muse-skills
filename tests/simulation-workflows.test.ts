@@ -1621,7 +1621,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"',
       );
     });
 
@@ -3202,6 +3202,107 @@ window.alert('Blocking modal');`,
       } finally {
         fs.rmSync(tempDir2, { recursive: true, force: true });
       }
+    });
+
+    test("Crew & Jasper: ops sku mode enforces turnkey productized packaging, 5.0x ROI value pricing, SOW generation, and milestone receipts", () => {
+      const skuRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/ops", "references", "sku.md"),
+        "utf8",
+      );
+      expect(skuRef).toContain("SKU-001: Turnkey Productized SKU Scaffolder");
+      expect(skuRef).toContain("SKU-002: Value Triangulation Engine");
+      expect(skuRef).toContain("SKU-003: SOW & Intake Brief Scaffolder");
+      expect(skuRef).toContain("SKU-004: Milestone Verification Gate");
+
+      const opsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/ops", "SKILL.md"), "utf8");
+      expect(opsSkill).toContain("| **sku** |");
+      expect(opsSkill).toContain("references/sku.md");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/ops/scripts/sku-packager.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const {
+        scaffoldProductizedSku,
+        calculateSkuPricing,
+        generateSowAndIntakeBrief,
+        generateMilestoneSignoffPacket,
+      } = require("../skills/agency-delivery/ops/scripts/sku-packager");
+
+      // 1. SKU Scaffolder (SKU-001)
+      const sku = scaffoldProductizedSku({
+        name: "Autonomous Pipeline",
+        category: "ai-automation",
+        tier: "enterprise",
+        turnaroundDays: 10,
+        basePriceUsd: 12000,
+      });
+      expect(sku.skuId).toBe("SKU-AUTONOMOUS-PIPEL");
+      expect(sku.turnaroundDays).toBe(10);
+      expect(sku.slaTurnaroundHours).toBe(240);
+      expect(sku.deliverables.length).toBeGreaterThanOrEqual(4);
+      expect(sku.definitionOfDone.length).toBeGreaterThanOrEqual(4);
+      expect(sku.exclusions.length).toBeGreaterThanOrEqual(4);
+
+      // 2. Value Triangulation (SKU-002)
+      const pricing = calculateSkuPricing({
+        estimatedClientAnnualUpsideUsd: 150000,
+        agencyDirectDeliveryCostUsd: 3000,
+      });
+      expect(pricing.recommendedPriceUsd).toBeGreaterThanOrEqual(15000);
+      expect(pricing.clientRoiMultiple).toBeGreaterThanOrEqual(5.0);
+      expect(pricing.projectedGrossMarginPercent).toBeGreaterThanOrEqual(80.0);
+      expect(pricing.verdict).toBe("APPROVED");
+      expect(pricing.maxAllowableDiscountPercent).toBeGreaterThan(0);
+
+      // 3. SOW & Intake Brief (SKU-003)
+      const sow = generateSowAndIntakeBrief(sku, { clientName: "Globex Corporation" });
+      expect(sow.clientName).toBe("Globex Corporation");
+      expect(sow.statementOfWorkMd).toContain("Statement of Work (SOW): Autonomous Pipeline");
+      expect(sow.statementOfWorkMd).toContain("Definition of Done (DoD)");
+      expect(sow.statementOfWorkMd).toContain("Strict Boundary & Exclusions List");
+      expect(sow.intakeChecklistMd).toContain("Client Intake Brief: Autonomous Pipeline");
+      expect(sow.milestoneSchedule.length).toBe(3);
+
+      // 4. Milestone Verification Gate (SKU-004)
+      const receipts = [
+        {
+          deliverableName: sku.deliverables[0],
+          completedAt: "2026-10-28T10:00:00Z",
+          artifactUri: "https://github.com/client/repo/pull/1",
+          verifiedBy: "Nexus",
+        },
+        {
+          deliverableName: sku.deliverables[1],
+          completedAt: "2026-10-28T11:00:00Z",
+          artifactUri: "https://github.com/client/repo/pull/2",
+          verifiedBy: "Sol",
+        },
+      ];
+      const partialSignoff = generateMilestoneSignoffPacket(sku, receipts);
+      expect(partialSignoff.allCriteriaSatisfied).toBe(false);
+      expect(partialSignoff.verdict).toBe("INCOMPLETE");
+
+      const fullReceipts = sku.deliverables.map((d: string, i: number) => ({
+        deliverableName: d,
+        completedAt: "2026-10-28T12:00:00Z",
+        artifactUri: `https://github.com/client/repo/pull/${i + 1}`,
+        verifiedBy: "Nexus",
+      }));
+      const completeSignoff = generateMilestoneSignoffPacket(sku, fullReceipts);
+      expect(completeSignoff.allCriteriaSatisfied).toBe(true);
+      expect(completeSignoff.verdict).toBe("SIGN_OFF_READY");
+      expect(completeSignoff.nextRetentionAction).toContain("retain:check-in");
+
+      // 5. Standalone CLI execution
+      const cliRes = spawnSync(
+        "bun",
+        [scriptPath, "--scaffold-sku", "--name", "Sovereign Backend", "--category", "engineering", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(cliRes.status).toBe(0);
+      const parsed = JSON.parse(cliRes.stdout);
+      expect(parsed.name).toBe("Sovereign Backend");
+      expect(parsed.category).toBe("engineering");
     });
 
     test("Jasper: growth viral mode implements K-factor triangulation, cycle time compression, and incentive scaffolds", () => {
