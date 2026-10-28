@@ -103,7 +103,7 @@ export function generateComponentPreview(input: PreviewInput): PreviewBundle {
   const viewportWidths: Record<ViewportMode, number> = {
     mobile: 375,
     tablet: 768,
-    desktop: 1280,
+    desktop: 1440,
     fluid: 0,
   };
 
@@ -113,20 +113,68 @@ export function generateComponentPreview(input: PreviewInput): PreviewBundle {
 
   const containerStyle =
     width > 0
-      ? `width: ${width}px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); min-height: 100vh;`
-      : "width: 100%; min-height: 100vh;";
+      ? `inline-size: 100%; max-inline-size: ${width}px; margin-inline: auto; border: 1px solid color-mix(in oklch, currentColor 12%, transparent); border-radius: clamp(0.5rem, 0.35rem + 0.4dvw, 0.875rem); box-shadow: 0 0.5rem 1.5rem -0.25rem color-mix(in oklch, currentColor 8%, transparent); min-block-size: 100dvh;`
+      : "inline-size: 100%; min-block-size: 100dvh;";
 
   const renderedHtml = `<!DOCTYPE html>
 <html lang="en" class="${theme}">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="Content-Security-Policy" content="${cspPolicy}">
   <title>Canvas Preview: ${previewId}</title>
   ${input.includeTailwind !== false ? '<script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>' : ""}
   <style>
-    body { margin: 0; padding: 16px; background-color: ${theme === "dark" ? "#0f172a" : "#f8fafc"}; color: ${theme === "dark" ? "#f8fafc" : "#0f172a"}; font-family: system-ui, sans-serif; }
-    .canvas-container { ${containerStyle} background-color: ${theme === "dark" ? "#1e293b" : "#ffffff"}; overflow: hidden; }
+    :root {
+      /* Fluid typography: zero static px, clamp-scaled across viewports */
+      --font-fluid-base: clamp(1rem, 0.95rem + 0.25dvw, 1.125rem);
+      --font-fluid-h1: clamp(2rem, 1.3rem + 3dvw, 3.25rem);
+      --font-fluid-h2: clamp(1.5rem, 1.1rem + 1.8dvw, 2.25rem);
+      --font-fluid-h3: clamp(1.25rem, 1rem + 1dvw, 1.75rem);
+      --font-fluid-sm: clamp(0.75rem, 0.7rem + 0.2dvw, 0.875rem);
+      --space-fluid-xs: clamp(0.25rem, 0.2rem + 0.2dvw, 0.5rem);
+      --space-fluid-sm: clamp(0.5rem, 0.4rem + 0.4dvw, 0.875rem);
+      --space-fluid-md: clamp(1rem, 0.8rem + 0.8dvw, 1.5rem);
+      --space-fluid-lg: clamp(1.5rem, 1.2rem + 1.5dvw, 2.5rem);
+      --space-fluid-xl: clamp(2rem, 1.5rem + 2.5dvw, 4rem);
+      --radius-fluid: clamp(0.5rem, 0.35rem + 0.4dvw, 0.875rem);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    body {
+      margin: 0;
+      padding-inline: clamp(0.75rem, 2dvw, 2rem);
+      padding-block: clamp(1rem, 2dvh, 2rem);
+      background-color: ${theme === "dark" ? "oklch(0.14 0.02 260)" : "oklch(0.98 0.005 260)"};
+      color: ${theme === "dark" ? "oklch(0.96 0.01 260)" : "oklch(0.18 0.02 260)"};
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: var(--font-fluid-base);
+      line-height: 1.5;
+      min-block-size: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .canvas-container {
+      ${containerStyle}
+      background-color: ${theme === "dark" ? "oklch(0.18 0.02 260)" : "oklch(1 0 0)"};
+      container-type: inline-size;
+      overflow: hidden;
+      padding-inline: clamp(1rem, 2.5cqi, 2.5rem);
+      padding-block: clamp(1rem, 2.5cqi, 2.5rem);
+    }
+
+    /* Modern fluid typography hierarchy */
+    h1 { font-size: var(--font-fluid-h1); line-height: 1.15; margin-block-end: var(--space-fluid-md); }
+    h2 { font-size: var(--font-fluid-h2); line-height: 1.2; margin-block-end: var(--space-fluid-sm); }
+    h3 { font-size: var(--font-fluid-h3); line-height: 1.3; margin-block-end: var(--space-fluid-xs); }
+    p { font-size: var(--font-fluid-base); margin-block-end: var(--space-fluid-md); }
+    small { font-size: var(--font-fluid-sm); }
   </style>
 </head>
 <body>
@@ -293,12 +341,40 @@ export function validateAndExportMermaidGraph(mermaidSource: string): MermaidExp
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mermaid Canvas Export</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
   <style>
-    body { font-family: system-ui, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background: #fafafa; }
-    .mermaid-box { padding: 24px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 90vw; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: clamp(0.95rem, 0.9rem + 0.25dvw, 1.125rem);
+      line-height: 1.5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-block-size: 100dvh;
+      margin: 0;
+      padding-inline: clamp(1rem, 2.5dvw, 2.5rem);
+      padding-block: clamp(1rem, 2.5dvh, 2.5rem);
+      background: oklch(0.98 0.005 260);
+      color: oklch(0.18 0.02 260);
+    }
+    .mermaid-box {
+      padding-inline: clamp(1.25rem, 3cqi, 2.5rem);
+      padding-block: clamp(1.25rem, 3cqi, 2.5rem);
+      background: oklch(1 0 0);
+      border-radius: clamp(0.5rem, 0.4rem + 0.4dvw, 0.875rem);
+      border: 1px solid color-mix(in oklch, currentColor 10%, transparent);
+      box-shadow: 0 0.5rem 1.5rem -0.25rem color-mix(in oklch, currentColor 8%, transparent);
+      max-inline-size: min(94dvw, 90rem);
+      inline-size: 100%;
+      overflow: auto;
+    }
   </style>
 </head>
 <body>
