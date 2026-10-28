@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Nexus Technical Director & Sol Product Architect: AI Agent Evaluation Engine & Synthetic Edge Tester (`qa-launch:evals`)**:
+  - **Agent Evaluation Playbook (`evals.md`)**: Enforces Synthetic Edge Test Battery generation across Boundary, Unicode/RTL, Concurrency/Idempotency, and Adversarial Injections (EVL-001); Dual-Model Blind Evaluator-Optimizer Loop with Consensus Scoring >= 8.5/10 and inter-judge delta <= 1.5 (EVL-002); Minimal Failing Repro Pack Scaffolder generating isolated fixtures and test scripts (EVL-003); and Golden Baseline Regression Scorecards enforcing >= 95% pass rate and zero golden regressions (EVL-004).
+  - **Eval Runner CLI (`eval-runner.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/eval-runner.ts` supporting `--generate-edge`, `--evaluate-sample`, `--scaffold-repro`, `--regression-audit`, and `--json`.
+  - **QA-Launch Mode Expansion**: Expanded `qa-launch` to 9 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 442 slash commands per harness.
+
 - **Nexus Technical Director & Sol Product Architect: Dynamic MCP Server Governance & Tool Poisoning Defense (`muse-security:mcp-guard`)**:
   - **MCP Security Playbook (`mcp-guard.md`)**: Enforces OWASP MCP03 Tool Poisoning & Schema Injection scanning on all tool descriptions and parameter schemas (MCP-001); Transport Isolation & Network Perimeter Gate mandating stdio/IPC over unsafe wildcard or unauthenticated TCP listeners (MCP-002); Dynamic JIT Tool Hydration & Lazy Loading achieving 70%+ prompt token savings (MCP-003); and Ephemeral Token Fencing with automated credential exfiltration tripwires (MCP-004).
   - **MCP Sanitizer CLI (`mcp-sanitizer.ts`)**: Built standalone CLI in `skills/quality-review/muse-security/scripts/mcp-sanitizer.ts` supporting `--scan-manifest`, `--audit-config`, `--hydrate-tools`, `--audit-payload`, and `--json`.
