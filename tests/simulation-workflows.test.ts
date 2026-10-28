@@ -4884,5 +4884,83 @@ NextApp relies on RedisCache
       expect(cliRes.stdout).toContain("Usage-Based Metering & Billing Report:");
       expect(cliRes.stdout).toContain("DEDUPLICATED");
     });
+
+    test("Sol: webdev realtime-bus mode implements distributed pub-sub backplane, monotonic sequence IDs, 45s heartbeat pruning, and sub-50ms fanout", () => {
+      const webdevSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/webdev/SKILL.md"), "utf8");
+      expect(webdevSkill).toContain("version: 1.9.0");
+      expect(webdevSkill).toContain("| **realtime-bus** |");
+
+      const busRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/webdev/references/realtime-bus.md"),
+        "utf8",
+      );
+      expect(busRef).toContain("BUS-001");
+      expect(busRef).toContain("BUS-002");
+      expect(busRef).toContain("BUS-003");
+      expect(busRef).toContain("BUS-004");
+      expect(busRef).toContain("Distributed Pub/Sub Backplane");
+      expect(busRef).toContain("Monotonic Message Sequencer");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/webdev/scripts/realtime-bus.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { RealtimeBusEngine } = require(scriptPath);
+      const engine = new RealtimeBusEngine();
+
+      // BUS-001 Connection Registration & Pub/Sub Sharding
+      const connA = engine.registerConnection("conn-A", ["chat:general", "orders:feed"]);
+      const connB = engine.registerConnection("conn-B", ["chat:general"]);
+      expect(connA.status).toBe("ACTIVE");
+      expect(connB.rooms.has("chat:general")).toBe(true);
+
+      // BUS-002 Monotonic Sequence & Publishing
+      const pub1 = engine.publish("chat:general", { text: "Hello, room!" });
+      expect(pub1.message.sequenceId).toBe(1);
+      expect(pub1.subscribersNotified).toBe(2);
+
+      const pub2 = engine.publish("chat:general", { text: "Second message" });
+      expect(pub2.message.sequenceId).toBe(2);
+      expect(pub2.subscribersNotified).toBe(2);
+
+      // Gap detection test
+      const gapAudit = engine.detectSequenceGaps([1, 2, 4, 6]);
+      expect(gapAudit.hasGap).toBe(true);
+      expect(gapAudit.missingSequences).toEqual([3, 5]);
+
+      const noGapAudit = engine.detectSequenceGaps([1, 2, 3, 4]);
+      expect(noGapAudit.hasGap).toBe(false);
+      expect(noGapAudit.missingSequences).toEqual([]);
+
+      // BUS-003 Ghost Connection Pruning (45s ceiling)
+      const now = Date.now();
+      const ghostConn = engine.registerConnection("ghost-conn", ["chat:general"]);
+      ghostConn.lastPingTimestamp = now - 50000; // 50s ago, exceeds 45s threshold
+
+      const pruneRes = engine.pruneGhostConnections(45000, now);
+      expect(pruneRes.prunedConnectionsCount).toBe(1);
+      expect(pruneRes.prunedConnectionIds).toContain("ghost-conn");
+      expect(ghostConn.status).toBe("PRUNED");
+
+      // BUS-004 Sub-50ms Edge Fanout Benchmark
+      const bench = engine.runFanoutBenchmark(200, 5, 4);
+      expect(bench.totalSubscribers).toBe(200);
+      expect(bench.messagesBroadcast).toBe(20);
+      expect(bench.p95LatencyMs).toBeLessThan(50);
+      expect(bench.compliantSub50ms).toBe(true);
+
+      // Full Report Generation
+      const report = engine.generateFullReport(100, 4);
+      expect(report.summaryMarkdown).toContain("Realtime Pub/Sub Bus & Edge WebSocket Report");
+      expect(report.summaryMarkdown).toContain("Edge Fanout Latency Benchmarks (BUS-004)");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath, "--simulate-subscribers", "100", "--rooms", "4"], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+      });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Realtime Pub/Sub Bus & Edge WebSocket Report");
+      expect(cliRes.stdout).toContain("COMPLIANT (<50ms)");
+    });
   });
 });
