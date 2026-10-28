@@ -81,3 +81,13 @@ bun <skill-dir>/coupling-router/scripts/worktree-lease.ts release   # delete lea
 ## 📄 Artifacts Generated
 
 1. `ROUTING_PLAN.md` — Active Minimal Viable Skill Set (MVSS), suppressed redundant skills, execution strategy (`SEQUENTIAL` / `STAGED_PIPELINE` / `PARALLEL_FAN_OUT`), Mermaid task DAG, and file isolation boundaries.
+
+---
+
+## 🐝 Swarm Dispatcher & Multi-Agent Consensus Engine
+
+The `swarm` mode provisions `scripts/swarm-dispatcher.ts` to coordinate complex autonomous agent swarms:
+- **Topological DAG Wave Partitioning (`SWM-001`)**: Automatically groups task dependencies into parallel execution waves with deterministic cycle detection.
+- **Byzantine Consensus Quorum (`SWM-002`)**: Requires $\ge 3$ agent votes with $> 66\%$ agreement before landing critical architectural seams or schema migrations.
+- **Global Token Ceiling Arbiter (`SWM-003`)**: Enforces an aggregate session token budget ceiling ($C \le 250\text{k}$) with automatic burn rate circuit breakers.
+- **Fast-Fail Dependent Pruning (`SWM-004`)**: Instantly prunes all downstream dependents if an upstream task fails, preventing token waste.

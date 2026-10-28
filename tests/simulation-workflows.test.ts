@@ -623,7 +623,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
 
       expect(skillContent).toContain("**`federation`**");
       expect(skillContent).toContain("references/federation.md");
-      expect(skillContent).toContain('argument-hint: "[route|decouple|skill-audit|worktree-lease|federation]"');
+      expect(skillContent).toContain('argument-hint: "[route|decouple|skill-audit|worktree-lease|federation|swarm]"');
 
       expect(fedContent).toContain("Worktree Federation Architecture");
       expect(fedContent).toContain("The 4 Federation Invariants");
@@ -4029,6 +4029,112 @@ window.alert('Blocking modal');`,
         } finally {
           await new Promise<void>((resolve) => testServer.close(() => resolve()));
         }
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("Sol & Nexus: coupling-router swarm mode implements DAG wave partitioning, Byzantine consensus, token budget, and fast-fail pruning", () => {
+      const swarmRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/context-orchestration/coupling-router", "references", "swarm.md"),
+        "utf8",
+      );
+      expect(swarmRef).toContain("SWM-001: Topological DAG Wave Partitioning & Cycle Detection");
+      expect(swarmRef).toContain("SWM-002: Byzantine Consensus Quorum Gate");
+      expect(swarmRef).toContain("SWM-003: Global Token Budget Arbiter");
+      expect(swarmRef).toContain("SWM-004: Fast-Fail Dependent Pruning");
+
+      const routerSkill = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/context-orchestration/coupling-router", "SKILL.md"),
+        "utf8",
+      );
+      expect(routerSkill).toContain("| **`swarm`** |");
+      expect(routerSkill).toContain("references/swarm.md");
+
+      const scriptPath = path.join(
+        REPO_ROOT,
+        "skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts",
+      );
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const {
+        partitionDagIntoWaves,
+        evaluateByzantineConsensus,
+        dispatchSwarmPlan,
+      } = require("../skills/context-orchestration/coupling-router/scripts/swarm-dispatcher");
+
+      // 1. DAG Wave Partitioning & Cycle Detection (SWM-001)
+      const validDag = [
+        { id: "task-1", name: "Types" },
+        { id: "task-2", name: "DB Schema", dependsOn: ["task-1"], criticalSeam: true },
+        { id: "task-3", name: "Docs", dependsOn: ["task-1"] },
+        { id: "task-4", name: "API Route", dependsOn: ["task-2"] },
+      ];
+      const partition = partitionDagIntoWaves(validDag);
+      expect(partition.isValid).toBe(true);
+      expect(partition.waves.length).toBe(3);
+      expect(partition.waves[0].taskIds).toEqual(["task-1"]);
+      expect(partition.waves[1].taskIds).toContain("task-2");
+      expect(partition.waves[1].taskIds).toContain("task-3");
+      expect(partition.waves[2].taskIds).toEqual(["task-4"]);
+
+      // Cyclic DAG check
+      const cyclicDag = [
+        { id: "task-A", name: "A", dependsOn: ["task-B"] },
+        { id: "task-B", name: "B", dependsOn: ["task-A"] },
+      ];
+      const cyclicPartition = partitionDagIntoWaves(cyclicDag);
+      expect(cyclicPartition.isValid).toBe(false);
+      expect(cyclicPartition.error).toContain("Cyclic dependency detected");
+
+      // 2. Byzantine Consensus Quorum (SWM-002)
+      const task = { id: "seam-1", name: "Auth Seam", criticalSeam: true };
+      const passingVotes = [
+        { agent: "Sol", approve: true },
+        { agent: "Nexus", approve: true },
+        { agent: "Crew", approve: false },
+      ];
+      const passConsensus = evaluateByzantineConsensus(task, passingVotes, 3);
+      expect(passConsensus.passed).toBe(true);
+      expect(passConsensus.agreementRate).toBe(67); // 2/3 > 66%
+
+      const failingVotes = [
+        { agent: "Sol", approve: true },
+        { agent: "Nexus", approve: false },
+        { agent: "Crew", approve: false },
+      ];
+      const failConsensus = evaluateByzantineConsensus(task, failingVotes, 3);
+      expect(failConsensus.passed).toBe(false);
+      expect(failConsensus.agreementRate).toBe(33);
+
+      // 3. Swarm Execution with Fast-Fail Dependent Pruning (SWM-003 & SWM-004)
+      const plan = {
+        planId: "SWARM-TEST-001",
+        maxTokenCeiling: 100000,
+        tasks: validDag,
+      };
+      // When task-2 fails, task-4 should be pruned
+      const ledger = dispatchSwarmPlan(plan, ["task-2"]);
+      expect(ledger.completedTasks).toBe(2); // task-1 and task-3
+      expect(ledger.failedTasks).toBe(1); // task-2
+      expect(ledger.skippedTasks).toBe(1); // task-4
+      const skipped = ledger.results.find((r) => r.taskId === "task-4");
+      expect(skipped?.status).toBe("SKIPPED_UPSTREAM_FAILURE");
+
+      // 4. Standalone CLI execution
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "swarm-dispatcher-test-"));
+      try {
+        const planFile = path.join(tempDir, "plan.json");
+        fs.writeFileSync(planFile, JSON.stringify(plan), "utf8");
+        const cliRes = spawnSync("bun", [scriptPath, "--plan", planFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(cliRes.status).toBe(0);
+        const parsed = JSON.parse(cliRes.stdout);
+        expect(parsed.planId).toBe("SWARM-TEST-001");
+        expect(parsed.totalWaves).toBe(3);
+        expect(parsed.totalTasks).toBe(4);
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
