@@ -5039,5 +5039,86 @@ NextApp relies on RedisCache
       expect(cliRes.stdout).toContain("Distributed Edge Mesh & Anycast Routing Report");
       expect(cliRes.stdout).toContain("SLA COMPLIANT");
     });
+
+    test("Crew & Jasper: client-comms executive-pulse mode implements layman impact translation, velocity & runway tracking, 48h risk radar, and HTML one-pager scaffolding", () => {
+      const commsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/client-comms/SKILL.md"), "utf8");
+      expect(commsSkill).toContain("version: 1.6.0");
+      expect(commsSkill).toContain("| **executive-pulse** |");
+
+      const pulseRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/client-comms/references/executive-pulse.md"),
+        "utf8",
+      );
+      expect(pulseRef).toContain("PLS-001");
+      expect(pulseRef).toContain("PLS-002");
+      expect(pulseRef).toContain("PLS-003");
+      expect(pulseRef).toContain("PLS-004");
+      expect(pulseRef).toContain("Layman Impact Translation");
+      expect(pulseRef).toContain("Blocker & Risk Radar");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/client-comms/scripts/executive-pulse.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { ExecutivePulseEngine, sanitizeJargon } = require(scriptPath);
+
+      // PLS-001 Anti-Jargon Sanitization
+      const rawJargon = "We configured mTLS and optimized the ORM to minimize CLS.";
+      const sanitized = sanitizeJargon(rawJargon);
+      expect(sanitized.isClean).toBe(false);
+      expect(sanitized.flaggedJargon).toContain("MTLS");
+      expect(sanitized.flaggedJargon).toContain("ORM");
+      expect(sanitized.flaggedJargon).toContain("CLS");
+      expect(sanitized.sanitized).toContain("database access layer");
+
+      const cleanText = "We improved customer checkout speed by twenty percent.";
+      const cleanSanitized = sanitizeJargon(cleanText);
+      expect(cleanSanitized.isClean).toBe(true);
+      expect(cleanSanitized.flaggedJargon.length).toBe(0);
+
+      const engine = new ExecutivePulseEngine();
+
+      // PLS-001 Layman Translation of Milestones
+      const milestones = [
+        { technicalName: "coupling-router:swarm", category: "engineering", status: "COMPLETED", commitsCount: 14 },
+        { technicalName: "database:graph", category: "infrastructure", status: "COMPLETED", commitsCount: 12 },
+      ];
+      const laymanItems = engine.translateToLaymanImpact(milestones);
+      expect(laymanItems.length).toBe(2);
+      expect(laymanItems[0].headline).toBe("Parallel Autonomous Swarm Coordination");
+      expect(laymanItems[0].isJargonFree).toBe(true);
+
+      // PLS-002 Velocity & Runway Computation
+      const metrics = engine.computeVelocityMetrics(6, 8, 100000, 40000, 10000);
+      expect(metrics.completionPercent).toBe(75);
+      expect(metrics.budgetRemainingDollars).toBe(60000);
+      expect(metrics.runwayWeeksRemaining).toBe(6);
+
+      // PLS-003 Blocker & Risk Radar with 48h Mitigation Invariant
+      const rawRisks = [
+        {
+          riskId: "r-1",
+          description: "Stripe verification delay",
+          severity: "HIGH",
+          namedOwner: "Crew Lead",
+          deadlineDate: "2026-10-30",
+          mitigationProposal48h: "", // Empty, should trigger fallback
+        },
+      ];
+      const evaluatedRisks = engine.evaluateRiskRadar(rawRisks);
+      expect(evaluatedRisks[0].mitigationProposal48h).toContain("Stop-the-Clock");
+
+      // PLS-004 HTML One-Pager Scaffolding
+      const report = engine.generateExecutiveReport("Project Phoenix", "Omega Global");
+      expect(report.htmlOnePager).toContain("WEEKLY EXECUTIVE PULSE");
+      expect(report.htmlOnePager).toContain("Sprint Velocity");
+      expect(report.htmlOnePager).toContain("@media print");
+      expect(report.summaryMarkdown).toContain("C-Suite Executive Pulse: Project Phoenix");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("C-Suite Executive Pulse:");
+      expect(cliRes.stdout).toContain("Executive KPI Snapshot (PLS-002)");
+    });
   });
 });

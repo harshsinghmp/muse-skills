@@ -1,10 +1,10 @@
 ---
 name: client-comms
 aliases: ["client-communication", "status-update", "change-request", "project-handover", "client-feedback", "handover-docs"]
-description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, B2B proposals with stop-the-clock terms, and automated onboarding intake with scope boundaries — routed through nine modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, collect client feedback, or ingest a new client intake form. Not for internal agency ops (ops) or pricing strategy (growth)."
-argument-hint: "[status|change|handover|feedback|proposal|intake|audit|inbox-triage]"
+description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, B2B proposals with stop-the-clock terms, automated onboarding intake with scope boundaries, and autonomous C-suite executive pulse briefings — routed through ten modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, collect client feedback, generate an executive pulse one-pager, or ingest a new client intake form. Not for internal agency ops (ops) or pricing strategy (growth)."
+argument-hint: "[status|change|handover|feedback|proposal|intake|executive-pulse|audit|inbox-triage]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -45,6 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **feedback** | "collect feedback", "client review", "satisfaction check" | Client feedback intake: structured capture, triage, and response plan | [references/feedback.md](references/feedback.md) |
 | **proposal** | "client proposal", "pitch deck", "project pitch", "B2B proposal" | High-converting client proposal and pitch: PAS/AIDA/QUEST architecture, stop-the-clock terms, and milestone proof gates | [references/proposal.md](references/proposal.md) |
 | **intake** | "client intake", "intake form", "client onboarding questionnaire", "ingest intake" | Automated client intake ingestion: scope boundary extraction, anti-scope fencing, and vault scaffolding | [references/intake.md](references/intake.md) |
+| **executive-pulse** | "executive pulse", "c-suite briefing", "weekly executive update", "client pulse", "one pager report" | Autonomous C-suite weekly briefing generator: layman impact translation (zero jargon), sprint velocity & runway tracking, 48h risk radar, and print-ready HTML one-pagers | [references/executive-pulse.md](references/executive-pulse.md) |
 | **`audit`** | "communication audit", "audit client comms", "SLA audit" | Bidirectional SLA conformance, cadence integrity, channel discipline, unresolved threads, escalation signals. | [references/audit.md](references/audit.md) |
 | **`inbox-triage`** | "triage the inbox", "client emails", "executive email triage" | Executive email triage and follow-up protocols | [references/inbox-triage.md](references/inbox-triage.md) |
 
