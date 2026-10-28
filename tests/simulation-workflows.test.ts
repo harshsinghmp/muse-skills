@@ -1104,7 +1104,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain(
-        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|audit]"',
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit]"',
       );
       expect(growthSkill).toContain("| **community** |");
       expect(growthSkill).toContain("references/community.md");
@@ -4680,6 +4680,116 @@ NextApp relies on RedisCache
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("AI AUDIO SHOWRUNNER:");
       expect(cliRes.stdout).toContain("Quality Audit Score: 100/100 [PASSED]");
+    });
+
+    test("Jasper & Nexus: growth programmatic-cro mode implements Bayesian Thompson sampling, significance gate, zero-CLS fences, and revenue triangulation", () => {
+      const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/growth/SKILL.md"), "utf8");
+      expect(growthSkill).toContain("version: 1.3.0");
+      expect(growthSkill).toContain("| **programmatic-cro** |");
+
+      const croRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/growth/references/programmatic-cro.md"),
+        "utf8",
+      );
+      expect(croRef).toContain("MAB-001");
+      expect(croRef).toContain("MAB-002");
+      expect(croRef).toContain("MAB-003");
+      expect(croRef).toContain("MAB-004");
+      expect(croRef).toContain("Thompson Sampling");
+      expect(croRef).toContain("Zero-CLS");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/growth/scripts/bandit-cro.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { BanditCroEngine } = require(scriptPath);
+      const engine = new BanditCroEngine();
+
+      const variants = [
+        {
+          id: "var-control",
+          name: "Control",
+          isBaseline: true,
+          impressions: 5000,
+          conversions: 100, // 2.0%
+          layoutShiftScore: 0.01,
+          hasReservedContainer: true,
+        },
+        {
+          id: "var-winner",
+          name: "Variant Winner",
+          isBaseline: false,
+          impressions: 5000,
+          conversions: 250, // 5.0%
+          layoutShiftScore: 0.02,
+          hasReservedContainer: true,
+        },
+        {
+          id: "var-loser",
+          name: "Variant Loser",
+          isBaseline: false,
+          impressions: 5000,
+          conversions: 50, // 1.0%
+          layoutShiftScore: 0.015,
+          hasReservedContainer: true,
+        },
+      ];
+
+      // MAB-001 Thompson Sampling with 10% Exploration Floor
+      const thompson = engine.evaluateThompsonSampling(variants, 5000, 0.1);
+      expect(thompson.length).toBe(3);
+      for (const t of thompson) {
+        expect(t.recommendedTrafficShare).toBeGreaterThanOrEqual(0.1);
+      }
+      const winningAlloc = thompson.find((t: { variantId: string }) => t.variantId === "var-winner");
+      expect(winningAlloc.recommendedTrafficShare).toBeGreaterThan(0.6);
+
+      // MAB-002 Statistical Significance Gate
+      const significance = engine.evaluateSignificance(variants, 0.95, 1000);
+      const winnerSig = significance.find((s: { variantId: string }) => s.variantId === "var-winner");
+      expect(winnerSig.status).toBe("WINNER");
+      expect(winnerSig.isSignificant).toBe(true);
+      expect(winnerSig.pBeatBaseline).toBeGreaterThan(0.95);
+
+      const loserSig = significance.find((s: { variantId: string }) => s.variantId === "var-loser");
+      expect(loserSig.status).toBe("LOSING");
+
+      // MAB-003 Zero-CLS Audit
+      const clsAudits = engine.auditLayoutShift(variants);
+      expect(clsAudits.every((c: { compliant: boolean }) => c.compliant)).toBe(true);
+
+      const badVariants = [
+        {
+          id: "var-bad-cls",
+          name: "Bad CLS",
+          isBaseline: false,
+          impressions: 100,
+          conversions: 2,
+          layoutShiftScore: 0.12, // Violates 0.05
+          hasReservedContainer: false,
+        },
+      ];
+      const badClsAudit = engine.auditLayoutShift(badVariants);
+      expect(badClsAudit[0].compliant).toBe(false);
+      expect(badClsAudit[0].issues.length).toBe(2);
+
+      // MAB-004 Revenue Lift Triangulation
+      const revenue = engine.triangulateRevenue(variants, 100000, 200);
+      const winnerRev = revenue.find((r: { variantId: string }) => r.variantId === "var-winner");
+      // Delta CR = 5.0% - 2.0% = 0.03
+      // Monthly lift = 100000 * 0.03 * 200 = $600,000
+      expect(winnerRev.projectedMonthlyRevenueLift).toBe(600000);
+      expect(winnerRev.projectedAnnualRevenueLift).toBe(7200000);
+
+      // Full Report Generation
+      const report = engine.generateFullReport("Test SaaS CRO", variants, 100000, 200, 0.95);
+      expect(report.summaryMarkdown).toContain("Programmatic CRO & Multi-Armed Bandit Report");
+      expect(report.summaryMarkdown).toContain("Bayesian Thompson Sampling Allocations (MAB-001)");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Programmatic CRO & Multi-Armed Bandit Report");
+      expect(cliRes.stdout).toContain("WINNER");
     });
   });
 });
