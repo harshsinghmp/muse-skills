@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Nexus Technical Director & Jasper Growth Mastermind: Multi-Touch Shapley Attribution Graph & Identity Stitcher (`analytics:attribution-graph`)**:
+  - **Attribution Graph Playbook (`attribution-graph.md`)**: Enforces Cooperative Game Theory Shapley Value Attribution calculating marginal contributions across all touchpoint coalitions (ATB-001); Cross-Device Identity Stitching unifying anonymous cookies into authenticated user clusters via SHA-256 identity hashing (ATB-002); Channel Haircut Deduplication applying 20%–40% discount penalties to self-reported ad network view-through claims (ATB-003); and Autonomous Budget Reallocation Advisor generating data-backed spend shifts based on true incremental Shapley ROAS (ATB-004).
+  - **Attribution Graph CLI (`attribution-graph.ts`)**: Built standalone CLI in `skills/agency-delivery/analytics/scripts/attribution-graph.ts` supporting `--journeys`, `--stitch`, `--haircut`, `--advisor`, and `--json`.
+  - **Analytics Mode Expansion**: Expanded `analytics` to v1.3.0 across 8 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`. Command surface increased to 450 slash commands per harness.
+
 - **Nexus Technical Director & Sol Product Architect: Ephemeral Mutual TLS & Zero-Trust Subagent Attestation (`muse-security:zero-trust`)**:
   - **Zero-Trust Playbook (`zero-trust.md`)**: Enforces SPIFFE/SPIRE Identity Attestation issuing short-lived SVID tokens with bounded TTL <= 60m (ZTR-001); Least-Privilege Capability Scope Gating with tool allowlists, path traversal jails, and database table fences (ZTR-002); Mutual TLS Verification for inter-agent network/RPC communication with pinned modern cipher suites (ZTR-003); and Continuous Cryptographic Audit Trail recording tamper-evident SHA-256 linked blocks with HMAC signatures (ZTR-004).
   - **Zero-Trust CLI (`zero-trust.ts`)**: Built standalone CLI in `skills/quality-review/muse-security/scripts/zero-trust.ts` supporting `--attest`, `--verify-mtls`, `--audit-chain`, and `--json`.

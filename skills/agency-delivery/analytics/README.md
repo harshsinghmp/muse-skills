@@ -1,6 +1,6 @@
 # 📊 analytics
 
-The data and analytics department head: one skill, seven modes — tracking, dashboards, attribution, reporting, cro, events, audit. Decide the question, instrument cleanly, then optimize on evidence.
+The data and analytics department head: one skill, eight modes — tracking, dashboards, attribution, reporting, cro, events, attribution-graph, audit. Decide the question, instrument cleanly, then optimize on evidence.
 
 ## Install
 
@@ -30,6 +30,7 @@ Audit our signup funnel, find the drop-off, and run a CRO test on the pricing pa
 | **reporting** | performance reporting | Reporting: recurring performance reports that end in decisions. |
 | **cro** | conversion rate optimization | CRO: find the funnel leak, then fix it with a disciplined experiment. |
 | **events** | server-side event ingestion | Events: server-side event collection, privacy PII scrubbing, schema validation, and multi-touch attribution. |
+| **attribution-graph** | multi-touch shapley attribution / identity stitching | Attribution Graph: Cooperative game theory Shapley value attribution, cross-device identity stitching, channel haircut deduplication, and budget reallocation advisor. |
 | **audit** | analytics & data audit | Audit: data integrity verification, event tracking drift checks, and dashboard accuracy. |
 
 ## How it works
