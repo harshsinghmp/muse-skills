@@ -2,9 +2,9 @@
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, and manages multi-tenant worktree federation and lease arbitration across concurrent subagent fleets. Completion claims require verification receipts."
-argument-hint: "[route|decouple|skill-audit|worktree-lease|federation]"
+argument-hint: "[route|decouple|skill-audit|worktree-lease|federation|swarm]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -46,6 +46,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`skill-compatibility-matrix`** | "coupling-router skill-compatibility-matrix", "skill-compatibility-matrix" | Skill Compatibility & Conflict Matrix Reference | [references/skill-compatibility-matrix.md](references/skill-compatibility-matrix.md) |
 | **`worktree-lease-protocol`** | "coupling-router worktree-lease-protocol", "worktree-lease-protocol" | Worktree Lease Protocol | [references/worktree-lease-protocol.md](references/worktree-lease-protocol.md) |
 | **`federation`** | "worktree federation", "federate worktrees", "worktree fleet", "spawn worktree", "sweep worktrees" | Multi-tenant worktree federation, zero-collision fleet management, and automated stale sweeper | [references/federation.md](references/federation.md) |
+| **`swarm`** | "swarm dispatcher", "agent swarm", "byzantine consensus", "dag wave", "swarm consensus", "token budget arbiter", "multi-agent quorum" | Multi-agent DAG wave dispatcher, Byzantine consensus quorum, token budget arbiter, and cascade pruning | [references/swarm.md](references/swarm.md) |
 
 ## When to Use
 

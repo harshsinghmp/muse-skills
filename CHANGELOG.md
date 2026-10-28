@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Sol Product Architect & Nexus Technical Director: Multi-Agent Consensus & DAG Wave Dispatcher (`coupling-router:swarm`)**:
+  - **Swarm Playbook (`swarm.md`)**: Enforces Topological DAG Wave Partitioning with deterministic cycle detection (SWM-001); Byzantine Consensus Quorum requiring >= 3 agent votes with > 66% agreement on critical seams (SWM-002); Global Token Budget Arbiter setting aggregate session ceilings (C <= 250k) and burn rate circuit breakers (SWM-003); and Fast-Fail Dependent Pruning immediately skipping child tasks upon parent failure (SWM-004).
+  - **Swarm Dispatcher CLI (`swarm-dispatcher.ts`)**: Built standalone CLI in `skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts` supporting `--plan`, `--max-tokens`, `--quorum`, `--simulate`, and `--json`.
+  - **Coupling-Router Expansion**: Bumped `coupling-router` to v1.6.0 across 5 active modes, updating `skills.json`, `llms.txt`, and command surface to 445 slash commands per harness.
+
 - **Jasper Creative Technologist & Sol Product Architect: Dynamic Visual Artifact Streaming & Canvas Relay (`design:canvas`)**:
   - **Visual Canvas Playbook (`canvas.md`)**: Enforces Live Component Preview Pipe with responsive multi-viewport simulation across Mobile (375px), Tablet (768px), and Desktop Standard (1440px widescreen baseline, modern fluid CSS guidelines with zero static px fonts, dvh/dvw, container queries, and logical properties) and postMessage hot-reloading (CNV-001); Dynamic OKLCH Palette Visualizer calculating mathematical relative luminance contrast for WCAG AA/AAA certification and CSS custom properties emission (CNV-002); Interactive Mermaid Graph Exporter auditing syntax hazards, unquoted parens, and packaging standalone pan/zoom viewers (CNV-003); and Token-Gated Visual Sandbox Isolation with strict Content Security Policy (CSP) fences and zero-credential DOM scrubbing (CNV-004).
   - **Canvas Relay CLI (`canvas-relay.ts`)**: Built standalone CLI in `skills/agency-delivery/design/scripts/canvas-relay.ts` supporting `--preview-component`, `--audit-palette`, `--export-mermaid`, `--audit-sandbox`, and `--json`.
