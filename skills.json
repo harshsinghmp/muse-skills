@@ -1075,7 +1075,7 @@
       "name": "growth",
       "description": "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, conversion rate optimization (CRO), viral loop coefficient engineering (K-factor), and growth audits \u2014 routed through thirteen modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, audit landing page conversion rates, model viral loops and K-factors, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics).",
       "path": "skills/agency-delivery/growth/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "web_search", "web_fetch", "grep_search"],
       "tags": [

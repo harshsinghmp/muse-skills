@@ -2,9 +2,9 @@
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt", "viral-loop", "k-factor"]
 description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, conversion rate optimization (CRO), viral loop coefficient engineering (K-factor), and growth audits — routed through thirteen modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, audit landing page conversion rates, model viral loops and K-factors, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|audit]"
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -49,6 +49,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **community** | "community", "discord community", "skool", "slack community", "community onboarding", "engagement loops", "moderation", "member retention" | Community architecture, onboarding rituals, engagement loops, and moderation guardrails across Discord, Skool, Slack, and Circle | [references/community.md](references/community.md) |
 | **cro** | "cro", "conversion rate", "landing page audit", "conversion optimization", "hero audit", "anti-slop copy" | Conversion-rate optimization: hero density (5-second rule), 5-state anti-slop copy gate, CTA contrast, and form friction reduction | [references/cro.md](references/cro.md) |
 | **viral** | "viral loop", "viral coefficient", "k factor", "referral loop", "viral mechanics", "cycle time compression", "invitation rate", "viral growth model" | Mathematical Viral Loop ($K = i \times c$) modeling, cycle time ($ct \le 72\text{h}$) compression, asymmetric double-sided incentives, and 'Aha!' trigger placement | [references/viral.md](references/viral.md) |
+| **programmatic-cro** | "programmatic cro", "bandit cro", "multi armed bandit", "thompson sampling", "dynamic ab test" | Bayesian Thompson Sampling dynamic variant traffic allocation, zero-CLS layout shift fences, statistical significance gates, and revenue triangulation | [references/programmatic-cro.md](references/programmatic-cro.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
