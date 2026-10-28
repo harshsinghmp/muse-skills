@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Technologist & Sol Product Architect: Dynamic Visual Artifact Streaming & Canvas Relay (`design:canvas`)**:
+  - **Visual Canvas Playbook (`canvas.md`)**: Enforces Live Component Preview Pipe with responsive multi-viewport simulation across Mobile (375px), Tablet (768px), and Desktop (1280px) and postMessage hot-reloading (CNV-001); Dynamic OKLCH Palette Visualizer calculating mathematical relative luminance contrast for WCAG AA/AAA certification and CSS custom properties emission (CNV-002); Interactive Mermaid Graph Exporter auditing syntax hazards, unquoted parens, and packaging standalone pan/zoom viewers (CNV-003); and Token-Gated Visual Sandbox Isolation with strict Content Security Policy (CSP) fences and zero-credential DOM scrubbing (CNV-004).
+  - **Canvas Relay CLI (`canvas-relay.ts`)**: Built standalone CLI in `skills/agency-delivery/design/scripts/canvas-relay.ts` supporting `--preview-component`, `--audit-palette`, `--export-mermaid`, `--audit-sandbox`, and `--json`.
+  - **Design Mode Expansion**: Expanded `design` to 15 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 444 slash commands per harness.
+
 - **Crew Operations & Jasper Growth Division: Turnkey Productized Agency SKU Packager & Value Triangulation (`ops:sku`)**:
   - **Productized SKU Playbook (`sku.md`)**: Enforces Fixed-Scope Turnkey SKU Packaging with objective Definition of Done (DoD) criteria, day-1 turnaround commitments, and rigid anti-scope boundary exclusion lists (SKU-001); Outcome-Based Value Triangulation mathematically anchoring pricing to >= 5.0x client ROI realization and >= 80% agency gross margin floor with haircut discount fences (SKU-002); Automated Statement of Work (SOW) & 24h Client Intake Brief Generation (SKU-003); and Milestone Deliverable Verification Checklist with artifact receipts ledgers triggering post-delivery retention (SKU-004).
   - **SKU Packager CLI (`sku-packager.ts`)**: Built standalone CLI in `skills/agency-delivery/ops/scripts/sku-packager.ts` supporting `--scaffold-sku`, `--calc-pricing`, `--generate-sow`, `--verify-milestone`, and `--json`.

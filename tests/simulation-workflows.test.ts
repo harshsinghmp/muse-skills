@@ -1241,7 +1241,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(designSkill).toContain("visual storytelling");
       expect(designSkill).toContain("references/story.md");
       expect(designSkill).toContain(
-        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|3d]"',
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d]"',
       );
 
       const storyRef = fs.readFileSync(
@@ -3303,6 +3303,98 @@ window.alert('Blocking modal');`,
       const parsed = JSON.parse(cliRes.stdout);
       expect(parsed.name).toBe("Sovereign Backend");
       expect(parsed.category).toBe("engineering");
+    });
+
+    test("Jasper & Sol: design canvas mode enforces live component preview, OKLCH contrast visualizer, Mermaid exporter, and sandbox CSP", () => {
+      const canvasRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/design", "references", "canvas.md"),
+        "utf8",
+      );
+      expect(canvasRef).toContain("CNV-001: Live Component Preview Pipe");
+      expect(canvasRef).toContain("CNV-002: Dynamic OKLCH Palette Visualizer");
+      expect(canvasRef).toContain("CNV-003: Interactive Mermaid Graph Exporter");
+      expect(canvasRef).toContain("CNV-004: Token-Gated Visual Sandbox Isolation");
+
+      const designSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/design", "SKILL.md"), "utf8");
+      expect(designSkill).toContain("| **canvas** |");
+      expect(designSkill).toContain("references/canvas.md");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/design/scripts/canvas-relay.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const {
+        generateComponentPreview,
+        visualizeOklchPalette,
+        validateAndExportMermaidGraph,
+        auditSandboxSecurity,
+      } = require("../skills/agency-delivery/design/scripts/canvas-relay");
+
+      // 1. Live Component Preview (CNV-001)
+      const preview = generateComponentPreview({
+        componentCode: "<button class='px-4 py-2 bg-indigo-600 text-white rounded'>Click</button>",
+        viewport: "mobile",
+        theme: "dark",
+      });
+      expect(preview.viewport).toBe("mobile");
+      expect(preview.viewportWidthPx).toBe(375);
+      expect(preview.isSandboxed).toBe(true);
+      expect(preview.renderedHtml).toContain("Content-Security-Policy");
+      expect(preview.renderedHtml).toContain("CANVAS_UPDATE");
+
+      // 2. OKLCH Palette Visualizer (CNV-002)
+      const palette = {
+        paletteName: "CyberpunkNeon",
+        tokens: [
+          { name: "primary", oklchValue: "oklch(0.65 0.24 260)", role: "primary" as const },
+          { name: "surface", oklchValue: "oklch(0.98 0.01 260)", role: "surface" as const },
+          { name: "text", oklchValue: "oklch(0.15 0.02 260)", role: "text" as const },
+        ],
+      };
+      const report = visualizeOklchPalette(palette);
+      expect(report.totalTokens).toBe(3);
+      expect(report.allCompliant).toBe(true);
+      expect(report.cssCustomProperties).toContain("--color-primary: oklch(0.65 0.24 260);");
+
+      // 3. Interactive Mermaid Exporter (CNV-003)
+      const validMmd = `flowchart TD\n  A["Start"] --> B["Process (Step 1)"]\n  B --> C["Finish"]`;
+      const exportRes = validateAndExportMermaidGraph(validMmd);
+      expect(exportRes.isValid).toBe(true);
+      expect(exportRes.graphType).toBe("flowchart");
+      expect(exportRes.exportedHtml).toContain("mermaid.initialize");
+
+      const invalidMmd = `flowchart TD\n  A[Unquoted (Parentheses)] --> B`;
+      const invalidRes = validateAndExportMermaidGraph(invalidMmd);
+      expect(invalidRes.isValid).toBe(false);
+      expect(invalidRes.errors.length).toBeGreaterThanOrEqual(1);
+
+      // 4. Token-Gated Visual Sandbox Isolation (CNV-004)
+      const secureHtml = `<!DOCTYPE html><html><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'"></head><body><h1>Safe</h1></body></html>`;
+      const secReport = auditSandboxSecurity(secureHtml);
+      expect(secReport.isSecure).toBe(true);
+      expect(secReport.cspEnforced).toBe(true);
+
+      const insecureHtml = `<!DOCTYPE html><html><body><script>eval("alert(1)");</script></body></html>`;
+      const insecReport = auditSandboxSecurity(insecureHtml);
+      expect(insecReport.isSecure).toBe(false);
+      expect(insecReport.violations.length).toBeGreaterThanOrEqual(2);
+
+      // 5. Standalone CLI execution
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "design-canvas-test-"));
+      try {
+        const compFile = path.join(tempDir, "card.html");
+        fs.writeFileSync(compFile, "<div class='p-4 bg-white shadow'>Card</div>", "utf8");
+        const cliRes = spawnSync(
+          "bun",
+          [scriptPath, "--preview-component", "--input", compFile, "--viewport", "tablet", "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(cliRes.status).toBe(0);
+        const parsed = JSON.parse(cliRes.stdout);
+        expect(parsed.viewport).toBe("tablet");
+        expect(parsed.viewportWidthPx).toBe(768);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
     });
 
     test("Jasper: growth viral mode implements K-factor triangulation, cycle time compression, and incentive scaffolds", () => {
