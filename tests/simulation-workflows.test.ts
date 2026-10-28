@@ -2002,7 +2002,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(devopsSkill).toContain("| **preview** |");
       expect(devopsSkill).toContain("references/preview.md");
       expect(devopsSkill).toContain(
-        'argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|audit]"',
+        'argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|edge-mesh|audit]"',
       );
     });
 
@@ -4961,6 +4961,83 @@ NextApp relies on RedisCache
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Realtime Pub/Sub Bus & Edge WebSocket Report");
       expect(cliRes.stdout).toContain("COMPLIANT (<50ms)");
+    });
+
+    test("Sol: devops edge-mesh mode implements geographic Anycast proximity routing, SWR edge caching, sub-500ms failover, and IaC scaffolding", () => {
+      const devopsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/devops/SKILL.md"), "utf8");
+      expect(devopsSkill).toContain("version: 1.4.0");
+      expect(devopsSkill).toContain("| **edge-mesh** |");
+
+      const meshRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/devops/references/edge-mesh.md"),
+        "utf8",
+      );
+      expect(meshRef).toContain("MSH-001");
+      expect(meshRef).toContain("MSH-002");
+      expect(meshRef).toContain("MSH-003");
+      expect(meshRef).toContain("MSH-004");
+      expect(meshRef).toContain("Anycast Edge Proximity Routing");
+      expect(meshRef).toContain("Stale-While-Revalidate");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/devops/scripts/edge-mesh.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { EdgeMeshEngine, calculateHaversineDistanceKm } = require(scriptPath);
+
+      // Distance Math
+      const dist = calculateHaversineDistanceKm(37.7749, -122.4194, 34.0522, -118.2437);
+      expect(dist).toBeGreaterThan(500);
+      expect(dist).toBeLessThan(600);
+
+      const engine = new EdgeMeshEngine();
+
+      // MSH-001 Anycast Proximity Routing
+      const laClient = { ip: "1.2.3.4", city: "Los Angeles", latitude: 34.0522, longitude: -118.2437 };
+      const route = engine.resolveProximityRoute(laClient);
+      expect(route.selectedPoP.id).toBe("sfo");
+      expect(route.isFailoverRerouted).toBe(false);
+
+      // MSH-002 SWR Cache Evaluation
+      const now = Date.now();
+      engine.setEdgeCache("asset_1", { body: "data" }, 10, 60, now);
+      const hit1 = engine.queryEdgeCache("asset_1", now + 5000);
+      expect(hit1.hit).toBe(true);
+      expect(hit1.isStale).toBe(false);
+
+      const staleHit = engine.queryEdgeCache("asset_1", now + 25000); // 25s elapsed (ttl: 10s, swr: 60s)
+      expect(staleHit.hit).toBe(true);
+      expect(staleHit.isStale).toBe(true);
+
+      const miss = engine.queryEdgeCache("non_existent", now);
+      expect(miss.hit).toBe(false);
+
+      // MSH-003 Sub-500ms Failover
+      const failoverEvent = engine.triggerPoPFailover("sfo");
+      expect(failoverEvent.failedPoPId).toBe("sfo");
+      expect(failoverEvent.compliantSub500ms).toBe(true);
+      expect(failoverEvent.rerouteDurationMs).toBeLessThan(500);
+
+      // Rerouting after failover
+      const rerouted = engine.resolveProximityRoute(laClient);
+      expect(rerouted.isFailoverRerouted).toBe(true);
+      expect(rerouted.selectedPoP.id).not.toBe("sfo");
+
+      // MSH-004 Declarative IaC Scaffolding
+      const iac = engine.scaffoldIacManifests("prod-mesh");
+      expect(iac.wranglerJsonc).toContain("EDGE_CACHE");
+      expect(iac.wranglerJsonc).toContain("smart");
+      expect(iac.terraformHcl).toContain("cloudflare_worker_script");
+
+      // Full Report Generation
+      const report = engine.generateFullReport("agency-mesh-test");
+      expect(report.summaryMarkdown).toContain("Distributed Edge Mesh & Anycast Routing Report");
+      expect(report.summaryMarkdown).toContain("Proximity Routing Telemetry (MSH-001)");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Distributed Edge Mesh & Anycast Routing Report");
+      expect(cliRes.stdout).toContain("SLA COMPLIANT");
     });
   });
 });
