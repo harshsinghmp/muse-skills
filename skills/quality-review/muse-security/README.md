@@ -1,6 +1,6 @@
 # muse-security
 
-Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, and runtime defense guardrails — routed through seven modes.
+Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, and dynamic MCP server governance & tool poisoning defense — routed through eight modes.
 
 ## Modes
 
@@ -10,6 +10,7 @@ Unified security authority and governance engine for the agency: CVE vulnerabili
 - `sast`: Static application security testing, dependency vulnerability trees, and MITRE ATT&CK mapping.
 - `runtime`: AST command interception, destructive action prevention, and zero-secret isolation.
 - `boundary`: Subagent tenant boundary & worktree isolation auditing (symlink escapes, lease collisions, key permissions).
+- `mcp-guard`: Dynamic MCP server governance, OWASP MCP03 tool poisoning scanner, transport isolation, and credential tripwires.
 - `audit`: 360° comprehensive security posture audit.
 
 ## Installation & Usage

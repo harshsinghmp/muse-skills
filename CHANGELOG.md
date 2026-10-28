@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Nexus Technical Director & Sol Product Architect: Dynamic MCP Server Governance & Tool Poisoning Defense (`muse-security:mcp-guard`)**:
+  - **MCP Security Playbook (`mcp-guard.md`)**: Enforces OWASP MCP03 Tool Poisoning & Schema Injection scanning on all tool descriptions and parameter schemas (MCP-001); Transport Isolation & Network Perimeter Gate mandating stdio/IPC over unsafe wildcard or unauthenticated TCP listeners (MCP-002); Dynamic JIT Tool Hydration & Lazy Loading achieving 70%+ prompt token savings (MCP-003); and Ephemeral Token Fencing with automated credential exfiltration tripwires (MCP-004).
+  - **MCP Sanitizer CLI (`mcp-sanitizer.ts`)**: Built standalone CLI in `skills/quality-review/muse-security/scripts/mcp-sanitizer.ts` supporting `--scan-manifest`, `--audit-config`, `--hydrate-tools`, `--audit-payload`, and `--json`.
+  - **Muse-Security Mode Expansion**: Expanded `muse-security` to 8 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 441 slash commands per harness.
+
 - **Crew Operations & Nexus Quality Review: Client Health Telemetry & Churn Early Warning Radar (`retain:health`)**:
   - **Health Playbook (`health.md`)**: Enforces Tri-Vector Health Scoring mathematically triangulating Product & Deliverable Telemetry (40%), Relationship & CSAT Sentiment (30%), and Financial & Payment Velocity (30%) (HLT-001); Churn Early Warning Radar categorizing accounts into Green (>=75, expansion ready), Amber (50-74, proactive pulse), and Red (<50, critical alert) (HLT-002); 48-Hour Stop-the-Clock Intervention Protocol freezing billing and SLA penalties while executing executive alignment and corrective action plans (HLT-003); and Executive Health Scorecard & Net Retention Rate (NRR) Modeling benchmarking against >=115% expansion targets (HLT-004).
   - **Health Telemetry CLI (`client-health-telemetry.ts`)**: Built standalone CLI in `skills/agency-delivery/retain/scripts/client-health-telemetry.ts` supporting `--calc-health`, `--audit-account`, `--scorecard`, `--scaffold-cap`, `--calc-nrr`, and `--json`.
