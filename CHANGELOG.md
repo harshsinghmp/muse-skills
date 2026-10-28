@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Jasper Creative Technologist: Multimodal Brand Narrative Genesis & Story Engine (`brand:story-engine`)**:
+  - **Story Engine Playbook (`story-engine.md`)**: Enforces Founder Archetype Alignment mapping origins across 12 archetypes, catalyst events, shadow traits, and transformation arcs (STR-001); Multimodal OKLCH Palette & Emotional Resonance Curves (Trust, Excitement, Authority, Warmth, Intrigue) with WCAG AA contrast gates (STR-002); 5-Vector Tagline Matrix (Direct, Aspirational, Provocative, Metaphorical, Quantifiable) and 15s/30s/60s elevator pitch suites (STR-003); and Brand Voice Constitution enforcing banned buzzword filters, cadence rules, and 18-token standalone quotability scoring (STR-004).
+  - **Story Engine CLI (`story-engine.ts`)**: Built standalone CLI in `skills/agency-delivery/brand/scripts/story-engine.ts` with archetype mapping, OKLCH design token synthesis, and automated copy linting.
+  - **Brand Mode Expansion**: Expanded `brand` to v1.2.0 across 11 active modes, updating `skills.json`, `llms.txt`, `README.md`, and `secretary/references/dispatch.md`. Command surface increased to 447 slash commands per harness.
+
 - **Sol Product Architect & Nexus Technical Director: Multi-Agent Consensus & DAG Wave Dispatcher (`coupling-router:swarm`)**:
   - **Swarm Playbook (`swarm.md`)**: Enforces Topological DAG Wave Partitioning with deterministic cycle detection (SWM-001); Byzantine Consensus Quorum requiring >= 3 agent votes with > 66% agreement on critical seams (SWM-002); Global Token Budget Arbiter setting aggregate session ceilings (C <= 250k) and burn rate circuit breakers (SWM-003); and Fast-Fail Dependent Pruning immediately skipping child tasks upon parent failure (SWM-004).
   - **Swarm Dispatcher CLI (`swarm-dispatcher.ts`)**: Built standalone CLI in `skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts` supporting `--plan`, `--max-tokens`, `--quorum`, `--simulate`, and `--json`.
