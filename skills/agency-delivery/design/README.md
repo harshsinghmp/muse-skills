@@ -34,7 +34,7 @@ Create a logo and brand identity for our new fintech client.
 | **prototype** | prototype flows, test risky screens | Clickable mocks, fast user tests, locked/iterate/kill verdicts. |
 | **uikit** | build component library or UI kit | Headless primitives, Tailwind/Starwind UI component kits, token bindings. |
 | **story** | visual storytelling, storyboarding, data narrative | Visual narratives: story arcs, video storyboards, data infographics, cross-platform visual adaptations. |
-| **canvas** | live component preview / canvas relay / oklch visualizer | Canvas: Dynamic visual artifact streaming, live component preview pipe (375px/768px/1280px), and OKLCH contrast visualizer. |
+| **canvas** | live component preview / canvas relay / oklch visualizer | Canvas: Dynamic visual artifact streaming, live component preview pipe (375px/768px/1440px), and OKLCH contrast visualizer. |
 | **`audit`** | design audit / design QA / contrast check | Score hierarchy, contrast, states, tokens, responsive integrity. |
 | **3d** | 3d scene, spline, three.js, webgl, blender | Interactive 3D web scenes: Spline embeds, Three.js/R3F setups, and glTF optimization. |
 

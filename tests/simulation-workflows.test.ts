@@ -3340,6 +3340,18 @@ window.alert('Blocking modal');`,
       expect(preview.isSandboxed).toBe(true);
       expect(preview.renderedHtml).toContain("Content-Security-Policy");
       expect(preview.renderedHtml).toContain("CANVAS_UPDATE");
+      expect(preview.renderedHtml).toContain("clamp(");
+      expect(preview.renderedHtml).toContain("100dvh");
+      expect(preview.renderedHtml).toContain("container-type: inline-size");
+
+      // Verify 1440px Modern Desktop Standard
+      const desktopPreview = generateComponentPreview({
+        componentCode: "<h1>Header</h1>",
+        viewport: "desktop",
+      });
+      expect(desktopPreview.viewport).toBe("desktop");
+      expect(desktopPreview.viewportWidthPx).toBe(1440);
+      expect(desktopPreview.renderedHtml).toContain("max-inline-size: 1440px");
 
       // 2. OKLCH Palette Visualizer (CNV-002)
       const palette = {
