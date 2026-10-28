@@ -1,10 +1,10 @@
 ---
 name: muse-security
 aliases: ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "clawsec", "mcp-guard", "mcp-security", "tool-poisoning"]
-description: "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, and dynamic MCP server governance & tool poisoning defense — routed through eight modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', 'audit subagent boundary', 'audit mcp servers', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops)."
-argument-hint: "[cve|remediate|cloud-waf|sast|runtime|boundary|mcp-guard|audit]"
+description: "Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, dynamic MCP server governance & tool poisoning defense, and ephemeral mutual TLS zero-trust subagent attestation — routed through nine modes. Trigger when asked to: 'run a security audit', 'check for CVEs', 'audit cloud WAF', 'remediate vulnerabilities', 'SAST review', 'test cloud armor', 'audit subagent boundary', 'audit mcp servers', 'zero trust attestation', or 'harden infrastructure security'. Not for day-to-day web development coding (webdev) or routine deployment pipelines (devops)."
+argument-hint: "[cve|remediate|cloud-waf|sast|runtime|boundary|mcp-guard|zero-trust|audit]"
 user-invocable: true
-version: 1.0.1
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **runtime** | "runtime defense", "destructive command check", "zero-secret enforcement" | AST command interception (blocking `rm -rf /`, `terraform destroy`) and process environment isolation | [references/runtime.md](references/runtime.md) |
 | **boundary** | "subagent boundary", "worktree isolation", "symlink escape", "permission fence", "tenant isolation" | Subagent tenant boundary & worktree isolation auditor: symlink traversal fences, shared worktree lease arbitration, permission fences, and argv hygiene | [references/boundary.md](references/boundary.md) |
 | **mcp-guard** | "mcp guard", "mcp security", "tool poisoning", "owasp mcp03", "sanitize mcp", "mcp audit" | Dynamic MCP server governance, OWASP MCP03 tool poisoning scanner, transport isolation, and credential tripwires | [references/mcp-guard.md](references/mcp-guard.md) |
+| **zero-trust** | "zero trust", "spiffe", "spire", "subagent attestation", "mtls", "capability scope", "tamper evident audit" | Ephemeral mutual TLS zero-trust subagent attestation: SPIFFE SVIDs, least-privilege capability scope jails, mTLS verification, and linked cryptographic audit chains | [references/zero-trust.md](references/zero-trust.md) |
 | **audit** | "full security audit", "security posture", "compliance review" | End-to-end security posture evaluation synthesizing CVE, SAST, WAF, and runtime controls | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

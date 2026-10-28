@@ -11,11 +11,21 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     const securityDir = path.join(REPO_ROOT, "skills/quality-review/muse-security");
     const skillPath = path.join(securityDir, "SKILL.md");
 
-    test("muse-security declares all 8 core operating modes and matching references", () => {
+    test("muse-security declares all 9 core operating modes and matching references", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const skillContent = fs.readFileSync(skillPath, "utf8");
 
-      const expectedModes = ["cve", "remediate", "cloud-waf", "sast", "runtime", "boundary", "mcp-guard", "audit"];
+      const expectedModes = [
+        "cve",
+        "remediate",
+        "cloud-waf",
+        "sast",
+        "runtime",
+        "boundary",
+        "mcp-guard",
+        "zero-trust",
+        "audit",
+      ];
       for (const mode of expectedModes) {
         expect(skillContent).toContain(`**${mode}**`);
         const refPath = path.join(securityDir, "references", `${mode}.md`);
@@ -4402,6 +4412,94 @@ NextApp relies on RedisCache
       const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Chaos Resilience Audit Report");
+    });
+
+    test("Nexus & Sol: muse-security zero-trust mode implements SPIFFE attestation, capability jails, mTLS, and cryptographic audit chains", () => {
+      const ztRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/quality-review/muse-security", "references", "zero-trust.md"),
+        "utf8",
+      );
+      expect(ztRef).toContain("ZTR-001");
+      expect(ztRef).toContain("ZTR-002");
+      expect(ztRef).toContain("ZTR-003");
+      expect(ztRef).toContain("ZTR-004");
+      expect(ztRef).toContain("Nexus");
+      expect(ztRef).toContain("Sol");
+
+      const secSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/quality-review/muse-security", "SKILL.md"), "utf8");
+      expect(secSkill).toContain("zero-trust");
+      expect(secSkill).toContain("version: 1.1.0");
+      expect(secSkill).toContain("[cve|remediate|cloud-waf|sast|runtime|boundary|mcp-guard|zero-trust|audit]");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/quality-review/muse-security/scripts/zero-trust.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { ZeroTrustEngine } = require(scriptPath);
+      const engine = new ZeroTrustEngine("agency.muse");
+
+      // ZTR-001 SPIFFE Attestation
+      const solToken = engine.issueSpiffeIdentity("sol", 30);
+      expect(solToken.spiffeId).toContain("spiffe://agency.muse/subagent/sol-");
+      expect(solToken.subagentRole).toBe("sol");
+      expect(solToken.expiresAt - solToken.issuedAt).toBe(30 * 60 * 1000);
+      expect(engine.verifyIdentity(solToken)).toBe(true);
+
+      // Tampered Token Detection
+      const tamperedToken = { ...solToken, fingerprint: "badc0ffee" };
+      expect(engine.verifyIdentity(tamperedToken)).toBe(false);
+
+      // ZTR-002 Least-Privilege Capability Scope Gate
+      const scope = {
+        role: "sol",
+        allowedTools: ["git", "edit_file"],
+        allowedPathPrefixes: ["src/", "tests/"],
+        allowedTables: ["tasks", "users"],
+        maxPrivilegeLevel: "standard",
+      };
+
+      // Allowed invocation
+      const validCall = engine.validateCapability(solToken, { tool: "edit_file", path: "src/main.ts" }, scope);
+      expect(validCall.allowed).toBe(true);
+
+      // Blocked tool
+      const blockedTool = engine.validateCapability(solToken, { tool: "drop_database" }, scope);
+      expect(blockedTool.allowed).toBe(false);
+      expect(blockedTool.reason).toContain("not permitted");
+
+      // Blocked path traversal / root escape
+      const pathEscape = engine.validateCapability(solToken, { path: "/etc/shadow" }, scope);
+      expect(pathEscape.allowed).toBe(false);
+      expect(pathEscape.reason).toContain("Path traversal or privileged root escape attempt blocked");
+
+      const relativeEscape = engine.validateCapability(solToken, { path: "../../secret.env" }, scope);
+      expect(relativeEscape.allowed).toBe(false);
+
+      // Blocked table
+      const blockedTable = engine.validateCapability(solToken, { table: "admin_credentials" }, scope);
+      expect(blockedTable.allowed).toBe(false);
+      expect(blockedTable.reason).toContain("table 'admin_credentials' not permitted");
+
+      // ZTR-003 Mutual TLS Verification
+      const nexusToken = engine.issueSpiffeIdentity("nexus", 30);
+      const mtlsRes = engine.verifyMtlsHandshake(solToken, nexusToken);
+      expect(mtlsRes.verified).toBe(true);
+      expect(mtlsRes.cipherSuite).toBe("TLS_AES_256_GCM_SHA384");
+      expect(mtlsRes.protocolVersion).toBe("TLSv1.3");
+
+      const invalidMtls = engine.verifyMtlsHandshake(tamperedToken, nexusToken);
+      expect(invalidMtls.verified).toBe(false);
+
+      // ZTR-004 Audit Chain Integrity
+      const auditChain = engine.verifyAuditChain();
+      expect(auditChain.valid).toBe(true);
+      expect(auditChain.totalEntries).toBeGreaterThan(3);
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Issued SVID Token:");
+      expect(cliRes.stdout).toContain("mTLS Handshake Status: VERIFIED (TLS 1.3)");
+      expect(cliRes.stdout).toContain("Audit Chain Integrity: VALID");
     });
   });
 });
