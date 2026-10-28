@@ -2655,7 +2655,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
       expect(qaSkill).toContain("| **e2e** |");
       expect(qaSkill).toContain("references/e2e.md");
-      expect(qaSkill).toContain('argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|audit]"');
+      expect(qaSkill).toContain(
+        'argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|evals|audit]"',
+      );
 
       const e2eRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "e2e.md"),
@@ -3069,6 +3071,136 @@ window.alert('Blocking modal');`,
         expect(goodReport.categories.fonts.passed).toBe(true);
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    test("Nexus & Sol: qa-launch evals mode enforces synthetic edge testing, dual-model consensus, repro packaging, and regression scorecards", () => {
+      const evalsRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "references", "evals.md"),
+        "utf8",
+      );
+      expect(evalsRef).toContain("EVL-001: Synthetic Edge Test Generator");
+      expect(evalsRef).toContain("EVL-002: Dual-Model Blind Evaluator-Optimizer Loop");
+      expect(evalsRef).toContain("EVL-003: Minimal Failing Repro Pack Scaffolder");
+      expect(evalsRef).toContain("EVL-004: Regression Scorecard & Production Gate");
+
+      const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
+      expect(qaSkill).toContain("| **evals** |");
+      expect(qaSkill).toContain("references/evals.md");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/scripts/eval-runner.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const {
+        generateSyntheticEdgeCases,
+        evaluateDualModelConsensus,
+        scaffoldReproPack,
+        calculateRegressionScorecard,
+      } = require("../skills/agency-delivery/qa-launch/scripts/eval-runner");
+
+      // 1. Synthetic Edge Test Battery (EVL-001)
+      const spec = {
+        taskName: "CustomerSupportAgent",
+        expectedBehavior: "Answers customer queries with polite tone and valid JSON",
+        parameters: {
+          message: { type: "string" as const, required: true },
+          retryCount: { type: "number" as const },
+          tags: { type: "array" as const },
+        },
+      };
+      const suite = generateSyntheticEdgeCases(spec);
+      expect(suite.totalCases).toBeGreaterThanOrEqual(8);
+      expect(suite.casesByCategory.boundary).toBeGreaterThanOrEqual(4);
+      expect(suite.casesByCategory.unicode).toBeGreaterThanOrEqual(2);
+      expect(suite.casesByCategory.concurrency).toBeGreaterThanOrEqual(1);
+      expect(suite.casesByCategory.adversarial).toBeGreaterThanOrEqual(2);
+
+      // 2. Dual-Model Consensus Evaluation (EVL-002)
+      const cleanSample = {
+        sampleId: "SMP-001",
+        taskPrompt: "Output user profile in JSON format",
+        agentOutput: '{"userId": "USR-123", "role": "admin", "status": "active"}',
+        expectedGroundTruth: "active",
+      };
+      const cleanVerdict = evaluateDualModelConsensus(cleanSample);
+      expect(cleanVerdict.passed).toBe(true);
+      expect(cleanVerdict.consensusScore).toBeGreaterThanOrEqual(8.5);
+      expect(cleanVerdict.isConsensusValid).toBe(true);
+      expect(cleanVerdict.verdict).toBe("PASS");
+
+      const slopSample = {
+        sampleId: "SMP-002",
+        taskPrompt: "Output user profile in JSON format",
+        agentOutput:
+          "In conclusion, it is important to remember that we delve into the testament of user data without json.",
+      };
+      const slopVerdict = evaluateDualModelConsensus(slopSample);
+      expect(slopVerdict.passed).toBe(false);
+      expect(slopVerdict.verdict).toBe("FAIL");
+
+      // 3. Minimal Failing Repro Pack Scaffolding (EVL-003)
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qa-eval-repro-test-"));
+      try {
+        const failure = {
+          failureId: "FAIL-404-UNICODE",
+          timestamp: "2026-10-28T12:00:00Z",
+          taskPrompt: "Translate message to Arabic",
+          agentInput: { text: "Hello world" },
+          expectedOutput: "مرحبا بالعالم",
+          actualOutput: "??? ??????",
+          errorMessage: "Unicode rendering buffer overflow",
+        };
+        const repro = scaffoldReproPack(failure, tempDir);
+        expect(repro.reproId).toBe("REPRO-FAIL-404-UNICODE");
+        expect(fs.existsSync(path.join(tempDir, "fixture.json"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "repro.test.ts"))).toBe(true);
+        expect(fs.existsSync(path.join(tempDir, "README.md"))).toBe(true);
+        const fixtureContent = JSON.parse(fs.readFileSync(path.join(tempDir, "fixture.json"), "utf8"));
+        expect(fixtureContent.actualOutput).toBe("??? ??????");
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+
+      // 4. Golden Regression Scorecard (EVL-004)
+      const goldenBaseline = [
+        { testId: "T-01", name: "auth login", passed: true },
+        { testId: "T-02", name: "checkout flow", passed: true },
+        { testId: "T-03", name: "edge unicode", passed: true },
+      ];
+      const cleanRun = [
+        { testId: "T-01", name: "auth login", passed: true },
+        { testId: "T-02", name: "checkout flow", passed: true },
+        { testId: "T-03", name: "edge unicode", passed: true },
+      ];
+      const passingCard = calculateRegressionScorecard(cleanRun, goldenBaseline);
+      expect(passingCard.verdict).toBe("PASS");
+      expect(passingCard.currentPassRate).toBe(100);
+      expect(passingCard.regressionsCount).toBe(0);
+
+      const regressedRun = [
+        { testId: "T-01", name: "auth login", passed: true },
+        { testId: "T-02", name: "checkout flow", passed: false },
+        { testId: "T-03", name: "edge unicode", passed: true },
+      ];
+      const blockedCard = calculateRegressionScorecard(regressedRun, goldenBaseline);
+      expect(blockedCard.verdict).toBe("BLOCK");
+      expect(blockedCard.regressionsCount).toBe(1);
+      expect(blockedCard.regressions).toContain("T-02");
+
+      // 5. CLI Invocation
+      const tempDir2 = fs.mkdtempSync(path.join(os.tmpdir(), "qa-eval-cli-test-"));
+      try {
+        const specFile = path.join(tempDir2, "spec.json");
+        fs.writeFileSync(specFile, JSON.stringify(spec), "utf8");
+        const cliRes = spawnSync("bun", [scriptPath, "--generate-edge", "--input", specFile, "--json"], {
+          encoding: "utf8",
+          cwd: REPO_ROOT,
+        });
+        expect(cliRes.status).toBe(0);
+        const parsed = JSON.parse(cliRes.stdout);
+        expect(parsed.totalCases).toBeGreaterThanOrEqual(8);
+      } finally {
+        fs.rmSync(tempDir2, { recursive: true, force: true });
       }
     });
 
