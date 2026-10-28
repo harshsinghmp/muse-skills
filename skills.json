@@ -1353,9 +1353,9 @@
     },
     {
       "name": "accounts",
-      "description": "Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance \u2014 routed through eight modes. Use when asked to calculate value-based pricing proposals, compare sprint retainer vs fixed-scope contracts, send or schedule an invoice, execute automated dunning for overdue accounts, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev).",
+      "description": "Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, sovereign usage-based metering, and cross-border digital tax compliance \u2014 routed through nine modes. Use when asked to calculate value-based pricing proposals, compare sprint retainer vs fixed-scope contracts, send or schedule an invoice, execute automated dunning for overdue accounts, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev).",
       "path": "skills/agency-delivery/accounts/SKILL.md",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
       "tags": [

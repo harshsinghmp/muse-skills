@@ -1,10 +1,10 @@
 ---
 name: accounts
 aliases: ["finance", "invoicing", "billing", "bookkeeping", "cfo", "agency-accounts"]
-description: "Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance — routed through eight modes. Use when asked to calculate value-based pricing proposals, compare sprint retainer vs fixed-scope contracts, send or schedule an invoice, execute automated dunning for overdue accounts, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev)."
-argument-hint: "[invoicing|pricing|dunning|bookkeeping|client-pnl|cashflow|tax-compliance|audit]"
+description: "Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, sovereign usage-based metering, and cross-border digital tax compliance — routed through nine modes. Use when asked to calculate value-based pricing proposals, compare sprint retainer vs fixed-scope contracts, send or schedule an invoice, execute automated dunning for overdue accounts, reconcile agency or client books, calculate client gross margins and effective hourly rates, forecast runway and cash buffers, evaluate GST/VAT digital services tax rules, or audit financial leakages. Not for general project management (ops) or payment code integration (webdev)."
+argument-hint: "[invoicing|pricing|dunning|bookkeeping|client-pnl|cashflow|tax-compliance|billing-engine|audit]"
 user-invocable: true
-version: 1.5.0
+version: 1.6.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **client-pnl** | "client profitability", "project margin", "effective hourly rate", "scope billing adjustment" | True client & project gross margin calculation (Revenue minus direct contractor fees, dedicated API tokens, infra costs), scope-creep margin leakage detection, and EHR | [references/client-pnl.md](references/client-pnl.md) |
 | **cashflow** | "cash runway", "burn rate", "cash flow forecast", "DSO", "reserve buffer", "operating capital" | Bootstrapped CFO cash forecasting, Days Sales Outstanding (DSO) compression, AR aging analysis, and 3–6 month operating reserve + tax allocation buffers | [references/cashflow.md](references/cashflow.md) |
 | **tax-compliance** | "gst vat digital services", "contractor withholding", "w8ben 1099", "reverse charge", "statutory invoice" | Cross-border digital services tax rules (GST/VAT export zero-rating, reverse charge mechanism, place-of-supply), invoice statutory requirements, and contractor tax documentation | [references/tax-compliance.md](references/tax-compliance.md) |
+| **billing-engine** | "usage based billing", "metered billing", "telemetry metering", "billing engine", "dunning escalation", "circuit breaker billing" | Sovereign usage-based metering, SHA-256 event deduplication, graduated tiered pricing, spend circuit breakers, Stripe tax sync, and 3-tier dunning | [references/billing-engine.md](references/billing-engine.md) |
 | **audit** | "financial audit", "audit expenses", "revenue leakage", "zombie subscriptions", "fx drag" | Comprehensive financial hygiene audit for agency or client accounts: detecting zombie subscriptions, unbilled deliverables, gateway payout delays, and FX drag | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
