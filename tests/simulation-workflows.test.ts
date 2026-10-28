@@ -2069,7 +2069,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       );
       expect(analyticsSkill).toContain("| **events** |");
       expect(analyticsSkill).toContain("references/events.md");
-      expect(analyticsSkill).toContain('argument-hint: "[tracking|dashboards|attribution|reporting|cro|events]"');
+      expect(analyticsSkill).toContain(
+        'argument-hint: "[tracking|dashboards|attribution|reporting|cro|events|attribution-graph|audit]"',
+      );
 
       const eventsRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/analytics", "references", "events.md"),
@@ -4500,6 +4502,110 @@ NextApp relies on RedisCache
       expect(cliRes.stdout).toContain("Issued SVID Token:");
       expect(cliRes.stdout).toContain("mTLS Handshake Status: VERIFIED (TLS 1.3)");
       expect(cliRes.stdout).toContain("Audit Chain Integrity: VALID");
+    });
+
+    test("Nexus & Jasper: analytics attribution-graph mode implements Shapley attribution, identity stitching, haircut discounts, and budget advisor", () => {
+      const atbRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/analytics", "references", "attribution-graph.md"),
+        "utf8",
+      );
+      expect(atbRef).toContain("ATB-001");
+      expect(atbRef).toContain("ATB-002");
+      expect(atbRef).toContain("ATB-003");
+      expect(atbRef).toContain("ATB-004");
+      expect(atbRef).toContain("Nexus");
+      expect(atbRef).toContain("Jasper");
+
+      const anSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/analytics", "SKILL.md"), "utf8");
+      expect(anSkill).toContain("attribution-graph");
+      expect(anSkill).toContain("version: 1.3.0");
+      expect(anSkill).toContain("[tracking|dashboards|attribution|reporting|cro|events|attribution-graph|audit]");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/analytics/scripts/attribution-graph.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { AttributionGraphEngine } = require(scriptPath);
+      const engine = new AttributionGraphEngine();
+
+      // ATB-002 Identity Stitching
+      const hash1 = engine.hashIdentifier("user@domain.com");
+      expect(hash1).toBe("f7ee5ec7312165148b69fcca1d29075b14b8aef0b5048a332b18b88d09069fb7");
+
+      const rawTouchpoints = [
+        { anonymousId: "c-1", timestamp: 1000, channel: "organic_seo", deviceType: "mobile" },
+        {
+          anonymousId: "c-1",
+          timestamp: 2000,
+          channel: "meta_ads",
+          deviceType: "mobile",
+          userIdentifier: "user@domain.com",
+        },
+        {
+          anonymousId: "c-2",
+          timestamp: 3000,
+          channel: "google_ads",
+          deviceType: "desktop",
+          userIdentifier: "user@domain.com",
+        },
+      ];
+
+      const clusters = engine.stitchIdentities(rawTouchpoints);
+      expect(clusters.length).toBe(1);
+      expect(clusters[0].anonymousIds.size).toBe(2);
+      expect(clusters[0].touchpoints.length).toBe(3);
+
+      // ATB-001 Shapley Value Attribution
+      const journeys = [
+        {
+          journeyId: "j-1",
+          unifiedUserId: clusters[0].unifiedUserId,
+          touchpoints: rawTouchpoints,
+          conversionValue: 1000,
+          convertedAt: 4000,
+        },
+      ];
+
+      const channelSpend = { organic_seo: 100, meta_ads: 200, google_ads: 250 };
+      const shapleyMetrics = engine.calculateShapleyAttribution(journeys, channelSpend);
+      expect(shapleyMetrics.length).toBe(3);
+
+      const metaMetric = shapleyMetrics.find((m: { channel: string }) => m.channel === "meta_ads");
+      expect(metaMetric).toBeDefined();
+      expect(metaMetric.shapleyShare).toBeGreaterThan(0);
+      expect(metaMetric.attributedRevenue).toBeGreaterThan(0);
+
+      // ATB-003 Channel Haircut Deduplication
+      const claimed = {
+        meta_ads: { count: 20, revenue: 4000 },
+        google_ads: { count: 10, revenue: 2000 },
+        organic_seo: { count: 5, revenue: 1000 },
+      };
+      const haircuts = engine.applyHaircutDeduplication(claimed);
+      expect(haircuts.length).toBe(3);
+
+      const metaHaircut = haircuts.find((h: { channel: string }) => h.channel === "meta_ads");
+      expect(metaHaircut.haircutPenaltyPercent).toBe(35);
+      expect(metaHaircut.deduplicatedConversions).toBe(13);
+
+      const seoHaircut = haircuts.find((h: { channel: string }) => h.channel === "organic_seo");
+      expect(seoHaircut.haircutPenaltyPercent).toBe(0);
+      expect(seoHaircut.deduplicatedConversions).toBe(5);
+
+      // ATB-004 Budget Reallocation Advisor
+      const recs = engine.generateBudgetAdvisor(shapleyMetrics, 2.0);
+      expect(recs.length).toBe(3);
+      expect(recs.some((r: { action: string }) => ["increase", "decrease", "maintain"].includes(r.action))).toBe(true);
+
+      // Full Report
+      const fullReport = engine.generateFullReport(journeys, channelSpend, claimed);
+      expect(fullReport.totalJourneys).toBe(1);
+      expect(fullReport.summaryMarkdown).toContain("Multi-Touch Shapley Attribution & Identity Report");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Stitched Clusters:");
+      expect(cliRes.stdout).toContain("Game Theory Shapley Value Attribution (ATB-001)");
     });
   });
 });
