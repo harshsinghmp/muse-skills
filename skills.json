@@ -1028,9 +1028,9 @@
     },
     {
       "name": "ops",
-      "description": "Internal agency operations department: client onboarding, proposals, statements of work, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, multi-client context vault and asset fencing, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) \u2014 routed through fifteen modes. Use when asked to onboard a new client, write a proposal or SOW, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, enforce client context vault isolation, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
+      "description": "Internal agency operations department: client onboarding, proposals, statements of work, productized agency SKU packaging and value triangulation, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, multi-client context vault and asset fencing, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) \u2014 routed through sixteen modes. Use when asked to onboard a new client, write a proposal or SOW, package productized agency service SKUs, triangulate outcome-based pricing, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, enforce client context vault isolation, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff).",
       "path": "skills/agency-delivery/ops/SKILL.md",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "category": "agency-delivery",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search"],
       "tags": [

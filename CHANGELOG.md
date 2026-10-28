@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Crew Operations & Jasper Growth Division: Turnkey Productized Agency SKU Packager & Value Triangulation (`ops:sku`)**:
+  - **Productized SKU Playbook (`sku.md`)**: Enforces Fixed-Scope Turnkey SKU Packaging with objective Definition of Done (DoD) criteria, day-1 turnaround commitments, and rigid anti-scope boundary exclusion lists (SKU-001); Outcome-Based Value Triangulation mathematically anchoring pricing to >= 5.0x client ROI realization and >= 80% agency gross margin floor with haircut discount fences (SKU-002); Automated Statement of Work (SOW) & 24h Client Intake Brief Generation (SKU-003); and Milestone Deliverable Verification Checklist with artifact receipts ledgers triggering post-delivery retention (SKU-004).
+  - **SKU Packager CLI (`sku-packager.ts`)**: Built standalone CLI in `skills/agency-delivery/ops/scripts/sku-packager.ts` supporting `--scaffold-sku`, `--calc-pricing`, `--generate-sow`, `--verify-milestone`, and `--json`.
+  - **Ops Mode Expansion**: Expanded `ops` to 16 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 443 slash commands per harness.
+
 - **Nexus Technical Director & Sol Product Architect: AI Agent Evaluation Engine & Synthetic Edge Tester (`qa-launch:evals`)**:
   - **Agent Evaluation Playbook (`evals.md`)**: Enforces Synthetic Edge Test Battery generation across Boundary, Unicode/RTL, Concurrency/Idempotency, and Adversarial Injections (EVL-001); Dual-Model Blind Evaluator-Optimizer Loop with Consensus Scoring >= 8.5/10 and inter-judge delta <= 1.5 (EVL-002); Minimal Failing Repro Pack Scaffolder generating isolated fixtures and test scripts (EVL-003); and Golden Baseline Regression Scorecards enforcing >= 95% pass rate and zero golden regressions (EVL-004).
   - **Eval Runner CLI (`eval-runner.ts`)**: Built standalone CLI in `skills/agency-delivery/qa-launch/scripts/eval-runner.ts` supporting `--generate-edge`, `--evaluate-sample`, `--scaffold-repro`, `--regression-audit`, and `--json`.
