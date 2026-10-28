@@ -4607,5 +4607,79 @@ NextApp relies on RedisCache
       expect(cliRes.stdout).toContain("Stitched Clusters:");
       expect(cliRes.stdout).toContain("Game Theory Shapley Value Attribution (ATB-001)");
     });
+
+    test("Jasper & Crew: content podcast mode implements dialectical tension, SSML prosody, 18-token quotables, and chapter scaffolding", () => {
+      const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/content/SKILL.md"), "utf8");
+      expect(contentSkill).toContain("version: 1.4.0");
+      expect(contentSkill).toContain("| **podcast** |");
+
+      const podcastRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/content/references/podcast.md"),
+        "utf8",
+      );
+      expect(podcastRef).toContain("POD-001");
+      expect(podcastRef).toContain("POD-002");
+      expect(podcastRef).toContain("POD-003");
+      expect(podcastRef).toContain("POD-004");
+      expect(podcastRef).toContain("-16.0 LUFS");
+      expect(podcastRef).toContain("-19.0 LUFS");
+      expect(podcastRef).toContain("-1.0 dBTP");
+      expect(podcastRef).toContain("80 Hz");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/content/scripts/podcast-showrunner.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { scaffoldPodcastShow, auditPodcastScript, validate18TokenQuote } = require(scriptPath);
+
+      // POD-003: 18-token validation
+      const validQuote = validate18TokenQuote("Every distributed database is an apology for an unindexed table.");
+      expect(validQuote.compliant).toBe(true);
+      expect(validQuote.wordCount).toBe(10);
+
+      const longQuote = validate18TokenQuote(
+        "This is an excessively long and unnecessarily verbose sentence that goes well beyond the eighteen word threshold established for concise standalone quoting in modern search engine optimization.",
+      );
+      expect(longQuote.compliant).toBe(false);
+
+      const pronounQuote = validate18TokenQuote("It is essential that developers understand these rules.");
+      expect(pronounQuote.compliant).toBe(false);
+      expect(pronounQuote.reason).toContain("dangling pronoun");
+
+      // POD-001 & POD-002: Podcast scaffolding
+      const packet = scaffoldPodcastShow({
+        topic: "Autonomous Swarms and Edge Computing",
+        durationMinutes: 10,
+        host1Name: "Alex",
+        host2Name: "Jordan",
+      });
+
+      expect(packet.speakers.length).toBe(2);
+      expect(packet.speakers[0].role).toBe("expert");
+      expect(packet.speakers[1].role).toBe("challenger");
+      expect(packet.dialogue.length).toBeGreaterThanOrEqual(8);
+      expect(packet.ssmlMasterScript).toContain("<prosody");
+      expect(packet.ssmlMasterScript).toContain("<break time=");
+
+      // POD-004: Monotonic chapters
+      expect(packet.chapters.length).toBeGreaterThanOrEqual(4);
+      for (let i = 1; i < packet.chapters.length; i++) {
+        expect(packet.chapters[i].offsetSeconds).toBeGreaterThan(packet.chapters[i - 1].offsetSeconds);
+      }
+
+      // Audit validation
+      const audit = auditPodcastScript(packet);
+      expect(audit.valid).toBe(true);
+      expect(audit.score).toBeGreaterThanOrEqual(80);
+      expect(audit.ssmlPauseCompliance).toBe(true);
+      expect(audit.maxPauseMs).toBeLessThan(350);
+      expect(audit.hasMonotonicChapters).toBe(true);
+      expect(audit.compliant18TokenQuotesCount).toBeGreaterThanOrEqual(3);
+
+      // CLI execution
+      const cliRes = spawnSync("bun", [scriptPath, "--duration", "10m"], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("AI AUDIO SHOWRUNNER:");
+      expect(cliRes.stdout).toContain("Quality Audit Score: 100/100 [PASSED]");
+    });
   });
 });
