@@ -367,7 +367,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     const accountsDir = path.join(REPO_ROOT, "skills/agency-delivery/accounts");
     const skillPath = path.join(accountsDir, "SKILL.md");
 
-    test("accounts declares all 8 core operating modes and matching references", () => {
+    test("accounts declares all 9 core operating modes and matching references", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const skillContent = fs.readFileSync(skillPath, "utf8");
 
@@ -379,6 +379,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         "client-pnl",
         "cashflow",
         "tax-compliance",
+        "billing-engine",
         "audit",
       ];
       for (const mode of expectedModes) {
@@ -4790,6 +4791,98 @@ NextApp relies on RedisCache
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Programmatic CRO & Multi-Armed Bandit Report");
       expect(cliRes.stdout).toContain("WINNER");
+    });
+
+    test("Crew & Sol: accounts billing-engine mode implements idempotent telemetry ingestion, tiered pricing, circuit breakers, Stripe tax sync, and smart dunning", () => {
+      const accountsSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/accounts/SKILL.md"), "utf8");
+      expect(accountsSkill).toContain("version: 1.6.0");
+      expect(accountsSkill).toContain("| **billing-engine** |");
+
+      const billingRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/accounts/references/billing-engine.md"),
+        "utf8",
+      );
+      expect(billingRef).toContain("BIL-001");
+      expect(billingRef).toContain("BIL-002");
+      expect(billingRef).toContain("BIL-003");
+      expect(billingRef).toContain("BIL-004");
+      expect(billingRef).toContain("Idempotent Event Ingestion");
+      expect(billingRef).toContain("Circuit Breaker");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/accounts/scripts/metering-engine.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const { MeteringBillingEngine } = require(scriptPath);
+      const engine = new MeteringBillingEngine();
+
+      // BIL-001 Idempotent Ingestion
+      const rawEvents = [
+        { tenantId: "tenant-1", timestamp: 1000, metricName: "api_calls", quantity: 500, sequenceId: "1" },
+        { tenantId: "tenant-1", timestamp: 1000, metricName: "api_calls", quantity: 500, sequenceId: "1" }, // Duplicate
+        { tenantId: "tenant-1", timestamp: 2000, metricName: "api_calls", quantity: 1500, sequenceId: "2" },
+      ];
+
+      const { ingested, duplicatesCount } = engine.ingestEvents(rawEvents);
+      expect(ingested.length).toBe(3);
+      expect(duplicatesCount).toBe(1);
+      expect(ingested[0].isDuplicate).toBe(false);
+      expect(ingested[1].isDuplicate).toBe(true);
+      expect(ingested[2].isDuplicate).toBe(false);
+
+      // BIL-002 Tiered Pricing Calculation
+      const tiers = [
+        { upTo: 1000, unitPriceDollars: 0.1 },
+        { upTo: 5000, unitPriceDollars: 0.08 },
+        { upTo: null, unitPriceDollars: 0.05 },
+      ];
+      // 2000 units: 1000 @ 0.10 ($100) + 1000 @ 0.08 ($80) = $180
+      const lineItem = engine.calculateMetricCost("api_calls", 2000, tiers);
+      expect(lineItem.subtotalDollars).toBe(180);
+      expect(lineItem.breakdown.length).toBe(2);
+
+      // BIL-003 Invoice & Stripe Sync
+      const config = {
+        tenantId: "tenant-1",
+        tenantName: "Acme Corp",
+        currency: "USD",
+        spendLimitDollars: 1000,
+        taxRatePercent: 10,
+        taxJurisdiction: "EU-VAT",
+        metrics: [{ metricName: "api_calls", description: "API", tiers }],
+      };
+
+      const invoice = engine.generateInvoice(config, { api_calls: 2000 });
+      expect(invoice.subtotalDollars).toBe(180);
+      expect(invoice.taxDollars).toBe(18);
+      expect(invoice.totalDollars).toBe(198);
+      expect(invoice.circuitBreakerStatus).toBe("NORMAL");
+      expect(invoice.stripePayload.subtotal).toBe(18000);
+      expect(invoice.stripePayload.idempotencyKey).toBe(invoice.invoiceId);
+
+      // Circuit Breaker Test
+      const highSpendInvoice = engine.generateInvoice(config, { api_calls: 15000 });
+      // 15000 units: 1000@0.10 (100) + 4000@0.08 (320) + 10000@0.05 (500) = $920 + 10% tax ($92) = $1012 > $1000 limit
+      expect(highSpendInvoice.circuitBreakerStatus).toBe("HARD_CAP_TRIGGERED");
+
+      // BIL-004 Smart Dunning Evaluation
+      const dunningCurrent = engine.evaluateDunning("tenant-1", 198, 0);
+      expect(dunningCurrent.currentStatus).toBe("CURRENT");
+      expect(dunningCurrent.projectedRecoveryRatePercent).toBeGreaterThanOrEqual(70);
+
+      const dunningSoft = engine.evaluateDunning("tenant-1", 198, 2);
+      expect(dunningSoft.currentStatus).toBe("DUNNING_SOFT");
+
+      const dunningRetry = engine.evaluateDunning("tenant-1", 198, 5);
+      expect(dunningRetry.currentStatus).toBe("DUNNING_RETRY");
+
+      const dunningWarning = engine.evaluateDunning("tenant-1", 198, 8);
+      expect(dunningWarning.currentStatus).toBe("STOP_THE_CLOCK_WARNING");
+
+      // CLI Execution
+      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      expect(cliRes.status).toBe(0);
+      expect(cliRes.stdout).toContain("Usage-Based Metering & Billing Report:");
+      expect(cliRes.stdout).toContain("DEDUPLICATED");
     });
   });
 });
