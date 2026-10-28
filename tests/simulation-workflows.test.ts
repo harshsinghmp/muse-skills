@@ -4139,5 +4139,95 @@ window.alert('Blocking modal');`,
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     });
+
+    test("Sol & Muse: database graph mode implements SPO triples extraction, temporal supersession, sub-10ms traversal, and tenant fencing", () => {
+      const graphRef = fs.readFileSync(
+        path.join(REPO_ROOT, "skills/agency-delivery/database", "references", "graph.md"),
+        "utf8",
+      );
+      expect(graphRef).toContain("GRP-001: SPO Triples Extraction");
+      expect(graphRef).toContain("GRP-002: Temporal Validity & Supersession Traversal");
+      expect(graphRef).toContain("GRP-003: Sub-10ms Graph Traversal");
+      expect(graphRef).toContain("GRP-004: Context Vault Fencing");
+
+      const dbSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/database", "SKILL.md"), "utf8");
+      expect(dbSkill).toContain("| **graph** |");
+      expect(dbSkill).toContain("references/graph.md");
+
+      const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/database/scripts/cognitive-graph.ts");
+      expect(fs.existsSync(scriptPath)).toBe(true);
+
+      const {
+        CognitiveGraphEngine,
+        extractTriplesFromText,
+      } = require("../skills/agency-delivery/database/scripts/cognitive-graph");
+
+      // 1. SPO Triples Extraction (GRP-001)
+      const doc = `
+[NextApp] -[DEPENDS_ON]-> [BetterAuth]
+[BetterAuth] -[CONFIGURES]-> [PostgresDB]
+NextApp relies on RedisCache
+`;
+      const extracted = extractTriplesFromText(doc, "tenant-alpha");
+      expect(extracted.length).toBeGreaterThanOrEqual(3);
+      expect(extracted[0].subject).toBe("NextApp");
+      expect(extracted[0].predicate).toBe("DEPENDS_ON");
+      expect(extracted[0].object).toBe("BetterAuth");
+      expect(extracted[0].tenantId).toBe("tenant-alpha");
+
+      // 2. Sub-10ms Graph Traversal & Bidirectional Index (GRP-003)
+      const engine = new CognitiveGraphEngine(extracted);
+      const queryRes = engine.traverse("NextApp", "tenant-alpha", 2);
+      expect(queryRes.reachableNodes.length).toBeGreaterThanOrEqual(3);
+      expect(queryRes.edges.length).toBeGreaterThanOrEqual(2);
+      expect(queryRes.executionTimeMs).toBeLessThan(10); // sub-10ms guarantee
+
+      // 3. Temporal Validity & Supersession (GRP-002)
+      const tripleToSupersede = extracted[0].id;
+      engine.supersedeTriple(tripleToSupersede, "TRP-NEW-AUTH-001");
+      const filteredRes = engine.traverse("NextApp", "tenant-alpha", 2, false);
+      expect(filteredRes.edges.some((e) => e.id === tripleToSupersede)).toBe(false);
+
+      // 4. Context Vault Tenant Fencing (GRP-004)
+      const foreignDoc = `[SecretService] -[USES]-> [PrivateVault]`;
+      const foreignTriples = extractTriplesFromText(foreignDoc, "tenant-beta");
+      for (const ft of foreignTriples) engine.addTriple(ft);
+
+      // Querying tenant-alpha must never reveal tenant-beta nodes
+      const alphaQuery = engine.traverse("SecretService", "tenant-alpha", 2);
+      expect(alphaQuery.edges.length).toBe(0);
+
+      // Querying tenant-beta finds its own nodes
+      const betaQuery = engine.traverse("SecretService", "tenant-beta", 2);
+      expect(betaQuery.edges.length).toBe(1);
+
+      // 5. Standalone CLI execution
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "cognitive-graph-test-"));
+      try {
+        const storeFile = path.join(tempDir, "graph.json");
+        const docFile = path.join(tempDir, "facts.md");
+        fs.writeFileSync(docFile, "[AuthService] -[CONNECTS_TO]-> [PostgresCluster]", "utf8");
+
+        const ingestRes = spawnSync(
+          "bun",
+          [scriptPath, "--ingest", docFile, "--tenant", "test-tenant", "--store", storeFile],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(ingestRes.status).toBe(0);
+
+        const queryCliRes = spawnSync(
+          "bun",
+          [scriptPath, "--query", "AuthService", "--tenant", "test-tenant", "--store", storeFile, "--json"],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(queryCliRes.status).toBe(0);
+        const parsed = JSON.parse(queryCliRes.stdout);
+        expect(parsed.queryEntity).toBe("AuthService");
+        expect(parsed.reachableNodes.length).toBe(2);
+        expect(parsed.executionTimeMs).toBeLessThan(20);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });

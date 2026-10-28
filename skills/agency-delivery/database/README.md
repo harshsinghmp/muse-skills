@@ -47,6 +47,8 @@ You run a full-service creative web marketing agency with multiple projects, mul
 
 7. **Guard migrations against table lockouts.** When schemas evolve, the `migrations` mode and `migration-guard.ts` simulate DDL lock levels, detect table rewrites, flag missing `CONCURRENTLY` modifiers, require `NOT VALID` on constraints, and catch unindexed foreign key share-lock hazards before production DDL runs.
 
+8. **Traverse cognitive knowledge graphs.** When architecture decisions, entity relations, and technical rules require semantic exploration, the `graph` mode and `cognitive-graph.ts` build in-memory bi-directional SPO triples (`(Entity)-[RELATION]->(Entity)`), enforce temporal validity & supersession edges, traverse $k$-hop neighborhoods in sub-10ms, and maintain cryptographic multi-tenant vault fencing.
+
 A single skill, seven core modes, four database types. The agent resolves the mode from the request, loads only that mode's reference, and follows the playbook.
 
 ### Specialized Deep-Dive References
