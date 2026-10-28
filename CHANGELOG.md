@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Crew Operations & Nexus Quality Review: Client Health Telemetry & Churn Early Warning Radar (`retain:health`)**:
+  - **Health Playbook (`health.md`)**: Enforces Tri-Vector Health Scoring mathematically triangulating Product & Deliverable Telemetry (40%), Relationship & CSAT Sentiment (30%), and Financial & Payment Velocity (30%) (HLT-001); Churn Early Warning Radar categorizing accounts into Green (>=75, expansion ready), Amber (50-74, proactive pulse), and Red (<50, critical alert) (HLT-002); 48-Hour Stop-the-Clock Intervention Protocol freezing billing and SLA penalties while executing executive alignment and corrective action plans (HLT-003); and Executive Health Scorecard & Net Retention Rate (NRR) Modeling benchmarking against >=115% expansion targets (HLT-004).
+  - **Health Telemetry CLI (`client-health-telemetry.ts`)**: Built standalone CLI in `skills/agency-delivery/retain/scripts/client-health-telemetry.ts` supporting `--calc-health`, `--audit-account`, `--scorecard`, `--scaffold-cap`, `--calc-nrr`, and `--json`.
+  - **Retain Mode Expansion**: Expanded `retain` to 10 active modes, updating `skills.json`, `llms.txt`, and `secretary/references/dispatch.md`. Command surface increased to 440 slash commands per harness.
+
 - **Jasper Creative Division: Direct-Response UGC Video Scripting & Creator Brief Engine (`content:ugc`)**:
   - **UGC Playbook (`ugc.md`)**: Enforces 4-Hook Matrix for algorithmic split-testing across Negative Curiosity, Direct Problem, Unpopular Opinion, and Before/After payoffs (UGC-001); Jasper 5-Beat Narrative Storyboard Spine spanning 0-3s Hook, 3-8s Agitated Problem, 8-15s Discovery Pivot, 15-25s Proof & Demo, and 25-30s Frictionless CTA (UGC-002); Retention Pacing and 9:16 Vertical Safe Zones with 130-160 WPM delivery, 2.0-3.5s visual cut cadence, and platform icon boundary fences (UGC-003); and Production-Ready Creator Brief Export with rigid technical specs, DOs/DON'Ts, shot lists, and native caption copy (UGC-004).
   - **UGC Generator CLI (`ugc-generator.ts`)**: Built standalone CLI in `skills/agency-delivery/content/scripts/ugc-generator.ts` supporting `--scaffold-ugc`, `--score-pacing`, `--export-brief`, `--audit-script`, and `--json`.
