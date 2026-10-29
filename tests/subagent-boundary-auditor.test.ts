@@ -170,6 +170,25 @@ describe("🛡️ Subagent Boundary Auditor — Core Invariants", () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
     }, 15000);
+
+    test("auditPermissions never traverses symlinks outside the workspace", () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "boundary-symlink-perm-"));
+      const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "boundary-outside-"));
+      try {
+        const keyFile = path.join(outsideDir, "outside.key");
+        fs.writeFileSync(keyFile, "OUTSIDE-SECRET", "utf8");
+        fs.chmodSync(keyFile, 0o644);
+        fs.symlinkSync(outsideDir, path.join(tempDir, "escape-link"));
+
+        // The symlink audit reports the escape separately (BND-001). The
+        // permission scan must not follow it and grade files outside the root.
+        const issues = auditPermissions(tempDir);
+        expect(issues.some((i) => i.id === "BND-003")).toBe(false);
+      } finally {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+        fs.rmSync(outsideDir, { recursive: true, force: true });
+      }
+    }, 15000);
   });
 
   describe("4. Process Argv Credential Hygiene (BND-005)", () => {

@@ -15,7 +15,7 @@
  *   bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
  */
 
-import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, join, normalize, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -158,12 +158,17 @@ export function auditPermissions(rootPath: string): BoundaryIssue[] {
       if (IGNORED_DIRS.has(entry)) continue;
 
       const fullPath = join(currentDir, entry);
-      let stat: ReturnType<typeof statSync>;
+      let stat: ReturnType<typeof lstatSync>;
       try {
-        stat = statSync(fullPath);
+        stat = lstatSync(fullPath);
       } catch {
         continue;
       }
+
+      // Never follow symlinks while scanning permissions: the symlink audit
+      // reports escapes separately, and following a link can walk outside the
+      // workspace (a link to /tmp turns a fast audit into a full-disk scan).
+      if (stat.isSymbolicLink()) continue;
 
       if (stat.isFile()) {
         const mode = stat.mode & 0o777;
