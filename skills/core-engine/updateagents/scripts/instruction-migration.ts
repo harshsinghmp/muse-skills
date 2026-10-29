@@ -196,15 +196,18 @@ export function discoverAgentInstructionSources(workspaceRoot: string): AgentIns
       if (!entry.isFile() || !isInstructionFile(relPath)) continue;
       try {
         const content = readFileSync(fullPath, "utf8");
-        // A managed root AGENTS.md is the canonical destination, never a foreign
-        // source: importing it writes a byte-for-byte copy of itself into
-        // .agents/context/imported-agent-instructions.md. `--force` must not
-        // reclassify it either — that flag exists to refresh managed adapters,
-        // and treating the root as legacy input produces self-referential
-        // duplicates that then masquerade as user-authored rules.
-        // A hand-written root (no managed marker) is still a genuine legacy
-        // source and must keep migrating.
-        if (relPath === "AGENTS.md" && isManagedRootAgents(content)) continue;
+        // The root AGENTS.md is the canonical instruction file, never a foreign
+        // source. It is already read in place by every harness, so importing it
+        // only writes a byte-for-byte copy of the project's own rules into
+        // .agents/context/imported-agent-instructions.md and archives a snapshot
+        // of itself. That duplication is not harmless: the imported copy is then
+        // re-read as if it were user-authored legacy guidance.
+        //
+        // This applies to hand-written roots too. Location, not the presence of
+        // a managed marker, decides canonicity. Rules that a user wants promoted
+        // out of a hand-written root into .agents/standards/ still have an
+        // explicit path: `--promote <path>`.
+        if (relPath === "AGENTS.md") continue;
         if (isExpectedAdapter(content, relPath)) continue;
         found.push({ relativePath: relPath, absolutePath: fullPath, content });
       } catch {

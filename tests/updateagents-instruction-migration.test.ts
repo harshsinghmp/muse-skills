@@ -46,6 +46,22 @@ describe("updateagents instruction migration", () => {
     ]);
   });
 
+  it("never imports the root AGENTS.md as a foreign instruction source", () => {
+    mkdirSync(join(ROOT, ".agents/context"), { recursive: true });
+    writeFileSync(join(ROOT, "AGENTS.md"), "# Project OS\n\n- Never commit credentials.\n");
+    writeFileSync(join(ROOT, "CLAUDE.md"), "# Claude\nUse pnpm for installs.\n");
+
+    // A hand-written root carries no managed marker, yet it is still canonical.
+    expect(discoverAgentInstructionSources(ROOT).map((source) => source.relativePath)).toEqual(["CLAUDE.md"]);
+
+    const migration = migrateAgentInstructions(ROOT);
+    expect(migration.imported).toEqual(["CLAUDE.md"]);
+    const imported = readFileSync(join(ROOT, ".agents/context/imported-agent-instructions.md"), "utf8");
+    expect(imported).toContain("Use pnpm for installs.");
+    expect(imported).not.toContain("Never commit credentials.");
+    expect(readFileSync(join(ROOT, "AGENTS.md"), "utf8")).toBe("# Project OS\n\n- Never commit credentials.\n");
+  });
+
   it("ignores reference playbooks and templates — content is never an instruction source", () => {
     mkdirSync(join(ROOT, "skills/demo/references"), { recursive: true });
     mkdirSync(join(ROOT, "skills/demo/templates"), { recursive: true });

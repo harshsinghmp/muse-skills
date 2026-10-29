@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **`updateagents`: the root `AGENTS.md` is never imported as a foreign instruction source (`instruction-migration`)**:
+  - **Root self-import**: `discoverAgentInstructionSources()` now skips the root `AGENTS.md` unconditionally. Previously it skipped only roots carrying a managed marker, so a hand-written root was imported into `.agents/context/imported-agent-instructions.md` and archived as a byte-identical snapshot of itself. The imported copy was then re-read as if it were legacy user guidance. Location, not marker presence, decides canonicity; `--promote <path>` remains the explicit route for extracting rules from a hand-written root.
+  - **Regression coverage**: Added a test asserting that a marker-less root is excluded from discovery and migration while sibling runtime files (`CLAUDE.md`) still migrate.
+
 ## [8.0.0] - 2026-10-28
 
 ### Added
