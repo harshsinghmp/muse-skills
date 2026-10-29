@@ -323,6 +323,12 @@ export function quarantineWorktree(
     }
   }
 
+  execGit(resolved, ["reset", "--hard", "HEAD"]);
+  execGit(resolved, ["clean", "-fd"]);
+
+  // Write the ledger AFTER cleanup: `git clean -fd` removes untracked
+  // directories, and `.agents/` is untracked in repos that do not ignore it.
+  // Writing first made the quarantine delete its own audit trail.
   const ledgerDir = join(resolved, ".agents", "artifacts");
   if (!existsSync(ledgerDir)) mkdirSync(ledgerDir, { recursive: true });
   const ledgerFile = join(ledgerDir, "QUARANTINE_LEDGER.md");
@@ -344,9 +350,6 @@ export function quarantineWorktree(
       : `# 🛡️ Worktree Quarantine Ledger\n\n${entry}`,
     "utf8",
   );
-
-  execGit(resolved, ["reset", "--hard", "HEAD"]);
-  execGit(resolved, ["clean", "-fd"]);
 
   return {
     success: true,

@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.0.1] - 2026-10-29
+
+### Fixed
+
+- **`muse-security`: the boundary auditor no longer follows symlinks while scanning file permissions (`boundary-audit`)**:
+  - **Traversal fence**: `auditPermissions()` used `statSync()`, which follows symlinks, then recursed into any directory target. A single escaping link (for example to `/tmp`) turned a fast permission scan into a full-disk walk outside the workspace. It now uses `lstatSync()` and skips symlinks; the dedicated symlink audit still reports the escape as `BND-001`.
+  - **Regression coverage**: added a test proving a symlinked outside directory containing a world-readable key is not graded by the permission scan.
+
+- **`coupling-router`: quarantine keeps its audit trail after worktree cleanup (`worktree-federation`)**:
+  - **Ordering fix**: `quarantineWorktree()` wrote `.agents/artifacts/QUARANTINE_LEDGER.md` before running `git reset --hard` and `git clean -fd`. In repos that do not ignore `.agents/`, `clean -fd` deleted the ledger the function had just written. The ledger is now written after cleanup.
+  - **Regression coverage**: the existing federation simulation asserts the ledger exists after quarantine; it now passes in a clean sandbox without a `.gitignore`.
+
+- **`argument-hint` now surfaces the declared `audit` mode (`content`, `research`, `sales-enablement`, `pua`)**:
+  - **Discoverability**: the four skills declare an `audit` mode in their Modes table but omitted it from `argument-hint`, so harness hints never advertised it. `pua`'s hint was free prose naming none of its three modes; it now lists `audit`, `flavor-packs`, and `receipt-verification`.
+
+- **Audit-mode inventory corrected (`AGENTS.md`)**: the Infrastructure note claimed 21 skills ship `references/audit.md`; the live tree has 39. The count now matches the generated `/<skill>-audit` command surface.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.0.0...v8.0.1
+
 ## [8.0.0] - 2026-10-28
 
 ### Added

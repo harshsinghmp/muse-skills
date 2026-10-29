@@ -2,7 +2,7 @@
 name: sales-enablement
 aliases: ["sales-enablement", "demo-scripting", "objection-handling", "sales-playbook", "sales-assets"]
 description: "Pre-sale sales enablement department: demo scripts and narration, objection-handling handbooks, one-pagers, and sales playbooks — routed through five modes. Use when asked to write a sales demo script, draft objection-handling answers, build a one-pager or leave-behind, or assemble a sales playbook for a client's sales team. Not for proposals or deal terms (ops), outbound pipeline (gtm), or marketing content (content)."
-argument-hint: "[demo|objection|one-pager|playbook]"
+argument-hint: "[demo|objection|one-pager|playbook|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
