@@ -2,7 +2,7 @@
 name: research
 aliases: ["user-research", "market-pulse", "entity-dossier", "client-research"]
 description: "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through five modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics)."
-argument-hint: "[user-research|market-pulse|entity-dossier]"
+argument-hint: "[user-research|market-pulse|entity-dossier|audit]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh

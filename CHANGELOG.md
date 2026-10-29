@@ -14,6 +14,9 @@ All notable changes to this project are documented in this file.
   - **Ordering fix**: `quarantineWorktree()` wrote `.agents/artifacts/QUARANTINE_LEDGER.md` before running `git reset --hard` and `git clean -fd`. In repos that do not ignore `.agents/`, `clean -fd` deleted the ledger the function had just written. The ledger is now written after cleanup.
   - **Regression coverage**: the existing federation simulation asserts the ledger exists after quarantine; it now passes in a clean sandbox without a `.gitignore`.
 
+- **`argument-hint` now surfaces the declared `audit` mode (`content`, `research`, `sales-enablement`, `pua`)**:
+  - **Discoverability**: the four skills declare an `audit` mode in their Modes table but omitted it from `argument-hint`, so harness hints never advertised it. `pua`'s hint was free prose naming none of its three modes; it now lists `audit`, `flavor-packs`, and `receipt-verification`.
+
 ## [8.0.0] - 2026-10-28
 
 ### Added
