@@ -17,6 +17,8 @@ All notable changes to this project are documented in this file.
 - **`argument-hint` now surfaces the declared `audit` mode (`content`, `research`, `sales-enablement`, `pua`)**:
   - **Discoverability**: the four skills declare an `audit` mode in their Modes table but omitted it from `argument-hint`, so harness hints never advertised it. `pua`'s hint was free prose naming none of its three modes; it now lists `audit`, `flavor-packs`, and `receipt-verification`.
 
+- **Audit-mode inventory corrected (`AGENTS.md`)**: the Infrastructure note claimed 21 skills ship `references/audit.md`; the live tree has 39. The count now matches the generated `/<skill>-audit` command surface.
+
 ## [8.0.0] - 2026-10-28
 
 ### Added
