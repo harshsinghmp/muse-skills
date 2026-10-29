@@ -63,6 +63,8 @@ skills-lock.json
 .hermes/
 .continue/
 .omo/
+.omh/
+.omp/
 .crush/
 .codex/
 .codex-*/
