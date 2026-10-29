@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [8.0.1] - 2026-10-29
 
 ### Fixed
 
@@ -18,6 +18,8 @@ All notable changes to this project are documented in this file.
   - **Discoverability**: the four skills declare an `audit` mode in their Modes table but omitted it from `argument-hint`, so harness hints never advertised it. `pua`'s hint was free prose naming none of its three modes; it now lists `audit`, `flavor-packs`, and `receipt-verification`.
 
 - **Audit-mode inventory corrected (`AGENTS.md`)**: the Infrastructure note claimed 21 skills ship `references/audit.md`; the live tree has 39. The count now matches the generated `/<skill>-audit` command surface.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.0.0...v8.0.1
 
 ## [8.0.0] - 2026-10-28
 
