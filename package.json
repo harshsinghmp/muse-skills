@@ -75,7 +75,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.6.2",
     "bun-types": "^1.4.2",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "musememory": "^3.0.2"
