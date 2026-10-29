@@ -2,7 +2,7 @@
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
 description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates."
-argument-hint: "[Quick|Change|Release|Sprint|Full]"
+argument-hint: "[Quick|Change|Release|Sprint|audit]"
 user-invocable: true
 version: 2.7.0
 author: Agency Council
@@ -588,10 +588,9 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **Change** | Feature, API, migration, or config change | Full impact analysis, dependency propagation, targeted sync, and verification. | All 20 | Full report |
 | **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. | 1–5, 8, 11 (CHANGELOG/README focus), 14–15, 19, 20 | Full report |
 | **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 20 | Full report |
-| **Full** | Broad documentation health audit | Comprehensive repository audit: links, examples, commands, APIs, diagrams, debt — **plus undocumented-capability sync**: recent PRs, issues, commits, and releases whose features/capabilities are absent from docs get written in, not just checked | All 20 + capability sweep | Full report |
 | **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | [references/audit.md](references/audit.md) | brain-audit-report.md |
 
-Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated.
+Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated. With no mode given, run the comprehensive pass (all 20 steps plus the undocumented-capability sweep) — that is the skill's default behavior, not a separate mode.
 
 ---
 
@@ -605,7 +604,7 @@ All routed references for this skill have Modes-table rows above; topical deep-d
 ### Step 1 — Establish Repository Boundary and Select Mode
 Identify project root. Remain strictly inside the workspace.
 
-First, select the operating mode (Quick / Change / Release / Sprint / Full) from the Operating Modes table and state it. The mode determines which pipeline steps are mandatory; later steps marked "when relevant" are optional in all modes. Escalate Quick → Change only when evidence shows the change touches a public contract (API, CLI, schema, configuration surface).
+First, select the operating mode (Quick / Change / Release / Sprint / audit) from the Operating Modes table and state it — or run the comprehensive pass (all 20 steps plus the undocumented-capability sweep) by default when none is given. The mode determines which pipeline steps are mandatory; later steps marked "when relevant" are optional in all modes. Escalate Quick → Change only when evidence shows the change touches a public contract (API, CLI, schema, configuration surface).
 
 Exclude implementation artifacts:
 ```text
@@ -899,6 +898,9 @@ Avoid these high-risk failure modes:
 7. **Exposing Secrets**: Never copy actual credentials or `.env` values into docs or commit messages. Mask as `[REDACTED]`.
 8. **Destructive Commands**: Never execute `rm -rf`, `git reset --hard`, or overwriting redirection during documentation synchronization.
 9. **Trusting Bulk Edits Blindly**: `sd`/`sed`/scripted sweeps fail silently on regex metacharacters and can reformat whole files on an indent mismatch. Every bulk pass passes Step 21's diff audit + mechanical re-check before anything else touches the files.
+10. **Frozen historical snapshots must be excluded from live link-lint.** An archived README/changelog snapshot (e.g. `docs/README-v5.0.0.md`) is a frozen record of a past state; its relative links were correct when shipped and must not be "fixed" to today's layout. Exclude snapshot/archive paths from `--link-lint` rather than rewriting released sections — rewriting released changelog sections is forbidden by the HISTORICAL permission class.
+11. **Tooling binaries can shadow each other by name.** `bunx biome` resolves to the unrelated `biome@0.3.3` npm package (env-var manager), not `@biomejs/biome`; the npm `ruff` package is `coderaiser/ruff`, not Astral's ruff. Always invoke the scoped package (`bunx @biomejs/biome`, `uvx ruff`) or a locally installed binary, and never trust a bare `bunx <tool>` in CI without verifying it resolves to the intended package. A silent no-op linter is worse than a failing one.
+12. **Documentation counts must be derived from code, never hand-copied.** README/llms.txt "across N modes" tallies and slash-command totals drift from the shipped tree within one release. Derive them from the canonical source (`scripts/export-commands.ts`, frontmatter `argument-hint` token lists) and gate them with a test so drift fails CI instead of shipping.
 
 ---
 
