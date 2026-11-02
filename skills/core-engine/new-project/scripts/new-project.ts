@@ -2,13 +2,14 @@
 /**
  * 🏛️ Purpose-First Hierarchical Decision Engine & Project OS Provisioner (Agent Engine / DOX Engine)
  *
- * 6 Sequential Execution Stages:
+ * 7 Sequential Execution Stages:
  *   Stage 1: Purpose-First Root Prompt & Project Identity
- *   Stage 2: Hierarchical Decision Tree (Choice -> Sub-choice -> Sub-sub-choice)
+ *   Stage 2: Granular Hierarchical Decision Tree (archetype -> framework -> companions)
  *   Stage 3: Official Package Installation & Config Auto-Wiring
  *   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
- *   Stage 5: Client Intake Brief (employee checklist + agent-produced docs)
- *   Stage 6: Closeout (context sync, health check)
+ *   Stage 5: Client Onboarding Interview (5 sections, interactive / intake file / flags)
+ *   Stage 6: Intake Docs, Brand Compilation & Context Sync
+ *   Stage 7: Closeout (context sync, health check)
  *
  * Usage:
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
@@ -23,7 +24,7 @@ import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
-import { basename, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -47,6 +48,13 @@ function resolveTemplatesDir(): string {
 }
 const TEMPLATES_DIR = resolveTemplatesDir();
 
+function installAgentExcludes(targetDir: string): boolean {
+  const script = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
+  if (!existsSync(script)) return false;
+  const result = spawnSync("bun", [script, targetDir, "--install-excludes"], { encoding: "utf8" });
+  return result.status === 0;
+}
+
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
@@ -68,6 +76,42 @@ const { values, positionals } = parseArgs({
     "agent-name": { type: "string" },
     "agent-role": { type: "string" },
     constraint: { type: "string" },
+    // Client onboarding & engagement intake
+    "client-name": { type: "string" },
+    "client-brand": { type: "string" },
+    "client-slug": { type: "string" },
+    "client-contact": { type: "string" },
+    "client-role": { type: "string" },
+    "client-email": { type: "string" },
+    "decision-maker": { type: "string" },
+    "tech-lead": { type: "string" },
+    "business-model": { type: "string" },
+    "company-stage": { type: "string" },
+    "revenue-band": { type: "string" },
+    mission: { type: "string" },
+    vision: { type: "string" },
+    competitors: { type: "string" },
+    objections: { type: "string" },
+    "launch-goal": { type: "string" },
+    boundaries: { type: "string" },
+    domain: { type: "string" },
+    "dns-provider": { type: "string" },
+    "git-host": { type: "string" },
+    payments: { type: "string" },
+    integrations: { type: "string" },
+    "brand-assets": { type: "string" },
+    figma: { type: "string" },
+    "sla-tier": { type: "string" },
+    engagement: { type: "string" },
+    "comms-channel": { type: "string" },
+    "comms-cadence": { type: "string" },
+    "kickoff-date": { type: "string" },
+    deadline: { type: "string" },
+    budget: { type: "string" },
+    "access-items": { type: "string" },
+    intake: { type: "string" },
+    "onboard-client": { type: "boolean", default: false },
+    "skip-client-onboarding": { type: "boolean", default: false },
     intent: { type: "string", short: "i" }, // static | brochure | content | ecommerce | webapp | app | mobile | custom | governance
     preset: { type: "string" }, // powerhouse | publisher | edge | visual | instatic | mobile | astro-mobile
     type: { type: "string", short: "t" }, // nextjs | astro | instatic | wordpress | expo | custom | none
@@ -115,11 +159,12 @@ Usage:
 
 Core Execution Stages:
   Stage 1: Purpose-First Root Prompt & Project Identity
-  Stage 2: Hierarchical Decision Tree (Choice -> Sub-choice -> Sub-sub-choice)
+  Stage 2: Granular Hierarchical Decision Tree (archetype -> framework -> companions)
   Stage 3: Official Package Installation & Config Auto-Wiring
   Stage 4: Modern Tokens (Wide-gamut OKLCH + Fluid clamp) & BEM Architecture Injection
-  Stage 5: Client Intake Brief (employee checklist + agent-produced docs)
-  Stage 6: Closeout (context sync, health check)
+  Stage 5: Client Onboarding Interview (interactive, --intake file, or client flags)
+  Stage 6: Intake Docs, Brand Compilation & Context Sync
+  Stage 7: Closeout (context sync, health check)
 
 Options:
   -n, --name <name>             Project name (default: directory name)
@@ -140,6 +185,43 @@ Options:
       --agent-role <role>       Role configured for the primary workspace agent
       --constraint <rule>       Primary governance quality rule
   -i, --intent <intent>         brochure | content | ecommerce | app | mobile | governance
+
+Client Onboarding & Engagement Intake:
+      --onboard-client          Run the full client onboarding interview and write every intake doc
+      --skip-client-onboarding  Skip client onboarding (brief only; docs produced later by the agent)
+      --intake <path>           Prefill onboarding from a JSON file or a Markdown brief
+      --client-name <name>      Legal entity / company name
+      --client-brand <name>     Public brand / trade name
+      --client-slug <slug>      Stable client identifier (defaults to a slugged brand name)
+      --client-contact <name>   Day-to-day client contact
+      --client-role <role>      Day-to-day contact role
+      --client-email <email>    Day-to-day contact email
+      --decision-maker <name>   Final approval stakeholder
+      --tech-lead <name>        Client-side technical lead
+      --business-model <model>  b2b-saas | b2c-ecommerce | agency-service | marketplace | media-publisher | nonprofit | local-business | enterprise | custom
+      --company-stage <stage>   idea | bootstrapped | seed | series-a | growth | enterprise | established
+      --revenue-band <band>     pre-revenue | <100k | 100k-1m | 1m-10m | 10m-100m | 100m+
+      --mission <text>          Mission statement (what the client does every day)
+      --vision <text>           Vision statement (10-year north star)
+      --competitors <list>      Comma-separated direct/indirect competitors
+      --objections <list>       Comma-separated top customer objections
+      --launch-goal <text>      Single measurable goal that defines launch success
+      --boundaries <list>       Comma-separated explicit out-of-scope items
+      --domain <domain>         Primary production domain
+      --dns-provider <name>     cloudflare | route53 | namecheap | godaddy | vercel | other
+      --git-host <host>         github | gitlab | bitbucket | self-hosted | none
+      --payments <list>         Comma-separated payment rails (stripe, razorpay, paypal, ...)
+      --integrations <list>     Comma-separated third-party services already in use
+      --brand-assets <path>     Brand asset drive/folder location
+      --figma <url>             Figma or design file URL
+      --sla-tier <tier>         standard | priority | enterprise | none
+      --engagement <type>       fixed-scope | retainer | time-materials | productized-sku | internal | oss
+      --comms-channel <channel> slack | email | telegram | whatsapp | weekly-call | other
+      --comms-cadence <cadence> daily | weekly | biweekly | monthly | milestone
+      --kickoff-date <date>     Engagement kickoff date (YYYY-MM-DD)
+      --deadline <date>         Hard delivery deadline (YYYY-MM-DD)
+      --budget <text>           Budget band or commercial ceiling
+      --access-items <list>     Comma-separated access items required from the client
       --preset <preset>         1-click recipe: powerhouse | astro-commerce | publisher | edge | visual | astro-visual | plain-astro | git-cms | instatic | pure-html | mobile | astro-mobile | atomic-payload
   -t, --type <type>             Framework: nextjs | astro | instatic | wordpress | expo | custom | none
   -s, --styling <style>         Styling: hybrid | unocss | bem | tailwind | custom | none
@@ -204,6 +286,704 @@ async function ask(rl: ReturnType<typeof createInterface>, question: string, def
   const suffix = defaultVal ? ` [${defaultVal}]: ` : ": ";
   const answer = await rl.question(question + suffix);
   return answer.trim() || defaultVal;
+}
+
+interface ChoiceOption {
+  value: string;
+  label: string;
+  note?: string;
+}
+
+async function choose(
+  rl: ReturnType<typeof createInterface>,
+  title: string,
+  options: ChoiceOption[],
+  defaultValue: string,
+): Promise<string> {
+  const defaultIndex = Math.max(
+    0,
+    options.findIndex((o) => o.value === defaultValue),
+  );
+  console.log(title);
+  options.forEach((option, index) => {
+    const marker = index === defaultIndex ? " [Recommended]" : "";
+    const note = option.note ? ` — ${option.note}` : "";
+    console.log(`  [${index + 1}] ${option.label}${note}${marker}`);
+  });
+  const answer = (await ask(rl, "Select", String(defaultIndex + 1))).trim().toLowerCase();
+  const numeric = Number.parseInt(answer, 10);
+  if (Number.isFinite(numeric) && numeric >= 1 && numeric <= options.length) {
+    return options[numeric - 1].value;
+  }
+  const byValue = options.find((option) => option.value === answer);
+  return byValue ? byValue.value : options[defaultIndex]?.value || options[0].value;
+}
+
+async function chooseMany(
+  rl: ReturnType<typeof createInterface>,
+  title: string,
+  options: ChoiceOption[],
+  defaults: string[],
+): Promise<string[]> {
+  console.log(title);
+  options.forEach((option, index) => {
+    const checked = defaults.includes(option.value) ? " [selected]" : "";
+    const note = option.note ? ` — ${option.note}` : "";
+    console.log(`  [${index + 1}] ${option.label}${note}${checked}`);
+  });
+  const answer = (
+    await ask(rl, "Select any (comma-separated numbers/values, Enter keeps selection)", defaults.join(", "))
+  ).trim();
+  if (!answer) return [...defaults];
+  const selected: string[] = [];
+  for (const part of answer
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)) {
+    const index = Number.parseInt(part, 10);
+    if (Number.isFinite(index) && index >= 1 && index <= options.length) {
+      selected.push(options[index - 1].value);
+      continue;
+    }
+    const byValue = options.find((option) => option.value === part.toLowerCase());
+    if (byValue) selected.push(byValue.value);
+  }
+  return selected.length > 0 ? [...new Set(selected)] : [...defaults];
+}
+
+interface ClientOnboarding {
+  clientLegalName: string;
+  brandName: string;
+  slug: string;
+  contactName: string;
+  contactRole: string;
+  contactEmail: string;
+  decisionMaker: string;
+  techLead: string;
+  businessModel: string;
+  companyStage: string;
+  revenueBand: string;
+  mission: string;
+  vision: string;
+  industry: string;
+  icp: string;
+  coreProblem: string;
+  brandVoice: string;
+  competitors: string[];
+  objections: string[];
+  offerings: string[];
+  launchGoal: string;
+  boundaries: string[];
+  domain: string;
+  dnsProvider: string;
+  gitHost: string;
+  payments: string[];
+  integrations: string[];
+  brandAssets: string;
+  figma: string;
+  slaTier: string;
+  engagement: string;
+  commsChannel: string;
+  commsCadence: string;
+  kickoffDate: string;
+  deadline: string;
+  budget: string;
+  accessItems: string[];
+  onboardingDate: string;
+  status: "NOT_STARTED" | "IN_PROGRESS" | "VERIFIED_COMPLETE";
+}
+
+const CLIENT_ONBOARDING_DEFAULTS: ClientOnboarding = {
+  clientLegalName: "",
+  brandName: "",
+  slug: "",
+  contactName: "",
+  contactRole: "",
+  contactEmail: "",
+  decisionMaker: "",
+  techLead: "",
+  businessModel: "",
+  companyStage: "",
+  revenueBand: "",
+  mission: "",
+  vision: "",
+  industry: "",
+  icp: "",
+  coreProblem: "",
+  brandVoice: "",
+  competitors: [],
+  objections: [],
+  offerings: [],
+  launchGoal: "",
+  boundaries: [],
+  domain: "",
+  dnsProvider: "",
+  gitHost: "",
+  payments: [],
+  integrations: [],
+  brandAssets: "",
+  figma: "",
+  slaTier: "",
+  engagement: "",
+  commsChannel: "",
+  commsCadence: "",
+  kickoffDate: "",
+  deadline: "",
+  budget: "",
+  accessItems: [],
+  onboardingDate: "",
+  status: "NOT_STARTED",
+};
+
+function slugify(value: string): string {
+  return (
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "client"
+  );
+}
+
+function splitCsv(value: string | undefined, fallback: string[] = []): string[] {
+  if (!value) return [...fallback];
+  const items = value
+    .split(/[,;]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return items.length > 0 ? items : [...fallback];
+}
+
+function displayValue(value: string | undefined, fallback = "_(to confirm with client)_"): string {
+  const v = (value || "").trim();
+  return v && v !== "(unanswered)" ? v : fallback;
+}
+
+function bulletList(items: string[], empty = "_(to confirm with client)_"): string {
+  return items.length > 0 ? items.map((item) => `- ${item}`).join("\n") : empty;
+}
+
+function numberedList(items: string[], empty = "_(to confirm with client)_"): string {
+  return items.length > 0 ? items.map((item, index) => `${index + 1}. ${item}`).join("\n") : empty;
+}
+
+function businessModelLabel(value: string): string {
+  const labels: Record<string, string> = {
+    "b2b-saas": "B2B SaaS",
+    "b2c-ecommerce": "B2C E-Commerce",
+    "agency-service": "Agency / Professional Service",
+    marketplace: "Two-Sided Marketplace",
+    "media-publisher": "Media / Publisher",
+    nonprofit: "Nonprofit / Mission-Driven",
+    "local-business": "Local Business / Services",
+    enterprise: "Enterprise / Internal Platform",
+    custom: "Custom Business Model",
+  };
+  return labels[value] || displayValue(value);
+}
+
+function normalizeIntakeKey(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function parseIntakeMarkdown(raw: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const line of raw.split("\n")) {
+    const match = line.match(/^\s*(?:[-*]\s*)?\*\*([^*]+)\*\*\s*:\s*(.+)$/);
+    if (!match) continue;
+    const key = normalizeIntakeKey(match[1]);
+    const value = match[2].trim();
+    if (key && value) result[key] = value;
+  }
+  return result;
+}
+
+function loadIntakeSource(filePath: string): Record<string, string> {
+  const raw = readFileSync(filePath, "utf8");
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      const flat: Record<string, string> = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        if (value === null || value === undefined) continue;
+        flat[normalizeIntakeKey(key)] = Array.isArray(value) ? value.join(", ") : String(value);
+      }
+      return flat;
+    }
+  } catch {
+    // Not JSON — fall through to Markdown label parsing.
+  }
+  return parseIntakeMarkdown(raw);
+}
+
+function applyIntakeSource(profile: ClientOnboarding, source: Record<string, string>): ClientOnboarding {
+  const next = { ...profile };
+  const read = (...keys: string[]): string => {
+    for (const key of keys) {
+      const value = source[normalizeIntakeKey(key)];
+      if (value && value !== "(unanswered)") return value;
+    }
+    return "";
+  };
+
+  next.clientLegalName = read("clientName", "legalEntity", "companyName", "clientLegalName") || next.clientLegalName;
+  next.brandName = read("brandName", "brand", "tradeName") || next.brandName;
+  next.slug = read("clientSlug", "clientId", "slug") || next.slug;
+  next.contactName = read("contactName", "contact", "primaryContact") || next.contactName;
+  next.contactRole = read("contactRole", "role") || next.contactRole;
+  next.contactEmail = read("contactEmail", "email") || next.contactEmail;
+  next.decisionMaker = read("decisionMaker", "finalApproval", "stakeholder") || next.decisionMaker;
+  next.techLead = read("techLead", "technicalLead") || next.techLead;
+  next.businessModel = read("businessModel") || next.businessModel;
+  next.companyStage = read("companyStage", "stage") || next.companyStage;
+  next.revenueBand = read("revenueBand", "revenue") || next.revenueBand;
+  next.mission = read("mission") || next.mission;
+  next.vision = read("vision") || next.vision;
+  next.industry = read("industry", "industryVertical", "vertical") || next.industry;
+  next.icp = read("icp", "targetAudience", "audience") || next.icp;
+  next.coreProblem = read("coreProblem", "problem") || next.coreProblem;
+  next.brandVoice = read("brandVoice", "tone", "voice") || next.brandVoice;
+  next.competitors = splitCsv(read("competitors", "directRivals"), next.competitors);
+  next.objections = splitCsv(read("objections", "customerObjections"), next.objections);
+  next.offerings = splitCsv(read("offerings", "products", "packages", "services"), next.offerings);
+  next.launchGoal = read("launchGoal", "launchMetric", "northStarKpi", "successMetric") || next.launchGoal;
+  next.boundaries = splitCsv(read("boundaries", "negativeScope", "outOfScope", "exclusionList"), next.boundaries);
+  next.domain = read("domain", "primaryDomain", "productionUrl") || next.domain;
+  next.dnsProvider = read("dnsProvider", "dns") || next.dnsProvider;
+  next.gitHost = read("gitHost", "gitProvider") || next.gitHost;
+  next.payments = splitCsv(read("payments", "paymentRails", "paymentProcessor"), next.payments);
+  next.integrations = splitCsv(read("integrations", "thirdPartyServices", "servicesInUse"), next.integrations);
+  next.brandAssets = read("brandAssets", "assetLocation", "logoLocation") || next.brandAssets;
+  next.figma = read("figma", "designFile", "figmaUrl") || next.figma;
+  next.slaTier = read("slaTier", "sla") || next.slaTier;
+  next.engagement = read("engagement", "engagementType") || next.engagement;
+  next.commsChannel = read("commsChannel", "communicationChannel", "primaryChannel") || next.commsChannel;
+  next.commsCadence = read("commsCadence", "cadence", "reportingCadence") || next.commsCadence;
+  next.kickoffDate = read("kickoffDate", "startDate") || next.kickoffDate;
+  next.deadline = read("deadline", "deliveryDeadline") || next.deadline;
+  next.budget = read("budget", "budgetBand", "commercialCeiling") || next.budget;
+  next.accessItems = splitCsv(read("accessItems", "accessChecklist", "requiredAccess"), next.accessItems);
+  return next;
+}
+
+function applyClientFlagOverrides(profile: ClientOnboarding): ClientOnboarding {
+  const next = { ...profile };
+  const set = (key: keyof ClientOnboarding, value: string | undefined) => {
+    if (value?.trim()) (next[key] as string) = value.trim();
+  };
+  set("clientLegalName", values["client-name"]);
+  set("brandName", values["client-brand"]);
+  set("slug", values["client-slug"]);
+  set("contactName", values["client-contact"]);
+  set("contactRole", values["client-role"]);
+  set("contactEmail", values["client-email"]);
+  set("decisionMaker", values["decision-maker"]);
+  set("techLead", values["tech-lead"]);
+  set("businessModel", values["business-model"]);
+  set("companyStage", values["company-stage"]);
+  set("revenueBand", values["revenue-band"]);
+  set("mission", values.mission);
+  set("vision", values.vision);
+  set("launchGoal", values["launch-goal"]);
+  set("domain", values.domain);
+  set("dnsProvider", values["dns-provider"]);
+  set("gitHost", values["git-host"]);
+  set("brandAssets", values["brand-assets"]);
+  set("figma", values.figma);
+  set("slaTier", values["sla-tier"]);
+  set("engagement", values.engagement);
+  set("commsChannel", values["comms-channel"]);
+  set("commsCadence", values["comms-cadence"]);
+  set("kickoffDate", values["kickoff-date"]);
+  set("deadline", values.deadline);
+  set("budget", values.budget);
+  if (values.competitors) next.competitors = splitCsv(values.competitors);
+  if (values.objections) next.objections = splitCsv(values.objections);
+  if (values.offerings) next.offerings = splitCsv(values.offerings);
+  if (values.boundaries) next.boundaries = splitCsv(values.boundaries);
+  if (values.payments) next.payments = splitCsv(values.payments);
+  if (values.integrations) next.integrations = splitCsv(values.integrations);
+  if (values["access-items"]) next.accessItems = splitCsv(values["access-items"]);
+  return next;
+}
+
+async function promptClientOnboarding(
+  rl: ReturnType<typeof createInterface>,
+  existing: ClientOnboarding,
+): Promise<ClientOnboarding> {
+  const c = { ...existing };
+
+  console.log("\n🏢 Client onboarding — Section 1/5: Identity & contacts");
+  c.clientLegalName = await ask(rl, "  Legal entity / company name", c.clientLegalName);
+  c.brandName = await ask(rl, "  Public brand / trade name", c.brandName || c.clientLegalName);
+  c.slug = slugify(await ask(rl, "  Client slug", c.slug || c.brandName || c.clientLegalName));
+  c.contactName = await ask(rl, "  Day-to-day contact name", c.contactName);
+  c.contactRole = await ask(rl, "  Contact role", c.contactRole);
+  c.contactEmail = await ask(rl, "  Contact email", c.contactEmail);
+  c.decisionMaker = await ask(rl, "  Final approval stakeholder", c.decisionMaker || c.contactName);
+  c.techLead = await ask(rl, "  Client technical lead", c.techLead);
+
+  console.log("\n📊 Client onboarding — Section 2/5: Business & market");
+  c.businessModel = await choose(
+    rl,
+    "  Business model:",
+    [
+      { value: "b2b-saas", label: "B2B SaaS", note: "Subscription software sold to businesses" },
+      { value: "b2c-ecommerce", label: "B2C E-Commerce", note: "Direct-to-consumer catalog and checkout" },
+      { value: "agency-service", label: "Agency / Professional Service", note: "Client services and retainers" },
+      { value: "marketplace", label: "Two-Sided Marketplace", note: "Supply and demand matching" },
+      { value: "media-publisher", label: "Media / Publisher", note: "Editorial, newsletter, or content network" },
+      { value: "nonprofit", label: "Nonprofit / Mission-Driven", note: "Donations, grants, or public programs" },
+      { value: "local-business", label: "Local Business / Services", note: "Location-led service business" },
+      { value: "enterprise", label: "Enterprise / Internal Platform", note: "Internal tool or enterprise division" },
+      { value: "custom", label: "Custom Business Model" },
+    ],
+    c.businessModel || "b2b-saas",
+  );
+  c.companyStage = await choose(
+    rl,
+    "  Company stage:",
+    [
+      { value: "idea", label: "Idea / Pre-Launch" },
+      { value: "bootstrapped", label: "Bootstrapped / Profitable" },
+      { value: "seed", label: "Seed" },
+      { value: "series-a", label: "Series A+" },
+      { value: "growth", label: "Growth / Scale-Up" },
+      { value: "enterprise", label: "Enterprise" },
+      { value: "established", label: "Established / Legacy Business" },
+    ],
+    c.companyStage || "bootstrapped",
+  );
+  c.revenueBand = await choose(
+    rl,
+    "  Revenue band:",
+    [
+      { value: "pre-revenue", label: "Pre-Revenue" },
+      { value: "<100k", label: "Under $100k ARR" },
+      { value: "100k-1m", label: "$100k – $1M ARR" },
+      { value: "1m-10m", label: "$1M – $10M ARR" },
+      { value: "10m-100m", label: "$10M – $100M ARR" },
+      { value: "100m+", label: "$100M+ ARR" },
+    ],
+    c.revenueBand || "pre-revenue",
+  );
+  c.industry = await ask(rl, "  Industry / market vertical", c.industry);
+  c.mission = await ask(rl, "  Mission (what the client does every day)", c.mission);
+  c.vision = await ask(rl, "  Vision (10-year north star)", c.vision);
+  c.icp = await ask(rl, "  Target customer / ICP", c.icp);
+  c.coreProblem = await ask(rl, "  Core problem solved", c.coreProblem);
+  c.competitors = splitCsv(
+    await ask(rl, "  Top competitors (comma-separated)", c.competitors.join(", ")),
+    c.competitors,
+  );
+  c.objections = splitCsv(
+    await ask(rl, "  Top customer objections (comma-separated)", c.objections.join(", ")),
+    c.objections,
+  );
+  c.launchGoal = await ask(rl, "  Single launch-success metric", c.launchGoal);
+
+  console.log("\n📦 Client onboarding — Section 3/5: Offerings & scope");
+  c.offerings = splitCsv(
+    await ask(rl, "  Offerings / products / packages (comma-separated)", c.offerings.join(", ")),
+    c.offerings,
+  );
+  c.boundaries = splitCsv(
+    await ask(rl, "  Explicitly OUT of scope (comma-separated)", c.boundaries.join(", ")),
+    c.boundaries,
+  );
+
+  console.log("\n🤝 Client onboarding — Section 4/5: Engagement & commercial");
+  c.engagement = await choose(
+    rl,
+    "  Engagement type:",
+    [
+      { value: "fixed-scope", label: "Fixed Scope", note: "One deliverable, one price" },
+      { value: "retainer", label: "Retainer", note: "Ongoing monthly capacity" },
+      { value: "time-materials", label: "Time & Materials", note: "Hourly or day-rate billing" },
+      { value: "productized-sku", label: "Productized SKU", note: "Turnkey fixed-outcome package" },
+      { value: "internal", label: "Internal Project", note: "Own product or internal team" },
+      { value: "oss", label: "Open Source", note: "Public repository and community" },
+    ],
+    c.engagement || "fixed-scope",
+  );
+  c.slaTier = await choose(
+    rl,
+    "  SLA tier:",
+    [
+      { value: "standard", label: "Standard", note: "Business-hours response" },
+      { value: "priority", label: "Priority", note: "Same-day response" },
+      { value: "enterprise", label: "Enterprise", note: "Dedicated escalation path" },
+      { value: "none", label: "No SLA" },
+    ],
+    c.slaTier || "standard",
+  );
+  c.budget = await ask(rl, "  Budget band / commercial ceiling", c.budget);
+  c.kickoffDate = await ask(rl, "  Kickoff date (YYYY-MM-DD)", c.kickoffDate);
+  c.deadline = await ask(rl, "  Hard delivery deadline (YYYY-MM-DD)", c.deadline);
+  c.commsChannel = await choose(
+    rl,
+    "  Primary communication channel:",
+    [
+      { value: "slack", label: "Slack Connect" },
+      { value: "email", label: "Email" },
+      { value: "telegram", label: "Telegram" },
+      { value: "whatsapp", label: "WhatsApp" },
+      { value: "weekly-call", label: "Weekly Call" },
+      { value: "other", label: "Other" },
+    ],
+    c.commsChannel || "email",
+  );
+  c.commsCadence = await choose(
+    rl,
+    "  Reporting cadence:",
+    [
+      { value: "daily", label: "Daily" },
+      { value: "weekly", label: "Weekly" },
+      { value: "biweekly", label: "Bi-weekly" },
+      { value: "monthly", label: "Monthly" },
+      { value: "milestone", label: "Milestone-based" },
+    ],
+    c.commsCadence || "weekly",
+  );
+
+  console.log("\n🔐 Client onboarding — Section 5/5: Technical access & integrations");
+  c.domain = await ask(rl, "  Primary production domain", c.domain);
+  c.dnsProvider = await choose(
+    rl,
+    "  DNS provider:",
+    [
+      { value: "cloudflare", label: "Cloudflare" },
+      { value: "route53", label: "AWS Route 53" },
+      { value: "namecheap", label: "Namecheap" },
+      { value: "godaddy", label: "GoDaddy" },
+      { value: "vercel", label: "Vercel DNS" },
+      { value: "other", label: "Other / Unknown" },
+    ],
+    c.dnsProvider || "cloudflare",
+  );
+  c.gitHost = await choose(
+    rl,
+    "  Git host:",
+    [
+      { value: "github", label: "GitHub" },
+      { value: "gitlab", label: "GitLab" },
+      { value: "bitbucket", label: "Bitbucket" },
+      { value: "self-hosted", label: "Self-Hosted" },
+      { value: "none", label: "None / Local Only" },
+    ],
+    c.gitHost || "github",
+  );
+  c.payments = await chooseMany(
+    rl,
+    "  Payment rails:",
+    [
+      { value: "stripe", label: "Stripe" },
+      { value: "razorpay", label: "Razorpay" },
+      { value: "paypal", label: "PayPal" },
+      { value: "cashfree", label: "Cashfree" },
+      { value: "lemonsqueezy", label: "Lemon Squeezy" },
+      { value: "paddle", label: "Paddle" },
+      { value: "square", label: "Square" },
+      { value: "none", label: "None / Undecided" },
+    ],
+    c.payments,
+  );
+  c.integrations = await chooseMany(
+    rl,
+    "  Third-party services already in use:",
+    [
+      { value: "hubspot", label: "HubSpot CRM" },
+      { value: "salesforce", label: "Salesforce" },
+      { value: "mailchimp", label: "Mailchimp" },
+      { value: "resend", label: "Resend" },
+      { value: "postmark", label: "Postmark" },
+      { value: "segment", label: "Segment" },
+      { value: "ga4", label: "Google Analytics 4" },
+      { value: "plausible", label: "Plausible" },
+      { value: "mixpanel", label: "Mixpanel" },
+      { value: "sentry", label: "Sentry" },
+      { value: "intercom", label: "Intercom" },
+      { value: "zendesk", label: "Zendesk" },
+      { value: "slack", label: "Slack" },
+      { value: "notion", label: "Notion" },
+      { value: "airtable", label: "Airtable" },
+    ],
+    c.integrations,
+  );
+  const customIntegrations = await ask(rl, "  Other services (comma-separated, optional)", "");
+  if (customIntegrations) {
+    c.integrations = [...new Set([...c.integrations, ...splitCsv(customIntegrations)])];
+  }
+  c.brandAssets = await ask(rl, "  Brand assets location (drive/folder/URL)", c.brandAssets);
+  c.figma = await ask(rl, "  Figma / design file URL", c.figma);
+  c.accessItems = await chooseMany(
+    rl,
+    "  Access items required from the client:",
+    [
+      { value: "Domain / DNS management", label: "Domain / DNS management" },
+      { value: "Git host organization access", label: "Git host organization access" },
+      { value: "Hosting / Cloud account", label: "Hosting / Cloud account" },
+      { value: "Payment gateway account", label: "Payment gateway account" },
+      { value: "CMS / admin access", label: "CMS / admin access" },
+      { value: "Analytics property access", label: "Analytics property access" },
+      { value: "Ad account access", label: "Ad account access" },
+      { value: "Email / transactional sender", label: "Email / transactional sender" },
+      { value: "Brand asset folder", label: "Brand asset folder" },
+      { value: "Figma / design file", label: "Figma / design file" },
+      { value: "Database / API credentials", label: "Database / API credentials" },
+    ],
+    c.accessItems,
+  );
+
+  c.slug = slugify(c.slug || c.brandName || c.clientLegalName);
+  c.onboardingDate = new Date().toISOString().split("T")[0];
+  c.status = "VERIFIED_COMPLETE";
+  return c;
+}
+
+interface ClientDocContext {
+  projectName: string;
+  authorName: string;
+  projectDesc: string;
+  industry: string;
+  targetAudience: string;
+  coreProblem: string;
+  brandVoice: string;
+  colorPalette: string;
+  offerings: string;
+  firstMilestone: string;
+  config: StackConfig;
+}
+
+function stackSummary(config: StackConfig): string {
+  return `framework \`${config.framework}\`, CMS \`${config.cms}\`, e-commerce \`${config.ecommerce}\`, database \`${config.db}\`, auth \`${config.auth}\`, styling \`${config.styling}\`, animation \`${config.animation}\`, state \`${config.state}\`, deploy \`${config.deploy}\``;
+}
+
+function buildClientTokenMap(
+  client: ClientOnboarding,
+  ctx: ClientDocContext,
+  baseTokens: Record<string, string>,
+): Record<string, string> {
+  const lead = displayValue(client.contactName);
+  const leadContact = client.contactEmail?.trim() ? `${lead} <${client.contactEmail.trim()}>` : lead;
+  return {
+    ...baseTokens,
+    "{{CLIENT_LEGAL_NAME}}": displayValue(client.clientLegalName, displayValue(ctx.authorName)),
+    "{{CLIENT_BRAND_NAME}}": displayValue(client.brandName, displayValue(ctx.projectName)),
+    "{{CLIENT_SLUG}}": slugify(client.slug || client.brandName || client.clientLegalName || ctx.projectName),
+    "{{CLIENT_CONTACT}}": lead,
+    "{{CLIENT_CONTACT_ROLE}}": displayValue(client.contactRole),
+    "{{CLIENT_CONTACT_EMAIL}}": displayValue(client.contactEmail),
+    "{{CLIENT_PRIMARY_CONTACT}}": leadContact,
+    "{{DECISION_MAKER}}": displayValue(client.decisionMaker),
+    "{{TECH_LEAD}}": displayValue(client.techLead),
+    "{{BUSINESS_MODEL}}": businessModelLabel(client.businessModel),
+    "{{COMPANY_STAGE}}": displayValue(client.companyStage),
+    "{{REVENUE_BAND}}": displayValue(client.revenueBand),
+    "{{MISSION}}": displayValue(client.mission),
+    "{{VISION}}": displayValue(client.vision),
+    "{{COMPETITORS}}": client.competitors.join(", ") || "_(to confirm with client)_",
+    "{{COMPETITORS_LIST}}": bulletList(client.competitors),
+    "{{OBJECTIONS}}": client.objections.join(", ") || "_(to confirm with client)_",
+    "{{OBJECTIONS_LIST}}": bulletList(client.objections),
+    "{{LAUNCH_GOAL}}": displayValue(client.launchGoal),
+    "{{BOUNDARIES}}": client.boundaries.join(", ") || "_(to confirm with client)_",
+    "{{BOUNDARIES_LIST}}": bulletList(client.boundaries),
+    "{{PRIMARY_DOMAIN}}": displayValue(
+      client.domain,
+      displayValue(`${ctx.projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`),
+    ),
+    "{{DNS_PROVIDER}}": displayValue(client.dnsProvider),
+    "{{GIT_HOST}}": displayValue(client.gitHost),
+    "{{PAYMENTS}}": client.payments.join(", ") || "_(to confirm with client)_",
+    "{{PAYMENTS_LIST}}": bulletList(client.payments),
+    "{{INTEGRATIONS}}": client.integrations.join(", ") || "_(to confirm with client)_",
+    "{{INTEGRATIONS_LIST}}": bulletList(client.integrations),
+    "{{BRAND_ASSETS}}": displayValue(client.brandAssets),
+    "{{FIGMA_URL}}": displayValue(client.figma),
+    "{{SLA_TIER}}": displayValue(client.slaTier),
+    "{{ENGAGEMENT_TYPE}}": displayValue(client.engagement),
+    "{{COMMS_CHANNEL}}": displayValue(client.commsChannel),
+    "{{COMMS_CADENCE}}": displayValue(client.commsCadence),
+    "{{KICKOFF_DATE}}": displayValue(client.kickoffDate),
+    "{{DEADLINE}}": displayValue(client.deadline),
+    "{{BUDGET}}": displayValue(client.budget),
+    "{{ACCESS_ITEMS}}": client.accessItems.join(", ") || "_(to confirm with client)_",
+    "{{ACCESS_ITEMS_LIST}}": bulletList(client.accessItems),
+    "{{ONBOARDING_DATE}}": displayValue(client.onboardingDate, new Date().toISOString().split("T")[0]),
+    "{{ONBOARDING_STATUS}}": client.status,
+    "{{OFFERINGS_LIST}}": numberedList(client.offerings, displayValue(ctx.offerings)),
+    "{{STACK_DETAILS}}": stackSummary(ctx.config),
+    "{{FIRST_MILESTONE}}": displayValue(ctx.firstMilestone),
+    "{{INDUSTRY}}": displayValue(client.industry, displayValue(ctx.industry)),
+    "{{TARGET_AUDIENCE}}": displayValue(client.icp, displayValue(ctx.targetAudience)),
+    "{{PROBLEM_SOLVED}}": displayValue(client.coreProblem, displayValue(ctx.coreProblem)),
+    "{{BRAND_VOICE}}": displayValue(client.brandVoice, displayValue(ctx.brandVoice)),
+    "{{OFFERINGS}}": client.offerings.length > 0 ? client.offerings.join(", ") : displayValue(ctx.offerings),
+  };
+}
+
+function renderClientTemplate(templatePath: string, tokens: Record<string, string>): string | null {
+  if (!existsSync(templatePath)) return null;
+  let content = readFileSync(templatePath, "utf8");
+  for (const [token, value] of Object.entries(tokens)) {
+    content = content.replaceAll(token, value);
+  }
+  return content.replace(/\{\{[A-Z0-9_]+\}\}/g, "_(to confirm with client)_");
+}
+
+function provisionClientOnboardingDocs(
+  targetDir: string,
+  client: ClientOnboarding,
+  ctx: ClientDocContext,
+  baseTokens: Record<string, string>,
+  dryRun: boolean,
+): string[] {
+  const templateRoot = join(TEMPLATES_DIR, "Client-Intake");
+  const tokens = buildClientTokenMap(client, ctx, baseTokens);
+  const written: string[] = [];
+  const docs = [
+    "01-Brand/brand-identity.md",
+    "01-Brand/visual-direction.md",
+    "01-Brand/voice-and-tone.md",
+    "02-Business/business-model.md",
+    "02-Business/audience-persona.md",
+    "03-Offerings/offerings-catalog.md",
+    "03-Offerings/scope-deliverables.md",
+    "04-Technical-Intake/access-and-credentials.md",
+    "04-Technical-Intake/integrations-matrix.md",
+  ];
+
+  for (const relativePath of docs) {
+    const content = renderClientTemplate(join(templateRoot, relativePath), tokens);
+    if (content === null) continue;
+    const destination = join(targetDir, "Client-Intake", relativePath);
+    if (!dryRun) {
+      mkdirSync(dirname(destination), { recursive: true });
+      writeFileSync(destination, content, "utf8");
+    }
+    written.push(`Client-Intake/${relativePath}`);
+  }
+
+  const startHere = renderClientTemplate(join(templateRoot, "start-here.md"), tokens);
+  if (startHere !== null) {
+    const destination = join(targetDir, "start-here.md");
+    if (!dryRun) writeFileSync(destination, startHere, "utf8");
+    written.push("start-here.md");
+  }
+
+  return written;
+}
+
+async function compileClientBrandDocs(targetDir: string, briefPath: string, dryRun: boolean): Promise<string[]> {
+  if (dryRun) return [];
+  try {
+    const { compileIntake } = await import("../../../agency-delivery/brand/scripts/intake-compiler");
+    const result = await compileIntake(targetDir, { briefPath, dryRun: false, force: true });
+    return result.filesWritten.map((file) => relative(targetDir, file));
+  } catch (error) {
+    console.warn(`  ⚠️  Brand intake compiler unavailable; intake docs were still written (${String(error)})`);
+    return [];
+  }
 }
 
 interface PaletteColors {
@@ -1502,6 +2282,44 @@ async function main() {
   let agentName = values["agent-name"];
   let agentRole = values["agent-role"];
   let primaryConstraint = values.constraint;
+  let clientOnboarding: ClientOnboarding = { ...CLIENT_ONBOARDING_DEFAULTS };
+  const CLIENT_FLAG_KEYS = [
+    "client-name",
+    "client-brand",
+    "client-slug",
+    "client-contact",
+    "client-role",
+    "client-email",
+    "decision-maker",
+    "tech-lead",
+    "business-model",
+    "company-stage",
+    "revenue-band",
+    "mission",
+    "vision",
+    "competitors",
+    "objections",
+    "launch-goal",
+    "boundaries",
+    "domain",
+    "dns-provider",
+    "git-host",
+    "payments",
+    "integrations",
+    "brand-assets",
+    "figma",
+    "sla-tier",
+    "engagement",
+    "comms-channel",
+    "comms-cadence",
+    "kickoff-date",
+    "deadline",
+    "budget",
+    "access-items",
+  ];
+  const hasClientFlags = CLIENT_FLAG_KEYS.some((key) => Boolean((values as Record<string, unknown>)[key]));
+  const clientOnboardingRequested = Boolean(values["onboard-client"]);
+  let clientOnboardingEnabled = false;
 
   let config: StackConfig = {
     intent: values.intent || "brochure",
@@ -1551,6 +2369,27 @@ async function main() {
     projectName = basename(resolve(process.cwd(), targetPath));
   }
 
+  if (values.intake) {
+    clientOnboarding = applyIntakeSource(clientOnboarding, loadIntakeSource(resolve(process.cwd(), values.intake)));
+  }
+  clientOnboarding = applyClientFlagOverrides(clientOnboarding);
+
+  const seedClientDefaults = () => {
+    const seedName = projectName || authorName || "";
+    if (!clientOnboarding.clientLegalName) clientOnboarding.clientLegalName = seedName;
+    if (authorName && clientOnboarding.clientLegalName === seedName) {
+      clientOnboarding.clientLegalName = authorName;
+    }
+    if (!clientOnboarding.brandName) clientOnboarding.brandName = seedName;
+    if (!clientOnboarding.slug) clientOnboarding.slug = slugify(clientOnboarding.brandName || seedName);
+    if (!clientOnboarding.industry && industry) clientOnboarding.industry = industry;
+    if (!clientOnboarding.icp && targetAudience) clientOnboarding.icp = targetAudience;
+    if (!clientOnboarding.coreProblem && coreProblem) clientOnboarding.coreProblem = coreProblem;
+    if (!clientOnboarding.brandVoice && brandVoice) clientOnboarding.brandVoice = brandVoice;
+    if (clientOnboarding.offerings.length === 0 && offerings) clientOnboarding.offerings = splitCsv(offerings);
+    if (!clientOnboarding.launchGoal && firstMilestone) clientOnboarding.launchGoal = firstMilestone;
+  };
+
   // =========================================================================
   // INTERACTIVE ONBOARDING MODE
   // =========================================================================
@@ -1568,6 +2407,7 @@ async function main() {
         const defaultName = basename(resolve(process.cwd(), targetPath));
         projectName = await ask(rl, "🏷️  Project Name", defaultName);
       }
+      seedClientDefaults();
 
       // =====================================================================
       // STAGE 2: Progressive Decision Pipeline (5-Step Technical Architecture)
@@ -1575,179 +2415,263 @@ async function main() {
       console.log("\n⚡ STAGE 2: Progressive Technical Architecture Pipeline");
 
       // Step 1: Project Type / Archetype
-      console.log("\n🎯 Step 1: Project Archetype");
-      console.log(
-        "  [1] Static & Edge Site          (Cloudflare Pages, GitHub Pages, Astro, portfolio, docs) [Default]",
+      const archetype = await choose(
+        rl,
+        "\n🎯 Step 1: Project Archetype",
+        [
+          {
+            value: "static-edge",
+            label: "Static & Edge Site",
+            note: "Astro/Instatic/HTML, Cloudflare or GitHub Pages, portfolio, docs",
+          },
+          {
+            value: "content-publisher",
+            label: "Dynamic Content Publisher",
+            note: "Blog, publication, docs portal, editorial network",
+          },
+          {
+            value: "ecommerce",
+            label: "E-Commerce Storefront",
+            note: "Catalog, cart, checkout, payments, inventory",
+          },
+          {
+            value: "fullstack-app",
+            label: "Full-Stack SaaS & Web App",
+            note: "Next.js/Astro SSR, database, auth, background jobs",
+          },
+          {
+            value: "internal-tool",
+            label: "Internal Tool / Daemon",
+            note: "Ops dashboard, admin console, automation service",
+          },
+          {
+            value: "mobile-native",
+            label: "Native Mobile App",
+            note: "Expo React Native, App Store / Play Store",
+          },
+          {
+            value: "web-to-native",
+            label: "Web-to-Native Wrapper",
+            note: "Astro/Next.js web app packaged with Ionic Capacitor",
+          },
+          {
+            value: "creative-studio",
+            label: "Creative & Graphic Studio",
+            note: "Brand tokens, visual identity, Figma handoff, social assets",
+          },
+          {
+            value: "oss-library",
+            label: "Open-Source Library / CLI",
+            note: "Public package, CI, MIT/Apache license, docs site",
+          },
+          {
+            value: "growth-retainer",
+            label: "Growth & Marketing Retainer",
+            note: "SMM, SEO, paid ads, zero heavy backend",
+          },
+          {
+            value: "governance",
+            label: "Governance-Only / Existing Repo",
+            note: "DOX container and standards on an existing workspace",
+          },
+          {
+            value: "custom",
+            label: "Custom / Other Stack",
+            note: "Describe your own architecture after selection",
+          },
+        ],
+        "static-edge",
       );
-      console.log("  [2] Full-Stack SaaS & Web App   (Next.js, Astro SSR, database, auth, Docker/Cloud)");
-      console.log("  [3] E-Commerce Storefront (Ecom)(Medusa v2, Stripe checkout, product catalog, cart)");
-      console.log(
-        "  [4] Creative & Graphic Studio   (Brand tokens, visual identity, Figma handoff, decks, social assets)",
-      );
-      console.log("  [5] Open-Source (OSS) Library   (Public package/CLI, GitHub Actions CI, MIT/Apache license)");
-      console.log("  [6] Growth & Marketing Retainer (SMM, SEO, Paid Ads campaigns, zero heavy backend)");
-      console.log("  [7] Mobile Application          (Expo React Native, Ionic Capacitor)");
-      console.log("  [8] Custom / DOX Baseline       (Agent governance container on existing workspace)");
 
-      const purposeChoice = await ask(rl, "Select project archetype [1-8]", "1");
-      const purposeMap: Record<string, string> = {
-        "1": "content",
-        "2": "app",
-        "3": "ecommerce",
-        "4": "graphics",
-        "5": "oss",
-        "6": "growth",
-        "7": "mobile",
-        "8": "governance",
+      const archetypeIntentMap: Record<string, string> = {
+        "static-edge": "content",
+        "content-publisher": "content",
+        ecommerce: "ecommerce",
+        "fullstack-app": "app",
+        "internal-tool": "app",
+        "mobile-native": "mobile",
+        "web-to-native": "mobile",
+        "creative-studio": "graphics",
+        "oss-library": "oss",
+        "growth-retainer": "growth",
+        governance: "governance",
+        custom: "custom",
       };
-      config.intent = purposeMap[purposeChoice] || "content";
+      config.intent = archetypeIntentMap[archetype] || "content";
+      config.mobile = "none";
 
       // Step 2: Framework Selection
-      console.log("\n⚡ Step 2: Framework Selection (always pinned to @latest):");
-      if (config.intent === "content" || config.intent === "brochure") {
-        console.log("  [1] Astro (@latest)          (Zero-JS baseline, component islands, fast SSG/SSR) [Recommended]");
-        console.log("  [2] Pure HTML                (Zero build step, semantic BEM, OKLCH fluid design tokens)");
-        console.log("  [3] Next.js 16 (@latest)     (React 19 App Router, full-stack static export)");
-        console.log("  [4] Custom");
-        const fwChoice = await ask(rl, "Choose framework [1-4]", "1");
-        if (fwChoice === "1") config.framework = "astro";
-        else if (fwChoice === "2") {
-          config.framework = "html";
-          config.styling = "bem";
-          config.animation = "css";
-          config.state = "none";
-          config.cms = "none";
-        } else if (fwChoice === "3") config.framework = "nextjs";
-        else {
-          config.framework = "custom";
-          config.customFramework = await ask(rl, "Custom framework name", "custom-content");
-        }
+      let frameworkDefault = "astro";
+      let frameworkOptions: ChoiceOption[] = [];
+      if (config.intent === "content") {
+        frameworkOptions = [
+          { value: "astro", label: "Astro (@latest)", note: "Zero-JS baseline, islands, SSG/SSR" },
+          { value: "html", label: "Pure HTML", note: "Zero build step, semantic BEM, OKLCH tokens" },
+          { value: "instatic", label: "Instatic SSG", note: "Zero-runtime SSG with content collections" },
+          { value: "nextjs", label: "Next.js 16 (@latest)", note: "React 19 App Router, static export" },
+          { value: "wordpress", label: "Roots Bedrock", note: "Modern WordPress 6.x, Composer, Gutenberg" },
+          { value: "custom", label: "Custom Framework" },
+        ];
       } else if (config.intent === "app") {
-        console.log("  [1] Next.js 16 (@latest)     (React 19 App Router, Server Actions) [Recommended]");
-        console.log("  [2] Astro v7 SSR (@latest)   (Hybrid server output, ultra-fast content + islands)");
-        console.log("  [3] Custom");
-        const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
-        config.framework = fwChoice === "2" ? "astro" : fwChoice === "3" ? "custom" : "nextjs";
+        frameworkDefault = "nextjs";
+        frameworkOptions = [
+          { value: "nextjs", label: "Next.js 16 (@latest)", note: "React 19 App Router, Server Actions" },
+          { value: "astro", label: "Astro v7 SSR (@latest)", note: "Hybrid server output + islands" },
+          { value: "wordpress", label: "Roots Bedrock", note: "When the app lives inside WordPress" },
+          { value: "none", label: "No Framework", note: "API/service-only workspace" },
+          { value: "custom", label: "Custom Framework" },
+        ];
       } else if (config.intent === "ecommerce") {
-        console.log("  [1] Astro (@latest)          (High-performance storefront with visual editor) [Recommended]");
-        console.log("  [2] Next.js 16 (@latest)     (React 19 App Router fullstack storefront)");
-        console.log("  [3] Custom");
-        const fwChoice = await ask(rl, "Choose framework [1-3]", "1");
-        config.framework = fwChoice === "2" ? "nextjs" : fwChoice === "3" ? "custom" : "astro";
+        frameworkOptions = [
+          { value: "astro", label: "Astro (@latest)", note: "High-performance storefront + visual editor" },
+          { value: "nextjs", label: "Next.js 16 (@latest)", note: "React 19 App Router full-stack storefront" },
+          { value: "wordpress", label: "Roots Bedrock + WooCommerce", note: "Classic WordPress commerce" },
+          { value: "custom", label: "Custom Framework" },
+        ];
       } else if (config.intent === "graphics") {
-        console.log("  [1] Pure Design System & Tokens (HTML showcase, W3C tokens, OKLCH fluid clamp) [Recommended]");
-        console.log("  [2] Astro Visual Styleguide     (Component token viewer & brand documentation)");
-        console.log("  [3] None / Headless Asset Vault (Only .agents/brand/ & creative/ assets)");
-        const fwChoice = await ask(rl, "Choose graphics delivery mode [1-3]", "1");
-        if (fwChoice === "1") {
-          config.framework = "html";
-          config.styling = "bem";
-        } else if (fwChoice === "2") {
-          config.framework = "astro";
-          config.styling = "hybrid";
-        } else {
-          config.framework = "none";
-          config.styling = "none";
-        }
-        config.cms = "none";
-        config.db = "none";
-        config.auth = "none";
-        config.ecommerce = "none";
+        frameworkOptions = [
+          { value: "html", label: "Pure Design System & Tokens", note: "HTML showcase, W3C tokens, OKLCH clamp" },
+          { value: "astro", label: "Astro Visual Styleguide", note: "Token viewer & brand documentation" },
+          { value: "none", label: "Headless Asset Vault", note: "Only .agents/brand/ & creative/ assets" },
+        ];
       } else if (config.intent === "oss") {
-        console.log("  [1] TypeScript Library / CLI Harness [Recommended]");
-        console.log("  [2] Plain Astro Documentation Suite");
-        console.log("  [3] Pure Markdown & Script Container");
-        const fwChoice = await ask(rl, "Choose OSS architecture [1-3]", "1");
-        config.framework = fwChoice === "2" ? "astro" : "none";
-        config.cms = "none";
-        config.db = "none";
-        config.auth = "none";
-        config.ecommerce = "none";
+        frameworkOptions = [
+          { value: "none", label: "TypeScript Library / CLI Harness" },
+          { value: "astro", label: "Astro Documentation Suite" },
+          { value: "custom", label: "Custom Package Structure" },
+        ];
       } else if (config.intent === "growth") {
-        config.framework = "none";
-        config.styling = "none";
+        frameworkOptions = [
+          { value: "none", label: "No Framework", note: "Strategy, content, and campaign workspace only" },
+        ];
+      } else if (config.intent === "mobile") {
+        frameworkOptions = [
+          { value: "expo", label: "React Native with Expo", note: "Native iOS/Android with Expo Router" },
+          { value: "astro-capacitor", label: "Astro + Ionic Capacitor", note: "Convert Astro web app to native" },
+          { value: "nextjs-capacitor", label: "Next.js + Capacitor", note: "Convert Next.js web app to native" },
+          { value: "custom", label: "Custom Mobile Architecture" },
+        ];
+        if (archetype === "web-to-native") frameworkDefault = "astro-capacitor";
+      } else if (config.intent === "governance") {
+        frameworkOptions = [{ value: "none", label: "No Framework", note: "Governance container only" }];
+      } else {
+        frameworkOptions = [
+          { value: "astro", label: "Astro (@latest)" },
+          { value: "nextjs", label: "Next.js 16 (@latest)" },
+          { value: "html", label: "Pure HTML" },
+          { value: "instatic", label: "Instatic SSG" },
+          { value: "wordpress", label: "Roots Bedrock" },
+          { value: "expo", label: "Expo React Native" },
+          { value: "none", label: "No Framework / Governance only" },
+          { value: "custom", label: "Custom Framework" },
+        ];
+      }
+
+      const frameworkChoice = await choose(
+        rl,
+        "\n⚡ Step 2: Framework Selection (always pinned to @latest)",
+        frameworkOptions,
+        frameworkDefault,
+      );
+      if (frameworkChoice === "astro-capacitor") {
+        config.framework = "astro";
+        config.mobile = "capacitor";
+      } else if (frameworkChoice === "nextjs-capacitor") {
+        config.framework = "nextjs";
+        config.mobile = "capacitor";
+      } else if (frameworkChoice === "expo") {
+        config.framework = "expo";
+        config.mobile = "expo";
+      } else {
+        config.framework = frameworkChoice;
+      }
+      if (config.framework === "html") {
+        config.styling = "bem";
+        config.animation = "css";
+        config.state = "none";
         config.cms = "none";
+      }
+      if (config.framework === "custom") {
+        config.customFramework = await ask(rl, "Custom framework name", "custom-stack");
+      }
+      if (config.intent === "mobile") config.state = "nanostores";
+      if (config.intent === "graphics" || config.intent === "growth" || config.intent === "oss") {
         config.db = "none";
         config.auth = "none";
         config.ecommerce = "none";
-      } else if (config.intent === "mobile") {
-        console.log("  [1] React Native with Expo   (Native iOS/Android with Expo Router) [Recommended]");
-        console.log("  [2] Astro + Ionic Capacitor  (Convert Astro web app to native APK/iOS)");
-        console.log("  [3] Next.js + Capacitor      (Convert Next.js web app to native APK/iOS)");
-        console.log("  [4] Custom");
-        const mobChoice = await ask(rl, "Choose mobile architecture [1-4]", "1");
-        if (mobChoice === "1") {
-          config.framework = "expo";
-          config.mobile = "expo";
-        } else if (mobChoice === "2") {
-          config.framework = "astro";
-          config.mobile = "capacitor";
-        } else if (mobChoice === "3") {
-          config.framework = "nextjs";
-          config.mobile = "capacitor";
-        } else {
-          config.framework = "custom";
-          config.mobile = "custom";
-        }
-        config.state = "nanostores";
-      } else {
-        config.framework = "none";
+      }
+      if (config.intent === "growth" || config.intent === "governance") {
+        config.cms = "none";
       }
 
       // Step 3: Framework Variant & CMS Selection
-      console.log("\n📦 Step 3: Framework Variant & CMS Selection:");
       if (config.framework === "astro") {
-        console.log("  [1] Plain Astro Framework    (Clean baseline, pure .astro, zero React) [Recommended]");
-        console.log("  [2] Aria Builder Studio      (Visual block editor platform, Vue studio, /admin)");
-        console.log("  [3] Astro + Emdash CMS       (Cloudflare edge D1/R2, worker bridge, live loader, React admin)");
-        console.log("  [4] Astro + StudioCMS        (LibSQL/Turso SSR blog & docs CMS)");
-        console.log("  [5] Astro + Git-based CMS    (Native Content Collections, Markdown/MDX schemas, RSS)");
-        console.log("  [6] Astro + Payload CMS      (Headless Payload CMS connection)");
-        console.log("  [7] Astro + WollyCMS         (Self-hosted headless CMS, BlockRenderer, SQLite/Postgres)");
-        console.log("  [8] None / Pure Baseline");
-        const cmsChoice = await ask(rl, "Choose Astro variant / CMS [1-8]", "1");
-        const cmsMap: Record<string, string> = {
-          "1": "none",
-          "2": "ariabuilder",
-          "3": "emdash",
-          "4": "studiocms",
-          "5": "git",
-          "6": "payload",
-          "7": "wollycms",
-          "8": "none",
-        };
-        config.cms = cmsMap[cmsChoice] || "none";
+        config.cms = await choose(
+          rl,
+          "\n📦 Step 3: Astro Variant & CMS",
+          [
+            { value: "none", label: "Plain Astro Baseline", note: "Pure .astro, zero React" },
+            {
+              value: "ariabuilder",
+              label: "Aria Builder Studio",
+              note: "Visual block editor, /admin, isolated official scaffold",
+            },
+            { value: "emdash", label: "Astro + Emdash CMS", note: "Cloudflare D1/R2 edge CMS" },
+            { value: "studiocms", label: "Astro + StudioCMS", note: "LibSQL/Turso SSR blog & docs" },
+            { value: "git", label: "Astro + Git-based Content Collections", note: "Markdown/MDX + RSS" },
+            { value: "payload", label: "Astro + Payload CMS", note: "Headless Payload connection" },
+            { value: "wollycms", label: "Astro + WollyCMS", note: "Self-hosted headless CMS" },
+            { value: "keystatic", label: "Astro + Keystatic", note: "Flat-file Git collections + /keystatic" },
+            { value: "tina", label: "Astro + TinaCMS", note: "Official setup notice after scaffold" },
+            { value: "decap", label: "Astro + Decap CMS", note: "Git-backed editorial UI" },
+            { value: "keystone", label: "Astro + Keystone", note: "GraphQL headless CMS" },
+            { value: "sanity", label: "Astro + Sanity", note: "Structured content studio" },
+            { value: "strapi", label: "Astro + Strapi", note: "Self-hosted headless API" },
+            { value: "custom", label: "Custom CMS", note: "Wire per its official docs" },
+          ],
+          "none",
+        );
       } else if (config.framework === "html") {
-        console.log(
-          "  [1] Plain HTML               (Semantic HTML5, OKLCH fluid design tokens, zero build) [Recommended]",
+        const htmlChoice = await choose(
+          rl,
+          "\n📦 Step 3: HTML Variant",
+          [
+            { value: "html", label: "Plain HTML", note: "Semantic HTML5, OKLCH tokens, zero build" },
+            { value: "instatic", label: "Instatic Builder", note: "Full Instatic SSG layout and compiler" },
+          ],
+          "html",
         );
-        console.log("  [2] Instatic Builder         (Full Instatic SSG layout and compiler, zero runtime)");
-        const htmlChoice = await ask(rl, "Choose HTML variant [1-2]", "1");
-        if (htmlChoice === "2") {
-          config.framework = "instatic";
-        }
+        config.framework = htmlChoice;
       } else if (config.framework === "nextjs") {
-        console.log("  [1] Plain Next.js            (Clean App Router baseline, Server Actions) [Recommended]");
-        console.log(
-          "  [2] Next.js + Payload CMS 3.0 (Native App Router, TS collections + optional Puck visual canvas)",
+        const nextChoice = await choose(
+          rl,
+          "\n📦 Step 3: Next.js Variant & CMS",
+          [
+            { value: "none", label: "Plain Next.js App Router", note: "Server Actions baseline" },
+            { value: "payload", label: "Next.js + Payload CMS 3.0", note: "Typed collections + optional Puck" },
+            {
+              value: "atomic-payload",
+              label: "Atomic Payload Website Builder",
+              note: "Official isolated template, /admin on :42100",
+            },
+            { value: "git", label: "Next.js + Git-based Content", note: "Markdown/MDX collections" },
+            { value: "keystatic", label: "Next.js + Keystatic", note: "Flat-file Git collections" },
+            { value: "tina", label: "Next.js + TinaCMS", note: "Official setup notice after scaffold" },
+            { value: "decap", label: "Next.js + Decap CMS", note: "Git-backed editorial UI" },
+            { value: "keystone", label: "Next.js + Keystone", note: "GraphQL headless CMS" },
+            { value: "sanity", label: "Next.js + Sanity", note: "Structured content studio" },
+            { value: "strapi", label: "Next.js + Strapi", note: "Self-hosted headless API" },
+            { value: "custom", label: "Custom CMS", note: "Wire per its official docs" },
+          ],
+          "none",
         );
-        console.log(
-          "  [3] Atomic Payload Website Builder  (Official isolated template: Payload + Next.js + Tailwind, every @pro-laico plugin, /admin on :42100)",
-        );
-        console.log("  [4] Next.js + Git-based      (Markdown/MDX collections)");
-        console.log("  [5] None");
-        const nextChoice = await ask(rl, "Choose Next.js variant / CMS [1-5]", "1");
-        if (nextChoice === "2") {
-          config.cms = "payload";
-          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@puckeditor/core)? [y/n]", "y");
-          config.puck = puckChoice.toLowerCase().startsWith("y");
-        } else if (nextChoice === "3") {
-          config.cms = "atomic-payload";
-        } else if (nextChoice === "4") {
-          config.cms = "git";
-        } else {
-          config.cms = "none";
+        config.cms = nextChoice;
+        if (nextChoice === "payload") {
+          const puckChoice = await ask(rl, "🎨 Enable Puck Visual Builder (@puckeditor/core)? (yes/no)", "yes");
+          config.puck = ["y", "yes"].includes(puckChoice.toLowerCase());
         }
+      } else if (config.framework === "wordpress" || config.framework === "expo" || config.framework === "none") {
+        config.cms = "none";
       }
 
       // Step 4: Features & Add-ons (Styling, Animations, State, Database, Auth, E-Commerce)
@@ -1755,222 +2679,283 @@ async function main() {
 
       // 4a. Styling Engine
       if (config.framework !== "html" && config.framework !== "instatic") {
-        console.log("\n🎨 Styling Engine:");
-        console.log("  [1] Hybrid (UnoCSS Wind 4 + Custom BEM) [Recommended]");
-        console.log("  [2] UnoCSS with @unocss/preset-wind4");
-        console.log("  [3] Pure BEM CSS");
-        const stChoice = await ask(rl, "Choose styling [1-3]", "1");
-        config.styling = stChoice === "2" ? "unocss" : stChoice === "3" ? "bem" : "hybrid";
+        config.styling = await choose(
+          rl,
+          "\n🎨 Styling Engine:",
+          [
+            {
+              value: "hybrid",
+              label: "Hybrid: UnoCSS Wind 4 + Custom BEM",
+              note: "Utilities plus semantic components",
+            },
+            { value: "unocss", label: "UnoCSS with @unocss/preset-wind4", note: "Utility-first only" },
+            { value: "bem", label: "Pure BEM CSS", note: "Semantic component classes" },
+            { value: "tailwind", label: "Tailwind CSS", note: "Utility-first with Tailwind config" },
+            { value: "custom", label: "Custom Styling System", note: "Name it next" },
+            { value: "none", label: "No Styling Engine", note: "Bring your own" },
+          ],
+          "hybrid",
+        );
+        if (config.styling === "custom") {
+          config.customStyling = await ask(rl, "  Custom styling system name", "custom-css");
+        }
       }
 
       // 4b. Animations Engine
       if (config.framework !== "expo") {
-        console.log("\n🎭 Animations Engine:");
-        console.log("  [1] Pure CSS hardware-accelerated [Recommended]");
-        console.log("  [2] Motion.dev (Modern animation library)");
-        console.log("  [3] GSAP 3 + ScrollTrigger (High-performance timelines)");
-        console.log("  [4] WebGL (Three.js canvas shaders)");
-        console.log("  [5] None");
-        const anChoice = await ask(rl, "Choose animations [1-5]", "1");
-        const anMap: Record<string, string> = {
-          "1": "css",
-          "2": "motion",
-          "3": "gsap",
-          "4": "webgl",
-          "5": "none",
-        };
-        config.animation = anMap[anChoice] || "css";
+        config.animation = await choose(
+          rl,
+          "\n🎭 Animations Engine:",
+          [
+            { value: "css", label: "Pure CSS hardware-accelerated", note: "Zero dependency, prefers-reduced-motion" },
+            { value: "motion", label: "Motion.dev", note: "Modern React/vanilla animation library" },
+            { value: "gsap", label: "GSAP 3 + ScrollTrigger", note: "High-performance timelines" },
+            { value: "webgl", label: "WebGL / Three.js", note: "Canvas shaders and 3D" },
+            { value: "custom", label: "Custom Animation Stack", note: "Name it next" },
+            { value: "none", label: "None" },
+          ],
+          "css",
+        );
+        if (config.animation === "custom") {
+          config.customAnimation = await ask(rl, "  Custom animation library", "custom-animation");
+        }
       }
 
       // 4c. State Management
       if (config.framework === "astro" || config.framework === "nextjs") {
-        console.log("\n🧠 State Management:");
-        console.log("  [1] NanoStores (sub-1KB cross-island reactive store) [Recommended]");
-        console.log("  [2] None");
-        const stateChoice = await ask(rl, "Choose state store [1-2]", "1");
-        config.state = stateChoice === "1" ? "nanostores" : "none";
+        config.state = await choose(
+          rl,
+          "\n🧠 State Management:",
+          [
+            { value: "nanostores", label: "NanoStores", note: "Sub-1KB cross-island reactive store" },
+            { value: "custom", label: "Custom Store", note: "Name it next" },
+            { value: "none", label: "None" },
+          ],
+          "nanostores",
+        );
+        if (config.state === "custom") {
+          config.customState = await ask(rl, "  Custom state library", "custom-store");
+        }
       }
 
       // 4d. Database & Persistence (if app or user wants DB)
-      if (
+      const databaseRelevant =
         config.intent === "app" ||
         config.intent === "ecommerce" ||
-        config.cms === "studiocms" ||
-        config.cms === "payload"
-      ) {
-        console.log("\n🗄️  Database & Persistence Architecture:");
-        console.log(
-          "  [1] SQLite / Cloudflare D1 + Drizzle ORM [Lightweight edge: zero container, fast] [Recommended]",
+        ["studiocms", "payload", "keystatic", "wollycms", "emdash", "sanity", "strapi"].includes(config.cms);
+      if (databaseRelevant) {
+        config.db = await choose(
+          rl,
+          "\n🗄️  Database & Persistence Architecture:",
+          [
+            { value: "sqlite", label: "SQLite / Cloudflare D1 + Drizzle ORM", note: "Zero container, edge-friendly" },
+            { value: "supabase", label: "Supabase PostgreSQL", note: "Realtime + managed auth" },
+            { value: "neon", label: "Neon Serverless Postgres + Drizzle", note: "Branching, scale-to-zero" },
+            { value: "postgres", label: "Local PostgreSQL 16 + Docker Compose", note: "Full data sovereignty" },
+            { value: "turso", label: "Turso libSQL", note: "Edge-replicated SQLite" },
+            { value: "custom", label: "Custom Database", note: "Name it next" },
+            { value: "none", label: "None (Stateless)" },
+          ],
+          "sqlite",
         );
-        console.log("  [2] Supabase (PostgreSQL + Realtime + Auth)");
-        console.log("  [3] Neon Serverless Postgres + Drizzle ORM");
-        console.log("  [4] Turso (libSQL edge database)");
-        console.log("  [5] Local Postgres + Docker Compose");
-        console.log("  [6] None (Stateless)");
-        const dbChoice = await ask(rl, "Choose database [1-6]", "1");
-        const dbMap: Record<string, string> = {
-          "1": "sqlite",
-          "2": "supabase",
-          "3": "neon",
-          "4": "turso",
-          "5": "postgres",
-          "6": "none",
-        };
-        config.db = dbMap[dbChoice] || "sqlite";
-        if (config.db !== "none" && config.db !== "supabase") {
+        if (config.db === "custom") {
+          config.customDb = await ask(rl, "  Custom database engine", "custom-db");
+        }
+        if (!["none", "supabase", "custom"].includes(config.db)) {
           config.orm = "drizzle";
         }
       }
 
       // 4e. Authentication Strategy
       if (config.db !== "none" && config.db !== "undefined") {
-        console.log("\n🔑 Authentication Strategy:");
-        console.log("  [1] Better Auth (TypeScript-native auth in DB tables) [Recommended]");
-        console.log("  [2] Supabase Auth (Managed cloud auth)");
-        console.log("  [3] None");
-        const authChoice = await ask(rl, "Choose auth [1-3]", "1");
-        const authMap: Record<string, string> = {
-          "1": "better-auth",
-          "2": "supabase",
-          "3": "none",
-        };
-        config.auth = authMap[authChoice] || "better-auth";
+        config.auth = await choose(
+          rl,
+          "\n🔑 Authentication Strategy:",
+          [
+            { value: "better-auth", label: "Better Auth", note: "TypeScript-native auth in your DB tables" },
+            { value: "supabase", label: "Supabase Auth", note: "Managed cloud auth" },
+            { value: "authjs", label: "Auth.js / NextAuth", note: "Provider-heavy Next.js auth" },
+            { value: "custom", label: "Custom Auth", note: "Name it next" },
+            { value: "none", label: "None" },
+          ],
+          "better-auth",
+        );
+        if (config.auth === "custom") {
+          config.customAuth = await ask(rl, "  Custom auth provider", "custom-auth");
+        }
       }
 
-      // 4f. E-Commerce Engine (if ecommerce intent)
+      // 4f. Mobile Packaging (web frameworks only)
+      if (["astro", "nextjs", "html", "instatic"].includes(config.framework) && config.mobile === "none") {
+        config.mobile = await choose(
+          rl,
+          "\n📱 Mobile Packaging Target:",
+          [
+            { value: "none", label: "Web Only", note: "No native wrapper" },
+            { value: "capacitor", label: "Ionic Capacitor", note: "iOS + Android APK from the web build" },
+            { value: "expo", label: "Expo React Native", note: "Shared codebase, native runtime" },
+            { value: "custom", label: "Custom Native Wrapper", note: "Name it next" },
+          ],
+          "none",
+        );
+        if (config.mobile === "custom") {
+          config.customMobile = await ask(rl, "  Custom mobile wrapper", "custom-mobile");
+        }
+      }
+
+      // 4g. E-Commerce Engine (if ecommerce intent)
       if (config.intent === "ecommerce") {
-        console.log("\n🛍️  E-Commerce Engine:");
-        console.log("  [1] Stripe Hosted Checkout (Hosted checkout, zero backend maintenance) [Recommended]");
-        console.log("  [2] Medusa v2 Sovereign Engine (Full headless ecommerce backend)");
-        console.log("  [3] Fastrr 1-Click Checkout (High-conversion checkout modal)");
-        console.log("  [4] Payload E-Commerce (Native collections in Payload CMS)");
-        console.log("  [5] None / Custom");
-        const ecomChoice = await ask(rl, "Choose commerce engine [1-5]", "1");
-        const ecomMap: Record<string, string> = {
-          "1": "stripe",
-          "2": "medusa",
-          "3": "fastrr",
-          "4": "payload",
-          "5": "none",
-        };
-        config.ecommerce = ecomMap[ecomChoice] || "stripe";
+        config.ecommerce = await choose(
+          rl,
+          "\n🛍️  E-Commerce Engine:",
+          [
+            { value: "stripe", label: "Stripe Hosted Checkout", note: "Zero backend maintenance" },
+            { value: "medusa", label: "Medusa v2 Sovereign Engine", note: "Full headless commerce backend" },
+            { value: "fastrr", label: "Fastrr 1-Click Checkout", note: "High-conversion checkout modal" },
+            { value: "razorpay", label: "Razorpay", note: "India-first payment stack" },
+            { value: "payload", label: "Payload E-Commerce", note: "Native collections inside Payload CMS" },
+            { value: "vendure", label: "Vendure", note: "Enterprise TypeScript GraphQL backend" },
+            { value: "custom", label: "Custom Commerce Engine", note: "Name it next" },
+            { value: "none", label: "None" },
+          ],
+          "stripe",
+        );
+        if (config.ecommerce === "custom") {
+          config.customEcommerce = await ask(rl, "  Custom commerce engine", "custom-commerce");
+        }
       }
 
       // Step 5: OKLCH Color Palette (37 official presets from oklch.fyi)
       if (!colorPalette) {
-        console.log("\n🌈 Step 5: OKLCH Color Palette (37 official presets from oklch.fyi):");
-        console.log(
-          "  [1] Curated Themes (sunset-vibes, deep-sea, forest, neon-nights, cherry-blossom...) [Recommended]",
+        const paletteCategory = await choose(
+          rl,
+          "\n🌈 Step 5: OKLCH Color Palette (37 official presets from oklch.fyi)",
+          [
+            {
+              value: "curated",
+              label: "Curated Designer Themes",
+              note: "sunset-vibes, deep-sea, forest, neon-nights, …",
+            },
+            { value: "neutral", label: "Radix Neutrals", note: "slate, gray, sand, steel" },
+            { value: "chromatic", label: "Radix Chromatic", note: "indigo, blue, red, green, amber, violet, …" },
+            { value: "hue", label: "Custom Brand Hue", note: "Generate an OKLCH ramp from a hue angle" },
+            { value: "slug", label: "Type a Palette Slug", note: "Any oklch.fyi slug" },
+          ],
+          "curated",
         );
-        console.log("  [2] Radix Neutrals (slate, gray, sand, steel)");
-        console.log("  [3] Radix Chromatic (indigo, blue, red, green, amber, violet, teal, cyan...)");
-        console.log("  [4] Type palette slug directly");
-        const catChoice = await ask(rl, "Choose palette category [1-4]", "1");
 
-        if (catChoice === "1") {
-          console.log("\n🎨 Curated Designer Themes:");
-          console.log("   [1] sunset-vibes     [2] deep-sea         [3] forest           [4] forest-fresh");
-          console.log("   [5] sand             [6] steel            [7] olive-garden     [8] ocean-breeze");
-          console.log("   [9] neon-nights     [10] earthy-tones    [11] cherry-blossom  [12] midnight-blue");
-          console.log("  [13] lavender-fields [14] coral-reef      [15] autumn-leaves   [16] arctic-frost");
-          console.log("  [17] vintage-rose    [18] tropical-paradise [19] desert-sand   [20] berry-burst");
-          console.log("  [21] pastel-dreamland-adventure");
-          const curatedThemes = [
+        if (paletteCategory === "curated") {
+          colorPalette = await choose(
+            rl,
+            "\n🎨 Curated Designer Themes:",
+            [
+              { value: "sunset-vibes", label: "sunset-vibes", note: "Warm oranges and rose" },
+              { value: "deep-sea", label: "deep-sea", note: "Cool teal and deep blue" },
+              { value: "forest", label: "forest", note: "Grounded greens" },
+              { value: "forest-fresh", label: "forest-fresh", note: "Bright botanical greens" },
+              { value: "sand", label: "sand", note: "Warm neutral desert" },
+              { value: "steel", label: "steel", note: "Industrial cool gray" },
+              { value: "olive-garden", label: "olive-garden", note: "Muted olive and sage" },
+              { value: "ocean-breeze", label: "ocean-breeze", note: "Airy coastal blue" },
+              { value: "neon-nights", label: "neon-nights", note: "High-contrast cyber palette" },
+              { value: "earthy-tones", label: "earthy-tones", note: "Clay, umber, and moss" },
+              { value: "cherry-blossom", label: "cherry-blossom", note: "Soft pink and plum" },
+              { value: "midnight-blue", label: "midnight-blue", note: "Deep naval blue" },
+              { value: "lavender-fields", label: "lavender-fields", note: "Lilac and violet" },
+              { value: "coral-reef", label: "coral-reef", note: "Coral and aqua" },
+              { value: "autumn-leaves", label: "autumn-leaves", note: "Rust and amber" },
+              { value: "arctic-frost", label: "arctic-frost", note: "Icy blue-white" },
+              { value: "vintage-rose", label: "vintage-rose", note: "Dusty rose and cream" },
+              { value: "tropical-paradise", label: "tropical-paradise", note: "Vivid tropical mix" },
+              { value: "desert-sand", label: "desert-sand", note: "Dune neutrals" },
+              { value: "berry-burst", label: "berry-burst", note: "Berry and magenta" },
+              {
+                value: "pastel-dreamland-adventure",
+                label: "pastel-dreamland-adventure",
+                note: "Soft pastel spectrum",
+              },
+            ],
             "sunset-vibes",
-            "deep-sea",
-            "forest",
-            "forest-fresh",
-            "sand",
-            "steel",
-            "olive-garden",
-            "ocean-breeze",
-            "neon-nights",
-            "earthy-tones",
-            "cherry-blossom",
-            "midnight-blue",
-            "lavender-fields",
-            "coral-reef",
-            "autumn-leaves",
-            "arctic-frost",
-            "vintage-rose",
-            "tropical-paradise",
-            "desert-sand",
-            "berry-burst",
-            "pastel-dreamland-adventure",
-          ];
-          const cIndex = await ask(rl, "Select theme [1-21]", "1");
-          const idx = parseInt(cIndex, 10) - 1;
-          colorPalette = idx >= 0 && idx < curatedThemes.length ? curatedThemes[idx] : "sunset-vibes";
-        } else if (catChoice === "2") {
-          console.log("\n🎨 Radix Neutrals:");
-          console.log("  [1] slate (Minimalist & Modern SaaS) [Default]");
-          console.log("  [2] gray");
-          console.log("  [3] sand");
-          console.log("  [4] steel");
-          const neutrals = ["slate", "gray", "sand", "steel"];
-          const nIndex = await ask(rl, "Select neutral [1-4]", "1");
-          const idx = parseInt(nIndex, 10) - 1;
-          colorPalette = idx >= 0 && idx < neutrals.length ? neutrals[idx] : "slate";
-        } else if (catChoice === "3") {
-          console.log("\n🎨 Radix Chromatic Scales:");
-          console.log("   [1] indigo  [2] blue    [3] red     [4] green   [5] amber");
-          console.log("   [6] violet  [7] teal    [8] cyan    [9] lime   [10] mint");
-          console.log("  [11] tomato [12] orange [13] purple [14] pink  [15] yellow");
-          const chromatic = [
+          );
+        } else if (paletteCategory === "neutral") {
+          colorPalette = await choose(
+            rl,
+            "\n🎨 Radix Neutrals:",
+            [
+              { value: "slate", label: "slate", note: "Minimalist modern SaaS" },
+              { value: "gray", label: "gray", note: "Pure neutral" },
+              { value: "sand", label: "sand", note: "Warm neutral" },
+              { value: "steel", label: "steel", note: "Cool industrial" },
+            ],
+            "slate",
+          );
+        } else if (paletteCategory === "chromatic") {
+          colorPalette = await choose(
+            rl,
+            "\n🎨 Radix Chromatic Scales:",
+            [
+              { value: "indigo", label: "indigo" },
+              { value: "blue", label: "blue" },
+              { value: "red", label: "red" },
+              { value: "green", label: "green" },
+              { value: "amber", label: "amber" },
+              { value: "violet", label: "violet" },
+              { value: "teal", label: "teal" },
+              { value: "cyan", label: "cyan" },
+              { value: "lime", label: "lime" },
+              { value: "mint", label: "mint" },
+              { value: "tomato", label: "tomato" },
+              { value: "orange", label: "orange" },
+              { value: "purple", label: "purple" },
+              { value: "pink", label: "pink" },
+              { value: "yellow", label: "yellow" },
+            ],
             "indigo",
-            "blue",
-            "red",
-            "green",
-            "amber",
-            "violet",
-            "teal",
-            "cyan",
-            "lime",
-            "mint",
-            "tomato",
-            "orange",
-            "purple",
-            "pink",
-            "yellow",
-          ];
-          const chIndex = await ask(rl, "Select chromatic scale [1-15]", "1");
-          const idx = parseInt(chIndex, 10) - 1;
-          colorPalette = idx >= 0 && idx < chromatic.length ? chromatic[idx] : "indigo";
-        } else if (catChoice === "4") {
-          const directSlug = await ask(rl, "Enter palette slug (e.g. sunset-vibes, deep-sea, slate)", "slate");
-          colorPalette = PALETTES[directSlug.toLowerCase()] ? directSlug.toLowerCase() : "slate";
+          );
+        } else if (paletteCategory === "hue") {
+          const hueAnswer = await ask(rl, "  Brand hue angle 0–360", "260");
+          const hue = Math.max(0, Math.min(360, Number.parseInt(hueAnswer, 10) || 260));
+          const chromaAnswer = await ask(rl, "  Chroma intensity 0.05–0.30", "0.18");
+          const chroma = Math.max(0.05, Math.min(0.3, Number.parseFloat(chromaAnswer) || 0.18));
+          colorPalette = `custom-hue-${hue}`;
+          PALETTES[colorPalette] = {
+            primaryDefault: `oklch(0.55 ${chroma} ${hue})`,
+            primaryLight: `oklch(0.65 ${Math.max(0.05, chroma - 0.04)} ${hue})`,
+            primaryDark: `oklch(0.45 ${Math.min(0.3, chroma + 0.02)} ${hue})`,
+            secondary: `oklch(0.65 ${Math.max(0.05, chroma - 0.06)} ${(hue + 30) % 360})`,
+            accent: `oklch(0.75 0.15 ${(hue + 180) % 360})`,
+          };
         } else {
-          colorPalette = "slate";
+          const directSlug = await ask(rl, "  Palette slug (e.g. sunset-vibes, deep-sea, slate)", "slate");
+          const normalized = directSlug.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+          colorPalette = normalized || "slate";
         }
       }
 
       // Step 5b: Deployment & DevOps Target
       if (!values.deploy && config.intent !== "graphics" && config.intent !== "growth") {
-        console.log("\n🚀 Step 5b: Deployment & Hosting Target:");
-        console.log("  [1] Cloudflare Edge (Pages / Workers) (Sub-50ms worldwide edge delivery) [Recommended]");
-        console.log("  [2] GitHub Pages                       (Zero-cost static hosting for OSS/docs)");
-        console.log("  [3] Docker / Self-Hosted VPS           (Container isolation, Coolify/Fly.io/VPS)");
-        console.log("  [4] Vercel Serverless                  (Serverless compute with edge routing)");
-        console.log("  [5] Static Export / Nginx              (Zero server runtime, static HTML/assets)");
-        console.log("  [6] None / Local Workspace Only");
-        const deployChoice = await ask(rl, "Choose deployment target [1-6]", "1");
-        const deployMap: Record<string, string> = {
-          "1": "cloudflare",
-          "2": "github-pages",
-          "3": "docker",
-          "4": "vercel",
-          "5": "static",
-          "6": "none",
-        };
-        config.deploy = deployMap[deployChoice] || "cloudflare";
+        config.deploy = await choose(
+          rl,
+          "\n🚀 Step 5b: Deployment & Hosting Target",
+          [
+            { value: "cloudflare", label: "Cloudflare Edge (Pages / Workers)", note: "Sub-50ms worldwide delivery" },
+            { value: "github-pages", label: "GitHub Pages", note: "Zero-cost static hosting for OSS/docs" },
+            { value: "docker", label: "Docker / Self-Hosted VPS", note: "Container isolation, Coolify/Fly.io/VPS" },
+            { value: "vercel", label: "Vercel Serverless", note: "Serverless compute with edge routing" },
+            { value: "static", label: "Static Export / Nginx", note: "Zero server runtime" },
+            { value: "custom", label: "Custom Hosting", note: "Name it next" },
+            { value: "none", label: "None / Local Workspace Only" },
+          ],
+          "cloudflare",
+        );
       } else if (config.intent === "graphics" || config.intent === "growth") {
         config.deploy = "none";
       }
 
       // =====================================================================
-      // STAGE 6: Client Onboarding & Brand Intake Gate
+      // STAGE 3: Brand Identity & Client Onboarding Gate
       // =====================================================================
-      console.log("\n📋 STAGE 6: Client Onboarding & Brand Intake Gate");
+      console.log("\n📋 STAGE 3: Brand Identity & Client Onboarding Gate");
 
       if (!projectDesc) {
         projectDesc = await ask(
@@ -2011,21 +2996,61 @@ async function main() {
       }
 
       if (!brandVoice) {
-        console.log("\n🎨 Brand Personality & Tone:");
-        console.log("  [1] Modern, Technical & Authoritative [Recommended]");
-        console.log("  [2] Clean, Minimalist & Focused");
-        console.log("  [3] Bold, Dynamic & Creative");
-        console.log("  [4] Elegant, Editorial & Sophisticated");
-        console.log("  [5] Friendly, Warm & Approachable");
-        const toneChoice = await ask(rl, "Choose brand tone [1-5]", "1");
-        const toneMap: Record<string, string> = {
-          "1": "Modern, technical, precise, and authoritative",
-          "2": "Clean, minimalist, focused, and distraction-free",
-          "3": "Bold, dynamic, creative, and high-energy",
-          "4": "Elegant, editorial, sophisticated, and polished",
-          "5": "Friendly, warm, helpful, and approachable",
-        };
-        brandVoice = toneMap[toneChoice] || toneMap["1"];
+        brandVoice = await choose(
+          rl,
+          "\n🎨 Brand Personality & Tone:",
+          [
+            {
+              value: "Modern, technical, precise, and authoritative",
+              label: "Modern, Technical & Authoritative",
+              note: "Engineering-led, evidence-first",
+            },
+            {
+              value: "Clean, minimalist, focused, and distraction-free",
+              label: "Clean, Minimalist & Focused",
+              note: "Quiet luxury, generous whitespace",
+            },
+            {
+              value: "Bold, dynamic, creative, and high-energy",
+              label: "Bold, Dynamic & Creative",
+              note: "Loud, expressive, campaign-led",
+            },
+            {
+              value: "Elegant, editorial, sophisticated, and polished",
+              label: "Elegant, Editorial & Sophisticated",
+              note: "Magazine cadence, refined typography",
+            },
+            {
+              value: "Friendly, warm, helpful, and approachable",
+              label: "Friendly, Warm & Approachable",
+              note: "Human, conversational, low-friction",
+            },
+            {
+              value: "Playful, witty, and conversational",
+              label: "Playful, Witty & Conversational",
+              note: "Personality-forward, community-led",
+            },
+            {
+              value: "Premium, luxurious, and understated",
+              label: "Premium, Luxurious & Understated",
+              note: "Restraint, craft, high-ticket",
+            },
+            {
+              value: "Direct, no-nonsense, and utilitarian",
+              label: "Direct, No-Nonsense & Utilitarian",
+              note: "Operator-first, zero decoration",
+            },
+            { value: "custom", label: "Custom Tone", note: "Type your own adjectives next" },
+          ],
+          "Modern, technical, precise, and authoritative",
+        );
+        if (brandVoice === "custom") {
+          brandVoice = await ask(
+            rl,
+            "  Describe the brand tone in 2–4 adjectives",
+            "Modern, technical, precise, and authoritative",
+          );
+        }
       }
 
       if (!firstMilestone) {
@@ -2057,6 +3082,31 @@ async function main() {
       if (githubProjectEnabled === undefined) {
         const githubChoice = (await ask(rl, "Will this project be hosted on GitHub? (yes/no)", "no")).toLowerCase();
         githubProjectEnabled = ["y", "yes"].includes(githubChoice);
+      }
+
+      // ---------------------------------------------------------------------
+      // Client onboarding: capture real client answers so the intake template,
+      // brand/context docs, and start-here.md are written in tandem.
+      // ---------------------------------------------------------------------
+      seedClientDefaults();
+      if (!values["skip-client-onboarding"]) {
+        const onboardAnswer = clientOnboardingRequested
+          ? "yes"
+          : (await ask(rl, "\nRun the full client onboarding interview now? (yes/no)", "yes")).toLowerCase();
+        if (["y", "yes"].includes(onboardAnswer)) {
+          clientOnboarding = await promptClientOnboarding(rl, clientOnboarding);
+          clientOnboardingEnabled = true;
+
+          industry = clientOnboarding.industry || industry;
+          targetAudience = clientOnboarding.icp || targetAudience;
+          coreProblem = clientOnboarding.coreProblem || coreProblem;
+          offerings = clientOnboarding.offerings.length > 0 ? clientOnboarding.offerings.join(", ") : offerings;
+          brandVoice = clientOnboarding.brandVoice || brandVoice;
+          authorName = clientOnboarding.clientLegalName || authorName;
+          if (!projectDesc || projectDesc.includes("Modern application governed by DOX Engine")) {
+            projectDesc = clientOnboarding.mission || clientOnboarding.vision || projectDesc;
+          }
+        }
       }
     } finally {
       rl.close();
@@ -2105,6 +3155,28 @@ async function main() {
   agentRole = agentRole || "Configured workspace agent";
   primaryConstraint = primaryConstraint || "Zero regression, 100% test pass rate, and zero secret exposure";
 
+  seedClientDefaults();
+  clientOnboarding = applyClientFlagOverrides(clientOnboarding);
+  if (values["skip-client-onboarding"]) {
+    clientOnboardingEnabled = false;
+  } else if (isNonInteractive && !clientOnboardingEnabled) {
+    clientOnboardingEnabled = Boolean(values["onboard-client"] || values.intake || hasClientFlags);
+  }
+
+  if (clientOnboardingEnabled) {
+    clientOnboarding.onboardingDate = clientOnboarding.onboardingDate || new Date().toISOString().split("T")[0];
+    if (clientOnboarding.status === "NOT_STARTED") clientOnboarding.status = "IN_PROGRESS";
+    industry = clientOnboarding.industry || industry;
+    targetAudience = clientOnboarding.icp || targetAudience;
+    coreProblem = clientOnboarding.coreProblem || coreProblem;
+    offerings = clientOnboarding.offerings.length > 0 ? clientOnboarding.offerings.join(", ") : offerings;
+    brandVoice = clientOnboarding.brandVoice || brandVoice;
+    authorName = clientOnboarding.clientLegalName || authorName;
+    if (clientOnboarding.mission && projectDesc.includes("Modern application governed by DOX Engine")) {
+      projectDesc = clientOnboarding.mission;
+    }
+  }
+
   config.framework = (config.framework || "astro").toLowerCase();
   config.styling = (config.styling || "hybrid").toLowerCase();
   config.animation = (config.animation || "css").toLowerCase();
@@ -2119,6 +3191,11 @@ async function main() {
   console.log(`📁 Project Directory: \`${resolvedTarget}\``);
   console.log(`🏷️  Project Name:      \`${projectName}\``);
   console.log(`👤 Author:            \`${authorName}\``);
+  if (clientOnboardingEnabled) {
+    console.log(
+      `🏢 Client:            \`${clientOnboarding.brandName || clientOnboarding.clientLegalName} (${clientOnboarding.status}, ${clientOnboarding.engagement || "engagement n/a"})\``,
+    );
+  }
   console.log(`🎯 Project Intent:     \`${config.intent.toUpperCase() || "CUSTOM"}\``);
   console.log(
     `⚡ Framework:         \`${config.framework.toUpperCase()}${config.customFramework ? ` (${config.customFramework})` : ""}\``,
@@ -2236,16 +3313,26 @@ async function main() {
     }
   }
 
-  // 1.2 Copy .gitignore
+  // 1.2 Copy .gitignore (public-safe only; agent state goes to .git/info/exclude)
   const gitignoreSrc = join(TEMPLATES_DIR, "gitignore.template");
   const gitignoreDest = join(resolvedTarget, ".gitignore");
   if (existsSync(gitignoreSrc)) {
     if (!existsSync(gitignoreDest) || isForce) {
       if (!isDryRun) cpSync(gitignoreSrc, gitignoreDest);
-      console.log("  ✅ Created: `./.gitignore`");
+      console.log("  ✅ Created: `./.gitignore` (public-safe rules only)");
     } else {
       console.log("  ⏩ Skipped: `./.gitignore` (already exists)");
     }
+  }
+
+  // 1.2b Keep agent state internal: install local-only excludes when a git
+  // repository already exists. Never puts harness names in the public .gitignore.
+  if (!isDryRun && existsSync(join(resolvedTarget, ".git"))) {
+    if (installAgentExcludes(resolvedTarget)) {
+      console.log("  ✅ Installed: `.git/info/exclude` (internal-only agent patterns)");
+    }
+  } else if (!isDryRun) {
+    console.log("  ℹ️  Agent excludes: run `git init` then `updateagents --install-excludes` (internal-only).");
   }
 
   // 1.3 Scaffold .agents/ 9-Folder Tree
@@ -2370,7 +3457,29 @@ async function main() {
     "{{DOMAIN_ROOT}}": `${projectName.toLowerCase().replace(/[^a-z0-9-]/g, "")}.com`,
     "{{FRAMEWORK_PRIMARY}}": config.framework !== "none" ? config.framework.toUpperCase() : "Astro",
     "{{FRAMEWORK_SECONDARY}}": "Next.js / Service API",
+    "{{STACK_DETAILS}}": stackSummary(config),
   };
+
+  Object.assign(
+    tokenMap,
+    buildClientTokenMap(
+      clientOnboarding,
+      {
+        projectName,
+        authorName,
+        projectDesc,
+        industry,
+        targetAudience,
+        coreProblem,
+        brandVoice,
+        colorPalette,
+        offerings,
+        firstMilestone,
+        config,
+      },
+      tokenMap,
+    ),
+  );
 
   // 1.5 Copy Brand Guidelines & Tokens
   const brandSrc = join(TEMPLATES_DIR, ".agents/brand");
@@ -6517,7 +7626,7 @@ input, button, textarea, select {
   // =========================================================================
   // STAGE 5: Client Intake Brief (employee answers -> agent-produced docs)
   // =========================================================================
-  console.log("📋 STAGE 5: Provisioning Client Intake Brief...");
+  console.log("📋 STAGE 5: Provisioning Client Intake Brief & Onboarding Docs...");
 
   if (!isDryRun) {
     const intakeDir = join(resolvedTarget, "Client-Intake");
@@ -6532,6 +7641,11 @@ input, button, textarea, select {
       }
     }
 
+    if (clientOnboardingEnabled) {
+      clientOnboarding.onboardingDate = clientOnboarding.onboardingDate || new Date().toISOString().split("T")[0];
+      if (clientOnboarding.status === "NOT_STARTED") clientOnboarding.status = "IN_PROGRESS";
+    }
+
     const templateBriefPath = join(templateIntakeDir, "00-Intake-Brief.md");
     let intakeBriefContent = "";
     if (existsSync(templateBriefPath)) {
@@ -6539,10 +7653,6 @@ input, button, textarea, select {
       for (const [token, val] of Object.entries(tokenMap)) {
         intakeBriefContent = intakeBriefContent.replaceAll(token, val);
       }
-      intakeBriefContent = intakeBriefContent.replaceAll(
-        "{{STACK_DETAILS}}",
-        `framework \`${config.framework}\`, CMS \`${config.cms}\`, e-commerce \`${config.ecommerce}\`, database \`${config.db}\`, auth \`${config.auth}\`, styling \`${config.styling}\`, animation \`${config.animation}\`, state \`${config.state}\``,
-      );
     } else {
       intakeBriefContent = `# Client Intake Brief — ${projectName}
 
@@ -6576,7 +7686,7 @@ input, button, textarea, select {
 2. Write \`02-Business/\`: \`business-model.md\` and \`audience-persona.md\`.
 3. Write \`03-Offerings/\`: \`offerings-catalog.md\` and \`scope-deliverables.md\` (split launch vs. later).
 4. Write \`04-Technical-Intake/\`: \`access-and-credentials.md\` (placeholders only — never real secrets) and \`integrations-matrix.md\`.
-5. Write \`start-here.md\` at the repo root: a short developer orientation (what this is, prerequisites, install/run commands from \`package.json\`, where tokens live, how to verify). Derive it from the actual scaffolded stack — do not paste generic content.
+5. Write \`start-here.md\` at the repo root: a short developer orientation (what this is, prerequisites, install/run commands from \`package.json\`, where tokens live at \`src/styles/tokens.css\` and \`.agents/brand/tokens/\`, how to verify). Derive it from the actual scaffolded stack — do not paste generic content.
 6. Sync the answers into \`.agents/context/product.md\` and \`.agents/context/accounts.md\`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
 
 ## Non-Negotiables
@@ -6588,9 +7698,49 @@ input, button, textarea, select {
     writeFileSync(join(intakeDir, "00-Intake-Brief.md"), intakeBriefContent, "utf8");
 
     console.log("  ✅ Generated: `./Client-Intake/00-Intake-Brief.md` (employee checklist + agent instructions)");
-    console.log(
-      "  ℹ️  Docs in 01-Brand/, 02-Business/, 03-Offerings/, 04-Technical-Intake/ are written by your AI agent from the brief.",
-    );
+
+    if (clientOnboardingEnabled) {
+      const written = provisionClientOnboardingDocs(
+        resolvedTarget,
+        clientOnboarding,
+        {
+          projectName,
+          authorName,
+          projectDesc,
+          industry,
+          targetAudience,
+          coreProblem,
+          brandVoice,
+          colorPalette,
+          offerings,
+          firstMilestone,
+          config,
+        },
+        tokenMap,
+        isDryRun,
+      );
+      console.log(`  ✅ Generated ${written.length} client onboarding artifacts: ${written.join(", ")}`);
+
+      const compiled = await compileClientBrandDocs(resolvedTarget, join(intakeDir, "00-Intake-Brief.md"), isDryRun);
+      if (compiled.length > 0) {
+        console.log(`  ✅ Compiled brand/context docs from real answers: ${compiled.join(", ")}`);
+      }
+
+      // The intake compiler writes its own generic start-here.md; re-render the
+      // onboarding-aware version last so client answers win.
+      const startHereContent = renderClientTemplate(join(TEMPLATES_DIR, "Client-Intake", "start-here.md"), tokenMap);
+      if (startHereContent !== null && !isDryRun) {
+        writeFileSync(join(resolvedTarget, "start-here.md"), startHereContent, "utf8");
+      }
+      console.log(
+        `  ℹ️  Client status: ${clientOnboarding.status} · engagement ${clientOnboarding.engagement || "n/a"} · SLA ${clientOnboarding.slaTier || "n/a"}`,
+      );
+    } else {
+      console.log(
+        "  ℹ️  Docs in 01-Brand/, 02-Business/, 03-Offerings/, 04-Technical-Intake/ are written by your AI agent from the brief.",
+      );
+      console.log("  ℹ️  Run with --onboard-client to capture client answers and generate them now.");
+    }
   }
 
   // Provision Wave 23 Workspace Terrain Maps
@@ -6627,7 +7777,7 @@ input, button, textarea, select {
 - Progressive Disclosure DOX container active with 13 modular standards, brand token baseline, and cognitive memory.
 - Client intake brief provisioned at \`./Client-Intake/00-Intake-Brief.md\`.
 - Client content map provisioned at \`./.agents/brand/CONTENT_MAP.md\` (zero-hardcoded-strings contract).
-- Intake docs are produced by the AI agent from the brief after employee answers.
+${clientOnboardingEnabled ? `- Client onboarding captured for **${clientOnboarding.brandName || clientOnboarding.clientLegalName}** (${clientOnboarding.status}), engagement \`${clientOnboarding.engagement || "n/a"}\`, SLA \`${clientOnboarding.slaTier || "n/a"}\`; docs in \`./Client-Intake/\` and \`./start-here.md\` were generated from those answers.` : "- Intake docs are produced by the AI agent from the brief after employee answers."}
 
 ## 2. Live Deliverables & Key Artifacts
 ${artifactList}
@@ -6802,9 +7952,11 @@ ${offerItems}
   console.log(`🛍️  E-Commerce:        \`${config.ecommerce.toUpperCase()}\``);
   console.log(`🗄️  Database:          \`${config.db.toUpperCase()}\``);
   console.log(`🛡️  Governance:         DOX Engine Active (Root \`AGENTS.md\` + \`.agents/\` container)`);
-  console.log(`📖 Developer Guide:    \`./start-here.md\` (written by your agent after intake)`);
   console.log(
-    `📋 Client Intake:      \`./Client-Intake/00-Intake-Brief.md\` (answer with your agent; docs generated after)`,
+    `📖 Developer Guide:    \`./start-here.md\` ${clientOnboardingEnabled ? "(generated from client onboarding)" : "(written by your agent after intake)"}`,
+  );
+  console.log(
+    `📋 Client Intake:      \`./Client-Intake/00-Intake-Brief.md\` ${clientOnboardingEnabled ? `(pre-filled + docs generated · ${clientOnboarding.status})` : "(answer with your agent; docs generated after)"}`,
   );
   console.log(`\nNext Steps:`);
   console.log(`  1. cd ${relative(process.cwd(), resolvedTarget) || "."}`);

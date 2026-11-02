@@ -10,6 +10,7 @@
 ## ⚡ Key Architectural Features
 
 - **🛡️ Agents First (Governance Container)**: Provisions the lean root `AGENTS.md` (<50 lines) and the complete `.agents/` container *before* framework creation, establishing security boundaries and gitignore early.
+- **🔒 Internal-Only Agent State**: The committed `.gitignore` is public-safe; agent/harness paths go to `.git/info/exclude` via `updateagents --install-excludes`. Anything a harness creates is consolidated under `.agents/<category>/` and the active harness is never moved mid-session.
 - **📁 Complete 9-Folder `.agents/` Containment**:
   - `archive/` — Retired plans & completed scratchpads (`[title]-[timestamp].md`)
   - `artifacts/` — Active walkthroughs, specifications & diffs
@@ -20,7 +21,8 @@
   - `skills/` — Clean, isolated container for project-specific skills
   - `standards/` — 13 modular rulebooks read on-demand (Next.js, Astro, WordPress, testing, security, etc.)
   - `workflows/` — Custom project workflows & protocols
-- **🎯 Intent-First Architecture**: User selects project intent (Brochure, Content, E-Commerce, Web App, Mobile App) to receive a tailored, pruned menu of compatible companions.
+- **🎯 Intent-First Architecture**: Twelve project archetypes (static, content, e-commerce, SaaS, internal tool, native mobile, web-to-native, creative studio, OSS, growth, governance, custom) drive a tailored, pruned menu of compatible companions.
+- **🏢 Client Onboarding as a First-Class Stage**: Captures identity, contacts, business model, stage/revenue, mission/vision, ICP, competitors, objections, offerings, launch KPI, scope boundaries, engagement terms (type, SLA, budget, dates, cadence), and technical access, then renders every `Client-Intake/` document plus a client-aware `start-here.md`. Re-runs accept `--intake <json|md>` or granular client flags.
 - **🎨 Hybrid Styling Engine**: Combines `@unocss/preset-wind4` for utility speed with Custom Semantic BEM (`tokens.css`, `semantic.css`, `reset.css`) and OKLCH color variables.
 - **🎭 High-Performance Animations**: Hardware-accelerated CSS presets (`.fade-in`, `.slide-up`, `.stagger-group`, `.reveal-on-scroll`, `.hover-lift`) alongside Motion.dev and GSAP ScrollTrigger.
 - **🧠 NanoStores Cross-Island State Engine**: Sub-1KB, framework-agnostic reactive state sharing across Astro islands (React, Vue, Svelte, vanilla) and Next.js components.
@@ -58,6 +60,29 @@ bun new-project/scripts/new-project.ts <targetPath> \
   --ecommerce=medusa \
   --db=postgres \
   --auth=better-auth
+
+# Full client onboarding (interactive, generates every intake doc)
+bun new-project/scripts/new-project.ts <targetPath> --onboard-client
+
+# Client onboarding from a JSON/Markdown intake file
+bun new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
+
+# Granular client flags
+bun new-project/scripts/new-project.ts <targetPath> \
+  --client-name="Acme Health LLC" --client-brand="Acme Health" \
+  --client-contact="Dana Lee" --client-email="dana@acme.health" \
+  --business-model=b2b-saas --company-stage=seed --revenue-band=1m-10m \
+  --industry="Healthcare" --audience="Regional clinics" \
+  --problem="Manual paper intake" --offerings="Intake Suite, EHR Sync" \
+  --competitors="Epic, Cerner" --objections="Price, Migration effort" \
+  --launch-goal="50 clinics onboarded" --boundaries="Native mobile app, Multi-language" \
+  --domain=acme.health --dns-provider=cloudflare --git-host=github \
+  --payments=stripe --integrations=hubspot,segment \
+  --engagement=fixed-scope --sla-tier=priority --budget="USD 40k" \
+  --comms-channel=slack --comms-cadence=weekly \
+  --kickoff-date=2026-11-10 --deadline=2027-02-01 \
+  --access-items="DNS, GitHub org, Stripe account" \
+  --non-interactive
 ```
 
 ### ⚡ 1-Click Agency Presets
@@ -92,6 +117,41 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--github` / `--no-github` | Boolean | Explicitly include or omit GitHub community files and stack-matched workflows; interactive setup asks when unknown |
 | `--agent-role <role>` | String | Lead agent functional role description |
 | `--constraint <text>` | String | Primary operational constraint or invariant |
+| `--onboard-client` | Boolean | Run the full 5-section client onboarding interview and render every intake doc |
+| `--skip-client-onboarding` | Boolean | Write only the brief; leave doc generation to a later agent pass |
+| `--intake <path>` | String | Prefill onboarding from a JSON object or Markdown brief |
+| `--client-name <name>` | String | Client legal entity / company name |
+| `--client-brand <name>` | String | Public brand / trade name |
+| `--client-slug <slug>` | String | Stable client identifier |
+| `--client-contact <name>` | String | Day-to-day client contact |
+| `--client-role <role>` | String | Contact role |
+| `--client-email <email>` | String | Contact email |
+| `--decision-maker <name>` | String | Final approval stakeholder |
+| `--tech-lead <name>` | String | Client-side technical lead |
+| `--business-model <model>` | String | `b2b-saas` \| `b2c-ecommerce` \| `agency-service` \| `marketplace` \| `media-publisher` \| `nonprofit` \| `local-business` \| `enterprise` \| `custom` |
+| `--company-stage <stage>` | String | `idea` \| `bootstrapped` \| `seed` \| `series-a` \| `growth` \| `enterprise` \| `established` |
+| `--revenue-band <band>` | String | `pre-revenue` \| `<100k` \| `100k-1m` \| `1m-10m` \| `10m-100m` \| `100m+` |
+| `--mission <text>` | String | Mission statement |
+| `--vision <text>` | String | Vision statement |
+| `--competitors <list>` | String | Comma-separated competitors |
+| `--objections <list>` | String | Comma-separated customer objections |
+| `--launch-goal <text>` | String | Single measurable launch-success metric |
+| `--boundaries <list>` | String | Comma-separated explicit out-of-scope items |
+| `--domain <domain>` | String | Primary production domain |
+| `--dns-provider <name>` | String | `cloudflare` \| `route53` \| `namecheap` \| `godaddy` \| `vercel` \| `other` |
+| `--git-host <host>` | String | `github` \| `gitlab` \| `bitbucket` \| `self-hosted` \| `none` |
+| `--payments <list>` | String | Comma-separated payment rails |
+| `--integrations <list>` | String | Comma-separated third-party services |
+| `--brand-assets <path>` | String | Brand asset location |
+| `--figma <url>` | String | Figma / design file URL |
+| `--sla-tier <tier>` | String | `standard` \| `priority` \| `enterprise` \| `none` |
+| `--engagement <type>` | String | `fixed-scope` \| `retainer` \| `time-materials` \| `productized-sku` \| `internal` \| `oss` |
+| `--comms-channel <channel>` | String | `slack` \| `email` \| `telegram` \| `whatsapp` \| `weekly-call` \| `other` |
+| `--comms-cadence <cadence>` | String | `daily` \| `weekly` \| `biweekly` \| `monthly` \| `milestone` |
+| `--kickoff-date <date>` | String | Kickoff date (`YYYY-MM-DD`) |
+| `--deadline <date>` | String | Deadline (`YYYY-MM-DD`) |
+| `--budget <text>` | String | Budget band / commercial ceiling |
+| `--access-items <list>` | String | Comma-separated access items required |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
 | `--preset <preset>` | String | `powerhouse` \| `astro-commerce` \| `publisher` \| `edge` \| `visual` \| `astro-visual` \| `plain-astro` \| `git-cms` \| `instatic` \| `pure-html` \| `mobile` \| `astro-mobile` \| `atomic-payload` |
 | `-t, --type <framework>` | String | `nextjs` \| `astro` \| `instatic` \| `wordpress` \| `expo` \| `custom` \| `none` |
@@ -117,17 +177,20 @@ bun new-project/scripts/new-project.ts <targetPath> \
 
 ## 🎙️ Interactive Onboarding & Client Intake Suite
 
-When running `new-project` interactively or through an AI agent, the onboarding engine guides users through 6 stages:
-1. **Purpose-First Root Prompt**: Immediate mission definition, target audience, core problem, and archetype routing.
-2. **Hierarchical Decision Tree**: Granular selection across styling, animations, cross-island state, mobile bridges, CMS, and e-commerce.
+When running `new-project` interactively or through an AI agent, the onboarding engine guides users through 7 stages:
+1. **Purpose-First Root Prompt**: Destination, project name, engagement mode, and twelve-archetype routing.
+2. **Granular Decision Tree**: Archetype → framework → CMS → styling → animation → state → mobile → database → auth → commerce → palette → deployment, each with tradeoff notes and a `custom` escape hatch.
 3. **Official Companion Auto-Wiring**: Direct configuration files (`astro.config.mjs`, `uno.config.ts`, `medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`).
-4. **Modern Design Tokens & Semantic BEM**: Wide-gamut OKLCH palettes and fluid `clamp()` responsive scales in `src/styles/tokens.css`.
-5. **Client Intake Brief**: One pre-filled brief at `./Client-Intake/00-Intake-Brief.md`; your AI agent writes `start-here.md` and the intake docs after collecting the employee's answers.
-6. **Brand Onboarding & Client Intake Suite**: 4-pillar governance suite scaffolded in `./Client-Intake/` (single canonical folder — no `./Intake/` or `./Onboarding/` mirrors):
-   - `01-Brand/`: Brand identity, visual direction, voice & tone guidelines, brand guardrails, and media kit intake.
-   - `02-Business/`: Business model, audience personas, competitor benchmarks, and target launch KPIs.
-   - `03-Offerings/`: Universal offerings catalog matrix, pricing models, and scope deliverable boundaries.
-   - `04-Technical-Intake/`: Domain/DNS management, repository access, hosting credentials, and third-party integrations.
+4. **Modern Design Tokens & Semantic BEM**: Wide-gamut OKLCH palettes (curated, Radix, or custom hue ramp) and fluid `clamp()` scales in `src/styles/tokens.css`.
+5. **Client Onboarding Interview**: Five sections — identity/contacts, business/market, offerings/scope, engagement/commercial, and technical access/integrations. Runs interactively (`--onboard-client`), from `--intake`, or from individual client flags.
+6. **Intake Docs & Brand Compilation**: Renders `00-Intake-Brief.md` plus the 4-pillar suite from real answers, compiles `.agents/brand/`, syncs `.agents/context/product.md` + `accounts.md`, and writes a client-aware `start-here.md`.
+   - `01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`.
+   - `02-Business/`: `business-model.md`, `audience-persona.md`.
+   - `03-Offerings/`: `offerings-catalog.md`, `scope-deliverables.md`.
+   - `04-Technical-Intake/`: `access-and-credentials.md`, `integrations-matrix.md`.
+7. **Closeout**: Records shipped state, ADRs, terrain maps, and runs the health check.
+
+`--skip-client-onboarding` preserves the older behavior: the brief is written, and the docs are left for a later agent pass. See [`references/client-onboarding.md`](references/client-onboarding.md) for the full schema and option matrix.
 
 All gathered answers dynamically populate:
 - `AGENTS.md` (project identity, mission, and agent personas)
