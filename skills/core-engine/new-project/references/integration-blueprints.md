@@ -127,7 +127,7 @@ Web agency clients demand editable content without calling developers or touchin
   - Plain HTML: Data-driven template attributes (`data-copy-key="..."`) backed by a JSON dictionary
 
 ### 2. The `CONTENT_MAP.md` Contract
-In Stage 5 of `new-project`, generate `.agents/brand/CONTENT_MAP.md` providing non-technical clients and copywriters with a directory of all editable copy:
+In Stage 6 of `new-project` (intake docs + context sync), generate `.agents/brand/CONTENT_MAP.md` providing non-technical clients and copywriters with a directory of all editable copy:
 
 ```markdown
 # 🗺️ Client Content Map: [Project Name]
