@@ -13,30 +13,13 @@ node_modules/
 # Python
 .ruff_cache/
 
-# Agents
-.claude/
-.opencode/
-.pi/
-.jez/
-.memory/
-.agentmemory/
-GEMINI.md
-.codex/
-/.agents/
-!skills/core-engine/updateagents/templates/.agents/
-!updateagents/templates/.agents/
-.codegraph/
-.crush/
-.omo/
-.playwright/
-.slim/
-.slim/deepwork/
+# Agent & harness state is internal-only.
+# Install local excludes (never commit this list):
+#   bun skills/core-engine/updateagents/scripts/updateagents.ts . --install-excludes
+# Covers .agents/, .memory/, .claude/, .cursor/, .codex/, .gemini/, transcripts, and caches.
 
-# IDE & ADE
+# IDE
 .zed/
-.orca/
-.cursor/
-.antigravity/
 .vscode/
 .idea/
 *.swp
@@ -55,9 +38,10 @@ venv/
 *.pyc
 __pycache__/
 
-# Test coverage
+# Test coverage & browser output
 coverage/
 .nyc_output/
+.playwright/
 
 # Temporary files
 tmp/

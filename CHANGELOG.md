@@ -2,6 +2,41 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **Documentation Point Ledger: session-proof docs coverage and shipped-state tracking (`updatedocs:ledger`)**:
+  - **Sequential points**: every change that owes docs becomes a `DP-####` point in `.docs-ledger.json`, with developer/user/agent coverage, phrase-based evidence, a documented watermark, and shipped state.
+  - **Recovery and release commands**: `--ledger` / `--catch-up` backfills from the watermark, `--checkpoint` advances only when complete, `--check-points` is the CI gate, `--mark` is the manual override, `--release <tag>` stamps shipped state, and `--whats-new` projects developer, user, or agent release notes.
+  - **Publishing**: `--write-changelog` and `--write-client-changelog` write idempotent managed blocks; `--install-hook` adds a post-commit capture hook; `--memory-hint` prints safe harness-memory hints without touching `.memory/`.
+  - **Reference**: full schema and workflow in `skills/core-engine/updatedocs/references/DOCS-LEDGER.md`.
+
+- **Agent docs backlog and harness hygiene (`updateagents`)**:
+  - **Docs backlog**: `--docs-backlog` folds completed agent-facing points into `.agents/context/current.md` and stops at the first point still owing agent documentation; the default sync consumes ready points automatically.
+  - **Clean root**: `--hygiene` reports IDE/ADE/CLI artifacts, `--hygiene --consolidate` archives and moves non-active artifacts into `.agents/`, and `--hygiene --purge --yes` handles disposable caches.
+  - **Active-harness safety**: the running harness is detected from env/process signals and always skipped; managed adapters and `.github/copilot-instructions.md` are preserved.
+  - **Local-only state**: `--install-excludes` writes `.git/info/exclude` patterns; the public `gitignore.template` is now public-safe and `gitignore.private.template` holds internal rules.
+  - **Gates**: `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, the git preflight public-surface check, and CI `check:hygiene`.
+  - **Reference**: full detection table and workflow in `skills/core-engine/updateagents/references/harness-hygiene.md`; backlog details in `references/docs-backlog.md`.
+
+- **Client onboarding engine (`new-project`)**:
+  - Five-section onboarding interview (identity, business, offerings/scope, engagement terms, technical access) with 30+ granular flags and JSON/Markdown `--intake` support.
+  - Renders `Client-Intake/00-Intake-Brief.md`, the Brand/Business/Offerings/Technical documents, and a client-aware `start-here.md` from real answers, then compiles `.agents/brand/` and `.agents/context/`.
+  - Twelve project archetypes and granular framework/CMS/commerce/database/auth/palette/deployment choices.
+  - Added `references/client-onboarding.md` and the matching intake templates.
+
+### Changed
+
+- **Public-safe agent state**: the committed `.gitignore` template no longer advertises agent/harness names; local excludes are installed through `updateagents --install-excludes`.
+- **Scaffolding**: `new-project` and `updateagents --scaffold` install local excludes when the target is a git repository.
+- **Command surface**: 46 skills + 402 `<skill>-<mode>` commands + 10 aliases = **458 slash commands per harness**.
+
+### Fixed
+
+- **Capability sweep**: scaffolding templates under `templates/` are no longer misreported as invisible skill reference files.
+- **Docs-only commits**: commits after the ledger watermark that owe no documentation no longer reopen the checkpoint gate.
+
 ## [8.0.1] - 2026-10-29
 
 ### Fixed
