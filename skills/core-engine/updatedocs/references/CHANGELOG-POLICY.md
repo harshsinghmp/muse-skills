@@ -108,4 +108,16 @@ When delivering software to non-technical stakeholders, agency clients, or execu
 3. **Token-Saving Freshness Invariant (`--check-freshness`)**:
    - To prevent token waste and redundant doc generation in multi-agent sessions, execution must check the freshness cache (`.agents/artifacts/.docs_fresh`).
    - If no codebase or documentation files have drifted since the last verified turn or commit, docs generation skips immediately with 0 changes and 0 token burn.
+   - The freshness gate also fails when `.docs-ledger.json` has pending points, so a cached hash cannot hide an undocumented change.
+
+## 6. Documentation Points → Shipped What's New
+
+The changelog is the **user-facing projection of shipped documentation points**, not a raw commit log:
+
+- `updatedocs --ledger` records each change as `DP-####` with developer, user, and agent coverage.
+- `--release <tag>` marks complete points as shipped and stamps the real tag (never invent a version).
+- `--whats-new --audience user` prints the business-language projection; `--write-client-changelog` writes it into a managed `CLIENT_CHANGELOG.md` block.
+- `--write-changelog` writes a managed `Documentation Points` block under `## [Unreleased]`. The block is idempotent and history outside the markers remains immutable.
+- A point may be `complete` for developer/agent but still `pending` for user; it must not be presented to users as shipped until the user projection exists.
+- Never claim a release tag that the repository does not contain. The ledger's `shipped` flag comes from tag ancestry or an explicit `--release <tag>` confirmation.
 

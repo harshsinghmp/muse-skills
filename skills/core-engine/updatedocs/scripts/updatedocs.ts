@@ -14,6 +14,8 @@
  *   - Client Handoff Manual Generator (--client-manual): Produces non-technical, client-friendly handoff guides.
  *   - Jargon & Secret Defense (--sanitize-jargon): Redacts internal ticket IDs, staging hosts, and raw tokens.
  *   - Open-Source Credits Ledger (--credits-sync): Synchronizes CREDITS.md with package.json dependencies.
+ *   - Documentation Point Ledger (--ledger/--checkpoint/--check-points): Session-proof DP-#### points,
+ *     per-audience coverage watermarks, shipped state, what's-new, and updateagents --docs-backlog handoff.
  *
  * Invariants:
  *   - HARD BOUNDARY: Never modify or validate .memory/**.
@@ -26,7 +28,7 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -53,6 +55,21 @@ const { values, positionals } = parseArgs({
     "sanitize-jargon": { type: "boolean", default: false },
     "credits-sync": { type: "boolean", default: false },
     "capability-sweep": { type: "boolean", default: false },
+    ledger: { type: "boolean", default: false },
+    "catch-up": { type: "boolean", default: false },
+    checkpoint: { type: "boolean", default: false },
+    "check-points": { type: "boolean", default: false },
+    "whats-new": { type: "boolean", default: false },
+    mark: { type: "string" },
+    audience: { type: "string" },
+    docs: { type: "string" },
+    release: { type: "string" },
+    since: { type: "string" },
+    "write-changelog": { type: "boolean", default: false },
+    "write-client-changelog": { type: "boolean", default: false },
+    "memory-hint": { type: "boolean", default: false },
+    "include-chore": { type: "boolean", default: false },
+    "install-hook": { type: "boolean", default: false },
     "fail-under": { type: "string" },
     "dry-run": { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
@@ -70,7 +87,7 @@ Usage:
   bun updatedocs.ts [targetPath] [options]
 
 Core Capabilities:
-  -a, --audit               Run comprehensive 20-point doc audit (env, links, mermaid, density, snippets)
+  -a, --audit               Run comprehensive 21-point doc audit (env, links, mermaid, density, snippets, ledger)
   -c, --check               Fast pre-commit / CI gate (exits 0 if fresh, 1 on drift)
       --fast-skip           Skip if git status is clean or .docs.hash matches (0 token waste)
       --env-audit           Audit process.env.* in code vs .env.example and README tables
@@ -86,6 +103,21 @@ Core Capabilities:
       --sanitize-jargon     Sanitize internal ticket IDs (PROJ-123) and secrets from client docs
       --credits-sync        Sync CREDITS.md open-source attribution with package.json dependencies
       --capability-sweep    Sweep assets added since the last release tag and fail on capabilities documented nowhere (the sync half: audit checks written, sweep hunts missing)
+      --ledger              Catch up documentation points from the ledger watermark to HEAD (session-proof)
+      --catch-up            Alias for --ledger (process every update since the last documented point)
+      --checkpoint          Advance the ledger watermark only when every point is fully documented
+      --check-points        Read-only CI gate: exit 1 when points are pending or HEAD moved past the watermark
+      --whats-new           Print shipped/complete points grouped for developer, user, or agent (--audience)
+      --mark <id|sha>       Mark a point's audience coverage as documented (pair with --audience/--docs)
+      --audience <name>     developer | user | agent | all (default: all)
+      --docs <list>         Comma-separated doc paths that document the point (used with --mark)
+      --release <tag>       Mark every complete point as shipped in the given release tag
+      --since <ref>         Override the ledger baseline (default: watermark, then last release tag)
+      --write-changelog     Write the managed Documentation Points block into CHANGELOG.md [Unreleased]
+      --write-client-changelog  Write business-language What's New into CLIENT_CHANGELOG.md
+      --memory-hint         Print optional harness-memory hints (updatedocs never writes .memory/)
+      --include-chore       Include chore commits (deps/config/release-related) as documentation points
+      --install-hook        Install an idempotent post-commit hook that auto-captures each commit as a point
       --fail-under <score>  Fail CI if doc health score is below threshold (default: 80)
       --dry-run             Simulate changes without writing files
   -f, --force               Bypass fast-skip gate and force full execution
@@ -174,6 +206,778 @@ export function isGitClean(targetDir: string): boolean {
     return res.status === 0 && res.stdout.trim().length === 0;
   } catch {
     return false;
+  }
+}
+
+// =========================================================================
+// 0. Documentation Point Ledger (--ledger / --checkpoint / --whats-new)
+// =========================================================================
+// A durable, session-proof state file recording every code change that owes
+// documentation, which audience still owes it, and what has shipped. It is
+// the cross-session memory bridge: `.memory/` stays untouched, and harness
+// memory receives a safe hint string rather than a write.
+
+export const DOCS_LEDGER_FILE = ".docs-ledger.json";
+const LEDGER_SCHEMA_VERSION = 1;
+
+export type AudienceName = "developer" | "user" | "agent";
+export type AudienceStatus = "not-needed" | "pending" | "documented" | "verified";
+
+export interface AudienceCoverage {
+  required: boolean;
+  status: AudienceStatus;
+  docs: string[];
+  evidence: string;
+  manual?: boolean;
+}
+
+export interface DocumentationPoint {
+  id: string;
+  point: number;
+  commit: string;
+  shortCommit: string;
+  date: string;
+  type: string;
+  scope: string;
+  summary: string;
+  breaking: boolean;
+  files: string[];
+  audiences: Record<AudienceName, AudienceCoverage>;
+  shipped: boolean;
+  releaseTag: string | null;
+  createdAt: string;
+}
+
+export interface DocsLedger {
+  schemaVersion: number;
+  project: string;
+  createdAt: string;
+  updatedAt: string;
+  head: string;
+  watermark: { point: number; commit: string; date: string; releaseTag: string | null };
+  agentWatermark: { point: number; commit: string; syncedAt: string };
+  points: DocumentationPoint[];
+}
+
+export interface LedgerReport {
+  target: string;
+  ledgerPath: string;
+  baseline: string;
+  head: string;
+  totalPoints: number;
+  newPoints: number;
+  pendingPoints: number;
+  completePoints: number;
+  shippedPoints: number;
+  wrote: boolean;
+  points: DocumentationPoint[];
+  pending: DocumentationPoint[];
+  nextActions: string[];
+  memoryHints: string[];
+}
+
+interface GitCommitRecord {
+  hash: string;
+  short: string;
+  date: string;
+  subject: string;
+  type: string;
+  scope: string;
+  summary: string;
+  breaking: boolean;
+  files: string[];
+}
+
+const CONVENTIONAL_COMMIT = /^([a-z]+)(?:\(([^)]+)\))?(!)?:\s*(.+)$/i;
+
+function classifyCommit(subject: string, files: string[]): GitCommitRecord {
+  const match = CONVENTIONAL_COMMIT.exec(subject);
+  const type = (match?.[1] ?? "other").toLowerCase();
+  const scope = match?.[2] ?? "";
+  const breaking = Boolean(match?.[3]) || /BREAKING CHANGE/i.test(subject);
+  const summary = match?.[4] ?? subject;
+  return {
+    hash: "",
+    short: "",
+    date: "",
+    subject,
+    type,
+    scope,
+    summary,
+    breaking,
+    files,
+  };
+}
+
+function listCommitsSince(targetDir: string, sinceRef: string | null, limit = 200): GitCommitRecord[] {
+  const format = "%H%x1f%h%x1f%cs%x1f%s";
+  const args = sinceRef
+    ? ["log", `--format=${format}`, "--name-only", `${sinceRef}..HEAD`]
+    : ["log", `--format=${format}`, "--name-only", "-n", String(limit)];
+  const result = spawnSync("git", args, { cwd: targetDir, encoding: "utf8" });
+  if (result.status !== 0) return [];
+
+  const commits: GitCommitRecord[] = [];
+  let current: GitCommitRecord | null = null;
+  for (const line of (result.stdout ?? "").split("\n")) {
+    if (line.includes("\x1f")) {
+      if (current) commits.push(current);
+      const [hash, short, date, subject] = line.split("\x1f");
+      current = classifyCommit(subject ?? "", []);
+      current.hash = hash ?? "";
+      current.short = short ?? "";
+      current.date = date ?? "";
+    } else if (line.trim() && current) {
+      current.files.push(line.trim());
+    }
+  }
+  if (current) commits.push(current);
+  return commits.reverse();
+}
+
+function commitExists(targetDir: string, ref: string): boolean {
+  if (!ref) return false;
+  return gitIn(targetDir, ["cat-file", "-e", `${ref}^{commit}`]).code === 0;
+}
+
+function isCommitAncestor(targetDir: string, commit: string, ref: string): boolean {
+  return gitIn(targetDir, ["merge-base", "--is-ancestor", commit, ref]).code === 0;
+}
+
+function repoHead(targetDir: string): string {
+  const res = gitIn(targetDir, ["rev-parse", "HEAD"]);
+  return res.code === 0 ? res.out.trim() : "";
+}
+
+function ledgerProjectName(targetDir: string): string {
+  const pkgPath = join(targetDir, "package.json");
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as { name?: string };
+      if (pkg.name) return pkg.name;
+    } catch {}
+  }
+  return basename(targetDir);
+}
+
+function emptyDocsLedger(targetDir: string): DocsLedger {
+  const now = new Date().toISOString();
+  return {
+    schemaVersion: LEDGER_SCHEMA_VERSION,
+    project: ledgerProjectName(targetDir),
+    createdAt: now,
+    updatedAt: now,
+    head: repoHead(targetDir),
+    watermark: { point: 0, commit: "", date: "", releaseTag: null },
+    agentWatermark: { point: 0, commit: "", syncedAt: "" },
+    points: [],
+  };
+}
+
+export function readDocsLedger(targetDir: string): DocsLedger | null {
+  const ledgerPath = join(targetDir, DOCS_LEDGER_FILE);
+  if (!existsSync(ledgerPath)) return null;
+  try {
+    const parsed = JSON.parse(readFileSync(ledgerPath, "utf8")) as Partial<DocsLedger>;
+    if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.points)) return null;
+    const ledger: DocsLedger = {
+      ...emptyDocsLedger(targetDir),
+      ...parsed,
+      schemaVersion: parsed.schemaVersion ?? LEDGER_SCHEMA_VERSION,
+      watermark: {
+        point: 0,
+        commit: "",
+        date: "",
+        releaseTag: null,
+        ...(parsed.watermark ?? {}),
+      },
+      agentWatermark: { point: 0, commit: "", syncedAt: "", ...(parsed.agentWatermark ?? {}) },
+      points: parsed.points,
+    };
+    for (const point of ledger.points) {
+      point.files = Array.isArray(point.files) ? point.files : [];
+      point.audiences = {
+        developer: { required: true, status: "pending", docs: [], evidence: "" },
+        user: { required: false, status: "not-needed", docs: [], evidence: "" },
+        agent: { required: false, status: "not-needed", docs: [], evidence: "" },
+        ...(point.audiences ?? {}),
+      };
+    }
+    return ledger;
+  } catch {
+    return null;
+  }
+}
+
+export function writeDocsLedger(targetDir: string, ledger: DocsLedger, dryRun = false): string {
+  const ledgerPath = join(targetDir, DOCS_LEDGER_FILE);
+  if (!dryRun) {
+    writeFileSync(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`, "utf8");
+  }
+  return ledgerPath;
+}
+
+const MANIFEST_FILES =
+  /^(package\.json|bun\.lockb?|pnpm-lock\.yaml|yarn\.lock|package-lock\.json|pyproject\.toml|requirements\.txt|Cargo\.toml|go\.mod|composer\.json)$/;
+const CONFIG_FILES =
+  /(^|\/)(vite|next|astro|nuxt|svelte|remix|tailwind|tsconfig|drizzle|payload|wrangler|vercel|netlify|docker-compose)[^/]*\.(config\.)?(ts|js|mjs|cjs|json|toml|yml|yaml)$|^Dockerfile$|^\.env\.example$/;
+const CODE_PATHS = /^(src|app|packages|api|cli|lib|server|cmd|bin|scripts|skills)\//;
+const AGENT_PATHS = /^(skills\/|\.agents\/)|^AGENTS\.md$|^llms\.txt$|^skills\.json$/;
+const DOC_PATH = /\.(md|mdx|txt)$/i;
+
+function isDocRelevantCommit(commit: GitCommitRecord, includeChore = false): boolean {
+  if (commit.type === "docs" || commit.type === "test" || commit.type === "style") return false;
+  if (commit.type === "chore" && !includeChore) {
+    const touchesMachineSurface = commit.files.some(
+      (file) =>
+        MANIFEST_FILES.test(file) ||
+        CONFIG_FILES.test(file) ||
+        file.startsWith(".github/workflows/") ||
+        /deps|dependency|release|security|deploy/i.test(`${commit.scope} ${commit.summary}`),
+    );
+    if (!touchesMachineSurface) return false;
+  }
+  return true;
+}
+
+function audienceRequirements(commit: GitCommitRecord): Record<AudienceName, boolean> {
+  const codeFiles = commit.files.filter((file) => CODE_PATHS.test(file) && !DOC_PATH.test(file));
+  const machineSurface = commit.files.some(
+    (file) => MANIFEST_FILES.test(file) || CONFIG_FILES.test(file) || file.startsWith(".github/workflows/"),
+  );
+  const agentSurface = commit.files.some((file) => AGENT_PATHS.test(file));
+  const skillOnly =
+    agentSurface && commit.files.filter((file) => !DOC_PATH.test(file)).every((file) => AGENT_PATHS.test(file));
+  const publicChange = ["feat", "fix", "perf", "security", "revert"].includes(commit.type) || commit.breaking;
+
+  return {
+    developer: codeFiles.length > 0 || machineSurface || agentSurface || publicChange,
+    user: !skillOnly && (publicChange || machineSurface),
+    agent:
+      agentSurface ||
+      machineSurface ||
+      commit.type === "feat" ||
+      commit.type === "perf" ||
+      commit.type === "security" ||
+      commit.type === "refactor",
+  };
+}
+
+function documentationPoint(commit: GitCommitRecord, pointNumber: number): DocumentationPoint {
+  const required = audienceRequirements(commit);
+  const coverage = (requiredFlag: boolean): AudienceCoverage =>
+    requiredFlag
+      ? { required: true, status: "pending", docs: [], evidence: "awaiting documentation" }
+      : { required: false, status: "not-needed", docs: [], evidence: "no audience impact detected" };
+  const now = new Date().toISOString();
+  return {
+    id: `DP-${String(pointNumber).padStart(4, "0")}`,
+    point: pointNumber,
+    commit: commit.hash,
+    shortCommit: commit.short,
+    date: commit.date,
+    type: commit.type,
+    scope: commit.scope,
+    summary: commit.summary,
+    breaking: commit.breaking,
+    files: commit.files,
+    audiences: {
+      developer: coverage(required.developer),
+      user: coverage(required.user),
+      agent: coverage(required.agent),
+    },
+    shipped: false,
+    releaseTag: null,
+    createdAt: now,
+  };
+}
+
+const COVERAGE_STOPWORDS = new Set([
+  "add",
+  "added",
+  "adds",
+  "allow",
+  "allows",
+  "change",
+  "changed",
+  "changes",
+  "create",
+  "created",
+  "creates",
+  "docs",
+  "document",
+  "documented",
+  "fix",
+  "fixed",
+  "fixes",
+  "improve",
+  "improved",
+  "improves",
+  "make",
+  "makes",
+  "more",
+  "new",
+  "remove",
+  "removed",
+  "removes",
+  "support",
+  "supports",
+  "update",
+  "updated",
+  "updates",
+  "use",
+  "uses",
+  "using",
+  "with",
+]);
+
+function coveragePhrases(point: DocumentationPoint): string[] {
+  // Match phrases, not isolated words. A generic token such as "auth" would
+  // otherwise let an unrelated heading "document" every auth commit, and an
+  // older point's summary would auto-satisfy a newer, different capability.
+  const summaryTokens = point.summary
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length >= 4 && !COVERAGE_STOPWORDS.has(token))
+    .slice(0, 5);
+  const phrases = new Set<string>();
+  if (summaryTokens.length >= 2) {
+    for (let index = 0; index < summaryTokens.length - 1; index++) {
+      phrases.add(`${summaryTokens[index]} ${summaryTokens[index + 1]}`);
+    }
+    if (summaryTokens.length >= 3) phrases.add(summaryTokens.join(" "));
+  } else if (summaryTokens.length === 1) {
+    phrases.add(summaryTokens[0]);
+  }
+  if (point.id) phrases.add(point.id.toLowerCase());
+  if (phrases.size === 0 && point.scope) phrases.add(point.scope.toLowerCase());
+  return [...phrases];
+}
+
+function normalizeDocText(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+type DocCorpus = Array<{ rel: string; content: string }>;
+
+function buildDocCorpus(targetDir: string, audience: AudienceName): DocCorpus {
+  const files = findFiles(targetDir, /\.(md|mdx|txt)$/i);
+  return files
+    .map((file) => ({ rel: relative(targetDir, file), file }))
+    .filter(({ rel }) => !rel.startsWith(".memory/") && !rel.endsWith(DOCS_LEDGER_FILE))
+    .filter(({ rel }) => {
+      if (audience === "agent") {
+        return rel === "AGENTS.md" || rel === "llms.txt" || rel.startsWith(".agents/context/");
+      }
+      if (audience === "user") {
+        return (
+          /^(README|CHANGELOG|CLIENT_CHANGELOG|CLIENT_HANDOFF|RELEASE_NOTES)/i.test(rel) ||
+          /^(docs|guides|handbook|manual)\//i.test(rel)
+        );
+      }
+      return (
+        /^(README|CHANGELOG|CONTRIBUTING|ARCHITECTURE|SECURITY|API|COMPATIBILITY|MIGRATING|UPGRADING|RELEASE_NOTES)/i.test(
+          rel,
+        ) ||
+        /^(docs|adr|examples)\//i.test(rel) ||
+        rel === "llms.txt" ||
+        rel === "AGENTS.md"
+      );
+    })
+    .map(({ rel, file }) => {
+      try {
+        return { rel, content: readFileSync(file, "utf8") };
+      } catch {
+        return { rel, content: "" };
+      }
+    });
+}
+
+function detectAudienceCoverage(
+  corpus: DocCorpus,
+  point: DocumentationPoint,
+  audience: AudienceName,
+): AudienceCoverage {
+  const phrases = coveragePhrases(point);
+  for (const doc of corpus) {
+    const haystack = normalizeDocText(doc.content);
+    const hit = phrases.find((phrase) => haystack.includes(normalizeDocText(phrase)));
+    if (hit) {
+      return {
+        required: true,
+        status: "documented",
+        docs: [doc.rel],
+        evidence: `phrase "${hit}" found in ${doc.rel}`,
+      };
+    }
+  }
+  return {
+    required: true,
+    status: "pending",
+    docs: [],
+    evidence:
+      audience === "agent"
+        ? "no agent context or discovery doc mentions this change yet"
+        : "no discovery doc mentions this change yet",
+  };
+}
+
+function pointComplete(point: DocumentationPoint): boolean {
+  return (Object.keys(point.audiences) as AudienceName[]).every((audience) => {
+    const coverage = point.audiences[audience];
+    return !coverage.required || coverage.status === "documented" || coverage.status === "verified";
+  });
+}
+
+function pendingPoints(ledger: DocsLedger): DocumentationPoint[] {
+  return ledger.points.filter((point) => !pointComplete(point));
+}
+
+function memoryHintFor(point: DocumentationPoint): string {
+  const audience = (Object.keys(point.audiences) as AudienceName[])
+    .map((name) => `${name}:${point.audiences[name].status}`)
+    .join(" ");
+  return `DOCS ${point.id} ${point.shortCommit} ${point.summary} | ${audience} | shipped:${point.releaseTag ?? "no"}`;
+}
+
+export interface LedgerSyncOptions {
+  since?: string;
+  dryRun?: boolean;
+  includeChore?: boolean;
+  write?: boolean;
+  advance?: boolean;
+  limit?: number;
+}
+
+export function syncDocumentationPoints(targetDir: string, options: LedgerSyncOptions = {}): LedgerReport {
+  const existing = readDocsLedger(targetDir);
+  const ledger = existing ?? emptyDocsLedger(targetDir);
+  const baseline =
+    options.since ||
+    (existing?.watermark.commit && commitExists(targetDir, existing.watermark.commit)
+      ? existing.watermark.commit
+      : (lastTag(targetDir) ?? ""));
+  const commits = listCommitsSince(targetDir, baseline || null, options.limit ?? 200);
+  const knownCommits = new Set(ledger.points.map((point) => point.commit));
+  let nextPoint = ledger.points.reduce((max, point) => Math.max(max, point.point), 0) + 1;
+
+  let newPoints = 0;
+  for (const commit of commits) {
+    if (knownCommits.has(commit.hash)) continue;
+    if (!isDocRelevantCommit(commit, options.includeChore)) continue;
+    ledger.points.push(documentationPoint(commit, nextPoint));
+    nextPoint++;
+    newPoints++;
+  }
+
+  const corpora: Record<AudienceName, DocCorpus> = {
+    developer: buildDocCorpus(targetDir, "developer"),
+    user: buildDocCorpus(targetDir, "user"),
+    agent: buildDocCorpus(targetDir, "agent"),
+  };
+
+  for (const point of ledger.points) {
+    for (const audience of Object.keys(point.audiences) as AudienceName[]) {
+      const coverage = point.audiences[audience];
+      if (!coverage.required || coverage.manual) continue;
+      const detected = detectAudienceCoverage(corpora[audience], point, audience);
+      point.audiences[audience] = detected;
+    }
+  }
+
+  const tag = lastTag(targetDir);
+  for (const point of ledger.points) {
+    if (point.shipped) continue;
+    if (tag && point.commit && isCommitAncestor(targetDir, point.commit, tag)) {
+      point.shipped = true;
+      point.releaseTag = tag;
+    }
+  }
+
+  const head = repoHead(targetDir);
+  ledger.head = head || ledger.head;
+  ledger.updatedAt = new Date().toISOString();
+  ledger.points.sort((a, b) => a.point - b.point);
+
+  const pending = pendingPoints(ledger);
+  if (options.advance && pending.length === 0) {
+    ledger.watermark = {
+      point: ledger.points.reduce((max, point) => Math.max(max, point.point), 0),
+      commit: head,
+      date: new Date().toISOString(),
+      releaseTag: tag,
+    };
+  }
+
+  const wrote = options.write !== false && !options.dryRun;
+  const ledgerPath = wrote ? writeDocsLedger(targetDir, ledger, options.dryRun) : join(targetDir, DOCS_LEDGER_FILE);
+  const shipped = ledger.points.filter((point) => point.shipped).length;
+  const nextActions: string[] = [];
+  for (const point of pending) {
+    const missing = (Object.keys(point.audiences) as AudienceName[])
+      .filter((audience) => point.audiences[audience].required && point.audiences[audience].status === "pending")
+      .map((audience) => audience);
+    nextActions.push(
+      `${point.id} (${point.shortCommit} ${point.type}${point.scope ? `(${point.scope})` : ""}): document ${missing.join(", ")}`,
+    );
+  }
+
+  return {
+    target: targetDir,
+    ledgerPath,
+    baseline: baseline || "no-baseline",
+    head,
+    totalPoints: ledger.points.length,
+    newPoints,
+    pendingPoints: pending.length,
+    completePoints: ledger.points.length - pending.length,
+    shippedPoints: shipped,
+    wrote,
+    points: ledger.points,
+    pending,
+    nextActions,
+    memoryHints: ledger.points.map(memoryHintFor),
+  };
+}
+
+function hasUnscannedDocumentationCommits(targetDir: string, ledger: DocsLedger): boolean {
+  if (!ledger.watermark.commit) return false;
+  const known = new Set(ledger.points.map((point) => point.commit));
+  return listCommitsSince(targetDir, ledger.watermark.commit, 200).some(
+    (commit) => !known.has(commit.hash) && isDocRelevantCommit(commit),
+  );
+}
+
+export function checkDocumentationPoints(targetDir: string): {
+  ok: boolean;
+  ledgerExists: boolean;
+  pending: number;
+  headBehind: boolean;
+  watermark: number;
+  head: string;
+} {
+  const ledger = readDocsLedger(targetDir);
+  if (!ledger) {
+    return { ok: true, ledgerExists: false, pending: 0, headBehind: false, watermark: 0, head: repoHead(targetDir) };
+  }
+  const pending = pendingPoints(ledger).length;
+  const head = repoHead(targetDir);
+  // HEAD moving is fine when the new commits are docs-only or otherwise owe
+  // no documentation. Only unscanned documentation-relevant commits count.
+  const headBehind = hasUnscannedDocumentationCommits(targetDir, ledger);
+  return {
+    ok: pending === 0 && !headBehind,
+    ledgerExists: true,
+    pending,
+    headBehind,
+    watermark: ledger.watermark.point,
+    head,
+  };
+}
+
+export function markDocumentationPoint(
+  targetDir: string,
+  idOrCommit: string,
+  audience: AudienceName | "all" = "all",
+  docs: string[] = [],
+): { ok: boolean; message: string } {
+  const ledger = readDocsLedger(targetDir);
+  if (!ledger) return { ok: false, message: `No ${DOCS_LEDGER_FILE} found. Run --ledger first.` };
+  const key = idOrCommit.toLowerCase();
+  const point = ledger.points.find(
+    (candidate) => candidate.id.toLowerCase() === key || candidate.commit.startsWith(key),
+  );
+  if (!point) return { ok: false, message: `No documentation point matches "${idOrCommit}".` };
+
+  const audiences: AudienceName[] = audience === "all" ? ["developer", "user", "agent"] : [audience];
+  for (const name of audiences) {
+    const coverage = point.audiences[name];
+    if (!coverage.required) continue;
+    coverage.status = "documented";
+    coverage.manual = true;
+    coverage.docs = [...new Set([...coverage.docs, ...docs])];
+    coverage.evidence = docs.length > 0 ? `manually documented in ${docs.join(", ")}` : "manually marked via --mark";
+  }
+  ledger.updatedAt = new Date().toISOString();
+  writeDocsLedger(targetDir, ledger, false);
+  return { ok: true, message: `Marked ${point.id} (${audiences.join(", ")}) as documented.` };
+}
+
+export function releaseDocumentationPoints(
+  targetDir: string,
+  tag: string,
+): { ok: boolean; message: string; released: number; pending: number } {
+  const ledger = readDocsLedger(targetDir);
+  if (!ledger) return { ok: false, message: `No ${DOCS_LEDGER_FILE} found.`, released: 0, pending: 0 };
+  const pending = pendingPoints(ledger);
+  if (pending.length > 0) {
+    return {
+      ok: false,
+      message: `${pending.length} documentation point(s) still owe docs: ${pending.map((p) => p.id).join(", ")}`,
+      released: 0,
+      pending: pending.length,
+    };
+  }
+  let released = 0;
+  for (const point of ledger.points) {
+    if (point.shipped) continue;
+    point.shipped = true;
+    point.releaseTag = tag;
+    released++;
+  }
+  ledger.watermark.releaseTag = tag;
+  ledger.updatedAt = new Date().toISOString();
+  writeDocsLedger(targetDir, ledger, false);
+  return { ok: true, message: `Marked ${released} point(s) shipped in ${tag}.`, released, pending: 0 };
+}
+
+function humanizePoint(point: DocumentationPoint): string {
+  const labels: Record<string, string> = {
+    feat: "New",
+    fix: "Fixed",
+    perf: "Faster",
+    security: "Security",
+    revert: "Reverted",
+    refactor: "Improved",
+    chore: "Maintenance",
+    ci: "Automation",
+  };
+  const label = labels[point.type] ?? "Updated";
+  const prefix = point.breaking ? "Important — " : "";
+  return `${prefix}${label}: ${point.summary}`;
+}
+
+export function buildWhatsNewMarkdown(ledger: DocsLedger, audience: "developer" | "user" | "agent" = "user"): string {
+  const points = ledger.points.filter((point) => point.shipped || pointComplete(point));
+  if (points.length === 0) return "";
+  const lines: string[] = [];
+  for (const point of points) {
+    const release = point.releaseTag ? ` (shipped ${point.releaseTag})` : " (unreleased)";
+    if (audience === "user") {
+      lines.push(`- ${humanizePoint(point)}${release}`);
+    } else if (audience === "agent") {
+      const status = (Object.keys(point.audiences) as AudienceName[])
+        .map((name) => `${name}=${point.audiences[name].status}`)
+        .join(" ");
+      lines.push(
+        `- **${point.id}** \`${point.shortCommit}\` ${point.type}${point.scope ? `(${point.scope})` : ""} — ${point.summary} — ${status} — shipped=${point.releaseTag ?? "no"}`,
+      );
+    } else {
+      lines.push(
+        `- **${point.id}** \`${point.shortCommit}\` **${point.type}${point.scope ? `(${point.scope})` : ""}** — ${point.summary}${release}`,
+      );
+    }
+  }
+  return lines.join("\n");
+}
+
+const LEDGER_BLOCK_START = "<!-- docs-ledger:start -->";
+const LEDGER_BLOCK_END = "<!-- docs-ledger:end -->";
+
+function upsertManagedBlock(filePath: string, body: string, anchor: string, heading: string): boolean {
+  const block = `${LEDGER_BLOCK_START}\n### ${heading}\n\n${body}\n${LEDGER_BLOCK_END}`;
+  let content = existsSync(filePath) ? readFileSync(filePath, "utf8") : "";
+  if (content.includes(LEDGER_BLOCK_START) && content.includes(LEDGER_BLOCK_END)) {
+    content = content.replace(new RegExp(`${LEDGER_BLOCK_START}[\\s\\S]*?${LEDGER_BLOCK_END}`), block);
+  } else if (content.includes(anchor)) {
+    content = content.replace(anchor, `${anchor}\n\n${block}`);
+  } else {
+    content = `${content.trim()}\n\n${anchor}\n\n${block}\n`;
+  }
+  writeFileSync(filePath, `${content.trim()}\n`, "utf8");
+  return true;
+}
+
+export function writeWhatsNewDocuments(
+  targetDir: string,
+  dryRun = false,
+  write: { changelog?: boolean; clientChangelog?: boolean } = { changelog: true, clientChangelog: true },
+): { changelog: boolean; clientChangelog: boolean } {
+  const ledger = readDocsLedger(targetDir);
+  if (!ledger || dryRun) return { changelog: false, clientChangelog: false };
+  const developer = write.changelog === false ? "" : buildWhatsNewMarkdown(ledger, "developer");
+  const user = write.clientChangelog === false ? "" : buildWhatsNewMarkdown(ledger, "user");
+  const changelogPath = join(targetDir, "CHANGELOG.md");
+  const clientPath = join(targetDir, "CLIENT_CHANGELOG.md");
+  if (developer) upsertManagedBlock(changelogPath, developer, "## [Unreleased]", "Documentation Points");
+  if (user) upsertManagedBlock(clientPath, user, "## What's New", "Delivery Notes");
+  return { changelog: Boolean(developer), clientChangelog: Boolean(user) };
+}
+
+export function installLedgerHook(targetDir: string): { ok: boolean; hookPath: string; message: string } {
+  const gitDir = join(targetDir, ".git");
+  if (!existsSync(gitDir)) {
+    return { ok: false, hookPath: "", message: `Not a git repository: .git not found in ${targetDir}` };
+  }
+  const hooksDir = join(gitDir, "hooks");
+  if (!existsSync(hooksDir)) mkdirSync(hooksDir, { recursive: true });
+  const hookPath = join(hooksDir, "post-commit");
+  const start = "# >>> updatedocs ledger >>>";
+  const end = "# <<< updatedocs ledger <<<";
+  const block = `${start}
+if command -v bun >/dev/null 2>&1; then
+  for p in "skills/core-engine/updatedocs/scripts/updatedocs.ts" ".agents/skills/updatedocs/scripts/updatedocs.ts" "$HOME/.agents/skills/updatedocs/scripts/updatedocs.ts"; do
+    if [ -f "$p" ]; then bun "$p" . --ledger >/dev/null 2>&1 || true; break; fi
+  done
+fi
+${end}`;
+
+  let content = existsSync(hookPath) ? readFileSync(hookPath, "utf8") : "#!/bin/sh\n";
+  if (content.includes(start) && content.includes(end)) {
+    content = content.replace(new RegExp(`${start}[\\s\\S]*?${end}`), block);
+  } else {
+    content = `${content.trimEnd()}\n\n${block}\n`;
+  }
+  writeFileSync(hookPath, `${content.trimEnd()}\n`, "utf8");
+  chmodSync(hookPath, 0o755);
+  return {
+    ok: true,
+    hookPath,
+    message: "Post-commit hook installed; each commit auto-captures a documentation point.",
+  };
+}
+
+export function printLedgerReport(report: LedgerReport, includeMemoryHints = false): void {
+  console.log(`\n📚 Documentation Point Ledger: ${report.target}`);
+  console.log(`  • Ledger file:        ${report.ledgerPath}${report.wrote ? "" : " (not written)"}`);
+  console.log(`  • Baseline:           ${report.baseline}`);
+  console.log(`  • HEAD:               ${report.head.slice(0, 12)}${report.head.length > 12 ? "..." : ""}`);
+  console.log(`  • Points tracked:     ${report.totalPoints} (${report.newPoints} new this scan)`);
+  console.log(`  • Complete:           ${report.completePoints}`);
+  console.log(`  • Pending docs:       ${report.pendingPoints}`);
+  console.log(`  • Shipped:            ${report.shippedPoints}`);
+  if (report.points.length > 0) {
+    console.log("\n  ID       Commit   Type              Dev        User       Agent      Shipped");
+    console.log("  ───────────────────────────────────────────────────────────────────────────────");
+    for (const point of report.points.slice(-25)) {
+      const label = `${point.type}${point.scope ? `(${point.scope})` : ""}`.slice(0, 16).padEnd(16);
+      const status = (name: AudienceName) => {
+        const coverage = point.audiences[name];
+        if (!coverage.required) return "—".padEnd(11);
+        return coverage.status.slice(0, 11).padEnd(11);
+      };
+      console.log(
+        `  ${point.id.padEnd(8)} ${point.shortCommit.padEnd(8)} ${label} ${status("developer")} ${status("user")} ${status("agent")} ${point.shipped ? (point.releaseTag ?? "yes") : "no"}`,
+      );
+    }
+    if (report.points.length > 25) console.log(`  … ${report.points.length - 25} older point(s) omitted`);
+  }
+  if (report.nextActions.length > 0) {
+    console.log("\n  ⚠️  Documentation debt (write these before --checkpoint):");
+    for (const action of report.nextActions) console.log(`     • ${action}`);
+  } else {
+    console.log("\n  ✅ Every tracked point has its required audience coverage.");
+  }
+  console.log(
+    "\n  ℹ️  Audience model: developer = README/CHANGELOG/API/architecture; user = README/CLIENT_CHANGELOG/guides; agent = AGENTS.md/llms.txt/.agents/context (owned by updateagents).",
+  );
+  if (includeMemoryHints && report.memoryHints.length > 0) {
+    console.log("\n  🧠 Optional memory hints (never written to `.memory/` by updatedocs):");
+    for (const hint of report.memoryHints) console.log(`     • ${hint}`);
   }
 }
 
@@ -1204,6 +2008,14 @@ export function generateHtmlWorkReport(
 // =========================================================================
 
 export function checkDocsFreshness(targetDir: string): { isFresh: boolean; reason: string; timestamp?: string } {
+  const pointCheck = checkDocumentationPoints(targetDir);
+  if (pointCheck.ledgerExists && !pointCheck.ok) {
+    return {
+      isFresh: false,
+      reason: `LEDGER: ${pointCheck.pending} pending documentation point(s); watermark DP-${String(pointCheck.watermark).padStart(4, "0")}${pointCheck.headBehind ? " (HEAD moved past watermark)" : ""}.`,
+    };
+  }
+
   const receiptPath = join(targetDir, ".agents/artifacts/.docs_fresh");
   const clean = isGitClean(targetDir);
 
@@ -1264,10 +2076,127 @@ const isForce = values.force || false;
 const isDryRun = values["dry-run"] || false;
 const isCheck = values.check || false;
 const isFastSkip = values["fast-skip"] || isCheck;
+const ledgerAudience = (values.audience ?? "all") as AudienceName | "all";
+const ledgerDocs = (values.docs ?? "")
+  .split(",")
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+
+// Documentation Point Ledger handlers run before the fast-skip gate so a
+// cached docs hash can never hide undocumented code changes.
+if (values["install-hook"]) {
+  const result = installLedgerHook(targetDir);
+  console.log(result.ok ? `✅ ${result.message}\n   ${result.hookPath}` : `❌ ${result.message}`);
+  process.exit(result.ok ? 0 : 1);
+}
+
+if (values.mark) {
+  // Materialize any commits since the last scan first; otherwise a fresh
+  // point cannot be marked until a separate --ledger run has persisted it.
+  syncDocumentationPoints(targetDir, {
+    since: values.since,
+    includeChore: values["include-chore"],
+  });
+  const result = markDocumentationPoint(targetDir, values.mark, ledgerAudience, ledgerDocs);
+  console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
+  process.exit(result.ok ? 0 : 1);
+}
+
+if (values.release) {
+  // Materialize any commits since the last scan before evaluating completeness,
+  // so a release cannot silently ship an undocumented change.
+  syncDocumentationPoints(targetDir, { since: values.since, includeChore: values["include-chore"] });
+  const result = releaseDocumentationPoints(targetDir, values.release);
+  console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
+  process.exit(result.ok ? 0 : 1);
+}
+
+const ledgerRequested =
+  values.ledger ||
+  values["catch-up"] ||
+  values.checkpoint ||
+  values["check-points"] ||
+  values["whats-new"] ||
+  values["write-changelog"] ||
+  values["write-client-changelog"];
+
+if (ledgerRequested) {
+  const readOnly = Boolean(values["check-points"]);
+  const report = syncDocumentationPoints(targetDir, {
+    since: values.since,
+    dryRun: isDryRun || readOnly,
+    includeChore: values["include-chore"],
+    write: !readOnly,
+    advance: Boolean(values.checkpoint),
+  });
+
+  if (values.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    printLedgerReport(report, Boolean(values["memory-hint"]));
+  }
+
+  if (values["whats-new"] && !values.json) {
+    const ledger = readDocsLedger(targetDir);
+    const audience = values.audience === "developer" || values.audience === "agent" ? values.audience : "user";
+    const body = ledger ? buildWhatsNewMarkdown(ledger, audience) : "";
+    console.log(`\n## What's New (${audience})\n\n${body || "No shipped or complete points yet."}\n`);
+  }
+
+  if ((values["write-changelog"] || values["write-client-changelog"]) && !values.json) {
+    const written = writeWhatsNewDocuments(targetDir, isDryRun, {
+      changelog: Boolean(values["write-changelog"]),
+      clientChangelog: Boolean(values["write-client-changelog"]),
+    });
+    if (values["write-changelog"]) {
+      console.log(`  • CHANGELOG.md managed block: ${written.changelog ? "written" : "skipped (no points)"}`);
+    }
+    if (values["write-client-changelog"]) {
+      console.log(`  • CLIENT_CHANGELOG.md block: ${written.clientChangelog ? "written" : "skipped (no points)"}`);
+    }
+  }
+
+  if (values.checkpoint && !values.json) {
+    if (report.pendingPoints > 0) {
+      console.error(
+        `\n❌ Checkpoint blocked: ${report.pendingPoints} point(s) still owe documentation. Nothing advanced.`,
+      );
+    } else {
+      console.log(
+        `\n✅ Checkpoint advanced to ${report.head.slice(0, 12)}${report.head.length > 12 ? "..." : ""} (${report.totalPoints} points).`,
+      );
+    }
+  }
+
+  const ok = report.pendingPoints === 0;
+  process.exit(values["check-points"] || values.checkpoint ? (ok ? 0 : 1) : 0);
+}
 
 // Fast-Skip Evaluation (Sub-10ms)
+if (isCheck) {
+  const ledgerGate = checkDocumentationPoints(targetDir);
+  if (ledgerGate.ledgerExists && !ledgerGate.ok) {
+    console.log("❌ Documentation Point Ledger gate failed.");
+    console.log(
+      `   • Pending points: ${ledgerGate.pending} · watermark: DP-${String(ledgerGate.watermark).padStart(4, "0")}${ledgerGate.headBehind ? " · HEAD moved past watermark" : ""}`,
+    );
+    console.log("   • Run: bun updatedocs.ts . --ledger  then document and --checkpoint");
+    process.exit(1);
+  }
+}
+
 const docsHashFile = join(targetDir, ".docs.hash");
 if (isFastSkip && !isForce && existsSync(docsHashFile)) {
+  const pointCheck = checkDocumentationPoints(targetDir);
+  if (!pointCheck.ok) {
+    console.log("⚠️ Documentation Point Ledger has pending work; fast-skip disabled.");
+    console.log(
+      `   • Pending points: ${pointCheck.pending} · watermark: DP-${String(pointCheck.watermark).padStart(4, "0")}`,
+    );
+    console.log("   • Run: bun updatedocs.ts . --ledger  (then document, then --checkpoint)");
+    process.exit(1);
+  }
+
   const savedHash = readFileSync(docsHashFile, "utf8").trim();
   const currentHash = computeDocsHash(targetDir);
   const clean = isGitClean(targetDir);
@@ -1415,21 +2344,26 @@ if (values["credits-sync"]) {
 }
 
 // Full Comprehensive Audit (--audit or default)
-console.log("📚 Running Full 20-Point Documentation Governance Audit...");
+console.log("📚 Running Full 21-Point Documentation Governance Audit...");
 const envRes = auditEnvironmentVariables(targetDir);
 const linkRes = lintMarkdownLinks(targetDir);
 const mermaidRes = lintMermaidDiagrams(targetDir, false);
 const densityRes = checkAnswerFirstDensity(targetDir);
 const snippetRes = verifyCodeSnippets(targetDir);
 const audienceRes = auditDualAudienceSync(targetDir);
+const ledgerCheck = checkDocumentationPoints(targetDir);
+const ledgerScore = !ledgerCheck.ledgerExists
+  ? 100
+  : Math.max(0, 100 - ledgerCheck.pending * 10 - (ledgerCheck.headBehind ? 10 : 0));
 
 // Overall Score Calculation (Weighted composite)
 const overallScore = Math.round(
-  envRes.score * 0.25 +
-    linkRes.score * 0.25 +
-    densityRes.densityScore * 0.2 +
-    (snippetRes.errors.length === 0 ? 100 : 50) * 0.2 +
-    (audienceRes.inSync ? 100 : 60) * 0.1,
+  envRes.score * 0.2 +
+    linkRes.score * 0.2 +
+    densityRes.densityScore * 0.15 +
+    (snippetRes.errors.length === 0 ? 100 : 50) * 0.15 +
+    (audienceRes.inSync ? 100 : 60) * 0.1 +
+    ledgerScore * 0.2,
 );
 
 console.log("\n========================================================");
@@ -1445,6 +2379,15 @@ console.log(
   `  5. Code Snippet Integrity:    ${snippetRes.errors.length === 0 ? "100%" : "Errors detected"} (${snippetRes.errors.length} errors)`,
 );
 console.log(`  6. Dual-Audience Parity:      ${audienceRes.inSync ? "100% In Sync" : "Drift detected"}`);
+console.log(
+  `  7. Documentation Points:      ${
+    !ledgerCheck.ledgerExists
+      ? "100% (no ledger initialized)"
+      : ledgerCheck.ok
+        ? `100% (watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
+        : `${ledgerScore}% (${ledgerCheck.pending} pending, watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
+  }`,
+);
 
 // Save fresh docs hash
 if (!isDryRun) {

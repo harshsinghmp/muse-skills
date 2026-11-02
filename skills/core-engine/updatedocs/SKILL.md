@@ -1,10 +1,10 @@
 ---
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
-description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates."
-argument-hint: "[Quick|Change|Release|Sprint|audit]"
+description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates. Maintains a session-proof .docs-ledger.json point system with developer/user/agent coverage watermarks, shipped-state tracking, what's-new generation, and an updateagents --docs-backlog handoff so forgotten sessions catch up from the last documented point."
+argument-hint: "[Quick|Change|Release|Sprint|audit|Ledger]"
 user-invocable: true
-version: 2.7.0
+version: 2.8.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -589,6 +589,7 @@ If implementation and intended documentation differ, report the discrepancy rath
 | **Release** | Preparing a confirmed release / tag | Review `CHANGELOG`, `README`, version matrices, migration notes, and compatibility. | 1–5, 8, 11 (CHANGELOG/README focus), 14–15, 19, 20 | Full report |
 | **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 20 | Full report |
 | **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | [references/audit.md](references/audit.md) | brain-audit-report.md |
+| **`ledger`** | "docs ledger", "catch up docs", "what shipped", "documentation points", "forgotten session docs" | Session-proof documentation point ledger: backfill from the watermark, per-audience coverage (developer/user/agent), shipped state, what's-new, and CI gate | [references/DOCS-LEDGER.md](references/DOCS-LEDGER.md) | Ledger table + debt list |
 
 Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated. With no mode given, run the comprehensive pass (all 20 steps plus the undocumented-capability sweep) — that is the skill's default behavior, not a separate mode.
 
@@ -598,6 +599,57 @@ Mode selection is made once at Step 1 and stated in the final report. A mode may
 ### Support references (load on topic)
 
 All routed references for this skill have Modes-table rows above; topical deep-dives (governance policies) live in uppercase files (`AUDIT-CHECKLIST.md`, `CHANGELOG-POLICY.md`, …) and load by name.
+
+---
+
+## 🧭 Documentation Point Ledger (Session-Proof Sync)
+
+The ledger is the durable answer to "which code change still owes docs, to whom, and what shipped?" It lives at `.docs-ledger.json` (root, commit-worthy) — never `.memory/`, never directly in `.agents/`.
+
+```text
+code change
+  → updatedocs --ledger          create DP-#### points, mark audience gaps
+  → docs written / --mark        coverage detected or manually confirmed
+  → updatedocs --checkpoint      advance the watermark only when complete
+  → updateagents --docs-backlog  fold agent-relevant points into current.md
+  → updatedocs --release <tag>   mark shipped + generate what's-new
+```
+
+Audience routing:
+
+| Audience | Discovery surfaces | Required when |
+| :--- | :--- | :--- |
+| **developer** | README, CHANGELOG, CONTRIBUTING, API/architecture, docs/, examples/ | code, config, CI, skills, or public/breaking change |
+| **user** | README, CHANGELOG, CLIENT_CHANGELOG, guides/, docs/ | feat/fix/perf/security/revert, dependency/config, breaking |
+| **agent** | `AGENTS.md`, `llms.txt`, `.agents/context/*` | skill/agent surface, config/CI, feat/perf/security/refactor |
+
+Core commands:
+
+```bash
+# Catch up every commit since the documented watermark (forgotten-session safe)
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --ledger
+
+# CI gate: fail on pending points or HEAD ahead of the watermark
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --check-points
+
+# Advance only when every required audience is documented
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --checkpoint
+
+# Manual coverage when the phrase heuristic is too strict
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --mark DP-0007 --audience user --docs CHANGELOG.md
+
+# Shipped state + human what's-new
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release v1.2.0
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --whats-new --audience user
+
+# Optional: auto-capture every commit as a point (post-commit hook)
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --install-hook
+```
+
+- The `.docs.hash` fast-skip cannot hide a pending point; `--check` disables the fast path when the ledger has debt.
+- `.memory/` is never read or written. `--memory-hint` prints a safe one-line hint per point for the user's harness memory tooling.
+- `.agents/context/` is updated only by `updateagents --docs-backlog`, never by `updatedocs`.
+- Full schema, phrase-evidence rules, managed blocks, and recovery flow: [references/DOCS-LEDGER.md](./references/DOCS-LEDGER.md).
 
 ## Procedure
 
@@ -928,6 +980,10 @@ Before declaring documentation synchronized, verify:
 ✓ .agents/ governed correctly (explicit permission gate enforced)
 ✓ No protected architecture modified without authorization
 ✓ Every bulk edit passed the diff audit + mechanical re-check (Step 21)
+✓ Documentation points caught up from the watermark; no stale pending point
+✓ `--checkpoint` advanced only after developer/user/agent coverage
+✓ Shipped points carry a real release tag; `.memory/` still untouched
+✓ Agent-facing points handed to `updateagents --docs-backlog` (or reported)
 ```
 
 ---
@@ -945,6 +1001,7 @@ Report depth scales with mode. Use the **Full Report** for Change, Release, Spri
 
 - **Updated:** `<path>` — <one-line reason, evidence-backed>
 - **Verified:** <command/link/claim checked against source>
+- **Ledger:** <DP range caught up / no pending points / pending DP ids>
 - **Boundaries:** `.memory/` untouched; `.agents/` <not affected / permission required>
 - **Skipped:** <nearby docs deliberately not touched and why>
 ```
@@ -979,6 +1036,13 @@ Always provide a structured synchronization report:
 - `path/to/file`
   - Issue: [verified problem]
   - Status: [resolved / unresolved / blocked]
+
+### 🧭 Documentation Points
+- **Caught up:** <DP-0001 → DP-0007 / no new commits>
+- **Pending:** <DP ids + missing audiences, or none>
+- **Shipped:** <DP ids + release tags, or none>
+- **Memory hints:** <printed / suppressed; never written to `.memory/`>
+- **Agent backlog:** <`updateagents --docs-backlog` consumed DP range / blocked on DP id>
 
 ### 🔐 Protected DOX Architecture Review
 - `.agents/`: [not affected / reviewed, no change / affected but not modified]
@@ -1055,12 +1119,12 @@ NEVER MODIFY `.agents/` WITHOUT EXPLICIT USER PERMISSION.
 
 ---
 
-## 🛠️ Automated CLI Engine (`scripts/updatedocs.ts`) & 20-Point Governance Suite
+## 🛠️ Automated CLI Engine (`scripts/updatedocs.ts`) & 21-Point Governance Suite
 
-The `updatedocs` skill ships with a high-performance Bun CLI (`scripts/updatedocs.ts`) designed to solve the 20 primary pain points web agencies and software engineering teams face when keeping documentation synchronized:
+The `updatedocs` skill ships with a high-performance Bun CLI (`scripts/updatedocs.ts`) designed to solve the 21 primary pain points web agencies and software engineering teams face when keeping documentation synchronized:
 
 ```bash
-# Run comprehensive 20-point documentation audit
+# Run comprehensive 21-point documentation audit
 bun skills/core-engine/updatedocs/scripts/updatedocs.ts --audit
 
 # Fast pre-commit / CI gate with sub-10ms fast-skip (0 token waste)
@@ -1092,9 +1156,17 @@ bun skills/core-engine/updatedocs/scripts/updatedocs.ts --sanitize-jargon
 
 # Synchronize open source licenses in CREDITS.md with package.json
 bun skills/core-engine/updatedocs/scripts/updatedocs.ts --credits-sync
+
+# Documentation point ledger: catch up, gate, checkpoint, ship, publish
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --ledger
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --check-points
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --checkpoint
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release v1.2.0
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --whats-new --audience user
+bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --write-changelog --write-client-changelog
 ```
 
-### The 20 Documentation Quality Invariants
+### The 21 Documentation Quality Invariants
 1. **Verified Code Snippets**: Fenced code blocks must pass syntax and brace balance checks (`--test-snippets`).
 2. **Environment Variable Parity**: Every `process.env` in code must be present in `.env.example` (`--env-audit`).
 3. **CLI Argument Alignment**: Documented CLI flags must match `parseArgs` options byte-for-byte.
@@ -1115,6 +1187,7 @@ bun skills/core-engine/updatedocs/scripts/updatedocs.ts --credits-sync
 18. **SemVer Breaking Change Guardian**: Breaking changes mandate a `### ⚠️ Breaking Changes` entry in `CHANGELOG.md`.
 19. **Fresh Clone 5-Minute Test**: README quickstart commands must work from a clean clone without undocumented prerequisites.
 20. **Open Source Attribution**: Third-party dependencies must be accurately attributed in `CREDITS.md` (`--credits-sync`).
+21. **Documentation Point Ledger**: Every code change that owes docs is a sequential `DP-####` point with developer/user/agent coverage, a documented watermark, and shipped state (`.docs-ledger.json`, `--ledger` / `--checkpoint` / `--check-points`). A cached `.docs.hash` never hides pending points, and `updateagents --docs-backlog` consumes completed agent-facing points.
 
 ---
 

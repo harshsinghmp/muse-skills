@@ -27,6 +27,21 @@ Before finalizing any documentation edits or presenting a completion report, rig
 
 ---
 
+## Ledger Gate (additive check)
+
+In addition to the 14 points, a repository using `.docs-ledger.json` must satisfy:
+
+| Check | Verification Question / Action | Failure Consequence |
+|:---|:---|:---|
+| **L1** | Did `--ledger` run from the documented watermark to HEAD, with no forgotten commits skipped? | Run `updatedocs . --ledger`; do not hand-edit point history. |
+| **L2** | Does every pending point name the exact missing audience(s)? | Write the missing developer/user/agent docs or use `--mark` with a real path. |
+| **L3** | Did `--checkpoint` advance only when every required audience is documented? | Revert the watermark advance; document the pending points first. |
+| **L4** | Do shipped points carry a real tag (ancestry or explicit `--release`)? | Remove fabricated release tags; never invent versions. |
+| **L5** | Did `updateagents --docs-backlog` consume agent-facing points without skipping a pending one? | Leave `agentWatermark` in place until the blocking point is documented. |
+| **L6** | Is `.memory/` still untouched and `.agents/context/` modified only by `updateagents`? | Immediate boundary violation — revert and report. |
+
+---
+
 ## Verification Strategy & Oracle Rules
 
 When performing verification:
