@@ -1456,8 +1456,12 @@ export function sweepUndocumentedCapabilities(targetDir: string): CapabilitySwee
         .split("\n")
         .map((l) => l.trim())
         .filter(Boolean)) {
-        checked++;
         const base = rel.split("/").pop() ?? rel;
+        // Scaffolding templates (Client-Intake, standards, brand) are internal
+        // assets, not discovery documents; they do not belong in a SKILL.md
+        // Modes table and must not be reported as invisible references.
+        if (rel.includes("/templates/")) continue;
+        checked++;
         const _suggested: string[] = ["README.md", "CHANGELOG.md"];
         if (rel.includes("skills/") && base.endsWith(".md") && KEBAB_MD.test(base)) {
           // a reference/mode file — its own SKILL.md must surface it
