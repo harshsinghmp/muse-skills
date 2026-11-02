@@ -68,10 +68,12 @@
     "validate": "bash skills/core-engine/updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && bash scripts/ruff-check.sh",
     "type-check": "tsc --noEmit",
-    "check:landed": "bun scripts/check-landed.ts"
+    "check:landed": "bun scripts/check-landed.ts",
+    "check:hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public",
+    "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene"
   },
   "type": "module",
-  "version": "8.0.1",
+  "version": "8.1.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.2",
     "bun-types": "^1.4.2",

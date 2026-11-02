@@ -2,6 +2,45 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.1.0] - 2026-11-01
+
+### Added
+
+- **Documentation Point Ledger: session-proof docs coverage and shipped-state tracking (`updatedocs:ledger`)**:
+  - **Sequential points**: every change that owes docs becomes a `DP-####` point in `.docs-ledger.json`, with developer/user/agent coverage, phrase-based evidence, a documented watermark, and shipped state.
+  - **Recovery and release commands**: `--ledger` / `--catch-up` backfills from the watermark, `--checkpoint` advances only when complete, `--check-points` is the CI gate, `--mark` is the manual override, `--release <tag>` stamps shipped state, and `--whats-new` projects developer, user, or agent release notes.
+  - **Publishing**: `--write-changelog` and `--write-client-changelog` write idempotent managed blocks; `--install-hook` adds a post-commit capture hook; `--memory-hint` prints safe harness-memory hints without touching `.memory/`.
+  - **Reference**: full schema and workflow in `skills/core-engine/updatedocs/references/DOCS-LEDGER.md`.
+
+- **Agent docs backlog and harness hygiene (`updateagents`)**:
+  - **Docs backlog**: `--docs-backlog` folds completed agent-facing points into `.agents/context/current.md` and stops at the first point still owing agent documentation; the default sync consumes ready points automatically.
+  - **Clean root**: `--hygiene` reports IDE/ADE/CLI artifacts, `--hygiene --consolidate` archives and moves non-active artifacts into `.agents/`, and `--hygiene --purge --yes` handles disposable caches.
+  - **Active-harness safety**: the running harness is detected from env/process signals and always skipped; managed adapters and `.github/copilot-instructions.md` are preserved.
+  - **Local-only state**: `--install-excludes` writes `.git/info/exclude` patterns; the public `gitignore.template` is now public-safe and `gitignore.private.template` holds internal rules.
+  - **Gates**: `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, the git preflight public-surface check, and CI `check:hygiene`.
+  - **Reference**: full detection table and workflow in `skills/core-engine/updateagents/references/harness-hygiene.md`; backlog details in `references/docs-backlog.md`.
+
+- **Client onboarding engine (`new-project`)**:
+  - Five-section onboarding interview (identity, business, offerings/scope, engagement terms, technical access) with 30+ granular flags and JSON/Markdown `--intake` support.
+  - Renders `Client-Intake/00-Intake-Brief.md`, the Brand/Business/Offerings/Technical documents, and a client-aware `start-here.md` from real answers, then compiles `.agents/brand/` and `.agents/context/`.
+  - Twelve project archetypes and granular framework/CMS/commerce/database/auth/palette/deployment choices.
+  - Added `references/client-onboarding.md` and the matching intake templates.
+
+### Changed
+
+- **Public-safe agent state**: the committed `.gitignore` template no longer advertises agent/harness names; local excludes are installed through `updateagents --install-excludes`.
+- **Scaffolding**: `new-project` and `updateagents --scaffold` install local excludes when the target is a git repository.
+- **Command surface**: 46 skills + 402 `<skill>-<mode>` commands + 10 aliases = **458 slash commands per harness**.
+
+### Fixed
+
+- **Capability sweep**: scaffolding templates under `templates/` are no longer misreported as invisible skill reference files.
+- **Docs-only commits**: commits after the ledger watermark that owe no documentation no longer reopen the checkpoint gate.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.0.1...v8.1.0
+
+---
+
 ## [8.0.1] - 2026-10-29
 
 ### Fixed
@@ -361,7 +400,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- **Companion & Community Skills Section**: the README now carries a `🔗 Companion & Community Skills` table listing the suite itself (with per-department install) and independently maintained skills that live outside it. The first companion is [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) (MIT) — a self-custodial Bitcoin wallet skill for agents on the Spark L2, covering zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. The upstream real-Bitcoin custody guardrail is quoted alongside the entry.
+- **Companion & Community Skills Section**: the README now carries a `🔗 Companion & Community Skills` table listing the suite itself (with per-department install) and independently maintained skills that live outside it. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. 
 - **Brand Banner (`assets/banner.svg`)**: a generated brand hero — deep-space canvas, violet→cyan accent gradient, and a 46-node constellation with one node per shipped department. `scripts/gen-banner.ts` is the source of truth; `assets/banner.png` is the rasterised copy for surfaces that do not accept SVG (GitHub's social-preview upload). The banner is rendered in the README hero.
 
 ### Fixed
@@ -383,7 +422,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- **Companion & Community Skills Section**: the README now carries a `🔗 Companion & Community Skills` table listing the suite itself (with per-department install) and independently maintained skills that live outside it. The first companion is [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) (MIT) — a self-custodial Bitcoin wallet skill for agents on the Spark L2, covering zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. The upstream real-Bitcoin custody guardrail is quoted alongside the entry.
+- **Companion & Community Skills Section**: the README now carries a `🔗 Companion & Community Skills` table listing the suite itself (with per-department install) and independently maintained skills that live outside it. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. 
 - **Brand Banner (`assets/banner.svg`)**: a generated brand hero — deep-space canvas, violet→cyan accent gradient, and a 46-node constellation with one node per shipped department. `scripts/gen-banner.ts` is the source of truth; `assets/banner.png` is the rasterised copy for surfaces that do not accept SVG (GitHub's social-preview upload). The banner is rendered in the README hero.
 
 ### Fixed
@@ -405,7 +444,7 @@ All notable changes to this project are documented in this file.
 
 - **Front-End Performance Checklist mode (`qa-launch:performance`, #216)**: Sixth `qa-launch` mode (`skills/agency-delivery/qa-launch/references/performance.md`) incorporating the community Front-End Performance Checklist (`thedaviddias/Front-End-Performance-Checklist`, MIT) as a routed launch-QA gate. Grades a release candidate across the six payload categories — HTML, CSS, Fonts, Images, JavaScript, Server — with each item's high/medium/low priority mapped to gate severity ([H]=Block, [M]=ship-with-ticket, [L]=note), the checklist's headline budgets (page <1500 KB / ideally <500 KB, load <3 s, TTFB <1.3 s) anchored to Core Web Vitals where field data exists, a tooling list, and a 2026 modern-framing note (HTTP/2+ concatenation, WebP/AVIF, bundler-driven minification). The mode feeds the `gate` Block-or-Ship verdict and the `audit` perf-budget line. `qa-launch` bumps to 1.2.0 with description/version/mode parity across SKILL.md, README, skills.json, llms.txt, agents/openai.yaml, the root README structure tree, and the regenerated `secretary/references/dispatch.md`; also corrects a prior drift where SKILL.md listed five modes but README/openai.yaml advertised four, and the skill README Modes table now lists all six modes including `audit`.
 
-- **Community & Companion Skills Catalog (#214)**: The README now carries a `🔗 Community & Companion Skills` section for independently maintained skills that live outside the suite. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. First entry: [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) (MIT) — a self-custodial Bitcoin wallet skill for agents on the Spark L2, covering zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy; install with `npx skills add echennells/sparkbtcbot`, confirmed discoverable by the `skills` CLI.
+- **Community & Companion Skills Catalog (#214)**: The README now carries a `🔗 Community & Companion Skills` section for independently maintained skills that live outside the suite. Nothing is vendored and the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) is untouched, so the zero-dependency portability rule and registry parity both hold. 
 
 ### Fixed
 

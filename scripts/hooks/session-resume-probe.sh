@@ -31,4 +31,10 @@ if [ -n "$HTML" ]; then
     echo "[hooks] auto-archived stale report: $DEST"
   fi
 fi
+# Advisory clean-root check: never blocks session start.
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$HOOK_DIR/harness-hygiene-session.sh" ]; then
+  bash "$HOOK_DIR/harness-hygiene-session.sh" || true
+fi
+
 exit 0

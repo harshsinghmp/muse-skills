@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 455 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 458 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -29,9 +29,10 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
+- **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only).
-- **Command surface**: 46 skills + 399 `<skill>-<mode>` commands + 10 aliases = **455 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 402 `<skill>-<mode>` commands + 10 aliases = **458 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.1.0**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution and ephemeral zero-trust mTLS subagent attestation.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -223,9 +224,6 @@ Skills an agent can reach **outside** this source tree. None of them are vendore
 | Skill | What it adds | Install |
 |:---|:---|:---|
 | [`muse-skills`](https://github.com/harshsinghmp/muse-skills) | **This suite** — 46 departments. Install everything, or a single department with `--skill <name>` (e.g. `--skill qa-launch`). | `npx skills add harshsinghmp/muse-skills` |
-| [`sparkbtcbot`](https://github.com/echennells/sparkbtcbot) | Self-custodial Bitcoin wallet for agents on the Spark L2: zero-fee Spark and BTKN/LRC20 transfers, Lightning invoices, L402 paywall payment, L1 deposits and cooperative withdrawals, message signing, and merchant purchases (gift cards, eSIMs, VPNs) under a shared payment policy — invoice-vs-quote verification, amount ceilings, confirm-before-buy. MIT. | `npx skills add echennells/sparkbtcbot` |
-
-> **sparkbtcbot handles real Bitcoin.** Mainnet by default and fully self-custodial — fund it with an operational float only, set `SPARK_DAILY_BUDGET_SATS`, and populate the recipient allowlist before an agent moves sats.
 
 ---
 

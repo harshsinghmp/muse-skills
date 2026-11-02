@@ -1,10 +1,10 @@
 ---
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-description: "Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. Implements a 6-stage sequential execution pipeline: Stage 1 (Purpose-First Root Prompt), Stage 2 (Hierarchical Decision Tree with Tradeoff Engine), Stage 3 (Official Package Installation & Full End-to-End Companion Wiring), Stage 4 (Modern OKLCH Tokens & Fluid BEM System), Stage 5 (Client Intake Brief with post-scaffold agent onboarding), and Stage 6 (Closeout). Bootstraps the Agents-First architecture (AGENTS.md, 9-folder .agents/ container, 13 modular standards, brand tokens, and cognitive memory) before interactively composing project intent, framework (Next.js 16, Astro v7, Instatic HTML, Roots Bedrock, Expo), styling (Hybrid UnoCSS Wind 4 + BEM), animations (CSS presets, Motion.dev, GSAP), state management (NanoStores cross-island store), mobile conversion (Ionic Capacitor for Astro/Next.js to iOS/APK, Expo for React), CMS (Payload 3.0 + Puck, Atomic Payload website builder, Keystatic, StudioCMS, Git-based CMS), e-commerce (Medusa v2 sovereign backend, Payload E-Commerce, Stripe, Razorpay, Vendure), and database (Drizzle ORM with typed schema, Neon, Supabase, Postgres Docker, SQLite). Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'scaffold Project OS', or to initialize an agent-governed workspace."
-argument-hint: "[scaffold|new-project|Agent-Engine|DOX-Engine]"
+description: "Purpose-First interactive project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. Runs a 7-stage pipeline: identity, a granular hierarchical decision tree (archetype to framework to CMS/commerce to DB/auth to styling/motion to palette to deployment), official package installation and full companion wiring, OKLCH/BEM token injection, a full client onboarding interview (contacts, business model, ICP, objections, competitors, offerings, scope boundaries, engagement terms, access, integrations) that renders every Client-Intake document plus start-here.md from real answers, brand/context compilation, and closeout. Bootstraps Agents-First architecture (AGENTS.md, 9-folder .agents/ container, modular standards, brand tokens, cognitive memory) for Next.js 16, Astro, Instatic, Roots Bedrock, Expo, plus Payload/Puck, StudioCMS, Emdash, Keystatic, WollyCMS, Medusa v2, Stripe/Razorpay/Vendure, Drizzle/Neon/Supabase/Postgres/SQLite, and Capacitor. Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'onboard a client project', 'scaffold Project OS', or to initialize an agent-governed workspace."
+argument-hint: "[scaffold|new-project|Agent-Engine|DOX-Engine|client-onboarding]"
 user-invocable: true
-version: 2.7.0
+version: 2.8.0
 author: DOX Engine Provisioner
 license: MIT
 platforms: [macos, linux, windows]
@@ -31,24 +31,28 @@ metadata:
 
 > **Aliases**: `Agent Engine` | `DOX Engine` | `agent-engine` | `dox-engine`
 
-Interactive project creator and Project Operating System provisioner. Implements the **Purpose-First Hierarchical Decision Engine** across **6 Sequential Execution Stages**:
+Interactive project creator, **client onboarding engine**, and Project Operating System provisioner. Implements the **Purpose-First Hierarchical Decision Engine** across **7 Sequential Execution Stages**:
 
 ```
-[ 🎯 Stage 1: Purpose-First Prompt ] ──► [ ⚡ Stage 2: Hierarchical Decision Tree ]
-                                                      │
-[ 🎨 Stage 4: Modern OKLCH / BEM ]   ◄── [ 🔌 Stage 3: Official Package Wiring ]
+[ 🎯 Stage 1: Identity & Archetype ] ──► [ ⚡ Stage 2: Granular Decision Tree ]
+                                                     │
+[ 🎨 Stage 4: OKLCH / BEM Tokens ]   ◄── [ 🔌 Stage 3: Package & Companion Wiring ]
          │
          ▼
-[ 📖 Stage 5: Client Intake Brief ] ──► [ ✅ Stage 6: Closeout ]
+[ 🏢 Stage 5: Client Onboarding ] ──► [ 🏷️ Stage 6: Intake Docs + Brand Compilation ]
+                                                     │
+                                                     ▼
+                                            [ ✅ Stage 7: Closeout ]
 ```
 
 0. **Stage 0: AI-Ready Pre-Flight Gate**: Audits if root `AGENTS.md` and `.agents/` container already exist and pass `updateagents` audit.
-1. **Stage 1: Purpose-First Root Prompt & Project Identity**: Initiates interactively by querying the foundational domain purpose before prompting for identity, mission, and scope.
-2. **Stage 2: Hierarchical Decision Tree**: Prunes irrelevant questions based on selected purpose across 6 branches (Static, Content, Ecommerce, WebApp, Mobile, Custom).
-3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Automatically wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
-4. **Stage 4: Modern Tokens & BEM Architecture Injection**: Injects wide-gamut OKLCH tokens, fluid `clamp()` typography & spacing scales (`src/styles/tokens.css`), and reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-cart-drawer`).
-5. **Stage 5: Client Intake Brief**: Writes `Client-Intake/00-Intake-Brief.md` (employee checklist pre-filled from scaffold answers + agent instructions). Intake docs and `start-here.md` are written by the AI agent AFTER scaffolding, from real employee answers.
-6. **Stage 6: Closeout**: Synchronizes `.agents/context/` (decisions ADRs, product, current, architecture) and runs the health check.
+1. **Stage 1: Purpose-First Root Prompt & Project Identity**: Queries the foundational domain purpose, project name, destination, engagement mode, and existing-repo status before any scaffolding.
+2. **Stage 2: Granular Hierarchical Decision Tree**: Twelve archetypes, then framework → CMS → styling → motion → state → mobile → database → auth → commerce → palette → deployment, each with free-form `custom` plus explicit tradeoff notes.
+3. **Stage 3: Official Package Installation & Config Auto-Wiring**: Wires framework configs (`astro.config.mjs`, `uno.config.ts`, `postcss.config.mjs`, `src/lib/medusa.ts`, `db.ts`, `auth.ts`, `capacitor.config.ts`, `.env.example`) and synchronizes official dependencies in `package.json` with self-verification.
+4. **Stage 4: Modern Tokens & BEM Architecture Injection**: Injects wide-gamut OKLCH tokens (including a custom hue-ramp option), fluid `clamp()` typography & spacing scales (`src/styles/tokens.css`), and reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-cart-drawer`).
+5. **Stage 5: Client Onboarding Interview**: Collects client identity, contacts, business model, stage/revenue, mission/vision, ICP, competitors, objections, offerings, launch KPI, scope boundaries, engagement terms (type, SLA, budget, dates, cadence), and technical access/integrations. Runs interactively or from `--intake <json|md>` / individual `--client-*` flags.
+6. **Stage 6: Intake Docs & Brand Compilation**: Renders `Client-Intake/00-Intake-Brief.md` plus `01-Brand/`, `02-Business/`, `03-Offerings/`, `04-Technical-Intake/` documents and `start-here.md` from the real answers, then compiles `.agents/brand/` and syncs `.agents/context/product.md` + `accounts.md`.
+7. **Stage 7: Closeout**: Records shipped state in `.agents/context/current.md`, writes ADRs, and runs the health check.
 
 ## Modes
 
@@ -60,12 +64,13 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`project-os-architecture`** | "new-project project-os-architecture", "project-os-architecture" | Project Operating System & Progressive Disclosure DOX Architecture | [references/project-os-architecture.md](references/project-os-architecture.md) |
 | **`skill-extraction`** | "new-project skill-extraction", "skill-extraction" | Self-Improvement Skill Extraction Architecture | [references/skill-extraction.md](references/skill-extraction.md) |
 | **`audit`** | "new-project audit", "audit provisioned project", "agent readiness audit" | Certify a provisioned or inherited project's agent infrastructure against the readiness-level checklist (L1–L4, evidence per check, contiguous levels) | [references/audit.md](references/audit.md) |
+| **`client-onboarding`** | "new-project client-onboarding", "onboard a client project", "add client answers to intake" | Full client onboarding schema, interactive section order, every flag, JSON/Markdown intake format, and the intake→brand/context compilation map | [references/client-onboarding.md](references/client-onboarding.md) |
 
 ## Audit routing
 
 new-project embeds audit at two stages:
 - **Stage 0** runs `updateagents --audit` — the 13-asset repository audit (see `updateagents` skill)
-- **Stage 6** runs the health check — `.agents/context/` sync verification
+- **Stage 7** runs the health check — `.agents/context/` sync verification
 
 For deeper audit of the scaffolded output, route to:
 - **UI/component audit** → `refactor-ui` audit mode (scored UI report)
@@ -126,18 +131,24 @@ Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + 
 
 ## Procedure
 
-### 🎯 6 Sequential Execution Stages
+### 🎯 7 Sequential Execution Stages
 
 ### Stage 1: Purpose-First Root Prompt & Project Identity
 The provisioner never guesses the project domain from ambient files. It prompts:
 ```text
 🎯 What is the primary purpose of this project?
-  [1] Static Website          (Brochure, portfolio, landing page, minimal or zero compute)
-  [2] Dynamic Content Website (Blog, publication, documentation, agency editorial)
-  [3] Ecommerce Storefront    (Catalog, shopping cart, checkout, payments, inventory)
-  [4] Full-Stack Web App      (SaaS, dashboard, auth, multi-tenant DB, background jobs)
-  [5] Mobile Application      (Native iOS/Android, Expo React Native, or web-to-APK)
-  [6] Custom / Infrastructure (Library, monorepo package, agent workspace, custom stack)
+  [1] Static & Edge Site         (Brochure, portfolio, landing page, docs, minimal compute)
+  [2] Dynamic Content Publisher  (Blog, publication, docs portal, editorial network)
+  [3] E-Commerce Storefront      (Catalog, cart, checkout, payments, inventory)
+  [4] Full-Stack SaaS & Web App  (Dashboard, auth, multi-tenant DB, background jobs)
+  [5] Internal Tool / Daemon     (Ops dashboard, admin console, automation service)
+  [6] Native Mobile App          (Expo React Native, App Store / Play Store)
+  [7] Web-to-Native Wrapper      (Astro/Next.js packaged with Ionic Capacitor)
+  [8] Creative & Graphic Studio  (Brand tokens, visual identity, Figma handoff, social assets)
+  [9] Open-Source Library / CLI  (Public package, CI, MIT/Apache license, docs site)
+  [10] Growth & Marketing Retainer (SMM, SEO, paid ads, zero heavy backend)
+  [11] Governance-Only / Existing Repo (DOX container on an existing workspace)
+  [12] Custom / Other Stack      (Describe your own architecture)
 ```
 Gathers project name, tagline, author/organization, target audience, core problem, features, industry vertical, and catalog offerings.
 
@@ -254,14 +265,32 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 - `src/styles/semantic.css`: Reusable semantic BEM classes (`.c-card`, `.c-button`, `.c-product-grid`, `.c-product-card`, `.c-cart-drawer`).
 - `src/styles/animations.css`: Hardware-accelerated GPU animations with `prefers-reduced-motion` compliance.
 
-### Stage 5: Client Intake Brief (Instructions, Not Documents)
-The engine writes ONE file: `Client-Intake/00-Intake-Brief.md` — pre-filled with scaffold-time answers (name, purpose, audience, palette, etc.) plus an employee checklist and agent instructions. It does NOT pre-generate the intake documents; those are produced by the AI agent AFTER scaffolding, grounded in real employee answers:
+### Stage 5: Client Onboarding Interview (Answers, Not Placeholders)
+The engine treats client onboarding as a first-class stage, not a post-scaffold afterthought. It never invents client identity. Two entry paths produce the same profile:
 
-**Post-scaffold onboarding flow (agent-driven)**:
-1. Read `./Client-Intake/00-Intake-Brief.md` with the employee and collect answers to the checklist (brand corrections, business context, offerings, technical access, scope boundaries).
-2. Write `01-Brand/`, `02-Business/`, `03-Offerings/`, and `04-Technical-Intake/` documents from those answers — real content only, no invented filler.
-3. Write `./start-here.md`: a short developer orientation derived from the actual scaffolded stack (install/run commands from `package.json`, token locations, verification steps).
-4. Sync answers into `.agents/context/product.md` and `.agents/context/accounts.md`. If a project memory system is present, record active constraints via its memory tooling or CLI, never by editing store files directly; skip if no memory system exists.
+- **Interactive**: `--onboard-client` (or answering `yes` to the prompt in an interactive run) walks five sections in order: identity & contacts → business & market → offerings & scope → engagement & commercial → technical access & integrations.
+- **Non-interactive**: `--intake=<json|md>` pre-fills the profile, and individual `--client-*`, `--business-model`, `--company-stage`, `--revenue-band`, `--mission`, `--vision`, `--competitors`, `--objections`, `--launch-goal`, `--boundaries`, `--domain`, `--dns-provider`, `--git-host`, `--payments`, `--integrations`, `--brand-assets`, `--figma`, `--sla-tier`, `--engagement`, `--comms-channel`, `--comms-cadence`, `--kickoff-date`, `--deadline`, `--budget`, and `--access-items` flags override it.
+
+The full schema, option matrix, JSON shape, and resume rules live in [references/client-onboarding.md](references/client-onboarding.md). The key discipline:
+
+1. Every question is one field at a time, pre-filled with the scaffold answer, so pressing Enter keeps a verified default.
+2. Multi-value fields (payments, integrations, access) use numbered multi-select with a free-text extension.
+3. Missing values are written as `_(to confirm with client)_`, never guessed.
+4. `--skip-client-onboarding` writes only the brief and leaves document generation to the agent later.
+
+### Stage 6: Intake Docs, Brand Compilation & Context Sync
+When onboarding is enabled, the engine renders **all** of these from the real answers:
+
+- `Client-Intake/00-Intake-Brief.md` — complete pre-filled brief with every onboarding field.
+- `Client-Intake/01-Brand/`: `brand-identity.md`, `visual-direction.md`, `voice-and-tone.md`.
+- `Client-Intake/02-Business/`: `business-model.md`, `audience-persona.md`.
+- `Client-Intake/03-Offerings/`: `offerings-catalog.md`, `scope-deliverables.md`.
+- `Client-Intake/04-Technical-Intake/`: `access-and-credentials.md`, `integrations-matrix.md`.
+- `start-here.md` — orientation generated from the actual scaffolded stack and client facts.
+
+It then runs `brand/scripts/intake-compiler.ts` to compile `.agents/brand/` (`voice`, `personas`, `positioning`, `messaging`, `visual-identity`, `social-hooks`) and sync `.agents/context/product.md` + `accounts.md`. The onboarding-aware `start-here.md` is re-rendered last so the compiler's generic version never wins.
+
+**Post-scaffold follow-up (agent-driven)**: only fill genuine gaps the client did not answer; re-ask nothing already verified in the brief.
 
 **Durable DOX Closeout (engine-run at scaffold)**:
 - Provisions `.agents/terrain/` with the 6 canonical Wave 23 Workspace Terrain Maps (`stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`) pre-indexing technical reality so future agents never waste tokens probing.
@@ -305,6 +334,30 @@ bun new-project/scripts/new-project.ts <targetPath> \
   --auth=better-auth \
   --github \
   --non-interactive
+
+# Full client onboarding (interactive interview, docs generated in tandem)
+bun new-project/scripts/new-project.ts <targetPath> --onboard-client
+
+# Full client onboarding from a JSON or Markdown intake file
+bun new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
+
+# Granular client flags (answers prefill the intake docs and brand/context)
+bun new-project/scripts/new-project.ts <targetPath> \
+  --client-name="Acme Health LLC" \
+  --client-brand="Acme Health" \
+  --client-contact="Dana Lee" --client-email="dana@acme.health" \
+  --business-model=b2b-saas --company-stage=seed --revenue-band=1m-10m \
+  --industry="Healthcare" --audience="Regional clinics" \
+  --problem="Manual paper intake" --offerings="Intake Suite, EHR Sync" \
+  --competitors="Epic, Cerner" --objections="Price, Migration effort" \
+  --launch-goal="50 clinics onboarded" --boundaries="Native mobile app, Multi-language" \
+  --domain=acme.health --dns-provider=cloudflare --git-host=github \
+  --payments=stripe --integrations=hubspot,segment \
+  --engagement=fixed-scope --sla-tier=priority --budget="USD 40k" \
+  --comms-channel=slack --comms-cadence=weekly \
+  --kickoff-date=2026-11-10 --deadline=2027-02-01 \
+  --access-items="DNS, GitHub org, Stripe account" \
+  --non-interactive
 ```
 
 | Flag | Type | Description |
@@ -325,6 +378,41 @@ bun new-project/scripts/new-project.ts <targetPath> \
 | `--agent-name <name>` | String | Agent name configured for this workspace; otherwise use the user's global assistant identity and prompt if unavailable |
 | `--agent-role <role>` | String | Lead agent functional role description |
 | `--constraint <text>` | String | Primary operational constraint or invariant |
+| `--onboard-client` | Boolean | Run the full 5-section client onboarding interview and render every intake doc |
+| `--skip-client-onboarding` | Boolean | Write only the brief; leave doc generation to a later agent pass |
+| `--intake <path>` | String | Prefill onboarding from a JSON object or a Markdown `**Label**: value` brief |
+| `--client-name <name>` | String | Client legal entity / company name |
+| `--client-brand <name>` | String | Public brand / trade name |
+| `--client-slug <slug>` | String | Stable client identifier (default: slugged brand name) |
+| `--client-contact <name>` | String | Day-to-day client contact |
+| `--client-role <role>` | String | Day-to-day contact role |
+| `--client-email <email>` | String | Day-to-day contact email |
+| `--decision-maker <name>` | String | Final approval stakeholder |
+| `--tech-lead <name>` | String | Client-side technical lead |
+| `--business-model <model>` | String | `b2b-saas` \| `b2c-ecommerce` \| `agency-service` \| `marketplace` \| `media-publisher` \| `nonprofit` \| `local-business` \| `enterprise` \| `custom` |
+| `--company-stage <stage>` | String | `idea` \| `bootstrapped` \| `seed` \| `series-a` \| `growth` \| `enterprise` \| `established` |
+| `--revenue-band <band>` | String | `pre-revenue` \| `<100k` \| `100k-1m` \| `1m-10m` \| `10m-100m` \| `100m+` |
+| `--mission <text>` | String | Mission statement |
+| `--vision <text>` | String | Vision statement |
+| `--competitors <list>` | String | Comma-separated competitors |
+| `--objections <list>` | String | Comma-separated customer objections |
+| `--launch-goal <text>` | String | Single measurable launch-success metric |
+| `--boundaries <list>` | String | Comma-separated explicit out-of-scope items |
+| `--domain <domain>` | String | Primary production domain |
+| `--dns-provider <name>` | String | `cloudflare` \| `route53` \| `namecheap` \| `godaddy` \| `vercel` \| `other` |
+| `--git-host <host>` | String | `github` \| `gitlab` \| `bitbucket` \| `self-hosted` \| `none` |
+| `--payments <list>` | String | Comma-separated payment rails |
+| `--integrations <list>` | String | Comma-separated third-party services in use |
+| `--brand-assets <path>` | String | Brand asset drive/folder location |
+| `--figma <url>` | String | Figma or design file URL |
+| `--sla-tier <tier>` | String | `standard` \| `priority` \| `enterprise` \| `none` |
+| `--engagement <type>` | String | `fixed-scope` \| `retainer` \| `time-materials` \| `productized-sku` \| `internal` \| `oss` |
+| `--comms-channel <channel>` | String | `slack` \| `email` \| `telegram` \| `whatsapp` \| `weekly-call` \| `other` |
+| `--comms-cadence <cadence>` | String | `daily` \| `weekly` \| `biweekly` \| `monthly` \| `milestone` |
+| `--kickoff-date <date>` | String | Engagement kickoff date (`YYYY-MM-DD`) |
+| `--deadline <date>` | String | Hard delivery deadline (`YYYY-MM-DD`) |
+| `--budget <text>` | String | Budget band or commercial ceiling |
+| `--access-items <list>` | String | Comma-separated access items required from the client |
 | `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
 | `--preset <preset>` | String | `powerhouse` \| `astro-commerce` \| `publisher` \| `edge` \| `visual` \| `astro-visual` \| `plain-astro` \| `git-cms` \| `instatic` \| `pure-html` \| `mobile` \| `astro-mobile` \| `atomic-payload` |
 | `-t, --type <framework>` | String | `nextjs` \| `astro` \| `instatic` \| `wordpress` \| `expo` \| `custom` \| `none` |
@@ -452,6 +540,7 @@ Bring your own: wire the CMS strictly per its official documentation, keep crede
 - **Cross-Project Bleed**: Never copy client-specific skills, assets, or memory files from sibling projects. Every project starts with a clean isolated container.
 - **Monolithic Memory Dumps**: Keep machine real-time invariants in cognitive memory (updated strictly via memory tooling/CLI; never hand-edited directly; skipped if no memory system exists) and `.agents/context/current.md` for durable shipped reality.
 - **Single-Harness Assumptions**: Never default install paths, configuration files, or hooks to harness-specific locations (e.g., `~/.claude/settings.json`). Always follow the layout hierarchy: project-local standard (`.agents/`), home-level agent config (`~/.agents/`), and harness-specific paths only as explicit opt-in when that harness is actually in use. If an opt-in harness follows the `.agents` and `AGENTS.md` standard, do not create its own files; have it follow the DOX engine directly.
+- **Public Agent State**: Keep the scaffolded root clean. The committed `.gitignore` is public-safe only; install internal agent/harness excludes with `updateagents --install-excludes` (`.git/info/exclude`) and consolidate any harness artifact under `.agents/<category>/`. Never commit `.agents/`, `.memory/`, harness dirs, or transcripts to a public remote.
 - **Never Ship Half-Baked Companion Stubs**: Never provision an SDK or integration flag without the accompanying route handlers, client SDKs, schemas, admin UIs, or container configs needed to actually run it. Every technology must be immediately runnable from a clean checkout.
 - **Isolated Official Scaffolds (Aria Builder, Atomic Payload)**: these upstreams ship complete stacks — never overlay engine extras (framework re-scaffold, companion configs, tokens, CI, package.json rewrites); the isolation gate zeroes companion selections with a printed notice and extras are added only on explicit request after scaffolding.
 
@@ -460,8 +549,8 @@ Bring your own: wire the CMS strictly per its official documentation, keep crede
 ## Verification
 
 After scaffolding, verify the project:
-1. **Intake Brief**: Check that `./Client-Intake/00-Intake-Brief.md` exists with pre-filled scaffold answers.
-2. **Post-Scaffold Onboarding**: Walk the employee through the brief with your agent, then write the intake docs and `./start-here.md` it prescribes.
+1. **Intake Brief**: Check that `./Client-Intake/00-Intake-Brief.md` exists with pre-filled scaffold answers and the full **Client Onboarding Answers** block.
+2. **Client Onboarding Artifacts**: When `--onboard-client`, `--intake`, or any client flag was used, verify `01-Brand/`, `02-Business/`, `03-Offerings/`, `04-Technical-Intake/` each contain their generated docs and that `./start-here.md` reflects the client facts (not the generic compass template). When onboarding was skipped, verify the brief alone is written and the docs are marked for the agent pass.
 3. **Design Tokens**: Check wide-gamut OKLCH tokens and fluid clamp scales in `./src/styles/tokens.css` and `.c-*` classes in `semantic.css`.
 4. **Governance Container**: Check `./.agents/` tree, `./AGENTS.md`, and `./CLAUDE.md` containing only `@AGENTS.md`. Working artifacts (research corpora, planning docs, reports) live under `./.agents/artifacts/<topic>/` per its README contract stub — never the repo tree, never `./.memory`; durable findings promote to `./.agents/context/`.
 5. **Database & Auth Completeness**: If database or auth is provisioned, verify `src/lib/schema.ts`, `src/lib/db.ts`, `src/lib/auth-client.ts`, and API route handlers (`/api/auth/[...all]`) exist and compile cleanly.

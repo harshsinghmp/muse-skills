@@ -1,29 +1,35 @@
-# 🏛️ Muse Skills v7.1.0 — Agency Reflection & Quality Gate Release
+# 🏛️ Muse Skills v8.1.0 — Session-Proof Docs & Clean Agent Roots
 
-> **The complete agency reflection, quality hardening, and agent orchestration suite.** 65 PRs merged. 189 automated tests. 502 commits. 46 production-grade skills. Zero dead-letter failures. Zero credential leaks.
+> **Documentation that remembers, agent context that catches up, and project roots that stay clean across every harness.** 371 automated tests. 14,193 assertions. 46 production-grade skills. 458 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
 
 ---
 
-## 🌟 What's New in v7.1.0
+## 🌟 What's New in v8.1.0
 
-- **Tri-Vector Autonomous Agency Coach (`coach`)** (#210): Structured daily standups, async scope checks, client digest automation, and founder vitality audits across Team, Client, and Founder vectors with five dedicated reference playbooks (`team.md`, `client.md`, `founder.md`, `audit.md`, `effort-rubric.md`) and executable CLI engine (`coach.ts`).
-- **Toxic Loop Circuit Breaker (`dead-letter`)** (#206): Automatic circuit-trip on ≥2 identical failure signatures, Precondition Delta gate, Vibeguard zero-credential sanitization, and atomic POSIX rename writes for corrupted-state protection (`circuit-breaker.md`).
-- **Receipt-or-Rejection Gate (`pua`)** (#207): Verbatim CLI receipt requirement, Ghost File Probe (`fs.existsSync`), Churn-to-Signal ratio guardrail (≤ 1.5; > 3.0 = halt), and banned sycophancy phrase scan with 3-line diagnosis format (`receipt-verification.md`).
-- **Automated Purge Register & Founder Vitality ADE (`periodic-retreat` v1.1.0)** (#208): 4-phase strategic retreat facilitation — forensic retrospective with git churn heatmap, `bunx knip` dead-export purge register, Automate/Delegate/Eliminate vitality framework, and binary OKR contracts with Monday Launchpad Packet (`retreat-protocol.md`).
-- **AST Code-Shield Pipeline & Cadence Burstiness (`humanize` v1.1.0)** (#209): 3-pass stash pipeline (fenced code, inline backticks, frontmatter, tables, URLs) preserving code blocks through humanization; cadence dispersion metric (σ ≥ 5.0); bullet density fence (≤ 40%); em-dash budget (≤ 1 per 500w); technical jargon whitelist (`ast-shield-and-cadence.md`).
-- **Git Convention Miner Merge Filter (`git`)**: Ignored topological merge commits (`--no-merges`) when mining repository commit message conventions in `pr-convention-miner.ts`.
+- **Documentation Point Ledger (`updatedocs` v2.8.0)** (#331): Every change that owes docs is now a sequential `DP-####` point in `.docs-ledger.json` with developer, user, and agent coverage, phrase-based evidence, a documented watermark, and shipped state. `--ledger` catches up forgotten sessions, `--checkpoint` advances only when complete, `--check-points` gates CI, `--whats-new` projects audience-specific notes, `--write-changelog` / `--write-client-changelog` publish managed blocks, and `--install-hook` captures every commit. Full reference: `updatedocs/references/DOCS-LEDGER.md`.
+
+- **Agent Docs Backlog (`updateagents` v2.6.0)** (#331): `--docs-backlog` folds completed agent-facing points into `.agents/context/current.md`, stops at the first point still owing agent docs, and advances an independent agent watermark. The default sync consumes ready points automatically. Full reference: `updateagents/references/docs-backlog.md`.
+
+- **Harness Hygiene & Clean Roots (`updateagents` v2.6.0)** (#331): `--hygiene` detects IDE/ADE/CLI artifacts at the root; `--hygiene --consolidate` archives and moves non-active artifacts under `.agents/`; `--hygiene --purge --yes` handles disposable caches. The running harness is detected and always skipped, managed adapters are preserved, and every archive writes a SHA-256 manifest. `--install-excludes` keeps agent state in local-only `.git/info/exclude`, while the public `gitignore.template` stays free of harness names and the new `gitignore.private.template` holds internal rules. Session, pre-commit, and pre-push hooks plus `check:hygiene` gate the workflow. Full reference: `updateagents/references/harness-hygiene.md`.
+
+- **Client Onboarding Engine (`new-project` v2.8.0)** (#331): A five-section onboarding interview (identity, business, offerings/scope, engagement terms, technical access) with 30+ granular flags and JSON/Markdown `--intake` support. The engine renders the complete `Client-Intake/` suite and a client-aware `start-here.md` from real answers, then compiles `.agents/brand/` and `.agents/context/`. The decision tree now spans twelve archetypes with granular framework, CMS, commerce, database, auth, palette, and deployment choices. Full reference: `new-project/references/client-onboarding.md`.
+
+- **Public-Safe Gitignore Split** (#331): Agent and harness paths are no longer advertised in the committed `.gitignore` template. Local excludes are installed through `updateagents --install-excludes`; `new-project` and `updateagents --scaffold` do this automatically when the target is a git repository. This repository dogfoods the model: the public `.gitignore` keeps a pointer, and the internal patterns live in `.git/info/exclude`.
+
+- **Capability Sweep Fix** (#331): Scaffolding templates under `templates/` are no longer misreported as invisible skill reference files. The live capability sweep is back to 100% with zero undocumented capabilities.
 
 ---
 
 ## 📊 Suite Verification & Stats
 
-| Metric | v7.0.0 | v7.1.0 |
+| Metric | v8.0.1 | v8.1.0 |
 |:---|:---|:---|
-| Automated Tests | 188 | **189** |
-| Test Assertions | 3,815 | **3,857** |
+| Automated Tests | 366 | **371** |
+| Test Assertions | 14,131 | **14,193** |
 | Skills Count | 46 | **46** |
-| Shipped Commits | 497 | **502** |
+| Command Surface | 457 | **458** |
 | Test Failures | 0 | **0** |
+| Tracked Agent Artifacts | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
 ---
@@ -34,4 +40,4 @@
 npx skills add harshsinghmp/muse-skills
 ```
 
-**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v7.0.0...v7.1.0
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.0.1...v8.1.0

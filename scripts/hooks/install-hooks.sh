@@ -72,6 +72,31 @@ for harness in "${!HOOK_SUBDIR[@]}"; do
   INSTALLED=$((INSTALLED + 1))
 done
 
+# ─── Git boundary wrappers (harness hygiene) ───────────────────────────────
+# Append to existing hooks; never replace a user's hook wholesale.
+install_git_wrapper() {
+  local hook="$1"
+  local script="$2"
+  local dir="$REPO_ROOT/.git/hooks"
+  [ -d "$dir" ] || return 0
+  local path="$dir/$hook"
+  [ -f "$path" ] || printf '#!/bin/sh\n' > "$path"
+  if grep -q "muse harness hygiene" "$path" 2>/dev/null; then
+    return 0
+  fi
+  {
+    echo ""
+    echo "# >>> muse harness hygiene >>>"
+    echo "if [ -f \"$script\" ]; then bash \"$script\" || exit 1; fi"
+    echo "# <<< muse harness hygiene <<<"
+  } >> "$path"
+  chmod +x "$path"
+  echo "[hooks] git $hook: installed harness hygiene wrapper"
+}
+
+install_git_wrapper pre-commit "$HOOKS_DIR/harness-hygiene-pre-commit.sh"
+install_git_wrapper pre-push "$HOOKS_DIR/harness-hygiene-pre-push.sh"
+
 # ─── Cron hook registration ────────────────────────────────────────────────
 # Cron hooks (dead-letter-nightly, cache-pressure-check) have no event to hook
 # into — they need a scheduler. Register them with crontab if available.
