@@ -72,7 +72,7 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 | **`updatedocs`** | Project-wide documentation synchronization, drift detection, and governance engine. | **Sol** |
 | **`updateagents`** | Universal agent context synchronization and repository AI-readiness engine. | **Nexus** |
 | **`git`** | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. | **Nexus** |
-| **`new-project`** | Purpose-First interactive project creator, companion configurator, DOX Engine, and Agent Engine provisioner. | **Sol** |
+| **`new-project`** | Purpose-First interactive project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. | **Sol** |
 
 ---
 

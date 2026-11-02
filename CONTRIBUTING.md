@@ -154,6 +154,9 @@ git checkout dev
 git pull origin dev
 git checkout -b feat/<skill-name>-<feature>
 
+# Keep agent/harness state local-only (never committed, never in public .gitignore)
+bun skills/core-engine/updateagents/scripts/updateagents.ts . --install-excludes
+
 # 2. Author or modify your skill assets
 # (SKILL.md, README.md, agents/openai.yaml, references/<mode>.md)
 
