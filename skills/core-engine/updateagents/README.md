@@ -19,6 +19,8 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 - **🏛️ Autonomous Secretary Dispatch**: Automatically ensures that the root `AGENTS.md` carries the Secretary Protocol router (`secretary:dispatch`), guaranteeing autonomous triage across all 46 departments on first run or session start.
 - **🛡️ Synthetic Artifact Sanitization**: Strips proprietary IDE wrappers (`[[ORCA_RICH_MD]]`, Cursor markers) automatically via `--sanitize`.
 - **🛡️ Legacy-Write Promotion Interceptor**: Intercepts attempts to write or update foreign-harness instruction files (`CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, etc.), classifies the content into `.agents/standards/` (rule-like) or `.agents/context/` (facts), deduplicates on whitespace normalization, captures provenance, archives original bytes, and resyncs `AGENTS.md` via `--promote <path>`.
+- **📚 Documentation-Point Backlog Bridge**: Consumes `.docs-ledger.json` from the last agent watermark to the latest point whose agent-facing docs are complete, appends an idempotent block to `.agents/context/current.md`, and stops at the first pending point so agent context never claims a change it has not learned. Forgotten sessions recover from the ledger instead of Git archaeology (`--docs-backlog`).
+- **🧹 Harness Hygiene & Clean Root**: Detects IDE/ADE/CLI artifacts at the project root, skips the currently running harness so nothing breaks mid-session, archives and consolidates the rest under `.agents/<category>/`, and installs local-only `.git/info/exclude` patterns so agent state never reaches a public remote (`--hygiene`, `--install-excludes`, `--hygiene --check-public`).
 - **⚖️ Global Invariant Atom Table Telemetry**: Audits active global invariant atoms against the $\le 20$ atom attention cap to prevent model instruction fatigue and context bloat.
 - **📏 Compact Size Control**: Enforces concise instruction files (<5KB preferred, <10KB hard ceiling).
 
@@ -89,6 +91,18 @@ bun path/to/updateagents/scripts/updateagents.ts --lint-rules
 
 # Archive completed historical milestones (>14d) into .agents/archive/milestones/
 bun path/to/updateagents/scripts/updateagents.ts --archive-sprints
+
+# Consume documented points since the last agent watermark into .agents/context/current.md
+bun path/to/updateagents/scripts/updateagents.ts --docs-backlog
+bun path/to/updateagents/scripts/updateagents.ts --docs-backlog --docs-backlog-limit 20
+
+# Clean the project root (active harness is always skipped)
+bun path/to/updateagents/scripts/updateagents.ts . --hygiene
+bun path/to/updateagents/scripts/updateagents.ts . --hygiene --consolidate
+bun path/to/updateagents/scripts/updateagents.ts . --hygiene --check-public
+
+# Keep agent state internal via .git/info/exclude (never committed .gitignore)
+bun path/to/updateagents/scripts/updateagents.ts . --install-excludes
 
 # Canon-drift check: compare .agents/standards/ against master canon (no writes; exits 1 on drift)
 bun path/to/updateagents/scripts/updateagents.ts --check-canon

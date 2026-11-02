@@ -2,6 +2,8 @@
 
 A comprehensive reference for repository hygiene, dynamic `.gitignore` seeding, scratch artifact purging, license validation, and monorepo tag scoping.
 
+> **Clean-root gate**: before pre-release sanitization, run `updateagents --hygiene --check-public` (when available) or `git ls-files | rg '^(\.agents/|\.memory/|\.claude/|\.cursor/)'`. Agent/harness state must be local-only via `.git/info/exclude`; it must never be tracked. The committed `.gitignore` stays public-safe.
+
 ---
 
 ## 1. Dynamic `.gitignore` Seeding

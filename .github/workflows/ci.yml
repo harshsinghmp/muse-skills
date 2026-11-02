@@ -77,6 +77,9 @@ jobs:
       - name: Run verification suite
         run: bun test
 
+      - name: Harness hygiene public-surface gate
+        run: bun run check:hygiene
+
   secret-scan:
     name: secret-scan
     runs-on: ubuntu-latest
