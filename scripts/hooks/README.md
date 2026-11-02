@@ -31,7 +31,7 @@ The `muse-skills` hook suite runs passively at the git and agent harness lifecyc
 
 ---
 
-## 📋 Complete Hooks Catalog (15 Total)
+## 📋 Complete Hooks Catalog (18 Total)
 
 | # | Hook | Trigger Event | Target Layer | Deterministic Behavior |
 |:---|:---|:---|:---|:---|
@@ -49,7 +49,10 @@ The `muse-skills` hook suite runs passively at the git and agent harness lifecyc
 | 12 | `dead-letter-nightly.sh` | scheduled / manual | all | Scans unhandled failure logs and recommends running `dead-letter status` |
 | 13 | `cache-pressure-check.sh` | periodic / pre-build | all | Monitors disk pressure and triggers `clean-system-cache` when disk space < 10GB |
 | 14 | `taste-observer.sh` | session end / feedback | all | Passively extracts user corrections and stylistic preferences into the Taste Engine |
-| 15 | `install-hooks.sh` | manual install | all | Detects active agent runtimes and installs hooks into existing harness directories |
+| 15 | `harness-hygiene-session.sh` | session start | all | Advisory clean-root report: active harness, stray dirs, tracked internal paths (never blocks) |
+| 16 | `harness-hygiene-pre-commit.sh` | git pre-commit | git-native | Blocks staged/tracked `.agents/`, `.memory/`, harness dirs, transcripts, and agent instruction files |
+| 17 | `harness-hygiene-pre-push.sh` | git pre-push | git-native | Blocks pushes when internal agent state is tracked (`--hygiene --check-public`) |
+| 18 | `install-hooks.sh` | manual install | all | Detects active agent runtimes and installs hooks into existing harness directories (never creates one) |
 
 ## Auto-detection table
 

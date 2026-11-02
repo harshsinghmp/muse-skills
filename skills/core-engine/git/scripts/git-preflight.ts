@@ -153,14 +153,28 @@ export function runPreflightSync(workspaceRoot = process.cwd(), options: { force
     skipped.push("updatedocs");
   }
 
+  // Public-surface safety: never push tracked agent/harness state to a remote.
+  let publicSurfaceOk = true;
+  const hygieneScript = join(workspaceRoot, "skills/core-engine/updateagents/scripts/updateagents.ts");
+  if (existsSync(hygieneScript)) {
+    const res = spawnSync("bun", [hygieneScript, workspaceRoot, "--hygiene", "--check-public"], {
+      cwd: workspaceRoot,
+      encoding: "utf8",
+    });
+    publicSurfaceOk = res.status === 0;
+    actionsExecuted.push("updateagents (Harness Hygiene public-surface check)");
+  }
+
   // Record freshness receipts
   recordPreflightReceipts(workspaceRoot);
 
   return {
-    success: true,
+    success: publicSurfaceOk,
     skipped,
     actionsExecuted,
-    reason: "Pre-flight synchronization executed and freshness receipts recorded.",
+    reason: publicSurfaceOk
+      ? "Pre-flight synchronization executed and freshness receipts recorded."
+      : "Pre-flight blocked: tracked agent/harness artifacts must be removed from the index before delivery.",
   };
 }
 

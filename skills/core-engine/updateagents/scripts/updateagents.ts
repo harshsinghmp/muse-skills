@@ -31,14 +31,16 @@ import {
   chmodSync,
   cpSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import * as readline from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -144,6 +146,16 @@ const { values, positionals } = parseArgs({
     content: { type: "string", default: "" },
     "lint-rules": { type: "boolean", default: false },
     "archive-sprints": { type: "boolean", default: false },
+    "docs-backlog": { type: "boolean", default: false },
+    "docs-backlog-limit": { type: "string", default: "" },
+    hygiene: { type: "boolean", default: false },
+    consolidate: { type: "boolean", default: false },
+    purge: { type: "boolean", default: false },
+    "install-excludes": { type: "boolean", default: false },
+    "check-public": { type: "boolean", default: false },
+    yes: { type: "boolean", default: false },
+    "force-active": { type: "boolean", default: false },
+    "no-hygiene": { type: "boolean", default: false },
     "check-canon": { type: "boolean", default: false },
     refresh: { type: "string", default: "" },
     "report-html": { type: "boolean", default: false },
@@ -187,6 +199,18 @@ Options:
   --sync-ide       Compile .agents/standards/ into .cursor/rules/*.mdc and .github/copilot-instructions.md
   --lint-rules     Validate standards and context rules against installed package.json dependencies
   --archive-sprints Move completed milestones (>14d) from current.md to .agents/archive/milestones/
+  --docs-backlog   Consume .docs-ledger.json points since agentWatermark into .agents/context/current.md
+  --docs-backlog-limit <n>  Cap the number of documentation points appended per run (default: 50)
+  --hygiene        Report harness/IDE artifacts at the project root (read-only by default)
+  --hygiene --consolidate   Archive + move non-active harness artifacts into .agents/ and clean the root
+  --hygiene --purge         Archive + remove disposable caches/transcripts (requires --yes)
+  --hygiene --check         Exit 1 when stray harness artifacts or tracked internal paths exist
+  --hygiene --check-public  Exit 1 when .agents/, .memory/, harness dirs, or transcripts are tracked
+  --install-excludes        Write local-only agent patterns into .git/info/exclude (never .gitignore)
+  --global                  With --install-excludes, write to the global core.excludesFile instead
+  --yes                     Confirm destructive purge operations
+  --force-active            Allow consolidating the currently running harness (dangerous; default: skip)
+  --no-hygiene             Skip the automatic hygiene pass in the default sync
   --check-canon     Verify local .agents/standards against the master canon without modifying (exits 0 if in sync, 1 if drift)
   --refresh <name>  Adopt the master-canon version of one standard (or "all" for every diverged one) — selective, agent-reviewed
   --report-html    Generate a standalone single-file HTML work report for employees, agents, or clients
@@ -593,6 +617,206 @@ export function executeCloseout(targetDir: string, summary: string): void {
   console.log(`\n✅ Task Closeout Complete: Verified milestone appended to current.md.\n`);
 }
 
+// =========================================================================
+// Documentation Point Backlog (--docs-backlog)
+// =========================================================================
+// Consumes the updatedocs-owned `.docs-ledger.json` from the last point the
+// agent context has seen up to the latest point whose agent-facing docs are
+// complete. This is the bridge that makes "forgotten sessions" recoverable:
+// the ledger remembers every code change; updateagents turns the agent-relevant
+// ones into durable `.agents/context/current.md` knowledge.
+
+interface DocsLedgerAudience {
+  required: boolean;
+  status: string;
+  docs: string[];
+  evidence: string;
+}
+
+interface DocsLedgerPoint {
+  id: string;
+  point: number;
+  commit: string;
+  shortCommit: string;
+  date: string;
+  type: string;
+  scope: string;
+  summary: string;
+  shipped: boolean;
+  releaseTag: string | null;
+  audiences: Record<string, DocsLedgerAudience>;
+}
+
+interface DocsLedgerShape {
+  schemaVersion?: number;
+  agentWatermark?: { point: number; commit: string; syncedAt: string };
+  updatedAt?: string;
+  points: DocsLedgerPoint[];
+}
+
+const DOCS_BACKLOG_START = "<!-- docs-backlog:start -->";
+const DOCS_BACKLOG_END = "<!-- docs-backlog:end -->";
+
+function agentCoverageReady(point: DocsLedgerPoint): boolean {
+  const agent = point.audiences?.agent;
+  if (!agent?.required) return true;
+  return agent.status === "documented" || agent.status === "verified" || agent.status === "not-needed";
+}
+
+function hasReadyDocsBacklog(targetDir: string): boolean {
+  const ledgerPath = join(targetDir, ".docs-ledger.json");
+  if (!existsSync(ledgerPath)) return false;
+  try {
+    const ledger = JSON.parse(readFileSync(ledgerPath, "utf8")) as DocsLedgerShape;
+    const watermark = ledger.agentWatermark?.point ?? 0;
+    const next = (ledger.points ?? []).filter((point) => point.point > watermark).sort((a, b) => a.point - b.point)[0];
+    return next ? agentCoverageReady(next) : false;
+  } catch {
+    return false;
+  }
+}
+
+function renderDocsBacklogBlock(points: DocsLedgerPoint[]): string {
+  const first = points[0]?.id ?? "";
+  const last = points[points.length - 1]?.id ?? "";
+  const rows = points.map((point) => {
+    const status = ["developer", "user", "agent"]
+      .map((audience) => `${audience}: ${point.audiences?.[audience]?.status ?? "unknown"}`)
+      .join(" · ");
+    const release = point.releaseTag ? `shipped: ${point.releaseTag}` : "unreleased";
+    return `- **${point.id}** \`${point.shortCommit}\` **${point.type}${point.scope ? `(${point.scope})` : ""}** — ${point.summary} — ${status} · ${release}`;
+  });
+  return `${DOCS_BACKLOG_START}
+### 📚 Documentation Points Since Last Agent Sync (${first}–${last})
+
+_Source: \`.docs-ledger.json\` (owned by \`updatedocs\`). These code changes are durable agent-relevant knowledge; document any remaining audience gaps before the next checkpoint._
+
+${rows.join("\n")}
+${DOCS_BACKLOG_END}`;
+}
+
+export function syncDocsBacklog(
+  targetDir: string,
+  options: { dryRun?: boolean; limit?: number } = {},
+): {
+  ok: boolean;
+  reason: string;
+  appended: number;
+  from?: string;
+  to?: string;
+  pending: number;
+  ledgerPath: string;
+  currentPath: string;
+} {
+  const ledgerPath = join(targetDir, ".docs-ledger.json");
+  const currentPath = join(targetDir, ".agents/context/current.md");
+  if (!existsSync(ledgerPath)) {
+    return {
+      ok: false,
+      reason: "No .docs-ledger.json found. Run 'updatedocs --ledger' first.",
+      appended: 0,
+      pending: 0,
+      ledgerPath,
+      currentPath,
+    };
+  }
+  if (!existsSync(currentPath)) {
+    return {
+      ok: false,
+      reason: "No .agents/context/current.md found. Run 'updateagents --scaffold' first.",
+      appended: 0,
+      pending: 0,
+      ledgerPath,
+      currentPath,
+    };
+  }
+
+  let ledger: DocsLedgerShape;
+  try {
+    ledger = JSON.parse(readFileSync(ledgerPath, "utf8")) as DocsLedgerShape;
+  } catch {
+    return {
+      ok: false,
+      reason: ".docs-ledger.json is not valid JSON.",
+      appended: 0,
+      pending: 0,
+      ledgerPath,
+      currentPath,
+    };
+  }
+
+  const watermark = ledger.agentWatermark?.point ?? 0;
+  const limit = options.limit && options.limit > 0 ? options.limit : 50;
+  const candidates = (ledger.points ?? []).filter((point) => point.point > watermark).sort((a, b) => a.point - b.point);
+
+  const ready: DocsLedgerPoint[] = [];
+  for (const point of candidates) {
+    if (!agentCoverageReady(point)) break;
+    ready.push(point);
+    if (ready.length >= limit) break;
+  }
+
+  if (ready.length === 0) {
+    return {
+      ok: true,
+      reason:
+        candidates.length === 0
+          ? "Agent context is already caught up with the documentation ledger."
+          : `Next point ${candidates[0].id} still owes agent documentation; backlog paused.`,
+      appended: 0,
+      pending: candidates.length,
+      ledgerPath,
+      currentPath,
+    };
+  }
+
+  const block = renderDocsBacklogBlock(ready);
+  let current = readFileSync(currentPath, "utf8");
+  const anchor = "## 1. Verified Shipped Reality";
+  if (current.includes(DOCS_BACKLOG_START) && current.includes(DOCS_BACKLOG_END)) {
+    current = current.replace(new RegExp(`${DOCS_BACKLOG_START}[\\s\\S]*?${DOCS_BACKLOG_END}`), block);
+  } else if (current.includes(anchor)) {
+    current = current.replace(anchor, `${anchor}\n\n${block}`);
+  } else {
+    current = `${current.trim()}\n\n${anchor}\n\n${block}\n`;
+  }
+
+  const lastReady = ready[ready.length - 1];
+  ledger.agentWatermark = {
+    point: lastReady.point,
+    commit: lastReady.commit,
+    syncedAt: new Date().toISOString(),
+  };
+  ledger.updatedAt = new Date().toISOString();
+
+  if (!options.dryRun) {
+    writeFileSync(currentPath, `${current.trim()}\n`, "utf8");
+    writeFileSync(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`, "utf8");
+    const contextDir = join(targetDir, ".agents/context");
+    const hash = computeContextHash(contextDir);
+    if (hash) writeFileSync(join(contextDir, ".context.hash"), hash, "utf8");
+    if (!values.json) {
+      logExplicitModification({
+        file: ".agents/context/current.md",
+        changeType: "appended",
+        section: "Verified Shipped Reality",
+        diffSummary: `Documentation points ${ready[0].id}–${lastReady.id}`,
+      });
+    }
+  }
+
+  return {
+    ok: true,
+    reason: `Consumed ${ready.length} documentation point(s).`,
+    appended: ready.length,
+    from: ready[0].id,
+    to: lastReady.id,
+    pending: candidates.length - ready.length,
+    ledgerPath,
+    currentPath,
+  };
+}
+
 // Early handler: Stack Guard
 if (values["stack-guard"]) {
   console.log("🛡️ Running Stack Drift Guard check on:", workspaceDir);
@@ -611,6 +835,687 @@ const closeoutMsg = values.closeout || values.delta;
 if (closeoutMsg) {
   executeCloseout(workspaceDir, closeoutMsg);
   process.exit(0);
+}
+
+// Early handler: Documentation Point Backlog
+if (values["docs-backlog"]) {
+  const limit = values["docs-backlog-limit"] ? Number.parseInt(values["docs-backlog-limit"], 10) : undefined;
+  const result = syncDocsBacklog(workspaceDir, { dryRun: isDryRun, limit });
+  if (values.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(`\n📚 Documentation Point Backlog — ${workspaceDir}`);
+    console.log(`  • Ledger:   ${result.ledgerPath}`);
+    console.log(`  • Context:  ${result.currentPath}`);
+    console.log(`  • Verdict:  ${result.ok ? "OK" : "BLOCKED"} — ${result.reason}`);
+    if (result.appended > 0) {
+      console.log(`  • Appended: ${result.from} → ${result.to} (${result.appended} point(s))`);
+    }
+    if (result.pending > 0) {
+      console.log(`  • Pending:  ${result.pending} point(s) still owed agent documentation`);
+    }
+  }
+  process.exit(result.ok ? 0 : 1);
+}
+
+// =========================================================================
+// Harness Hygiene — Clean Root, Local-Only Agent State, .agents/ Consolidation
+// =========================================================================
+
+export type HarnessCategory = "harness" | "instruction" | "data" | "cache" | "ide";
+
+export interface HarnessDescriptor {
+  path: string;
+  category: HarnessCategory;
+  signals: string[];
+  label: string;
+}
+
+export const HARNESS_DESCRIPTORS: HarnessDescriptor[] = [
+  {
+    path: ".claude",
+    category: "harness",
+    signals: ["CLAUDECODE", "CLAUDE_CODE", "CLAUDE_CODE_ENTRYPOINT"],
+    label: "Claude Code",
+  },
+  { path: ".cursor", category: "harness", signals: ["CURSOR_TRACE_ID", "CURSOR_AGENT"], label: "Cursor" },
+  { path: ".codex", category: "harness", signals: ["CODEX_HOME", "CODEX_SANDBOX"], label: "Codex" },
+  { path: ".gemini", category: "harness", signals: ["GEMINI_CLI", "GEMINI_API_KEY"], label: "Gemini CLI" },
+  { path: ".opencode", category: "harness", signals: ["OPENCODE", "OPENCODE_CONFIG"], label: "OpenCode" },
+  { path: ".openclaw", category: "harness", signals: ["OPENCLAW"], label: "OpenClaw" },
+  {
+    path: ".commandcode",
+    category: "harness",
+    signals: ["COMMANDCODE", "COMMANDCODE_SCRATCHPAD"],
+    label: "Command Code",
+  },
+  { path: ".windsurf", category: "harness", signals: ["WINDSURF"], label: "Windsurf" },
+  { path: ".aider", category: "harness", signals: ["AIDER"], label: "Aider" },
+  { path: ".cline", category: "harness", signals: ["CLINE"], label: "Cline" },
+  { path: ".continue", category: "harness", signals: ["CONTINUE"], label: "Continue" },
+  { path: ".roo", category: "harness", signals: ["ROO"], label: "Roo" },
+  { path: ".trae", category: "harness", signals: ["TRAE"], label: "Trae" },
+  { path: ".hermes", category: "harness", signals: ["HERMES"], label: "Hermes" },
+  { path: ".crush", category: "harness", signals: ["CRUSH"], label: "Crush" },
+  { path: ".antigravity", category: "harness", signals: ["ANTIGRAVITY"], label: "Antigravity" },
+  { path: ".omo", category: "harness", signals: ["OMO"], label: "OMO" },
+  { path: ".omh", category: "harness", signals: ["OMH"], label: "OMH" },
+  { path: ".omp", category: "harness", signals: ["OMP"], label: "OMP" },
+  { path: ".superpowers", category: "harness", signals: ["SUPERPOWERS"], label: "Superpowers" },
+  { path: ".codegraph", category: "cache", signals: ["CODEGRAPH"], label: "Codegraph" },
+  { path: ".slim", category: "cache", signals: ["SLIM"], label: "Slim" },
+  { path: ".jez", category: "cache", signals: ["JEZ"], label: "Jez" },
+  { path: ".playwright", category: "cache", signals: [], label: "Playwright" },
+  { path: ".vscode", category: "ide", signals: ["VSCODE_PID"], label: "VS Code" },
+  { path: ".idea", category: "ide", signals: ["IDEA_INITIAL_DIRECTORY"], label: "JetBrains" },
+  { path: ".zed", category: "ide", signals: ["ZED_TERM"], label: "Zed" },
+];
+
+export const HARNESS_INSTRUCTION_FILES = [
+  "CLAUDE.md",
+  "GEMINI.md",
+  "CODEX.md",
+  ".cursorrules",
+  ".windsurfrules",
+  ".clinerules",
+  ".roomodes",
+  ".aider.conf.yml",
+  ".aider.model.settings.yml",
+  ".github/copilot-instructions.md",
+];
+
+export const HARNESS_DATA_PATHS = [
+  "transcripts",
+  "chat-logs",
+  "session-logs",
+  "agent-transcripts",
+  "subagents",
+  ".artifacts",
+  ".artifacets",
+  ".system_generated",
+];
+
+const HARNESS_DATA_FILE =
+  /(?:\.transcript\.jsonl|\.trajectory\.jsonl|\.chat\.json|\.prompt\.md|\.prompt\.tmp|\.scratchpad\.md)$/i;
+
+export interface ActiveHarness {
+  path: string;
+  signal: string;
+  label: string;
+}
+
+export function detectActiveHarness(): ActiveHarness | null {
+  for (const descriptor of HARNESS_DESCRIPTORS) {
+    for (const signal of descriptor.signals) {
+      if (process.env[signal] !== undefined) {
+        return { path: descriptor.path, signal, label: descriptor.label };
+      }
+    }
+  }
+  const processText = `${process.execPath} ${process.argv.join(" ")}`.toLowerCase();
+  for (const descriptor of HARNESS_DESCRIPTORS) {
+    if (processText.includes(descriptor.path.toLowerCase())) {
+      return { path: descriptor.path, signal: "process-argv", label: descriptor.label };
+    }
+  }
+  return null;
+}
+
+export type HygieneAction =
+  | "CONSOLIDATE"
+  | "PROMOTE"
+  | "ARCHIVE"
+  | "PURGE"
+  | "KEEP_ADAPTER"
+  | "SKIPPED_ACTIVE"
+  | "IGNORE_ONLY"
+  | "SKIP_SYMLINK";
+
+export interface HygieneFinding {
+  path: string;
+  category: HarnessCategory;
+  action: HygieneAction;
+  reason: string;
+  active: boolean;
+}
+
+export interface HygieneScanResult {
+  active: ActiveHarness | null;
+  findings: HygieneFinding[];
+  violations: HygieneFinding[];
+}
+
+function containsManagedAdapter(dir: string, depth = 0): boolean {
+  if (depth > 4) return false;
+  try {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      let stat: ReturnType<typeof lstatSync>;
+      try {
+        stat = lstatSync(full);
+      } catch {
+        continue;
+      }
+      if (stat.isSymbolicLink()) continue;
+      if (stat.isDirectory()) {
+        if (containsManagedAdapter(full, depth + 1)) return true;
+      } else if (/\.(md|mdc|mdx)$/i.test(entry)) {
+        try {
+          if (readFileSync(full, "utf8").includes("[//]: # (updateagents:adapter)")) return true;
+        } catch {}
+      }
+    }
+  } catch {}
+  return false;
+}
+
+export function scanHarnessArtifacts(targetDir: string, options: { forceActive?: boolean } = {}): HygieneScanResult {
+  const active = detectActiveHarness();
+  const findings: HygieneFinding[] = [];
+  const entries = existsSync(targetDir) ? readdirSync(targetDir) : [];
+
+  for (const entry of entries) {
+    if ([".git", ".memory", ".agents", "node_modules", ".worktrees", "worktrees"].includes(entry)) continue;
+    const full = join(targetDir, entry);
+    let stat: ReturnType<typeof lstatSync>;
+    try {
+      stat = lstatSync(full);
+    } catch {
+      continue;
+    }
+    if (stat.isSymbolicLink()) {
+      findings.push({
+        path: entry,
+        category: "cache",
+        action: "SKIP_SYMLINK",
+        reason: "symlink — never followed during hygiene",
+        active: false,
+      });
+      continue;
+    }
+
+    const descriptor = HARNESS_DESCRIPTORS.find((item) => item.path === entry);
+    if (descriptor) {
+      const isActive = active?.path === entry && !options.forceActive;
+      const managedAdapter = descriptor.category === "harness" && containsManagedAdapter(full);
+      const action: HygieneAction =
+        descriptor.category === "ide"
+          ? "IGNORE_ONLY"
+          : isActive
+            ? "SKIPPED_ACTIVE"
+            : managedAdapter
+              ? "KEEP_ADAPTER"
+              : descriptor.category === "cache"
+                ? "PURGE"
+                : "CONSOLIDATE";
+      findings.push({
+        path: entry,
+        category: descriptor.category,
+        action,
+        reason:
+          descriptor.category === "ide"
+            ? "IDE metadata — ignored locally, not consolidated"
+            : isActive
+              ? `active harness (${active?.signal}) — skipped`
+              : managedAdapter
+                ? "managed harness adapters detected — keep locally and ignore"
+                : descriptor.category === "cache"
+                  ? "regeneratable agent cache — explicit --purge only"
+                  : "root harness artifact — consolidate to .agents/",
+        active: isActive,
+      });
+      continue;
+    }
+
+    const instructionPath = HARNESS_INSTRUCTION_FILES.find((item) => item === entry);
+    if (instructionPath && stat.isFile()) {
+      const content = readFileSync(full, "utf8");
+      const isAdapter =
+        (instructionPath === "CLAUDE.md" && content.trim() === "@AGENTS.md") ||
+        content.includes("[//]: # (updateagents:adapter)");
+      const instructionForHarness: Record<string, string> = {
+        ".claude": "CLAUDE.md",
+        ".codex": "CODEX.md",
+        ".gemini": "GEMINI.md",
+        ".cursor": ".cursorrules",
+        ".windsurf": ".windsurfrules",
+        ".cline": ".clinerules",
+        ".roo": ".roomodes",
+        ".aider": ".aider.conf.yml",
+      };
+      const isActive =
+        Boolean(active && instructionForHarness[active.path] === instructionPath) && !options.forceActive;
+      findings.push({
+        path: entry,
+        category: "instruction",
+        action: isActive
+          ? "SKIPPED_ACTIVE"
+          : isAdapter
+            ? "KEEP_ADAPTER"
+            : instructionPath === ".github/copilot-instructions.md"
+              ? "KEEP_ADAPTER"
+              : "PROMOTE",
+        reason: isActive
+          ? "active harness instruction — skipped"
+          : isAdapter
+            ? "minimal @AGENTS.md adapter — keep locally and ignore"
+            : instructionPath === ".github/copilot-instructions.md"
+              ? "compiled IDE artifact — archive; regenerate with --sync-ide"
+              : "foreign-harness instruction — promote to .agents/",
+        active: isActive,
+      });
+      continue;
+    }
+
+    if (HARNESS_DATA_PATHS.includes(entry) || HARNESS_DATA_FILE.test(entry)) {
+      findings.push({
+        path: entry,
+        category: "data",
+        action: "ARCHIVE",
+        reason: "agent transcript/data artifact — archive under .agents/archive/",
+        active: false,
+      });
+    }
+  }
+
+  const copilotRel = ".github/copilot-instructions.md";
+  if (existsSync(join(targetDir, copilotRel))) {
+    findings.push({
+      path: copilotRel,
+      category: "instruction",
+      action: "KEEP_ADAPTER",
+      reason: "compiled IDE artifact — regenerate with --sync-ide; never auto-removed",
+      active: false,
+    });
+  }
+
+  const violations = findings.filter(
+    (finding) => !["KEEP_ADAPTER", "IGNORE_ONLY", "SKIPPED_ACTIVE", "SKIP_SYMLINK", "PURGE"].includes(finding.action),
+  );
+  return { active, findings, violations };
+}
+
+export function printHygieneReport(scan: HygieneScanResult, targetDir: string): void {
+  console.log(`\n🧹 Harness Hygiene — ${targetDir}`);
+  console.log(
+    `  • Active harness: ${scan.active ? `${scan.active.label} (${scan.active.path}, signal=${scan.active.signal}) — will be skipped` : "not detected — all harness dirs are treated as inactive"}`,
+  );
+  console.log(`  • Findings: ${scan.findings.length} · violations: ${scan.violations.length}`);
+  if (scan.findings.length > 0) {
+    console.log("\n  Path                          Category     Action           Reason");
+    console.log("  ──────────────────────────────────────────────────────────────────────────────");
+    for (const finding of scan.findings) {
+      console.log(
+        `  ${finding.path.padEnd(29)} ${finding.category.padEnd(12)} ${finding.action.padEnd(16)} ${finding.reason}`,
+      );
+    }
+  }
+  if (scan.violations.length === 0) {
+    console.log("\n  ✅ Project root is clean: no unconsolidated harness artifacts.");
+  } else {
+    console.log("\n  ⚠️  Run: updateagents . --hygiene --consolidate");
+    console.log("      Active harness directories are never moved.");
+  }
+}
+
+export interface HygieneConsolidateOptions {
+  dryRun?: boolean;
+  purge?: boolean;
+  yes?: boolean;
+  forceActive?: boolean;
+}
+
+export interface HygieneConsolidateResult {
+  ok: boolean;
+  reason: string;
+  active: ActiveHarness | null;
+  findings: HygieneFinding[];
+  archived: string[];
+  promoted: string[];
+  removed: string[];
+  skipped: string[];
+  manifestPath: string;
+}
+
+function timestampSlug(): string {
+  return new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+}
+
+function hashPathContent(targetDir: string, relPath: string): string {
+  const full = join(targetDir, relPath);
+  const hasher = createHash("sha256");
+  try {
+    const stat = lstatSync(full);
+    if (stat.isDirectory()) {
+      const walk = (dir: string) => {
+        for (const entry of readdirSync(dir).sort()) {
+          const child = join(dir, entry);
+          const childStat = lstatSync(child);
+          if (childStat.isDirectory()) walk(child);
+          else if (childStat.isFile()) hasher.update(`${relative(targetDir, child)}:${readFileSync(child, "utf8")}`);
+        }
+      };
+      walk(full);
+    } else if (stat.isFile()) {
+      hasher.update(readFileSync(full, "utf8"));
+    }
+  } catch {}
+  return hasher.digest("hex");
+}
+
+export function consolidateHarnessArtifacts(
+  targetDir: string,
+  options: HygieneConsolidateOptions = {},
+): HygieneConsolidateResult {
+  const scan = scanHarnessArtifacts(targetDir, { forceActive: options.forceActive });
+  const actionable = scan.findings.filter(
+    (finding) =>
+      finding.action === "CONSOLIDATE" ||
+      finding.action === "PROMOTE" ||
+      finding.action === "ARCHIVE" ||
+      (options.purge && finding.action === "PURGE"),
+  );
+  const result: HygieneConsolidateResult = {
+    ok: true,
+    reason: "",
+    active: scan.active,
+    findings: scan.findings,
+    archived: [],
+    promoted: [],
+    removed: [],
+    skipped: scan.findings
+      .filter((finding) => ["SKIPPED_ACTIVE", "KEEP_ADAPTER", "IGNORE_ONLY", "SKIP_SYMLINK"].includes(finding.action))
+      .map((finding) => finding.path),
+    manifestPath: "",
+  };
+
+  if (options.purge && !options.yes) {
+    return { ...result, ok: false, reason: "Purge requires --yes (archive-before-delete safety)." };
+  }
+  if (options.purge && actionable.length === 0) {
+    return { ...result, reason: "No disposable harness artifacts to purge." };
+  }
+
+  const stamp = timestampSlug();
+  const archiveRoot = join(targetDir, ".agents/archive/agent-instructions", stamp);
+  const manifests: string[] = [];
+  if (!options.dryRun && actionable.length > 0) mkdirSync(archiveRoot, { recursive: true });
+
+  for (const finding of actionable) {
+    const source = join(targetDir, finding.path);
+    if (!existsSync(source)) continue;
+    const hash = hashPathContent(targetDir, finding.path);
+
+    if (finding.action === "PROMOTE") {
+      try {
+        promoteLegacyInstructionWrite(targetDir, finding.path, { dryRun: options.dryRun });
+        result.promoted.push(finding.path);
+        manifests.push(`- \`${finding.path}\` — promoted; sha256=${hash}`);
+        const adapterExists = existsSync(source);
+        if (!options.dryRun && adapterExists && !finding.active) {
+          rmSync(source, { force: true });
+          result.removed.push(finding.path);
+        }
+      } catch (error) {
+        result.skipped.push(`${finding.path} (promote failed: ${String(error)})`);
+      }
+      continue;
+    }
+
+    // ARCHIVE / CONSOLIDATE: keep a byte-recoverable snapshot before removing
+    // the root copy. Never follow symlinks; `.memory/` is never in scope.
+    const safeName = finding.path.replace(/[\\/]/g, "__");
+    const destination = join(archiveRoot, safeName);
+    if (!options.dryRun) {
+      cpSync(source, destination, { recursive: true });
+      rmSync(source, { recursive: true, force: true });
+      manifests.push(
+        `- \`${finding.path}\` — archived to \`${relative(targetDir, destination)}\`; category=${finding.category}; sha256=${hash}`,
+      );
+    }
+    result.archived.push(finding.path);
+    result.removed.push(finding.path);
+  }
+
+  if (!options.dryRun && manifests.length > 0) {
+    const manifestPath = join(archiveRoot, "MANIFEST.md");
+    const manifest = [
+      `# Harness Hygiene Manifest — ${stamp}`,
+      "",
+      "> Auto-generated by updateagents --hygiene --consolidate.",
+      `> Active harness: ${scan.active ? `${scan.active.label} (${scan.active.signal})` : "none detected"}`,
+      "> Rule: .memory/ is never touched; the active harness is never moved.",
+      "",
+      manifests.join("\n"),
+      "",
+    ].join("\n");
+    writeFileSync(manifestPath, manifest, "utf8");
+    result.manifestPath = manifestPath;
+  }
+
+  result.reason =
+    actionable.length === 0
+      ? "Root is clean; no harness artifacts require consolidation."
+      : `Consolidated ${actionable.length} artifact(s) into .agents/ and cleaned the root.`;
+  return result;
+}
+
+const LOCAL_EXCLUDE_START = "# >>> muse agent hygiene (local-only) >>>";
+const LOCAL_EXCLUDE_END = "# <<< muse agent hygiene (local-only) <<<";
+
+export function localExcludePatterns(): string[] {
+  const templatePath = join(TEMPLATES_DIR, "gitignore.private.template");
+  if (existsSync(templatePath)) {
+    return readFileSync(templatePath, "utf8")
+      .split("\n")
+      .map((line) => line.trimEnd())
+      .filter((line) => line.length > 0);
+  }
+  return [
+    ".agents/",
+    ".memory/",
+    "AGENTS.md",
+    "AGENTS.local.md",
+    ".claude/",
+    ".cursor/",
+    ".codex/",
+    ".gemini/",
+    ".opencode/",
+    ".openclaw/",
+    ".commandcode/",
+    ".windsurf/",
+    ".aider*",
+    ".cline/",
+    ".roo/",
+    ".hermes/",
+    ".continue/",
+    ".trae/",
+    ".omo/",
+    ".omh/",
+    ".omp/",
+    ".crush/",
+    ".antigravity/",
+    ".superpowers/",
+    ".codegraph/",
+    ".slim/",
+    ".jez/",
+    "transcripts/",
+    "chat-logs/",
+    "session-logs/",
+    "agent-transcripts/",
+    "*.transcript.jsonl",
+    "*.trajectory.jsonl",
+    "*.chat.json",
+    "*.prompt.md",
+    "*.scratchpad.md",
+  ];
+}
+
+export function installLocalExcludes(
+  targetDir: string,
+  options: { global?: boolean; dryRun?: boolean } = {},
+): { ok: boolean; path: string; patterns: number; wrote: boolean; reason: string } {
+  const patterns = localExcludePatterns();
+  const block = `${LOCAL_EXCLUDE_START}\n${patterns.join("\n")}\n${LOCAL_EXCLUDE_END}`;
+  let excludePath = "";
+
+  if (options.global) {
+    const config = spawnSync("git", ["config", "--global", "--get", "core.excludesFile"], {
+      cwd: targetDir,
+      encoding: "utf8",
+    });
+    const configured = (config.stdout ?? "").trim();
+    excludePath = configured || join(homedir(), ".config/git/ignore");
+  } else {
+    const gitPath = spawnSync("git", ["rev-parse", "--git-path", "info/exclude"], {
+      cwd: targetDir,
+      encoding: "utf8",
+    });
+    if (gitPath.status !== 0) {
+      return { ok: false, path: "", patterns: patterns.length, wrote: false, reason: "Not a git repository." };
+    }
+    const raw = (gitPath.stdout ?? "").trim();
+    excludePath = raw.startsWith("/") ? raw : resolve(targetDir, raw);
+  }
+
+  let content = existsSync(excludePath) ? readFileSync(excludePath, "utf8") : "";
+  if (content.includes(LOCAL_EXCLUDE_START) && content.includes(LOCAL_EXCLUDE_END)) {
+    content = content.replace(new RegExp(`${LOCAL_EXCLUDE_START}[\\s\\S]*?${LOCAL_EXCLUDE_END}`), block);
+  } else {
+    content = `${content.trimEnd()}${content.trim() ? "\n\n" : ""}${block}\n`;
+  }
+  if (!options.dryRun) {
+    mkdirSync(dirname(excludePath), { recursive: true });
+    writeFileSync(excludePath, content, "utf8");
+  }
+  return {
+    ok: true,
+    path: excludePath,
+    patterns: patterns.filter((line) => line.length > 0 && !line.trimStart().startsWith("#")).length,
+    wrote: !options.dryRun,
+    reason: options.global
+      ? "Global excludes are internal-only (core.excludesFile)."
+      : "Local excludes are internal-only (.git/info/exclude; never committed).",
+  };
+}
+
+export interface PublicSurfaceResult {
+  ok: boolean;
+  tracked: string[];
+  historyWarnings: string[];
+}
+
+export function checkPublicSurface(targetDir: string): PublicSurfaceResult {
+  const trackedRes = spawnSync("git", ["ls-files"], { cwd: targetDir, encoding: "utf8" });
+  const tracked =
+    trackedRes.status === 0
+      ? (trackedRes.stdout ?? "")
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean)
+      : [];
+  const internal =
+    /^(?:\.agents\/|\.memory\/|\.claude\/|\.cursor\/|\.codex\/|\.gemini\/|\.opencode\/|\.openclaw\/|\.commandcode\/|\.windsurf\/|\.aider|\.cline\/|\.roo\/|\.hermes\/|\.continue\/|\.trae\/|\.omo\/|\.omh\/|\.omp\/|\.crush\/|\.antigravity\/|\.superpowers\/|transcripts\/|chat-logs\/|session-logs\/|agent-transcripts\/)|\.(?:transcript|trajectory)\.jsonl$|\.chat\.json$|\.scratchpad\.md$/;
+  const trackedInternal = tracked.filter((file) => internal.test(file));
+
+  const history = spawnSync("git", ["log", "--all", "--name-only", "--pretty=format:", "-n", "500"], {
+    cwd: targetDir,
+    encoding: "utf8",
+  });
+  const historical = new Set<string>();
+  if (history.status === 0) {
+    for (const line of (history.stdout ?? "").split("\n")) {
+      const file = line.trim();
+      if (file && internal.test(file)) historical.add(file);
+    }
+  }
+
+  return {
+    ok: trackedInternal.length === 0,
+    tracked: trackedInternal,
+    historyWarnings: [...historical],
+  };
+}
+
+function hasHygieneWork(targetDir: string): boolean {
+  const scan = scanHarnessArtifacts(targetDir);
+  return scan.violations.length > 0;
+}
+
+// Early handler: Local-only excludes (never edits the committed .gitignore).
+// Placed after the harness tables so the const declarations are initialized.
+if (values["install-excludes"]) {
+  const result = installLocalExcludes(workspaceDir, { global: isGlobalScope, dryRun: isDryRun });
+  if (values.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(`\n🔒 Local-Only Agent Excludes — ${workspaceDir}`);
+    console.log(`  • Scope:    ${isGlobalScope ? "global (core.excludesFile)" : "repository (.git/info/exclude)"}`);
+    console.log(`  • Path:     ${result.path || "(not found)"}`);
+    console.log(`  • Patterns: ${result.patterns}`);
+    console.log(`  • Wrote:    ${result.wrote ? "yes" : "no (dry-run)"}`);
+    console.log(`  • Verdict:  ${result.ok ? "OK" : "BLOCKED"} — ${result.reason}`);
+    console.log("  ℹ️  Committed .gitignore is untouched; agent state stays internal.");
+  }
+  process.exit(result.ok ? 0 : 1);
+}
+
+// Early handler: Harness hygiene / clean root.
+if (values.hygiene || values["check-public"]) {
+  if (values["check-public"]) {
+    const publicSurface = checkPublicSurface(workspaceDir);
+    if (values.json) {
+      console.log(JSON.stringify(publicSurface, null, 2));
+    } else {
+      console.log(`\n🔎 Public Surface Audit — ${workspaceDir}`);
+      console.log(`  • Tracked internal paths: ${publicSurface.tracked.length}`);
+      for (const file of publicSurface.tracked) console.log(`    ❌ ${file}`);
+      console.log(`  • Historical leaks (warn only): ${publicSurface.historyWarnings.length}`);
+      for (const file of publicSurface.historyWarnings.slice(0, 10)) console.log(`    ⚠️  ${file}`);
+      console.log(
+        publicSurface.ok
+          ? "  ✅ No agent/harness artifacts are tracked for a public remote."
+          : "  ❌ Fix: git rm -r --cached <path>, then run --install-excludes.",
+      );
+    }
+    process.exit(publicSurface.ok ? 0 : 1);
+  }
+
+  const scan = scanHarnessArtifacts(workspaceDir, { forceActive: values["force-active"] });
+  const wantsChange = values.consolidate || values.purge;
+  if (!wantsChange) {
+    if (values.json) {
+      console.log(JSON.stringify(scan, null, 2));
+    } else {
+      printHygieneReport(scan, workspaceDir);
+    }
+    process.exit(values.check && scan.violations.length > 0 ? 1 : 0);
+  }
+
+  const result = consolidateHarnessArtifacts(workspaceDir, {
+    dryRun: isDryRun,
+    purge: values.purge,
+    yes: values.yes,
+    forceActive: values["force-active"],
+  });
+  if (values.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    printHygieneReport({ active: result.active, findings: result.findings, violations: [] }, workspaceDir);
+    console.log(
+      `\n  • Archived:  ${result.archived.length}${result.archived.length ? ` (${result.archived.join(", ")})` : ""}`,
+    );
+    console.log(
+      `  • Promoted:  ${result.promoted.length}${result.promoted.length ? ` (${result.promoted.join(", ")})` : ""}`,
+    );
+    console.log(`  • Removed:   ${result.removed.length}`);
+    console.log(
+      `  • Skipped:   ${result.skipped.length}${result.skipped.length ? ` (${result.skipped.join(", ")})` : ""}`,
+    );
+    console.log(`  • Manifest:  ${result.manifestPath || "(none)"}`);
+    console.log(`  • Verdict:   ${result.ok ? "OK" : "BLOCKED"} — ${result.reason}`);
+  }
+  process.exit(result.ok ? 0 : 1);
 }
 
 export function auditContextBudget(targetDir: string): {
@@ -2252,6 +3157,12 @@ export function scaffoldAgentEngine(
     if (!dry) cpSync(srcGitignore, gitignore);
     created.push(".gitignore");
   }
+  // Agent state is internal: keep it in .git/info/exclude, never the public
+  // .gitignore, and never create a harness directory.
+  if (!dry && existsSync(join(target, ".git"))) {
+    const exclude = installLocalExcludes(target, {});
+    if (exclude.ok) created.push(".git/info/exclude (local-only agent excludes)");
+  }
 
   // 7. Adapt GitHub community assets and stack-specific workflows from the target project.
   const githubAssets = scaffoldGitHubAssets(target, {
@@ -2619,7 +3530,9 @@ if (
   existsSync(hashFile) &&
   existsSync(rootAgentsFile) &&
   (!existsSync(legacyClaude) || readFileSync(legacyClaude, "utf8").trim() === "@AGENTS.md") &&
-  discoveredFiles.length === 0
+  discoveredFiles.length === 0 &&
+  !hasReadyDocsBacklog(workspaceDir) &&
+  !hasHygieneWork(workspaceDir)
 ) {
   const currentHash = computeContextHash(contextDir);
   const savedHash = readFileSync(hashFile, "utf8").trim();
@@ -3054,6 +3967,35 @@ if (existsSync(tasteStateFile)) {
     );
   } catch {
     // Non-blocking telemetry
+  }
+}
+
+// Step 5.5: Consume documentation points since the last agent watermark.
+const docsBacklog = syncDocsBacklog(workspaceDir, { dryRun: isDryRun });
+if (docsBacklog.appended > 0) {
+  console.log(
+    `  📚 Docs backlog: consumed ${docsBacklog.appended} point(s) ${docsBacklog.from}→${docsBacklog.to} into .agents/context/current.md.`,
+  );
+  if (docsBacklog.pending > 0) {
+    console.log(`  ℹ️  ${docsBacklog.pending} documentation point(s) still owed agent docs.`);
+  }
+} else if (existsSync(join(workspaceDir, ".docs-ledger.json"))) {
+  console.log(`  ℹ️  Docs backlog: ${docsBacklog.reason}`);
+}
+
+// Step 5.6: Harness hygiene report. Default sync never moves harness state;
+// consolidation is explicit (`--hygiene --consolidate`) so a user's IDE/CLI
+// configuration cannot disappear during a routine context sync.
+if (!values["no-hygiene"]) {
+  const hygiene = scanHarnessArtifacts(workspaceDir);
+  if (hygiene.violations.length > 0) {
+    console.log(
+      `  🧹 Harness hygiene: ${hygiene.violations.length} root artifact(s) detected (active ${hygiene.active?.label ?? "none"} skipped).`,
+    );
+    console.log("     Preview: updateagents . --hygiene");
+    console.log("     Clean:   updateagents . --hygiene --consolidate");
+  } else if (hygiene.active) {
+    console.log(`  🧹 Harness hygiene: active ${hygiene.active.label} skipped; root is clean.`);
   }
 }
 

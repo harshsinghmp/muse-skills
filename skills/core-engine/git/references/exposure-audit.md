@@ -2,6 +2,8 @@
 
 Playbook for identifying accidentally committed credentials, private keys, tokens, `.env` files, and cleaning git commit trees before pushing.
 
+> **Internal agent state**: add `updateagents --hygiene --check-public` to the pre-push audit. It fails when `.agents/`, `.memory/`, harness dirs, transcripts, or agent instruction files are tracked. Use `updateagents --install-excludes` to keep them in `.git/info/exclude` without exposing tool names in the public `.gitignore`.
+
 ---
 
 ## 1. Quick Audit Protocol
