@@ -45,6 +45,13 @@ synchronized against the actual diff.
     maintainer confirmation rather than edited during a rename that is still
     in the working tree.
 
+### 🧭 Documentation Points
+- **Caught up:** DP-0012 → DP-0014 (3 new points from `--ledger`)
+- **Pending:** none — developer, user, and agent coverage documented
+- **Shipped:** DP-0012 (v1.2.0), DP-0013 (v1.2.0)
+- **Memory hints:** printed for DP-0014; not written to `.memory/`
+- **Agent backlog:** `updateagents --docs-backlog` consumed DP-0012 → DP-0014
+
 ### 🔐 Protected DOX Architecture Review
 - `.agents/`: affected (`.agents/context/architecture.md` references `API_TOKEN`)
   but not modified.
@@ -99,6 +106,7 @@ working tree; only the CLI reference document needed a targeted fix.
   definition in `src/cli.ts:41`.
 - **Verified:** example command `mytool --out ./build` matches the
   implementation's option name and default.
+- **Ledger:** DP-0015 pending on user + agent; developer documented in `docs/cli.md`.
 - **Boundaries:** `.memory/` untouched; `.agents/` not affected.
 - **Skipped:** `README.md` (no occurrences of the old flag — checked with
   `rg --output`), `CHANGELOG.md` (rename not yet consumer-shipped; will be

@@ -37,7 +37,14 @@ Project memory and state systems exist **completely independently** of `updatedo
 - **Scope**: Verified shipped capabilities, runtime oracle health, known gaps.
 - **Rule for updatedocs**: Inspect under applicable `AGENTS.md` governance; `DO NOT MODIFY` without explicit user permission.
 
-### 3. `SUMMARY.md` / `SESSION_LOG.md` (Project Change Ledgers)
+### 3. `.docs-ledger.json` (Documentation Point Ledger)
+- **Owner**: `updatedocs`
+- **Scope**: Session-proof documentation state — sequential `DP-####` points, developer/user/agent coverage, documented watermark, agent watermark, and shipped state.
+- **Rule for updatedocs**: Read and write directly. This is the cross-session bridge: a forgotten session catches up from `watermark.commit` without relying on conversation memory.
+- **Rule for updateagents**: Consume completed agent-facing points with `--docs-backlog` into `.agents/context/current.md`; never edit the ledger's point history directly.
+- **Memory relationship**: `.memory/` is never read or written. `--memory-hint` prints a safe one-line hint per point for a harness memory tool to record on its own; `updatedocs` does not execute it.
+
+### 4. `SUMMARY.md` / `SESSION_LOG.md` (Project Change Ledgers)
 - **Owner**: Project developers & active workflows
 - **Scope**: Reverse-chronological rolling ledger of verified session changes.
 - **Rule for updatedocs**: Append verified documentation synchronization entries only when the project explicitly maintains a change ledger.
