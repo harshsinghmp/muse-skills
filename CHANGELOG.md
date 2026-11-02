@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [8.1.0] - 2026-11-01
 
 ### Added
 
@@ -36,6 +36,10 @@ All notable changes to this project are documented in this file.
 
 - **Capability sweep**: scaffolding templates under `templates/` are no longer misreported as invisible skill reference files.
 - **Docs-only commits**: commits after the ledger watermark that owe no documentation no longer reopen the checkpoint gate.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.0.1...v8.1.0
+
+---
 
 ## [8.0.1] - 2026-10-29
 
