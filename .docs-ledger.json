@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T10:34:04.205Z",
-  "head": "448012639dd462573b43eaad4770705a19f4c795",
+  "updatedAt": "2026-11-03T11:00:04.112Z",
+  "head": "043f4bcc3dc399c9c0caae45fd35a0bd5de70fcb",
   "watermark": {
-    "point": 13,
-    "commit": "448012639dd462573b43eaad4770705a19f4c795",
-    "date": "2026-11-03T10:34:04.043Z",
+    "point": 19,
+    "commit": "043f4bcc3dc399c9c0caae45fd35a0bd5de70fcb",
+    "date": "2026-11-03T11:00:04.112Z",
     "releaseTag": "v8.1.2"
   },
   "agentWatermark": {
@@ -498,6 +498,220 @@
       "shipped": true,
       "releaseTag": "v8.1.2",
       "createdAt": "2026-11-03T10:33:54.496Z"
+    },
+    {
+      "id": "DP-0014",
+      "point": 14,
+      "commit": "376362841b5620b8a097abdd54d3a65067f1c433",
+      "shortCommit": "3763628",
+      "date": "2026-11-02",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "bump astral-sh/setup-uv from 6.8.0 to 10.3.3",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T11:00:03.304Z"
+    },
+    {
+      "id": "DP-0015",
+      "point": 15,
+      "commit": "88fe433162fcd06572f023cc0d7e2f9f10a7b668",
+      "shortCommit": "88fe433",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #341 from harshsinghmp/release/v8.1.2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.2",
+      "createdAt": "2026-11-03T11:00:03.305Z"
+    },
+    {
+      "id": "DP-0016",
+      "point": 16,
+      "commit": "1e88d62563555f1c42ecc1bbb22a342241072cec",
+      "shortCommit": "1e88d62",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge branch 'dev' into dependabot/github_actions/astral-sh/setup-uv-10.3.2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T11:00:03.305Z"
+    },
+    {
+      "id": "DP-0017",
+      "point": 17,
+      "commit": "437c86f380f3756fb0980aa691e8718b68e0f257",
+      "shortCommit": "437c86f",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #282 from harshsinghmp/dependabot/github_actions/astral-sh/setup-uv-10.3.2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T11:00:03.305Z"
+    },
+    {
+      "id": "DP-0018",
+      "point": 18,
+      "commit": "95671ede27a6d2c2b214f804b2cd45423409361c",
+      "shortCommit": "95671ed",
+      "date": "2026-11-03",
+      "type": "chore",
+      "scope": "deps-dev",
+      "summary": "bump typescript from 5.9.3 to 7.0.2",
+      "breaking": false,
+      "files": ["bun.lock", "package.json"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T11:00:03.305Z"
+    },
+    {
+      "id": "DP-0019",
+      "point": 19,
+      "commit": "043f4bcc3dc399c9c0caae45fd35a0bd5de70fcb",
+      "shortCommit": "043f4bc",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #342 from harshsinghmp/chore/deps-typescript-7",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T11:00:03.305Z"
     }
   ]
 }
