@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T06:32:23.173Z",
-  "head": "65e519530dc3fb0e1fa103279ef275ff1526dfce",
+  "updatedAt": "2026-11-03T06:41:44.144Z",
+  "head": "79e0b159fd4d168a788d2407c8effe2b9bd833e0",
   "watermark": {
-    "point": 1,
-    "commit": "65e519530dc3fb0e1fa103279ef275ff1526dfce",
-    "date": "2026-11-03T06:30:20.229Z",
+    "point": 2,
+    "commit": "79e0b159fd4d168a788d2407c8effe2b9bd833e0",
+    "date": "2026-11-03T06:41:44.041Z",
     "releaseTag": "v8.1.1"
   },
   "agentWatermark": {
@@ -59,6 +59,44 @@
       "shipped": true,
       "releaseTag": "v8.1.1",
       "createdAt": "2026-11-03T06:30:02.231Z"
+    },
+    {
+      "id": "DP-0002",
+      "point": 2,
+      "commit": "79e0b159fd4d168a788d2407c8effe2b9bd833e0",
+      "shortCommit": "79e0b15",
+      "date": "2026-11-03",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.1.1",
+      "breaking": false,
+      "files": [".docs-ledger.json", "CHANGELOG.md", "README.md", "package.json"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.1",
+      "createdAt": "2026-11-03T06:41:43.466Z"
     }
   ]
 }
