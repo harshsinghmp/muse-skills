@@ -56,6 +56,7 @@ import {
   findContainingNestedRepository,
   findNestedRepositoryRoots,
   isAllowedUntouchedTarget,
+  isCompiledIdeArtifact,
   isInvalidLegacyWriteTarget,
   isRecognizedRootInstructionFile,
   isRepositoryRoot,
@@ -2901,6 +2902,8 @@ export function auditWorkspace(target: string): AssetCheck[] {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacy.push(src.relativePath);
       }
@@ -3519,6 +3522,8 @@ if (isAudit) {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacyList.push(src.relativePath);
       }
