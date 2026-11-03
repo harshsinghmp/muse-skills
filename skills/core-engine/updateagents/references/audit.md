@@ -38,7 +38,7 @@ Grade each asset on the 4-tier matrix (0 absent · 1 stub · 2 partial · 3 cano
 
 - Read-only by default: an audit never writes. Remediation belongs to a follow-up `--sync` run.
 - Curated-vs-canon divergences are **reported**, never resolved silently (preserve-not-regenerate).
-- Do not treat the engine's own generated files as findings of "drift" — they are destinations, not sources.
+- Do not treat the engine's own generated files as findings of "drift" — they are destinations, not sources. Compiled IDE artifacts (`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`), generated `.opencode/commands/`, and Syncthing `.stversions/` backups are excluded from the unpromoted-legacy count.
 
 ## Severity & routing
 
