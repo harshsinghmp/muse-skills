@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T11:00:04.112Z",
-  "head": "043f4bcc3dc399c9c0caae45fd35a0bd5de70fcb",
+  "updatedAt": "2026-11-03T11:07:01.957Z",
+  "head": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
   "watermark": {
-    "point": 19,
-    "commit": "043f4bcc3dc399c9c0caae45fd35a0bd5de70fcb",
-    "date": "2026-11-03T11:00:04.112Z",
-    "releaseTag": "v8.1.2"
+    "point": 21,
+    "commit": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
+    "date": "2026-11-03T11:07:01.791Z",
+    "releaseTag": "v8.1.3"
   },
   "agentWatermark": {
     "point": 1,
@@ -531,8 +531,8 @@
           "manual": true
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:00:03.304Z"
     },
     {
@@ -601,8 +601,8 @@
           "evidence": "no audience impact detected"
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:00:03.305Z"
     },
     {
@@ -636,8 +636,8 @@
           "evidence": "no audience impact detected"
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:00:03.305Z"
     },
     {
@@ -674,8 +674,8 @@
           "manual": true
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:00:03.305Z"
     },
     {
@@ -709,9 +709,82 @@
           "evidence": "no audience impact detected"
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:00:03.305Z"
+    },
+    {
+      "id": "DP-0020",
+      "point": 20,
+      "commit": "ddb45ebe90312b52d465e6832267359fe7c92e8f",
+      "shortCommit": "ddb45eb",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #343 from harshsinghmp/docs/deps-ledger",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.3",
+      "createdAt": "2026-11-03T11:06:54.533Z"
+    },
+    {
+      "id": "DP-0021",
+      "point": 21,
+      "commit": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
+      "shortCommit": "2414eba",
+      "date": "2026-11-03",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.1.3",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "README.md", "RELEASE_NOTES.md", "package.json"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.3",
+      "createdAt": "2026-11-03T11:06:54.534Z"
     }
   ]
 }
