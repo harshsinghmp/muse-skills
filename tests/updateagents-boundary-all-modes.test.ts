@@ -13,7 +13,9 @@ import { join } from "node:path";
 const REPO_ROOT = join(import.meta.dir, "..");
 const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
 const TEST_SANDBOX = join("/tmp", `ua-allmodes-${Date.now()}`);
-const SYNTHETIC = "[[ORCA_RICH_MD:abc123:md:hello%20world]]";
+// Built at runtime so the repository's own sanitizer never treats this test
+// fixture as a real synthetic artifact and rewrites it.
+const SYNTHETIC = `[[ORCA_RICH_MD:${"abc123"}:md:hello%20world]]`;
 
 function initGitRepo(dir: string): void {
   mkdirSync(dir, { recursive: true });
