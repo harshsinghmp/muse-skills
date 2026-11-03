@@ -57,3 +57,6 @@ updateagents/scripts/*.sh.bak
 # Git Worktrees
 .worktrees/
 worktrees/
+
+# Syncthing local version backups
+.stversions/

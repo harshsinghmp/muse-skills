@@ -117,11 +117,17 @@ function isInsideRuleDirectory(relativePath: string): boolean {
 }
 
 function isInsideGenericInstructionDirectory(relativePath: string): boolean {
+  // `agents/` is intentionally absent: a directory named agents/ commonly holds
+  // product content (personas, subagent definitions), not runtime instructions.
+  // Classifying it as an instruction source caused persona files to be rewritten
+  // into three-line adapters.
   return portablePath(relativePath)
     .split("/")
     .slice(0, -1)
-    .some((segment) => /^(?:\.)?(?:agent|rule|instruction|prompt)s?$/i.test(segment));
+    .some((segment) => /^(?:\.)?(?:rule|instruction|prompt)s?$/i.test(segment));
 }
+
+const RULES_OR_CONVENTION_NAME_RE = /^.*(?:rules?|convention).*\.md$/i;
 
 function isInstructionFile(relativePath: string): boolean {
   const normalized = portablePath(relativePath);
@@ -133,10 +139,56 @@ function isInstructionFile(relativePath: string): boolean {
   return (
     KNOWN_NAMES.has(name) ||
     name.endsWith(".instructions.md") ||
-    /(?:agent|ai|prompt|instruction|convention|rules?)(?:s)?\.(?:md|mdc|txt)$/i.test(name) ||
+    RULES_OR_CONVENTION_NAME_RE.test(name) ||
     ((isInsideRuleDirectory(normalized) || isInsideGenericInstructionDirectory(normalized)) &&
       TEXT_EXTENSIONS.has(extname(name).toLowerCase()))
   );
+}
+
+export function isRecognizedRootInstructionFile(relativePath: string): boolean {
+  const normalized = portablePath(relativePath);
+  if (normalized.includes("/")) return false;
+  const name = basename(normalized);
+  return KNOWN_NAMES.has(name) || name.endsWith(".instructions.md") || RULES_OR_CONVENTION_NAME_RE.test(name);
+}
+
+const VCS_MARKERS = [".git", ".hg", ".svn"] as const;
+
+export function isRepositoryRoot(directory: string): boolean {
+  return VCS_MARKERS.some((marker) => existsSync(join(directory, marker)));
+}
+
+/**
+ * Locate repositories nested beneath a workspace root. The walk stops at each
+ * repository boundary: a nested clone is a separate scope, not part of the
+ * current workspace.
+ */
+export function findNestedRepositoryRoots(workspaceRoot: string): string[] {
+  const root = resolve(workspaceRoot);
+  const found: string[] = [];
+
+  function walk(directory: string, depth: number): void {
+    if (depth > 12) return;
+    let entries: Dirent[];
+    try {
+      entries = readdirSync(directory, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory() || entry.isSymbolicLink()) continue;
+      const fullPath = join(directory, entry.name);
+      if (isRepositoryRoot(fullPath)) {
+        found.push(portablePath(relative(root, fullPath)));
+        continue;
+      }
+      if (SKIP_DIRS.has(entry.name)) continue;
+      walk(fullPath, depth + 1);
+    }
+  }
+
+  walk(root, 0);
+  return found.sort();
 }
 
 export function isManagedRootAgents(content: string): boolean {
@@ -173,7 +225,15 @@ export function renderAdapter(original: string, relativePath: string): string {
   return `${frontmatter}${heading ? `${heading}\n\n` : ""}${ADAPTER_MARKER}\n\nRead and follow the workspace instructions in \`AGENTS.md\` and the complete migrated rules in \`.agents/context/imported-agent-instructions.md\`. Higher-priority system, developer and current user instructions prevail. If imported sources conflict and precedence does not resolve them, report both paths and ask the user; do not silently choose.\n`;
 }
 
-export function discoverAgentInstructionSources(workspaceRoot: string): AgentInstructionSource[] {
+export interface AgentInstructionDiscoverOptions {
+  /** Cross a nested repository boundary. Off by default: nested clones are separate scopes. */
+  followNestedRepos?: boolean;
+}
+
+export function discoverAgentInstructionSources(
+  workspaceRoot: string,
+  options: AgentInstructionDiscoverOptions = {},
+): AgentInstructionSource[] {
   const root = resolve(workspaceRoot);
   const found: AgentInstructionSource[] = [];
 
@@ -190,7 +250,11 @@ export function discoverAgentInstructionSources(workspaceRoot: string): AgentIns
       const relPath = portablePath(relative(root, fullPath));
       if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) {
-        if (!SKIP_DIRS.has(entry.name)) walk(fullPath, depth + 1);
+        if (SKIP_DIRS.has(entry.name)) continue;
+        // The workspace root may itself be a repository; every repository
+        // *below* it is a different scope and must never be traversed.
+        if (!options.followNestedRepos && isRepositoryRoot(fullPath)) continue;
+        walk(fullPath, depth + 1);
         continue;
       }
       if (!entry.isFile() || !isInstructionFile(relPath)) continue;
@@ -306,10 +370,10 @@ ${sections.join("\n\n---\n\n")}
 
 export function migrateAgentInstructions(
   workspaceRoot: string,
-  options: { dryRun?: boolean } = {},
+  options: { dryRun?: boolean; followNestedRepos?: boolean } = {},
 ): InstructionMigrationResult {
   const root = resolve(workspaceRoot);
-  const sources = discoverAgentInstructionSources(root);
+  const sources = discoverAgentInstructionSources(root, { followNestedRepos: options.followNestedRepos });
   const manifestPath = join(root, MANIFEST_PATH);
   const canonicalPath = join(root, CANONICAL_PATH);
   assertNoSymlinkSegments(root, canonicalPath);
@@ -370,17 +434,93 @@ export function migrateAgentInstructions(
   };
 }
 
-export function adaptAgentInstructionSources(
-  sources: AgentInstructionSource[],
-  options: { dryRun?: boolean } = {},
-): string[] {
-  const updated: string[] = [];
+export interface InstructionAdaptation {
+  relativePath: string;
+  absolutePath: string;
+  original: string;
+  adapter: string;
+}
+
+/**
+ * Build the exact pre-write plan: every source that would be replaced and the
+ * adapter bytes that would replace it. No filesystem access, no writes.
+ */
+export function planInstructionAdaptations(sources: AgentInstructionSource[]): InstructionAdaptation[] {
+  const plan: InstructionAdaptation[] = [];
   for (const source of sources) {
+    // The root AGENTS.md is the canonical destination, never an adapter target.
     if (source.relativePath === "AGENTS.md") continue;
     const adapter = renderAdapter(source.content, source.relativePath);
     if (adapter === source.content) continue;
-    if (!options.dryRun) writeFileSync(source.absolutePath, adapter, "utf8");
-    updated.push(source.relativePath);
+    plan.push({
+      relativePath: source.relativePath,
+      absolutePath: source.absolutePath,
+      original: source.content,
+      adapter,
+    });
+  }
+  return plan;
+}
+
+function inferWorkspaceRoot(source: AgentInstructionSource): string | null {
+  const relativePath = portablePath(source.relativePath);
+  const absolutePath = resolve(source.absolutePath);
+  const suffix = relativePath.split("/").join(sep);
+  if (absolutePath === suffix) return sep;
+  if (absolutePath.endsWith(`${sep}${suffix}`)) {
+    return absolutePath.slice(0, absolutePath.length - suffix.length - 1) || sep;
+  }
+  return null;
+}
+
+/**
+ * Hard invariant: an original must be recoverable before it is overwritten.
+ * The caller normally archives via migrateAgentInstructions first; if an
+ * adapter is invoked directly, take the snapshot here.
+ */
+function ensureArchivedBeforeAdapt(workspaceRoot: string, source: AgentInstructionSource): void {
+  const archived = loadManifest(workspaceRoot);
+  const hash = sha256(source.content);
+  if (archived.some((item) => item.sourcePath === source.relativePath && item.sha256 === hash)) return;
+
+  const archivePath = safeArchiveName(source.relativePath, hash);
+  const absoluteArchive = resolveArchivePath(workspaceRoot, archivePath);
+  mkdirSync(dirname(absoluteArchive), { recursive: true });
+  if (!existsSync(absoluteArchive)) copyFileSync(source.absolutePath, absoluteArchive);
+
+  archived.push({ sourcePath: source.relativePath, archivePath, sha256: hash });
+  const manifestPath = resolveArchivePath(workspaceRoot, MANIFEST_PATH);
+  mkdirSync(dirname(manifestPath), { recursive: true });
+  writeFileSync(manifestPath, `${JSON.stringify({ version: 1, sources: archived }, null, 2)}\n`, "utf8");
+}
+
+export function adaptAgentInstructionSources(
+  sources: AgentInstructionSource[],
+  options: { dryRun?: boolean; workspaceRoot?: string } = {},
+): string[] {
+  const updated: string[] = [];
+  for (const item of planInstructionAdaptations(sources)) {
+    if (!options.dryRun) {
+      const workspaceRoot = options.workspaceRoot
+        ? resolve(options.workspaceRoot)
+        : inferWorkspaceRoot({
+            relativePath: item.relativePath,
+            absolutePath: item.absolutePath,
+            content: item.original,
+          });
+      if (!workspaceRoot) {
+        throw new Error(
+          `Cannot determine the workspace root for ${item.relativePath}; refusing to adapt without an archive snapshot.`,
+        );
+      }
+      ensureArchivedBeforeAdapt(workspaceRoot, {
+        relativePath: item.relativePath,
+        absolutePath: item.absolutePath,
+        content: item.original,
+      });
+      writeFileSync(item.absolutePath, item.adapter, "utf8");
+    }
+    updated.push(item.relativePath);
   }
   return updated;
 }
