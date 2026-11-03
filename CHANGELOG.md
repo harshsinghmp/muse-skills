@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **`updateagents` audit scorecard**: the denominator is now derived from the actual checks (14), so the engine can no longer report a false "13/13 AI-Ready" while an asset is failing. The root `AGENTS.md` router is restored to the 90-line budget, and the matrix documents the 14th terrain asset.
+
 ## [8.1.1] - 2026-11-03
 
 ### Fixed

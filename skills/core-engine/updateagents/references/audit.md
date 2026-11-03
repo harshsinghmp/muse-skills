@@ -2,11 +2,11 @@
 
 ## When to Use
 
-- **Repository AI-readiness audit**: grade the full agent-context surface of a repository against the 13 tracked assets and the 4-tier matrix, without writing anything.
+- **Repository AI-readiness audit**: grade the full agent-context surface of a repository against the 14 tracked assets and the 4-tier matrix, without writing anything.
 - **Post-sync verification**: confirm a sync actually left curated content intact and the registry/standards state coherent.
 - **Onboarding diligence**: before wiring a new repository into the agency, know exactly what is missing and how bad it is.
 
-## The 13 tracked assets, graded
+## The 14 tracked assets, graded
 
 Grade each asset on the 4-tier matrix (0 absent · 1 stub · 2 partial · 3 canonical), and record the evidence path for every non-zero grade — a grade without an artifact path is an assertion, not an audit.
 
@@ -25,10 +25,11 @@ Grade each asset on the 4-tier matrix (0 absent · 1 stub · 2 partial · 3 cano
 | 11 | Test/verification contract | Gates exist and actually run (lint, type-check, test) |
 | 12 | Branch policy | Integration branch protected with required checks |
 | 13 | Secrets posture | Zero credentials in tracked files; `.env` ignored |
+| 14 | `.agents/terrain/` | All 6 canonical terrain maps present, current, and free of credentials or machine paths |
 
 ## Procedure
 
-1. Grade all 13 assets; record evidence path per grade.
+1. Grade all 14 assets; record evidence path per grade.
 2. Classify each gap: `missing` / `stub` / `drifted` (exists but contradicts reality — cite the contradiction).
 3. Emit the remediation plan ordered by blast radius (secrets > branch policy > registry parity > docs).
 4. Register findings in `.agents/context/current.md` — the next sync starts from this state.
@@ -50,5 +51,5 @@ Grade each asset on the 4-tier matrix (0 absent · 1 stub · 2 partial · 3 cano
 
 ## Sources
 
-- this skill's own 13-asset / 4-tier grading matrix (SKILL.md) — the audit's grading authority
+- this skill's own 14-asset / 4-tier grading matrix (SKILL.md) — the audit's grading authority
 - `skills/references/audit-mode-guidance.md` — the suite's canonical audit-mode spec (severity classes, remediation action classes, companion routing)
