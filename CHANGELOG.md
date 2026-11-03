@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.1.2] - 2026-11-03
+
+### Fixed
+
+- **`updateagents` audit scorecard**: the denominator is now derived from the actual checks (14), so the engine can no longer report a false "13/13 AI-Ready" while an asset is failing. The root `AGENTS.md` router is restored to the 90-line budget, and the matrix documents the 14th terrain asset.
+
+- **`updateagents` boundary fence across write modes**: `--sanitize`, `--promote`, and `--hygiene --consolidate/--purge` now refuse an umbrella workspace that merely contains repositories. Sanitization and audit skip nested VCS roots and Syncthing `.stversions/` backups, and a `--promote` target inside a nested clone is refused unless `--follow-nested-repos` is set.
+
+- **`updateagents` audit classification**: generated destinations are no longer counted as unpromoted legacy sources. Compiled IDE artifacts (`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`), generated `.opencode/commands/`, and `.stversions/` backups are excluded, so a clean repository reaches 14/14 instead of a permanent Asset 1 failure.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.1...v8.1.2
+
 ## [8.1.1] - 2026-11-03
 
 ### Fixed

@@ -50,7 +50,7 @@ bun path/to/updateagents/scripts/updateagents.ts --promote CLAUDE.md
 # Promote explicit content string into .agents/
 bun path/to/updateagents/scripts/updateagents.ts --promote .cursorrules --content "Always run bun test before pushing."
 
-# Audit 13 tracked assets for repository AI-readiness
+# Audit 14 tracked assets for repository AI-readiness
 bun path/to/updateagents/scripts/updateagents.ts --audit
 
 # Gate CI on minimum readiness score (exits 1 if score < 12)

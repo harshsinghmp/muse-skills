@@ -40,7 +40,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import * as readline from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -53,8 +53,10 @@ import { parseGitHubRemote, scaffoldGitHubAssets, selectGitHubWorkflowTemplates 
 import {
   adaptAgentInstructionSources,
   discoverAgentInstructionSources,
+  findContainingNestedRepository,
   findNestedRepositoryRoots,
   isAllowedUntouchedTarget,
+  isCompiledIdeArtifact,
   isInvalidLegacyWriteTarget,
   isRecognizedRootInstructionFile,
   isRepositoryRoot,
@@ -258,7 +260,7 @@ if (!workspaceDir.startsWith(process.cwd()) && rawTarget === "." && !isGlobalSco
  * umbrella directory, not a repository. Adapting its children would rewrite
  * separate projects that merely happen to live beside each other.
  */
-function assertAdapterWorkspaceBoundary(targetDir: string): void {
+function assertWorkspaceBoundary(targetDir: string): void {
   if (followNestedRepos) return;
   if (isRepositoryRoot(targetDir)) return;
   const nested = findNestedRepositoryRoots(targetDir);
@@ -1075,6 +1077,8 @@ function containsManagedAdapter(dir: string, depth = 0): boolean {
       }
       if (stat.isSymbolicLink()) continue;
       if (stat.isDirectory()) {
+        // A nested clone is a separate scope; its adapters are not ours.
+        if (isRepositoryRoot(full)) continue;
         if (containsManagedAdapter(full, depth + 1)) return true;
       } else if (/\.(md|mdc|mdx)$/i.test(entry)) {
         try {
@@ -1560,6 +1564,7 @@ if (values.hygiene || values["check-public"]) {
 
   const scan = scanHarnessArtifacts(workspaceDir, { forceActive: values["force-active"] });
   const wantsChange = values.consolidate || values.purge;
+  if (wantsChange) assertWorkspaceBoundary(workspaceDir);
   if (!wantsChange) {
     if (values.json) {
       console.log(JSON.stringify(scan, null, 2));
@@ -2353,7 +2358,22 @@ if (values["sync-ide"]) {
 
 // Early handler: Legacy-Write Promotion Interceptor
 if (values.promote) {
+  assertWorkspaceBoundary(workspaceDir);
   const promoteTarget = values.promote;
+  const absolutePromoteTarget = resolve(workspaceDir, promoteTarget);
+  const promoteRelative = relative(workspaceDir, absolutePromoteTarget);
+  if (promoteRelative === ".." || promoteRelative.startsWith(`..${sep}`)) {
+    console.error(`\n❌ Workspace boundary refusal: target path is outside the workspace (${absolutePromoteTarget}).`);
+    console.error("   Pass a target inside the current workspace, or run from the target repository.");
+    process.exit(1);
+  }
+  const nestedOwner = findContainingNestedRepository(workspaceDir, absolutePromoteTarget);
+  if (nestedOwner && !followNestedRepos) {
+    console.error(`\n❌ Workspace boundary refusal: target path is inside nested repository '${nestedOwner}'.`);
+    console.error("   Nested repositories are separate scopes and were not touched.");
+    console.error("   Pass --follow-nested-repos only if you explicitly intend cross-repository writes.");
+    process.exit(1);
+  }
   let promoteContent = values.content || undefined;
   if (!promoteContent && !process.stdin.isTTY) {
     try {
@@ -2729,7 +2749,10 @@ export function unwrapSyntheticArtifacts(content: string): { cleaned: string; un
   return { cleaned, unwrappedCount };
 }
 
-export function scanForSyntheticArtifacts(target: string): { file: string; count: number }[] {
+export function scanForSyntheticArtifacts(
+  target: string,
+  options: { followNestedRepos?: boolean } = {},
+): { file: string; count: number }[] {
   const contaminated: { file: string; count: number }[] = [];
   const orcaPattern = /\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:[^\]]+\]\]|<antArtifact|\[cursor:|<<<windsurf/i;
 
@@ -2759,12 +2782,16 @@ export function scanForSyntheticArtifacts(target: string): { file: string; count
         if (entry.isDirectory()) {
           if (
             entry.name === ".git" ||
+            entry.name === ".hg" ||
+            entry.name === ".svn" ||
+            entry.name === ".stversions" ||
             entry.name === "node_modules" ||
             entry.name === "dist" ||
             entry.name === ".worktrees" ||
             entry.name === ".memory"
           )
             continue;
+          if (!options.followNestedRepos && isRepositoryRoot(fullPath)) continue;
           walk(fullPath);
         } else if (entry.isFile() && /\.(md|markdown|txt|json|yaml|yml|ts|js|tsx|jsx|sh)$/i.test(entry.name)) {
           try {
@@ -2875,6 +2902,8 @@ export function auditWorkspace(target: string): AssetCheck[] {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacy.push(src.relativePath);
       }
@@ -3307,6 +3336,8 @@ export function scaffoldAgentEngine(
 // MODE: SANITIZE
 // =========================================================================
 if (isSanitize) {
+  assertWorkspaceBoundary(workspaceDir);
+
   console.log("\n============================================================");
   console.log(" 🛡️ updateagents — Synthetic ADE/IDE Artifact Sanitization Pass");
   console.log("============================================================");
@@ -3314,7 +3345,7 @@ if (isSanitize) {
   if (isDryRun) console.log(`🔍 [DRY RUN — No filesystem writes]`);
   console.log("------------------------------------------------------------\n");
 
-  const contaminated = scanForSyntheticArtifacts(workspaceDir);
+  const contaminated = scanForSyntheticArtifacts(workspaceDir, { followNestedRepos });
   if (contaminated.length === 0) {
     console.log("✅ Zero synthetic ADE/IDE artifacts detected in workspace.");
   } else {
@@ -3343,7 +3374,7 @@ if (isSanitize) {
 // MODE: DIRECT SCAFFOLD (--scaffold)
 // =========================================================================
 if (isScaffold) {
-  assertAdapterWorkspaceBoundary(workspaceDir);
+  assertWorkspaceBoundary(workspaceDir);
   await guardInstructionAdaptation(
     planInstructionAdaptations(discoverAgentInstructionSources(workspaceDir, { followNestedRepos })),
     { dryRun: isDryRun, yes: values.yes },
@@ -3436,7 +3467,9 @@ if (isAudit) {
   const checks = auditWorkspace(workspaceDir);
   const score = checks.filter((c) => c.passed).length;
   const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
-  const TOTAL_ASSETS = 13;
+  // Derive the denominator from the actual checks so adding an asset can never
+  // silently produce a false "13/13 AI-Ready" pass again.
+  const TOTAL_ASSETS = checks.length;
 
   // Stage-0 Fast-Skip Gate
   if (score === TOTAL_ASSETS && !values.force) {
@@ -3466,7 +3499,7 @@ if (isAudit) {
 
   // Modern Tooling & Synthetic Artifact Health
   const toolHealth = checkModernToolsAvailability();
-  const contaminated = scanForSyntheticArtifacts(workspaceDir);
+  const contaminated = scanForSyntheticArtifacts(workspaceDir, { followNestedRepos });
 
   console.log("\n⚡ Modern CLI Tooling Health (Host System):");
   console.log(`  • Installed: ${toolHealth.installed.join(", ") || "None"}`);
@@ -3489,6 +3522,8 @@ if (isAudit) {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacyList.push(src.relativePath);
       }
@@ -3558,7 +3593,7 @@ const report: ChangeReport = {
   preserved: [],
 };
 
-assertAdapterWorkspaceBoundary(workspaceDir);
+assertWorkspaceBoundary(workspaceDir);
 
 console.log("\n=======================================================");
 console.log(" 🧠 updateagents — Project Agent Context Synchronization");

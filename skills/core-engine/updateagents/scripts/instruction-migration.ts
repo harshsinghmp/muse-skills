@@ -59,6 +59,7 @@ const SKIP_DIRS = new Set([
   ".git",
   ".hg",
   ".svn",
+  ".stversions",
   "node_modules",
   "vendor",
   "dist",
@@ -135,6 +136,8 @@ function isInstructionFile(relativePath: string): boolean {
   // Rules ported into a references/ file and linked from AGENTS.md must never be
   // flattened into an adapter.
   if (/(^|\/)(references|templates)\//.test(normalized)) return false;
+  // .opencode/commands/ holds generated slash commands, not runtime rules.
+  if (/(^|\/)\.opencode\/commands?\//.test(normalized)) return false;
   const name = basename(normalized);
   return (
     KNOWN_NAMES.has(name) ||
@@ -189,6 +192,27 @@ export function findNestedRepositoryRoots(workspaceRoot: string): string[] {
 
   walk(root, 0);
   return found.sort();
+}
+
+/**
+ * Return the nested repository that contains `targetPath`, if any. Used by
+ * write modes that accept an explicit target so a promoted/sanitized path can
+ * never cross into a separate clone.
+ */
+export function findContainingNestedRepository(workspaceRoot: string, targetPath: string): string | null {
+  const root = resolve(workspaceRoot);
+  const target = resolve(targetPath);
+  const relativePath = relative(root, target);
+  if (relativePath === "" || relativePath === ".." || relativePath.startsWith(`..${sep}`)) return null;
+
+  let current = target;
+  while (current !== root && current.startsWith(`${root}${sep}`)) {
+    if (isRepositoryRoot(current)) return portablePath(relative(root, current));
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
 }
 
 export function isManagedRootAgents(content: string): boolean {
