@@ -191,6 +191,27 @@ export function findNestedRepositoryRoots(workspaceRoot: string): string[] {
   return found.sort();
 }
 
+/**
+ * Return the nested repository that contains `targetPath`, if any. Used by
+ * write modes that accept an explicit target so a promoted/sanitized path can
+ * never cross into a separate clone.
+ */
+export function findContainingNestedRepository(workspaceRoot: string, targetPath: string): string | null {
+  const root = resolve(workspaceRoot);
+  const target = resolve(targetPath);
+  const relativePath = relative(root, target);
+  if (relativePath === "" || relativePath === ".." || relativePath.startsWith(`..${sep}`)) return null;
+
+  let current = target;
+  while (current !== root && current.startsWith(`${root}${sep}`)) {
+    if (isRepositoryRoot(current)) return portablePath(relative(root, current));
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
+}
+
 export function isManagedRootAgents(content: string): boolean {
   content = stripSentinelComments(content);
   return (
