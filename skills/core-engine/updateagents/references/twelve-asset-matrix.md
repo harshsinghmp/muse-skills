@@ -1,6 +1,6 @@
-# 📋 The 13-Asset AI-Readiness Matrix
+# 📋 The 14-Asset AI-Readiness Matrix
 
-This reference documents the 13 tracked assets required for a repository to achieve **🏆 AI-Ready** status.
+This reference documents the 14 tracked assets required for a repository to achieve **🏆 AI-Ready** status.
 
 ---
 
@@ -25,9 +25,8 @@ This reference documents the 13 tracked assets required for a repository to achi
     5. `skills/` — Project-scoped agent skills.
     6. `goals/` — Sprints, milestones, and roadmaps.
     7. `research/` — Technical investigations, benchmarks, and spikes.
-    8. `artifacts/` — Generated deliverables, schemas, and diagrams.
-    9. `artifacts/` — Research corpora, planning docs, and generated reports (working state, local-only, with a README contract stub; durable findings are promoted to `context/`).
-    10. `archive/` — Completed work, retired plans, and historical logs.
+    8. `artifacts/` — Research corpora, planning docs, generated reports, and schemas (local-only, with a README contract stub; durable findings are promoted to `context/`).
+    9. `archive/` — Completed work, retired plans, and historical logs.
 
 ### Asset 3: Tool & MCP Configuration (`.mcp.json` or agent tool config)
 - **Location**: `./.mcp.json` or any of `.claude/`, `.cursor/`, `.gemini/`
@@ -112,3 +111,10 @@ This reference documents the 13 tracked assets required for a repository to achi
 - **Criteria**:
   - `.gitignore` explicitly blocks `.env`, `.env.*`, `node_modules/`, credentials, and private keys.
   - `.env.example` provides non-sensitive dummy placeholders for every required variable.
+
+### Asset 14: Workspace Terrain Maps (`.agents/terrain/`)
+- **Location**: `./.agents/terrain/`
+- **Criteria**:
+  - Ships the 6 canonical maps: `stack.md`, `habits.md`, `ownership.md`, `packages.md`, `repo.md`, `logs.md`.
+  - Each map reflects current toolchain reality and contains zero credential leaks or hardcoded machine paths.
+  - `updateagents --audit` grades terrain health as part of the 14-asset matrix.

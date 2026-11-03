@@ -16,17 +16,17 @@ The **Fast-Skip Gate** enforces a binary pre-flight check:
 
 ## ⚡ Execution Mechanism
 
-The gate runs a non-destructive, sub-100ms shell check across the 13 tracked assets:
+The gate runs a non-destructive, sub-100ms shell check across the 14 tracked assets:
 
 ```bash
 #!/usr/bin/env bash
-# High-Speed 12-Asset Health Verification
+# High-Speed 14-Asset Health Verification
 
 PASS=0
 FAIL=0
 
 # 1. Root Router
-[ -f "AGENTS.md" ] && [ $(wc -l < "AGENTS.md") -le 50 ] && ((PASS++)) || ((FAIL++))
+[ -f "AGENTS.md" ] && [ $(wc -l < "AGENTS.md") -le 90 ] && ((PASS++)) || ((FAIL++))
 
 # 2. DOX Container
 [ -d ".agents/standards" ] && [ -d ".agents/context" ] && ((PASS++)) || ((FAIL++))
@@ -61,11 +61,17 @@ FAIL=0
 # 12. Secret Hygiene
 [ -f ".gitignore" ] && (rg -q "^\.e\[n\]v" .gitignore 2>/dev/null || grep -qE "^\.e\[n\]v" .gitignore) && [ -f ".env.example" ] && ((PASS++)) || ((FAIL++))
 
-if [ "$PASS" -eq 12 ]; then
-  echo "[updateagents] Repository is AI-ready (13/13). Skipping pass."
+# 13. Working Artifacts Container
+[ -f ".agents/artifacts/README.md" ] && ((PASS++)) || ((FAIL++))
+
+# 14. Workspace Terrain Maps
+[ -f ".agents/terrain/stack.md" ] && [ -f ".agents/terrain/habits.md" ] && [ -f ".agents/terrain/ownership.md" ] && [ -f ".agents/terrain/packages.md" ] && [ -f ".agents/terrain/repo.md" ] && [ -f ".agents/terrain/logs.md" ] && ((PASS++)) || ((FAIL++))
+
+if [ "$PASS" -eq 14 ]; then
+  echo "[updateagents] Repository is AI-ready (14/14). Skipping pass."
   exit 0
 else
-  echo "[updateagents] Repository score: $PASS/12. Remediation required."
+  echo "[updateagents] Repository score: $PASS/14. Remediation required."
   exit 1
 fi
 ```
@@ -74,10 +80,10 @@ fi
 
 ## 🛑 Exit Invariants
 
-When the Fast-Skip check succeeds (`PASS == 12`):
+When the Fast-Skip check succeeds (`PASS == 14`):
 1. **Single Line Output**: The agent must output only:
    ```text
-   [updateagents] Repository is AI-ready (13/13). Skipping pass.
+   [updateagents] Repository is AI-ready (14/14). Skipping pass.
    ```
 2. **Immediate Turn Termination / Next Task**: The agent immediately moves to the user's primary feature request or command.
 3. **No Retrospective Analysis**: Do not explain why the files are compliant, do not re-list the file paths, and do not congratulate the user. Silence is efficiency.

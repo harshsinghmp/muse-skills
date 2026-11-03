@@ -5,13 +5,10 @@ Curated suite of forty-six universal AI agent skills. MIT. Install via
 
 ## Read before working
 
-Durable project truth lives in `.agents/context/` (local, untracked).
-Working artifacts (research corpora, planning docs, reports) belong in
-`.agents/artifacts/<topic>/` — never the repo tree, never `.memory/`
-(musememory owns it); durable findings are promoted to `.agents/context/`
-via `updateagents`.
-Start at `.agents/context/index.md` and read only the files your task needs.
-Code and skill frontmatter are canonical when docs drift.
+Durable truth lives in `.agents/context/` (local, untracked); working artifacts
+belong in `.agents/artifacts/<topic>/` — never the repo tree, never `.memory/`
+(musememory owns it). Read `.agents/context/index.md` first, then only what your
+task needs. Code and skill frontmatter are canonical when docs drift.
 
 ## Working rules
 
@@ -47,15 +44,10 @@ Code and skill frontmatter are canonical when docs drift.
 - Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
 
 ## Session Report Protocol
-
-**Scope:** emit the Layman Report only for top-level, user-facing work. Suppress it entirely in agent-to-agent communication, subagent results, internal tool flows, and background/automated runs (those carry the technical report alone). When unsure whether the user wants the plain-language version, finish the technical report, then ask once ("Want the plain-language summary too?") and append it only on confirmation.
-
-Every completed task ends with two reports, in this order (user-facing only):
-
-1. **Technical report** — files changed, commands run, tests, evidence, verification. Canonical record.
-2. **Layman Report (appendix)** — the same work in plain language: one bullet per file/skill/task touched, stating what changed and why it matters to the user, no jargon, no code. Group by area when more than ~8 bullets.
-
-The Layman Report is additive: it never replaces, truncates, or reorders the technical report. For user-facing work, a report without the Layman appendix is incomplete; a report with only the Layman appendix is never acceptable. (Agent-to-agent flows carry the technical report alone.)
+User-facing work ends with a technical report, then a **Layman Report** appendix:
+one plain bullet per file/task touched (group by area when >8), no jargon. It is
+additive and never replaces the technical report; suppress it in agent-to-agent,
+subagent, internal, and automated flows.
 
 ## Verification
 
