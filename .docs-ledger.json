@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T06:41:44.144Z",
-  "head": "79e0b159fd4d168a788d2407c8effe2b9bd833e0",
+  "updatedAt": "2026-11-03T10:14:04.458Z",
+  "head": "62a4ab5b97da98f20d53fa47e53e3add1708980c",
   "watermark": {
-    "point": 2,
-    "commit": "79e0b159fd4d168a788d2407c8effe2b9bd833e0",
-    "date": "2026-11-03T06:41:44.041Z",
+    "point": 8,
+    "commit": "62a4ab5b97da98f20d53fa47e53e3add1708980c",
+    "date": "2026-11-03T10:14:04.458Z",
     "releaseTag": "v8.1.1"
   },
   "agentWatermark": {
@@ -97,6 +97,224 @@
       "shipped": true,
       "releaseTag": "v8.1.1",
       "createdAt": "2026-11-03T06:41:43.466Z"
+    },
+    {
+      "id": "DP-0003",
+      "point": 3,
+      "commit": "5379227c62507456d1a31c03fff6aef8c6e4b2b1",
+      "shortCommit": "5379227",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #334 from harshsinghmp/hotfix/updateagents-workspace-boundary",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.1",
+      "createdAt": "2026-11-03T10:14:03.675Z"
+    },
+    {
+      "id": "DP-0004",
+      "point": 4,
+      "commit": "6d7a37af0669bc1c82009f9ec0c5dea172c0ed88",
+      "shortCommit": "6d7a37a",
+      "date": "2026-11-03",
+      "type": "fix",
+      "scope": "updateagents",
+      "summary": "derive audit total from checks",
+      "breaking": false,
+      "files": ["skills/core-engine/updateagents/scripts/updateagents.ts", "tests/updateagents-audit.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T10:14:03.675Z"
+    },
+    {
+      "id": "DP-0005",
+      "point": 5,
+      "commit": "7d2b0829643a4b8eebea8cf2b20ec1d9e8286f05",
+      "shortCommit": "7d2b082",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #335 from harshsinghmp/fix/updateagents-audit-asset-count",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T10:14:03.675Z"
+    },
+    {
+      "id": "DP-0006",
+      "point": 6,
+      "commit": "22bbba266074bc7cd6a7d217b419d79accb5345c",
+      "shortCommit": "22bbba2",
+      "date": "2026-11-03",
+      "type": "fix",
+      "scope": "updateagents",
+      "summary": "fence all write modes at workspace boundaries",
+      "breaking": false,
+      "files": [
+        "skills/core-engine/updateagents/scripts/instruction-migration.ts",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "tests/updateagents-boundary-all-modes.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T10:14:03.676Z"
+    },
+    {
+      "id": "DP-0007",
+      "point": 7,
+      "commit": "9e5c8389cd0039ba20a507315276e28025058324",
+      "shortCommit": "9e5c838",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #336 from harshsinghmp/fix/updateagents-boundary-all-modes",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T10:14:03.676Z"
+    },
+    {
+      "id": "DP-0008",
+      "point": 8,
+      "commit": "62a4ab5b97da98f20d53fa47e53e3add1708980c",
+      "shortCommit": "62a4ab5",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #337 from harshsinghmp/test/updateagents-instruction-matching",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-03T10:14:03.676Z"
     }
   ]
 }
