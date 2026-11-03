@@ -59,6 +59,7 @@ const SKIP_DIRS = new Set([
   ".git",
   ".hg",
   ".svn",
+  ".stversions",
   "node_modules",
   "vendor",
   "dist",
@@ -135,6 +136,8 @@ function isInstructionFile(relativePath: string): boolean {
   // Rules ported into a references/ file and linked from AGENTS.md must never be
   // flattened into an adapter.
   if (/(^|\/)(references|templates)\//.test(normalized)) return false;
+  // .opencode/commands/ holds generated slash commands, not runtime rules.
+  if (/(^|\/)\.opencode\/commands?\//.test(normalized)) return false;
   const name = basename(normalized);
   return (
     KNOWN_NAMES.has(name) ||
