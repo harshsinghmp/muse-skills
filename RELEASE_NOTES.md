@@ -1,3 +1,38 @@
+# 🏛️ Muse Skills v8.1.3 — Toolchain Patch
+
+> **Patch release: TypeScript 7 and setup-uv 10 across the build and CI toolchain.** 386 automated tests. 14,267 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.1.3
+
+- **TypeScript 7.0.2**: the native compiler replaces TypeScript 5.9.3. `tsconfig.json` was already TS7-clean (`ESNext`, `bundler`, `strict`, explicit `bun-types`), and no programmatic compiler API, `tsserver`, typescript-eslint, ts-node, or tsx consumers exist. `bun.lock` is regenerated with the TS7 platform binaries; the dead `package-lock.json` stub is intentionally untouched.
+- **setup-uv 10.3.3**: the CI ruff runner moves from v6.8.0 to v10.3.3. Only `.github/workflows/ci.yml` uses the action, with no `with:` inputs, so the v7–v10 breaking changes (node24, removed `server-url`, tag policy, cache defaults) are inert here.
+- **Clean dependency hygiene**: the Dependabot TypeScript PR was replaced because it populated the abandoned npm lockfile instead of `bun.lock`; the replacement updates `package.json` + `bun.lock` only.
+- **Documentation**: the Unreleased dependency note is stamped into this release, and the documentation ledger remains at zero pending points.
+
+## 📊 Verification
+
+| Metric | v8.1.2 | v8.1.3 |
+|:---|:---|:---|
+| Automated Tests | 386 | **386** |
+| Test Assertions | 14,267 | **14,267** |
+| Skills Count | 46 | **46** |
+| TypeScript | 5.9.3 → 7.0.2 | **7.0.2** |
+| setup-uv | 6.8.0 → 10.3.3 | **10.3.3** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.2...v8.1.3
+
+---
+
 # 🏛️ Muse Skills v8.1.2 — Audit & Boundary Hardening
 
 > **The updateagents follow-up release: honest 14-asset scoring, a boundary fence across every write mode, and a clean 14/14 audit on this repository.** 386 automated tests. 14,267 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
