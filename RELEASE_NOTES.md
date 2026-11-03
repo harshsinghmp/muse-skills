@@ -1,3 +1,39 @@
+# 🏛️ Muse Skills v8.1.2 — Audit & Boundary Hardening
+
+> **The updateagents follow-up release: honest 14-asset scoring, a boundary fence across every write mode, and a clean 14/14 audit on this repository.** 386 automated tests. 14,267 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.1.2
+
+- **Honest audit scorecard**: the denominator is derived from the actual checks (14), so the engine can no longer report a false `13/13 AI-Ready` while an asset is failing. The root `AGENTS.md` router is back under the 90-line budget, and the matrix documents the Workspace Terrain Maps asset.
+- **Boundary fence across every write mode**: `--sanitize`, `--promote`, and `--hygiene --consolidate/--purge` now refuse an umbrella workspace that merely contains repositories. Sanitization and audit skip nested VCS roots and `.stversions/` backups; a `--promote` target outside the workspace or inside a nested clone is refused unless `--follow-nested-repos` is set.
+- **Audit classification**: compiled IDE artifacts (`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`), generated `.opencode/commands/`, and `.stversions/` backups are treated as destinations, not legacy debts. This repository now audits **14/14**.
+- **Instruction-source matching locked**: regression tests pin `agents/` personas, lowercase legacy names, and bare extensions as non-sources while preserving known names, `*.instructions.md`, rules/convention names, and harness rule directories.
+- **Sanitize fixture hardening**: the boundary test assembles its synthetic marker at runtime so a release sanitization pass never rewrites the fixture.
+
+## 📊 Verification
+
+| Metric | v8.1.1 | v8.1.2 |
+|:---|:---|:---|
+| Automated Tests | 375 | **386** |
+| Test Assertions | 14,226 | **14,267** |
+| Skills Count | 46 | **46** |
+| Repository Audit | 13/14 | **14/14** |
+| Test Failures | 0 | **0** |
+| Tracked Agent Artifacts | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.1...v8.1.2
+
+---
+
 # 🏛️ Muse Skills v8.1.1 — updateagents Workspace Boundary Hotfix
 
 > **Patch release for the 2026-11-03 cross-repository data-loss incident.** 375 automated tests. 14,226 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
