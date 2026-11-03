@@ -1,3 +1,38 @@
+# 🏛️ Muse Skills v8.1.1 — updateagents Workspace Boundary Hotfix
+
+> **Patch release for the 2026-11-03 cross-repository data-loss incident.** 375 automated tests. 14,226 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.1.1
+
+- **Nested-repository boundary fence**: instruction discovery stops at every nested VCS root (`.git` directory or file, `.hg`, `.svn`). An umbrella directory that is not itself a repository refuses to adapt anything and exits non-zero with the discovered paths. `--follow-nested-repos` (default `false`) is the only opt-in.
+- **`agents/` is product content**: persona and subagent-definition trees are never classified as runtime instructions or rewritten into adapters.
+- **Pre-write plan and confirmation**: `--dry-run` prints every source path and its replacement adapter and writes nothing. Multi-file or non-root adaptation requires `--yes` or an interactive prompt; non-interactive runs abort with zero writes.
+- **Archive-before-adapt**: exact originals are snapshotted under `.agents/archive/agent-instructions/` with SHA-256 provenance before any rewrite.
+- **Preserved behavior**: root `AGENTS.md` is never regenerated, `CLAUDE.md` stays exactly `@AGENTS.md`, existing snapshots work, and `.memory/**` remains untouched.
+
+## 📊 Verification
+
+| Metric | v8.1.0 | v8.1.1 |
+|:---|:---|:---|
+| Automated Tests | 371 | **375** |
+| Test Assertions | 14,193 | **14,226** |
+| Skills Count | 46 | **46** |
+| Test Failures | 0 | **0** |
+| Tracked Agent Artifacts | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.0...v8.1.1
+
+---
+
 # 🏛️ Muse Skills v8.1.0 — Session-Proof Docs & Clean Agent Roots
 
 > **Documentation that remembers, agent context that catches up, and project roots that stay clean across every harness.** 371 automated tests. 14,193 assertions. 46 production-grade skills. 458 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
