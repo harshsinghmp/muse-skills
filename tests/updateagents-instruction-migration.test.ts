@@ -46,6 +46,39 @@ describe("updateagents instruction migration", () => {
     ]);
   });
 
+  it("classifies instruction sources by the closed name set and never treats agents/ as instructions", () => {
+    mkdirSync(join(ROOT, "agents/dev"), { recursive: true });
+    mkdirSync(join(ROOT, "notes"), { recursive: true });
+    mkdirSync(join(ROOT, ".windsurf/rules"), { recursive: true });
+
+    // Lowercase legacy names and bare extensions are no longer instruction sources.
+    writeFileSync(join(ROOT, "notes/agent.md"), "lowercase agent\n");
+    writeFileSync(join(ROOT, "notes/ai.md"), "lowercase ai\n");
+    writeFileSync(join(ROOT, "notes/prompt.md"), "lowercase prompt\n");
+    writeFileSync(join(ROOT, "notes/snippet.mdc"), "extension alone\n");
+    writeFileSync(join(ROOT, "agents/dev/reviewer.md"), "# Reviewer persona\n");
+
+    // Known names, *.instructions.md, rules/convention names, and harness rule dirs stay sources.
+    writeFileSync(join(ROOT, "notes/PROMPT.md"), "known name\n");
+    writeFileSync(join(ROOT, "notes/coding-rules.md"), "rules name\n");
+    writeFileSync(join(ROOT, "notes/conventions.md"), "convention name\n");
+    writeFileSync(join(ROOT, "notes/api.instructions.md"), "instructions suffix\n");
+    writeFileSync(join(ROOT, ".windsurf/rules/security.md"), "harness rule dir\n");
+
+    const discovered = discoverAgentInstructionSources(ROOT)
+      .map((source) => source.relativePath)
+      .sort();
+    expect(discovered).toEqual(
+      [
+        ".windsurf/rules/security.md",
+        "notes/PROMPT.md",
+        "notes/api.instructions.md",
+        "notes/coding-rules.md",
+        "notes/conventions.md",
+      ].sort(),
+    );
+  });
+
   it("ignores reference playbooks and templates — content is never an instruction source", () => {
     mkdirSync(join(ROOT, "skills/demo/references"), { recursive: true });
     mkdirSync(join(ROOT, "skills/demo/templates"), { recursive: true });
