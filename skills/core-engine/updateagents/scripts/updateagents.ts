@@ -3436,7 +3436,9 @@ if (isAudit) {
   const checks = auditWorkspace(workspaceDir);
   const score = checks.filter((c) => c.passed).length;
   const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
-  const TOTAL_ASSETS = 13;
+  // Derive the denominator from the actual checks so adding an asset can never
+  // silently produce a false "13/13 AI-Ready" pass again.
+  const TOTAL_ASSETS = checks.length;
 
   // Stage-0 Fast-Skip Gate
   if (score === TOTAL_ASSETS && !values.force) {
