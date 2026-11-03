@@ -2,6 +2,40 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.1.2] - 2026-11-03
+
+### Fixed
+
+- **`updateagents` audit scorecard**: the denominator is now derived from the actual checks (14), so the engine can no longer report a false "13/13 AI-Ready" while an asset is failing. The root `AGENTS.md` router is restored to the 90-line budget, and the matrix documents the 14th terrain asset.
+
+- **`updateagents` boundary fence across write modes**: `--sanitize`, `--promote`, and `--hygiene --consolidate/--purge` now refuse an umbrella workspace that merely contains repositories. Sanitization and audit skip nested VCS roots and Syncthing `.stversions/` backups, and a `--promote` target inside a nested clone is refused unless `--follow-nested-repos` is set.
+
+- **`updateagents` audit classification**: generated destinations are no longer counted as unpromoted legacy sources. Compiled IDE artifacts (`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`), generated `.opencode/commands/`, and `.stversions/` backups are excluded, so a clean repository reaches 14/14 instead of a permanent Asset 1 failure.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.1...v8.1.2
+
+## [8.1.1] - 2026-11-03
+
+### Fixed
+
+- **`updateagents`: workspace boundary fence stops at nested repositories (`--follow-nested-repos`)**:
+  - **Boundary fence**: instruction discovery halts at every nested VCS root (`.git` as a directory *or* a file, `.hg`, `.svn`), so an umbrella directory holding separate clones is never traversed and their instructions are never imported, archived, or rewritten.
+  - **Refusal**: a workspace that is not itself a repository but contains nested repositories refuses to adapt anything and exits non-zero with the discovered repository paths, instead of adapting children.
+  - **Opt-in**: `--follow-nested-repos` (default `false`) is the only way to cross those boundaries.
+
+- **`updateagents`: `agents/` directories are product content, never runtime instructions**:
+  - **Classification**: `agents/` no longer matches the generic instruction-directory pattern, so persona and subagent-definition trees are never replaced with adapter stubs. File-name matching is tightened to known instruction names, `*.instructions.md`, and `*rules*.md`.
+
+- **`updateagents`: pre-write plan, confirmation gate, and archive-before-adapt**:
+  - **Dry run**: `--dry-run` prints every instruction source path and the exact adapter text that would replace it, and writes nothing.
+  - **Confirmation**: a non-dry run that would rewrite more than one source, or any source that is not a recognized root instruction file, requires `--yes` or an interactive prompt; non-interactive runs abort with a non-zero exit and zero writes.
+  - **Archive invariant**: no original may be overwritten unless its exact bytes were archived first under `.agents/archive/agent-instructions/` with its SHA-256 recorded in `manifest.json`.
+  - **Regression coverage**: `tests/updateagents-workspace-boundary.test.ts` proves a nested repository is left byte-identical and an umbrella workspace is refused.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.0...v8.1.1
+
+---
+
 ## [8.1.0] - 2026-11-01
 
 ### Added

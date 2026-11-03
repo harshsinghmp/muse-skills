@@ -46,6 +46,39 @@ describe("updateagents instruction migration", () => {
     ]);
   });
 
+  it("classifies instruction sources by the closed name set and never treats agents/ as instructions", () => {
+    mkdirSync(join(ROOT, "agents/dev"), { recursive: true });
+    mkdirSync(join(ROOT, "notes"), { recursive: true });
+    mkdirSync(join(ROOT, ".windsurf/rules"), { recursive: true });
+
+    // Lowercase legacy names and bare extensions are no longer instruction sources.
+    writeFileSync(join(ROOT, "notes/agent.md"), "lowercase agent\n");
+    writeFileSync(join(ROOT, "notes/ai.md"), "lowercase ai\n");
+    writeFileSync(join(ROOT, "notes/prompt.md"), "lowercase prompt\n");
+    writeFileSync(join(ROOT, "notes/snippet.mdc"), "extension alone\n");
+    writeFileSync(join(ROOT, "agents/dev/reviewer.md"), "# Reviewer persona\n");
+
+    // Known names, *.instructions.md, rules/convention names, and harness rule dirs stay sources.
+    writeFileSync(join(ROOT, "notes/PROMPT.md"), "known name\n");
+    writeFileSync(join(ROOT, "notes/coding-rules.md"), "rules name\n");
+    writeFileSync(join(ROOT, "notes/conventions.md"), "convention name\n");
+    writeFileSync(join(ROOT, "notes/api.instructions.md"), "instructions suffix\n");
+    writeFileSync(join(ROOT, ".windsurf/rules/security.md"), "harness rule dir\n");
+
+    const discovered = discoverAgentInstructionSources(ROOT)
+      .map((source) => source.relativePath)
+      .sort();
+    expect(discovered).toEqual(
+      [
+        ".windsurf/rules/security.md",
+        "notes/PROMPT.md",
+        "notes/api.instructions.md",
+        "notes/coding-rules.md",
+        "notes/conventions.md",
+      ].sort(),
+    );
+  });
+
   it("ignores reference playbooks and templates — content is never an instruction source", () => {
     mkdirSync(join(ROOT, "skills/demo/references"), { recursive: true });
     mkdirSync(join(ROOT, "skills/demo/templates"), { recursive: true });
@@ -97,7 +130,7 @@ describe("updateagents instruction migration", () => {
     writeFileSync(join(ROOT, "GEMINI.md"), "# Gemini\nDo not change public APIs without approval.\n");
     writeFileSync(join(ROOT, ".windsurf/rules/security.md"), "# Security\nNever log credentials.\n");
 
-    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT], { encoding: "utf8" });
+    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--yes"], { encoding: "utf8" });
     if (run.status !== 0) throw new Error(`${run.stdout}\n${run.stderr}`);
     expect(existsSync(join(ROOT, "AGENTS.md"))).toBe(true);
     expect(existsSync(join(ROOT, ".agents/context/index.md"))).toBe(true);
@@ -121,7 +154,7 @@ describe("updateagents instruction migration", () => {
     writeFileSync(join(ROOT, ".roo/rules-code/review.md"), "Review all changed files before approval.\n");
     writeFileSync(join(ROOT, ".windsurfrules"), "Keep layouts mobile-first.\n");
 
-    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--scaffold"], { encoding: "utf8" });
+    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--scaffold", "--yes"], { encoding: "utf8" });
     if (run.status !== 0) throw new Error(`${run.stdout}\n${run.stderr}`);
     expect(readFileSync(join(ROOT, ".windsurfrules"), "utf8")).toContain("updateagents:adapter");
     expect(readFileSync(join(ROOT, ".roo/rules-code/review.md"), "utf8")).toContain("updateagents:adapter");

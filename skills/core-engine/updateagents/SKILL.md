@@ -1,7 +1,7 @@
 ---
 name: updateagents
 aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
-description: "Universal agent context synchronization and repository AI-readiness engine. Audits 13 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes."
+description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes."
 argument-hint: "[sync|audit|sanitize|scaffold|promote|docs-backlog|hygiene]"
 user-invocable: true
 version: 2.6.0
@@ -68,14 +68,14 @@ Run when the change has a reasonable chance of affecting what future agents need
 | Mode | Focus | Key Output | Reference Document |
 | :--- | :--- | :--- | :--- |
 | **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 21 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
-| **`scorecard`** | 13-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
+| **`scorecard`** | 14-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
 | **`promote`** | Intercept & promote foreign-harness instruction writes to DOX standards/context | Promoted standards/context, preserved archive, resynced router | [references/legacy-promotion.md](references/legacy-promotion.md) |
 | **`onboard`** | Run the interactive identity onboarding interview (`--onboard` with `--global` or `--project`) | Identity profiles (`user.md`, `assistant.md`, `vision.md`, `rules.md`) | [references/onboard.md](references/onboard.md) |
 | **`docs-backlog`** | "consume docs ledger", "catch agents up on documented changes", "forgotten session context" | Fold documented points since `agentWatermark` into `.agents/context/current.md`; stop at the first point still owing agent docs | [references/docs-backlog.md](references/docs-backlog.md) |
 | **`hygiene`** | "clean project root", "keep agent folders out of git", "consolidate harness folders", "don't upload agent state" | Detect root harness/IDE/CLI artifacts, skip the active harness, consolidate the rest into `.agents/`, install local-only excludes, and gate public pushes | [references/harness-hygiene.md](references/harness-hygiene.md) |
-| **`audit`** | "repo AI-readiness audit", "audit the 13 assets", "grade agent context" | Grade the 13 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
+| **`audit`** | "repo AI-readiness audit", "audit the 14 assets", "grade agent context" | Grade the 14 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
 
 ---
 
@@ -115,14 +115,16 @@ The `.memory/` directory is **exclusively owned and managed by MuseMemory**.
 *MuseMemory Context Rule*: External memory tools (`cavemem`, `memoryagent`, etc.) provide context, not authoritative project state. A memory-derived fact may be recorded only when it is durable and verifiable from current project code, configs, or documentation.
 
 ### Workspace Boundary
-The workspace boundary is the **current working directory**:
+The workspace boundary is the **current working directory** (or the explicit positional target):
 1. Never traverse above the current workspace.
 2. Never modify files outside the workspace.
 3. Never search parent directories for missing agent files.
 4. Never silently switch to another repository.
 5. Do not assume the Git root is the workspace root unless it is the current working directory.
-6. Nested repositories should be treated as separate scopes unless explicitly requested otherwise.
-7. `.memory/**` remains excluded even though it may physically exist inside the workspace.
+6. Nested repositories are separate scopes. Every mode stops at nested VCS roots (`.git` directory or file, `.hg`, `.svn`); nothing inside is read, imported, archived, sanitized, promoted, or rewritten. `--sanitize` and `--audit` also skip `.stversions/` backups. Pass `--follow-nested-repos` to opt into crossing those boundaries explicitly.
+7. If the workspace root is **not** a repository but contains nested repositories, refuse every write mode (`--sanitize`, `--promote`, `--hygiene --consolidate/--purge`, and instruction adaptation) and exit non-zero with the discovered repository paths. Run the engine per repository, or pass the repository path as the positional target.
+8. An explicit `--promote` target inside a nested repository is refused unless `--follow-nested-repos` is set.
+9. `.memory/**` remains excluded even though it may physically exist inside the workspace.
 
 ### Authority & Priority Heuristic
 ```text
@@ -161,6 +163,12 @@ Execute the synchronization workflow via the automation CLI:
 bun path/to/updateagents/scripts/updateagents.ts [options]
 ```
 
+Instruction-adaptation safety options:
+
+* `--dry-run` — print every instruction source path and the exact adapter text that would replace it; write nothing.
+* `--yes` — confirm a multi-file or non-root adaptation plan without prompting. Non-interactive runs refuse the plan unless this flag is present.
+* `--follow-nested-repos` — opt into traversing nested repositories. Default `false`; without it the walk stops at every nested VCS root.
+
 ### Step 0 — Stage-0 Fast-Skip Gate (Pre-Flight)
 Before performing deep inspection or delta generation, run the `updateagents` fast-skip verification:
 1. Verify `AGENTS.md` exists and is `<50 lines`.
@@ -175,7 +183,7 @@ Before performing deep inspection or delta generation, run the `updateagents` fa
 Determine current directory, repository status, project type, language/runtime, package manager, and application boundaries. Exclude parent directories and `.memory/**`.
 
 ### Step 2 — Discover Agent Context
-Recursively discover supported instruction files inside the workspace, including nested `AGENTS.md`; Claude, Gemini, Codex and OpenCode instruction files; Cursor, Windsurf, Cline, Roo, Copilot and Continue rules; `*.instructions.md` / `CONVENTIONS.md`; and Markdown/text files inside directories named `agent(s)`, `rule(s)`, `instruction(s)` or `prompt(s)` for other runtimes. Skip `.git`, `.agents`, `.memory`, dependency/build outputs, and symlinks. Read each candidate and retain its relative path and scope metadata. Never search above the workspace.
+Recursively discover supported instruction files inside the workspace, including nested `AGENTS.md`; Claude, Gemini, Codex and OpenCode instruction files; Cursor, Windsurf, Cline, Roo, Copilot and Continue rules; `*.instructions.md` / `CONVENTIONS.md`; `*rules*.md` / `*convention*.md`; and Markdown/text files inside known harness rule directories or directories named `rule(s)`, `instruction(s)` or `prompt(s)` for other runtimes. A directory named `agents/` holds product content (personas, subagent definitions), **not** runtime instructions — never adapt files inside it. Skip `.git`, `.hg`, `.svn`, `.stversions`, `.agents`, `.memory`, generated `.opencode/commands/`, dependency/build outputs, symlinks, and every nested repository boundary. Read each candidate and retain its relative path and scope metadata. Never search above the workspace.
 
 ### Step 3 — Inspect Project State
 Inspect only authoritative sources (`package.json`, `tsconfig.json`, `README`, CI configs, source structure). Explicitly exclude `.memory/**`.
@@ -214,7 +222,8 @@ Lazy file creation: never scaffold context files speculatively; create only on c
 3. **If ANY Found (custom content present)**:
    - Before changing an instruction file, snapshot its exact bytes under `.agents/archive/agent-instructions/`; record source path and SHA-256 in `manifest.json`.
    - Import complete source contents, including rules, workflows, configuration notes, definitions and scope metadata, into `.agents/context/imported-agent-instructions.md`. Do not section-guess, truncate or silently drop content. Preserve each source’s path and keep changed versions as additional snapshots.
-   - Make `AGENTS.md` the compact shared router. Replace supported runtime-specific files with small adapters only after snapshot + import succeeds; keep relevant frontmatter/scope metadata. Adapt runtime instruction files only — never files under `references/` or `templates/`, which are content, not instructions. Claude’s root `CLAUDE.md` remains exactly `@AGENTS.md`. Preserve non-instruction configuration files untouched.
+   - Make `AGENTS.md` the compact shared router. Replace supported runtime-specific files with small adapters only after snapshot + import succeeds; keep relevant frontmatter/scope metadata. Adapt runtime instruction files only — never files under `references/`, `templates/`, or `agents/` (personas are content, not instructions). Claude’s root `CLAUDE.md` remains exactly `@AGENTS.md`. Preserve non-instruction configuration files untouched.
+   - Build a pre-write plan before touching any file. `--dry-run` lists every source and its replacement adapter. A non-dry run that would rewrite more than one source, or any source that is not a recognized root instruction file, requires explicit confirmation (`--yes` or an interactive prompt); without it, abort with a non-zero exit and zero writes. No original may be overwritten unless its exact bytes were archived first.
    - Read imported instructions before every task, apply each within its recorded source scope, and report conflicting rules with both source paths; ask the user instead of silently choosing.
    - Report every source → archive snapshot → canonical context mapping so users can find both their active rules and exact originals. Never delete an original snapshot.
    - When refreshing a generated `AGENTS.md`, reconcile conditional-standard links with project evidence. Ask about ambiguous applicability; only unlink standards the user confirms are inapplicable, retaining their files.
@@ -289,6 +298,9 @@ When an agent or harness attempts to write or update a prohibited legacy instruc
 
 ### Mandatory Safety Rules
 * **Never modify outside the workspace** or traverse above root.
+* **Never cross a nested repository boundary in any write mode.** A parent directory holding separate clones is an umbrella scope, not a workspace: refuse and exit non-zero instead of adapting, sanitizing, promoting, or consolidating children. `--follow-nested-repos` is the only opt-in, and an explicit `--promote` target inside a nested repo is refused without it.
+* **Never rewrite an instruction file without an archive snapshot of its exact original bytes.**
+* **Never auto-adapt multiple sources or a non-root source** without confirmation (`--yes` or an interactive prompt). Refuse in non-interactive runs.
 * **Never read, write, create, delete, move, rename, summarize, reorganize, synchronize, or validate `.memory/**`**.
 * Never expose secrets, API keys, or `.env` contents.
 * Never fabricate commands or architecture.

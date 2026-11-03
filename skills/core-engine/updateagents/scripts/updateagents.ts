@@ -40,7 +40,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import * as readline from "node:readline/promises";
 import { parseArgs } from "node:util";
 import {
@@ -53,9 +53,15 @@ import { parseGitHubRemote, scaffoldGitHubAssets, selectGitHubWorkflowTemplates 
 import {
   adaptAgentInstructionSources,
   discoverAgentInstructionSources,
+  findContainingNestedRepository,
+  findNestedRepositoryRoots,
   isAllowedUntouchedTarget,
+  isCompiledIdeArtifact,
   isInvalidLegacyWriteTarget,
+  isRecognizedRootInstructionFile,
+  isRepositoryRoot,
   migrateAgentInstructions,
+  planInstructionAdaptations,
   promoteLegacyInstructionWrite,
   stripSentinelComments,
 } from "./instruction-migration";
@@ -161,6 +167,7 @@ const { values, positionals } = parseArgs({
     "report-html": { type: "boolean", default: false },
     "report-out": { type: "string", default: "" },
     "dry-run": { type: "boolean", default: false },
+    "follow-nested-repos": { type: "boolean", default: false },
     "fail-under": { type: "string", default: "" },
     json: { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
@@ -216,7 +223,9 @@ Options:
   --report-html    Generate a standalone single-file HTML work report for employees, agents, or clients
   --report-out <f> Custom destination path for HTML work report
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
-  --dry-run        Simulate without writing files to disk
+  --dry-run        Preview every instruction adapter that would be written; writes nothing
+  --follow-nested-repos  Traverse nested repositories too (default: stop at repository boundaries)
+  --yes            Confirm multi-file or non-root instruction adaptation without prompting
   --json           Output audit results in JSON format
   -f, --force      Force overwrite of standards and templates
   --confirm-remove-github-workflows  Confirm removal of .github/workflows for a non-GitHub project
@@ -234,6 +243,7 @@ const isScaffold = values.scaffold || false;
 const isSanitize = values.sanitize || false;
 const isOnboard = values.onboard || values.interview || false;
 const isGlobalScope = values.global || false;
+const followNestedRepos = values["follow-nested-repos"] || false;
 
 // Step 1: Establish Workspace Context & Boundaries
 const rawTarget = positionals[0] || ".";
@@ -243,6 +253,75 @@ const workspaceDir = resolve(process.cwd(), rawTarget);
 if (!workspaceDir.startsWith(process.cwd()) && rawTarget === "." && !isGlobalScope) {
   console.error("❌ Safety Violation: Cannot traverse above current working directory.");
   process.exit(1);
+}
+
+/**
+ * A workspace that is not itself a repository but contains repositories is an
+ * umbrella directory, not a repository. Adapting its children would rewrite
+ * separate projects that merely happen to live beside each other.
+ */
+function assertWorkspaceBoundary(targetDir: string): void {
+  if (followNestedRepos) return;
+  if (isRepositoryRoot(targetDir)) return;
+  const nested = findNestedRepositoryRoots(targetDir);
+  if (nested.length === 0) return;
+  console.error(`\n❌ Workspace boundary refusal: ${targetDir} is not a repository but contains nested repositories:`);
+  for (const repo of nested) console.error(`   • ${repo}`);
+  console.error("   Nested repositories are separate scopes and were not touched.");
+  console.error("   Run updateagents inside each repository, or pass the repository path as the positional target.");
+  console.error("   Pass --follow-nested-repos only if you explicitly intend cross-repository adaptation.");
+  process.exit(1);
+}
+
+function printInstructionAdaptationPlan(plan: ReturnType<typeof planInstructionAdaptations>): void {
+  console.log(`\n🔍 Instruction adaptation plan (${plan.length} source(s), no writes):`);
+  for (const item of plan) {
+    console.log(`  • ${item.relativePath}`);
+    console.log("    ┌── adapter that would replace it ──");
+    for (const line of item.adapter.split("\n")) console.log(`    │ ${line}`);
+    console.log("    └──");
+  }
+}
+
+/**
+ * Safety gate for in-place adapter rewrites. A single, recognized root
+ * instruction file is routine; anything broader needs explicit consent.
+ */
+async function guardInstructionAdaptation(
+  plan: ReturnType<typeof planInstructionAdaptations>,
+  options: { dryRun: boolean; yes: boolean },
+): Promise<void> {
+  if (plan.length === 0) return;
+  if (options.dryRun) {
+    printInstructionAdaptationPlan(plan);
+    return;
+  }
+
+  const needsConfirmation = plan.length > 1 || plan.some((item) => !isRecognizedRootInstructionFile(item.relativePath));
+  if (!needsConfirmation) return;
+
+  console.log(`\n⚠️  Instruction adaptation plan (${plan.length} source(s)):`);
+  for (const item of plan) console.log(`  • ${item.relativePath}`);
+  console.log("  Original bytes will be snapshotted under .agents/archive/agent-instructions/ first.");
+
+  if (options.yes) {
+    console.log("  ✔  Confirmed via --yes.");
+    return;
+  }
+  if (!process.stdin.isTTY) {
+    console.error(
+      "❌ Refusing to rewrite instruction files without confirmation. Review --dry-run, then re-run with --yes.",
+    );
+    process.exit(1);
+  }
+
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = await rl.question("Rewrite these files as adapters? [y/N] ");
+  rl.close();
+  if (!/^y(es)?$/i.test(answer.trim())) {
+    console.log("⏭️  Instruction adaptation declined. No instruction files were rewritten.");
+    process.exit(1);
+  }
 }
 
 // =========================================================================
@@ -998,6 +1077,8 @@ function containsManagedAdapter(dir: string, depth = 0): boolean {
       }
       if (stat.isSymbolicLink()) continue;
       if (stat.isDirectory()) {
+        // A nested clone is a separate scope; its adapters are not ours.
+        if (isRepositoryRoot(full)) continue;
         if (containsManagedAdapter(full, depth + 1)) return true;
       } else if (/\.(md|mdc|mdx)$/i.test(entry)) {
         try {
@@ -1483,6 +1564,7 @@ if (values.hygiene || values["check-public"]) {
 
   const scan = scanHarnessArtifacts(workspaceDir, { forceActive: values["force-active"] });
   const wantsChange = values.consolidate || values.purge;
+  if (wantsChange) assertWorkspaceBoundary(workspaceDir);
   if (!wantsChange) {
     if (values.json) {
       console.log(JSON.stringify(scan, null, 2));
@@ -2276,7 +2358,22 @@ if (values["sync-ide"]) {
 
 // Early handler: Legacy-Write Promotion Interceptor
 if (values.promote) {
+  assertWorkspaceBoundary(workspaceDir);
   const promoteTarget = values.promote;
+  const absolutePromoteTarget = resolve(workspaceDir, promoteTarget);
+  const promoteRelative = relative(workspaceDir, absolutePromoteTarget);
+  if (promoteRelative === ".." || promoteRelative.startsWith(`..${sep}`)) {
+    console.error(`\n❌ Workspace boundary refusal: target path is outside the workspace (${absolutePromoteTarget}).`);
+    console.error("   Pass a target inside the current workspace, or run from the target repository.");
+    process.exit(1);
+  }
+  const nestedOwner = findContainingNestedRepository(workspaceDir, absolutePromoteTarget);
+  if (nestedOwner && !followNestedRepos) {
+    console.error(`\n❌ Workspace boundary refusal: target path is inside nested repository '${nestedOwner}'.`);
+    console.error("   Nested repositories are separate scopes and were not touched.");
+    console.error("   Pass --follow-nested-repos only if you explicitly intend cross-repository writes.");
+    process.exit(1);
+  }
   let promoteContent = values.content || undefined;
   if (!promoteContent && !process.stdin.isTTY) {
     try {
@@ -2652,7 +2749,10 @@ export function unwrapSyntheticArtifacts(content: string): { cleaned: string; un
   return { cleaned, unwrappedCount };
 }
 
-export function scanForSyntheticArtifacts(target: string): { file: string; count: number }[] {
+export function scanForSyntheticArtifacts(
+  target: string,
+  options: { followNestedRepos?: boolean } = {},
+): { file: string; count: number }[] {
   const contaminated: { file: string; count: number }[] = [];
   const orcaPattern = /\[\[ORCA_RICH_MD:[a-f0-9]+:[a-z-]+:[^\]]+\]\]|<antArtifact|\[cursor:|<<<windsurf/i;
 
@@ -2682,12 +2782,16 @@ export function scanForSyntheticArtifacts(target: string): { file: string; count
         if (entry.isDirectory()) {
           if (
             entry.name === ".git" ||
+            entry.name === ".hg" ||
+            entry.name === ".svn" ||
+            entry.name === ".stversions" ||
             entry.name === "node_modules" ||
             entry.name === "dist" ||
             entry.name === ".worktrees" ||
             entry.name === ".memory"
           )
             continue;
+          if (!options.followNestedRepos && isRepositoryRoot(fullPath)) continue;
           walk(fullPath);
         } else if (entry.isFile() && /\.(md|markdown|txt|json|yaml|yml|ts|js|tsx|jsx|sh)$/i.test(entry.name)) {
           try {
@@ -2798,6 +2902,8 @@ export function auditWorkspace(target: string): AssetCheck[] {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacy.push(src.relativePath);
       }
@@ -2953,7 +3059,13 @@ export function auditWorkspace(target: string): AssetCheck[] {
 
 export function scaffoldAgentEngine(
   target: string,
-  options: { dryRun?: boolean; force?: boolean; githubProject?: boolean; confirmRemoveGitHubWorkflows?: boolean } = {},
+  options: {
+    dryRun?: boolean;
+    force?: boolean;
+    githubProject?: boolean;
+    confirmRemoveGitHubWorkflows?: boolean;
+    followNestedRepos?: boolean;
+  } = {},
 ): {
   created: string[];
   skipped: string[];
@@ -3002,7 +3114,10 @@ export function scaffoldAgentEngine(
   // refreshed. There is deliberately no "force" escape hatch here: the managed
   // root AGENTS.md is the canonical destination and can never be re-imported
   // into itself.
-  const instructionMigration = migrateAgentInstructions(target, { dryRun: dry });
+  const instructionMigration = migrateAgentInstructions(target, {
+    dryRun: dry,
+    followNestedRepos: options.followNestedRepos,
+  });
   for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
     created.push(`${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (snapshot)`);
   }
@@ -3123,7 +3238,10 @@ export function scaffoldAgentEngine(
     skipped.push("CLAUDE.md");
   }
 
-  const instructionAdapters = adaptAgentInstructionSources(instructionMigration.sources, { dryRun: dry });
+  const instructionAdapters = adaptAgentInstructionSources(instructionMigration.sources, {
+    dryRun: dry,
+    workspaceRoot: target,
+  });
   for (const adapterPath of instructionAdapters) created.push(`${adapterPath} (forwards to AGENTS.md)`);
   if (!dry && existsSync(rootAgents)) {
     const rootContent = readFileSync(rootAgents, "utf8");
@@ -3218,6 +3336,8 @@ export function scaffoldAgentEngine(
 // MODE: SANITIZE
 // =========================================================================
 if (isSanitize) {
+  assertWorkspaceBoundary(workspaceDir);
+
   console.log("\n============================================================");
   console.log(" 🛡️ updateagents — Synthetic ADE/IDE Artifact Sanitization Pass");
   console.log("============================================================");
@@ -3225,7 +3345,7 @@ if (isSanitize) {
   if (isDryRun) console.log(`🔍 [DRY RUN — No filesystem writes]`);
   console.log("------------------------------------------------------------\n");
 
-  const contaminated = scanForSyntheticArtifacts(workspaceDir);
+  const contaminated = scanForSyntheticArtifacts(workspaceDir, { followNestedRepos });
   if (contaminated.length === 0) {
     console.log("✅ Zero synthetic ADE/IDE artifacts detected in workspace.");
   } else {
@@ -3254,6 +3374,12 @@ if (isSanitize) {
 // MODE: DIRECT SCAFFOLD (--scaffold)
 // =========================================================================
 if (isScaffold) {
+  assertWorkspaceBoundary(workspaceDir);
+  await guardInstructionAdaptation(
+    planInstructionAdaptations(discoverAgentInstructionSources(workspaceDir, { followNestedRepos })),
+    { dryRun: isDryRun, yes: values.yes },
+  );
+
   console.log("\n============================================================");
   console.log(" 🤖 updateagents — Scaffolding Agent Engine DOX Architecture");
   console.log("============================================================");
@@ -3266,6 +3392,7 @@ if (isScaffold) {
     force: isForce,
     githubProject: values.github ? true : values["no-github"] ? false : undefined,
     confirmRemoveGitHubWorkflows: values["confirm-remove-github-workflows"],
+    followNestedRepos,
   });
   if (result.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
     const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -3340,7 +3467,9 @@ if (isAudit) {
   const checks = auditWorkspace(workspaceDir);
   const score = checks.filter((c) => c.passed).length;
   const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
-  const TOTAL_ASSETS = 13;
+  // Derive the denominator from the actual checks so adding an asset can never
+  // silently produce a false "13/13 AI-Ready" pass again.
+  const TOTAL_ASSETS = checks.length;
 
   // Stage-0 Fast-Skip Gate
   if (score === TOTAL_ASSETS && !values.force) {
@@ -3370,7 +3499,7 @@ if (isAudit) {
 
   // Modern Tooling & Synthetic Artifact Health
   const toolHealth = checkModernToolsAvailability();
-  const contaminated = scanForSyntheticArtifacts(workspaceDir);
+  const contaminated = scanForSyntheticArtifacts(workspaceDir, { followNestedRepos });
 
   console.log("\n⚡ Modern CLI Tooling Health (Host System):");
   console.log(`  • Installed: ${toolHealth.installed.join(", ") || "None"}`);
@@ -3393,6 +3522,8 @@ if (isAudit) {
     for (const src of sources) {
       if (src.relativePath === "AGENTS.md") continue;
       if (isAllowedUntouchedTarget(src.relativePath)) continue;
+      // Compiled IDE artifacts are generated destinations, not legacy sources.
+      if (isCompiledIdeArtifact(src.relativePath)) continue;
       if (isInvalidLegacyWriteTarget(src.relativePath)) {
         unpromotedLegacyList.push(src.relativePath);
       }
@@ -3462,6 +3593,8 @@ const report: ChangeReport = {
   preserved: [],
 };
 
+assertWorkspaceBoundary(workspaceDir);
+
 console.log("\n=======================================================");
 console.log(" 🧠 updateagents — Project Agent Context Synchronization");
 console.log("=======================================================");
@@ -3471,7 +3604,8 @@ console.log("-------------------------------------------------------\n");
 
 // Step 2: Discover Existing Agent Files
 console.log("🔍 Step 2: Scanning for existing agent files...");
-const discoveredFiles = discoverAgentInstructionSources(workspaceDir).map((source) => ({
+const discoveredSources = discoverAgentInstructionSources(workspaceDir, { followNestedRepos });
+const discoveredFiles = discoveredSources.map((source) => ({
   relPath: source.relativePath,
   fullPath: source.absolutePath,
   content: source.content,
@@ -3479,6 +3613,10 @@ const discoveredFiles = discoverAgentInstructionSources(workspaceDir).map((sourc
 for (const file of discoveredFiles) {
   console.log(`  📄 Found agent instructions: ./${file.relPath} (${(file.content.length / 1024).toFixed(1)} KB)`);
 }
+await guardInstructionAdaptation(planInstructionAdaptations(discoveredSources), {
+  dryRun: isDryRun,
+  yes: values.yes,
+});
 
 const agentsDir = join(workspaceDir, ".agents");
 const standardsDir = join(agentsDir, "standards");
@@ -3696,7 +3834,10 @@ for (const sub of subdirs) {
   }
 }
 
-const instructionMigration = migrateAgentInstructions(workspaceDir, { dryRun: isDryRun });
+const instructionMigration = migrateAgentInstructions(workspaceDir, {
+  dryRun: isDryRun,
+  followNestedRepos,
+});
 for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
   report.archived.push(
     `${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (exact snapshot)`,
@@ -3824,7 +3965,10 @@ if (hasAnyAgentFiles) {
 }
 
 // Rewrite supported runtime files as small adapters only after their exact contents are imported.
-const adaptedSources = adaptAgentInstructionSources(instructionMigration.sources, { dryRun: isDryRun });
+const adaptedSources = adaptAgentInstructionSources(instructionMigration.sources, {
+  dryRun: isDryRun,
+  workspaceRoot: workspaceDir,
+});
 for (const sourcePath of adaptedSources) report.scaffolded.push(`${sourcePath} (forwards to AGENTS.md)`);
 for (const sourcePath of adaptedSources)
   console.log(`  🔗 Updated ./${sourcePath} to use the canonical instruction engine`);
