@@ -97,7 +97,7 @@ describe("updateagents instruction migration", () => {
     writeFileSync(join(ROOT, "GEMINI.md"), "# Gemini\nDo not change public APIs without approval.\n");
     writeFileSync(join(ROOT, ".windsurf/rules/security.md"), "# Security\nNever log credentials.\n");
 
-    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT], { encoding: "utf8" });
+    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--yes"], { encoding: "utf8" });
     if (run.status !== 0) throw new Error(`${run.stdout}\n${run.stderr}`);
     expect(existsSync(join(ROOT, "AGENTS.md"))).toBe(true);
     expect(existsSync(join(ROOT, ".agents/context/index.md"))).toBe(true);
@@ -121,7 +121,7 @@ describe("updateagents instruction migration", () => {
     writeFileSync(join(ROOT, ".roo/rules-code/review.md"), "Review all changed files before approval.\n");
     writeFileSync(join(ROOT, ".windsurfrules"), "Keep layouts mobile-first.\n");
 
-    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--scaffold"], { encoding: "utf8" });
+    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ROOT, "--scaffold", "--yes"], { encoding: "utf8" });
     if (run.status !== 0) throw new Error(`${run.stdout}\n${run.stderr}`);
     expect(readFileSync(join(ROOT, ".windsurfrules"), "utf8")).toContain("updateagents:adapter");
     expect(readFileSync(join(ROOT, ".roo/rules-code/review.md"), "utf8")).toContain("updateagents:adapter");
