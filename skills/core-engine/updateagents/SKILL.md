@@ -121,9 +121,10 @@ The workspace boundary is the **current working directory** (or the explicit pos
 3. Never search parent directories for missing agent files.
 4. Never silently switch to another repository.
 5. Do not assume the Git root is the workspace root unless it is the current working directory.
-6. Nested repositories are separate scopes. Discovery stops at every nested VCS root (`.git` directory or file, `.hg`, `.svn`); nothing inside it is read, imported, archived, or rewritten. Pass `--follow-nested-repos` to opt into crossing those boundaries explicitly.
-7. If the workspace root is **not** a repository but contains nested repositories, refuse to adapt anything and exit non-zero with the discovered repository paths. Run the engine per repository, or pass the repository path as the positional target.
-8. `.memory/**` remains excluded even though it may physically exist inside the workspace.
+6. Nested repositories are separate scopes. Every mode stops at nested VCS roots (`.git` directory or file, `.hg`, `.svn`); nothing inside is read, imported, archived, sanitized, promoted, or rewritten. `--sanitize` and `--audit` also skip `.stversions/` backups. Pass `--follow-nested-repos` to opt into crossing those boundaries explicitly.
+7. If the workspace root is **not** a repository but contains nested repositories, refuse every write mode (`--sanitize`, `--promote`, `--hygiene --consolidate/--purge`, and instruction adaptation) and exit non-zero with the discovered repository paths. Run the engine per repository, or pass the repository path as the positional target.
+8. An explicit `--promote` target inside a nested repository is refused unless `--follow-nested-repos` is set.
+9. `.memory/**` remains excluded even though it may physically exist inside the workspace.
 
 ### Authority & Priority Heuristic
 ```text
@@ -297,7 +298,7 @@ When an agent or harness attempts to write or update a prohibited legacy instruc
 
 ### Mandatory Safety Rules
 * **Never modify outside the workspace** or traverse above root.
-* **Never cross a nested repository boundary.** A parent directory holding separate clones is an umbrella scope, not a workspace: refuse and exit non-zero instead of adapting children. `--follow-nested-repos` is the only opt-in.
+* **Never cross a nested repository boundary in any write mode.** A parent directory holding separate clones is an umbrella scope, not a workspace: refuse and exit non-zero instead of adapting, sanitizing, promoting, or consolidating children. `--follow-nested-repos` is the only opt-in, and an explicit `--promote` target inside a nested repo is refused without it.
 * **Never rewrite an instruction file without an archive snapshot of its exact original bytes.**
 * **Never auto-adapt multiple sources or a non-root source** without confirmation (`--yes` or an interactive prompt). Refuse in non-interactive runs.
 * **Never read, write, create, delete, move, rename, summarize, reorganize, synchronize, or validate `.memory/**`**.
