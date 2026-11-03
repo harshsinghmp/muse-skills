@@ -59,19 +59,22 @@ describe("🛡️ updateagents workspace boundary: nested repositories are separ
       persona: readFileSync(join(repo, "agents/persona.md"), "utf8"),
     }));
 
-    const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT], { cwd: parent, encoding: "utf8" });
-    const output = `${run.stdout}\n${run.stderr}`;
+    // Both the normal run and the dry-run preview must refuse before writing.
+    for (const extraArgs of [[], ["--dry-run"]] as string[][]) {
+      const run = spawnSync("bun", [UPDATEAGENTS_SCRIPT, ...extraArgs], { cwd: parent, encoding: "utf8" });
+      const output = `${run.stdout}\n${run.stderr}`;
 
-    expect(run.status).not.toBe(0);
-    expect(output).toContain("nested repositories");
-    expect(output).toContain("is not a repository");
+      expect(run.status).not.toBe(0);
+      expect(output).toContain("nested repositories");
+      expect(output).toContain("is not a repository");
 
-    repos.forEach((repo, index) => {
-      expect(readFileSync(join(repo, "AGENTS.md"), "utf8")).toBe(before[index].agents);
-      expect(readFileSync(join(repo, "agents/persona.md"), "utf8")).toBe(before[index].persona);
-      expect(existsSync(join(repo, ".agents"))).toBe(false);
-    });
-    expect(existsSync(join(parent, ".agents"))).toBe(false);
+      repos.forEach((repo, index) => {
+        expect(readFileSync(join(repo, "AGENTS.md"), "utf8")).toBe(before[index].agents);
+        expect(readFileSync(join(repo, "agents/persona.md"), "utf8")).toBe(before[index].persona);
+        expect(existsSync(join(repo, ".agents"))).toBe(false);
+      });
+      expect(existsSync(join(parent, ".agents"))).toBe(false);
+    }
   });
 
   it("treats agents/<persona>.md as content, not as a runtime instruction", () => {
