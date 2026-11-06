@@ -8,7 +8,11 @@ list) exists and the findings need to become fixes.
 1. **Parse the report into the findings ledger.** One row per finding: ID, severity,
    location, status (`open` / `fixing` / `fixed` / `skipped` / `skipped-risky`), and
    confidence. The ledger persists across fix rounds so repeat reviews deduplicate
-   instead of re-fixing.
+   instead of re-fixing. **Cluster before you fix**: when several findings share one
+   root cause, group them into a cluster row (`CL-nn`) listing its member IDs, and
+   write the fix above the problems it solves. The cluster — not the individual
+   finding — becomes the commit unit in Step 3. A cluster that resolves one finding is
+   fine; a cluster invented to bundle unrelated fixes is not.
 2. **Test-first where a regression test is possible.** For a bug finding, the failing
    test IS the finding made executable — write it, watch it fail, then fix. If the
    project has no test runner or the failure needs external systems, record the
@@ -19,8 +23,11 @@ list) exists and the findings need to become fixes.
    "a reproducing test passes"; "refactor X" → "tests green before and
    after") and loop per finding until its goal verifies — weak goals
    ("make it work") need clarification before fixing starts.
-3. **One commit per finding.** Atomic, revertable, individually verifiable. No
-   bundled fix commits — they defeat the per-finding verification the ledger tracks.
+3. **One commit per finding or per root-cause cluster.** Atomic, revertable,
+   individually verifiable. No bundled fix commits — they defeat the per-finding
+   verification the ledger tracks. A multi-finding cluster commits as one unit only
+   when every member traces to the same root cause and the commit message names each
+   member; unrelated fixes never share a commit.
    **Surgical changes** (source: `tech-leads-club-coding-guidelines`): touch
    only what the finding requires — no adjacent "improvements", no unrelated
    refactors; match existing style even when you'd write it differently.
@@ -46,6 +53,11 @@ list) exists and the findings need to become fixes.
    review that raised them; the loop converges when the re-review reports no open
    findings from the ledger. If fixes stop converging (new findings outnumber fixed
    two rounds running), stop and escalate rather than polish forever.
+   **Structural clusters have a second stop condition**: a cluster that keeps
+   producing new instances of the same class is wrong at the layer it was fixed, so
+   escalate to a redesign decision instead of fixing instances one by one. The
+   cluster loop is done when as few special cases remain as the system actually
+   needs, and a typical change lands in one place.
    **3-failed-fixes rule** (source: `obra/superpowers` systematic-debugging): three
    failed fix attempts on the same finding → stop fixing, question the architecture
    (wrong layer, wrong representation, wrong assumption). No further same-level

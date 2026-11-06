@@ -68,3 +68,35 @@ authoritative (this baseline feeds Axis A only, never Axis B).
 Binding is judgement-call-only: baseline smells default to Discussion/Nitpick
 and escalate only with a forcing-violation proof (SKILL.md Step 4) — a smell you
 cannot demonstrate is never a Reject.
+
+---
+
+# Change-coupling axis (audit lens; `couple` loads the full protocol)
+
+The call-graph checks above answer "does this change break a caller?". This axis
+answers a different question — **will these two pieces have to change together?** —
+and it is the one that predicts maintenance cost. Evaluate it over directories and
+features, not file-by-file.
+
+| Class | Sub-patterns | Fix direction |
+| :--- | :--- | :--- |
+| **Hidden link** (must change together, not visible) | copied logic/values, cross-module global reads, layer-split feature, implicit call order | colocate, or make the dependency explicit in a type/parameter/entry point |
+| **Needless link** (tied for different reasons to change) | callers on internals, volatile→stable import, caller-vocabulary parameter, shallow module | encapsulate; depend on the side that changes less |
+| **Surplus** (no reason of its own to change) | pass-through wrappers, speculative generality, dead code | delete |
+| **Special case** (one situation, not a rule) | one-value `if`, caller-specific param, swallowed exception, retry/sleep, disabled test | treat as evidence of a missing requirement, not a fix target |
+
+Evidence sources, in order of strength:
+
+1. **Import graph** (scripted) — shows the static edges. The edges that *aren't* there
+   are the hidden links.
+2. **Duplicate-content scan** — copied rules and constants no import connects.
+3. **Co-change history** — `git log --name-only --pretty=format: -n 500`, then
+   pair-frequency per file. Files that co-change above the noise floor with no import
+   edge are hidden links; files that always co-change but belong to unrelated domains
+   are needless links. Use history as evidence, never as a verdict.
+4. **Convention grep** — "call `init` first" docs, retries, and sleeps compensating for
+   ordering.
+
+`audit` mode uses this as an additional lens. The full protocol — inventory tables,
+decision log, severity calibration, execution boundary, termination — is
+[coupling-audit.md](coupling-audit.md), loaded by `couple` mode only.

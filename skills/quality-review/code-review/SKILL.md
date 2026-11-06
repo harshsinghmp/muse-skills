@@ -1,10 +1,10 @@
 ---
 name: code-review
 aliases: ["code-review-linus-torvalds-style","linus-review","rigorous-review"]
-description: "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review; (6) reviewing diffs that touch tests, specs, or snapshots to confirm the spec stayed authoritative and tests were never weakened to match broken behavior; (7) security review of a diff or module (OWASP-style control pass); (8) receiving or acting on code review feedback; (9) turning review findings into verified fixes."
-argument-hint: "[diff|hotfix|audit|contract|security|receive|fix]"
+description: "A language-agnostic code review method derived from Linus Torvalds' review corpus. Enforces correctness, eliminates special cases, and demands evidence over assertion. Trigger when: (1) reviewing PRs, diffs, patches, or commits; (2) auditing data structures, memory safety, concurrency, or API stability; (3) refactoring edge cases and special cases into clean representations; (4) demanding proof, benchmarks, or reproducer evidence for code changes; (5) user requests a Linus Torvalds style, no-nonsense, or rigorous code review; (6) reviewing diffs that touch tests, specs, or snapshots to confirm the spec stayed authoritative and tests were never weakened to match broken behavior; (7) security review of a diff or module (OWASP-style control pass); (8) receiving or acting on code review feedback; (9) turning review findings into verified fixes; (10) auditing how a whole codebase's pieces are coupled — hidden links, needless links, surplus, and special cases — before a structural refactor."
+argument-hint: "[diff|hotfix|audit|contract|security|receive|fix|couple]"
 user-invocable: true
-version: 1.6.0
+version: 1.8.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -18,7 +18,7 @@ metadata:
   aliases: ["code-review-linus-torvalds-style","linus-review","rigorous-review"]
   suggested_skills: ["git","gauntlet-loop","refactor-ui","pua"]
   hermes:
-    tags: [code-review, reviewer-method, torvalds, correctness, data-structures, concurrency, api-stability, karpathy-doctrine, minimal-diff, test-spec-immutability, security-review, feedback-receiving, findings-to-fixes]
+    tags: [code-review, reviewer-method, torvalds, correctness, data-structures, concurrency, api-stability, karpathy-doctrine, minimal-diff, test-spec-immutability, security-review, feedback-receiving, findings-to-fixes, coupling-audit, hidden-coupling, dependency-direction, untangle]
     related_skills: [git, gauntlet-loop, refactor-ui, pua, dead-letter]
     suggested_skills: [git, gauntlet-loop, refactor-ui, pua]
     requires_tools: [bash, view_file, grep, edit_file]
@@ -44,16 +44,21 @@ see the load-map column below; loading nothing extra is the default.
 
 Every invocation resolves to exactly one mode, routed on the *verb* and *scope of
 change* — review depth scales with blast radius. Load only the listed references.
+**When no narrower trigger is named, `audit` is the default**: it discovers the repo's
+own conventions first and widens the boundary to the relevant module, so the default
+review is grounded in the project rather than in generic taste. `diff` is the explicit
+narrow mode for a literal patch, commit, or PR diff.
 
 | Mode | Trigger phrases | Scope | Loads |
 |:---|:---|:---|:---|
-| **diff** (default) | "review this PR", "review this diff", `/torvalds` | Full theme-catalog adversarial review with severity calibration | [references/themes.md](references/themes.md) + [references/pr-context.md](references/pr-context.md) |
+| **audit** (default) | "review this", "review this PR", "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over the relevant module; discovers the project's own conventions (test runner, standards docs, error conventions) before judging | [references/themes.md](references/themes.md) + [references/cross-file-invariants.md](references/cross-file-invariants.md) + [references/agreement-review.md](references/agreement-review.md), plus [references/pr-context.md](references/pr-context.md) when the subject is a PR |
+| **diff** | "review exactly this diff", "just the changeset", "don't widen scope", `/torvalds` | Full theme-catalog adversarial review of the literal patch/commit/PR, without widening to the module | [references/themes.md](references/themes.md) + [references/pr-context.md](references/pr-context.md) |
 | **hotfix** | "quick review", "one-liner review", "is this safe to merge" | Single-hunk changes: correctness + surgical-diff + tests-only; skips architectural themes | nothing extra |
-| **audit** | "audit this module", "deep review this subsystem" | Cross-file invariants + data-structure focus over a whole module, not one diff; discovers the project's own conventions (test runner, standards docs, error conventions) before judging | [references/themes.md](references/themes.md) + [references/cross-file-invariants.md](references/cross-file-invariants.md) + [references/agreement-review.md](references/agreement-review.md) |
+| **couple** | "untangle the codebase", "audit coupling", "hidden dependencies", "why does one change touch five files" | Whole-codebase change-coupling audit, read-only: hidden links, needless links, surplus, and a special-case census; emits a fix-cluster decision log and routes execution to `refactor` architecture | [references/coupling-audit.md](references/coupling-audit.md) |
 | **contract** | "review the API change", "is this breaking" | API/ABI stability only: signatures, return semantics, error conventions | Quick Reference table below |
 | **security** | "security review", "check this for vulnerabilities", "OWASP pass" | Numbered control pass (SEC-01..13) over a diff or module; evidence-first findings, threat-model/differential/fix-verification discipline, and EDR/runtime safety | [references/security-controls.md](references/security-controls.md) + [references/security-process.md](references/security-process.md) + [references/edr-and-execution-safety.md](references/edr-and-execution-safety.md) |
 | **receive** | "review feedback arrived", "act on review comments" | Incoming feedback: verify → implement/rebut/ask per item; anti-sycophancy; risk-gating | [references/receiving-feedback.md](references/receiving-feedback.md) |
-| **fix** | "fix the review findings", "apply REVIEW.md", "fix and re-review" | Findings ledger → test-first fixes, one commit per finding, skip ledger for blind-risk items, re-review until convergence | [references/fixing-findings.md](references/fixing-findings.md) |
+| **fix** | "fix the review findings", "apply REVIEW.md", "fix and re-review" | Findings ledger → test-first fixes, one commit per finding or root-cause cluster, skip ledger for blind-risk items, re-review until convergence | [references/fixing-findings.md](references/fixing-findings.md) |
 | **multi** | "multi-reviewer review", "parallel review", "independent passes", "dedup findings" | Run N independent dimension-scoped passes, dedup by root cause, calibrate severity onto one scale, emit ONE consolidated report | [references/multi-reviewer.md](references/multi-reviewer.md) |
 | **intended** | "does the code match the docs", "intended vs implemented", "access control vs permissions", "audit AI-built code against its spec" | Bind each documented-intent claim to implementation evidence or an explicit mismatch; no hand-wavy findings | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
 | **design** | "is this the right design", "review this design", "soundness check" | Right-problem check from goals/constraints; findings-not-edits; author-vs-critic routing | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
@@ -65,6 +70,8 @@ change* — review depth scales with blast radius. Load only the listed referenc
 `hotfix` and `contract` never load the theme catalog; `receive` and `fix` never load
 it either — they operate on existing findings, they do not produce new ones. `simplify`
 is strictly on-demand and is NEVER executed automatically during standard reviews.
+`couple` is likewise strictly on-demand (whole-codebase blast radius) and is
+diagnosis-only — it does not edit code without explicit authorization.
 
 **Rigor ladder** (source: `bjgreenberg/senior-engineering-partner` `references/engineering-workflow.md`, Apache-2.0): match review depth to tier — T0 spike (one-line spec, test-after acceptable, security floor still holds) · T1 MVP (short written spec, test-first on the critical path) · T2 production (written mini-spec + threat-model lines for auth/tenancy/ingestion/billing/secrets surfaces, iron-law TDD, regression test seen red before every fix). Spec-first gate: restate the understanding and get agreement before judging; the spec is the rubric the review checks against.
 
@@ -94,6 +101,7 @@ Execute this skill when any of the following occur:
 7. **Findings Remediation**: A review report exists and its findings must become verified, individually-committed fixes.
 8. **Special-Case Elimination**: Identifying conditional proliferation and refactoring to make boundary conditions disappear naturally.
 9. **Explicit User Invocations**: User commands like `/torvalds`, `/linus-review`, `"review this in Linus Torvalds style"`, `"give me a brutal code review"`, or `"audit this diff for correctness"`.
+10. **Whole-Codebase Coupling Audit**: The user asks why one change touches many files, wants hidden dependencies mapped, or wants the codebase untangled before a structural refactor (`couple` mode — on-demand, diagnosis-only).
 
 ### When NOT to Use
 - Do NOT trigger on exploratory early-stage brainstorming where interface contracts have not yet stabilized.
@@ -143,14 +151,17 @@ Execute this skill when any of the following occur:
 
 ---
 
-## Procedure (diff mode — the full review)
+## Procedure (the review pass — `audit` by default)
 
 **Mode gate first**: resolve the mode from the trigger *before* Step 1 and load only
-that mode's references. The steps below are the default `diff` path; `hotfix` runs
-Steps 1 → 4 → 5 → 6 → 7 only; `contract` runs the Quick Reference API row + Step 6
-and stops; `audit` runs everything with the diff boundary widened to the module and
-conventions discovered first; `security`, `receive`, `fix`, `multi`, `intended`, `design`,
-`simplify`, and `delegate` follow their own reference protocols instead of these steps.
+that mode's references. When no narrower trigger is named, resolve to `audit`. The
+steps below are the shared review path: `audit` (default) runs all of them with the
+boundary widened to the relevant module and the project's conventions discovered
+first; `diff` runs the same steps over the literal changeset without widening;
+`hotfix` runs Steps 1 → 4 → 5 → 6 → 7 → 8 only; `contract` runs the Quick Reference
+API row + Step 6 and stops; `security`, `receive`, `fix`, `multi`, `intended`, `design`,
+`couple`, `simplify`, and `delegate` follow their own reference protocols instead of these
+steps.
 
 **Preflight (Step 0)**: before any analysis, enumerate the exact files/commits in
 scope and confirm each is present on disk (or in the diff). A review that cannot
@@ -334,6 +345,9 @@ violation, per the forcing-violation proof above.
 ### ❓ Open Questions
 [Uncertainty made explicit instead of hidden as false certainty — items the reviewer could not verify and why.]
 
+### 🔁 Next Mode
+[Exactly one: `/code-review-<mode>` — the signal that justifies it. Or: **None — no follow-up justified.** See Step 8; never a playlist, never auto-executed.]
+
 ### Compact / Terse Output (on request: one line per finding)
 Each finding as a single line — *location / problem / fix* — no prose. Use when the
 reviewer or author asks for the bullet version. Confidence and trigger ID survive:
@@ -366,6 +380,41 @@ src/db.ts:9 / NI — `tmp` shadows outer loop var / rename to `cursor`
 
 ---
 
+### Step 8: Recommend the Next Mode
+
+A review that ends without a next step wastes the reader's next command. Close every
+review with **at most one** mode from this skill's own menu — the one that best
+matches the highest-leverage gap the review found. Suggest nothing merely to keep the
+session going: **"None — no follow-up justified" is the correct answer when the change
+is adequate**, and it is the answer whenever the verdict is APPROVE with no open
+findings.
+
+| Signal from the review | Recommend |
+| :--- | :--- |
+| Blocking or required findings are actionable now | `fix` |
+| Findings came from another reviewer/author and need adjudication | `receive` |
+| A numbered security control (SEC-01..13) failed or is untested | `security` |
+| Code disagrees with its spec, docs, or permission model | `intended` |
+| The design is unsound, not merely the implementation | `design` |
+| Special cases and duplicated/cross-file logic dominate the findings | `couple` |
+| Scope is too large for one pass, or independent dimensions need separating | `multi` or `delegate` |
+| Recently-changed code is correct but over-complex | `simplify` |
+| The change touches a public API/ABI surface | `contract` |
+| The change is one hunk and already safe | `hotfix` (no further pass needed) |
+| No actionable gap remains | **None** |
+
+Rules for the recommendation:
+
+- **Name the exact command** (`/code-review-<mode>`) plus one sentence of why.
+- **Advisory only** — it never auto-executes, never chains two modes silently, and
+  never overrides a mode the user already named.
+- **On-demand modes stay on-demand**: recommending `simplify` or `couple` is a
+  suggestion, not an invocation.
+- **One mode, not a playlist.** If two compete, pick the one that clears the most
+  blocking findings; list the other in Open Questions.
+
+---
+
 ## Pitfalls
 
 - **Surface-Level Pattern Matching**: Do NOT flag every `if` statement as a special-case bug. If the branch encodes a legitimate business rule, it is valid. Always verify context first.
@@ -377,6 +426,7 @@ src/db.ts:9 / NI — `tmp` shadows outer loop var / rename to `cursor`
 - **Spec-Weakening Tolerance**: Approving a diff that edits tests or specs to make broken behavior pass — the spec is the source of truth; if the spec is wrong, that is a deliberate, separately reviewed spec change, never a hunk inside a bug fix.
 - **Generic-Convention Preaching**: Reviewing against generic ideals without discovering the project's own documented standards, test runner, and error conventions first (audit mode) — the repo as it is defines Axis A.
 - **Over-Loading**: Loading the full theme catalog for a one-liner hotfix or an API-contract check — the mode gate exists to prevent exactly this token waste.
+- **Coupling Audit as Auto-Refactor**: running `couple` on every review, or letting it edit code unprompted — its blast radius is the whole repository, so it stays on-demand and diagnosis-only; execution goes to `refactor` architecture with a characterization test first.
 
 ---
 
@@ -397,6 +447,8 @@ Before finalizing a code review, verify that:
 12. **LLM-Failure-Mode Self-Check**: Before presenting any finding, re-read the cited lines. Machine-authored code fails exactly where it reads most fluently — confirm identifiers exist, APIs are real, and logic is not plausible-but-wrong.
 13. **Every Blocking Finding Names an Unblock Condition**: Each Reject / Request-Changes states the concrete condition (fix, test, evidence) that would clear it — no finding without an exit path.
 14. **External-API Claims Grounded in Current Docs** (source: `tech-leads-club-the-judge`): every claim about an external library or API was checked against its current official docs before filing — no stale-API findings from memory.
+15. **Coupling Findings Demonstrated** (`couple`): every hidden/needless link names a concrete change scenario or an already-diverged duplicate, every fix has a caller-facing effect, and the special-case census is stated.
+16. **Next Mode Named**: exactly one `/code-review-<mode>` (with its justifying signal) or an explicit "None — no follow-up justified" — advisory, never auto-executed.
 
 ### Pre-Finalize Checklist
 
@@ -408,6 +460,7 @@ Run this before handing the review over:
 - [ ] No finding without a demonstrating execution (forcing-violation proof); no `low`-confident Reject
 - [ ] Anti-patterns checked as debugging leads: when a known anti-pattern (e.g. silent error swallow, spec-weakening) appears, use it as a *lead* to find the underlying defect, not as the finding itself
 - [ ] CONSTRAINTS floor held: no lowered-bar green (suppressions, weakened asserts, edited thresholds flagged as regression)
+- [ ] Next mode named (or explicitly "None"), with the signal that justifies it, and only one
 - [ ] Code passes EDR and runtime safety audit (`code-review.ts --audit-edr-safety && --audit-runtime-pitfalls`)
 - [ ] Review findings follow Conventional Comments standard (`code-review.ts --audit-conventional-comments`)
 
@@ -415,6 +468,7 @@ Run this before handing the review over:
 
 code-review has a built-in `audit` mode (cross-file invariants + data-structure focus). Route deeper audits to:
 - **UI/component audit** → `refactor-ui` audit mode (scored UI report, WCAG 2.2)
+- **Whole-codebase coupling audit** → `code-review` `couple` mode (hidden/needless links + surplus decision log; execution via `refactor` architecture)
 - **Security control pass** → `code-review` `security` mode (SEC-01..13 numbered controls)
 - **Analytics audit** → `analytics` audit mode (events firing, definitions match)
 - **Content-quality audit** → `content` audit mode (anti-slop scan, fact verification)
