@@ -45,6 +45,7 @@ Trigger this skill using slash commands or natural language:
 "audit this diff for correctness and data structure hygiene"
 "give me a brutal, no-nonsense code review on this patch"
 "check this refactor for edge case proliferation"
+"untangle the codebase — map the hidden dependencies before we refactor"
 ```
 
 ---
@@ -68,13 +69,23 @@ The SKILL.md is a router that loads only what the mode needs — token-minimal b
 
 | Mode | Use when | Loads |
 | :--- | :--- | :--- |
-| **diff** (default) | "review this PR" — full 17-theme adversarial review | `references/themes.md` |
+| **audit** (default) | "review this" / unqualified request — whole module, discovers the project's own conventions first, two-axis (standards + spec) report | `references/themes.md`, `references/cross-file-invariants.md` |
+| **diff** | "review exactly this diff" — full 17-theme adversarial review of the literal changeset, no widening | `references/themes.md` |
 | **hotfix** | one-liner / single-hunk — correctness + surgical + tests only | nothing extra |
-| **audit** | whole module — discovers the project's own conventions first, two-axis (standards + spec) report | `references/themes.md`, `references/cross-file-invariants.md` |
+| **couple** | whole codebase coupling audit — hidden links, needless links, surplus, special-case census; read-only decision log, execution deferred to `refactor` architecture | `references/coupling-audit.md` |
 | **contract** | API/ABI stability only | nothing extra |
 | **security** | numbered control pass (SEC-01..13), evidence-first findings, EDR & runtime safety | `references/security-controls.md`, `references/edr-and-execution-safety.md` |
 | **receive** | feedback arrived on your work — verify → implement / rebut / ask | `references/receiving-feedback.md` |
-| **fix** | findings → test-first fixes, one commit each, skip ledger, re-review to convergence | `references/fixing-findings.md` |
+| **fix** | findings → test-first fixes, one commit per finding or root-cause cluster, skip ledger, re-review to convergence | `references/fixing-findings.md` |
+
+`audit` is the default: an unqualified review request widens to the relevant module and
+grounds itself in the project's own conventions before judging. `diff` is the explicit
+narrow mode for a literal patch, commit, or PR diff.
+
+Every review closes with **one** recommended next mode (`/code-review-<mode>`, or an
+explicit "None") chosen from the signal table in Step 8 of `SKILL.md`. The
+recommendation is advisory: it never auto-executes, and on-demand modes (`simplify`,
+`couple`) are recommended, never invoked.
 
 ### Specialized References & Boundary Governance
 
@@ -192,7 +203,8 @@ code-review/
 │   ├── security-controls.md            # SEC-01..10 control pass (security)
 │   ├── receiving-feedback.md           # verify → implement/rebut/ask protocol (receive)
 │   ├── fixing-findings.md              # findings ledger → verified fixes (fix)
-│   └── cross-file-invariants.md        # cross-file checks + two-axis output + consolidation
+│   ├── cross-file-invariants.md        # cross-file checks + change-coupling axis + two-axis output
+│   └── coupling-audit.md               # whole-codebase coupling audit (couple mode)
 └── examples/
     └── sample-review.md                # worked review report
 ```

@@ -132,6 +132,15 @@ comparable across reviews and rounds.
 - **Trigger 17.2 (Spec Edit Hidden in a Fix)**: A bug-fix commit modifies spec files (test specs, E2E specs, golden files) alongside implementation changes without an explicit, separately-reviewable spec-change rationale. (*Severity: Reject*)
 - **Trigger 17.3 (Unexplained Test Modification)**: Test files change in the diff without the author stating whether behavior legitimately changed; if the test itself is wrong, that claim requires evidence and is reviewed as its own change — never silently. (*Severity: Request Changes*)
 - **Trigger 17.4 (Snapshot Regenerated Blind)**: Snapshots or golden outputs regenerated without a line-by-line diff review of what changed. (*Severity: Request Changes*)
+- **Trigger 17.5 (Test Cannot Fail)**: A test passes whatever the implementation does — no assertion, a tautological assertion, a mocked subject, or a catch-all that swallows the failure. It has no reason of its own to change. (*Severity: Request Changes — remove*)
+- **Trigger 17.6 (Test Restates Implementation)**: A test re-implements the same branch or copies the same constant it is checking, so it agrees with the code by construction and cannot catch a regression. (*Severity: Discussion — rewrite against behavior first*)
+- **Trigger 17.7 (Test Bound to Internals)**: A test asserts private structure, call order, or an internal helper rather than observable behavior, so it breaks when behavior is unchanged. (*Severity: Nitpick / Discussion — rewrite to a behavioral assertion*)
+
+**Test-removal guard**: 17.5–17.7 authorize deletion only as a deliberate spec
+change — never as a convenience inside a fix. A removal states why the behavior is
+covered elsewhere or no longer required, and lands as its own reviewed change. They
+never weaken 17.1 or 17.2: removing a test that *would* catch a real regression is
+Trigger 17.1, not 17.5.
 
 **The principle**: The test defines correct behavior. Fix the implementation to match the spec — never the spec to match the implementation. If the spec is genuinely wrong, changing it is a deliberate spec decision reviewed as its own change, not a convenience smuggled into a bug fix.
 

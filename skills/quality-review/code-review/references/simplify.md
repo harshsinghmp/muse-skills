@@ -42,6 +42,25 @@ already-installed dependency → one line → minimum code that works.
 boundaries, error handling that prevents data loss, security measures,
 accessibility basics, anything explicitly requested.
 
+## Comment triage (opt-in only)
+
+Run only when the user asks for comment cleanup; it is never implicit in "simplify".
+Classify every comment by **what makes it change**:
+
+- **Restates the implementation** (`// sort first so the binary search works`) — changes
+  only when the code does, so it has no reason of its own to exist. Delete it, even
+  when it is phrased as a "why".
+- **States a fact about the world outside the code** (`// the proxy drops websockets,
+  so we poll`) — changes when that outside fact does, which the code cannot show.
+  Keep it.
+- **Documents a workaround** (`// wait 100ms because the cache isn't ready yet`) —
+  changes when the problem behind the workaround does. It goes only when the redesign
+  removes that problem; deleting it while the wait remains removes the only warning.
+
+A comment that survives must answer "what would a reader get wrong without this?".
+Uncommented intent is not a finding; this pass only removes, it never demands new
+prose.
+
 ## Output
 
 ```
