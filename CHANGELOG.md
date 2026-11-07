@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.1.4] - 2026-11-07
+
+### Changed
+
+- **clean-system-cache: 16-point cache architecture matrix with candidate catalog**: expanded from 12 to 16 suites (AUR helpers, desktop/runtimes, confirmation-gated, discovery/learning) with `references/candidate-catalog.md` menu catalog; SKILL.md description reworded to self-learning scanner; skills.json/llms.txt/dispatch parity resynced; per-harness command surface 459 -> 460.
+- **Tests hermetized**: `clean-system-cache.test.ts` expects 16-point matrix; `harness-hygiene.test.ts` forces tracked fixtures past global excludes so the public-surface gate is deterministic.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.3...v8.1.4
+
 ## [8.1.3] - 2026-11-03
 
 ### Changed

@@ -100,9 +100,9 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     }
   });
 
-  test("SKILL.md encodes 12-point matrix, three-tier classification, and safety contracts", () => {
+  test("SKILL.md encodes 16-point matrix, three-tier classification, and safety contracts", () => {
     const skillContent = fs.readFileSync(SKILL_MD_PATH, "utf8");
-    expect(skillContent).toContain("12-Point Cache Architecture Matrix");
+    expect(skillContent).toContain("16-Point Cache Architecture Matrix");
     expect(skillContent).toContain("Three-Tier Cache Classification");
     expect(skillContent).toContain("T1");
     expect(skillContent).toContain("T2");
