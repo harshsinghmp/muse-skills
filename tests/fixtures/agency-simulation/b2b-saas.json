@@ -1,0 +1,93 @@
+{
+  "scenarioId": "b2b-saas-rescue",
+  "client": "Helios Analytics",
+  "profile": "B2B SaaS",
+  "billing": { "model": "gpt-4o", "inputTokens": 3200000, "outputTokens": 640000 },
+  "planId": "helios-saas-rescue",
+  "maxTokenCeiling": 180000,
+  "requiredQuorum": 3,
+  "tasks": [
+    {
+      "id": "gtm-research",
+      "name": "ICP and competitor research",
+      "skill": "gtm",
+      "mode": "research",
+      "assignedDivision": "Nexus",
+      "estimatedTokens": 11000
+    },
+    {
+      "id": "brand-brief",
+      "name": "Repositioning brief",
+      "skill": "brand",
+      "mode": "brief",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["gtm-research"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "design-wireframe",
+      "name": "Onboarding flow wireframes",
+      "skill": "design",
+      "mode": "wireframe",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-brief"],
+      "estimatedTokens": 12000
+    },
+    {
+      "id": "webdev-fullstack",
+      "name": "Activation flow rebuild",
+      "skill": "webdev",
+      "mode": "fullstack",
+      "assignedDivision": "Sol",
+      "dependsOn": ["design-wireframe"],
+      "estimatedTokens": 26000,
+      "criticalSeam": true
+    },
+    {
+      "id": "database-migrations",
+      "name": "Tenant schema migration",
+      "skill": "database",
+      "mode": "migrations",
+      "assignedDivision": "Sol",
+      "dependsOn": ["webdev-fullstack"],
+      "estimatedTokens": 14000
+    },
+    {
+      "id": "security-sast",
+      "name": "SAST and tenant-boundary review",
+      "skill": "muse-security",
+      "mode": "sast",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["webdev-fullstack", "database-migrations"],
+      "estimatedTokens": 16000,
+      "criticalSeam": true
+    },
+    {
+      "id": "qa-e2e",
+      "name": "Activation and billing regression",
+      "skill": "qa-launch",
+      "mode": "e2e",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["security-sast"],
+      "estimatedTokens": 13000
+    },
+    {
+      "id": "comms-status",
+      "name": "Executive status report",
+      "skill": "client-comms",
+      "mode": "status",
+      "assignedDivision": "Crew",
+      "dependsOn": ["qa-e2e"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "accounts-pricing",
+      "name": "Usage-tier repricing",
+      "skill": "accounts",
+      "mode": "pricing",
+      "assignedDivision": "Crew",
+      "dependsOn": ["comms-status"],
+      "estimatedTokens": 8000
+    }
+  ]
+}

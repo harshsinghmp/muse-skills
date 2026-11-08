@@ -1,0 +1,83 @@
+{
+  "scenarioId": "productized-agency-growth",
+  "client": "Beacon Studio",
+  "profile": "Turnkey productized agency",
+  "billing": { "model": "claude-3-5-haiku", "inputTokens": 1400000, "outputTokens": 900000 },
+  "planId": "beacon-productized-growth",
+  "maxTokenCeiling": 120000,
+  "requiredQuorum": 3,
+  "tasks": [
+    {
+      "id": "ops-onboarding",
+      "name": "Client onboarding and vault setup",
+      "skill": "ops",
+      "mode": "onboarding",
+      "assignedDivision": "Crew",
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "brand-intake",
+      "name": "Brand and offer intake",
+      "skill": "brand",
+      "mode": "intake",
+      "assignedDivision": "Crew",
+      "dependsOn": ["ops-onboarding"],
+      "estimatedTokens": 8000
+    },
+    {
+      "id": "growth-positioning",
+      "name": "Category positioning and offer ladder",
+      "skill": "growth",
+      "mode": "positioning",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-intake"],
+      "estimatedTokens": 10000,
+      "criticalSeam": true
+    },
+    {
+      "id": "content-blog",
+      "name": "Pillar content batch",
+      "skill": "content",
+      "mode": "blog",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["growth-positioning"],
+      "estimatedTokens": 14000
+    },
+    {
+      "id": "smm-calendar",
+      "name": "Multi-channel editorial calendar",
+      "skill": "smm",
+      "mode": "calendar",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["content-blog"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "analytics-dashboards",
+      "name": "Attribution dashboard",
+      "skill": "analytics",
+      "mode": "dashboards",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["content-blog"],
+      "estimatedTokens": 11000
+    },
+    {
+      "id": "retain-checkin",
+      "name": "Monthly value review",
+      "skill": "retain",
+      "mode": "check-in",
+      "assignedDivision": "Crew",
+      "dependsOn": ["smm-calendar", "analytics-dashboards"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "accounts-pnl",
+      "name": "Client P&L and margin review",
+      "skill": "accounts",
+      "mode": "client-pnl",
+      "assignedDivision": "Crew",
+      "dependsOn": ["retain-checkin"],
+      "estimatedTokens": 8000
+    }
+  ]
+}
