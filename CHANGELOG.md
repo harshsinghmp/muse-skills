@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **`updateagents` universal English language policy**: `templates/.agents/standards/language-policy.md` becomes the 22nd canon standard and is registered in `ALWAYS_STANDARDS` plus the generated `AGENTS.md`, so every scaffolded project states that the working language never switches to match the caller and that site copy is the only translation carve-out.
+
+### Changed
+
+- **Dependencies**: bump `@biomejs/biome` from 2.6.2 to 2.6.5 with a regenerated `bun.lock`; `biome check` passes on the full tree.
+
+### Fixed
+
+- **CI: Bun setup survives the release-asset CDN 504**: every `setup-bun` step in `ci.yml` and `release.yml` now runs with `continue-on-error` and one retry gated on the first attempt's outcome. A genuine setup failure still fails the job; only the transient `Unexpected HTTP response: 504` on the Bun download is absorbed, which had been red-lighting every pull request and the tag-triggered release run.
+
 ## [8.1.4] - 2026-11-07
 
 ### Added
