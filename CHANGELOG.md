@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [8.1.4] - 2026-11-07
 
+### Added
+
+- **code-review 1.8.0 — couple mode, audit default, next-mode handoff**: a read-only whole-codebase coupling audit (`couple` mode, `references/coupling-audit.md`) that answers "should these change together?" for every pair of pieces, emits a fix-cluster decision log, and hands execution to `refactor`. `audit` becomes the default entry for codebase-wide requests, and every mode now names the next mode to run. Trigger (10) of the description reflects the couple mode.
+
 ### Changed
 
 - **clean-system-cache: 16-point cache architecture matrix with candidate catalog**: expanded from 12 to 16 suites (AUR helpers, desktop/runtimes, confirmation-gated, discovery/learning) with `references/candidate-catalog.md` menu catalog; SKILL.md description reworded to self-learning scanner; skills.json/llms.txt/dispatch parity resynced; per-harness command surface 459 -> 460.
