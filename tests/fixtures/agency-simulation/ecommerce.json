@@ -1,0 +1,92 @@
+{
+  "scenarioId": "ecommerce-launch",
+  "client": "Northwind Supply Co.",
+  "profile": "E-commerce",
+  "billing": { "model": "claude-3-7-sonnet", "inputTokens": 1850000, "outputTokens": 420000 },
+  "planId": "northwind-ecommerce-launch",
+  "maxTokenCeiling": 150000,
+  "requiredQuorum": 3,
+  "tasks": [
+    {
+      "id": "brand-intake",
+      "name": "Brand intake and offer extraction",
+      "skill": "brand",
+      "mode": "intake",
+      "assignedDivision": "Crew",
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "design-ui",
+      "name": "Storefront UI direction",
+      "skill": "design",
+      "mode": "ui",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-intake"],
+      "estimatedTokens": 12000
+    },
+    {
+      "id": "content-copy",
+      "name": "Product and landing copy",
+      "skill": "content",
+      "mode": "copy",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-intake"],
+      "estimatedTokens": 10000
+    },
+    {
+      "id": "webdev-funnel",
+      "name": "Checkout funnel implementation",
+      "skill": "webdev",
+      "mode": "funnel",
+      "assignedDivision": "Sol",
+      "dependsOn": ["design-ui", "content-copy"],
+      "estimatedTokens": 22000,
+      "criticalSeam": true
+    },
+    {
+      "id": "paidads-google",
+      "name": "Google Shopping campaign build",
+      "skill": "paidads",
+      "mode": "google",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["content-copy"],
+      "estimatedTokens": 11000
+    },
+    {
+      "id": "analytics-tracking",
+      "name": "Conversion tracking and events",
+      "skill": "analytics",
+      "mode": "tracking",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["webdev-funnel"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "qa-e2e",
+      "name": "End-to-end purchase regression",
+      "skill": "qa-launch",
+      "mode": "e2e",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["webdev-funnel", "analytics-tracking"],
+      "estimatedTokens": 13000
+    },
+    {
+      "id": "client-handover",
+      "name": "Launch handover pack",
+      "skill": "client-comms",
+      "mode": "handover",
+      "assignedDivision": "Crew",
+      "dependsOn": ["qa-e2e"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "accounts-invoicing",
+      "name": "Milestone invoice and dunning setup",
+      "skill": "accounts",
+      "mode": "invoicing",
+      "assignedDivision": "Crew",
+      "dependsOn": ["client-handover"],
+      "estimatedTokens": 6000
+    }
+  ]
+}
