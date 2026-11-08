@@ -120,4 +120,190 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     expect(readmeContent).toContain("/include-coupled");
     expect(readmeContent).toContain("Agent toolchain caches");
   });
+
+  test("clean-cache.sh --help exposes --interactive, risk tiers, and learned.conf", () => {
+    const output = execSync(`bash "${SH_PATH}" --help`, { encoding: "utf8" });
+    expect(output).toContain("--interactive");
+    expect(output).toContain("-i");
+    expect(output).toContain("--scan-builds");
+    expect(output).toContain("--learned-conf");
+    expect(output).toContain("Class A: Regenerable System & Tool Caches");
+    expect(output).toContain("Class B: HIGH-RISK / Non-Regenerative User Data");
+    expect(output).toContain("CRITICAL: IRREVERSIBLE DATA LOSS");
+  });
+
+  test("clean-cache.cmd defines /interactive, risk tiers, and learned.conf", () => {
+    const cmdContent = fs.readFileSync(CMD_PATH, "utf8");
+    expect(cmdContent).toContain("/interactive");
+    expect(cmdContent).toContain("/i");
+    expect(cmdContent).toContain("/scan-builds");
+    expect(cmdContent).toContain("/learned-conf");
+    expect(cmdContent).toContain("Class A: Regenerable System ^& Tool Caches");
+    expect(cmdContent).toContain("Class B: HIGH-RISK / Non-Regenerative User Data");
+    expect(cmdContent).toContain("CRITICAL: IRREVERSIBLE DATA LOSS");
+    expect(cmdContent).toContain("learned.conf");
+  });
+
+  test("clean-cache.sh preserves Class B non-regenerative data by default in execution mode", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-class-b-safe-");
+    const downloadsDir = path.join(tmpDir, "Downloads");
+    const assistantSessionsDir = path.join(tmpDir, ".local/share/token-optimizer/sessions");
+    const trashDir = path.join(tmpDir, ".local/share/Trash");
+    const backupDir = path.join(tmpDir, ".config/profile-backup");
+
+    fs.mkdirSync(downloadsDir, { recursive: true });
+    fs.mkdirSync(assistantSessionsDir, { recursive: true });
+    fs.mkdirSync(trashDir, { recursive: true });
+    fs.mkdirSync(backupDir, { recursive: true });
+
+    fs.writeFileSync(path.join(downloadsDir, "tax-invoice.pdf"), "sensitive-doc");
+    fs.writeFileSync(path.join(assistantSessionsDir, "session-123.json"), "chat-transcript");
+    fs.writeFileSync(path.join(trashDir, "deleted.txt"), "recoverable-file");
+    fs.writeFileSync(path.join(backupDir, "backup-state.json"), "config-snapshot");
+
+    try {
+      const output = execSync(`HOME="${tmpDir}" bash "${SH_PATH}" --tool downloads,sessions,trash,backups`, {
+        encoding: "utf8",
+      });
+      expect(output).toContain("User Downloads [Class B]");
+      expect(output).toContain("preserved");
+
+      // Verify all Class B non-regenerative items are 100% intact
+      expect(fs.existsSync(path.join(downloadsDir, "tax-invoice.pdf"))).toBe(true);
+      expect(fs.existsSync(path.join(assistantSessionsDir, "session-123.json"))).toBe(true);
+      expect(fs.existsSync(path.join(trashDir, "deleted.txt"))).toBe(true);
+      expect(fs.existsSync(path.join(backupDir, "backup-state.json"))).toBe(true);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  test("clean-cache.sh interactive mode presents risk tiers and mandatory hazard alert for Class B", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-interactive-b-");
+    const downloadsDir = path.join(tmpDir, "Downloads");
+    fs.mkdirSync(downloadsDir, { recursive: true });
+    fs.writeFileSync(path.join(downloadsDir, "important.zip"), "user-archive");
+
+    try {
+      // Feed "S\n" (Skip) to interactive mode
+      const output = execSync(`printf "S\\n" | HOME="${tmpDir}" bash "${SH_PATH}" --tool downloads --interactive`, {
+        encoding: "utf8",
+      });
+      expect(output).toContain("[CLASS B: HIGH-RISK / NON-REGENERATIVE USER DATA (CRITICAL DANGER)]");
+      expect(output).toContain("CRITICAL: IRREVERSIBLE DATA LOSS");
+      expect(output).toContain("This path contains non-regenerative user data. Deleting it will");
+      expect(output).toContain("permanently destroy your files/transcripts with no recovery mechanism.");
+      expect(output).toContain("[Y]es / [N]o / [S]kip / [B]rowse");
+      expect(fs.existsSync(path.join(downloadsDir, "important.zip"))).toBe(true);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  test("clean-cache.sh interactive mode confirms Class A, stores in learned.conf, and respects on next run", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-interactive-a-");
+    const projectDir = path.join(tmpDir, "my-project");
+    const nextBuildDir = path.join(projectDir, ".next");
+    const confFile = path.join(tmpDir, "learned.conf");
+
+    fs.mkdirSync(nextBuildDir, { recursive: true });
+    fs.writeFileSync(path.join(nextBuildDir, "build-manifest.json"), "build-cache");
+
+    try {
+      // First run: Pass "Y\n" to allow Class A deletion
+      const output1 = execSync(
+        `printf "Y\\n" | HOME="${tmpDir}" bash "${SH_PATH}" --tool builds --interactive --scan-builds "${projectDir}" --learned-conf "${confFile}"`,
+        { encoding: "utf8" },
+      );
+      expect(output1).toContain("[CLASS A: REGENERABLE SYSTEM & TOOL CACHE (Moderate Risk)]");
+      expect(output1).toContain("Saved preference 'allow'");
+      expect(fs.existsSync(confFile)).toBe(true);
+      const confContent = fs.readFileSync(confFile, "utf8");
+      expect(confContent).toContain(`${nextBuildDir}=allow`);
+
+      // File was cleaned
+      expect(fs.existsSync(path.join(nextBuildDir, "build-manifest.json"))).toBe(false);
+
+      // Re-create build cache
+      fs.writeFileSync(path.join(nextBuildDir, "build-manifest.json"), "re-created-cache");
+
+      // Second run: Without interactive, learned.conf automatically allows Class A
+      const output2 = execSync(
+        `HOME="${tmpDir}" bash "${SH_PATH}" --tool builds --scan-builds "${projectDir}" --learned-conf "${confFile}"`,
+        { encoding: "utf8" },
+      );
+      expect(output2).toContain("Allowed via learned.conf");
+      expect(fs.existsSync(path.join(nextBuildDir, "build-manifest.json"))).toBe(false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  test("clean-cache.sh learned.conf strictly excludes Class B items", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-learned-class-b-");
+    const downloadsDir = path.join(tmpDir, "Downloads");
+    const confFile = path.join(tmpDir, "learned.conf");
+    fs.mkdirSync(downloadsDir, { recursive: true });
+    fs.writeFileSync(path.join(downloadsDir, "item.txt"), "user-file");
+
+    try {
+      // Confirm deletion of Class B item with Y
+      execSync(
+        `printf "Y\\n" | HOME="${tmpDir}" bash "${SH_PATH}" --tool downloads --interactive --learned-conf "${confFile}"`,
+        {
+          encoding: "utf8",
+        },
+      );
+
+      // Verify learned.conf was NOT populated with Class B path
+      if (fs.existsSync(confFile)) {
+        const conf = fs.readFileSync(confFile, "utf8");
+        expect(conf).not.toContain(downloadsDir);
+      }
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  test("clean-cache.sh interactive Browse [B] option displays contents and re-prompts", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-browse-");
+    const downloadsDir = path.join(tmpDir, "Downloads");
+    fs.mkdirSync(downloadsDir, { recursive: true });
+    fs.writeFileSync(path.join(downloadsDir, "secret-report.pdf"), "sensitive-data");
+
+    try {
+      // First send 'B' to browse, then 'S' to skip
+      const output = execSync(`printf "B\\nS\\n" | HOME="${tmpDir}" bash "${SH_PATH}" --tool downloads --interactive`, {
+        encoding: "utf8",
+      });
+      expect(output).toContain("Browsing contents of:");
+      expect(output).toContain("secret-report.pdf");
+      expect(output).toContain("Skipped by user (default)");
+      expect(fs.existsSync(path.join(downloadsDir, "secret-report.pdf"))).toBe(true);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
+  test("SKILL.md encodes confirmation gating, Class A/B risk classes, mandatory hazard warning, and agent invariants", () => {
+    const skillContent = fs.readFileSync(SKILL_MD_PATH, "utf8");
+    expect(skillContent).toContain("Class A: Regenerable System & Tool Caches");
+    expect(skillContent).toContain("Class B: HIGH-RISK / Non-Regenerative User Data");
+    expect(skillContent).toContain("CRITICAL: IRREVERSIBLE DATA LOSS");
+    expect(skillContent).toContain(
+      "This path contains non-regenerative user data. Deleting it will permanently destroy your files/transcripts with no recovery mechanism.",
+    );
+    expect(skillContent).toContain('Default to "KEEP" for all Class B');
+    expect(skillContent).toContain("learned.conf");
+    expect(skillContent).toContain("[Y]es / [N]o / [S]kip / [B]rowse");
+  });
+
+  test("README.md encodes interactive confirmation and Class A/B risk categories", () => {
+    const readmeContent = fs.readFileSync(README_PATH, "utf8");
+    expect(readmeContent).toContain("--interactive");
+    expect(readmeContent).toContain("/interactive");
+    expect(readmeContent).toContain("Class A (Moderate Risk)");
+    expect(readmeContent).toContain("Class B (CRITICAL DANGER)");
+    expect(readmeContent).toContain("CRITICAL: IRREVERSIBLE DATA LOSS");
+  });
 });

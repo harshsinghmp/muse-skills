@@ -51,6 +51,9 @@ clean-system-cache/scripts/clean-cache.sh --tool browser
 
 # Scan for dormant node_modules folders
 clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
+
+# Interactively review confirmation-gated candidates (Class A / Class B)
+clean-system-cache/scripts/clean-cache.sh --interactive
 ```
 
 ### Windows (Native Command Prompt — CMD)
@@ -66,6 +69,9 @@ clean-system-cache\scripts\clean-cache.cmd /include-coupled
 
 :: Clean browser caches only
 clean-system-cache\scripts\clean-cache.cmd /tool browser
+
+:: Interactively review confirmation-gated candidates (Class A / Class B)
+clean-system-cache\scripts\clean-cache.cmd /interactive
 ```
 
 ---
@@ -76,7 +82,12 @@ clean-system-cache\scripts\clean-cache.cmd /tool browser
    - **T1 Regenerable**: Disposable build layers, download tarballs, HTTP caches. Safe to purge silently.
    - **T2 Capability-Coupled**: Installed plugin packages, skill trees, MCP schemas, LSPs. **Preserved by default.** Only purged via explicit `--include-coupled` / `/include-coupled` opt-in, accompanied by a deterministic Rehydration Manifest.
    - **T3 Irreplaceable**: Auth credentials, session databases, agent memory (`.memory/**`), sovereign configs, git repos. **Never touched.**
-2. **Running Session Protection**: If an application, browser, or agent runtime is running, cleanup is skipped in execution mode so active sessions, websockets, and tools are never interrupted.
-3. **Capability Inventory Contract**: Verifies before-and-after capability counts in safe mode, guaranteeing zero tool/skill regressions.
-4. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.
-5. **Zero Dependencies**: Requires no Python, Node, or external interpreters.
+2. **Confirmation-Gated Risk Categories (Class A vs. Class B)**:
+   - **Class A (Moderate Risk)**: Regenerable system and tool caches (e.g. dormant `.next`/`.turbo`/`__pycache__` builds, package archives, Go modcache, stale `/tmp` entries). Safe to delete; toolchains will automatically regenerate. User decisions (`allow`/`deny`) are remembered in `learned.conf`.
+   - **Class B (CRITICAL DANGER)**: HIGH-RISK non-regenerative user data (e.g. `Downloads`, local assistant sessions in `token-optimizer`/`opencode`, `Trash`, `*-backup*` directories). Agents and CLI **default to KEEP**, require explicit manual confirmation (`[Y]es / [N]o / [S]kip / [B]rowse`), are NEVER saved to `learned.conf`, and mandate the critical hazard alert:
+     > ⚠️ **CRITICAL: IRREVERSIBLE DATA LOSS**
+     > This path contains non-regenerative user data. Deleting it will permanently destroy your files/transcripts with no recovery mechanism. This cannot be rebuilt by compilers, package managers, or browser caches.
+3. **Running Session Protection**: If an application, browser, or agent runtime is running, cleanup is skipped in execution mode so active sessions, websockets, and tools are never interrupted.
+4. **Capability Inventory Contract**: Verifies before-and-after capability counts in safe mode, guaranteeing zero tool/skill regressions.
+5. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.
+6. **Zero Dependencies**: Requires no Python, Node, or external interpreters.

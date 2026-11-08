@@ -99,6 +99,21 @@ Do **NOT** use this skill for:
 | **T2** | **Capability-Coupled Caches** | Caches that back live agent capabilities, installed plugin packages, language server binaries, and remote skill payloads (e.g. `~/.cache/opencode/packages`, `~/.cache/opencode/npm`, `~/.cache/claude`, `~/.continue/cache`). **PRESERVED BY DEFAULT.** Purging removes working functionality until network rehydration. Purged ONLY with explicit `--include-coupled` / `/include-coupled` opt-in, and never without emitting a deterministic Rehydration Manifest. |
 | **T3** | **Irreplaceable State & Auth** | Session databases, auth/credential stores, configurations, agent cognitive memory (`.memory/**`), sovereign configs (`~/.memory/` and `~/.config/muse/`), and git repositories. **NEVER TOUCHED UNDER ANY CIRCUMSTANCES.** |
 
+### Confirmation-Gated Risk Categories (Class A vs. Class B)
+
+Confirmation-gated candidates are explicitly partitioned into two risk classes before any interactive prompt or deletion:
+
+| Risk Class | Description & Consequence | Candidates & Examples | Policy & Automation |
+| :--- | :--- | :--- | :--- |
+| **Class A: Regenerable System & Tool Caches (Moderate Risk)** | Safe to delete; toolchains will automatically regenerate or re-download assets on demand. | Dormant project builds (`.next`, `.turbo`, `__pycache__` / `pycache`), package archives (`/var/cache/pacman/pkg`, `/var/cache/apt/archives`), Go modcache (`$GOPATH/pkg/mod`), stale `/tmp` entries, Flatpak HTTP caches. | Sequential interactive confirmation (`[Y]es / [N]o / [S]kip / [B]rowse`). Decisions (`allow` / `deny`) can be recorded in `learned.conf` to avoid repetitive prompts on future runs. |
+| **Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)** | **Permanent data loss.** Cannot be rebuilt by compilers, package managers, or browser caches. Deleting permanently destroys unrecoverable personal files, transcripts, or state. | **Downloads** (`~/Downloads` / `%USERPROFILE%\Downloads`), **Local Assistant Sessions & Cognitive State** (`token-optimizer/sessions`, `opencode/snapshot`, undo trees, checkpoint databases), **Trash / Recycle Bin** (`~/.local/share/Trash`, `$Recycle.Bin`), **Config Backups & Sovereign State** (`*-backup*` profile lowerdirs, state dumps). | **Strictly manual on every run.** Agent & CLI default to "KEEP". Never bundled into default sweeps. NEVER recorded in `learned.conf`. Requires mandatory hazard alert. |
+
+#### Mandatory Hazard Alert for Class B Items
+Whenever presenting Class B items in interactive CLI or agent dialogue, the following warning must be printed:
+
+> ⚠️ **CRITICAL: IRREVERSIBLE DATA LOSS**
+> This path contains non-regenerative user data. Deleting it will permanently destroy your files/transcripts with no recovery mechanism. This cannot be rebuilt by compilers, package managers, or browser caches.
+
 ### Safety & Running Session Protection Contracts
 
 | Protected Area | Skill Invariant |
@@ -112,6 +127,28 @@ Do **NOT** use this skill for:
 | **Virtual Environments (`.venv`)** | **PRESERVED.** Cleans package download wheels only; never touches virtual environments. |
 | **Active Containers & Volumes** | **PRESERVED.** Prunes dangling build layers only; active containers, images, and volumes are untouched. |
 | **Installed Global Binaries** | **PRESERVED.** Binaries in `~/.cargo/bin`, `~/.nvm`, `%APPDATA%`, etc. are never touched. |
+
+---
+
+## Interactive Confirmation & Risk Tiering Protocol
+
+### 1. Interactive Selection UX (Agent & CLI)
+- **Multi-Select or Sequential Confirmation**:
+  - In agent-driven environments (e.g., ACP, T3, Claude, Gemini, Cursor, OpenCode), the skill must either present items in a structured multi-select prompt or sequentially iterate through candidates one by one with a clear `[Y]es / [N]o / [S]kip / [B]rowse` choice.
+  - The agent must NEVER assume consent, bundle non-cache items into a default sweep, or present a bulk "delete all" toggle for confirmation-gated items.
+  - The CLI interactive mode (`--interactive` / `/interactive`) must display clear risk tiers before prompting for confirmation.
+- **Action Options**:
+  - `[Y]es`: Proceed with item removal.
+  - `[N]o`: Reject and skip item.
+  - `[S]kip`: Pass without decision (remains for next run).
+  - `[B]rowse`: Inspect directory or file contents before making a decision.
+
+### 2. Agent Protocol & Invariants
+AI agents running this skill must strictly enforce:
+1. **Default to "KEEP" for all Class B non-regenerative items**: Never suggest, pre-select, or default to deleting Downloads, assistant sessions, Trash, or config backups.
+2. **Quote exact paths, sizes, and explicit consequences for every item before prompting**: Never generalize with "clean temporary files". Quote the exact path (e.g. `~/Downloads`), the du-verified size (e.g. `2.4 GB`), and the consequence.
+3. **Proactively warn users before touching any directory outside standard disposable cache patterns**: Any path outside standard disposable cache patterns (`~/.cache/*` or app-specific `Cache_Data`/`GPUCache`) requires proactive hazard disclosure.
+4. **Record user choices (`allow` / `deny`) in `learned.conf` only for regenerable caches**: Record choices in `~/.config/clean-system-cache/learned.conf` strictly for Class A items. Keep dangerous Class B non-regenerative items strictly manual on every run.
 
 ---
 
@@ -181,6 +218,18 @@ Scan project directories for abandoned node_modules folders consuming massive di
   clean-system-cache\scripts\clean-cache.cmd /scan-node-modules C:\Projects
   ```
 
+### Phase 6: Interactive Confirmation & Risk-Gated Purging (`--interactive`)
+Interactively review and confirm confirmation-gated candidates with risk tiering (Class A & Class B) and `learned.conf` preference tracking:
+
+- **Linux & macOS**:
+  ```bash
+  clean-system-cache/scripts/clean-cache.sh --interactive
+  ```
+- **Windows CMD**:
+  ```cmd
+  clean-system-cache\scripts\clean-cache.cmd /interactive
+  ```
+
 ---
 
 ## Pitfalls
@@ -202,3 +251,6 @@ Before marking cleanup complete, verify:
 4. Active browser and agent sessions were protected and skipped if running.
 5. User cookies, credentials, agent memory, and repository code remain 100% intact.
 6. Disk free space increased as reported by `df -h` or `dir`.
+7. Interactive confirmation mechanism was honored: Class B non-regenerative items defaulted to KEEP with high-visibility hazard alerts.
+8. User choices (`allow` / `deny`) recorded in `learned.conf` strictly for Class A regenerable caches, while Class B items remained strictly manual on every run.
+9. Confirmation-gated candidates were never bundled into default non-interactive cache sweeps.

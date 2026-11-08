@@ -10,6 +10,8 @@
 
 - [ ] Inventory first, always: per-tool cache paths, sizes, last-access times — the audit report IS the pre-purge report
 - [ ] Classify every candidate: `safe-to-purge` (rebuildable caches) / `protected` (live agent caches, session state, capability indexes) / `ask-first` (anything with uncommitted work nearby)
+- [ ] Risk-tier confirmation-gated candidates: Class A (Regenerable System & Tool Caches — Moderate Risk) vs. Class B (HIGH-RISK / Non-Regenerative User Data — CRITICAL DANGER)
+- [ ] Enforce Class B invariants: mandatory hazard alert, default to KEEP, strict manual prompt on every run, and zero learned.conf persistence
 - [ ] Verify protected paths are on the exclusion list of every purge command this skill would run
 - [ ] Dry-run is the only default: every purge command reported with its `--dry-run`/`--check` output before any real invocation
 - [ ] Reclaimable space estimated per candidate (du-verified, not guessed)

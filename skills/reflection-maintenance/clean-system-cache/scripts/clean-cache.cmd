@@ -23,7 +23,10 @@ setlocal enabledelayedexpansion
 set DRY_RUN=0
 set INCLUDE_COUPLED=0
 set TARGET_TOOL=all
+set INTERACTIVE=0
 set SCAN_NM_DIR=
+set SCAN_BUILDS_DIR=
+set "LEARNED_CONF_FILE=%USERPROFILE%\.config\clean-system-cache\learned.conf"
 set T2_PURGED=0
 set T2_PRESERVED=0
 
@@ -31,6 +34,50 @@ set T2_PRESERVED=0
 if "%~1"=="" goto run_cleanup
 if /i "%~1"=="--dry-run" (
     set DRY_RUN=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="--interactive" (
+    set INTERACTIVE=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/interactive" (
+    set INTERACTIVE=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="-i" (
+    set INTERACTIVE=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/i" (
+    set INTERACTIVE=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="--scan-builds" (
+    set SCAN_BUILDS_DIR=%~2
+    shift
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/scan-builds" (
+    set SCAN_BUILDS_DIR=%~2
+    shift
+    shift
+    goto parse_args
+)
+if /i "%~1"=="--learned-conf" (
+    set "LEARNED_CONF_FILE=%~2"
+    shift
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/learned-conf" (
+    set "LEARNED_CONF_FILE=%~2"
+    shift
     shift
     goto parse_args
 )
@@ -96,16 +143,33 @@ echo ====================================================================
 echo  clean-cache.cmd — Native Windows Developer ^& Designer Cache Cleaner
 echo ====================================================================
 echo Usage:
-echo   clean-cache.cmd [/dry-run] [/include-coupled] [/tool name] [/scan-node-modules dir]
+echo   clean-cache.cmd [/dry-run] [/interactive] [/include-coupled] [/tool name]
+echo                   [/scan-builds dir] [/learned-conf file] [/scan-node-modules dir]
 echo.
 echo Options:
 echo   /dry-run, --dry-run          Preview cleanup actions without deleting files.
+echo   /interactive, /i             Interactively review confirmation-gated items with risk tiers (Class A/B).
+echo   /scan-builds dir             Scan a directory tree for Class A dormant builds (.next, .turbo, pycache).
+echo   /learned-conf file           Custom path for learned choices (defaults to %USERPROFILE%\.config\clean-system-cache\learned.conf).
 echo   /include-coupled             Opt-in to purging T2 capability-coupled caches (plugins, MCP, LSPs).
 echo                                PRESERVED BY DEFAULT. Emits rehydration manifest if purged.
 echo   /all-caches                  Alias for /include-coupled.
 echo   /tool, --tool name           Clean a specific tool (e.g. npm, uv, opencode, adobe, browser, agents).
 echo   /scan-node-modules dir       Audit directory tree for dormant node_modules folders.
 echo   /?, -h, --help               Display this help message.
+echo.
+echo Risk Classification:
+echo   Class A: Regenerable System ^& Tool Caches (Moderate Risk)
+echo            Safe to delete; toolchains automatically regenerate or re-download on demand.
+echo            (e.g., .next, .turbo, pycache, Go modcache, pip cache, NuGet packages)
+echo            User choices are saved to learned.conf.
+echo   Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)
+echo            ⚠️ CRITICAL: IRREVERSIBLE DATA LOSS
+echo            This path contains non-regenerative user data. Deleting it will permanently destroy
+echo            your files/transcripts with no recovery mechanism. This cannot be rebuilt by compilers,
+echo            package managers, or browser caches.
+echo            (e.g., Downloads, assistant sessions, Recycle Bin, *-backup*)
+echo            Class B items are NEVER stored in learned.conf and require strict manual confirmation on every run.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
@@ -1059,6 +1123,11 @@ if "!T2_PURGED!"=="1" (
 )
 
 rem ----------------------------------------------------------------------
+rem Confirmation-Gated Items (Class A & Class B Risk Tiering)
+rem ----------------------------------------------------------------------
+call :process_confirmation_gated_items
+
+rem ----------------------------------------------------------------------
 rem 20. Optional Dormant node_modules Scanner
 rem ----------------------------------------------------------------------
 if not "%SCAN_NM_DIR%"=="" (
@@ -1078,6 +1147,137 @@ if not "%SCAN_NM_DIR%"=="" (
     )
     echo ====================================================================
 )
+
+:process_confirmation_gated_items
+rem Class A: Regenerable System & Tool Caches
+call :prompt_candidate "A" "Go Module Cache" "%USERPROFILE%\go\pkg\mod" "Safe to delete; toolchains automatically re-download on demand."
+call :prompt_candidate "A" "Pip Cache" "%LOCALAPPDATA%\pip\cache" "Safe to delete; wheels are re-downloaded on demand."
+call :prompt_candidate "A" "NuGet Packages Cache" "%USERPROFILE%\.nuget\packages" "Safe to delete; packages are re-downloaded on demand."
+
+if not "%SCAN_BUILDS_DIR%"=="" if exist "%SCAN_BUILDS_DIR%" (
+    for /d /r "%SCAN_BUILDS_DIR%" %%d in (.next .turbo __pycache__) do (
+        if exist "%%d" call :prompt_candidate "A" "Dormant Project Build (%%~nxd)" "%%d" "Safe to delete; compilers rebuild on demand."
+    )
+)
+
+rem Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)
+call :prompt_candidate "B" "User Downloads" "%USERPROFILE%\Downloads" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Local Assistant Sessions (token-optimizer)" "%LOCALAPPDATA%\token-optimizer\sessions" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Local Assistant Sessions (opencode)" "%LOCALAPPDATA%\opencode\snapshot" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Local Assistant Sessions (claude)" "%USERPROFILE%\.claude\sessions" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Local Assistant Sessions (gemini)" "%USERPROFILE%\.gemini\antigravity-cli\sessions" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Local Assistant Sessions (continue)" "%USERPROFILE%\.continue\sessions" "CRITICAL: IRREVERSIBLE DATA LOSS"
+call :prompt_candidate "B" "Windows Recycle Bin" "%SystemDrive%\$Recycle.Bin" "CRITICAL: IRREVERSIBLE DATA LOSS"
+goto :eof
+
+:prompt_candidate
+rem %1=CLASS ("A" or "B")
+rem %2=LABEL
+rem %3=PATH
+rem %4=CONSEQUENCE
+set "P_CLASS=%~1"
+set "P_LABEL=%~2"
+set "P_PATH=%~3"
+set "P_CONSEQUENCE=%~4"
+
+if not exist "!P_PATH!" goto :eof
+
+rem Non-interactive mode handling
+if "!INTERACTIVE!"=="0" (
+    if "!DRY_RUN!"=="1" (
+        echo [!P_LABEL! [Class !P_CLASS!]]   ^| gated     ^| Confirmation required (/interactive)
+    ) else (
+        if "!P_CLASS!"=="B" (
+            echo [!P_LABEL! [Class B]]   ^| preserved ^| Class B non-regenerative data strictly preserved (needs /interactive)
+        ) else (
+            echo [!P_LABEL! [Class A]]   ^| skipped   ^| Class A confirmation-gated; skipped in non-interactive mode
+        )
+    )
+    goto :eof
+)
+
+rem Interactive mode handling
+if "!P_CLASS!"=="A" (
+    if exist "!LEARNED_CONF_FILE!" (
+        findstr /b /c:"!P_PATH!=allow" "!LEARNED_CONF_FILE!" >nul 2>&1
+        if !ERRORLEVEL! equ 0 (
+            if "!DRY_RUN!"=="1" (
+                echo [!P_LABEL! [Class A]]   ^| reclaimable ^| Allowed via learned.conf
+            ) else (
+                del /q /s "!P_PATH!\*.*" >nul 2>&1
+                for /d %%p in ("!P_PATH!\*") do rmdir /s /q "%%p" >nul 2>&1
+                echo [!P_LABEL! [Class A]]   ^| cleaned     ^| Allowed via learned.conf
+            )
+            goto :eof
+        )
+        findstr /b /c:"!P_PATH!=deny" "!LEARNED_CONF_FILE!" >nul 2>&1
+        if !ERRORLEVEL! equ 0 (
+            echo [!P_LABEL! [Class A]]   ^| skipped     ^| Denied via learned.conf
+            goto :eof
+        )
+    )
+)
+
+echo.
+echo ====================================================================
+if "!P_CLASS!"=="A" (
+    echo  [CLASS A: REGENERABLE SYSTEM ^& TOOL CACHE (Moderate Risk)]
+    echo  Target       : !P_LABEL!
+    echo  Path         : !P_PATH!
+    echo  Consequence  : !P_CONSEQUENCE!
+    echo --------------------------------------------------------------------
+) else (
+    echo  [CLASS B: HIGH-RISK / NON-REGENERATIVE USER DATA (CRITICAL DANGER)]
+    echo  Target       : !P_LABEL!
+    echo  Path         : !P_PATH!
+    echo --------------------------------------------------------------------
+    echo  ⚠️  CRITICAL: IRREVERSIBLE DATA LOSS
+    echo  This path contains non-regenerative user data. Deleting it will
+    echo  permanently destroy your files/transcripts with no recovery mechanism.
+    echo  This cannot be rebuilt by compilers, package managers, or browser caches.
+    echo ====================================================================
+)
+
+:prompt_candidate_loop
+set "USER_CHOICE=S"
+set /p "USER_CHOICE=Action for !P_LABEL!: [Y]es / [N]o / [S]kip / [B]rowse (default: No/Skip): "
+if /i "!USER_CHOICE!"=="B" (
+    echo.
+    echo --- Browsing !P_PATH! ---
+    dir "!P_PATH!"
+    echo -------------------------
+    goto prompt_candidate_loop
+)
+if /i "!USER_CHOICE!"=="Y" (
+    if "!DRY_RUN!"=="1" (
+        echo [!P_LABEL! [Class !P_CLASS!]]   ^| reclaimable ^| User confirmed deletion (dry run)
+    ) else (
+        if exist "!P_PATH!\*" (
+            del /q /s "!P_PATH!\*.*" >nul 2>&1
+            for /d %%p in ("!P_PATH!\*") do rmdir /s /q "%%p" >nul 2>&1
+        ) else (
+            del /q "!P_PATH!" >nul 2>&1
+        )
+        echo [!P_LABEL! [Class !P_CLASS!]]   ^| cleaned     ^| User confirmed deletion
+    )
+    if "!P_CLASS!"=="A" (
+        for %%F in ("!LEARNED_CONF_FILE!") do if not exist "%%~dpF" mkdir "%%~dpF" >nul 2>&1
+        echo !P_PATH!=allow>>"!LEARNED_CONF_FILE!"
+        echo   -^> Saved preference 'allow' in learned.conf
+    )
+    goto :eof
+)
+if /i "!USER_CHOICE!"=="N" (
+    echo [!P_LABEL! [Class !P_CLASS!]]   ^| skipped     ^| Denied by user
+    if "!P_CLASS!"=="A" (
+        for %%F in ("!LEARNED_CONF_FILE!") do if not exist "%%~dpF" mkdir "%%~dpF" >nul 2>&1
+        echo !P_PATH!=deny>>"!LEARNED_CONF_FILE!"
+        echo   -^> Saved preference 'deny' in learned.conf
+    )
+    goto :eof
+)
+echo [!P_LABEL! [Class !P_CLASS!]]   ^| skipped     ^| Skipped by user (default)
+goto :eof
 
 endlocal
 exit /b 0

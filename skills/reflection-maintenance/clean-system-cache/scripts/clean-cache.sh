@@ -41,6 +41,9 @@ VERBOSE=false
 INCLUDE_COUPLED=false
 SPECIFIC_TOOLS=""
 SCAN_NODE_MODULES_PATH=""
+SCAN_BUILDS_PATH=""
+INTERACTIVE=false
+LEARNED_CONF_PATH="${LEARNED_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/clean-system-cache/learned.conf}"
 OS="$(uname -s)"
 PURGED_T2_LIST=()
 T2_PRESERVED_COUNT=0
@@ -54,6 +57,9 @@ design, agent, and browser tools across Linux and macOS. Requires zero external 
 
 Options:
   --dry-run                 Inspect and calculate reclaimable cache space without deleting anything.
+  -i, --interactive         Interactively review confirmation-gated items with risk tiers (Class A/B).
+  --scan-builds <dir>       Scan a directory tree for Class A dormant project builds (.next, .turbo, pycache).
+  --learned-conf <file>     Custom path for learned choices (defaults to ~/.config/clean-system-cache/learned.conf).
   --include-coupled         Opt-in to purging T2 capability-coupled caches (plugins, MCP, LSPs).
                             PRESERVED BY DEFAULT. Generates a rehydration manifest if purged.
   --all-caches              Alias for --include-coupled.
@@ -61,6 +67,19 @@ Options:
   --scan-node-modules <dir> Scan a directory tree for dormant node_modules folders and report sizes.
   -v, --verbose             Print detailed command execution outputs.
   -h, --help                Show this help message and exit.
+
+Risk Classification:
+  Class A: Regenerable System & Tool Caches (Moderate Risk)
+           Safe to delete; toolchains will automatically regenerate or re-download assets on demand.
+           (e.g., .next, .turbo, pycache, Go modcache, /var/cache/pacman/pkg, stale /tmp entries)
+           User choices are saved to learned.conf to remember decisions.
+  Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)
+           ⚠️ CRITICAL: IRREVERSIBLE DATA LOSS
+           This path contains non-regenerative user data. Deleting it will permanently destroy
+           your files/transcripts with no recovery mechanism. This cannot be rebuilt by compilers,
+           package managers, or browser caches.
+           (e.g., ~/Downloads, token-optimizer/sessions, opencode/snapshot, ~/.local/share/Trash, *-backup*)
+           Class B items are NEVER stored in learned.conf and require strict manual confirmation on every run.
 
 Supported Tools:
   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle, brew
@@ -78,6 +97,18 @@ while [[ $# -gt 0 ]]; do
         --dry-run)
             DRY_RUN=true
             shift
+            ;;
+        -i|--interactive)
+            INTERACTIVE=true
+            shift
+            ;;
+        --scan-builds)
+            SCAN_BUILDS_PATH="$2"
+            shift 2
+            ;;
+        --learned-conf)
+            LEARNED_CONF_PATH="$2"
+            shift 2
             ;;
         --include-coupled|--all-caches)
             INCLUDE_COUPLED=true
@@ -110,7 +141,13 @@ get_dir_size_kb() {
     local target="$1"
     if [ -d "$target" ]; then
         # du -sk works universally on both GNU/Linux and BSD/macOS
-        du -sk "$target" 2>/dev/null | cut -f1 || echo 0
+        local sz
+        sz=$(du -sk "$target" 2>/dev/null | awk '{print $1}' | head -n 1)
+        if [ -n "$sz" ] && [ "$sz" -eq "$sz" ] 2>/dev/null; then
+            echo "$sz"
+        else
+            echo 0
+        fi
     elif [ -f "$target" ]; then
         local bytes
         bytes=$(wc -c < "$target" 2>/dev/null || echo 0)
@@ -492,6 +529,346 @@ handle_coupled_agent_cache() {
             record_result "$label" "cleaned" "$size_before" "$size_after" "$reclaimed" "T2 capability cache purged (rehydration required)"
             PURGED_T2_LIST+=("$label|$cache_dir|$what_removed|$reinstalls|$network_req|$restart_req|$restore_cmd")
         fi
+    fi
+}
+
+# ==============================================================================
+# Confirmation-Gated Items & Risk Tiering Protocol
+# Class A: Regenerable System & Tool Caches (Moderate Risk)
+# Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)
+# ==============================================================================
+
+get_learned_decision() {
+    local target="$1"
+    [ ! -f "$LEARNED_CONF_PATH" ] && return 1
+    local val
+    val=$(grep "^${target}=" "$LEARNED_CONF_PATH" 2>/dev/null | tail -n 1 | cut -d"=" -f2-)
+    if [ "$val" = "allow" ] || [ "$val" = "deny" ]; then
+        echo "$val"
+        return 0
+    fi
+    return 1
+}
+
+save_learned_decision() {
+    local target="$1"
+    local decision="$2"
+    # Strict invariant: Only Class A decisions may be recorded. Class B NEVER saved.
+    if [ "$decision" != "allow" ] && [ "$decision" != "deny" ]; then
+        return 0
+    fi
+    local conf_dir
+    conf_dir=$(dirname "$LEARNED_CONF_PATH")
+    mkdir -p "$conf_dir" 2>/dev/null || true
+    if [ -f "$LEARNED_CONF_PATH" ]; then
+        grep -v "^${target}=" "$LEARNED_CONF_PATH" > "${LEARNED_CONF_PATH}.tmp" 2>/dev/null || true
+        mv "${LEARNED_CONF_PATH}.tmp" "$LEARNED_CONF_PATH" 2>/dev/null || true
+    fi
+    echo "${target}=${decision}" >> "$LEARNED_CONF_PATH"
+}
+
+print_class_b_hazard_alert() {
+    echo "===================================================================="
+    echo " ⚠️  CRITICAL: IRREVERSIBLE DATA LOSS"
+    echo " This path contains non-regenerative user data. Deleting it will"
+    echo " permanently destroy your files/transcripts with no recovery mechanism."
+    echo " This cannot be rebuilt by compilers, package managers, or browser caches."
+    echo "===================================================================="
+}
+
+is_confirmation_tool_selected() {
+    local t="$1"
+    if [ -z "$SPECIFIC_TOOLS" ] || [ "$SPECIFIC_TOOLS" = "all" ] || [ "$SPECIFIC_TOOLS" = "confirmation" ] || [ "$SPECIFIC_TOOLS" = "gated" ]; then
+        return 0
+    fi
+    if [[ ",$SPECIFIC_TOOLS," =~ ,"$t", ]]; then
+        return 0
+    fi
+    return 1
+}
+
+prompt_confirmation_candidate() {
+    local risk_class="$1"    # "CLASS_A" or "CLASS_B"
+    local category_name="$2" # e.g. "User Downloads"
+    local target_path="$3"   # filesystem path
+    local consequence="$4"   # description
+
+    [ ! -e "$target_path" ] && return 0
+
+    local size_before
+    size_before=$(get_dir_size_kb "$target_path")
+    # If directory is empty, skip
+    if [ -d "$target_path" ]; then
+        if [ -z "$(ls -A "$target_path" 2>/dev/null)" ]; then
+            return 0
+        fi
+    fi
+    if [ "$size_before" -le 0 ]; then
+        size_before=1
+    fi
+
+    local display_class="Class A"
+    if [ "$risk_class" = "CLASS_B" ]; then
+        display_class="Class B"
+    fi
+
+    # Class A learned decision check
+    if [ "$risk_class" = "CLASS_A" ]; then
+        local learned
+        if learned=$(get_learned_decision "$target_path"); then
+            if [ "$learned" = "allow" ]; then
+                echo "  -> Allowed via learned.conf: $target_path"
+                if [ "$DRY_RUN" = true ]; then
+                    record_result "$category_name [$display_class]" "reclaimable" "$size_before" 0 "$size_before" "Allowed via learned.conf"
+                else
+                    if [ -d "$target_path" ]; then
+                        if [ "$category_name" = "Go Module Cache" ] && command -v go >/dev/null 2>&1; then
+                            go clean -modcache >/dev/null 2>&1 || true
+                        fi
+                        chmod -R u+w "$target_path" 2>/dev/null || true
+                        purge_dir_contents "$target_path"
+                    elif [ -f "$target_path" ]; then
+                        rm -f "$target_path" 2>/dev/null || true
+                    fi
+                    local size_after
+                    size_after=$(get_dir_size_kb "$target_path")
+                    local reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
+                    record_result "$category_name [$display_class]" "cleaned" "$size_before" "$size_after" "$reclaimed" "Allowed via learned.conf"
+                fi
+                return 0
+            elif [ "$learned" = "deny" ]; then
+                echo "  -> Denied via learned.conf: $target_path"
+                record_result "$category_name [$display_class]" "skipped" "$size_before" "$size_before" 0 "Denied via learned.conf"
+                return 0
+            fi
+        fi
+    fi
+
+    # In non-interactive mode:
+    # Confirmation-gated candidates are NEVER deleted automatically.
+    # Class B is strictly kept/preserved.
+    if [ "$INTERACTIVE" = false ]; then
+        if [ "$DRY_RUN" = true ]; then
+            if [ "$risk_class" = "CLASS_B" ]; then
+                record_result "$category_name [Class B]" "gated" "$size_before" "$size_before" 0 "Class B non-regenerative; pass --interactive to review"
+            else
+                record_result "$category_name [Class A]" "gated" "$size_before" "$size_before" 0 "Class A confirmation-gated; pass --interactive to review"
+            fi
+        else
+            if [ "$risk_class" = "CLASS_B" ]; then
+                record_result "$category_name [Class B]" "preserved" "$size_before" "$size_before" 0 "Class B non-regenerative data strictly preserved (needs --interactive)"
+            else
+                record_result "$category_name [Class A]" "skipped" "$size_before" "$size_before" 0 "Class A confirmation-gated; skipped in non-interactive mode"
+            fi
+        fi
+        return 0
+    fi
+
+    # Interactive mode: Display risk tier header
+    echo ""
+    echo "===================================================================="
+    if [ "$risk_class" = "CLASS_A" ]; then
+        echo " 📋 [CLASS A: REGENERABLE SYSTEM & TOOL CACHE (Moderate Risk)]"
+        echo " Target       : $category_name"
+        echo " Path         : $target_path"
+        echo " Size         : $(fmt_kb "$size_before")"
+        echo " Consequence  : $consequence"
+        echo "--------------------------------------------------------------------"
+    else
+        echo " 🛑 [CLASS B: HIGH-RISK / NON-REGENERATIVE USER DATA (CRITICAL DANGER)]"
+        echo " Target       : $category_name"
+        echo " Path         : $target_path"
+        echo " Size         : $(fmt_kb "$size_before")"
+        echo "--------------------------------------------------------------------"
+        print_class_b_hazard_alert
+    fi
+
+    # Sequential iteration prompt: [Y]es / [N]o / [S]kip / [B]rowse
+    while true; do
+        printf "Action for %s: [Y]es / [N]o / [S]kip / [B]rowse (default: No/Skip): " "$category_name"
+        local choice=""
+        if [ -t 0 ]; then
+            read -r choice < /dev/tty || choice="S"
+        else
+            if ! read -r choice; then
+                choice="S"
+            fi
+        fi
+        echo ""
+
+        case "$choice" in
+            [yY]|[yY][eE][sS])
+                if [ "$DRY_RUN" = true ]; then
+                    record_result "$category_name [$display_class]" "reclaimable" "$size_before" 0 "$size_before" "User confirmed deletion (dry run)"
+                else
+                    if [ -d "$target_path" ]; then
+                        if [ "$category_name" = "Go Module Cache" ] && command -v go >/dev/null 2>&1; then
+                            go clean -modcache >/dev/null 2>&1 || true
+                        fi
+                        chmod -R u+w "$target_path" 2>/dev/null || true
+                        purge_dir_contents "$target_path"
+                    elif [ -f "$target_path" ]; then
+                        rm -f "$target_path" 2>/dev/null || true
+                    fi
+                    local size_after
+                    size_after=$(get_dir_size_kb "$target_path")
+                    local reclaimed=$(( size_before > size_after ? size_before - size_after : 0 ))
+                    record_result "$category_name [$display_class]" "cleaned" "$size_before" "$size_after" "$reclaimed" "User confirmed deletion"
+                fi
+                if [ "$risk_class" = "CLASS_A" ]; then
+                    save_learned_decision "$target_path" "allow"
+                    echo "  -> Saved preference 'allow' for this path in $(basename "$LEARNED_CONF_PATH")"
+                fi
+                break
+                ;;
+            [nN]|[nN][oO])
+                record_result "$category_name [$display_class]" "skipped" "$size_before" "$size_before" 0 "Denied by user"
+                if [ "$risk_class" = "CLASS_A" ]; then
+                    save_learned_decision "$target_path" "deny"
+                    echo "  -> Saved preference 'deny' for this path in $(basename "$LEARNED_CONF_PATH")"
+                fi
+                break
+                ;;
+            [bB]|[bB][rR][oO][wW][sS][eE])
+                echo ""
+                echo "--------------------------------------------------------------------"
+                echo " 📂 Browsing contents of: $target_path"
+                echo "--------------------------------------------------------------------"
+                if [ -d "$target_path" ]; then
+                    ls -la "$target_path" 2>/dev/null | head -n 25 || true
+                elif [ -f "$target_path" ]; then
+                    ls -l "$target_path" 2>/dev/null || true
+                else
+                    echo " Path does not exist on disk."
+                fi
+                echo "--------------------------------------------------------------------"
+                echo ""
+                ;;
+            [sS]|[sS][kK][iI][pP]|"")
+                echo "  -> Skipped by user (default)"
+                record_result "$category_name [$display_class]" "skipped" "$size_before" "$size_before" 0 "Skipped by user (default)"
+                break
+                ;;
+            *)
+                echo "Invalid input: '$choice\. Please select [Y]es, [N]o, [S]kip, or [B]rowse."
+                ;;
+        esac
+    done
+}
+
+process_all_confirmation_gated_items() {
+    # Class A: Regenerable System & Tool Caches (Moderate Risk)
+    local class_a_consequence="Safe to delete; toolchains will automatically regenerate or re-download assets on demand."
+
+    # Go Module Cache
+    if is_confirmation_tool_selected "go" || is_confirmation_tool_selected "modcache"; then
+        local go_mod_cache="$HOME/go/pkg/mod"
+        [ -n "$GOPATH" ] && [ -d "$GOPATH/pkg/mod" ] && go_mod_cache="$GOPATH/pkg/mod"
+        if [ -d "$go_mod_cache" ]; then
+            prompt_confirmation_candidate "CLASS_A" "Go Module Cache" "$go_mod_cache" "$class_a_consequence"
+        fi
+    fi
+
+    # Package Archives (Linux / macOS)
+    if is_confirmation_tool_selected "pacman" && [ -d "/var/cache/pacman/pkg" ]; then
+        prompt_confirmation_candidate "CLASS_A" "Pacman Package Archives" "/var/cache/pacman/pkg" "$class_a_consequence"
+    fi
+    if is_confirmation_tool_selected "apt" && [ -d "/var/cache/apt/archives" ]; then
+        prompt_confirmation_candidate "CLASS_A" "Apt Package Archives" "/var/cache/apt/archives" "$class_a_consequence"
+    fi
+    if is_confirmation_tool_selected "brew" && [ "$OS" = "Darwin" ] && [ -d "$HOME/Library/Caches/Homebrew/downloads" ]; then
+        prompt_confirmation_candidate "CLASS_A" "Homebrew Download Cache" "$HOME/Library/Caches/Homebrew/downloads" "$class_a_consequence"
+    fi
+
+    # Flatpak HTTP / App Caches
+    if is_confirmation_tool_selected "flatpak"; then
+        if [ -d "$HOME/.var/app" ]; then
+            for app_cache in "$HOME"/.var/app/*/cache; do
+                if [ -d "$app_cache" ]; then
+                    local app_id
+                    app_id=$(basename "$(dirname "$app_cache")")
+                    prompt_confirmation_candidate "CLASS_A" "Flatpak App Cache ($app_id)" "$app_cache" "$class_a_consequence"
+                fi
+            done
+        fi
+        if [ -d "/var/tmp/flatpak-cache" ]; then
+            prompt_confirmation_candidate "CLASS_A" "Flatpak System Cache" "/var/tmp/flatpak-cache" "$class_a_consequence"
+        fi
+    fi
+
+    # Stale /tmp entries
+    if is_confirmation_tool_selected "tmp"; then
+        for tmp_candidate in /tmp/rust* /tmp/npm-* /tmp/yarn-* /tmp/v8-compile-cache* /tmp/tmp-*; do
+            if [ -e "$tmp_candidate" ]; then
+                prompt_confirmation_candidate "CLASS_A" "Stale Temp Build Cache ($(basename "$tmp_candidate"))" "$tmp_candidate" "$class_a_consequence"
+            fi
+        done
+    fi
+
+    # Scanned Project Builds (.next, .turbo, __pycache__)
+    if is_confirmation_tool_selected "builds" || [ -n "$SCAN_BUILDS_PATH" ]; then
+        if [ -n "$SCAN_BUILDS_PATH" ] && [ -d "$SCAN_BUILDS_PATH" ]; then
+            local b_dirs=()
+            while IFS= read -r b_dir; do
+                [ -d "$b_dir" ] && b_dirs+=("$b_dir")
+            done < <(find "$SCAN_BUILDS_PATH" -type d \( -name ".next" -o -name ".turbo" -o -name "__pycache__" \) -prune 2>/dev/null)
+            for b_dir in "${b_dirs[@]}"; do
+                local b_name
+                b_name=$(basename "$b_dir")
+                prompt_confirmation_candidate "CLASS_A" "Dormant Project Build ($b_name)" "$b_dir" "$class_a_consequence"
+            done
+        fi
+    fi
+
+    # Class B: HIGH-RISK / Non-Regenerative User Data (CRITICAL DANGER)
+    local class_b_consequence="⚠️ CRITICAL: IRREVERSIBLE DATA LOSS. This path contains non-regenerative user data. Deleting it will permanently destroy your files/transcripts with no recovery mechanism. This cannot be rebuilt by compilers, package managers, or browser caches."
+
+    # User Downloads Folder
+    if is_confirmation_tool_selected "downloads"; then
+        local downloads_dir="$HOME/Downloads"
+        if [ -d "$downloads_dir" ]; then
+            prompt_confirmation_candidate "CLASS_B" "User Downloads" "$downloads_dir" "$class_b_consequence"
+        fi
+    fi
+
+    # Local Assistant Sessions & Cognitive State
+    if is_confirmation_tool_selected "sessions" || is_confirmation_tool_selected "agents"; then
+        local assistant_session_dirs=(
+            "$HOME/.local/share/token-optimizer/sessions"
+            "$HOME/.cache/opencode/snapshot"
+            "$HOME/.opencode/snapshot"
+            "$HOME/.local/share/opencode/snapshot"
+            "$HOME/.claude/sessions"
+            "$HOME/.gemini/antigravity-cli/sessions"
+            "$HOME/.continue/sessions"
+            "$HOME/.local/share/token-optimizer/undo"
+            "$HOME/.cache/opencode/checkpoints"
+            "$HOME/.cache/opencode/undo"
+        )
+        for s_dir in "${assistant_session_dirs[@]}"; do
+            if [ -d "$s_dir" ]; then
+                prompt_confirmation_candidate "CLASS_B" "Local Assistant Sessions ($(basename "$(dirname "$s_dir")")/$(basename "$s_dir"))" "$s_dir" "$class_b_consequence"
+            fi
+        done
+    fi
+
+    # Trash / Recycle Bin
+    if is_confirmation_tool_selected "trash"; then
+        if [ -d "$HOME/.local/share/Trash" ]; then
+            prompt_confirmation_candidate "CLASS_B" "User Trash Bin" "$HOME/.local/share/Trash" "$class_b_consequence"
+        fi
+        if [ "$OS" = "Darwin" ] && [ -d "$HOME/.Trash" ]; then
+            prompt_confirmation_candidate "CLASS_B" "User Trash Bin (macOS)" "$HOME/.Trash" "$class_b_consequence"
+        fi
+    fi
+
+    # Config Backups & Sovereign State
+    if is_confirmation_tool_selected "backups"; then
+        for bak_dir in "$HOME"/.config/*-backup* "$HOME"/.config/*-bak* "$HOME"/.local/share/*-backup*; do
+            if [ -d "$bak_dir" ]; then
+                prompt_confirmation_candidate "CLASS_B" "Config Backup ($(basename "$bak_dir"))" "$bak_dir" "$class_b_consequence"
+            fi
+        done
     fi
 }
 
@@ -1141,6 +1518,8 @@ handle_chromium_browser "vivaldi" "vivaldi (cache)" \
 
 # Apple Safari (macOS only)
 handle_safari_browser
+
+process_all_confirmation_gated_items
 
 CAP_AFTER=$(snapshot_agent_capabilities)
 
