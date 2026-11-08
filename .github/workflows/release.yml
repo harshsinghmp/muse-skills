@@ -26,7 +26,17 @@ jobs:
           # tag checkout has no history to mine (Release failed on this since v7.1.0).
           fetch-depth: 0
 
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - id: bun-runtime
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        continue-on-error: true
+        with:
+          bun-version: latest
+
+      # GitHub's release-asset CDN intermittently answers 504 on the first
+      # download; one retry separates that from a genuine setup failure.
+      - name: Setup Bun (retry after CDN 504)
+        if: steps.bun-runtime.outcome == 'failure'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
 
