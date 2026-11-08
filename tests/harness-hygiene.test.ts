@@ -17,10 +17,14 @@ function run(target: string, args: string[], env: Record<string, string> = {}) {
 }
 
 function git(target: string, args: string[]) {
-  return spawnSync("git", ["-c", "user.name=T", "-c", "user.email=t@example.com", ...args], {
-    cwd: target,
-    encoding: "utf8",
-  });
+  return spawnSync(
+    "git",
+    ["-c", "user.name=T", "-c", "user.email=t@example.com", "-c", "core.excludesFile=/dev/null", ...args],
+    {
+      cwd: target,
+      encoding: "utf8",
+    },
+  );
 }
 
 function write(target: string, rel: string, content: string) {
@@ -41,7 +45,7 @@ function bootstrap(target: string) {
   write(target, "transcripts/session.jsonl", '{"message":"hello"}\n');
   write(target, ".vscode/settings.json", '{"editor":"vscode"}\n');
   write(target, ".playwright/cache.txt", "cache\n");
-  git(target, ["add", "-A"]);
+  git(target, ["add", "-f", "-A"]);
   git(target, ["commit", "-qm", "chore: baseline"]);
 }
 
