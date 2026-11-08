@@ -6,6 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **`clean-system-cache`: loud irreversible-data banner**: before any `ASK!` confirmation prompt the CLI now prints a boxed `WARNING: IRREVERSIBLE DATA LOSS` naming each selected target and stating that no undo exists. The Windows CLI prints the same box, listing every `ASK!` candidate in the catalog. `T1`/`T2`-only selections never print it, so the warning keeps its meaning. Salvaged from the superseded #348.
 - **`updateagents` universal English language policy**: `templates/.agents/standards/language-policy.md` becomes the 22nd canon standard and is registered in `ALWAYS_STANDARDS` plus the generated `AGENTS.md`, so every scaffolded project states that the working language never switches to match the caller and that site copy is the only translation carve-out.
 
 ### Changed

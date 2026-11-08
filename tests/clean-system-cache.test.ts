@@ -79,6 +79,30 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     }
   });
 
+  test("loud irreversible hazard banner surrounds ASK! selections and never appears for T1", () => {
+    const tmpDir = fs.mkdtempSync("/tmp/clean-test-hazard-");
+    const trashDir = path.join(tmpDir, ".local/share/Trash/files");
+    const safeCache = path.join(tmpDir, ".cache/uv");
+    fs.mkdirSync(trashDir, { recursive: true });
+    fs.writeFileSync(path.join(trashDir, "old.txt"), "junk");
+    fs.mkdirSync(safeCache, { recursive: true });
+    fs.writeFileSync(path.join(safeCache, "archive"), "cache");
+
+    try {
+      const danger = execSync(`HOME="${tmpDir}" bash "${SH_PATH}" --only ask-trash --dry-run`, {
+        encoding: "utf8",
+      });
+      expect(danger).toContain("WARNING: IRREVERSIBLE DATA LOSS");
+      expect(danger).toContain("Deleting them CANNOT be undone");
+      expect(danger).toContain(" - Trash");
+
+      const safe = execSync(`HOME="${tmpDir}" bash "${SH_PATH}" --dry-run`, { encoding: "utf8" });
+      expect(safe).not.toContain("IRREVERSIBLE DATA LOSS");
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }, 30000);
+
   test("T2 capability-coupled cache opt-in: --include-coupled purges and emits Rehydration Manifest", () => {
     const tmpDir = fs.mkdtempSync("/tmp/clean-test-coupled-");
     const testContinueCache = path.join(tmpDir, ".continue/cache");

@@ -1425,12 +1425,59 @@ call :cat_resolve "%~1"
 if not "!RES_IDX!"=="" call :cat_delete !RES_IDX!
 exit /b 0
 
+:hazard_banner
+rem Loud irreversible-data warning. Args: candidate ids (empty = warn about every ASK! candidate).
+set "HAZ=0"
+set "HAZ_ALL=0"
+if "%~1"=="" set "HAZ_ALL=1"
+for /l %%i in (1,1,%CAND_N%) do (
+    if /i "!C_TIER_%%i!"=="ASK!" (
+        if "!HAZ_ALL!"=="1" (
+            set "HAZ=1"
+        ) else (
+            for %%a in (%*) do (
+                if /i "!C_ID_%%i!"=="%%~a" set "HAZ=1"
+            )
+        )
+    )
+)
+if "%HAZ%"=="0" exit /b 0
+echo.
+echo ####################################################################
+echo #                                                                  #
+echo #   !!!  WARNING: IRREVERSIBLE DATA LOSS  !!!                      #
+echo #                                                                  #
+echo ####################################################################
+if "%HAZ_ALL%"=="1" (
+    echo    Irreversible candidates in this catalog. If you select any of
+    echo    them, the delete CANNOT be undone:
+) else (
+    echo    These selections are NOT caches. Deleting them CANNOT be undone:
+)
+for /l %%i in (1,1,%CAND_N%) do (
+    if /i "!C_TIER_%%i!"=="ASK!" (
+        if "!HAZ_ALL!"=="1" (
+            echo      - !C_LABEL_%%i!
+        ) else (
+            for %%a in (%*) do (
+                if /i "!C_ID_%%i!"=="%%~a" echo      - !C_LABEL_%%i!
+            )
+        )
+    )
+)
+echo    There is no Recycle Bin fallback, no restore point, and no undo.
+echo    If you are unsure, answer no and re-run /browse first.
+echo ####################################################################
+echo.
+exit /b 0
+
 :cat_only
 if "%~1"=="" (
     echo Usage: clean-cache.cmd /only ^<id,id^> [/yes]
     exit /b 1
 )
 if "%ASSUME_YES%"=="0" (
+    call :hazard_banner %~1
     set "CONFIRM="
     set /p "CONFIRM=Type yes to delete the selected candidates: "
     if /i not "!CONFIRM!"=="yes" (
@@ -1448,6 +1495,7 @@ set "SEL="
 set /p "SEL=Enter numbers (1,3 or 1-3 or all) / none: "
 if /i "!SEL!"=="" goto cat_int_abort
 if /i "!SEL!"=="none" goto cat_int_abort
+call :hazard_banner
 set "CONFIRM="
 set /p "CONFIRM=Type yes to permanently delete the selected candidates: "
 if /i not "!CONFIRM!"=="yes" goto cat_int_abort
