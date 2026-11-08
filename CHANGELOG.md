@@ -2,15 +2,19 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [8.2.0] - 2026-11-08
 
 ### Added
 
 - **`updateagents` universal sync gate**: `templates/github/workflows/sync-gate.yml` is now selected for every scaffolded project (through `new-project` and `updateagents`). It is self-contained — pure Git, no project script or language runtime — and blocks a pull request whose head does not contain the latest base. `updateagents --refresh-workflows` explicitly overwrites existing workflow templates; the default remains additive. The `git-workflow` standard now documents the pre-merge sync rule.
+- **Pre-merge sync gate**: `scripts/check-sync.ts` and the required `sync-gate` CI job fail a pull request whose head does not contain the latest integration branch. Branch protection on `dev` and `main` requires the check, and `bun run check:sync` gives the same verdict locally.
 
 ### Changed
 
 - **`updateagents` language policy: tool-call narration is output**: rule 6 and the language-policy standard now state that narration between tool calls is bound by the English-only rule, add a required `Known limit` section explaining what the file guard cannot see, add mid-turn recovery guidance, and add contract self-check assertions projects can encode in their test runner.
+- **Root `AGENTS.md` URL intake rule**: URL handling now routes through the classify -> fetch -> dump -> owning-department workflow in the repository router.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.5...v8.2.0
 
 ## [8.1.5] - 2026-11-08
 

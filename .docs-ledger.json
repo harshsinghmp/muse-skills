@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-08T15:18:26.615Z",
-  "head": "354455e48aa91a75f2d0742ea53c1d091267f2b4",
+  "updatedAt": "2026-11-08T21:02:44.181Z",
+  "head": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
   "watermark": {
-    "point": 21,
-    "commit": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
-    "date": "2026-11-03T11:07:01.791Z",
-    "releaseTag": "v8.1.5"
+    "point": 55,
+    "commit": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
+    "date": "2026-11-08T21:02:05.061Z",
+    "releaseTag": "v8.2.0"
   },
   "agentWatermark": {
     "point": 1,
@@ -225,14 +225,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -514,14 +514,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["README.md"],
-          "evidence": "phrase \"setup from\" found in README.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["README.md"],
-          "evidence": "phrase \"setup from\" found in README.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -839,20 +839,20 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/agent-reference.md"],
-          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"landing gate\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/agent-reference.md"],
-          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"landing gate\" found in .agents/context/current.md"
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"landing gate\" found in llms.txt"
         }
       },
       "shipped": true,
@@ -957,8 +957,8 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"mode audit\" found in docs/CHANGELOG.md"
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"couple mode\" found in llms.txt"
         },
         "user": {
           "required": false,
@@ -1043,20 +1043,20 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/ARCHITECTURE.md"],
-          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/ARCHITECTURE.md"],
-          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/index.md"],
-          "evidence": "phrase \"release\" found in .agents/context/index.md"
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
         }
       },
       "shipped": true,
@@ -1148,8 +1148,8 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"before writing\" found in docs/CHANGELOG.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"before writing\" found in CHANGELOG.md"
         },
         "user": {
           "required": false,
@@ -1160,8 +1160,8 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"emdash live\" found in .agents/context/current.md"
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"before writing\" found in .agents/context/imported-agent-instructions.md"
         }
       },
       "shipped": true,
@@ -1253,14 +1253,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"biomejs biome\" found in docs/CHANGELOG.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump biomejs\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["docs/CHANGELOG.md"],
-          "evidence": "phrase \"biomejs biome\" found in docs/CHANGELOG.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"bump biomejs\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -1292,8 +1292,8 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md"],
-          "evidence": "phrase \"universal english\" found in RELEASE_NOTES.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"universal english\" found in CHANGELOG.md"
         },
         "user": {
           "required": false,
@@ -1304,8 +1304,8 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"universal english\" found in .agents/context/current.md"
+          "docs": [".agents/context/invariants.md"],
+          "evidence": "phrase \"universal english\" found in .agents/context/invariants.md"
         }
       },
       "shipped": true,
@@ -1375,7 +1375,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"retry setup\" found in .agents/context/current.md"
+          "evidence": "phrase \"setup once\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -1515,7 +1515,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"lock biome\" found in .agents/context/current.md"
+          "evidence": "phrase \"dp-0041\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -1648,14 +1648,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md"],
-          "evidence": "phrase \"banner before\" found in RELEASE_NOTES.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"banner before\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md"],
-          "evidence": "phrase \"banner before\" found in RELEASE_NOTES.md"
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"banner before\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -1702,6 +1702,348 @@
       "shipped": true,
       "releaseTag": "v8.1.5",
       "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0047",
+      "point": 47,
+      "commit": "3af34d3e0367ae2affe00ead9e65ab66cedeed9e",
+      "shortCommit": "3af34d3",
+      "date": "2026-11-08",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.1.5",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package-lock.json",
+        "package.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0048",
+      "point": 48,
+      "commit": "c111711702002315732defc413fb50152ae62b50",
+      "shortCommit": "c111711",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #355 from harshsinghmp/release/v8.1.5",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0049",
+      "point": 49,
+      "commit": "294f90b444bdd837a1f2e7b17059ce70d0e1bc76",
+      "shortCommit": "294f90b",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "add pre-merge sync gate for local and remote freshness",
+      "breaking": false,
+      "files": [
+        ".github/workflows/sync-gate.yml",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "package.json",
+        "scripts/check-sync.ts",
+        "tests/check-sync.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"merge sync\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"merge sync\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/invariants.md"],
+          "evidence": "phrase \"merge sync\" found in .agents/context/invariants.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0050",
+      "point": 50,
+      "commit": "4264905dd67ecbedc7888d8a8fc430feae30e2b7",
+      "shortCommit": "4264905",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #358 from harshsinghmp/feat/pre-merge-sync-gate",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0051",
+      "point": 51,
+      "commit": "4ea099890cfa5c15b4e0e2ca433057edecac15b8",
+      "shortCommit": "4ea0998",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "updateagents",
+      "summary": "treat tool-call narration as output in language policy",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/core-engine/updateagents/templates/.agents/standards/language-policy.md",
+        "skills/core-engine/updateagents/templates/AGENTS.md"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"tool call\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/invariants.md"],
+          "evidence": "phrase \"tool call\" found in .agents/context/invariants.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0052",
+      "point": 52,
+      "commit": "792eac8142a4f6558749a43c86433688a9afd1d0",
+      "shortCommit": "792eac8",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #356 from harshsinghmp/feat/language-narration-delta",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0053",
+      "point": 53,
+      "commit": "1bf32dba78be43a0cbecb236d8c6ddc432fe1444",
+      "shortCommit": "1bf32db",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #357 from harshsinghmp/docs/agents-url-intake-rule",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0054",
+      "point": 54,
+      "commit": "4a4d128ebe826b01e85b9ae4d3bc7a24544023d9",
+      "shortCommit": "4a4d128",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "updateagents",
+      "summary": "ship universal self-contained sync gate to every scaffold",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/scripts/github-scaffold.ts",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updateagents/templates/.agents/standards/git-workflow.md",
+        "skills/core-engine/updateagents/templates/github/workflows/sync-gate.yml",
+        "tests/github-scaffold.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"self contained\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"self contained\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/invariants.md"],
+          "evidence": "phrase \"self contained\" found in .agents/context/invariants.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0055",
+      "point": 55,
+      "commit": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
+      "shortCommit": "59d0ba4",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #359 from harshsinghmp/feat/updateagents-universal-sync-gate",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-08T21:02:04.782Z"
     }
   ]
 }
