@@ -307,9 +307,13 @@ bun run sync-dispatch --check
 
 # Verify delivery: is HEAD reachable from the integration branch on the remote? (LANDED / LOCAL)
 bun run check:landed
+
+# Verify branch freshness before opening or merging a PR (SYNCED / NOT SYNCED)
+bun run check:sync
 ```
 
-- **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, and secret-scan as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).
+- **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).
+- **Pre-Merge Sync Gate (local + CI)**: `bun run check:sync` (`scripts/check-sync.ts`) fetches the integration branch and fails when the current branch does not contain the latest `dev`, or when local `dev` is behind. The `sync-gate` workflow (`.github/workflows/sync-gate.yml`) runs the same check on pull requests into `dev`/`main`; branch protection already requires branches to be up to date before merging.
 - **Zero-Secret Leakage Guarantee**: Enforced by pre-commit hooks and automated credential scanning pipelines.
 - **Zero-Drift Dispatch Guarantee**: CI strictly enforces that `secretary/references/dispatch.md` and harness commands stay in 100% lockstep with repository code.
 - **Landing Gate (delivery is not commitment)**: work is LANDED only when reachable from the integration branch on the remote; until then it is LOCAL. `bun run check:landed` (with the `LANDED`/`LOCAL` and `REVIEWABLE`/`NOT REVIEWABLE` verdicts) runs as a required CI job and is auto-provisioned into every scaffolded project (`.agents/standards/landing-gate.md`).

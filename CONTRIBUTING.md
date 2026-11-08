@@ -172,12 +172,19 @@ bun run type-check
 git add -A
 git commit -m "feat(<skill-name>): <imperative summary> (#issue)"
 
-# 6. Push and open your atomic PR against dev
+# 6. Confirm branch freshness, then push and open your atomic PR against dev
+bun run check:sync
 git push origin feat/<skill-name>-<feature>
 
 # 7. Prove delivery (Landing Gate) — a commit is not a delivery.
 bun run check:landed -- --mode=pre-review --head="$(git branch --show-current)"
 ```
+
+### Pre-merge sync gate
+
+Run `bun run check:sync` before opening or updating a PR, and again immediately before merging. It fetches the integration branch and fails when the current branch does not contain the latest `origin/dev`, or when the local `dev` branch is behind its remote. The same check runs in CI as the `sync-gate` job.
+
+The durable guarantee is server-side: on `dev` and `main`, enable **Require branches to be up to date before merging** and mark `sync-gate` as a required status check. Local checks cannot stop another device from advancing the base branch, so never merge a stale PR through the GitHub UI.
 
 The gate's verdicts are `REVIEWABLE` / `NOT REVIEWABLE` before merge and `LANDED` / `LOCAL` after it; until the gate exits 0, say LOCAL — never "landed". Full standard: [`.agents/standards/landing-gate.md`](.agents/standards/landing-gate.md).
 
