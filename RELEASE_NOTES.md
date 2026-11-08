@@ -1,3 +1,37 @@
+# 🏛️ Muse Skills v8.1.4 — Cache Engine & Scaffold Fix
+
+> **Patch release: the clean-system-cache engine grows to a 16-point architecture matrix with a candidate catalog, and `new-project` stops crashing when the emdash preset meets a missing `src/`.** 386 automated tests. 14,303 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.1.4
+
+- **clean-system-cache: 16-point cache architecture matrix**: four new suite groups (AUR helpers, desktop indexes and runtimes, confirmation-gated candidates, discovery and learning) extend the previous 12-point matrix. The skill now documents candidate ownership in `references/candidate-catalog.md` so a menu can describe every entry instead of guessing.
+- **Self-learning scanner description**: the `SKILL.md` frontmatter, `skills.json` registry, and `llms.txt` index carry the same rewritten description. Command surface moves from 459 to **460** per harness (46 skills + 404 `<skill>-<mode>` commands + 10 aliases).
+- **`new-project` emdash scaffold fix**: the preset writes `src/live.config.ts` and `src/worker.ts` but relied on the Astro scaffold having created `src/` first. On a clean provisioning run that directory was absent, so scaffolding aborted with `ENOENT`. The directory is now created before the write. Latent on `main` before this release.
+- **Test hermeticity**: `harness-hygiene` fixtures force their tracked paths past global git excludes so the public-surface gate is deterministic, and the clean-system-cache suite asserts the 16-point matrix.
+
+## 📊 Verification
+
+| Metric | v8.1.3 | v8.1.4 |
+|:---|:---|:---|
+| Automated Tests | 386 | **386** |
+| Test Assertions | 14,267 | **14,303** |
+| Skills Count | 46 | **46** |
+| Slash Commands / Harness | 459 | **460** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.3...v8.1.4
+
+---
+
 # 🏛️ Muse Skills v8.1.3 — Toolchain Patch
 
 > **Patch release: TypeScript 7 and setup-uv 10 across the build and CI toolchain.** 386 automated tests. 14,267 assertions. 46 production-grade skills. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.

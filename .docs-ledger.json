@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T11:07:01.957Z",
-  "head": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
+  "updatedAt": "2026-11-08T10:15:33.817Z",
+  "head": "820ec232945b3fbc31bd6d3e330578ae8fa35c78",
   "watermark": {
     "point": 21,
     "commit": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
     "date": "2026-11-03T11:07:01.791Z",
-    "releaseTag": "v8.1.3"
+    "releaseTag": "v8.1.4"
   },
   "agentWatermark": {
     "point": 1,
@@ -225,14 +225,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -785,6 +785,458 @@
       "shipped": true,
       "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:06:54.534Z"
+    },
+    {
+      "id": "DP-0022",
+      "point": 22,
+      "commit": "aa20c658cf9b1bb0dccbf3b11b6f4478c53ebf35",
+      "shortCommit": "aa20c65",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #344 from harshsinghmp/release/v8.1.3",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.878Z"
+    },
+    {
+      "id": "DP-0023",
+      "point": 23,
+      "commit": "3ce3c86567f4f371bd8cdd7a5c70a467027180cb",
+      "shortCommit": "3ce3c86",
+      "date": "2026-11-03",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "skip Landing Gate on tag pushes (post-merge gate is branch-only) (#345)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/landing-gate.yml",
+        "skills/core-engine/updateagents/templates/github/workflows/landing-gate.yml"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/agent-reference.md"],
+          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/agent-reference.md"],
+          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"landing gate\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0024",
+      "point": 24,
+      "commit": "fafb33e01f10c5d6f354916e7d74f55ed05c0bbc",
+      "shortCommit": "fafb33e",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge branch 'dev' into main (landing-gate tag-push fix)",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0025",
+      "point": 25,
+      "commit": "8d9dec3aa9af93a7cc74c7fb30ab6b208a15a170",
+      "shortCommit": "8d9dec3",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Back-merge main into dev",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0026",
+      "point": 26,
+      "commit": "dacfae5469161c6bd27be28e7bed7274813cb4d8",
+      "shortCommit": "dacfae5",
+      "date": "2026-11-06",
+      "type": "feat",
+      "scope": "code-review",
+      "summary": "add couple mode, audit default, and next-mode handoff",
+      "breaking": false,
+      "files": [
+        "README.md",
+        "llms.txt",
+        "skills.json",
+        "skills/quality-review/code-review/README.md",
+        "skills/quality-review/code-review/SKILL.md",
+        "skills/quality-review/code-review/references/coupling-audit.md",
+        "skills/quality-review/code-review/references/cross-file-invariants.md",
+        "skills/quality-review/code-review/references/delegate.md",
+        "skills/quality-review/code-review/references/fixing-findings.md",
+        "skills/quality-review/code-review/references/pr-context.md",
+        "skills/quality-review/code-review/references/simplify.md",
+        "skills/quality-review/code-review/references/themes.md"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"mode audit\" found in docs/CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"couple mode\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0027",
+      "point": 27,
+      "commit": "acb1bac806d7959c81fd09d6549e5d5519ef36de",
+      "shortCommit": "acb1bac",
+      "date": "2026-11-06",
+      "type": "merge",
+      "scope": "",
+      "summary": "code-review 1.8.0 — couple mode, audit default, next-mode handoff",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0028",
+      "point": 28,
+      "commit": "2bea69b7eaeb8bb8aa6b9160111f430f698297cc",
+      "shortCommit": "2bea69b",
+      "date": "2026-11-07",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.1.4",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "llms.txt",
+        "package.json",
+        "skills.json",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/reflection-maintenance/clean-system-cache/README.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/agents/openai.yaml",
+        "skills/reflection-maintenance/clean-system-cache/references/audit.md",
+        "skills/reflection-maintenance/clean-system-cache/references/candidate-catalog.md",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.cmd",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "tests/clean-system-cache.test.ts",
+        "tests/harness-hygiene.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/ARCHITECTURE.md"],
+          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/ARCHITECTURE.md"],
+          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/index.md"],
+          "evidence": "phrase \"release\" found in .agents/context/index.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0029",
+      "point": 29,
+      "commit": "7426ac14222650f837935f90827be0059c633cfc",
+      "shortCommit": "7426ac1",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #347 from harshsinghmp/release/v8.1.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0030",
+      "point": 30,
+      "commit": "40f530243e73f710448433a11f591ecd3ef38b33",
+      "shortCommit": "40f5302",
+      "date": "2026-11-08",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.1.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0031",
+      "point": 31,
+      "commit": "f457cd5d03f9cae6ab689305e1d4b4c8a0248c9b",
+      "shortCommit": "f457cd5",
+      "date": "2026-11-08",
+      "type": "fix",
+      "scope": "new-project",
+      "summary": "create src/ before writing emdash live.config.ts",
+      "breaking": false,
+      "files": ["skills/core-engine/new-project/scripts/new-project.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"before writing\" found in docs/CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"before writing\" found in .agents/context/imported-agent-instructions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0032",
+      "point": 32,
+      "commit": "5e543c3e24a85f7896f82db523ba4aac2b41e206",
+      "shortCommit": "5e543c3",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #349 from harshsinghmp/fix/emdash-scaffold-src",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0033",
+      "point": 33,
+      "commit": "820ec232945b3fbc31bd6d3e330578ae8fa35c78",
+      "shortCommit": "820ec23",
+      "date": "2026-11-08",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.1.4 (emdash scaffold fix)",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
     }
   ]
 }
