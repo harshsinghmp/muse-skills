@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-03T11:07:01.957Z",
-  "head": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
+  "updatedAt": "2026-11-08T15:18:26.615Z",
+  "head": "354455e48aa91a75f2d0742ea53c1d091267f2b4",
   "watermark": {
     "point": 21,
     "commit": "2414ebaf74a638656fb3a9fe5921e7ddec3baf07",
     "date": "2026-11-03T11:07:01.791Z",
-    "releaseTag": "v8.1.3"
+    "releaseTag": "v8.1.5"
   },
   "agentWatermark": {
     "point": 1,
@@ -225,14 +225,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"write modes\" found in CHANGELOG.md"
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"modes workspace\" found in docs/CHANGELOG.md"
         },
         "agent": {
           "required": true,
@@ -514,14 +514,14 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
+          "docs": ["README.md"],
+          "evidence": "phrase \"setup from\" found in README.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
-          "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
+          "docs": ["README.md"],
+          "evidence": "phrase \"setup from\" found in README.md"
         },
         "agent": {
           "required": true,
@@ -785,6 +785,923 @@
       "shipped": true,
       "releaseTag": "v8.1.3",
       "createdAt": "2026-11-03T11:06:54.534Z"
+    },
+    {
+      "id": "DP-0022",
+      "point": 22,
+      "commit": "aa20c658cf9b1bb0dccbf3b11b6f4478c53ebf35",
+      "shortCommit": "aa20c65",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #344 from harshsinghmp/release/v8.1.3",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.878Z"
+    },
+    {
+      "id": "DP-0023",
+      "point": 23,
+      "commit": "3ce3c86567f4f371bd8cdd7a5c70a467027180cb",
+      "shortCommit": "3ce3c86",
+      "date": "2026-11-03",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "skip Landing Gate on tag pushes (post-merge gate is branch-only) (#345)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/landing-gate.yml",
+        "skills/core-engine/updateagents/templates/github/workflows/landing-gate.yml"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/agent-reference.md"],
+          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/agent-reference.md"],
+          "evidence": "phrase \"landing gate\" found in docs/agent-reference.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"landing gate\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0024",
+      "point": 24,
+      "commit": "fafb33e01f10c5d6f354916e7d74f55ed05c0bbc",
+      "shortCommit": "fafb33e",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge branch 'dev' into main (landing-gate tag-push fix)",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0025",
+      "point": 25,
+      "commit": "8d9dec3aa9af93a7cc74c7fb30ab6b208a15a170",
+      "shortCommit": "8d9dec3",
+      "date": "2026-11-03",
+      "type": "other",
+      "scope": "",
+      "summary": "Back-merge main into dev",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0026",
+      "point": 26,
+      "commit": "dacfae5469161c6bd27be28e7bed7274813cb4d8",
+      "shortCommit": "dacfae5",
+      "date": "2026-11-06",
+      "type": "feat",
+      "scope": "code-review",
+      "summary": "add couple mode, audit default, and next-mode handoff",
+      "breaking": false,
+      "files": [
+        "README.md",
+        "llms.txt",
+        "skills.json",
+        "skills/quality-review/code-review/README.md",
+        "skills/quality-review/code-review/SKILL.md",
+        "skills/quality-review/code-review/references/coupling-audit.md",
+        "skills/quality-review/code-review/references/cross-file-invariants.md",
+        "skills/quality-review/code-review/references/delegate.md",
+        "skills/quality-review/code-review/references/fixing-findings.md",
+        "skills/quality-review/code-review/references/pr-context.md",
+        "skills/quality-review/code-review/references/simplify.md",
+        "skills/quality-review/code-review/references/themes.md"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"mode audit\" found in docs/CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"couple mode\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0027",
+      "point": 27,
+      "commit": "acb1bac806d7959c81fd09d6549e5d5519ef36de",
+      "shortCommit": "acb1bac",
+      "date": "2026-11-06",
+      "type": "merge",
+      "scope": "",
+      "summary": "code-review 1.8.0 — couple mode, audit default, next-mode handoff",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0028",
+      "point": 28,
+      "commit": "2bea69b7eaeb8bb8aa6b9160111f430f698297cc",
+      "shortCommit": "2bea69b",
+      "date": "2026-11-07",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.1.4",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "llms.txt",
+        "package.json",
+        "skills.json",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/reflection-maintenance/clean-system-cache/README.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/agents/openai.yaml",
+        "skills/reflection-maintenance/clean-system-cache/references/audit.md",
+        "skills/reflection-maintenance/clean-system-cache/references/candidate-catalog.md",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.cmd",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "tests/clean-system-cache.test.ts",
+        "tests/harness-hygiene.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/ARCHITECTURE.md"],
+          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/ARCHITECTURE.md"],
+          "evidence": "phrase \"release\" found in docs/ARCHITECTURE.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/index.md"],
+          "evidence": "phrase \"release\" found in .agents/context/index.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0029",
+      "point": 29,
+      "commit": "7426ac14222650f837935f90827be0059c633cfc",
+      "shortCommit": "7426ac1",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #347 from harshsinghmp/release/v8.1.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0030",
+      "point": 30,
+      "commit": "40f530243e73f710448433a11f591ecd3ef38b33",
+      "shortCommit": "40f5302",
+      "date": "2026-11-08",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.1.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0031",
+      "point": 31,
+      "commit": "f457cd5d03f9cae6ab689305e1d4b4c8a0248c9b",
+      "shortCommit": "f457cd5",
+      "date": "2026-11-08",
+      "type": "fix",
+      "scope": "new-project",
+      "summary": "create src/ before writing emdash live.config.ts",
+      "breaking": false,
+      "files": ["skills/core-engine/new-project/scripts/new-project.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"before writing\" found in docs/CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"emdash live\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0032",
+      "point": 32,
+      "commit": "5e543c3e24a85f7896f82db523ba4aac2b41e206",
+      "shortCommit": "5e543c3",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #349 from harshsinghmp/fix/emdash-scaffold-src",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0033",
+      "point": 33,
+      "commit": "820ec232945b3fbc31bd6d3e330578ae8fa35c78",
+      "shortCommit": "820ec23",
+      "date": "2026-11-08",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.1.4 (emdash scaffold fix)",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.4",
+      "createdAt": "2026-11-08T10:13:03.879Z"
+    },
+    {
+      "id": "DP-0034",
+      "point": 34,
+      "commit": "228ceee1bf0a6e538fb3d821edfaf1a5e1167347",
+      "shortCommit": "228ceee",
+      "date": "2026-11-08",
+      "type": "chore",
+      "scope": "deps-dev",
+      "summary": "bump @biomejs/biome from 2.6.2 to 2.6.5",
+      "breaking": false,
+      "files": ["package-lock.json", "package.json"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"biomejs biome\" found in docs/CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["docs/CHANGELOG.md"],
+          "evidence": "phrase \"biomejs biome\" found in docs/CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"bump biomejs\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0035",
+      "point": 35,
+      "commit": "91be8b900abf90121783c2201b0c230059c54513",
+      "shortCommit": "91be8b9",
+      "date": "2026-11-08",
+      "type": "feat",
+      "scope": "updateagents",
+      "summary": "universal English-only language policy and script guard",
+      "breaking": false,
+      "files": [
+        "skills/core-engine/updateagents/scripts/agents-template.ts",
+        "skills/core-engine/updateagents/templates/.agents/standards/language-policy.md",
+        "skills/core-engine/updateagents/templates/AGENTS.md"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md"],
+          "evidence": "phrase \"universal english\" found in RELEASE_NOTES.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"universal english\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0036",
+      "point": 36,
+      "commit": "ec53501d0063246c83121711f0b31c961687ae5f",
+      "shortCommit": "ec53501",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #351 from harshsinghmp/docs/release-surface-8.1.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0037",
+      "point": 37,
+      "commit": "30856ef726129a171c5a4c638bb14e2de3a5ad40",
+      "shortCommit": "30856ef",
+      "date": "2026-11-08",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "retry Bun setup once when the GitHub asset CDN returns 504",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["README.md"],
+          "evidence": "phrase \"setup once\" found in README.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["README.md"],
+          "evidence": "phrase \"setup once\" found in README.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"retry setup\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0038",
+      "point": 38,
+      "commit": "e0a4ece02fe90162a7fa9b80bdafc07f98f0073c",
+      "shortCommit": "e0a4ece",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #352 from harshsinghmp/fix/ci-bun-setup-retry",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0039",
+      "point": 39,
+      "commit": "a1ff2c8d0c7e602328acc31e2950a3ea21ac6f7f",
+      "shortCommit": "a1ff2c8",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge branch 'dev' into feat/updateagents-language-policy",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0040",
+      "point": 40,
+      "commit": "163875605a9ae3e2b7faa77b7c74b4f79c68c5a1",
+      "shortCommit": "1638756",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge branch 'dev' into dependabot/npm_and_yarn/biomejs/biome-2.6.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0041",
+      "point": 41,
+      "commit": "62aec68dc3ab14a5707dbb908add5ff4ad21387c",
+      "shortCommit": "62aec68",
+      "date": "2026-11-08",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "refresh bun.lock for biome 2.6.5 after dev merge",
+      "breaking": false,
+      "files": ["bun.lock"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"lock biome\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"lock biome\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"lock biome\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0042",
+      "point": 42,
+      "commit": "cb1624c90c68d65194a6df1c5addb391807285f8",
+      "shortCommit": "cb1624c",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #350 from harshsinghmp/feat/updateagents-language-policy",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0043",
+      "point": 43,
+      "commit": "26bbdaafe7db47b16995e721c937a05a12df7fa8",
+      "shortCommit": "26bbdaa",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #346 from harshsinghmp/dependabot/npm_and_yarn/biomejs/biome-2.6.4",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0044",
+      "point": 44,
+      "commit": "ab25f313226e9f8ed586d8da558563db9374999e",
+      "shortCommit": "ab25f31",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #353 from harshsinghmp/docs/changelog-unreleased-batch",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0045",
+      "point": 45,
+      "commit": "da1cec6f9c30d9077532e19cfe2131d94c83c3c2",
+      "shortCommit": "da1cec6",
+      "date": "2026-11-08",
+      "type": "feat",
+      "scope": "clean-system-cache",
+      "summary": "loud banner before irreversible ASK! deletions",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.cmd",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "tests/clean-system-cache.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md"],
+          "evidence": "phrase \"banner before\" found in RELEASE_NOTES.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md"],
+          "evidence": "phrase \"banner before\" found in RELEASE_NOTES.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"loud banner\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
+    },
+    {
+      "id": "DP-0046",
+      "point": 46,
+      "commit": "354455e48aa91a75f2d0742ea53c1d091267f2b4",
+      "shortCommit": "354455e",
+      "date": "2026-11-08",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #354 from harshsinghmp/feat/clean-system-cache-hazard-banner",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.1.5",
+      "createdAt": "2026-11-08T15:18:26.522Z"
     }
   ]
 }

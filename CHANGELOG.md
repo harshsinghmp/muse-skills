@@ -2,7 +2,28 @@
 
 All notable changes to this project are documented in this file.
 
+## [8.1.5] - 2026-11-08
+
+### Added
+
+- **`clean-system-cache`: loud irreversible-data banner**: before any `ASK!` confirmation prompt the CLI now prints a boxed `WARNING: IRREVERSIBLE DATA LOSS` naming each selected target and stating that no undo exists. The Windows CLI prints the same box, listing every `ASK!` candidate in the catalog. `T1`/`T2`-only selections never print it, so the warning keeps its meaning. Salvaged from the superseded #348.
+- **`updateagents` universal English language policy**: `templates/.agents/standards/language-policy.md` becomes the 22nd canon standard and is registered in `ALWAYS_STANDARDS` plus the generated `AGENTS.md`, so every scaffolded project states that the working language never switches to match the caller and that site copy is the only translation carve-out.
+
+### Changed
+
+- **Dependencies**: bump `@biomejs/biome` from 2.6.2 to 2.6.5 with a regenerated `bun.lock`; `biome check` passes on the full tree.
+
+### Fixed
+
+- **CI: Bun setup survives the release-asset CDN 504**: every `setup-bun` step in `ci.yml` and `release.yml` now runs with `continue-on-error` and one retry gated on the first attempt's outcome. A genuine setup failure still fails the job; only the transient `Unexpected HTTP response: 504` on the Bun download is absorbed, which had been red-lighting every pull request and the tag-triggered release run.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.4...v8.1.5
+
 ## [8.1.4] - 2026-11-07
+
+### Added
+
+- **code-review 1.8.0 — couple mode, audit default, next-mode handoff**: a read-only whole-codebase coupling audit (`couple` mode, `references/coupling-audit.md`) that answers "should these change together?" for every pair of pieces, emits a fix-cluster decision log, and hands execution to `refactor`. `audit` becomes the default entry for codebase-wide requests, and every mode now names the next mode to run. Trigger (10) of the description reflects the couple mode.
 
 ### Changed
 
