@@ -4891,7 +4891,8 @@ declare module "emdash" {
       };
       writeFileSync(join(seedDir, "seed.json"), `${JSON.stringify(seedData, null, 2)}\n`, "utf8");
 
-      // Live content collections
+      // Live content collections (Astro may not have created src/ for the emdash preset)
+      mkdirSync(join(resolvedTarget, "src"), { recursive: true });
       writeFileSync(
         join(resolvedTarget, "src", "live.config.ts"),
         `import { defineLiveCollection } from "astro:content";
