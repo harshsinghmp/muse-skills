@@ -23,6 +23,11 @@ task needs. Code and skill frontmatter are canonical when docs drift.
 - Atomic PR per skill: separate `feat/*` branch and PR per change; never batch
   multi-skill work into one PR.
 - No secrets or personal environment values in any shipped file.
+- URL Intake: when the user drops any URL (skill page, repo, direct/raw file,
+  blog/article, docs, design reference), classify → fetch → stash the raw
+  source in `.agents/dump/<category>/<descriptive-file-name>` → route to the
+  owning department/mode. Full workflow: `.agents/workflows/url-intake.md`.
+  Never put dumps in the repo tree or `.memory/`.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
 - Modern Tool Primacy: call installed modern CLI tools by binary name,
