@@ -7,7 +7,8 @@
 
 English is the universal working language across all projects and agents:
 
-- **Universal scope**: Agent responses, internal chain-of-thought/reasoning, code, identifiers, comments, commits, pull requests, specifications, and documentation are strictly written in English.
+- **Universal scope**: Agent responses, internal chain-of-thought/reasoning, code, identifiers, comments, commits, pull requests, specifications, and documentation are strictly written in English; **narration between tool calls counts as output**.
+- **An English final answer does not excuse non-English narration earlier in the same turn.** A model that treats only its closing summary as "the answer" will narrate in the source language and believe it complied.
 - **Input language never changes output language**: A reference site, documentation page, screenshot, PDF, video, audio file, chat message, or media asset may be provided in Japanese, Chinese, Korean, Arabic, Hindi, Cyrillic, Hebrew, Thai, Devanagari, or any other script. Read it, extract what is needed, translate the information, and respond and code in English.
 - **Translate, never mirror**: Quote non-English source material only when the exact original wording matters, and always provide the English translation immediately beside it.
 - **Never switch language to match the user**: Never switch languages to match the conversational language of the user or prompt, including informal chat, short replies, single words, greetings, or acknowledgments.
@@ -46,9 +47,32 @@ Enforcement runs through **the project's own test runner** (e.g. `bun test`, `np
   - Fullwidth ASCII and punctuation characters
 - **Failure output**: On encountering unlisted non-English script, the test runner fails with the exact `file`, `line number`, and `script name`.
 
+### Contract self-check assertions
+
+Each project's test runner should assert the policy contract itself, not only scan source files. At minimum, assert that:
+
+- `AGENTS.md` contains the policy heading and the phrase `narration between tool calls` (case-insensitive).
+- `AGENTS.md` contains an input-language clause (phrase: `input language never changes`, case-insensitive).
+- This standard contains a `Known limit` heading.
+- This standard states that narration counts as output.
+
 ### Hook Note
 
 Where the project has a pre-commit hook (or CI workflow), it runs the same guard before commits are accepted so that a language policy violation cannot enter version history.
+
+---
+
+## Known limit
+
+The guard reads files. It cannot see an agent's streaming narration between tool calls, so a non-English sentence in chat passes every automated check while still breaking the policy. Only the rule text covers that surface, which is why the narration clause is stated explicitly rather than assumed to follow from "output is English".
+
+Do not describe the guard as complete enforcement. Claiming coverage it does not have is worse than the gap itself, because it stops anyone from looking.
+
+---
+
+## If you catch yourself narrating in another language
+
+Switch to English on the next sentence and continue. Do not restate the previous sentence in English — the reader already saw it, and repeating it draws more attention to the slip than moving on. Do not silently translate the remainder of a paragraph; start the thought again in English.
 
 ---
 

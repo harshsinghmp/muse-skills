@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- **`updateagents` language policy: tool-call narration is output**: rule 6 and the language-policy standard now state that narration between tool calls is bound by the English-only rule, add a required `Known limit` section explaining what the file guard cannot see, add mid-turn recovery guidance, and add contract self-check assertions projects can encode in their test runner.
+
 ## [8.1.5] - 2026-11-08
 
 ### Added
