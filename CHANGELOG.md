@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **`updateagents` Next 3 follow-ups**: the generated `AGENTS.md` now requires user-facing highly technical work (code, debugging, architecture, security, infrastructure, dependencies, releases) to end with a **Next 3** block after the Layman Report — the three most valuable follow-up actions in priority order, most important first. The rule is mirrored in the repository router and `updatedocs`.
+
+### Fixed
+
+- **`updateagents` module import is side-effect-free**: the CLI body is gated on the entry-point guard (`import.meta.main` with a `process.argv[1]` fallback), and an imported module parses an empty argv instead of the importer's. Importing `updateagents.ts` for its helpers no longer runs a default sync or overwrites curated standards. New regression tests assert import cleanliness and curated-standard preservation.
+
 ## [8.2.0] - 2026-11-08
 
 ### Added

@@ -4,7 +4,7 @@ aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready",
 description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes."
 argument-hint: "[sync|audit|sanitize|scaffold|promote|docs-backlog|hygiene]"
 user-invocable: true
-version: 2.6.0
+version: 2.7.0
 author: Agency Council
 license: MIT
 platforms: [macos, linux, windows]
@@ -281,7 +281,7 @@ Remove duplication and move verbose reference material to dedicated documentatio
 Run `validate-memory-file.sh` to confirm size, structure, command accuracy, and verify `.memory/**` was untouched.
 
 ### Step 17 — Report the Change
-Output a concise change report detailing files discovered, updated, new/obsolete knowledge, and validation receipts.
+Output a concise change report detailing files discovered, updated, new/obsolete knowledge, and validation receipts. For user-facing highly technical work, follow the Session Report Protocol in the generated `AGENTS.md`: technical report, then the plain-language Layman Report, then a **Next 3** block with the three highest-value follow-ups in priority order.
 
 ### Step 18 — Intercept & Promote Foreign-Harness Writes (`promote` Mode)
 When an agent or harness attempts to write or update a prohibited legacy instruction target (`CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`, etc.):
@@ -313,6 +313,7 @@ When an agent or harness attempts to write or update a prohibited legacy instruc
 Do not add entire package manifests, full dependency lists, complete directory trees, full source snippets, logs, stack traces, session transcripts, or generic tutorials. Document only what agents repeatedly need.
 
 ### Canon Refresh (new capability)
+* **Module import must be side-effect-free.** The sync engine's CLI body is gated on the entry-point guard (`import.meta.main`, with a `process.argv[1]` fallback), and an imported module parses an empty argv instead of the importer's. Importing `updateagents.ts` for its helpers must never run a default sync or rewrite curated standards. Any new top-level executable statement belongs inside the guard, and `tests/updateagents-import-guard.test.ts` fails if a raw import writes to the working directory or rewrites a curated standard.
 * **`--check-canon` distinguishes localization from drift automatically.** A file is classified `localized` (not `diverged`) when its only difference from canon is `{{...}}` → concrete substitution, detected by replacing each placeholder with a line-bounded wildcard (`[^\\n]*?`) and regex-matching the local file byte-for-byte (line counts must match). Localized files do not fail the gate (exit 0). Inspect the diff only for genuinely `diverged` files.
 * **`--json` mode must be machine-clean.** Suppress all human-facing banners (headers, "✅ Canon in sync", warnings) when `--json` is set; emit only the JSON object. Any stray text breaks downstream `JSON.parse`.
 * **CI tests must not depend on gitignored local state.** A test that reads `.agents/standards/` passes locally (the dir exists from a prior dogfood run) but fails in CI (the dir is gitignored and absent). Scaffold the fixture in the test itself (copy canon into a temp dir) so the test is deterministic across environments.
