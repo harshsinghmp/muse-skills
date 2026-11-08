@@ -200,6 +200,11 @@ the last scan in `~/.local/state/clean-system-cache/last-scan.tsv`.
 - **`ASK!` is never learned.** Trash/Recycle Bin, `Downloads`, stale `/tmp`, and Flatpak
   app caches always require an explicit selection plus confirmation, on every run,
   forever. A learned `allow` on an `ASK!` key is ignored by design.
+- **`ASK!` selections get a loud banner.** Before the confirmation prompt, the CLI prints a
+  boxed `WARNING: IRREVERSIBLE DATA LOSS` that names each selected irreversible target and
+  states there is no undo. The Windows CLI prints the same box, listing every `ASK!`
+  candidate in the catalog. Never strip it, and never print it for a `T1`/`T2`-only selection —
+  a warning that fires on safe work stops being read.
 
 Learning is per key, so per app (`app:mpv`), per Flatpak app
 (`flatpak:org.mozilla.thunderbird`), and per project cache

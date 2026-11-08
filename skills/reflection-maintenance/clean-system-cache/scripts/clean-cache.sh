@@ -1529,6 +1529,33 @@ print_selection_plan() {
     echo "===================================================================="
 }
 
+# Loud, unmissable warning before anything irreversible is touched. The quiet
+# per-row note in print_selection_plan is easy to scroll past; this is not.
+print_irreversible_hazard() {
+    local a found=0
+    for a in "$@"; do
+        [ "${ACT_TIER[$a]}" = "ASK!" ] || continue
+        found=1
+        break
+    done
+    [ "$found" -eq 1 ] || return 0
+    echo ""
+    echo " ####################################################################"
+    echo " #                                                                  #"
+    echo " #   !!!  WARNING: IRREVERSIBLE DATA LOSS  !!!                      #"
+    echo " #                                                                  #"
+    echo " ####################################################################"
+    echo "   These selections are NOT caches. Deleting them CANNOT be undone:"
+    for a in "$@"; do
+        [ "${ACT_TIER[$a]}" = "ASK!" ] || continue
+        printf '     - %s\n' "${ACT_LABEL[$a]}"
+    done
+    echo "   There is no Trash fallback, no restore point, and no undo."
+    echo "   If you are unsure, answer no and re-run with --browse first."
+    echo " ####################################################################"
+    echo ""
+}
+
 selection_needs_confirmation() {
     local a
     for a in "$@"; do
@@ -1592,6 +1619,7 @@ execute_selection() {
     local a
     [ "$#" -gt 0 ] || return 0
     print_selection_plan "$@"
+    print_irreversible_hazard "$@"
     if selection_needs_confirmation "$@"; then
         if [ "$DRY_RUN" = true ]; then
             echo " Dry run: nothing will be deleted."
