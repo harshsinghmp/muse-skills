@@ -64,7 +64,32 @@ describe("GitHub scaffold adaptation", () => {
     expect(workflows).toContain("ci-node.yml");
     expect(workflows).not.toContain("ci-python.yml");
     expect(workflows).not.toContain("cli-release.yml");
-    expect(selectGitHubWorkflowTemplates({ packageScripts: { dev: "vite" } })).toEqual(["landing-gate.yml"]);
+    expect(selectGitHubWorkflowTemplates({ packageScripts: { dev: "vite" } })).toEqual([
+      "landing-gate.yml",
+      "sync-gate.yml",
+    ]);
+  });
+
+  it("provisions a self-contained sync gate and preserves edits unless refreshed", () => {
+    const target = fixture();
+    const first = scaffoldGitHubAssets(target, { githubProject: true });
+    expect(first.created).toContain(".github/workflows/sync-gate.yml");
+
+    const path = join(target, ".github/workflows/sync-gate.yml");
+    const workflow = readFileSync(path, "utf8");
+    expect(workflow).toContain("merge-base --is-ancestor");
+    expect(workflow).toContain("github.event.number");
+    expect(workflow).not.toContain("scripts/check-sync.ts");
+    expect(workflow).not.toMatch(/\{\{[A-Z_]+\}\}/);
+
+    writeFileSync(path, "name: Local override\n", "utf8");
+    const second = scaffoldGitHubAssets(target, { githubProject: true });
+    expect(second.skipped).toContain(".github/workflows/sync-gate.yml");
+    expect(readFileSync(path, "utf8")).toBe("name: Local override\n");
+
+    const refreshed = scaffoldGitHubAssets(target, { githubProject: true, refreshWorkflows: true });
+    expect(refreshed.created).toContain(".github/workflows/sync-gate.yml");
+    expect(readFileSync(path, "utf8")).toContain("merge-base --is-ancestor");
   });
 
   it("selects a Python workflow only when Python project files are detected", () => {

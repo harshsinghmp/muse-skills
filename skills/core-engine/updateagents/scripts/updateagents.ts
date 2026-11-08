@@ -172,6 +172,7 @@ const { values, positionals } = parseArgs({
     json: { type: "boolean", default: false },
     force: { type: "boolean", short: "f", default: false },
     "confirm-remove-github-workflows": { type: "boolean", default: false },
+    "refresh-workflows": { type: "boolean", default: false },
     github: { type: "boolean", default: false },
     "no-github": { type: "boolean", default: false },
     help: { type: "boolean", short: "h", default: false },
@@ -220,6 +221,7 @@ Options:
   --no-hygiene             Skip the automatic hygiene pass in the default sync
   --check-canon     Verify local .agents/standards against the master canon without modifying (exits 0 if in sync, 1 if drift)
   --refresh <name>  Adopt the master-canon version of one standard (or "all" for every diverged one) — selective, agent-reviewed
+  --refresh-workflows  Overwrite existing .github/workflows templates with the current canon (default: preserve edits)
   --report-html    Generate a standalone single-file HTML work report for employees, agents, or clients
   --report-out <f> Custom destination path for HTML work report
   --fail-under N   Exit 1 when the audit score falls below N (CI gate)
@@ -3064,6 +3066,7 @@ export function scaffoldAgentEngine(
     force?: boolean;
     githubProject?: boolean;
     confirmRemoveGitHubWorkflows?: boolean;
+    refreshWorkflows?: boolean;
     followNestedRepos?: boolean;
   } = {},
 ): {
@@ -3288,6 +3291,7 @@ export function scaffoldAgentEngine(
     agentName: readConfiguredAgentName(),
     githubProject: options.githubProject,
     removeWorkflowsConfirmed: options.confirmRemoveGitHubWorkflows,
+    refreshWorkflows: options.refreshWorkflows,
     dryRun: dry,
   });
   created.push(...githubAssets.created);
@@ -3392,6 +3396,7 @@ if (isScaffold) {
     force: isForce,
     githubProject: values.github ? true : values["no-github"] ? false : undefined,
     confirmRemoveGitHubWorkflows: values["confirm-remove-github-workflows"],
+    refreshWorkflows: values["refresh-workflows"],
     followNestedRepos,
   });
   if (result.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
@@ -3405,6 +3410,7 @@ if (isScaffold) {
       agentName: readConfiguredAgentName(),
       githubProject: /^y(es)?$/i.test(answer.trim()),
       removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+      refreshWorkflows: values["refresh-workflows"],
       dryRun: isDryRun,
     });
     result = {
@@ -3428,6 +3434,7 @@ if (isScaffold) {
         agentName: readConfiguredAgentName(),
         githubProject: true,
         removeWorkflowsConfirmed: true,
+        refreshWorkflows: values["refresh-workflows"],
         dryRun: isDryRun,
       });
       result = {
@@ -3750,6 +3757,7 @@ let githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
   agentName: readConfiguredAgentName(),
   githubProject: values.github ? true : values["no-github"] ? false : undefined,
   removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+  refreshWorkflows: values["refresh-workflows"],
   communityAssets: isScaffold || isFreshEngineContainer,
   dryRun: isDryRun,
 });
@@ -3767,6 +3775,7 @@ if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values
     agentName: readConfiguredAgentName(),
     githubProject: /^y(es)?$/i.test(answer.trim()),
     removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
+    refreshWorkflows: values["refresh-workflows"],
     communityAssets: isScaffold || isFreshEngineContainer,
     dryRun: isDryRun,
   });
@@ -3790,6 +3799,7 @@ if (
       packageScripts: projectScripts,
       agentName: readConfiguredAgentName(),
       removeWorkflowsConfirmed: true,
+      refreshWorkflows: values["refresh-workflows"],
       dryRun: isDryRun,
     });
   }
