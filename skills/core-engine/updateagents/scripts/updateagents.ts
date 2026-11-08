@@ -42,6 +42,7 @@ import {
 import { homedir } from "node:os";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import * as readline from "node:readline/promises";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import {
   detectAgentTemplateProfile,
@@ -72,6 +73,27 @@ const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 
 /** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
 const AGENTS_MD_MAX_LINES = 90;
+
+/**
+ * Entry-point guard: importing this module must have no side effects.
+ *
+ * The CLI program below used to run at module top level, so `import`ing the
+ * file re-ran a default sync and could overwrite curated standards. The CLI
+ * body is now gated on this flag: only the process entry point executes it,
+ * while exports stay importable for tests and other tooling.
+ */
+function detectEntryPoint(): boolean {
+  if (typeof import.meta.main === "boolean") return import.meta.main;
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    return resolve(entry) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+}
+
+export const IS_ENTRY_POINT = detectEntryPoint();
 
 export const SECRETARY_ROUTER_BLOCK = `[//]: # (muse-secretary-router:start)
 ## Secretary Protocol
@@ -131,7 +153,8 @@ export function ensureImportedInstructionsRouter(content: string): { updatedCont
 
 // CLI Flags
 const { values, positionals } = parseArgs({
-  args: Bun.argv.slice(2),
+  // An imported module must not parse the importer's argv or trigger CLI modes.
+  args: IS_ENTRY_POINT ? Bun.argv.slice(2) : [],
   options: {
     audit: { type: "boolean", default: false },
     scaffold: { type: "boolean", short: "s", default: false },
@@ -3577,634 +3600,639 @@ if (isAudit) {
 // DEFAULT MODE: CONTEXT SYNCHRONIZATION & PROGRESSIVE DISCLOSURE DOX
 // =========================================================================
 
-// Change Tracking Ledger
-interface ChangeReport {
-  scaffolded: string[];
-  contextMerged: Array<{ targetFile: string; section: string; source: string }>;
-  standardsSynced: string[];
-  standardsDiverged: string[];
-  standardsSkipped: string[];
-  brandSynced: string[];
-  archived: string[];
-  preserved: string[];
-}
-
-const report: ChangeReport = {
-  scaffolded: [],
-  contextMerged: [],
-  standardsSynced: [],
-  standardsDiverged: [],
-  standardsSkipped: [],
-  brandSynced: [],
-  archived: [],
-  preserved: [],
-};
-
-assertWorkspaceBoundary(workspaceDir);
-
-console.log("\n=======================================================");
-console.log(" 🧠 updateagents — Project Agent Context Synchronization");
-console.log("=======================================================");
-console.log(`📁 Workspace: ${workspaceDir}`);
-if (isDryRun) console.log(`🔍 [DRY RUN MODE — No filesystem writes]`);
-console.log("-------------------------------------------------------\n");
-
-// Step 2: Discover Existing Agent Files
-console.log("🔍 Step 2: Scanning for existing agent files...");
-const discoveredSources = discoverAgentInstructionSources(workspaceDir, { followNestedRepos });
-const discoveredFiles = discoveredSources.map((source) => ({
-  relPath: source.relativePath,
-  fullPath: source.absolutePath,
-  content: source.content,
-}));
-for (const file of discoveredFiles) {
-  console.log(`  📄 Found agent instructions: ./${file.relPath} (${(file.content.length / 1024).toFixed(1)} KB)`);
-}
-await guardInstructionAdaptation(planInstructionAdaptations(discoveredSources), {
-  dryRun: isDryRun,
-  yes: values.yes,
-});
-
-const agentsDir = join(workspaceDir, ".agents");
-const standardsDir = join(agentsDir, "standards");
-const contextDir = join(agentsDir, "context");
-const hasAgentsDir = existsSync(agentsDir);
-const hasStandards = existsSync(standardsDir);
-const hasContext = existsSync(contextDir);
-
-const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir || existsSync(join(workspaceDir, "AGENTS.md"));
-
-// A container that exists only because this run created it is still fresh. New
-// projects must receive the full canon and the community/governance files;
-// established repositories must never have canon rulebooks injected or
-// community files re-provisioned behind a plain `sync`.
-const isFreshEngineContainer = !hasAnyAgentFiles;
-
-if (!hasAnyAgentFiles) {
-  console.log("  ℹ️  No existing agent files or .agents/ container found.");
-} else {
-  console.log(
-    `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"} (standards: ${hasStandards ? "Yes" : "No"}, context: ${hasContext ? "Yes" : "No"})`,
-  );
-}
-
-const globalIdentityDir = join(homedir(), ".agents/identity");
-const hasGlobalIdentity = existsSync(join(globalIdentityDir, "user.md"));
-if (!hasGlobalIdentity) {
-  console.log(
-    "  💡 Notice: Global identity not detected (~/.agents/identity/). Run 'bun updateagents.ts --onboard --global' or 'secretary:onboard' in chat to configure your principal profile.",
-  );
-} else {
-  console.log("  🧭 Global identity active: ~/.agents/identity/ (Cascade inherits baseline rules)");
-}
-
-// =========================================================================
-// Context Freshness Fast-Path Gate
-// =========================================================================
-const hashFile = join(contextDir, ".context.hash");
-const rootAgentsFile = join(workspaceDir, "AGENTS.md");
-const legacyClaude = join(workspaceDir, "CLAUDE.md");
-
-if (
-  !isForce &&
-  !isAudit &&
-  !isScaffold &&
-  !isSanitize &&
-  !isOnboard &&
-  existsSync(contextDir) &&
-  existsSync(hashFile) &&
-  existsSync(rootAgentsFile) &&
-  (!existsSync(legacyClaude) || readFileSync(legacyClaude, "utf8").trim() === "@AGENTS.md") &&
-  discoveredFiles.length === 0 &&
-  !hasReadyDocsBacklog(workspaceDir) &&
-  !hasHygieneWork(workspaceDir)
-) {
-  const currentHash = computeContextHash(contextDir);
-  const savedHash = readFileSync(hashFile, "utf8").trim();
-  const clean = isGitClean(workspaceDir);
-  if (currentHash === savedHash && currentHash.length > 0) {
-    console.log("\n⚡ Context Freshness Check: .agents/context/ verified & synchronized.");
-    if (clean) {
-      console.log("🔒 Git working tree clean — zero uncommitted drift.");
-    }
-    console.log(
-      `⏩ Fast-path exit: Zero drift detected (SHA-256: ${currentHash.slice(0, 12)}...). Proceeding to execution with 0 changes.\n`,
-    );
-    process.exit(0);
+// The whole default-sync program lives behind the entry-point guard.
+if (IS_ENTRY_POINT) {
+  // Change Tracking Ledger
+  interface ChangeReport {
+    scaffolded: string[];
+    contextMerged: Array<{ targetFile: string; section: string; source: string }>;
+    standardsSynced: string[];
+    standardsDiverged: string[];
+    standardsSkipped: string[];
+    brandSynced: string[];
+    archived: string[];
+    preserved: string[];
   }
-}
 
-// Step 3: Inspect Project Environment
-console.log("\n📦 Step 3: Inspecting codebase & framework...");
-let projectName = basename(workspaceDir);
-let projectDesc = `${projectName} - Application governed by Agency Council.`;
-let frameworkDetected = "generic";
-let projectScripts: Record<string, string> = {};
-let dependencies: Record<string, string> = {};
+  const report: ChangeReport = {
+    scaffolded: [],
+    contextMerged: [],
+    standardsSynced: [],
+    standardsDiverged: [],
+    standardsSkipped: [],
+    brandSynced: [],
+    archived: [],
+    preserved: [],
+  };
 
-const pkgJsonPath = join(workspaceDir, "package.json");
-if (existsSync(pkgJsonPath)) {
-  try {
-    const pkg = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-    if (pkg.name) projectName = pkg.name;
-    if (pkg.description) projectDesc = pkg.description;
-    if (pkg.scripts) projectScripts = pkg.scripts;
-    dependencies = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+  assertWorkspaceBoundary(workspaceDir);
 
-    if (dependencies.astro) frameworkDetected = "astro";
-    else if (dependencies.next) frameworkDetected = "nextjs";
-    else if (dependencies.hono) frameworkDetected = "hono";
-    else if (dependencies.vite) frameworkDetected = "vite";
-    else if (dependencies.react) frameworkDetected = "react";
+  console.log("\n=======================================================");
+  console.log(" 🧠 updateagents — Project Agent Context Synchronization");
+  console.log("=======================================================");
+  console.log(`📁 Workspace: ${workspaceDir}`);
+  if (isDryRun) console.log(`🔍 [DRY RUN MODE — No filesystem writes]`);
+  console.log("-------------------------------------------------------\n");
 
-    console.log(`  ✅ Parsed package.json: Name="${projectName}", Framework="${frameworkDetected}"`);
-  } catch {}
-}
+  // Step 2: Discover Existing Agent Files
+  console.log("🔍 Step 2: Scanning for existing agent files...");
+  const discoveredSources = discoverAgentInstructionSources(workspaceDir, { followNestedRepos });
+  const discoveredFiles = discoveredSources.map((source) => ({
+    relPath: source.relativePath,
+    fullPath: source.absolutePath,
+    content: source.content,
+  }));
+  for (const file of discoveredFiles) {
+    console.log(`  📄 Found agent instructions: ./${file.relPath} (${(file.content.length / 1024).toFixed(1)} KB)`);
+  }
+  await guardInstructionAdaptation(planInstructionAdaptations(discoveredSources), {
+    dryRun: isDryRun,
+    yes: values.yes,
+  });
 
-const composerJsonPath = join(workspaceDir, "composer.json");
-if (existsSync(composerJsonPath)) {
-  try {
-    const comp = JSON.parse(readFileSync(composerJsonPath, "utf8"));
-    if (comp.name && projectName === basename(workspaceDir)) projectName = comp.name;
+  const agentsDir = join(workspaceDir, ".agents");
+  const standardsDir = join(agentsDir, "standards");
+  const contextDir = join(agentsDir, "context");
+  const hasAgentsDir = existsSync(agentsDir);
+  const hasStandards = existsSync(standardsDir);
+  const hasContext = existsSync(contextDir);
+
+  const hasAnyAgentFiles = discoveredFiles.length > 0 || hasAgentsDir || existsSync(join(workspaceDir, "AGENTS.md"));
+
+  // A container that exists only because this run created it is still fresh. New
+  // projects must receive the full canon and the community/governance files;
+  // established repositories must never have canon rulebooks injected or
+  // community files re-provisioned behind a plain `sync`.
+  const isFreshEngineContainer = !hasAnyAgentFiles;
+
+  if (!hasAnyAgentFiles) {
+    console.log("  ℹ️  No existing agent files or .agents/ container found.");
+  } else {
+    console.log(
+      `  ℹ️  Active agent files detected: ${discoveredFiles.length} file(s), .agents/ dir: ${hasAgentsDir ? "Yes" : "No"} (standards: ${hasStandards ? "Yes" : "No"}, context: ${hasContext ? "Yes" : "No"})`,
+    );
+  }
+
+  const globalIdentityDir = join(homedir(), ".agents/identity");
+  const hasGlobalIdentity = existsSync(join(globalIdentityDir, "user.md"));
+  if (!hasGlobalIdentity) {
+    console.log(
+      "  💡 Notice: Global identity not detected (~/.agents/identity/). Run 'bun updateagents.ts --onboard --global' or 'secretary:onboard' in chat to configure your principal profile.",
+    );
+  } else {
+    console.log("  🧭 Global identity active: ~/.agents/identity/ (Cascade inherits baseline rules)");
+  }
+
+  // =========================================================================
+  // Context Freshness Fast-Path Gate
+  // =========================================================================
+  const hashFile = join(contextDir, ".context.hash");
+  const rootAgentsFile = join(workspaceDir, "AGENTS.md");
+  const legacyClaude = join(workspaceDir, "CLAUDE.md");
+
+  if (
+    !isForce &&
+    !isAudit &&
+    !isScaffold &&
+    !isSanitize &&
+    !isOnboard &&
+    existsSync(contextDir) &&
+    existsSync(hashFile) &&
+    existsSync(rootAgentsFile) &&
+    (!existsSync(legacyClaude) || readFileSync(legacyClaude, "utf8").trim() === "@AGENTS.md") &&
+    discoveredFiles.length === 0 &&
+    !hasReadyDocsBacklog(workspaceDir) &&
+    !hasHygieneWork(workspaceDir)
+  ) {
+    const currentHash = computeContextHash(contextDir);
+    const savedHash = readFileSync(hashFile, "utf8").trim();
+    const clean = isGitClean(workspaceDir);
+    if (currentHash === savedHash && currentHash.length > 0) {
+      console.log("\n⚡ Context Freshness Check: .agents/context/ verified & synchronized.");
+      if (clean) {
+        console.log("🔒 Git working tree clean — zero uncommitted drift.");
+      }
+      console.log(
+        `⏩ Fast-path exit: Zero drift detected (SHA-256: ${currentHash.slice(0, 12)}...). Proceeding to execution with 0 changes.\n`,
+      );
+      process.exit(0);
+    }
+  }
+
+  // Step 3: Inspect Project Environment
+  console.log("\n📦 Step 3: Inspecting codebase & framework...");
+  let projectName = basename(workspaceDir);
+  let projectDesc = `${projectName} - Application governed by Agency Council.`;
+  let frameworkDetected = "generic";
+  let projectScripts: Record<string, string> = {};
+  let dependencies: Record<string, string> = {};
+
+  const pkgJsonPath = join(workspaceDir, "package.json");
+  if (existsSync(pkgJsonPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
+      if (pkg.name) projectName = pkg.name;
+      if (pkg.description) projectDesc = pkg.description;
+      if (pkg.scripts) projectScripts = pkg.scripts;
+      dependencies = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+
+      if (dependencies.astro) frameworkDetected = "astro";
+      else if (dependencies.next) frameworkDetected = "nextjs";
+      else if (dependencies.hono) frameworkDetected = "hono";
+      else if (dependencies.vite) frameworkDetected = "vite";
+      else if (dependencies.react) frameworkDetected = "react";
+
+      console.log(`  ✅ Parsed package.json: Name="${projectName}", Framework="${frameworkDetected}"`);
+    } catch {}
+  }
+
+  const composerJsonPath = join(workspaceDir, "composer.json");
+  if (existsSync(composerJsonPath)) {
+    try {
+      const comp = JSON.parse(readFileSync(composerJsonPath, "utf8"));
+      if (comp.name && projectName === basename(workspaceDir)) projectName = comp.name;
+      if (
+        comp.require &&
+        (comp.require["roots/bedrock"] || comp.require["roots/wordpress"] || comp.require["johnpbloch/wordpress"])
+      ) {
+        frameworkDetected = "wordpress";
+      }
+      console.log(`  ✅ Parsed composer.json: Framework="${frameworkDetected}"`);
+    } catch {}
+  }
+
+  // Check for WordPress markers if not yet detected
+  if (frameworkDetected === "generic") {
     if (
-      comp.require &&
-      (comp.require["roots/bedrock"] || comp.require["roots/wordpress"] || comp.require["johnpbloch/wordpress"])
+      existsSync(join(workspaceDir, "wp-config.php")) ||
+      existsSync(join(workspaceDir, "web/wp-config.php")) ||
+      existsSync(join(workspaceDir, "wp-content"))
     ) {
       frameworkDetected = "wordpress";
+      console.log(`  ✅ Detected WordPress file hierarchy`);
     }
-    console.log(`  ✅ Parsed composer.json: Framework="${frameworkDetected}"`);
-  } catch {}
-}
-
-// Check for WordPress markers if not yet detected
-if (frameworkDetected === "generic") {
-  if (
-    existsSync(join(workspaceDir, "wp-config.php")) ||
-    existsSync(join(workspaceDir, "web/wp-config.php")) ||
-    existsSync(join(workspaceDir, "wp-content"))
-  ) {
-    frameworkDetected = "wordpress";
-    console.log(`  ✅ Detected WordPress file hierarchy`);
   }
-}
 
-// Keep project GitHub assets additive and adapt CI only to detected project scripts/files.
-let githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
-  projectName,
-  projectDesc,
-  framework: frameworkDetected,
-  packageScripts: projectScripts,
-  agentName: readConfiguredAgentName(),
-  githubProject: values.github ? true : values["no-github"] ? false : undefined,
-  removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
-  refreshWorkflows: values["refresh-workflows"],
-  communityAssets: isScaffold || isFreshEngineContainer,
-  dryRun: isDryRun,
-});
-if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
-  const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const answer = await prompt.question(
-    "No GitHub host is configured. Should GitHub community files and matching workflows be scaffolded? [y/N] ",
-  );
-  prompt.close();
-  githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
+  // Keep project GitHub assets additive and adapt CI only to detected project scripts/files.
+  let githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
     projectName,
     projectDesc,
     framework: frameworkDetected,
     packageScripts: projectScripts,
     agentName: readConfiguredAgentName(),
-    githubProject: /^y(es)?$/i.test(answer.trim()),
+    githubProject: values.github ? true : values["no-github"] ? false : undefined,
     removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
     refreshWorkflows: values["refresh-workflows"],
     communityAssets: isScaffold || isFreshEngineContainer,
     dryRun: isDryRun,
   });
-}
-if (
-  githubAssetResult.confirmationRequired &&
-  !isDryRun &&
-  process.stdin.isTTY &&
-  !values["confirm-remove-github-workflows"]
-) {
-  const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const answer = await prompt.question(
-    "This project has a non-GitHub origin. Remove all files under .github/workflows? Other .github files will be kept. [y/N] ",
-  );
-  prompt.close();
-  if (/^y(es)?$/i.test(answer.trim())) {
+  if (githubAssetResult.hostUnknown && !isDryRun && process.stdin.isTTY && !values.github && !values["no-github"]) {
+    const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await prompt.question(
+      "No GitHub host is configured. Should GitHub community files and matching workflows be scaffolded? [y/N] ",
+    );
+    prompt.close();
     githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
       projectName,
       projectDesc,
       framework: frameworkDetected,
       packageScripts: projectScripts,
       agentName: readConfiguredAgentName(),
-      removeWorkflowsConfirmed: true,
+      githubProject: /^y(es)?$/i.test(answer.trim()),
+      removeWorkflowsConfirmed: values["confirm-remove-github-workflows"],
       refreshWorkflows: values["refresh-workflows"],
+      communityAssets: isScaffold || isFreshEngineContainer,
       dryRun: isDryRun,
     });
   }
-}
-for (const path of githubAssetResult.created) report.scaffolded.push(path);
-for (const path of githubAssetResult.skipped) report.preserved.push(path);
-if (githubAssetResult.removed.length)
-  report.scaffolded.push(...githubAssetResult.removed.map((path) => `${path} (removed after confirmation)`));
-if (githubAssetResult.confirmationRequired) {
-  console.log(
-    "  ⚠️ GitHub workflow files were preserved. Ask the user before removal; confirm with --confirm-remove-github-workflows.",
-  );
-}
-if (githubAssetResult.hostUnknown) {
-  console.log(
-    "  ⚠️ GitHub assets deferred because hosting is unknown; ask the user and rerun with --github or --no-github.",
-  );
-}
-
-// Provision .agents/ directory structure
-const subdirs = [
-  "archive",
-  "artifacts",
-  "dump",
-  "brand",
-  "brand/tokens",
-  "brand/screenshots",
-  "context",
-  "goals",
-  "research",
-  "skills",
-  "standards",
-  "workflows",
-];
-
-for (const sub of subdirs) {
-  const p = join(agentsDir, sub);
-  assertNotMemory(p);
-  if (!existsSync(p) && !isDryRun) {
-    mkdirSync(p, { recursive: true });
-    report.scaffolded.push(`.agents/${sub}/`);
-  }
-}
-
-const instructionMigration = migrateAgentInstructions(workspaceDir, {
-  dryRun: isDryRun,
-  followNestedRepos,
-});
-for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
-  report.archived.push(
-    `${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (exact snapshot)`,
-  );
-}
-if (instructionMigration.imported.length > 0) {
-  report.contextMerged.push({
-    targetFile: instructionMigration.canonicalPath || ".agents/context/imported-agent-instructions.md",
-    section: `Imported ${instructionMigration.imported.length} source file(s)`,
-    source: "Agent-specific instruction migration",
-  });
-  console.log(
-    `  🧭 Imported ${instructionMigration.imported.length} source(s) into ${instructionMigration.canonicalPath}`,
-  );
-}
-
-function scaffoldMissingContextTemplates(): void {
-  const sourceDir = join(TEMPLATES_DIR, ".agents/context");
-  if (!existsSync(sourceDir)) return;
-  for (const file of readdirSync(sourceDir)) {
-    const source = join(sourceDir, file);
-    const destination = join(contextDir, file);
-    assertNotMemory(destination);
-    if (existsSync(destination) || isDryRun) continue;
-
-    let content = readFileSync(source, "utf8")
-      .replace(/\{\{PROJECT_NAME\}\}/g, projectName)
-      .replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
-    if (file === "product.md") {
-      content = `# 📦 Product Scope & Inventory\n\n## Overview\n${projectDesc}\n\n## Key Capabilities\n- Framework: ${frameworkDetected.toUpperCase()}\n- Governed by the project Agent Engine.\n`;
-    } else if (file === "architecture.md") {
-      const scripts = Object.entries(projectScripts)
-        .map(([name, command]) => `- npm run ${name} / bun ${name}: ${command}`)
-        .join("\n");
-      content = `# 🏗️ Architecture & Workspace Layout\n\n## Stack\n- Framework: ${frameworkDetected.toUpperCase()}\n- Runtime: from project configuration\n\n## Verified Project Scripts\n${scripts || "- No package scripts detected"}\n\n## Directory Layout\nDocument verified application boundaries and data flows here.\n`;
-    } else if (file === "current.md") {
-      content = `# 📍 Current Shipped State & System Reality\n\n## Verified Shipped Reality\n- Project **${projectName}** initialized with the Agent Engine.\n- Framework: ${frameworkDetected.toUpperCase()}.\n\n## Next Immediate Focus\n- Record the next verified project milestone.\n`;
+  if (
+    githubAssetResult.confirmationRequired &&
+    !isDryRun &&
+    process.stdin.isTTY &&
+    !values["confirm-remove-github-workflows"]
+  ) {
+    const prompt = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await prompt.question(
+      "This project has a non-GitHub origin. Remove all files under .github/workflows? Other .github files will be kept. [y/N] ",
+    );
+    prompt.close();
+    if (/^y(es)?$/i.test(answer.trim())) {
+      githubAssetResult = scaffoldGitHubAssets(workspaceDir, {
+        projectName,
+        projectDesc,
+        framework: frameworkDetected,
+        packageScripts: projectScripts,
+        agentName: readConfiguredAgentName(),
+        removeWorkflowsConfirmed: true,
+        refreshWorkflows: values["refresh-workflows"],
+        dryRun: isDryRun,
+      });
     }
-
-    writeFileSync(destination, content, "utf8");
-    report.scaffolded.push(`.agents/context/${file}`);
-    console.log(`  ✅ Created: ./.agents/context/${file}`);
   }
-}
+  for (const path of githubAssetResult.created) report.scaffolded.push(path);
+  for (const path of githubAssetResult.skipped) report.preserved.push(path);
+  if (githubAssetResult.removed.length)
+    report.scaffolded.push(...githubAssetResult.removed.map((path) => `${path} (removed after confirmation)`));
+  if (githubAssetResult.confirmationRequired) {
+    console.log(
+      "  ⚠️ GitHub workflow files were preserved. Ask the user before removal; confirm with --confirm-remove-github-workflows.",
+    );
+  }
+  if (githubAssetResult.hostUnknown) {
+    console.log(
+      "  ⚠️ GitHub assets deferred because hosting is unknown; ask the user and rerun with --github or --no-github.",
+    );
+  }
 
-// =========================================================================
-// SCENARIO A: No Agent Files Found -> Scaffold Fresh Agent Engine
-// =========================================================================
-if (!hasAnyAgentFiles) {
-  console.log("\n🛠️  Step 4A: No agent files detected — Scaffolding fresh Agent Engine DOX container...");
-  scaffoldMissingContextTemplates();
+  // Provision .agents/ directory structure
+  const subdirs = [
+    "archive",
+    "artifacts",
+    "dump",
+    "brand",
+    "brand/tokens",
+    "brand/screenshots",
+    "context",
+    "goals",
+    "research",
+    "skills",
+    "standards",
+    "workflows",
+  ];
 
-  // Deploy Lean Root AGENTS.md
-  const rootAgentsPath = join(workspaceDir, "AGENTS.md");
-  assertNotMemory(rootAgentsPath);
-  const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
-  if (existsSync(railTemplate) && !isDryRun) {
-    const templateContent = readFileSync(railTemplate, "utf8");
-    const profile = detectAgentTemplateProfile(workspaceDir, {
-      projectName,
-      projectDesc,
-      framework: frameworkDetected,
-      dependencies,
+  for (const sub of subdirs) {
+    const p = join(agentsDir, sub);
+    assertNotMemory(p);
+    if (!existsSync(p) && !isDryRun) {
+      mkdirSync(p, { recursive: true });
+      report.scaffolded.push(`.agents/${sub}/`);
+    }
+  }
+
+  const instructionMigration = migrateAgentInstructions(workspaceDir, {
+    dryRun: isDryRun,
+    followNestedRepos,
+  });
+  for (let index = 0; index < instructionMigration.archivePaths.length; index += 1) {
+    report.archived.push(
+      `${instructionMigration.imported[index]} → ${instructionMigration.archivePaths[index]} (exact snapshot)`,
+    );
+  }
+  if (instructionMigration.imported.length > 0) {
+    report.contextMerged.push({
+      targetFile: instructionMigration.canonicalPath || ".agents/context/imported-agent-instructions.md",
+      section: `Imported ${instructionMigration.imported.length} source file(s)`,
+      source: "Agent-specific instruction migration",
     });
-    const rendered = renderAgentsTemplate(templateContent, profile);
-    const { updatedContent } = ensureSecretaryRouter(rendered);
-    writeFileSync(rootAgentsPath, updatedContent, "utf8");
-    report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
-    console.log("  ✅ Deployed root AGENTS.md workspace instructions with Secretary Protocol");
+    console.log(
+      `  🧭 Imported ${instructionMigration.imported.length} source(s) into ${instructionMigration.canonicalPath}`,
+    );
   }
 
-  const claudePointerTemplate = join(TEMPLATES_DIR, "CLAUDE.md");
-  const claudePointerPath = join(workspaceDir, "CLAUDE.md");
-  assertNotMemory(claudePointerPath);
-  if (existsSync(claudePointerTemplate) && !existsSync(claudePointerPath)) {
-    if (!isDryRun) cpSync(claudePointerTemplate, claudePointerPath);
-    report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
-    console.log("  ✅ Deployed Claude pointer to root AGENTS.md");
+  function scaffoldMissingContextTemplates(): void {
+    const sourceDir = join(TEMPLATES_DIR, ".agents/context");
+    if (!existsSync(sourceDir)) return;
+    for (const file of readdirSync(sourceDir)) {
+      const source = join(sourceDir, file);
+      const destination = join(contextDir, file);
+      assertNotMemory(destination);
+      if (existsSync(destination) || isDryRun) continue;
+
+      let content = readFileSync(source, "utf8")
+        .replace(/\{\{PROJECT_NAME\}\}/g, projectName)
+        .replace(/\{\{PROJECT_DESC\}\}/g, projectDesc);
+      if (file === "product.md") {
+        content = `# 📦 Product Scope & Inventory\n\n## Overview\n${projectDesc}\n\n## Key Capabilities\n- Framework: ${frameworkDetected.toUpperCase()}\n- Governed by the project Agent Engine.\n`;
+      } else if (file === "architecture.md") {
+        const scripts = Object.entries(projectScripts)
+          .map(([name, command]) => `- npm run ${name} / bun ${name}: ${command}`)
+          .join("\n");
+        content = `# 🏗️ Architecture & Workspace Layout\n\n## Stack\n- Framework: ${frameworkDetected.toUpperCase()}\n- Runtime: from project configuration\n\n## Verified Project Scripts\n${scripts || "- No package scripts detected"}\n\n## Directory Layout\nDocument verified application boundaries and data flows here.\n`;
+      } else if (file === "current.md") {
+        content = `# 📍 Current Shipped State & System Reality\n\n## Verified Shipped Reality\n- Project **${projectName}** initialized with the Agent Engine.\n- Framework: ${frameworkDetected.toUpperCase()}.\n\n## Next Immediate Focus\n- Record the next verified project milestone.\n`;
+      }
+
+      writeFileSync(destination, content, "utf8");
+      report.scaffolded.push(`.agents/context/${file}`);
+      console.log(`  ✅ Created: ./.agents/context/${file}`);
+    }
   }
-}
 
-// =========================================================================
-// SCENARIO B: Existing agent files -> Preserve, migrate, and adapt
-// =========================================================================
-if (hasAnyAgentFiles) {
-  console.log(
-    "\n🔄 Step 4B: Existing agent instructions detected — retaining source history and updating the shared engine...",
-  );
-  scaffoldMissingContextTemplates();
-  const rootAgentsPath = join(workspaceDir, "AGENTS.md");
-  assertNotMemory(rootAgentsPath);
+  // =========================================================================
+  // SCENARIO A: No Agent Files Found -> Scaffold Fresh Agent Engine
+  // =========================================================================
+  if (!hasAnyAgentFiles) {
+    console.log("\n🛠️  Step 4A: No agent files detected — Scaffolding fresh Agent Engine DOX container...");
+    scaffoldMissingContextTemplates();
 
-  const previousRoot = existsSync(rootAgentsPath) ? readFileSync(rootAgentsPath, "utf8") : "";
-  // PRINCIPLE: an existing root AGENTS.md is never regenerated. Curated rules are
-  // preserved verbatim and only the shared routers are merged in; a file that is
-  // absent is the one case that gets the template.
-  if (!previousRoot) {
+    // Deploy Lean Root AGENTS.md
+    const rootAgentsPath = join(workspaceDir, "AGENTS.md");
+    assertNotMemory(rootAgentsPath);
     const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
     if (existsSync(railTemplate) && !isDryRun) {
+      const templateContent = readFileSync(railTemplate, "utf8");
       const profile = detectAgentTemplateProfile(workspaceDir, {
         projectName,
         projectDesc,
         framework: frameworkDetected,
         dependencies,
       });
-      const rendered = renderAgentsTemplate(readFileSync(railTemplate, "utf8"), profile);
-      const withSecretary = ensureSecretaryRouter(rendered).updatedContent;
+      const rendered = renderAgentsTemplate(templateContent, profile);
+      const { updatedContent } = ensureSecretaryRouter(rendered);
+      writeFileSync(rootAgentsPath, updatedContent, "utf8");
+      report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
+      console.log("  ✅ Deployed root AGENTS.md workspace instructions with Secretary Protocol");
+    }
+
+    const claudePointerTemplate = join(TEMPLATES_DIR, "CLAUDE.md");
+    const claudePointerPath = join(workspaceDir, "CLAUDE.md");
+    assertNotMemory(claudePointerPath);
+    if (existsSync(claudePointerTemplate) && !existsSync(claudePointerPath)) {
+      if (!isDryRun) cpSync(claudePointerTemplate, claudePointerPath);
+      report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
+      console.log("  ✅ Deployed Claude pointer to root AGENTS.md");
+    }
+  }
+
+  // =========================================================================
+  // SCENARIO B: Existing agent files -> Preserve, migrate, and adapt
+  // =========================================================================
+  if (hasAnyAgentFiles) {
+    console.log(
+      "\n🔄 Step 4B: Existing agent instructions detected — retaining source history and updating the shared engine...",
+    );
+    scaffoldMissingContextTemplates();
+    const rootAgentsPath = join(workspaceDir, "AGENTS.md");
+    assertNotMemory(rootAgentsPath);
+
+    const previousRoot = existsSync(rootAgentsPath) ? readFileSync(rootAgentsPath, "utf8") : "";
+    // PRINCIPLE: an existing root AGENTS.md is never regenerated. Curated rules are
+    // preserved verbatim and only the shared routers are merged in; a file that is
+    // absent is the one case that gets the template.
+    if (!previousRoot) {
+      const railTemplate = join(TEMPLATES_DIR, "AGENTS.md");
+      if (existsSync(railTemplate) && !isDryRun) {
+        const profile = detectAgentTemplateProfile(workspaceDir, {
+          projectName,
+          projectDesc,
+          framework: frameworkDetected,
+          dependencies,
+        });
+        const rendered = renderAgentsTemplate(readFileSync(railTemplate, "utf8"), profile);
+        const withSecretary = ensureSecretaryRouter(rendered).updatedContent;
+        const updated = instructionMigration.canonicalPath
+          ? ensureImportedInstructionsRouter(withSecretary).updatedContent
+          : withSecretary;
+        writeFileSync(rootAgentsPath, updated, "utf8");
+        report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
+        console.log("  ✅ Deployed root AGENTS.md and retained all previous rules in imported context");
+      }
+    } else if (!isDryRun) {
+      const withSecretary = ensureSecretaryRouter(previousRoot).updatedContent;
       const updated = instructionMigration.canonicalPath
         ? ensureImportedInstructionsRouter(withSecretary).updatedContent
         : withSecretary;
-      writeFileSync(rootAgentsPath, updated, "utf8");
-      report.scaffolded.push("AGENTS.md (Workspace Instructions & Secretary Protocol)");
-      console.log("  ✅ Deployed root AGENTS.md and retained all previous rules in imported context");
-    }
-  } else if (!isDryRun) {
-    const withSecretary = ensureSecretaryRouter(previousRoot).updatedContent;
-    const updated = instructionMigration.canonicalPath
-      ? ensureImportedInstructionsRouter(withSecretary).updatedContent
-      : withSecretary;
-    if (updated !== previousRoot) {
-      writeFileSync(rootAgentsPath, updated, "utf8");
-      report.preserved.push("AGENTS.md (managed content retained; shared routers refreshed)");
-    }
-  }
-}
-
-// Rewrite supported runtime files as small adapters only after their exact contents are imported.
-const adaptedSources = adaptAgentInstructionSources(instructionMigration.sources, {
-  dryRun: isDryRun,
-  workspaceRoot: workspaceDir,
-});
-for (const sourcePath of adaptedSources) report.scaffolded.push(`${sourcePath} (forwards to AGENTS.md)`);
-for (const sourcePath of adaptedSources)
-  console.log(`  🔗 Updated ./${sourcePath} to use the canonical instruction engine`);
-
-const claudePath = join(workspaceDir, "CLAUDE.md");
-const claudeTemplatePath = join(TEMPLATES_DIR, "CLAUDE.md");
-if (!existsSync(claudePath) && existsSync(claudeTemplatePath)) {
-  if (!isDryRun) cpSync(claudeTemplatePath, claudePath);
-  report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
-}
-
-// =========================================================================
-// Step 5: Synchronize Standards & Brand Tokens from Master Canon
-// =========================================================================
-console.log("\n🔄 Step 5: Synchronizing standards & brand tokens from updateagents/templates/...");
-
-if (existsSync(TEMPLATES_DIR)) {
-  // Sync .agents/standards/
-  //
-  // Established projects own their standards. The canon in
-  // templates/.agents/standards is a *reference*, not an authority: overwriting
-  // a curated rulebook (or injecting unrelated ones such as WordPress/fintech
-  // guidance into a project that uses neither) is data loss, not a sync.
-  //
-  // Rules (keyed off PRE-RUN state — the sync creates an empty .agents/standards
-  // container earlier in the same run, so a Step-5-time existsSync would mistake
-  // a brand-new project for an established one and provision nothing):
-  //   fresh container (no .agents/standards before this run) -> materialize canon
-  //   existing container                                    -> report drift, write nothing
-  //   --scaffold                                            -> add missing canon files
-  //   --force                                               -> overwrite diverged canon files
-  const masterStandardsDir = join(TEMPLATES_DIR, ".agents/standards");
-  if (existsSync(masterStandardsDir)) {
-    const standards = readdirSync(masterStandardsDir);
-    const standardsExisted = hasStandards;
-    const written: string[] = [];
-    for (const std of standards) {
-      const src = join(masterStandardsDir, std);
-      const dest = join(standardsDir, std);
-      assertNotMemory(dest);
-      const exists = existsSync(dest);
-      if (exists && !isForce) {
-        // Curated content wins. Surface the divergence instead of clobbering it.
-        const diverged = readFileSync(dest, "utf8") !== readFileSync(src, "utf8");
-        if (diverged) report.standardsDiverged.push(std);
-        report.standardsSynced.push(std);
-        continue;
+      if (updated !== previousRoot) {
+        writeFileSync(rootAgentsPath, updated, "utf8");
+        report.preserved.push("AGENTS.md (managed content retained; shared routers refreshed)");
       }
-      if (!exists && standardsExisted && !isScaffold && !isForce) {
-        // Do not inject orphan standards into an established project.
-        report.standardsSkipped.push(std);
-        continue;
-      }
-      if (!isDryRun) cpSync(src, dest);
-      if (exists) {
-        logExplicitModification({
-          file: `.agents/standards/${std}`,
-          changeType: "updated",
-          section: "Standard Synchronization",
-          diffSummary: `Updated canon for standard "${std}" (explicit --force)`,
-        });
-      }
-      written.push(std);
-      report.standardsSynced.push(std);
-    }
-    console.log(
-      `  ✅ Standards: ${report.standardsSynced.length} canon rulebook(s) accounted for in ./.agents/standards/` +
-        ` (${report.standardsDiverged.length} curated, ${report.standardsSkipped.length} not applicable, ${written.length} written)`,
-    );
-    if (report.standardsDiverged.length) {
-      console.log(
-        `  🔒 Curated standards preserved: ${report.standardsDiverged.join(", ")} (use --force to overwrite)`,
-      );
-    }
-    if (report.standardsSkipped.length) {
-      console.log(
-        `  ⏭️  Canon standards not applicable here: ${report.standardsSkipped.join(", ")} (use --scaffold to add)`,
-      );
     }
   }
 
-  // Sync .agents/brand/ baseline tokens & guidelines
-  const masterBrandDir = join(TEMPLATES_DIR, ".agents/brand");
-  const projectBrandDir = join(agentsDir, "brand");
-  if (existsSync(masterBrandDir)) {
-    // Sync every brand document the templates ship — the context index
-    // (`.agents/context/index.md`, `brand.md`) links to voice.md,
-    // personas.md, positioning.md, messaging.md, visual-identity.md and
-    // social-hooks.md. Copying only a subset left those links dangling
-    // and failed `--lint-context` on every synced project.
-    const brandFiles = readdirSync(masterBrandDir).filter((item) => item.endsWith(".md") && item !== "CONTENT_MAP.md");
-    for (const bf of brandFiles) {
-      const src = join(masterBrandDir, bf);
-      const dest = join(projectBrandDir, bf);
-      assertNotMemory(dest);
-      if (!existsSync(dest) || isForce) {
+  // Rewrite supported runtime files as small adapters only after their exact contents are imported.
+  const adaptedSources = adaptAgentInstructionSources(instructionMigration.sources, {
+    dryRun: isDryRun,
+    workspaceRoot: workspaceDir,
+  });
+  for (const sourcePath of adaptedSources) report.scaffolded.push(`${sourcePath} (forwards to AGENTS.md)`);
+  for (const sourcePath of adaptedSources)
+    console.log(`  🔗 Updated ./${sourcePath} to use the canonical instruction engine`);
+
+  const claudePath = join(workspaceDir, "CLAUDE.md");
+  const claudeTemplatePath = join(TEMPLATES_DIR, "CLAUDE.md");
+  if (!existsSync(claudePath) && existsSync(claudeTemplatePath)) {
+    if (!isDryRun) cpSync(claudeTemplatePath, claudePath);
+    report.scaffolded.push("CLAUDE.md (@AGENTS.md pointer)");
+  }
+
+  // =========================================================================
+  // Step 5: Synchronize Standards & Brand Tokens from Master Canon
+  // =========================================================================
+  console.log("\n🔄 Step 5: Synchronizing standards & brand tokens from updateagents/templates/...");
+
+  if (existsSync(TEMPLATES_DIR)) {
+    // Sync .agents/standards/
+    //
+    // Established projects own their standards. The canon in
+    // templates/.agents/standards is a *reference*, not an authority: overwriting
+    // a curated rulebook (or injecting unrelated ones such as WordPress/fintech
+    // guidance into a project that uses neither) is data loss, not a sync.
+    //
+    // Rules (keyed off PRE-RUN state — the sync creates an empty .agents/standards
+    // container earlier in the same run, so a Step-5-time existsSync would mistake
+    // a brand-new project for an established one and provision nothing):
+    //   fresh container (no .agents/standards before this run) -> materialize canon
+    //   existing container                                    -> report drift, write nothing
+    //   --scaffold                                            -> add missing canon files
+    //   --force                                               -> overwrite diverged canon files
+    const masterStandardsDir = join(TEMPLATES_DIR, ".agents/standards");
+    if (existsSync(masterStandardsDir)) {
+      const standards = readdirSync(masterStandardsDir);
+      const standardsExisted = hasStandards;
+      const written: string[] = [];
+      for (const std of standards) {
+        const src = join(masterStandardsDir, std);
+        const dest = join(standardsDir, std);
+        assertNotMemory(dest);
+        const exists = existsSync(dest);
+        if (exists && !isForce) {
+          // Curated content wins. Surface the divergence instead of clobbering it.
+          const diverged = readFileSync(dest, "utf8") !== readFileSync(src, "utf8");
+          if (diverged) report.standardsDiverged.push(std);
+          report.standardsSynced.push(std);
+          continue;
+        }
+        if (!exists && standardsExisted && !isScaffold && !isForce) {
+          // Do not inject orphan standards into an established project.
+          report.standardsSkipped.push(std);
+          continue;
+        }
         if (!isDryRun) cpSync(src, dest);
-        report.brandSynced.push(bf);
+        if (exists) {
+          logExplicitModification({
+            file: `.agents/standards/${std}`,
+            changeType: "updated",
+            section: "Standard Synchronization",
+            diffSummary: `Updated canon for standard "${std}" (explicit --force)`,
+          });
+        }
+        written.push(std);
+        report.standardsSynced.push(std);
+      }
+      console.log(
+        `  ✅ Standards: ${report.standardsSynced.length} canon rulebook(s) accounted for in ./.agents/standards/` +
+          ` (${report.standardsDiverged.length} curated, ${report.standardsSkipped.length} not applicable, ${written.length} written)`,
+      );
+      if (report.standardsDiverged.length) {
+        console.log(
+          `  🔒 Curated standards preserved: ${report.standardsDiverged.join(", ")} (use --force to overwrite)`,
+        );
+      }
+      if (report.standardsSkipped.length) {
+        console.log(
+          `  ⏭️  Canon standards not applicable here: ${report.standardsSkipped.join(", ")} (use --scaffold to add)`,
+        );
       }
     }
-    // Tokens
-    const masterTokensDir = join(masterBrandDir, "tokens");
-    const projectTokensDir = join(projectBrandDir, "tokens");
-    if (existsSync(masterTokensDir) && (!existsSync(projectTokensDir) || isForce)) {
-      if (!isDryRun) cpSync(masterTokensDir, projectTokensDir, { recursive: true });
-      report.brandSynced.push("tokens/*");
-      console.log("  ✅ Provisioned baseline design tokens in ./.agents/brand/tokens/");
+
+    // Sync .agents/brand/ baseline tokens & guidelines
+    const masterBrandDir = join(TEMPLATES_DIR, ".agents/brand");
+    const projectBrandDir = join(agentsDir, "brand");
+    if (existsSync(masterBrandDir)) {
+      // Sync every brand document the templates ship — the context index
+      // (`.agents/context/index.md`, `brand.md`) links to voice.md,
+      // personas.md, positioning.md, messaging.md, visual-identity.md and
+      // social-hooks.md. Copying only a subset left those links dangling
+      // and failed `--lint-context` on every synced project.
+      const brandFiles = readdirSync(masterBrandDir).filter(
+        (item) => item.endsWith(".md") && item !== "CONTENT_MAP.md",
+      );
+      for (const bf of brandFiles) {
+        const src = join(masterBrandDir, bf);
+        const dest = join(projectBrandDir, bf);
+        assertNotMemory(dest);
+        if (!existsSync(dest) || isForce) {
+          if (!isDryRun) cpSync(src, dest);
+          report.brandSynced.push(bf);
+        }
+      }
+      // Tokens
+      const masterTokensDir = join(masterBrandDir, "tokens");
+      const projectTokensDir = join(projectBrandDir, "tokens");
+      if (existsSync(masterTokensDir) && (!existsSync(projectTokensDir) || isForce)) {
+        if (!isDryRun) cpSync(masterTokensDir, projectTokensDir, { recursive: true });
+        report.brandSynced.push("tokens/*");
+        console.log("  ✅ Provisioned baseline design tokens in ./.agents/brand/tokens/");
+      }
+    }
+  } else {
+    console.warn(`  ⚠️ Templates directory not found at: ${TEMPLATES_DIR}`);
+  }
+
+  // =========================================================================
+  // Step 6: Validate Invariants & MuseMemory Boundary
+  // =========================================================================
+  console.log("\n🛡️ Step 6: Verifying safety invariants & MuseMemory hard boundary...");
+  const memoryPath = join(workspaceDir, ".memory");
+  if (existsSync(memoryPath)) {
+    console.log("  🔒 MuseMemory (.memory/**) detected: 100% UNTOUCHED & EXCLUDED (PASSED)");
+  } else {
+    console.log("  🔒 MuseMemory (.memory/**): Clean state (PASSED)");
+  }
+
+  // AGENTS.md size check
+  if (existsSync(rootAgentsFile)) {
+    const size = statSync(rootAgentsFile).size;
+    console.log(`  📄 AGENTS.md size: ${size} bytes (<5KB: ${size < 5120 ? "PASSED" : "REVIEW"})`);
+  }
+
+  // Taste State & Global Invariant Atom Table Check
+  const tasteStateFile = join(agentsDir, "context/taste-state.json");
+  if (existsSync(tasteStateFile)) {
+    try {
+      const tasteData = JSON.parse(readFileSync(tasteStateFile, "utf8"));
+      const activeAtoms = (tasteData.atoms || []).filter((a: { status?: string }) => a.status === "active");
+      const cap = tasteData.activeAtomCap || 20;
+      console.log(
+        `  🧠 Invariant Atom Table: ${activeAtoms.length}/${cap} active atoms (${activeAtoms.length <= cap ? "PASSED" : "EXCEEDS CAP"})`,
+      );
+    } catch {
+      // Non-blocking telemetry
     }
   }
-} else {
-  console.warn(`  ⚠️ Templates directory not found at: ${TEMPLATES_DIR}`);
-}
 
-// =========================================================================
-// Step 6: Validate Invariants & MuseMemory Boundary
-// =========================================================================
-console.log("\n🛡️ Step 6: Verifying safety invariants & MuseMemory hard boundary...");
-const memoryPath = join(workspaceDir, ".memory");
-if (existsSync(memoryPath)) {
-  console.log("  🔒 MuseMemory (.memory/**) detected: 100% UNTOUCHED & EXCLUDED (PASSED)");
-} else {
-  console.log("  🔒 MuseMemory (.memory/**): Clean state (PASSED)");
-}
-
-// AGENTS.md size check
-if (existsSync(rootAgentsFile)) {
-  const size = statSync(rootAgentsFile).size;
-  console.log(`  📄 AGENTS.md size: ${size} bytes (<5KB: ${size < 5120 ? "PASSED" : "REVIEW"})`);
-}
-
-// Taste State & Global Invariant Atom Table Check
-const tasteStateFile = join(agentsDir, "context/taste-state.json");
-if (existsSync(tasteStateFile)) {
-  try {
-    const tasteData = JSON.parse(readFileSync(tasteStateFile, "utf8"));
-    const activeAtoms = (tasteData.atoms || []).filter((a: { status?: string }) => a.status === "active");
-    const cap = tasteData.activeAtomCap || 20;
+  // Step 5.5: Consume documentation points since the last agent watermark.
+  const docsBacklog = syncDocsBacklog(workspaceDir, { dryRun: isDryRun });
+  if (docsBacklog.appended > 0) {
     console.log(
-      `  🧠 Invariant Atom Table: ${activeAtoms.length}/${cap} active atoms (${activeAtoms.length <= cap ? "PASSED" : "EXCEEDS CAP"})`,
+      `  📚 Docs backlog: consumed ${docsBacklog.appended} point(s) ${docsBacklog.from}→${docsBacklog.to} into .agents/context/current.md.`,
     );
-  } catch {
-    // Non-blocking telemetry
+    if (docsBacklog.pending > 0) {
+      console.log(`  ℹ️  ${docsBacklog.pending} documentation point(s) still owed agent docs.`);
+    }
+  } else if (existsSync(join(workspaceDir, ".docs-ledger.json"))) {
+    console.log(`  ℹ️  Docs backlog: ${docsBacklog.reason}`);
   }
-}
 
-// Step 5.5: Consume documentation points since the last agent watermark.
-const docsBacklog = syncDocsBacklog(workspaceDir, { dryRun: isDryRun });
-if (docsBacklog.appended > 0) {
-  console.log(
-    `  📚 Docs backlog: consumed ${docsBacklog.appended} point(s) ${docsBacklog.from}→${docsBacklog.to} into .agents/context/current.md.`,
-  );
-  if (docsBacklog.pending > 0) {
-    console.log(`  ℹ️  ${docsBacklog.pending} documentation point(s) still owed agent docs.`);
+  // Step 5.6: Harness hygiene report. Default sync never moves harness state;
+  // consolidation is explicit (`--hygiene --consolidate`) so a user's IDE/CLI
+  // configuration cannot disappear during a routine context sync.
+  if (!values["no-hygiene"]) {
+    const hygiene = scanHarnessArtifacts(workspaceDir);
+    if (hygiene.violations.length > 0) {
+      console.log(
+        `  🧹 Harness hygiene: ${hygiene.violations.length} root artifact(s) detected (active ${hygiene.active?.label ?? "none"} skipped).`,
+      );
+      console.log("     Preview: updateagents . --hygiene");
+      console.log("     Clean:   updateagents . --hygiene --consolidate");
+    } else if (hygiene.active) {
+      console.log(`  🧹 Harness hygiene: active ${hygiene.active.label} skipped; root is clean.`);
+    }
   }
-} else if (existsSync(join(workspaceDir, ".docs-ledger.json"))) {
-  console.log(`  ℹ️  Docs backlog: ${docsBacklog.reason}`);
-}
 
-// Step 5.6: Harness hygiene report. Default sync never moves harness state;
-// consolidation is explicit (`--hygiene --consolidate`) so a user's IDE/CLI
-// configuration cannot disappear during a routine context sync.
-if (!values["no-hygiene"]) {
-  const hygiene = scanHarnessArtifacts(workspaceDir);
-  if (hygiene.violations.length > 0) {
-    console.log(
-      `  🧹 Harness hygiene: ${hygiene.violations.length} root artifact(s) detected (active ${hygiene.active?.label ?? "none"} skipped).`,
-    );
-    console.log("     Preview: updateagents . --hygiene");
-    console.log("     Clean:   updateagents . --hygiene --consolidate");
-  } else if (hygiene.active) {
-    console.log(`  🧹 Harness hygiene: active ${hygiene.active.label} skipped; root is clean.`);
+  // Update .context.hash fingerprint
+  if (existsSync(contextDir) && !isDryRun) {
+    const newHash = computeContextHash(contextDir);
+    if (newHash) {
+      writeFileSync(join(contextDir, ".context.hash"), newHash, "utf8");
+      console.log(`  🔑 Updated .context.hash: ${newHash.slice(0, 12)}... (Context Freshness Gate armed)`);
+    }
   }
-}
 
-// Update .context.hash fingerprint
-if (existsSync(contextDir) && !isDryRun) {
-  const newHash = computeContextHash(contextDir);
-  if (newHash) {
-    writeFileSync(join(contextDir, ".context.hash"), newHash, "utf8");
-    console.log(`  🔑 Updated .context.hash: ${newHash.slice(0, 12)}... (Context Freshness Gate armed)`);
+  // =========================================================================
+  // Step 7: Detailed User Report
+  // =========================================================================
+  console.log("\n============================================================");
+  console.log(" 🧠 UPDATEAGENTS SYNCHRONIZATION REPORT");
+  console.log("============================================================");
+  console.log(`📁 Workspace:          ${workspaceDir}`);
+  console.log(`🏷️  Project Name:       ${projectName}`);
+  console.log(`⚡ Stack Archetype:    ${frameworkDetected.toUpperCase()}`);
+  const councilLead = resolveCouncilLead(contextDir);
+  console.log(`🏛️  Council Lead:       ${councilLead}`);
+  console.log("------------------------------------------------------------");
+
+  if (report.scaffolded.length > 0) {
+    console.log(`\n📦 SCAFFOLDED ASSETS (${report.scaffolded.length}):`);
+    for (const s of report.scaffolded) console.log(`   + ${s}`);
   }
-}
 
-// =========================================================================
-// Step 7: Detailed User Report
-// =========================================================================
-console.log("\n============================================================");
-console.log(" 🧠 UPDATEAGENTS SYNCHRONIZATION REPORT");
-console.log("============================================================");
-console.log(`📁 Workspace:          ${workspaceDir}`);
-console.log(`🏷️  Project Name:       ${projectName}`);
-console.log(`⚡ Stack Archetype:    ${frameworkDetected.toUpperCase()}`);
-const councilLead = resolveCouncilLead(contextDir);
-console.log(`🏛️  Council Lead:       ${councilLead}`);
-console.log("------------------------------------------------------------");
-
-if (report.scaffolded.length > 0) {
-  console.log(`\n📦 SCAFFOLDED ASSETS (${report.scaffolded.length}):`);
-  for (const s of report.scaffolded) console.log(`   + ${s}`);
-}
-
-if (report.contextMerged.length > 0) {
-  console.log(`\n🔄 CONTEXT MERGED & PRESERVED (${report.contextMerged.length}):`);
-  for (const m of report.contextMerged) {
-    console.log(`   • ${m.targetFile} ➔ Added section: "${m.section}"`);
+  if (report.contextMerged.length > 0) {
+    console.log(`\n🔄 CONTEXT MERGED & PRESERVED (${report.contextMerged.length}):`);
+    for (const m of report.contextMerged) {
+      console.log(`   • ${m.targetFile} ➔ Added section: "${m.section}"`);
+    }
   }
-}
 
-if (report.archived.length > 0) {
-  console.log(`\n📦 PRESERVED INSTRUCTION SNAPSHOTS (${report.archived.length}):`);
-  for (const a of report.archived) console.log(`   • ${a}`);
-}
-
-if (postInitModifications.length > 0) {
-  console.log(`\n📝 EXPLICIT POST-INITIALIZATION MODIFICATION LEDGER (${postInitModifications.length}):`);
-  for (const mod of postInitModifications) {
-    console.log(`   • ${mod.file} [${mod.changeType}]: ${mod.diffSummary}`);
+  if (report.archived.length > 0) {
+    console.log(`\n📦 PRESERVED INSTRUCTION SNAPSHOTS (${report.archived.length}):`);
+    for (const a of report.archived) console.log(`   • ${a}`);
   }
-} else {
-  console.log(`\n✅ Zero core files modified post-initialization (100% in sync with zero drift).`);
-}
 
-console.log(`\n✅ SYNCHRONIZED FROM UPDATEAGENTS MASTER CANON:`);
-console.log(`   • Standards:   ${report.standardsSynced.length} rulebooks in .agents/standards/`);
-console.log(`   • Brand:       Design tokens & guidelines in .agents/brand/`);
-console.log(`   • Router:      Root AGENTS.md workspace instructions active`);
-console.log(`   • Cognitive:   Taste & Invariant Atom Table verified`);
-console.log(`   • Safety:      Application code & .memory/** 100% untouched`);
-console.log("============================================================\n");
+  if (postInitModifications.length > 0) {
+    console.log(`\n📝 EXPLICIT POST-INITIALIZATION MODIFICATION LEDGER (${postInitModifications.length}):`);
+    for (const mod of postInitModifications) {
+      console.log(`   • ${mod.file} [${mod.changeType}]: ${mod.diffSummary}`);
+    }
+  } else {
+    console.log(`\n✅ Zero core files modified post-initialization (100% in sync with zero drift).`);
+  }
+
+  console.log(`\n✅ SYNCHRONIZED FROM UPDATEAGENTS MASTER CANON:`);
+  console.log(`   • Standards:   ${report.standardsSynced.length} rulebooks in .agents/standards/`);
+  console.log(`   • Brand:       Design tokens & guidelines in .agents/brand/`);
+  console.log(`   • Router:      Root AGENTS.md workspace instructions active`);
+  console.log(`   • Cognitive:   Taste & Invariant Atom Table verified`);
+  console.log(`   • Safety:      Application code & .memory/** 100% untouched`);
+  console.log("============================================================\n");
+}

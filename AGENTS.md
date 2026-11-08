@@ -47,13 +47,17 @@ task needs. Code and skill frontmatter are canonical when docs drift.
 - Test-Failure Audit (core invariant): when the same test/failure fails on 2+ consecutive runs, stop editing, self-audit own outputs (did edit land? test exercising it? pre-existing on clean tree? flaky/env?), triage root cause, then apply targeted fix and re-run full suite. Verdicts: SELF-AUDIT COMPLETE / SELF-AUDIT PENDING. Full standard: `.agents/standards/test-failure-audit.md`.
 - Landing Gate (core invariant): a commit is not a delivery. Work is LANDED only when reachable from the integration branch (`dev`) on the remote; until then it is LOCAL. Forbidden words (landed/shipped/merged/released/deployed/"verified on <branch>") only after the gate exits 0. Verdicts: LANDED/LOCAL, REVIEWABLE/NOT REVIEWABLE. Full standard: `.agents/standards/landing-gate.md`. Gate: `bun run check:landed`.
 - Pre-merge sync (core invariant): before opening, updating, or merging a PR, run `bun run check:sync`. It fetches the integration branch and fails when the branch does not contain the latest `origin/dev`, or when local `dev` is behind its remote. Never merge a stale branch; rebase first. CI enforces the same check as `sync-gate`; the server-side "Require branches to be up to date before merging" setting is the durable guarantee. Full procedure: `CONTRIBUTING.md`.
-- Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
+- Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). For highly technical work (code, debugging, architecture, security, infrastructure, dependencies, releases), append a **Next 3** block after the Layman Report: the three most valuable follow-ups in priority order, most important first. Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
 
 ## Session Report Protocol
 User-facing work ends with a technical report, then a **Layman Report** appendix:
 one plain bullet per file/task touched (group by area when >8), no jargon. It is
 additive and never replaces the technical report; suppress it in agent-to-agent,
 subagent, internal, and automated flows.
+
+For highly technical work, append **Next 3** after the Layman Report: the three
+most valuable follow-up actions, most important first, one line each with why it
+matters. Keep them concrete; do not pad to three with filler.
 
 ## Verification
 
