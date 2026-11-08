@@ -74,6 +74,11 @@ const ALWAYS_STANDARDS = [
     "standards/memory-context.md",
     "Project/global context sources and persistent-memory lifecycle.",
   ],
+  [
+    "Language Policy",
+    "standards/language-policy.md",
+    "Universal English working language, input translation, and non-English script guard.",
+  ],
   ["Anti-Patterns", "standards/anti-patterns.md", "Failure patterns and preferred alternatives."],
   ["Team Roles & Routing", "standards/council-roles.md", "Configured role responsibilities and task routing."],
   ["Project Context Map", "context/index.md", "Project purpose, architecture, current state, decisions, and roadmap."],

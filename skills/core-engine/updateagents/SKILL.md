@@ -67,7 +67,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 
 | Mode | Focus | Key Output | Reference Document |
 | :--- | :--- | :--- | :--- |
-| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 21 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 22 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
 | **`scorecard`** | 14-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |

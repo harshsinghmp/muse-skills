@@ -29,7 +29,20 @@ Agent execution resolves context through a two-tier cascade:
 3. **Destructive commands**: Do not run `rm -rf`, `git reset --hard`, force-pushes or shell piping until you state blast radius and rollback plan and receive user authorization.
 4. **Confidence**: Below 80%, stop and ask; 80–90%, state the assumption; above 90%, proceed.
 5. **Unknowns**: If a material project fact or choice cannot be verified, ask the user directly, apply their answer, then continue. Never invent identities, contacts, repo hosts or policy; keep unrelated work moving.
-6. **Evidence and language**: Verify with relevant tests, logs, runtime or rendered output before claiming completion. Use English for agent responses, code, comments, commits, specifications and docs.
+6. **Evidence and language**: Verify with relevant tests, logs, runtime or
+   rendered output before claiming completion. English is the working language:
+   responses, reasoning, code, identifiers, comments, commits, specifications
+   and docs. Input language never changes output language — a reference site,
+   screenshot, PDF, video, chat message or media asset may be in Japanese,
+   Chinese, Korean, Arabic, Hindi or any other script; read it, translate it,
+   extract what is needed, then answer in English. Translate, never mirror:
+   quote non-English source only when the exact wording matters and give the
+   English translation beside it. Never switch language to match the user,
+   including informal chat, short replies and single words. Public site copy
+   stays English unless the user approves a localised locale; proper nouns and
+   prices may keep their original script. Read
+   `.agents/standards/language-policy.md` before answering, writing copy, or
+   pasting from a non-English reference.
 7. **Working artifacts**: Put plans, research and reports in `.agents/artifacts/<topic>/`; put user-supplied URLs, data, logs and exports submitted for extraction in `.agents/dump/<category>/<descriptive-file-name>`. Keep them out of the repo root and `.memory/`; never store secrets in dumps. Archive retired scratchpads in `.agents/archive/`; promote durable findings to `.agents/context/`.
 8. **Closeout**: After every completed task, record session state only through the project's memory tooling or CLI, never by editing store files directly, and skip the step entirely where the project has no memory system. Update `.agents/context/current.md` when shipped state or active constraints changed. Then, **only for user-facing work** (see Session Report Protocol), append the **Layman Report** — never as a replacement for the technical report, always after it.
 9. **Modern tools**: Invoke installed modern binaries by name; agent subshells may not load shell aliases. Preferred tools detected at scaffold: {{INSTALLED_MODERN_TOOLS}}. Use legacy fallbacks only when the preferred binary is unavailable: `rg`→`grep`, `fd`→`find`, `bat`→`cat`, `eza`→`ls`, `sd`→`sed`, `gojq`/`choose`→`jq`/`cut`, `delta`→`git diff`, `zoxide`→`cd`. Never require undetected tools.
@@ -77,6 +90,7 @@ Read every **Always required** standard before work and every **Required when de
 - [Instruction Hierarchy](./.agents/standards/dox-hierarchy.md) — Instruction precedence, subtree contracts, and context closeout.
 - [Landing Gate](./.agents/standards/landing-gate.md) — Delivery is not commitment: LANDED/LOCAL and REVIEWABLE/NOT REVIEWABLE verdicts, the gate, and the staging rule.
 - [Test-Failure Audit](./.agents/standards/test-failure-audit.md) — Self-triage on repeated red: audit own outputs, triage root cause, then fix.
+- [Language Policy](./.agents/standards/language-policy.md) — Universal English working language, input translation, and non-English script guard.
 - [Context, Memory &amp; Identity](./.agents/standards/memory-context.md) — Project/global context sources and persistent-memory lifecycle.
 - [Anti-Patterns](./.agents/standards/anti-patterns.md) — Failure patterns and preferred alternatives.
 - [Team Roles &amp; Routing](./.agents/standards/council-roles.md) — Configured role responsibilities and task routing.
