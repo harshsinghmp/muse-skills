@@ -1,3 +1,38 @@
+# 🏛️ Muse Skills v8.2.0 — Universal Sync Gate & Language Enforcement
+
+> **Minor release: every scaffolded project receives a self-contained pre-merge sync gate, `updateagents` can refresh existing workflow templates, the English-only policy now binds narration between tool calls, and URL intake rules are in the root router.** 391 automated tests. 14,335 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.2.0
+
+- **Universal pre-merge sync gate**: `templates/github/workflows/sync-gate.yml` is provisioned by `new-project` and `updateagents`, is selected for every project type, and uses only Git (`git fetch` + `git merge-base --is-ancestor`). It blocks a pull request whose head does not contain the latest base without requiring a language runtime or project script.
+- **Refresh path for established projects**: a plain `updateagents` run creates the workflow when missing; `updateagents --refresh-workflows` overwrites existing workflow templates while the default preserves user edits. The `git-workflow` standard records the pre-merge sync rule.
+- **Repository sync gate**: `scripts/check-sync.ts` and the required `sync-gate` CI job fail stale branches, and branch protection on `dev` and `main` now requires the check alongside `bun test`, `lint`, `type-check`, `secret-scan`, and `landing-gate`.
+- **Language policy**: rule 6 and the language-policy standard state that narration between tool calls is output, add a required `Known limit` section for what the file guard cannot see, add mid-turn recovery guidance, and add contract self-check assertions.
+- **URL intake**: the root `AGENTS.md` router now directs every dropped URL through classify -> fetch -> dump -> owning-department routing.
+
+## 📊 Verification
+
+| Metric | v8.1.5 | v8.2.0 |
+|:---|:---|:---|
+| Automated Tests | 387 | **391** |
+| Test Assertions | 14,313 | **14,335** |
+| Skills Count | 46 | **46** |
+| Slash Commands / Harness | 460 | **460** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.5...v8.2.0
+
+---
+
 # 🏛️ Muse Skills v8.1.5 — Irreversible Data Hazard Banner & English Language Policy
 
 > **Patch release: clean-system-cache gains a loud boxed irreversible-data hazard banner for ASK! selections, updateagents enforces a universal English-only working language policy across canon standards, @biomejs/biome moves to 2.6.5, and CI Bun setup absorbs release-asset CDN 504s.** 387 automated tests. 14,313 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.

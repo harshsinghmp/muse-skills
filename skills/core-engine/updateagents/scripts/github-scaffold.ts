@@ -33,6 +33,11 @@ export interface GitHubScaffoldProfile {
   composerTestScript?: boolean;
   removeWorkflowsConfirmed?: boolean;
   /**
+   * Overwrite existing files in `.github/workflows/` with the current canon.
+   * Default is additive: existing (possibly user-edited) workflows are kept.
+   */
+  refreshWorkflows?: boolean;
+  /**
    * Provision community/governance files (CODE_OF_CONDUCT, CONTRIBUTING,
    * SECURITY, issue/PR templates, dependabot, CHANGELOG). These are additive
    * but unrelated to context synchronization, so a plain `sync` on an
@@ -142,7 +147,7 @@ function targetRepository(
 }
 
 export function selectGitHubWorkflowTemplates(profile: GitHubScaffoldProfile): string[] {
-  const selected: string[] = ["landing-gate.yml"];
+  const selected: string[] = ["landing-gate.yml", "sync-gate.yml"];
   const verificationScripts = ["test", "typecheck", "type-check", "lint", "build"];
   if (verificationScripts.some((name) => profile.packageScripts?.[name])) selected.push("ci-node.yml");
   if (profile.hasPythonProject) selected.push("ci-python.yml");
@@ -354,8 +359,9 @@ function copyRenderedFile(
   destination: string,
   profile: GitHubScaffoldProfile,
   dryRun: boolean,
+  overwrite = false,
 ): boolean {
-  if (existsSync(destination)) return false;
+  if (existsSync(destination) && !overwrite) return false;
   const content = readFileSync(source, "utf8");
   const rendered = source.endsWith("ci-node.yml")
     ? renderNodeWorkflow(content, profile)
@@ -483,23 +489,28 @@ export function scaffoldGitHubAssets(targetDir: string, hints: GitHubScaffoldPro
     const name =
       workflow === "landing-gate.yml"
         ? "landing-gate.yml"
-        : workflow === "cli-test.yml"
-          ? "cli-test.yml"
-          : workflow === "codeql.yml"
-            ? "codeql.yml"
-            : workflow === "trivy.yml"
-              ? "trivy.yml"
-              : workflow === "docs-sync.yml"
-                ? "docs-sync.yml"
-                : workflow === "ai-slop.yml"
-                  ? "ai-slop.yml"
-                  : workflow === "ci-python.yml" && selectedWorkflows.includes("ci-node.yml")
-                    ? "ci-python.yml"
-                    : workflow === "ci-composer.yml"
-                      ? "ci-php.yml"
-                      : "ci.yml";
+        : workflow === "sync-gate.yml"
+          ? "sync-gate.yml"
+          : workflow === "cli-test.yml"
+            ? "cli-test.yml"
+            : workflow === "codeql.yml"
+              ? "codeql.yml"
+              : workflow === "trivy.yml"
+                ? "trivy.yml"
+                : workflow === "docs-sync.yml"
+                  ? "docs-sync.yml"
+                  : workflow === "ai-slop.yml"
+                    ? "ai-slop.yml"
+                    : workflow === "ci-python.yml" && selectedWorkflows.includes("ci-node.yml")
+                      ? "ci-python.yml"
+                      : workflow === "ci-composer.yml"
+                        ? "ci-php.yml"
+                        : "ci.yml";
     const destination = join(workflowsDir, name);
-    if (existsSync(source) && copyRenderedFile(source, destination, profile, Boolean(hints.dryRun))) {
+    if (
+      existsSync(source) &&
+      copyRenderedFile(source, destination, profile, Boolean(hints.dryRun), Boolean(hints.refreshWorkflows))
+    ) {
       result.created.push(relative(targetDir, destination));
     } else if (existsSync(destination)) {
       result.skipped.push(relative(targetDir, destination));

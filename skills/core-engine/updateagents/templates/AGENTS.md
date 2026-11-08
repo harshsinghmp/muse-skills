@@ -32,7 +32,12 @@ Agent execution resolves context through a two-tier cascade:
 6. **Evidence and language**: Verify with relevant tests, logs, runtime or
    rendered output before claiming completion. English is the working language:
    responses, reasoning, code, identifiers, comments, commits, specifications
-   and docs. Input language never changes output language — a reference site,
+   and docs. Narration between tool calls is output — the sentence before or
+   after a command is read by the user in real time and is bound by this rule
+   exactly like a final reply, because an English closing summary does not
+   excuse non-English narration earlier in the same turn. If internal reasoning
+   drifts into another language, translate it before any of it reaches a
+   message. Input language never changes output language — a reference site,
    screenshot, PDF, video, chat message or media asset may be in Japanese,
    Chinese, Korean, Arabic, Hindi or any other script; read it, translate it,
    extract what is needed, then answer in English. Translate, never mirror:

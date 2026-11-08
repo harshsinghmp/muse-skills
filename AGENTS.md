@@ -23,6 +23,11 @@ task needs. Code and skill frontmatter are canonical when docs drift.
 - Atomic PR per skill: separate `feat/*` branch and PR per change; never batch
   multi-skill work into one PR.
 - No secrets or personal environment values in any shipped file.
+- URL Intake: when the user drops any URL (skill page, repo, direct/raw file,
+  blog/article, docs, design reference), classify → fetch → stash the raw
+  source in `.agents/dump/<category>/<descriptive-file-name>` → route to the
+  owning department/mode. Full workflow: `.agents/workflows/url-intake.md`.
+  Never put dumps in the repo tree or `.memory/`.
 - Canonical aliases: "Agent Engine" and "DOX Engine" = `new-project`
   Progressive Disclosure DOX scaffolding engine.
 - Modern Tool Primacy: call installed modern CLI tools by binary name,
@@ -41,6 +46,7 @@ task needs. Code and skill frontmatter are canonical when docs drift.
 - Test gate: `bun test` must pass before any merge.
 - Test-Failure Audit (core invariant): when the same test/failure fails on 2+ consecutive runs, stop editing, self-audit own outputs (did edit land? test exercising it? pre-existing on clean tree? flaky/env?), triage root cause, then apply targeted fix and re-run full suite. Verdicts: SELF-AUDIT COMPLETE / SELF-AUDIT PENDING. Full standard: `.agents/standards/test-failure-audit.md`.
 - Landing Gate (core invariant): a commit is not a delivery. Work is LANDED only when reachable from the integration branch (`dev`) on the remote; until then it is LOCAL. Forbidden words (landed/shipped/merged/released/deployed/"verified on <branch>") only after the gate exits 0. Verdicts: LANDED/LOCAL, REVIEWABLE/NOT REVIEWABLE. Full standard: `.agents/standards/landing-gate.md`. Gate: `bun run check:landed`.
+- Pre-merge sync (core invariant): before opening, updating, or merging a PR, run `bun run check:sync`. It fetches the integration branch and fails when the branch does not contain the latest `origin/dev`, or when local `dev` is behind its remote. Never merge a stale branch; rebase first. CI enforces the same check as `sync-gate`; the server-side "Require branches to be up to date before merging" setting is the durable guarantee. Full procedure: `CONTRIBUTING.md`.
 - Session Report Protocol: user-facing work ends with two reports — the technical report, then a **Layman Report** appendix (one plain-language bullet per file/skill/task touched, what changed + why, no jargon, no code). Suppressed entirely in agent-to-agent communication, subagent results, and internal tool flows. When unsure, ask once after the technical report before appending. Additive; never replaces the technical report.
 
 ## Session Report Protocol
@@ -54,7 +60,7 @@ subagent, internal, and automated flows.
 ### Lint + type-check (local runs)
 - `bun run lint` → `biome check .` + `ruff check scripts/`
 - `bun run type-check` → `tsc --noEmit`
-- CI runs lint, type-check, test, and secret-scan as separate jobs
+- CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs
 
 ## Infrastructure
 
