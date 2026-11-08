@@ -74,7 +74,7 @@ The central principle is:
 
 ### Report phase output
 
-A completed sync ends with two reports, in order, **for user-facing work only**: (1) the technical report (files changed, evidence, verification), then (2) a **Layman Report** appendix — one plain-language bullet per file/skill/task touched, saying what changed and why it matters to the user, no jargon, no code. The Layman Report is additive and never replaces the technical report. It is suppressed in agent-to-agent communication, subagent results, and internal flows; when unsure, ask once before appending. (See the Session Report Protocol in `AGENTS.md`.)
+A completed sync ends with two reports, in order, **for user-facing work only**: (1) the technical report (files changed, evidence, verification), then (2) a **Layman Report** appendix — one plain-language bullet per file/skill/task touched, saying what changed and why it matters to the user, no jargon, no code. For highly technical work (code, debugging, architecture, security, infrastructure, dependencies, releases), append (3) a **Next 3** block after the Layman Report: the three most valuable follow-ups in priority order, most important first, one line each with why it matters. Both appendixes are additive and never replace the technical report. They are suppressed in agent-to-agent communication, subagent results, and internal flows; when unsure, ask once before appending. (See the Session Report Protocol in `AGENTS.md`.)
 
 ---
 
