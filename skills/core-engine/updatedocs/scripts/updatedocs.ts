@@ -550,7 +550,10 @@ function coveragePhrases(point: DocumentationPoint): string[] {
     phrases.add(summaryTokens[0]);
   }
   if (point.id) phrases.add(point.id.toLowerCase());
-  if (phrases.size === 0 && point.scope) phrases.add(point.scope.toLowerCase());
+  // Scope fallback keys off the summary, not the phrase set: a summary such as
+  // "v8.1.4" yields no tokens, and the id phrase would otherwise suppress the
+  // only keyword a doc could ever contain (e.g. "release").
+  if (summaryTokens.length === 0 && point.scope) phrases.add(point.scope.toLowerCase());
   return [...phrases];
 }
 
