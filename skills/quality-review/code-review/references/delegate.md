@@ -21,8 +21,8 @@
    - single-hunk, one file → `hotfix`
    - API/signature-only → `contract`
    - security-sensitive surface → `security`
-   - whole module / cross-file invariants → `audit`
-   - otherwise → `diff`
+   - the user asked to stay literal — just the changeset → `diff`
+   - otherwise → `audit` (the default; widens to the module)
    Load only the resolved mode's references.
 3. **Run the LLM pass over that scope only.** Apply the resolved mode's procedure to
    the deterministic file set. Do not let analysis wander into files the scope

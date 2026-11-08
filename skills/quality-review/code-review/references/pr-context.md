@@ -3,7 +3,8 @@
 > Source: `accessibility-agents-pr-review` (skills-hub, signed SLSA L2, raw
 > SKILL.md fetched 2026-09-19) — mechanism only: PR asset sweep + workspace
 > review doc. MCP/GitHub tool calls generalized to `gh` CLI. Loaded by the
-> `diff` mode alongside the theme catalog.
+> `diff` mode alongside the theme catalog, and by the default `audit` mode
+> whenever the subject under review is an open PR.
 
 A diff without its context produces confident-but-wrong findings. Pull every
 asset in one sweep before running the theme pass.

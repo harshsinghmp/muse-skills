@@ -13,6 +13,14 @@ rem 3. Containers & Virtualization:
 rem    - docker (BuildKit layers only), podman
 rem 4. Designers & Creative Suites:
 rem    - adobe (Media Cache .cfa/.pek, scratch files), figma, blender, electron
+rem 5. Desktop, runtime & editor scratch caches:
+rem    - playwright, puppeteer, yarn, pip, typescript, VS Code/Cursor Cache,
+rem      CachedData, GPUCache, logs, CrashDumps, NuGet HTTP cache
+rem 6. Confirmation-gated candidates (ASK / ASK! - never auto-deleted):
+rem    - Recycle Bin, %TEMP%, Windows Update download cache, thumbnail cache,
+rem      Docker images
+rem
+rem Selection UX: /list  /browse <id>  /only <ids> [/yes]  /interactive
 rem
 rem Zero dependencies: Native Windows Command Prompt batch script.
 rem Runs anywhere on Windows without Python, Node, or WSL.
@@ -26,6 +34,18 @@ set TARGET_TOOL=all
 set SCAN_NM_DIR=
 set T2_PURGED=0
 set T2_PRESERVED=0
+set CATALOG_MODE=
+set CATALOG_ARG=
+set ASSUME_YES=0
+set LEARN_ACTION=
+set LEARN_KEYS=
+set STATE_DIR=%LOCALAPPDATA%\clean-system-cache
+set LEARN_FILE=%STATE_DIR%\learned.txt
+set CONFIG_FILE=%STATE_DIR%\config.txt
+set DISC_FILE=%STATE_DIR%\discovered.txt
+set DORMANT_DAYS=14
+set PROJECT_ROOTS=
+set LEARNED=
 
 :parse_args
 if "%~1"=="" goto run_cleanup
@@ -86,6 +106,54 @@ if /i "%~1"=="/scan-node-modules" (
 if /i "%~1"=="-h" goto show_help
 if /i "%~1"=="--help" goto show_help
 if /i "%~1"=="/?" goto show_help
+if /i "%~1"=="/list" (
+    set CATALOG_MODE=list
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/browse" (
+    set CATALOG_MODE=browse
+    set CATALOG_ARG=%~2
+    shift
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/only" (
+    set CATALOG_MODE=only
+    set CATALOG_ARG=%~2
+    shift
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/interactive" (
+    set CATALOG_MODE=interactive
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/yes" (
+    set ASSUME_YES=1
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/discover" (
+    set CATALOG_MODE=discover
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/learned" (
+    set CATALOG_MODE=learned
+    shift
+    goto parse_args
+)
+if /i "%~1"=="/learn" (
+    set CATALOG_MODE=learn
+    set LEARN_ACTION=%~2
+    set LEARN_KEYS=%~3
+    shift
+    shift
+    shift
+    goto parse_args
+)
 
 echo Unknown parameter: %~1
 echo Type clean-cache.cmd /? for usage.
@@ -97,6 +165,7 @@ echo  clean-cache.cmd — Native Windows Developer ^& Designer Cache Cleaner
 echo ====================================================================
 echo Usage:
 echo   clean-cache.cmd [/dry-run] [/include-coupled] [/tool name] [/scan-node-modules dir]
+echo                  [/list] [/browse id] [/only id,id [/yes]] [/interactive]
 echo.
 echo Options:
 echo   /dry-run, --dry-run          Preview cleanup actions without deleting files.
@@ -105,7 +174,19 @@ echo                                PRESERVED BY DEFAULT. Emits rehydration mani
 echo   /all-caches                  Alias for /include-coupled.
 echo   /tool, --tool name           Clean a specific tool (e.g. npm, uv, opencode, adobe, browser, agents).
 echo   /scan-node-modules dir       Audit directory tree for dormant node_modules folders.
+echo   /list                        Catalog every candidate: id, tier, size, path. Deletes nothing.
+echo   /discover                    Scan %USERPROFILE%\projects for dormant project build caches.
+echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
+echo   /only id,id^|proj:path [/yes] Delete exactly these candidates.
+echo   /interactive                 Numbered menu for confirmation-gated (ASK) candidates.
+echo   /learn allow^|deny^|forget k Record a decision so later runs already know.
+echo   /learned                     Show learned decisions.
 echo   /?, -h, --help               Display this help message.
+echo.
+echo Tiers:
+echo   T1   Regenerable, auto-cleaned on a normal run.
+echo   ASK  Expensive or admin-gated; only deleted when you select it.
+echo   ASK! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
@@ -117,6 +198,8 @@ echo   Web Browsers     : chrome, chromium, brave, edge, firefox, zen, vivaldi (
 exit /b 0
 
 :run_cleanup
+if not "%CATALOG_MODE%"=="" goto catalog_main
+call :cat_init
 set CAP_BEFORE=0
 if exist "%LOCALAPPDATA%\opencode\cache\npm" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\npm" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
 if exist "%LOCALAPPDATA%\opencode\cache\packages" for /f %%i in ('dir /b /a "%LOCALAPPDATA%\opencode\cache\packages" 2^>nul ^| find /c /v ""') do set /a CAP_BEFORE+=%%i
@@ -135,6 +218,11 @@ if "%DRY_RUN%"=="1" (
     echo  [*] Clean System Cache (Windows CMD) - EXECUTED
 )
 echo ====================================================================
+
+rem ----------------------------------------------------------------------
+rem 0. Desktop, runtime & editor scratch caches (T1, catalog-driven)
+rem ----------------------------------------------------------------------
+for /l %%i in (1,1,%CAND_N%) do call :cat_auto %%i
 
 rem ----------------------------------------------------------------------
 rem 1. uv
@@ -1031,6 +1119,14 @@ if "!INCLUDE_COUPLED!"=="0" if "%DRY_RUN%"=="0" (
     )
 )
 
+rem ----------------------------------------------------------------------
+rem Discovery report: dormant project build caches that need a decision.
+rem Nothing here is deleted; use /only proj:<path> [/yes] to apply.
+rem ----------------------------------------------------------------------
+echo.
+call :cat_load_config
+call :cat_discover
+
 echo ====================================================================
 echo  Cleanup Complete. Unreferenced caches safely pruned.
 if !T2_PRESERVED! gtr 0 (
@@ -1080,4 +1176,421 @@ if not "%SCAN_NM_DIR%"=="" (
 )
 
 endlocal
+exit /b 0
+
+rem ==========================================================================
+rem Candidate catalog: /list  /browse  /only  /interactive
+rem One registry drives listing, browsing, and deletion so what a user
+rem inspects is exactly what is removed.
+rem   T1   regenerable, cleaned on a normal run
+rem   ASK  expensive or admin-gated, only on explicit selection
+rem   ASK! irreversible, only after typing yes
+rem ==========================================================================
+
+:catalog_main
+call :cat_load_config
+call :cat_init
+if /i "%CATALOG_MODE%"=="list" (
+    call :cat_list
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="discover" (
+    call :cat_discover
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="learned" (
+    call :cat_show_learned
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="learn" (
+    call :cat_learn "%LEARN_ACTION%" "%LEARN_KEYS%"
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="browse" (
+    call :cat_browse "%CATALOG_ARG%"
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="only" (
+    call :cat_only "%CATALOG_ARG%"
+    goto cat_done
+)
+if /i "%CATALOG_MODE%"=="interactive" (
+    call :cat_interactive
+    goto cat_done
+)
+echo Unknown catalog mode: %CATALOG_MODE%
+goto cat_done
+
+:cat_done
+endlocal
+exit /b 0
+
+:cat_init
+set CAND_N=0
+call :cand_add win-playwright T1 "Playwright browsers" "%LOCALAPPDATA%\ms-playwright" rm "" "Reinstall with: npx playwright install"
+call :cand_add win-puppeteer T1 "Puppeteer Chrome download" "%USERPROFILE%\.cache\puppeteer" rm "" "Re-downloaded on next puppeteer install"
+call :cand_add win-yarn T1 "Yarn cache" "%LOCALAPPDATA%\Yarn\Cache" rm "" "Re-downloaded on next yarn install"
+call :cand_add win-pip T1 "pip wheel cache" "%LOCALAPPDATA%\pip\Cache" rm "" "Re-downloaded on next pip install"
+call :cand_add win-typescript T1 "TypeScript server cache" "%LOCALAPPDATA%\Microsoft\TypeScript" rm "" "Rebuilt on the next tsserver run"
+call :cand_add win-vscode-cache T1 "VS Code Cache" "%APPDATA%\Code\Cache" rm "" "Regenerated by VS Code"
+call :cand_add win-vscode-codedata T1 "VS Code CachedData" "%APPDATA%\Code\CachedData" rm "" "Regenerated by VS Code"
+call :cand_add win-vscode-gpu T1 "VS Code GPUCache" "%APPDATA%\Code\GPUCache" rm "" "Regenerated by VS Code"
+call :cand_add win-vscode-logs T1 "VS Code logs" "%APPDATA%\Code\logs" rm "" "New logs written on next launch"
+call :cand_add win-cursor-cache T1 "Cursor Cache" "%APPDATA%\Cursor\Cache" rm "" "Regenerated by Cursor"
+call :cand_add win-cursor-codedata T1 "Cursor CachedData" "%APPDATA%\Cursor\CachedData" rm "" "Regenerated by Cursor"
+call :cand_add win-crashdumps T1 "Crash dumps" "%LOCALAPPDATA%\CrashDumps" rm "" "Only written when an app crashes"
+call :cand_add win-electron T1 "Electron download cache" "%LOCALAPPDATA%\electron\Cache" rm "" "Re-downloaded on next electron install"
+call :cand_add win-nuget T1 "NuGet HTTP cache" "%LOCALAPPDATA%\NuGet\v3-cache" rm "" "Re-fetched on next restore"
+call :cand_add win-temp ASK! "User TEMP folder" "%LOCALAPPDATA%\Temp" rm "" "PERMANENT - open apps may hold files in use"
+call :cand_add win-update ASK "Windows Update downloads" "%SYSTEMROOT%\SoftwareDistribution\Download" rm "" "Needs an elevated prompt; re-downloaded on next update"
+call :cand_add win-thumbs ASK "Explorer thumbnail cache" "%LOCALAPPDATA%\Microsoft\Windows\Explorer" rm "" "Close Explorer first; thumbcache_*.db regenerate"
+call :cand_add win-recyclebin ASK! "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
+call :cand_add win-docker ASK "Docker images/build cache" "" guide "" "Inspect: docker system df - Prune: docker system prune [-a]"
+exit /b 0
+
+:cand_add
+set /a CAND_N+=1
+set "C_ID_%CAND_N%=%~1"
+set "C_TIER_%CAND_N%=%~2"
+set "C_LABEL_%CAND_N%=%~3"
+set "C_PATH_%CAND_N%=%~4"
+set "C_METHOD_%CAND_N%=%~5"
+set "C_CMD_%CAND_N%=%~6"
+set "C_NOTE_%CAND_N%=%~7"
+exit /b 0
+
+rem Sizes are measured with PowerShell so partial access errors never skew them.
+:cat_size
+set "SZ_KB=0"
+if "%~1"=="" exit /b 0
+if not exist "%~1" exit /b 0
+set "CCP=%~1"
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "$s=(Get-ChildItem -LiteralPath $env:CCP -Recurse -Force -ErrorAction SilentlyContinue ^| Measure-Object -Property Length -Sum).Sum; if(-not $s){$s=0}; [math]::Floor($s/1KB)" 2^>nul`) do set "SZ_KB=%%A"
+exit /b 0
+
+:cat_fmt
+set /a CC_MB=%~1/1024
+if %CC_MB% geq 1024 (
+    set /a CC_GB=CC_MB/1024
+    set "SZ_TXT=!CC_GB! GB"
+) else (
+    set "SZ_TXT=%CC_MB% MB"
+)
+exit /b 0
+
+:cat_list
+echo ====================================================================
+echo  Cache Candidate Catalog - Windows
+echo ====================================================================
+echo  T1 = auto-cleaned   ASK = needs selection   ASK! = irreversible
+echo --------------------------------------------------------------------
+set /a CAT_NUM=0
+for /l %%i in (1,1,%CAND_N%) do call :cat_list_one %%i
+echo --------------------------------------------------------------------
+echo  Browse : clean-cache.cmd /browse ^<id^>
+echo  Delete : clean-cache.cmd /only ^<id,id^> [/yes]
+echo  Choose : clean-cache.cmd /interactive
+echo ====================================================================
+exit /b 0
+
+:cat_list_one
+set "N=%~1"
+set "P=!C_PATH_%N%!"
+set "M=!C_METHOD_%N%!"
+if not "!P!"=="" (
+    call :cat_size "!P!"
+) else (
+    set "SZ_KB=0"
+)
+if "!SZ_KB!"=="0" if /i not "!M!"=="guide" exit /b 0
+set /a CAT_NUM+=1
+if "!SZ_KB!"=="0" (
+    set "SZ_TXT=n/a"
+) else (
+    call :cat_fmt !SZ_KB!
+)
+echo  !CAT_NUM!. !SZ_TXT! [!C_TIER_%N%!] !C_LABEL_%N%!  ^[!C_ID_%N%!^]
+if not "!P!"=="" echo       -^> !P!
+if not "!C_NOTE_%N%!"=="" echo       !C_NOTE_%N%!
+exit /b 0
+
+rem Resolve an id or a /list number into RES_IDX (empty when unknown).
+:cat_resolve
+set "RES_IDX="
+for /l %%i in (1,1,%CAND_N%) do (
+    if /i "!C_ID_%%i!"=="%~1" set "RES_IDX=%%i"
+)
+if not "!RES_IDX!"=="" exit /b 0
+set /a CAT_NUM=0
+for /l %%i in (1,1,%CAND_N%) do call :cat_num_probe %%i %~1
+exit /b 0
+
+:cat_num_probe
+set "P=!C_PATH_%~1!"
+set "M=!C_METHOD_%~1!"
+if "!P!"=="" if /i not "!M!"=="guide" exit /b 0
+if not "!P!"=="" (
+    call :cat_size "!P!"
+) else (
+    set "SZ_KB=0"
+)
+if "!SZ_KB!"=="0" if /i not "!M!"=="guide" exit /b 0
+set /a CAT_NUM+=1
+if "!CAT_NUM!"=="%~2" set "RES_IDX=%~1"
+exit /b 0
+
+:cat_browse
+if "%~1"=="" (
+    echo Usage: clean-cache.cmd /browse ^<id-or-key^>
+    exit /b 1
+)
+echo %~1| findstr /b /i /c:"proj:" >nul
+if not errorlevel 1 (
+    set "BP=%~1"
+    set "BP=!BP:proj:=!"
+    echo.
+    echo --------------------------------------------------------------------
+    echo  !BP!
+    echo --------------------------------------------------------------------
+    if exist "!BP!" (dir /a "!BP!") else (echo  Path no longer exists.)
+    echo --------------------------------------------------------------------
+    exit /b 0
+)
+call :cat_resolve "%~1"
+if "!RES_IDX!"=="" (
+    echo Unknown candidate: %~1
+    echo Run /list to see ids.
+    exit /b 1
+)
+set "N=!RES_IDX!"
+echo.
+echo --------------------------------------------------------------------
+echo  !C_ID_%N%!  [!C_TIER_%N%!]  !C_LABEL_%N%!
+echo --------------------------------------------------------------------
+if not "!C_NOTE_%N%!"=="" echo  Note   : !C_NOTE_%N%!
+set "P=!C_PATH_%N%!"
+if "!C_METHOD_%N%!"=="guide" if "!P!"=="" (
+    echo  Action : manual - nothing is deleted by this skill
+    echo --------------------------------------------------------------------
+    exit /b 0
+)
+call :cat_size "!P!"
+call :cat_fmt !SZ_KB!
+echo  Path   : !P!  ^(!SZ_TXT!^)
+if exist "!P!" (
+    for /f %%c in ('dir /s /b /a-d "!P!" 2^>nul ^| find /c /v ""') do echo  Files  : %%c
+    echo  Contents:
+    dir /a "!P!" 2>nul | findstr /v /c:"Directory of" | findstr /v /c:"Volume in drive" | findstr /v /c:"Total Files Listed" | findstr /v /c:"bytes free"
+)
+echo --------------------------------------------------------------------
+exit /b 0
+
+rem Delete one candidate, honouring DRY_RUN and printing one table row.
+:cat_delete
+set "N=%~1"
+set "P=!C_PATH_%N%!"
+set "M=!C_METHOD_%N%!"
+set "L=!C_LABEL_%N%!"
+if /i "!M!"=="guide" (
+    echo [!L!] manual - !C_CMD_%N%!
+    exit /b 0
+)
+if "%DRY_RUN%"=="1" (
+    echo [!L!] reclaimable -^> !P!
+    exit /b 0
+)
+if /i "!M!"=="rm" (
+    if exist "!P!" rmdir /s /q "!P!" >nul 2>&1
+) else (
+    if not "!C_CMD_%N%!"=="" call !C_CMD_%N%! >nul 2>&1
+)
+if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
+echo [!L!] cleaned
+exit /b 0
+
+:cat_auto
+if /i not "!C_TIER_%~1!"=="T1" exit /b 0
+call :learn_get "!C_ID_%~1!"
+if /i "!LEARNED!"=="deny" exit /b 0
+call :cat_delete %~1
+exit /b 0
+
+:cat_resolve_delete
+echo %~1| findstr /b /i /c:"proj:" >nul
+if not errorlevel 1 (
+    call :disc_delete "%~1"
+    exit /b 0
+)
+call :cat_resolve "%~1"
+if not "!RES_IDX!"=="" call :cat_delete !RES_IDX!
+exit /b 0
+
+:cat_only
+if "%~1"=="" (
+    echo Usage: clean-cache.cmd /only ^<id,id^> [/yes]
+    exit /b 1
+)
+if "%ASSUME_YES%"=="0" (
+    set "CONFIRM="
+    set /p "CONFIRM=Type yes to delete the selected candidates: "
+    if /i not "!CONFIRM!"=="yes" (
+        echo Aborted - nothing was deleted.
+        exit /b 0
+    )
+)
+for %%s in (%~1) do call :cat_resolve_delete %%s
+exit /b 0
+
+:cat_interactive
+call :cat_list
+echo.
+set "SEL="
+set /p "SEL=Enter numbers (1,3 or 1-3 or all) / none: "
+if /i "!SEL!"=="" goto cat_int_abort
+if /i "!SEL!"=="none" goto cat_int_abort
+set "CONFIRM="
+set /p "CONFIRM=Type yes to permanently delete the selected candidates: "
+if /i not "!CONFIRM!"=="yes" goto cat_int_abort
+if /i "!SEL!"=="all" (
+    for /l %%i in (1,1,%CAND_N%) do call :cat_delete %%i
+) else (
+    for %%s in (!SEL:,= !) do call :cat_resolve_delete %%s
+)
+exit /b 0
+
+:cat_int_abort
+echo Aborted - nothing was deleted.
+exit /b 0
+
+rem ==========================================================================
+rem Discovery and learning (Windows)
+rem Learned decisions: %LOCALAPPDATA%\clean-system-cache\learned.txt
+rem   key|allow|date
+rem ASK! items are never learned: Recycle Bin, %TEMP% and friends always ask.
+rem ==========================================================================
+
+:cat_load_config
+if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
+if exist "%CONFIG_FILE%" (
+    for /f "usebackq tokens=1,2 delims==" %%A in ("%CONFIG_FILE%") do (
+        if /i "%%A"=="PROJECT_ROOTS" set "PROJECT_ROOTS=%%B"
+        if /i "%%A"=="DORMANT_DAYS" set "DORMANT_DAYS=%%B"
+    )
+)
+if "%PROJECT_ROOTS%"=="" set "PROJECT_ROOTS=%USERPROFILE%\projects"
+exit /b 0
+
+:learn_get
+set "LEARNED="
+if not exist "%LEARN_FILE%" exit /b 0
+for /f "usebackq tokens=1,2 delims=|" %%A in ("%LEARN_FILE%") do (
+    if /i "%%A"=="%~1" set "LEARNED=%%B"
+)
+exit /b 0
+
+:learn_set
+if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
+set "LTMP=%STATE_DIR%\learned.tmp"
+set "LFOUND=0"
+if exist "%LEARN_FILE%" (
+    for /f "usebackq tokens=1,2,3 delims=|" %%A in ("%LEARN_FILE%") do (
+        if /i "%%A"=="%~1" (
+            echo %~1^|%~2^|%DATE%>>"%LTMP%"
+            set "LFOUND=1"
+        ) else (
+            echo %%A^|%%B^|%%C>>"%LTMP%"
+        )
+    )
+)
+if "%LFOUND%"=="0" echo %~1^|%~2^|%DATE%>>"%LTMP%"
+move /y "%LTMP%" "%LEARN_FILE%" >nul 2>&1
+exit /b 0
+
+:learn_forget
+set "LTMP=%STATE_DIR%\learned.tmp"
+set "LFOUND=0"
+if not exist "%LEARN_FILE%" exit /b 0
+for /f "usebackq tokens=1,2,3 delims=|" %%A in ("%LEARN_FILE%") do (
+    if /i not "%%A"=="%~1" echo %%A^|%%B^|%%C>>"%LTMP%"
+)
+move /y "%LTMP%" "%LEARN_FILE%" >nul 2>&1
+exit /b 0
+
+:cat_learn
+if "%~1"=="" (
+    echo Usage: /learn ^<allow^|deny^|forget^> ^<key,key^>
+    exit /b 1
+)
+if "%~2"=="" (
+    echo Usage: /learn ^<allow^|deny^|forget^> ^<key,key^>
+    exit /b 1
+)
+for %%k in (%~2) do call :learn_apply "%~1" "%%k"
+exit /b 0
+
+:learn_apply
+if /i "%~1"=="forget" (
+    call :learn_forget "%~2"
+    echo  Forgotten: %~2
+    exit /b 0
+)
+call :learn_set "%~2" "%~1"
+echo  Learned: %~2 = %~1
+exit /b 0
+
+:cat_show_learned
+if not exist "%LEARN_FILE%" (
+    echo No learned decisions yet ^(%LEARN_FILE%^).
+    exit /b 0
+)
+echo ====================================================================
+echo  Learned decisions - %LEARN_FILE%
+echo ====================================================================
+type "%LEARN_FILE%"
+echo ====================================================================
+echo  allow = cleaned automatically when regenerable ^| deny = never offered
+exit /b 0
+
+:cat_discover
+echo ====================================================================
+echo  Discovery - Windows
+echo ====================================================================
+echo  Roots: %PROJECT_ROOTS%   Dormant: %DORMANT_DAYS%+ days
+echo --------------------------------------------------------------------
+if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$roots='%PROJECT_ROOTS%'.Split(';'); $names=@('.next','.nuxt','.svelte-kit','.turbo','.parcel-cache','.pytest_cache','__pycache__','.mypy_cache','.ruff_cache','.nyc_output','coverage','.angular'); $old=(Get-Date).AddDays(-%DORMANT_DAYS%); $out=@(); foreach($r in $roots){ if(-not (Test-Path -LiteralPath $r)){continue}; Get-ChildItem -LiteralPath $r -Directory -Recurse -Depth 4 -Force -ErrorAction SilentlyContinue | Where-Object { ($names -contains $_.Name) -and ($_.LastWriteTime -lt $old) } | ForEach-Object { $mb=[math]::Round(((Get-ChildItem -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum)/1MB); $out += ('{0}|{1}' -f $mb,$_.FullName) } }; if($out.Count -eq 0){ 'none' } else { $out }" > "%DISC_FILE%" 2>nul
+set /a DNUM=0
+for /f "usebackq tokens=1,2 delims=|" %%A in ("%DISC_FILE%") do (
+    if /i not "%%A"=="none" (
+        set /a DNUM+=1
+        echo  !DNUM!. %%A MB   proj:%%B
+    )
+)
+if "%DNUM%"=="0" echo  No dormant project build caches found.
+echo --------------------------------------------------------------------
+echo  Browse : /browse proj:^<path^>
+echo  Apply  : /only proj:^<path^> [/yes]
+echo  Learn  : /learn allow ^<path-key^>
+echo ====================================================================
+exit /b 0
+
+:disc_delete
+set "P=%~1"
+set "P=!P:proj:=!"
+if "%P%"=="" exit /b 1
+if not exist "%DISC_FILE%" (
+    echo Refusing: run /discover first.
+    exit /b 1
+)
+findstr /i /e /c:"|%P%" "%DISC_FILE%" >nul 2>&1
+if errorlevel 1 (
+    echo Refusing: %P% is not in the last discovery. Run /discover again.
+    exit /b 1
+)
+if "%DRY_RUN%"=="1" (
+    echo [dry-run] %P%
+    exit /b 0
+)
+rmdir /s /q "%P%" >nul 2>&1
+echo [cleaned] %P%
 exit /b 0
