@@ -1,3 +1,37 @@
+# 🏛️ Muse Skills v8.1.5 — Irreversible Data Hazard Banner & English Language Policy
+
+> **Patch release: clean-system-cache gains a loud boxed irreversible-data hazard banner for ASK! selections, updateagents enforces a universal English-only working language policy across canon standards, @biomejs/biome moves to 2.6.5, and CI Bun setup absorbs release-asset CDN 504s.** 387 automated tests. 14,313 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.1.5
+
+- **`clean-system-cache`: loud irreversible-data hazard banner**: before any `ASK!` confirmation prompt the CLI now prints a boxed `WARNING: IRREVERSIBLE DATA LOSS` naming each selected target and warning that deleted contents cannot be recovered. The Windows CLI prints the same box, listing every `ASK!` candidate in the catalog. `T1`/`T2`-only selections never print it, preserving warning salience.
+- **`updateagents` universal English language policy**: `templates/.agents/standards/language-policy.md` becomes the 22nd canon standard and is registered in `ALWAYS_STANDARDS` plus generated `AGENTS.md`, ensuring all agent work stays strictly in English regardless of prompt language, with translated client-facing site copy as the explicit carve-out.
+- **Dependencies**: `@biomejs/biome` bumped from 2.6.2 to 2.6.5 with a regenerated `bun.lock`.
+- **CI resilience**: Bun setup in `ci.yml` and `release.yml` now absorbs transient `504 Gateway Timeout` errors from GitHub release asset CDNs with a guarded retry.
+
+## 📊 Verification
+
+| Metric | v8.1.4 | v8.1.5 |
+|:---|:---|:---|
+| Automated Tests | 386 | **387** |
+| Test Assertions | 14,303 | **14,313** |
+| Skills Count | 46 | **46** |
+| Slash Commands / Harness | 460 | **460** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.4...v8.1.5
+
+---
+
 # 🏛️ Muse Skills v8.1.4 — Cache Engine & Scaffold Fix
 
 > **Patch release: the clean-system-cache engine grows to a 16-point architecture matrix with a candidate catalog, and `new-project` stops crashing when the emdash preset meets a missing `src/`.** 386 automated tests. 14,303 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.

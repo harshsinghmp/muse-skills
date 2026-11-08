@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [8.1.5] - 2026-11-08
 
 ### Added
 
@@ -16,6 +16,8 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **CI: Bun setup survives the release-asset CDN 504**: every `setup-bun` step in `ci.yml` and `release.yml` now runs with `continue-on-error` and one retry gated on the first attempt's outcome. A genuine setup failure still fails the job; only the transient `Unexpected HTTP response: 504` on the Bun download is absorbed, which had been red-lighting every pull request and the tag-triggered release run.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.1.4...v8.1.5
 
 ## [8.1.4] - 2026-11-07
 
