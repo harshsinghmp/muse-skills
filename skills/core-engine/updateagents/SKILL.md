@@ -168,6 +168,7 @@ Instruction-adaptation safety options:
 * `--dry-run` — print every instruction source path and the exact adapter text that would replace it; write nothing.
 * `--yes` — confirm a multi-file or non-root adaptation plan without prompting. Non-interactive runs refuse the plan unless this flag is present.
 * `--follow-nested-repos` — opt into traversing nested repositories. Default `false`; without it the walk stops at every nested VCS root.
+* `--refresh-workflows` — overwrite existing files in `.github/workflows/` with the current canon. Default is additive: existing (possibly user-edited) workflows are preserved.
 
 ### Step 0 — Stage-0 Fast-Skip Gate (Pre-Flight)
 Before performing deep inspection or delta generation, run the `updateagents` fast-skip verification:

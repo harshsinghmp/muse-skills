@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **`updateagents` universal sync gate**: `templates/github/workflows/sync-gate.yml` is now selected for every scaffolded project (through `new-project` and `updateagents`). It is self-contained — pure Git, no project script or language runtime — and blocks a pull request whose head does not contain the latest base. `updateagents --refresh-workflows` explicitly overwrites existing workflow templates; the default remains additive. The `git-workflow` standard now documents the pre-merge sync rule.
+
 ### Changed
 
 - **`updateagents` language policy: tool-call narration is output**: rule 6 and the language-policy standard now state that narration between tool calls is bound by the English-only rule, add a required `Known limit` section explaining what the file guard cannot see, add mid-turn recovery guidance, and add contract self-check assertions projects can encode in their test runner.

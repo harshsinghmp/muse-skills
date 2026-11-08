@@ -18,6 +18,7 @@
 6. For production bugs, use `hotfix/*` rather than merging unfinished work from `{{integration_branch}}`.
 7. Prefer a new revert commit over rewriting shared history.
 8. **Atomic PR per Feature Protocol**: Give each independently deliverable feature its own dedicated feature branch and PR. Keep coordinated changes needed for that feature together; never batch unrelated features or workstreams into one PR. This rule is per feature, not per skill.
+9. **Pre-merge sync**: Before opening, updating, or merging a PR, fetch `{{integration_branch}}` and confirm the PR head contains the latest base (`git merge-base --is-ancestor origin/{{integration_branch}} HEAD`). Never merge a stale branch; rebase or merge the base first. CI enforces this through `.github/workflows/sync-gate.yml`, which is self-contained and requires no project script.
 
 ---
 
