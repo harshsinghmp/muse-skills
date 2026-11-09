@@ -80,6 +80,13 @@ jobs:
           fi
           echo "Release notes bytes: $(wc -c < release-body.md)"
 
+      - name: Generate checksums for the installer pin
+        run: |
+          set -euo pipefail
+          printf '%s  source-commit\n' "$(git rev-parse HEAD)" > checksums.txt
+          sha256sum scripts/install.sh | awk '{ print $1 "  install.sh" }' >> checksums.txt
+          cat checksums.txt
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         with:
@@ -87,5 +94,6 @@ jobs:
           tag_name: ${{ github.ref }}
           name: "muse-skills v${{ steps.version.outputs.VERSION }}"
           body_path: release-body.md
+          files: checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
