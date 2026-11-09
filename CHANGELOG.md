@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [Unreleased]
+
+### Added
+
+- **Dependency and docs-ledger gates**: `bun run check:deps` fails when a direct dependency is behind the registry or the pinned `musememory` MCP runtime cannot start; `bun run check:ledger` fails on pending docs debt or a stale release tag and runs in the release workflow.
+- **Faster scaffold coverage**: the five isolated `new-project` scaffold assertions now run concurrently (14.4s → 5.0s), lowering the parallel suite to about 40s.
+
 ## [8.4.1] - 2026-11-09
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.0...v8.4.1

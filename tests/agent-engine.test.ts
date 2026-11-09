@@ -14,6 +14,12 @@ const NEW_PROJECT_SCRIPT = join(REPO_ROOT, "skills/core-engine/new-project/scrip
 const UPDATEAGENTS_SCRIPT = join(REPO_ROOT, "skills/core-engine/updateagents/scripts/updateagents.ts");
 const TEST_SANDBOX = join("/tmp", `agent-engine-test-sandbox-${Date.now()}`);
 
+async function spawnProject(args: string[]): Promise<{ status: number | null; stdout: string; stderr: string }> {
+  const proc = Bun.spawn(["bun", NEW_PROJECT_SCRIPT, ...args], { stdout: "pipe", stderr: "pipe" });
+  const [stdout, stderr] = await Promise.all([new Response(proc.stdout).text(), new Response(proc.stderr).text()]);
+  return { status: await proc.exited, stdout, stderr };
+}
+
 describe("🏛️ Agent Engine & Multi-Skill Synergy", () => {
   beforeEach(() => {
     rmSync(TEST_SANDBOX, { recursive: true, force: true });
@@ -865,13 +871,16 @@ Custom billing engine for healthcare providers.
       expect(pkg.scripts.precommit).toBe("bash scripts/pre-commit.sh");
     }, 15000);
 
-    it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", () => {
-      // 1. Aria Builder (isolated official scaffold — extras skipped even when requested)
+    it("provisions complete modular implementations for isolated Aria Builder, Atomic Payload, StudioCMS, Emdash, and Payload E-Commerce", async () => {
       const targetAria = join(TEST_SANDBOX, "aria-showcase");
-      const resAria = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
+      const targetAtomic = join(TEST_SANDBOX, "atomic-showcase");
+      const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
+      const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
+      const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
+      const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
+
+      const [resAria, resAtomic, resStudio, resEmdash, resPayloadEcom, resHtml] = await Promise.all([
+        spawnProject([
           "--agent-name",
           "Test Agent",
           targetAria,
@@ -882,9 +891,63 @@ Custom billing engine for healthcare providers.
           "--ecommerce=medusa",
           "--styling=hybrid",
           "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
+        ]),
+        spawnProject([
+          "--agent-name",
+          "Test Agent",
+          targetAtomic,
+          "--non-interactive",
+          "--intent=content",
+          "--type=nextjs",
+          "--cms=atomic-payload",
+          "--db=postgres",
+          "--styling=hybrid",
+          "--skip-install",
+        ]),
+        spawnProject([
+          "--agent-name",
+          "Test Agent",
+          targetStudio,
+          "--non-interactive",
+          "--intent=content",
+          "--type=astro",
+          "--cms=studiocms",
+          "--styling=hybrid",
+          "--skip-install",
+        ]),
+        spawnProject([
+          "--agent-name",
+          "Test Agent",
+          targetEmdash,
+          "--non-interactive",
+          "--intent=content",
+          "--type=astro",
+          "--cms=emdash",
+          "--styling=hybrid",
+          "--skip-install",
+        ]),
+        spawnProject([
+          "--agent-name",
+          "Test Agent",
+          targetPayloadEcom,
+          "--non-interactive",
+          "--intent=ecommerce",
+          "--type=nextjs",
+          "--cms=payload",
+          "--ecommerce=payload",
+          "--puck",
+          "--skip-install",
+        ]),
+        spawnProject([
+          "--agent-name",
+          "Test Agent",
+          targetHtml,
+          "--non-interactive",
+          "--preset=pure-html",
+          "--skip-install",
+        ]),
+      ]);
+
       expect(resAria.status, resAria.stderr).toBe(0);
       expect(resAria.stdout).toContain("admin/setup");
       // Official upstream markers (present via clone and offline fallback).
@@ -904,25 +967,6 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetAria, "backend/package.json"))).toBe(false);
       expect(existsSync(join(targetAria, "backend/docker-compose.yml"))).toBe(false);
 
-      // 1b. Atomic Payload (isolated official website-builder scaffold — extras skipped even when requested)
-      const targetAtomic = join(TEST_SANDBOX, "atomic-showcase");
-      const resAtomic = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
-          "--agent-name",
-          "Test Agent",
-          targetAtomic,
-          "--non-interactive",
-          "--intent=content",
-          "--type=nextjs",
-          "--cms=atomic-payload",
-          "--db=postgres",
-          "--styling=hybrid",
-          "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
       expect(resAtomic.status, resAtomic.stderr).toBe(0);
       expect(resAtomic.stdout).toContain("localhost:42100/admin");
       expect(resAtomic.stdout).toContain("Atomic Payload is fully isolated");
@@ -947,24 +991,6 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetAtomic, ".github/workflows/ci.yml"))).toBe(false);
       expect(existsSync(join(targetAtomic, "src/lib/auth.ts"))).toBe(false);
 
-      // 2. Astro + StudioCMS
-      const targetStudio = join(TEST_SANDBOX, "studiocms-showcase");
-      const resStudio = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
-          "--agent-name",
-          "Test Agent",
-          targetStudio,
-          "--non-interactive",
-          "--intent=content",
-          "--type=astro",
-          "--cms=studiocms",
-          "--styling=hybrid",
-          "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
       expect(resStudio.status, resStudio.stderr).toBe(0);
       expect(existsSync(join(targetStudio, "studiocms.config.mjs"))).toBe(true);
       const studioCfg = readFileSync(join(targetStudio, "studiocms.config.mjs"), "utf8");
@@ -980,24 +1006,6 @@ Custom billing engine for healthcare providers.
       expect(studioPkg.dependencies["@studiocms/core"]).toBeUndefined();
       expect(studioPkg.dependencies["@astrojs/node"]).toBeDefined();
 
-      // 3. Astro + Emdash CMS
-      const targetEmdash = join(TEST_SANDBOX, "emdash-showcase");
-      const resEmdash = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
-          "--agent-name",
-          "Test Agent",
-          targetEmdash,
-          "--non-interactive",
-          "--intent=content",
-          "--type=astro",
-          "--cms=emdash",
-          "--styling=hybrid",
-          "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
       expect(resEmdash.status, resEmdash.stderr).toBe(0);
       expect(existsSync(join(targetEmdash, "emdash.config.ts"))).toBe(true);
       expect(existsSync(join(targetEmdash, "emdash-env.d.ts"))).toBe(true);
@@ -1012,25 +1020,6 @@ Custom billing engine for healthcare providers.
       expect(emdashAstroCfg).toContain("emdash(");
       expect(emdashAstroCfg).toContain("react()");
 
-      // 4. Next.js + Payload E-Commerce + Puck
-      const targetPayloadEcom = join(TEST_SANDBOX, "payload-ecom-showcase");
-      const resPayloadEcom = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
-          "--agent-name",
-          "Test Agent",
-          targetPayloadEcom,
-          "--non-interactive",
-          "--intent=ecommerce",
-          "--type=nextjs",
-          "--cms=payload",
-          "--ecommerce=payload",
-          "--puck",
-          "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
       expect(resPayloadEcom.status, resPayloadEcom.stderr).toBe(0);
       expect(existsSync(join(targetPayloadEcom, "src/payload.config.ts"))).toBe(true);
       const payloadCfg = readFileSync(join(targetPayloadEcom, "src/payload.config.ts"), "utf8");
@@ -1046,21 +1035,6 @@ Custom billing engine for healthcare providers.
       expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/layout.tsx"))).toBe(true);
       expect(existsSync(join(targetPayloadEcom, "src/app/(payload)/admin/[[...segments]]/page.tsx"))).toBe(true);
 
-      // 5. Pure HTML / CSS
-      const targetHtml = join(TEST_SANDBOX, "pure-html-showcase");
-      const resHtml = spawnSync(
-        "bun",
-        [
-          NEW_PROJECT_SCRIPT,
-          "--agent-name",
-          "Test Agent",
-          targetHtml,
-          "--non-interactive",
-          "--preset=pure-html",
-          "--skip-install",
-        ],
-        { encoding: "utf8" },
-      );
       expect(resHtml.status, resHtml.stderr).toBe(0);
       expect(existsSync(join(targetHtml, "index.html"))).toBe(true);
       const htmlDoc = readFileSync(join(targetHtml, "index.html"), "utf8");

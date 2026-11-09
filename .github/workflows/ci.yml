@@ -63,6 +63,9 @@ jobs:
       - name: Check skill discovery surfaces
         run: bun run check:surface
 
+      - name: Dependency smoke gate
+        run: bun run check:deps
+
       - name: Install uv (ruff runner)
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
 

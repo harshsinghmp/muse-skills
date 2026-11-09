@@ -78,7 +78,9 @@
     "sync:surface": "bun scripts/sync-skill-surface.ts --write",
     "check:hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public",
     "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene",
-    "release:smoke": "bun scripts/release-smoke.ts"
+    "release:smoke": "bun scripts/release-smoke.ts",
+    "check:deps": "bun scripts/check-deps.ts",
+    "check:ledger": "bun scripts/check-docs-ledger.ts"
   },
   "type": "module",
   "version": "8.4.1",
