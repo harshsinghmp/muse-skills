@@ -12,7 +12,7 @@ Install via `npx skills` shorthand:
 npx skills add harshsinghmp/muse-skills --skill pua
 ```
 
-*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/pua` is also supported).*
+*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/skills/quality-review/pua` is also supported).*
 
 ---
 

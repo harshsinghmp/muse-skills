@@ -25,7 +25,7 @@ Install via `npx skills` shorthand:
 npx skills add harshsinghmp/muse-skills --skill dead-letter
 ```
 
-*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/dead-letter` is also supported).*
+*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/skills/quality-review/dead-letter` is also supported).*
 
 ---
 

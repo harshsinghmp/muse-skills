@@ -1,6 +1,6 @@
 # 📈 growth
 
-The strategy and scaling department head: one skill across thirteen modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, viral, audit, and affiliates-referrals. Choose the playing field, then make the bets measurable.
+The strategy and scaling department head: one skill across fourteen modes — positioning, funnels, pricing, launch, competitor, referral, retention, pr, community, cro, viral, programmatic-cro, audit, affiliates-referrals affiliates-referrals. Choose the playing field, then make the bets measurable.
 
 ## Install
 
@@ -40,11 +40,13 @@ Run a CRO audit on our landing page hero section, enforce anti-slop copy, and ch
 | **cro** | conversion rate optimization / landing page audit | CRO: hero section 5-second test, 5-state anti-slop copy gate, CTA contrast, and form friction reduction. |
 | **viral** | viral loop / k factor / referral loop | Viral: mathematical K-factor triangulation ($K = i \times c$), cycle time ($ct \le 72\text{h}$) compression, asymmetric double-sided incentives, and 'Aha!' trigger placement. |
 | **audit** | growth experiment audit | Rigorous experiment and acquisition channel audit (CAC, LTV, hypotheses). |
+| **affiliates-referrals** | Partner Programs & Viral Referral Architectures | [references/affiliates-referrals.md](references/affiliates-referrals.md) |
+| **programmatic-cro** | Multi-Armed Bandit Dynamic Optimization Engine | [references/programmatic-cro.md](references/programmatic-cro.md) |
 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — fourteen mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

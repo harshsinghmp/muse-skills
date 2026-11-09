@@ -203,7 +203,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillContent).toContain("**carousel**");
       expect(skillContent).toContain("references/carousel.md");
       expect(skillContent).toContain(
-        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|postiz|carousel|x|audit]"',
+        'argument-hint: "[strategy|calendar|content|community|influencer|ugc|analytics|creator-vetting|postiz|carousel|x|audit|social-intel]"',
       );
 
       const openaiYaml = fs.readFileSync(path.join(smmDir, "agents", "openai.yaml"), "utf8");
@@ -657,7 +657,9 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
 
       expect(skillContent).toContain("**`federation`**");
       expect(skillContent).toContain("references/federation.md");
-      expect(skillContent).toContain('argument-hint: "[route|decouple|skill-audit|worktree-lease|federation|swarm]"');
+      expect(skillContent).toContain(
+        'argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm]"',
+      );
 
       expect(fedContent).toContain("Worktree Federation Architecture");
       expect(fedContent).toContain("The 4 Federation Invariants");
@@ -773,7 +775,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(autoSkill).toContain("| **voice** |");
       expect(autoSkill).toContain("references/voice.md");
       expect(autoSkill).toContain(
-        'argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|alerts|audit]"',
+        'argument-hint: "[workflow|chatbot|agents|rag|integrations|prompt|voice|realtime|alerts|audit|browser-relay]"',
       );
 
       const voiceRef = fs.readFileSync(
@@ -1128,7 +1130,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
     test("growth: community mode covers Discord/Skool/Slack onboarding, engagement rituals, and moderation", () => {
       const growthSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/growth", "SKILL.md"), "utf8");
       expect(growthSkill).toContain(
-        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit]"',
+        'argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit|affiliates-referrals]"',
       );
       expect(growthSkill).toContain("| **community** |");
       expect(growthSkill).toContain("references/community.md");
@@ -1275,7 +1277,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(designSkill).toContain("visual storytelling");
       expect(designSkill).toContain("references/story.md");
       expect(designSkill).toContain(
-        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d]"',
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides]"',
       );
 
       const storyRef = fs.readFileSync(
@@ -1438,7 +1440,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const skillMd = fs.readFileSync(path.join(brandDir, "SKILL.md"), "utf8");
       expect(skillMd).toContain("name: brand");
       expect(skillMd).toContain(
-        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]"',
+        'argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|story-engine|audit|persona]"',
       );
 
       // Modes table
@@ -1657,7 +1659,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **obsidian** |");
       expect(content).toContain("references/obsidian.md");
       expect(content).toContain(
-        'argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"',
+        'argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit|meeting-notes|product-marketing-template]"',
       );
     });
 
@@ -1729,7 +1731,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(content).toContain("| **dispatch** |");
       expect(content).toContain("references/dispatch.md");
       expect(content).toContain(
-        'argument-hint: "[dispatch|orchestration|socratic|staff-work|wave|ledger|handoff|onboard|audit]"',
+        'argument-hint: "[dispatch|orchestration|onboard|socratic-adversarial-gate|staff-work-doctrine]"',
       );
     });
 
@@ -1806,7 +1808,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(fs.existsSync(skillPath)).toBe(true);
       const content = fs.readFileSync(skillPath, "utf8");
 
-      expect(content).toContain('argument-hint: "[onboard|abandon|nurture|winback|deliverability|sms|contacts]"');
+      expect(content).toContain('argument-hint: "[onboard|abandon|nurture|winback|deliverability|sms|contacts|audit]"');
       expect(content).toContain("priority: 47");
       expect(content).toContain("category: agency-delivery");
 
@@ -2026,7 +2028,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(devopsSkill).toContain("| **preview** |");
       expect(devopsSkill).toContain("references/preview.md");
       expect(devopsSkill).toContain(
-        'argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|edge-mesh|audit]"',
+        'argument-hint: "[hosting|cicd|domains|cloudflare|security|monitoring|incident|preview|edge-mesh|audit]"',
       );
     });
 
@@ -2298,7 +2300,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       const contentSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/content", "SKILL.md"), "utf8");
       expect(contentSkill).toContain("| **ugc** |");
       expect(contentSkill).toContain("references/ugc.md");
-      expect(contentSkill).toContain("twelve modes");
+      expect(contentSkill).toContain("fourteen modes");
 
       const ugcRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/content", "references", "ugc.md"),
@@ -3773,7 +3775,7 @@ window.alert('Blocking modal');`,
         path.join(REPO_ROOT, "skills/agency-delivery/mobile", "references", "expo.md"),
         "utf8",
       );
-      expect(expoRef).toContain("EXP-001: Modern Expo SDK 52 Universal Architecture");
+      expect(expoRef).toContain("EXP-001: Modern Expo Universal Architecture");
       expect(expoRef).toContain("EXP-002: NativeWind v4 & OKLCH Theme Integration");
       expect(expoRef).toContain("EXP-003: Deep Linking & Universal Links / App Links Architecture");
       expect(expoRef).toContain("EXP-004: Native Hardware Access & Ephemeral Mocking Fences");
@@ -3882,7 +3884,7 @@ window.alert('Blocking modal');`,
       const tgSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/telegram", "SKILL.md"), "utf8");
       expect(tgSkill).toContain("| **webhook** |");
       expect(tgSkill).toContain("references/webhook.md");
-      expect(tgSkill).toContain('argument-hint: "[notify|approve|hook|route|setup|webhook]"');
+      expect(tgSkill).toContain('argument-hint: "[notify|approve|hook|route|setup|webhook|audit]"');
 
       const webhookRef = fs.readFileSync(
         path.join(REPO_ROOT, "skills/agency-delivery/telegram", "references", "webhook.md"),
@@ -4309,7 +4311,7 @@ NextApp relies on RedisCache
       expect(brandSkill).toContain("story-engine");
       expect(brandSkill).toContain("version: 1.2.0");
       expect(brandSkill).toContain(
-        "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]",
+        "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|story-engine|audit|persona]",
       );
 
       const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/brand/scripts/story-engine.ts");

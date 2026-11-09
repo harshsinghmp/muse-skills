@@ -2,7 +2,7 @@
 name: research
 aliases: ["user-research", "market-pulse", "entity-dossier", "client-research"]
 description: "Client-serving research department: user research on a client's product, market and competitive intelligence, and due-diligence dossiers — routed through five modes. Use when asked to plan or run user research on a client's product, size or analyze a market, build a competitive teardown or battle cards, monitor what is being said in a category, or investigate a company or person. Not for publishing content (content/smm) or analytics dashboards (analytics)."
-argument-hint: "[user-research|market-pulse|entity-dossier|audit]"
+argument-hint: "[user-research|market-pulse|entity-dossier|audit|competitor-analysis]"
 user-invocable: true
 version: 1.0.0
 author: Harsh Singh
@@ -43,6 +43,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **market-pulse** | "market pulse", "what's being said about X", "category sentiment", "launch timing" | Recency-windowed category/competitor briefing with sentiment and trend signals | [references/market-pulse.md](references/market-pulse.md) |
 | **entity-dossier** | "due diligence", "investigate a company", "is this partner credible", "vet a vendor/client" | Hypothesis-forced due-diligence dossier with verdict, timeline, red flags, and provenance | [references/entity-dossier.md](references/entity-dossier.md) |
 | **audit** | "audit research", "sources check", "research quality review" | Source/citation audit of any research artifact (provenance, staleness, over-claim) | [references/audit.md](references/audit.md) |
+| **competitor-analysis** | "competitor-analysis" | Competitor Messaging Grid & Positioning Teardowns | [references/competitor-analysis.md](references/competitor-analysis.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

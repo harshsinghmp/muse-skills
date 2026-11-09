@@ -2,7 +2,7 @@
 name: devops
 aliases: ["infrastructure", "reliability", "sre", "deployment", "hosting", "cicd", "platform", "cloudflare", "devops-engineer", "wrangler"]
 description: "Full infrastructure and reliability department: hosting and deployment, CI/CD pipelines, domains and DNS, Cloudflare edge and Workers, distributed Anycast routing mesh, security hardening, monitoring and alerting, incident response, and living deliverable preview sandboxes — routed through ten modes. Use when asked to deploy or host an app, set up a CI/CD pipeline, configure a domain or DNS, deploy to Cloudflare Workers or Pages, model edge Anycast routing and SWR caching, harden security, add monitoring and alerts, respond to an outage, or scaffold an ephemeral client review portal with token gating. Not for writing application code (webdev) or release/versioning workflows (git)."
-argument-hint: "[hosting|cicd|domains|security|monitoring|incident|cloudflare|preview|edge-mesh|audit]"
+argument-hint: "[hosting|cicd|domains|cloudflare|security|monitoring|incident|preview|edge-mesh|audit]"
 user-invocable: true
 version: 1.4.0
 author: Harsh Singh

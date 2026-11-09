@@ -1,6 +1,6 @@
 # 🚨 incident-response
 
-Live incident command: one skill, four modes — triage, mitigate, communicate, retro. Classify the severity, stop the bleeding, tell the truth on a cadence, then learn without blame. Mitigates first, diagnoses second.
+Live incident command: one skill, five modes — triage, mitigate, communicate, retro, audit. Classify the severity, stop the bleeding, tell the truth on a cadence, then learn without blame. Mitigates first, diagnoses second.
 
 ## Install
 
@@ -33,7 +33,7 @@ Draft the status page update for this SEV-1 outage.
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — five mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

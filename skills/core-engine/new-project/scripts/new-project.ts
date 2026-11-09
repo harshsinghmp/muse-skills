@@ -15,10 +15,14 @@
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
  */
 
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled Rejection:", reason);
-  process.exit(1);
-});
+const IS_ENTRY_POINT = import.meta.main;
+
+if (IS_ENTRY_POINT) {
+  process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled Rejection:", reason);
+    process.exit(1);
+  });
+}
 
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
@@ -57,7 +61,7 @@ function installAgentExcludes(targetDir: string): boolean {
 
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({
-  args: Bun.argv.slice(2),
+  args: IS_ENTRY_POINT ? Bun.argv.slice(2) : [],
   options: {
     name: { type: "string", short: "n" },
     desc: { type: "string", short: "d" },
@@ -7995,7 +7999,9 @@ ${offerItems}
   console.log("=======================================================\n");
 }
 
-main().catch((err) => {
-  console.error("❌ Scaffolding Error:", err);
-  process.exit(1);
-});
+if (IS_ENTRY_POINT) {
+  main().catch((err) => {
+    console.error("❌ Scaffolding Error:", err);
+    process.exit(1);
+  });
+}

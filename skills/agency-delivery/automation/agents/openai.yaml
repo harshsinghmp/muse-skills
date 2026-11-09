@@ -1,5 +1,5 @@
 name: automation
-description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through six modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics)."
+description: "Full automation and AI services department: workflow automation, chatbots, AI agents, retrieval-augmented generation, third-party integrations, and prompt engineering — routed through eleven modes. Use when asked to automate a manual process, build a chatbot or AI assistant, design an agent or RAG pipeline, connect systems via APIs/webhooks, or engineer and evaluate prompts. Not for hosting/CI (devops) or data tracking (analytics)."
 tools:
   - type: function
     function:

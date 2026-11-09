@@ -16,8 +16,6 @@
 # Install humanize skill directly
 npx skills add harshsinghmp/muse-skills --skill humanize
 
-# Or install the complete Muse Skills suite
-npx skills add harshsinghmp/muse-skills
 ```
 
 ---
@@ -50,6 +48,11 @@ Make this executive summary read naturally while preserving our metrics and tech
 | **File** | Operates directly on repository files, modifying prose while strictly preserving code blocks, YAML frontmatter, tables, and URLs. | READMEs, markdown docs, technical whitepapers. |
 | **Repo Audit** | Surveys a directory or docset to identify dominant anti-slop patterns without performing blind bulk rewrites. | Repo onboarding, docset health checks. |
 | **Embedded** | Operates silently as a quality filter within an automated multi-skill pipeline, returning clean prose directly. | Subagent handoffs, automated release summaries. |
+| **ast-shield-and-cadence** | Structural AST Shield & Rhythm Dispersion Protocol | [references/ast-shield-and-cadence.md](references/ast-shield-and-cadence.md) |
+| **audit** | humanize audit mode | [references/audit.md](references/audit.md) |
+| **patterns** | Humanize pattern catalog | [references/patterns.md](references/patterns.md) |
+| **style-guide** | Humanize style guide | [references/style-guide.md](references/style-guide.md) |
+| **verification** | Humanize verification guide | [references/verification.md](references/verification.md) |
 
 ---
 

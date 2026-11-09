@@ -18,6 +18,8 @@ Client and brand lifecycle engine: comprehensive brand intake, autonomous web re
 ## Installation & Usage
 
 ```bash
-# Run with npx skills
-npx skills run harshsinghmp/muse-skills/brand -- intake "Onboard client Acme Corp"
+# Install
+npx skills add harshsinghmp/muse-skills --skill brand
+
+# Then ask: intake "Onboard client Acme Corp"
 ```

@@ -17,6 +17,7 @@ skill:
       - route: shape structured events into Telegram messages; ack before dispatch; route by config (event type → chat/bot/target); channel down → queue note, not silent drop; sanitize sensitive payloads before send.
       - setup: create config file with bot token + chat ID + optional targets; mode-600; bind to env-manager layer when present; write recovery docs; confirm with a test message.
       - webhook: zero-dependency HTTP webhook receiver with timing-safe secret token verification, replay protection, update deduplication, and fast HTTP 200 ack.
+      - audit: telegram audit mode
 
       RULES:
       - Exactly one mode per request; ambiguous → default notify, state assumption.

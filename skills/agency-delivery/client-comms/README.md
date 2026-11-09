@@ -1,6 +1,6 @@
 # 💬 client-comms
 
-The client communication department head: one skill across nine modes — status, change, handover, feedback, proposal, intake, audit, inbox-triage, and factual-reporting. Pitch proposals, report progress, control scope, ingest client onboarding questionnaires, hand over cleanly, and listen well. Outward voice to the client, in plain language.
+The client communication department head: one skill across ten modes — status, change, handover, feedback, proposal, intake, executive-pulse, audit, inbox-triage, factual-reporting factual-reporting. Pitch proposals, report progress, control scope, ingest client onboarding questionnaires, hand over cleanly, and listen well. Outward voice to the client, in plain language.
 
 ## Install
 
@@ -36,6 +36,8 @@ Scaffold a high-converting B2B proposal for Acme Global with 48h stop-the-clock 
 | **intake** | client intake / onboarding questionnaire | Ingestion: scope boundary extraction, anti-scope fencing, and vault scaffolding. |
 | **`audit`** | communication audit / SLA audit | Bidirectional SLAs, cadence integrity, channel discipline, escalations. |
 | **`inbox-triage`** | inbox triage / email triage | Executive inbox triage and follow-up protocols. |
+| **executive-pulse** | Autonomous C-Suite Weekly Briefing Generator | [references/executive-pulse.md](references/executive-pulse.md) |
+| **factual-reporting** | Factual Daily, Sprint & Milestone Progress Reporting | [references/factual-reporting.md](references/factual-reporting.md) |
 
 ### Specialized References
 
@@ -44,7 +46,7 @@ Scaffold a high-converting B2B proposal for Acme Global with 48h stop-the-clock 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — ten mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

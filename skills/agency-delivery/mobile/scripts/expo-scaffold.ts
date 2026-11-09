@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
- * expo-scaffold.ts: Expo SDK 52 Universal Mobile App Scaffolder, Auditor & Deep Link Verifier.
+ * expo-scaffold.ts: Expo Universal Mobile App Scaffolder, Auditor & Deep Link Verifier.
  *
  * Implements EXP-001 through EXP-004:
- *   - EXP-001: Modern Expo SDK 52 Universal Architecture (expo-router v4, Hermes, New Architecture, Android 15 edge-to-edge, iOS 15.1+)
+ *   - EXP-001: Modern Expo Universal Architecture (expo-router v4, Hermes, New Architecture, Android 15 edge-to-edge, iOS 15.1+)
  *   - EXP-002: NativeWind v4 & OKLCH Theme Integration (Compiled StyleSheets, useSafeAreaInsets)
  *   - EXP-003: Deep Linking & Universal Links / App Links Architecture (app scheme, applinks, assetlinks, auth/pay callbacks)
  *   - EXP-004: Native Hardware Access & Ephemeral Mocking Fences (Camera, SecureStore, Haptics, LocalAuthentication)
@@ -98,7 +98,7 @@ interface RawExpoConfig {
 }
 
 /**
- * Generate a production-grade Expo SDK 52 universal app scaffold adhering to EXP-001 - EXP-004.
+ * Generate a production-grade the current Expo SDK universal app scaffold adhering to EXP-001 - EXP-004.
  */
 export function generateExpoScaffold(options: ScaffoldOptions): ScaffoldResult {
   const name = options.name || "Universal App";
@@ -164,7 +164,7 @@ export function generateExpoScaffold(options: ScaffoldOptions): ScaffoldResult {
       web: "expo start --web",
     },
     dependencies: {
-      expo: "~52.0.0",
+      expo: "latest",
       "expo-camera": "~16.0.0",
       "expo-haptics": "~14.0.0",
       "expo-local-authentication": "~15.0.0",
@@ -234,7 +234,7 @@ export default function HomeScreen() {
       className="flex-1 bg-white dark:bg-black items-center justify-center p-6"
     >
       <Text className="text-2xl font-bold text-gray-900 dark:text-white">
-        Expo SDK 52 Universal App
+        Expo Universal App
       </Text>
       <Text className="text-base text-gray-600 dark:text-gray-300 mt-2 text-center">
         File-based routing with New Architecture, Hermes bytecode, and NativeWind v4
@@ -424,17 +424,17 @@ export function auditExpoConfig(appJsonOrDir: string | object): ExpoAuditResult 
     if (match) sdkNum = Number.parseInt(match[1], 10);
   }
 
-  // If no explicit sdkVersion in app.json, SDK 52 can be assumed when newArchEnabled is present
+  // If no explicit sdkVersion in app.json, the current SDK can be assumed when newArchEnabled is present
   if (sdkNum >= 51) {
     score += 20;
   } else if (!sdkVer && expo.newArchEnabled) {
-    // Modern Expo SDK 52 config omits sdkVersion and relies on package.json
+    // Modern Expo config omits sdkVersion and relies on package.json
     score += 20;
     sdkVer = "52 (inferred)";
     sdkNum = 52;
   } else {
-    issues.push("EXP-001: Expo SDK version must be >= 51 (target SDK 52 for New Architecture support)");
-    recommendations.push("Upgrade project to Expo SDK 52 using 'npx expo install expo@~52.0.0'");
+    issues.push("EXP-001: Expo SDK version must be >= 51 (target a current SDK with New Architecture support)");
+    recommendations.push("Upgrade project to the current Expo SDK using 'npx expo install expo@latest'");
   }
 
   // 2. Hermes Bytecode Engine - 15 pts
@@ -624,7 +624,7 @@ if (import.meta.main) {
     if (isJson) {
       console.log(JSON.stringify(result, null, 2));
     } else {
-      console.log(`\n📱 Expo SDK 52 Universal Scaffold Created`);
+      console.log(`\n📱 Expo Universal Scaffold Created`);
       console.log(`Name:      ${name}`);
       console.log(`Slug:      ${slug}`);
       console.log(`Scheme:    ${scheme}://`);
@@ -660,7 +660,7 @@ if (import.meta.main) {
     if (isJson) {
       console.log(JSON.stringify(auditResult, null, 2));
     } else {
-      console.log(`\n📱 Expo SDK 52 Architecture Audit: ${target}`);
+      console.log(`\n📱 the current Expo SDK Architecture Audit: ${target}`);
       console.log(`Score:   ${auditResult.score}/100`);
       console.log(`Verdict: ${auditResult.verdict}\n`);
 
@@ -729,7 +729,7 @@ if (import.meta.main) {
     process.exit(linkResult.valid ? 0 : 1);
   }
 
-  console.log(`expo-scaffold.ts — Universal Mobile App & Expo SDK 52 Architecture CLI
+  console.log(`expo-scaffold.ts — Universal Mobile App & Current Expo SDK Architecture CLI
 
 Usage:
   bun expo-scaffold.ts --scaffold-app [--name <app>] [--slug <slug>] [--scheme <scheme>] [--bundle-id <bundleId>] [--output <dir>] [--json]

@@ -1,6 +1,6 @@
 # 🛠️ devops
 
-The infrastructure and reliability department head: one skill, nine modes — hosting, cicd, domains, security, monitoring, incident, cloudflare, preview, audit. Reproducible deploys, edge compute, and Zero Trust security.
+The infrastructure and reliability department head: one skill, ten modes — hosting, cicd, domains, cloudflare, security, monitoring, incident, preview, edge-mesh, audit. Reproducible deploys, edge compute, and Zero Trust security.
 
 ## Install
 
@@ -33,11 +33,12 @@ Deploy our API to Cloudflare Workers with Pages frontend, strict SSL, and Zero T
 | **cloudflare** | cloudflare edge, workers, pages & living deliverables | Cloudflare: Workers, Pages, Full (Strict) SSL, Zero Trust tunnels, Wrangler CLI, and living deliverables with workerd preview containers. |
 | **preview** | living deliverable / preview link / client portal | Preview: ephemeral workerd review containers, token-gated links, multi-viewport switcher, and 48-hour expiration. |
 | **`audit`** | CI/CD security audit / deployment gate audit | OWASP CICD-SEC-1..10: gates, IAM, credential hygiene, artifact integrity. |
+| **edge-mesh** | Distributed Cloudflare Workers Anycast Routing Mesh | [references/edge-mesh.md](references/edge-mesh.md) |
 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — ten mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

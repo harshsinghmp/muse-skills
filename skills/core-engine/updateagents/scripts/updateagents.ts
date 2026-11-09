@@ -3515,7 +3515,7 @@ if (isAudit) {
   const score = checks.filter((c) => c.passed).length;
   const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
   // Derive the denominator from the actual checks so adding an asset can never
-  // silently produce a false "13/13 AI-Ready" pass again.
+  // silently produce a false "14/14 AI-Ready" pass again.
   const TOTAL_ASSETS = checks.length;
 
   // Stage-0 Fast-Skip Gate

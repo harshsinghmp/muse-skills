@@ -9,6 +9,11 @@ on:
   pull_request:
     branches: [dev, main]
 
+# Supersede in-flight runs on force-push / rapid pushes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

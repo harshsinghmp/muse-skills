@@ -44,7 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **outreach** | "cold email sequence", "outbound sequence", "follow-up emails", "breakup email" | Email sequences with deliverability, caps, and breakup | [references/outreach.md](references/outreach.md) |
 | **list** | "build a prospect list", "list hygiene", "enrich this list", "verify emails" | List building with CSV hygiene and enrichment verification | [references/list.md](references/list.md) |
 | **handover** | "hand off to sales", "sales handover", "qualified pipeline", "context packet" | Sales handover with a context packet, routed to ops | [references/handover.md](references/handover.md) |
-| **audit** | "audit gtm", "launch audit", "launch readiness", "messaging audit", "anti-puffery audit" | Launch-readiness audit, developer quickstart audit, and anti-puffery verification | [references/audit.md](references/audit.md) |
+| **audit** | "audit gtm", "gtm launch audit", "launch messaging audit", "launch readiness", "messaging audit", "anti-puffery audit" | Launch-readiness audit, developer quickstart audit, and anti-puffery verification | [references/audit.md](references/audit.md) |
 | **discovery** | "customer discovery", "TAB interview", "technical advisory board", "talk to users", "validate assumptions" | Developer customer discovery via Technical Advisory Board (TAB) | [references/discovery.md](references/discovery.md) |
 | **dev-to-buyer** | "market to devs", "sell to buyers", "champion enablement", "developer ROI", "free to enterprise" | Arming developer champions with ROI and compliance packets for executive buyers | [references/dev-to-buyer.md](references/dev-to-buyer.md) |
 | **founder-sales** | "founder sales", "close first deals", "sales objection", "demo script", "let me think about it" | Founder-led technical sales execution, discovery calls, and objection handling | [references/founder-sales.md](references/founder-sales.md) |
@@ -95,7 +95,7 @@ Order for zero-to-one: discovery → research → score → list → outreach �
 
 ### Metrics loop (post-handover measurement)
 
-Source: `tech-leads-club/agent-skills` `gtm-metrics` (orig `chadboyda/agent-gtm-skills`), raw SKILL.md fetched per lane-a-skillshub-remainder.md #13; enrich-only, no new skill or mode.
+Source: `tech-leads-club/agent-skills` `gtm-metrics` (orig `chadboyda/agent-gtm-skills`); enrich-only, no new skill or mode.
 
 Run this loop on the outbound the modes above produce; deep analysis stays in `analytics`.
 

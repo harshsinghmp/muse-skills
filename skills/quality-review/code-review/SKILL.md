@@ -65,6 +65,23 @@ narrow mode for a literal patch, commit, or PR diff.
 | **skillscan** | "check this skill before install", "is this agent skill safe", "scan this skill bundle", "pre-install gate" | Ten-category static trust gate over an agent skill bundle (SKILL.md + scripts + metadata + hooks); returns structured PASS/WARN/FAIL naming the category; the supply-chain trust mechanism | [references/skill-bundle-scan.md](references/skill-bundle-scan.md) |
 | **simplify** | "make this simpler", "reduce complexity without changing behavior" | Rule-of-500 behavior-preserving simplification (strictly on-demand, never runs automatically); scoped to recently-changed code only; never expands scope to refactor stable code | [references/simplify.md](references/simplify.md) |
 | **delegate** | "delegate review", "pick a scope and review just that" | Deterministically pick the changed-file scope + resolve the mode, then run the LLM pass over that scope only | [references/delegate.md](references/delegate.md) |
+| **agreement-review** | "agreement-review" | the cross-boundary falsification engine | [references/agreement-review.md](references/agreement-review.md) |
+| **boundary-governance** | "boundary-governance" | Mission-Focused Boundary Governance & Quality Gate | [references/boundary-governance.md](references/boundary-governance.md) |
+| **coupling-audit** | "coupling-audit" | whole-codebase change-coupling audit | [references/coupling-audit.md](references/coupling-audit.md) |
+| **cross-file-invariants** | "cross-file-invariants" | Cross-File Invariant Review | [references/cross-file-invariants.md](references/cross-file-invariants.md) |
+| **edr-and-execution-safety** | "edr-and-execution-safety" | Antivirus/EDR Heuristics & Runtime Execution Safety | [references/edr-and-execution-safety.md](references/edr-and-execution-safety.md) |
+| **fixing-findings** | "fixing-findings" | review report → verified fixes | [references/fixing-findings.md](references/fixing-findings.md) |
+| **go-traps** | "go-traps" | defensive-Go checklist for reviewing Go diffs | [references/go-traps.md](references/go-traps.md) |
+| **intended-vs-implemented** | "intended-vs-implemented" | documentation-to-code drift | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
+| **multi-reviewer** | "multi-reviewer" | parallel dimensions, dedup, calibration | [references/multi-reviewer.md](references/multi-reviewer.md) |
+| **pr-context** | "pr-context" | gather the review's full evidence surface before judging | [references/pr-context.md](references/pr-context.md) |
+| **receiving-feedback** | "receiving-feedback" | rigor over compliance | [references/receiving-feedback.md](references/receiving-feedback.md) |
+| **review-render** | "review-render" | findings → shareable 2-column review artifact | [references/review-render.md](references/review-render.md) |
+| **security-controls** | "security-controls" | numbered control pass | [references/security-controls.md](references/security-controls.md) |
+| **security-process** | "security-process" | process methods (threat model · differential · fix verification) | [references/security-process.md](references/security-process.md) |
+| **skill-bundle-scan** | "skill-bundle-scan" | pre-install agent skill gate | [references/skill-bundle-scan.md](references/skill-bundle-scan.md) |
+| **themes** | "themes" | The Review Theme Trigger Catalog | [references/themes.md](references/themes.md) |
+| **triage-matrix** | "triage-matrix" | 5-Axis Quick-Triage Review Matrix + Review Input Gates | [references/triage-matrix.md](references/triage-matrix.md) |
 
 **Token minimization rule**: a mode loads its listed references and nothing else.
 `hotfix` and `contract` never load the theme catalog; `receive` and `fix` never load

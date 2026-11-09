@@ -17,6 +17,8 @@ Unified security authority and governance engine for the agency: CVE vulnerabili
 ## Installation & Usage
 
 ```bash
-# Run with npx skills
-npx skills run harshsinghmp/muse-skills/muse-security -- cve "CVE-2026-1234"
+# Install
+npx skills add harshsinghmp/muse-skills --skill muse-security
+
+# Then ask: "triage CVE-<real-id>" (use a real CVE identifier)
 ```

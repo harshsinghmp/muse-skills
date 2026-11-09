@@ -76,6 +76,16 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **`docs-backlog`** | "consume docs ledger", "catch agents up on documented changes", "forgotten session context" | Fold documented points since `agentWatermark` into `.agents/context/current.md`; stop at the first point still owing agent docs | [references/docs-backlog.md](references/docs-backlog.md) |
 | **`hygiene`** | "clean project root", "keep agent folders out of git", "consolidate harness folders", "don't upload agent state" | Detect root harness/IDE/CLI artifacts, skip the active harness, consolidate the rest into `.agents/`, install local-only excludes, and gate public pushes | [references/harness-hygiene.md](references/harness-hygiene.md) |
 | **`audit`** | "repo AI-readiness audit", "audit the 14 assets", "grade agent context" | Grade the 14 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
+| **advanced-audit-passes** | "advanced-audit-passes" | 🔬 Deep-Audit Passes | [references/advanced-audit-passes.md](references/advanced-audit-passes.md) |
+| **discovery-commands** | "discovery-commands" | Discovery Commands Reference | [references/discovery-commands.md](references/discovery-commands.md) |
+| **fast-skip-protocol** | "fast-skip-protocol" | ⚡ Stage-0 Fast-Skip Protocol | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
+| **global-atoms** | "global-atoms" | The ≤20 Global Invariant Atom Table & Task Observation Loop | [references/global-atoms.md](references/global-atoms.md) |
+| **harness-hygiene** | "harness-hygiene" | Clean Root, Local-Only Agent State | [references/harness-hygiene.md](references/harness-hygiene.md) |
+| **legacy-promotion** | "legacy-promotion" | 🛡️ Legacy-Write Promotion Policy & Interception Specification | [references/legacy-promotion.md](references/legacy-promotion.md) |
+| **memory-file-priorities** | "memory-file-priorities" | Agent Instruction Source & Migration Policy | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **pr-review-mining** | "pr-review-mining" | 🔍 PR Review Mining Protocol | [references/pr-review-mining.md](references/pr-review-mining.md) |
+| **skill-authoring** | "skill-authoring" | TDD for Agent Instructions | [references/skill-authoring.md](references/skill-authoring.md) |
+| **twelve-asset-matrix** | "twelve-asset-matrix" | 📋 The 14-Asset AI-Readiness Matrix | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 
 ---
 
