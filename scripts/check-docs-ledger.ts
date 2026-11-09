@@ -6,29 +6,37 @@
  * release tag does not match package.json. Stamp a release with:
  *   bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release vX.Y.Z
  */
-import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const pkg = JSON.parse(readFileSync(join(REPO_ROOT, "package.json"), "utf8")) as { version: string };
 
-const check = spawnSync(
-  "bun",
-  [join(REPO_ROOT, "skills/core-engine/updatedocs/scripts/updatedocs.ts"), ".", "--check-points"],
-  { cwd: REPO_ROOT, encoding: "utf8" },
-);
-if (check.status !== 0) {
-  console.error(check.stdout || check.stderr);
-  console.error("❌ docs ledger has pending documentation debt; run --ledger, document, and --checkpoint.");
-  process.exit(1);
+interface AudienceCoverage {
+  required?: boolean;
+  status?: string;
 }
-
-let ledger: { watermark?: { releaseTag?: string; point?: number } };
+interface LedgerPoint {
+  id: string;
+  audiences?: Record<string, AudienceCoverage>;
+}
+let ledger: { watermark?: { releaseTag?: string; point?: number }; points?: LedgerPoint[] };
 try {
   ledger = JSON.parse(readFileSync(join(REPO_ROOT, ".docs-ledger.json"), "utf8"));
 } catch (error) {
   console.error(`❌ docs ledger is unreadable: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+}
+
+const ready = new Set(["documented", "verified", "not-needed"]);
+const pending = (ledger.points ?? []).filter((point) =>
+  Object.values(point.audiences ?? {}).some((coverage) => coverage.required && !ready.has(coverage.status ?? "")),
+);
+if (pending.length > 0) {
+  console.error(
+    `❌ docs ledger has ${pending.length} point(s) owing audience docs: ${pending.map((point) => point.id).join(", ")}`,
+  );
+  console.error("   Run --ledger, document, and --checkpoint before releasing.");
   process.exit(1);
 }
 
