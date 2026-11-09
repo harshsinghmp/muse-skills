@@ -15,6 +15,7 @@
  *   bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
  */
 
+import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, join, normalize, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -55,6 +56,25 @@ export interface WorktreeLease {
 
 const IGNORED_DIRS = new Set([".git", "node_modules", "dist", ".cache", ".turbo"]);
 
+/**
+ * Paths the repository itself ignores (gitignored build artifacts, local venvs,
+ * editor scratch dirs). They are not part of the shipped workspace, so their
+ * dangling links and modes must not be reported as workspace violations.
+ */
+function collectIgnoredPaths(rootPath: string): Set<string> {
+  const ignored = new Set<string>();
+  const result = spawnSync("git", ["ls-files", "--others", "--ignored", "--exclude-standard", "--directory", "-z"], {
+    cwd: rootPath,
+    encoding: "utf8",
+  });
+  if (result.status !== 0 || !result.stdout) return ignored;
+  for (const entry of result.stdout.split("\0")) {
+    if (!entry) continue;
+    ignored.add(join(rootPath, entry.replace(/\/$/, "")));
+  }
+  return ignored;
+}
+
 const SENSITIVE_KEY_EXTENSIONS = [".pem", ".key", ".pfx", ".p12"];
 const SENSITIVE_KEY_FILENAMES = ["id_rsa", "id_ed25519", "id_ecdsa", "id_dsa"];
 
@@ -78,6 +98,7 @@ export function isWithinBoundary(targetPath: string, rootPath: string): boolean 
 export function auditSymlinks(rootPath: string): BoundaryIssue[] {
   const issues: BoundaryIssue[] = [];
   const resolvedRoot = realpathSync(resolve(rootPath));
+  const ignoredPaths = collectIgnoredPaths(resolvedRoot);
 
   function walk(currentDir: string) {
     if (!existsSync(currentDir)) return;
@@ -93,6 +114,7 @@ export function auditSymlinks(rootPath: string): BoundaryIssue[] {
       if (IGNORED_DIRS.has(entry)) continue;
 
       const fullPath = join(currentDir, entry);
+      if (ignoredPaths.has(fullPath)) continue;
       let lstat: ReturnType<typeof lstatSync>;
       try {
         lstat = lstatSync(fullPath);
@@ -143,6 +165,7 @@ export function auditSymlinks(rootPath: string): BoundaryIssue[] {
 export function auditPermissions(rootPath: string): BoundaryIssue[] {
   const issues: BoundaryIssue[] = [];
   const resolvedRoot = realpathSync(resolve(rootPath));
+  const ignoredPaths = collectIgnoredPaths(resolvedRoot);
 
   function walk(currentDir: string) {
     if (!existsSync(currentDir)) return;
@@ -158,6 +181,7 @@ export function auditPermissions(rootPath: string): BoundaryIssue[] {
       if (IGNORED_DIRS.has(entry)) continue;
 
       const fullPath = join(currentDir, entry);
+      if (ignoredPaths.has(fullPath)) continue;
       let stat: ReturnType<typeof lstatSync>;
       try {
         stat = lstatSync(fullPath);
@@ -197,32 +221,46 @@ export function auditPermissions(rootPath: string): BoundaryIssue[] {
           }
         }
 
-        // 2. Environment File Check (.env should never be executable)
-        if (lowerName === ".env" || lowerName.startsWith(".env.")) {
-          const isExecutable = (mode & 0o111) !== 0;
-          if (isExecutable) {
+        // 2. Environment File Check: real .env files must be owner-only.
+        //    Example/template files are placeholders and may be group-readable.
+        const isEnvPlaceholder = /\.(example|sample|template|dist)$/.test(lowerName);
+        if ((lowerName === ".env" || lowerName.startsWith(".env.")) && !isEnvPlaceholder) {
+          const target = relative(resolvedRoot, fullPath);
+          if ((mode & 0o111) !== 0) {
             issues.push({
               id: "BND-004",
               category: "permission",
-              severity: "warning",
-              target: relative(resolvedRoot, fullPath),
+              severity: "critical",
+              target,
               rule: "Executable Environment Configuration",
               message: `Environment configuration has execute permissions: 0${mode.toString(8)}.`,
-              remediation: `Run 'chmod -x ${relative(resolvedRoot, fullPath)}' to strip executable bits.`,
+              remediation: `Run 'chmod 600 ${target}' to strip executable bits.`,
               metadata: { mode: `0${mode.toString(8)}` },
             });
           }
 
-          const isWorldReadable = (mode & 0o004) !== 0;
-          if (isWorldReadable) {
+          if ((mode & 0o040) !== 0) {
             issues.push({
               id: "BND-004",
               category: "permission",
-              severity: "warning",
-              target: relative(resolvedRoot, fullPath),
+              severity: "critical",
+              target,
+              rule: "Group-Readable Environment File",
+              message: `Environment file is readable by the group: 0${mode.toString(8)}.`,
+              remediation: `Run 'chmod 600 ${target}' to restrict access to the owner.`,
+              metadata: { mode: `0${mode.toString(8)}` },
+            });
+          }
+
+          if ((mode & 0o004) !== 0) {
+            issues.push({
+              id: "BND-004",
+              category: "permission",
+              severity: "critical",
+              target,
               rule: "World-Readable Environment File",
               message: `Environment file is readable by all system users: 0${mode.toString(8)}.`,
-              remediation: `Run 'chmod 600 ${relative(resolvedRoot, fullPath)}' or 'chmod 640' to restrict access.`,
+              remediation: `Run 'chmod 600 ${target}' to restrict access to the owner.`,
               metadata: { mode: `0${mode.toString(8)}` },
             });
           }
@@ -324,13 +362,14 @@ export function auditProcessArgv(commandOrArgs: string | string[]): BoundaryIssu
     { regex: /--password=['"]?[^'"\s]{6,}['"]?/i, name: "CLI Password Flag" },
   ];
 
+  const redactedText = patterns.reduce((acc, p) => acc.replace(p.regex, "[REDACTED]"), text);
   for (const p of patterns) {
     if (p.regex.test(text)) {
       issues.push({
         id: "BND-005",
         category: "process",
         severity: "critical",
-        target: text.slice(0, 80) + (text.length > 80 ? "..." : ""),
+        target: redactedText.slice(0, 80) + (redactedText.length > 80 ? "..." : ""),
         rule: "Credential Exposed in Process Argv",
         message: `Command invocation leaks ${p.name} directly in process argument list.`,
         remediation:
@@ -383,6 +422,12 @@ export function runBoundaryAudit(rootPath: string): BoundaryAuditResult {
 
   // 3. Worktree lease audit
   issues.push(...auditWorktreeLeases(resolvedRoot));
+
+  // 4. Process argv credential audit
+  issues.push(...auditProcessArgv(process.argv.slice(2)));
+
+  // 5. Tenant boundary audit
+  issues.push(...auditTenantBoundary(resolvedRoot, resolvedRoot));
 
   const criticalCount = issues.filter((i) => i.severity === "critical").length;
   const warningCount = issues.filter((i) => i.severity === "warning").length;

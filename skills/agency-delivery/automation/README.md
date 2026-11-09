@@ -1,6 +1,6 @@
 # 🤖 automation
 
-The automation and AI services department head: one skill across eleven modes — workflow, chatbot, agents, rag, integrations, prompt, voice, realtime, alerts, audit, and browser-relay. Deterministic where possible, AI where it earns its place.
+The automation and AI services department head: one skill across eleven modes — workflow, chatbot, agents, rag, integrations, prompt, voice, realtime, alerts, audit, browser-relay browser-relay. Deterministic where possible, AI where it earns its place.
 
 ## Install
 
@@ -38,6 +38,7 @@ Stream real-time AI agent telemetry over WebSockets with exponential reconnect b
 | **realtime** | realtime / event streaming / websockets | Realtime: WebSockets, SSE event multiplexing, reconnection backoff with jitter, and Redis Pub/Sub. |
 | **alerts** | alerts / notifications / alert router | Alerts: multi-channel real-time notification routing across Discord, Slack, and Telegram with 4-tier escalation. |
 | **`audit`** | agent security audit / OWASP LLM audit | OWASP LLM Top-10: injection, agency, output handling, evals-as-gate. |
+| **browser-relay** | Authenticated In-Session Browser Automation | [references/browser-relay.md](references/browser-relay.md) |
 
 ### Specialized References
 
@@ -46,7 +47,7 @@ Stream real-time AI agent telemetry over WebSockets with exponential reconnect b
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — eleven mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

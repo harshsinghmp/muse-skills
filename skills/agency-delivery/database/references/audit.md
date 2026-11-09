@@ -9,7 +9,7 @@
 
 - [ ] All queries executed read-only (`SELECT`/`SHOW`/`EXPLAIN` only)
 - [ ] Config discovery resolved to expected path (see `references/query.md`)
-- [ ] Output row/col limits respected (default 100 rows × 10 cols)
+- [ ] Output row/col limits respected (10,000-row cap and 100-character column width)
 - [ ] Single-statement enforced (no `;`-chained writes)
 - [ ] No credentials printed in logs or output
 - [ ] Connection closed after each query batch

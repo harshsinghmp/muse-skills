@@ -17,6 +17,17 @@ id_[e]d25519
 *.secret
 *.credentials
 secrets.*
+.e[n]vrc
+
+# Agent state, memory, MCP configs & transcripts (internal-only)
+.agents/
+.memory/
+.musememory/
+.mcp.json
+*.jsonl
+
+# Client onboarding intake (contains client PII; keep local, never commit)
+Client-Intake/
 
 # Databases & Local SQLite
 *.sqlite

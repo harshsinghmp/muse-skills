@@ -469,6 +469,23 @@ export function analyzeStatement(
     return { lockLevel, issues };
   }
 
+  // Unknown DDL must not silently pass as a safe ACCESS_SHARE statement.
+  if (/^(?:CREATE|ALTER|DROP|TRUNCATE|REINDEX|CLUSTER|COMMENT|GRANT|REVOKE)\b/i.test(normalized)) {
+    issues.push({
+      id: "DDL-012",
+      statement: normalized,
+      line,
+      table,
+      lockLevel: "ACCESS_EXCLUSIVE",
+      severity: "warning",
+      causesTableRewrite: false,
+      rule: "Unrecognized DDL Statement",
+      message: "Statement was not matched by any safety rule; its lock level is unknown and must be reviewed manually.",
+      remediation: "Review the statement against the zero-downtime playbook or add a rule for it before deploying.",
+    });
+    return { lockLevel: "ACCESS_EXCLUSIVE", issues };
+  }
+
   return { lockLevel, issues };
 }
 
@@ -788,6 +805,7 @@ Options:
 
   const hasCritical = auditResults.some((r) => r.summary.criticalCount > 0);
   const isClean = !hasCritical && fkResults.length === 0;
+  const hardFail = (hasCritical || fkResults.length > 0) && values["fail-on-critical"];
 
   if (values.json) {
     console.log(
@@ -801,13 +819,13 @@ Options:
         2,
       ),
     );
-    process.exit(hasCritical && values["fail-on-critical"] ? 1 : 0);
+    process.exit(hardFail ? 1 : 0);
   }
 
   const report = formatAuditReport(auditResults, fkResults);
   console.log(report);
 
-  if (hasCritical && values["fail-on-critical"]) {
+  if (hardFail) {
     process.exit(1);
   }
 }

@@ -36,8 +36,10 @@ import { parseArgs } from "node:util";
 // CLI Parsing & Configuration
 // =========================================================================
 
+const IS_ENTRY_POINT = import.meta.main;
+
 const { values, positionals } = parseArgs({
-  args: Bun.argv.slice(2),
+  args: IS_ENTRY_POINT ? Bun.argv.slice(2) : [],
   options: {
     audit: { type: "boolean", short: "a", default: false },
     check: { type: "boolean", short: "c", default: false },
@@ -51,6 +53,7 @@ const { values, positionals } = parseArgs({
     "client-manual": { type: "boolean", default: false },
     "client-changelog": { type: "string" },
     "html-report": { type: "string" },
+    receipts: { type: "string" },
     "check-freshness": { type: "boolean", default: false },
     "sanitize-jargon": { type: "boolean", default: false },
     "credits-sync": { type: "boolean", default: false },
@@ -99,6 +102,7 @@ Core Capabilities:
       --client-manual       Generate non-technical, client-ready CLIENT_HANDOFF.md guide
       --client-changelog    Generate client-ready business release notes (CLIENT_CHANGELOG.md)
       --html-report         Generate single-file self-contained HTML work report (CLIENT_WORK_REPORT.html)
+      --receipts <path>     Attach verified JSON receipts to the HTML work report (otherwise marks claims unverified)
       --check-freshness     Token-saving cache check: exit 0 if docs fresh from recent turn
       --sanitize-jargon     Sanitize internal ticket IDs (PROJ-123) and secrets from client docs
       --credits-sync        Sync CREDITS.md open-source attribution with package.json dependencies
@@ -1684,25 +1688,53 @@ export function sanitizeClientJargon(content: string): { sanitized: string; reda
 // 9. Open Source Attribution Ledger (--credits-sync)
 // =========================================================================
 
+export function resolveDependencyLicense(targetDir: string, packageName: string): string {
+  const packageJsonPath = join(targetDir, "node_modules", packageName, "package.json");
+  if (!existsSync(packageJsonPath)) return "UNVERIFIED (install dependencies to resolve)";
+
+  try {
+    const meta = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+    if (typeof meta.license === "string" && meta.license.trim()) return meta.license.trim();
+    if (Array.isArray(meta.licenses)) {
+      const licenses = meta.licenses
+        .map((entry: unknown) => (typeof entry === "string" ? entry : (entry as { type?: string })?.type))
+        .filter((value: unknown): value is string => typeof value === "string" && value.trim().length > 0);
+      if (licenses.length > 0) return licenses.join(", ");
+    }
+  } catch {}
+
+  return "UNVERIFIED (package metadata unreadable)";
+}
+
 export function syncCreditsLedger(targetDir: string): { dependenciesTracked: number; path: string } {
   const pkgPath = join(targetDir, "package.json");
   const creditsPath = join(targetDir, "CREDITS.md");
   let depsCount = 0;
 
-  const depList: Array<{ name: string; version: string; type: string }> = [];
+  const depList: Array<{ name: string; version: string; type: string; license: string }> = [];
 
   if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
       if (pkg.dependencies) {
         for (const [name, version] of Object.entries(pkg.dependencies)) {
-          depList.push({ name, version: String(version), type: "Production" });
+          depList.push({
+            name,
+            version: String(version),
+            type: "Production",
+            license: resolveDependencyLicense(targetDir, name),
+          });
           depsCount++;
         }
       }
       if (pkg.devDependencies) {
         for (const [name, version] of Object.entries(pkg.devDependencies)) {
-          depList.push({ name, version: String(version), type: "Development" });
+          depList.push({
+            name,
+            version: String(version),
+            type: "Development",
+            license: resolveDependencyLicense(targetDir, name),
+          });
           depsCount++;
         }
       }
@@ -1711,7 +1743,7 @@ export function syncCreditsLedger(targetDir: string): { dependenciesTracked: num
 
   let tableRows = "";
   for (const d of depList) {
-    tableRows += `| \`${d.name}\` | \`${d.version}\` | ${d.type} | MIT / Open Source |\n`;
+    tableRows += `| \`${d.name}\` | \`${d.version}\` | ${d.type} | ${d.license} |\n`;
   }
 
   const creditsContent = `# 📜 Open Source Attribution & Credits Ledger
@@ -1724,7 +1756,8 @@ ${tableRows}
 ---
 
 ## License Invariants
-- All third-party dependencies are licensed under permissive open-source licenses (MIT, Apache 2.0, BSD, ISC).
+- License values above are read from installed package metadata; \`UNVERIFIED\` rows must be checked before redistribution.
+- Review any dependency whose resolved license is not on the approved permissive list (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC).
 - Proprietary agency client code and assets remain solely owned by the principal.
 `;
 
@@ -1839,9 +1872,33 @@ export function generateClientChangelog(
 // 11. Self-Contained HTML Work Report Generator (--html-report)
 // =========================================================================
 
+export interface WorkReportReceipts {
+  gatePassPercent?: number;
+  secretLeaks?: number;
+  brokenLinks?: number;
+  cmsStatus?: string;
+  docsParity?: boolean;
+  deploymentVerified?: boolean;
+  verifiedAt?: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function generateHtmlWorkReport(
   targetDir: string,
-  options: { clientName?: string; outPath?: string; summary?: string } = {},
+  options: {
+    clientName?: string;
+    outPath?: string;
+    summary?: string;
+    receipts?: WorkReportReceipts;
+  } = {},
 ): { html: string; path: string } {
   let dest = options.outPath ? resolve(targetDir, options.outPath) : join(targetDir, "CLIENT_WORK_REPORT.html");
   if (existsSync(dest) && statSync(dest).isDirectory()) {
@@ -1856,13 +1913,39 @@ export function generateHtmlWorkReport(
   }
 
   const dateStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const receipts = options.receipts;
+  const hasReceipts = Boolean(receipts);
+  const gatePass = receipts?.gatePassPercent !== undefined ? `${receipts.gatePassPercent}%` : "Not run";
+  const secretLeaks = receipts?.secretLeaks !== undefined ? String(receipts.secretLeaks) : "Not run";
+  const brokenLinks = receipts?.brokenLinks !== undefined ? String(receipts.brokenLinks) : "Not run";
+  const cmsStatus = receipts?.cmsStatus ? escapeHtml(receipts.cmsStatus) : "Not reported";
+  const safeSummary = escapeHtml(
+    options.summary ||
+      "No verified executive summary was supplied. This report intentionally makes no quality or security claims without a receipt.",
+  );
+  const docsParity =
+    receipts?.docsParity === true
+      ? "Verified — dual-audience documentation parity receipt attached."
+      : receipts?.docsParity === false
+        ? "FAILED — documentation parity receipt reports drift."
+        : "Not verified — no documentation parity receipt attached.";
+  const deploymentStatus =
+    receipts?.deploymentVerified === true
+      ? "Verified — staging deployment receipt attached."
+      : receipts?.deploymentVerified === false
+        ? "FAILED — deployment verification receipt reports a failure."
+        : "Not verified — no deployment receipt attached.";
+  const receiptNote = hasReceipts
+    ? `Receipts attached${receipts?.verifiedAt ? ` (verified ${escapeHtml(receipts.verifiedAt)})` : ""}.`
+    : "No receipts attached; all quality and security values below are unverified.";
+  const badge = hasReceipts ? "📎 RECEIPTS ATTACHED" : "⚠️ NOT VERIFIED";
 
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Work Report — ${pName}</title>
+  <title>Client Work Report — ${escapeHtml(pName)}</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -1950,31 +2033,32 @@ export function generateHtmlWorkReport(
     <header>
       <div>
         <h1>Executive Delivery Report</h1>
-        <p>Project: <strong>${pName}</strong> | Agency Delivery Lead</p>
+        <p>Project: <strong>${escapeHtml(pName)}</strong> | Agency Delivery Lead</p>
       </div>
       <div>
-        <span class="badge">✅ STABLE & VERIFIED</span>
+        <span class="badge">${badge}</span>
       </div>
     </header>
 
     <div class="card">
       <h2>Executive Summary</h2>
-      <p>${options.summary || "All milestones and documentation deliverables for this delivery cycle have been audited, synchronized, and verified against automated quality gates."}</p>
+      <p>${safeSummary}</p>
+      <p><small>${escapeHtml(receiptNote)}</small></p>
       <div class="grid">
         <div class="stat-box">
-          <div class="stat-number">100%</div>
+          <div class="stat-number">${escapeHtml(gatePass)}</div>
           <div class="stat-label">Automated Gate Pass</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">0</div>
+          <div class="stat-number">${escapeHtml(secretLeaks)}</div>
           <div class="stat-label">Secret / Token Leaks</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">0</div>
+          <div class="stat-number">${escapeHtml(brokenLinks)}</div>
           <div class="stat-label">Broken Doc Links</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">Active</div>
+          <div class="stat-number">${cmsStatus}</div>
           <div class="stat-label">CMS Cohesion Status</div>
         </div>
       </div>
@@ -1983,10 +2067,10 @@ export function generateHtmlWorkReport(
     <div class="card">
       <h2>Deliverables & Governance Invariants</h2>
       <ul>
-        <li><span class="check">✔</span> <strong>Complete Technical Synchronization</strong>: Dual-audience documentation parity maintained between developer guides, API references, and LLM prompt context.</li>
-        <li><span class="check">✔</span> <strong>Client-Safe Documentation</strong>: Zero internal Jira/GitHub issue tickets or raw server credentials leaked into client-facing artifacts.</li>
-        <li><span class="check">✔</span> <strong>CMS & Page Builder Architecture</strong>: Editable marketing content isolated into CMS collections and design tokens, protecting client staff from touching code.</li>
-        <li><span class="check">✔</span> <strong>Verified Pre-Flight Deployment</strong>: Staging preview builds actively polled and verified accessible with HTTP 200 before milestone sign-off.</li>
+        <li><strong>Documentation Synchronization</strong>: ${escapeHtml(docsParity)}</li>
+        <li><strong>Client-Safe Documentation</strong>: Secret/PII scan result: ${escapeHtml(secretLeaks)} leak(s) ${hasReceipts ? "(receipt attached)" : "(not run)"}.</li>
+        <li><strong>CMS & Page Builder Architecture</strong>: ${cmsStatus}.</li>
+        <li><strong>Deployment Verification</strong>: ${escapeHtml(deploymentStatus)}</li>
       </ul>
     </div>
 
@@ -2079,335 +2163,350 @@ export function recordDocsFreshness(targetDir: string): string {
 // =========================================================================
 
 const targetDir = positionals[0] ? resolve(process.cwd(), positionals[0]) : process.cwd();
-const isForce = values.force || false;
-const isDryRun = values["dry-run"] || false;
-const isCheck = values.check || false;
-const isFastSkip = values["fast-skip"] || isCheck;
-const ledgerAudience = (values.audience ?? "all") as AudienceName | "all";
-const ledgerDocs = (values.docs ?? "")
-  .split(",")
-  .map((entry) => entry.trim())
-  .filter(Boolean);
+if (IS_ENTRY_POINT) {
+  const isForce = values.force || false;
+  const isDryRun = values["dry-run"] || false;
+  const isCheck = values.check || false;
+  const isFastSkip = values["fast-skip"] || isCheck;
+  const ledgerAudience = (values.audience ?? "all") as AudienceName | "all";
+  const ledgerDocs = (values.docs ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
 
-// Documentation Point Ledger handlers run before the fast-skip gate so a
-// cached docs hash can never hide undocumented code changes.
-if (values["install-hook"]) {
-  const result = installLedgerHook(targetDir);
-  console.log(result.ok ? `✅ ${result.message}\n   ${result.hookPath}` : `❌ ${result.message}`);
-  process.exit(result.ok ? 0 : 1);
-}
-
-if (values.mark) {
-  // Materialize any commits since the last scan first; otherwise a fresh
-  // point cannot be marked until a separate --ledger run has persisted it.
-  syncDocumentationPoints(targetDir, {
-    since: values.since,
-    includeChore: values["include-chore"],
-  });
-  const result = markDocumentationPoint(targetDir, values.mark, ledgerAudience, ledgerDocs);
-  console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
-  process.exit(result.ok ? 0 : 1);
-}
-
-if (values.release) {
-  // Materialize any commits since the last scan before evaluating completeness,
-  // so a release cannot silently ship an undocumented change.
-  syncDocumentationPoints(targetDir, { since: values.since, includeChore: values["include-chore"] });
-  const result = releaseDocumentationPoints(targetDir, values.release);
-  console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
-  process.exit(result.ok ? 0 : 1);
-}
-
-const ledgerRequested =
-  values.ledger ||
-  values["catch-up"] ||
-  values.checkpoint ||
-  values["check-points"] ||
-  values["whats-new"] ||
-  values["write-changelog"] ||
-  values["write-client-changelog"];
-
-if (ledgerRequested) {
-  const readOnly = Boolean(values["check-points"]);
-  const report = syncDocumentationPoints(targetDir, {
-    since: values.since,
-    dryRun: isDryRun || readOnly,
-    includeChore: values["include-chore"],
-    write: !readOnly,
-    advance: Boolean(values.checkpoint),
-  });
-
-  if (values.json) {
-    console.log(JSON.stringify(report, null, 2));
-  } else {
-    printLedgerReport(report, Boolean(values["memory-hint"]));
+  // Documentation Point Ledger handlers run before the fast-skip gate so a
+  // cached docs hash can never hide undocumented code changes.
+  if (values["install-hook"]) {
+    const result = installLedgerHook(targetDir);
+    console.log(result.ok ? `✅ ${result.message}\n   ${result.hookPath}` : `❌ ${result.message}`);
+    process.exit(result.ok ? 0 : 1);
   }
 
-  if (values["whats-new"] && !values.json) {
-    const ledger = readDocsLedger(targetDir);
-    const audience = values.audience === "developer" || values.audience === "agent" ? values.audience : "user";
-    const body = ledger ? buildWhatsNewMarkdown(ledger, audience) : "";
-    console.log(`\n## What's New (${audience})\n\n${body || "No shipped or complete points yet."}\n`);
-  }
-
-  if ((values["write-changelog"] || values["write-client-changelog"]) && !values.json) {
-    const written = writeWhatsNewDocuments(targetDir, isDryRun, {
-      changelog: Boolean(values["write-changelog"]),
-      clientChangelog: Boolean(values["write-client-changelog"]),
+  if (values.mark) {
+    // Materialize any commits since the last scan first; otherwise a fresh
+    // point cannot be marked until a separate --ledger run has persisted it.
+    syncDocumentationPoints(targetDir, {
+      since: values.since,
+      includeChore: values["include-chore"],
     });
-    if (values["write-changelog"]) {
-      console.log(`  • CHANGELOG.md managed block: ${written.changelog ? "written" : "skipped (no points)"}`);
-    }
-    if (values["write-client-changelog"]) {
-      console.log(`  • CLIENT_CHANGELOG.md block: ${written.clientChangelog ? "written" : "skipped (no points)"}`);
-    }
+    const result = markDocumentationPoint(targetDir, values.mark, ledgerAudience, ledgerDocs);
+    console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
+    process.exit(result.ok ? 0 : 1);
   }
 
-  if (values.checkpoint && !values.json) {
-    if (report.pendingPoints > 0) {
-      console.error(
-        `\n❌ Checkpoint blocked: ${report.pendingPoints} point(s) still owe documentation. Nothing advanced.`,
-      );
+  if (values.release) {
+    // Materialize any commits since the last scan before evaluating completeness,
+    // so a release cannot silently ship an undocumented change.
+    syncDocumentationPoints(targetDir, { since: values.since, includeChore: values["include-chore"] });
+    const result = releaseDocumentationPoints(targetDir, values.release);
+    console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
+    process.exit(result.ok ? 0 : 1);
+  }
+
+  const ledgerRequested =
+    values.ledger ||
+    values["catch-up"] ||
+    values.checkpoint ||
+    values["check-points"] ||
+    values["whats-new"] ||
+    values["write-changelog"] ||
+    values["write-client-changelog"];
+
+  if (ledgerRequested) {
+    const readOnly = Boolean(values["check-points"]);
+    const report = syncDocumentationPoints(targetDir, {
+      since: values.since,
+      dryRun: isDryRun || readOnly,
+      includeChore: values["include-chore"],
+      write: !readOnly,
+      advance: Boolean(values.checkpoint),
+    });
+
+    if (values.json) {
+      console.log(JSON.stringify(report, null, 2));
     } else {
+      printLedgerReport(report, Boolean(values["memory-hint"]));
+    }
+
+    if (values["whats-new"] && !values.json) {
+      const ledger = readDocsLedger(targetDir);
+      const audience = values.audience === "developer" || values.audience === "agent" ? values.audience : "user";
+      const body = ledger ? buildWhatsNewMarkdown(ledger, audience) : "";
+      console.log(`\n## What's New (${audience})\n\n${body || "No shipped or complete points yet."}\n`);
+    }
+
+    if ((values["write-changelog"] || values["write-client-changelog"]) && !values.json) {
+      const written = writeWhatsNewDocuments(targetDir, isDryRun, {
+        changelog: Boolean(values["write-changelog"]),
+        clientChangelog: Boolean(values["write-client-changelog"]),
+      });
+      if (values["write-changelog"]) {
+        console.log(`  • CHANGELOG.md managed block: ${written.changelog ? "written" : "skipped (no points)"}`);
+      }
+      if (values["write-client-changelog"]) {
+        console.log(`  • CLIENT_CHANGELOG.md block: ${written.clientChangelog ? "written" : "skipped (no points)"}`);
+      }
+    }
+
+    if (values.checkpoint && !values.json) {
+      if (report.pendingPoints > 0) {
+        console.error(
+          `\n❌ Checkpoint blocked: ${report.pendingPoints} point(s) still owe documentation. Nothing advanced.`,
+        );
+      } else {
+        console.log(
+          `\n✅ Checkpoint advanced to ${report.head.slice(0, 12)}${report.head.length > 12 ? "..." : ""} (${report.totalPoints} points).`,
+        );
+      }
+    }
+
+    const ok = report.pendingPoints === 0;
+    process.exit(values["check-points"] || values.checkpoint ? (ok ? 0 : 1) : 0);
+  }
+
+  // Fast-Skip Evaluation (Sub-10ms)
+  if (isCheck) {
+    const ledgerGate = checkDocumentationPoints(targetDir);
+    if (ledgerGate.ledgerExists && !ledgerGate.ok) {
+      console.log("❌ Documentation Point Ledger gate failed.");
       console.log(
-        `\n✅ Checkpoint advanced to ${report.head.slice(0, 12)}${report.head.length > 12 ? "..." : ""} (${report.totalPoints} points).`,
+        `   • Pending points: ${ledgerGate.pending} · watermark: DP-${String(ledgerGate.watermark).padStart(4, "0")}${ledgerGate.headBehind ? " · HEAD moved past watermark" : ""}`,
       );
+      console.log("   • Run: bun updatedocs.ts . --ledger  then document and --checkpoint");
+      process.exit(1);
     }
   }
 
-  const ok = report.pendingPoints === 0;
-  process.exit(values["check-points"] || values.checkpoint ? (ok ? 0 : 1) : 0);
-}
+  const docsHashFile = join(targetDir, ".docs.hash");
+  if (isFastSkip && !isForce && existsSync(docsHashFile)) {
+    const pointCheck = checkDocumentationPoints(targetDir);
+    if (!pointCheck.ok) {
+      console.log("⚠️ Documentation Point Ledger has pending work; fast-skip disabled.");
+      console.log(
+        `   • Pending points: ${pointCheck.pending} · watermark: DP-${String(pointCheck.watermark).padStart(4, "0")}`,
+      );
+      console.log("   • Run: bun updatedocs.ts . --ledger  (then document, then --checkpoint)");
+      process.exit(1);
+    }
 
-// Fast-Skip Evaluation (Sub-10ms)
-if (isCheck) {
-  const ledgerGate = checkDocumentationPoints(targetDir);
-  if (ledgerGate.ledgerExists && !ledgerGate.ok) {
-    console.log("❌ Documentation Point Ledger gate failed.");
-    console.log(
-      `   • Pending points: ${ledgerGate.pending} · watermark: DP-${String(ledgerGate.watermark).padStart(4, "0")}${ledgerGate.headBehind ? " · HEAD moved past watermark" : ""}`,
-    );
-    console.log("   • Run: bun updatedocs.ts . --ledger  then document and --checkpoint");
-    process.exit(1);
-  }
-}
+    const savedHash = readFileSync(docsHashFile, "utf8").trim();
+    const currentHash = computeDocsHash(targetDir);
+    const clean = isGitClean(targetDir);
 
-const docsHashFile = join(targetDir, ".docs.hash");
-if (isFastSkip && !isForce && existsSync(docsHashFile)) {
-  const pointCheck = checkDocumentationPoints(targetDir);
-  if (!pointCheck.ok) {
-    console.log("⚠️ Documentation Point Ledger has pending work; fast-skip disabled.");
-    console.log(
-      `   • Pending points: ${pointCheck.pending} · watermark: DP-${String(pointCheck.watermark).padStart(4, "0")}`,
-    );
-    console.log("   • Run: bun updatedocs.ts . --ledger  (then document, then --checkpoint)");
-    process.exit(1);
+    if (savedHash === currentHash && (clean || isFastSkip)) {
+      console.log("⚡ Documentation Freshness Check: .docs.hash verified & git clean.");
+      console.log(
+        `⏩ Fast-path exit: Zero documentation drift detected (${currentHash.slice(0, 12)}...). Skipping with 0 changes.`,
+      );
+      process.exit(0);
+    }
   }
 
-  const savedHash = readFileSync(docsHashFile, "utf8").trim();
-  const currentHash = computeDocsHash(targetDir);
-  const clean = isGitClean(targetDir);
+  // Execution Modes
+  if (values["capability-sweep"]) {
+    console.log("🏷️  Running Capability-Absence Sweep (assets added since last release tag)...");
+    const res = sweepUndocumentedCapabilities(targetDir);
+    console.log(`  • Baseline (last release tag):   ${res.baseline}`);
+    console.log(`  • Assets/feat-commits swept:     ${res.checked + res.gaps.length}`);
+    console.log(`  • Capabilities documented nowhere: ${res.gaps.length}`);
+    for (const g of res.gaps) {
+      console.log(`    ❌ [${g.kind}] ${g.asset}`);
+      console.log(`       ➔ ${g.evidence}; write it into: ${g.suggestedDocs.join(", ")}`);
+    }
+    console.log(`  📊 Capability-Doc Sync Score:    ${res.score}%`);
+    if (res.gaps.length === 0) {
+      console.log("  ✅ Every shipped capability surfaces in a discovery document.");
+    } else {
+      console.log("  ⚠️  An audit score of 100 is not evidence of sync — write the missing sections.");
+    }
+    process.exit(res.gaps.length > 0 ? 1 : 0);
+  }
 
-  if (savedHash === currentHash && (clean || isFastSkip)) {
-    console.log("⚡ Documentation Freshness Check: .docs.hash verified & git clean.");
-    console.log(
-      `⏩ Fast-path exit: Zero documentation drift detected (${currentHash.slice(0, 12)}...). Skipping with 0 changes.`,
-    );
+  if (values["env-audit"]) {
+    console.log("🔍 Running Environment Variable Documentation Audit...");
+    const res = auditEnvironmentVariables(targetDir);
+    console.log(`  • Code variables detected:      ${res.codeVars.length}`);
+    console.log(`  • Variables in .env.example:     ${res.exampleVars.length}`);
+    console.log(`  • Variables in README:           ${res.readmeVars.length}`);
+    if (res.missingInExample.length > 0) {
+      console.log(`  ❌ Missing in .env.example:      ${res.missingInExample.join(", ")}`);
+    }
+    if (res.obsoleteInExample.length > 0) {
+      console.log(`  ⚠️ Obsolete in .env.example:     ${res.obsoleteInExample.join(", ")}`);
+    }
+    console.log(`  📊 Env Var Health Score:        ${res.score}%`);
+    process.exit(res.missingInExample.length > 0 ? 1 : 0);
+  }
+
+  if (values["link-lint"]) {
+    console.log("🔗 Running Markdown Link & Anchor Linter...");
+    const res = lintMarkdownLinks(targetDir);
+    console.log(`  • Total links verified:          ${res.totalLinks}`);
+    console.log(`  • Broken links detected:         ${res.brokenLinks.length}`);
+    for (const b of res.brokenLinks) {
+      console.log(`    ❌ ${b.file}: [${b.linkText}](${b.target}) ➔ ${b.reason}`);
+    }
+    console.log(`  📊 Link Integrity Score:        ${res.score}%`);
+    process.exit(res.brokenLinks.length > 0 ? 1 : 0);
+  }
+
+  if (values["mermaid-guard"]) {
+    console.log("📊 Running Mermaid Diagram Syntax Guard...");
+    const res = lintMermaidDiagrams(targetDir, !isDryRun);
+    console.log(`  • Diagnostics flagged:           ${res.diagnostics.length}`);
+    console.log(`  • Diagrams auto-sanitized:       ${res.fixedCount}`);
+    for (const d of res.diagnostics) {
+      console.log(`    ⚠️ ${d.file}:${d.line} ➔ ${d.error}`);
+    }
     process.exit(0);
   }
-}
 
-// Execution Modes
-if (values["capability-sweep"]) {
-  console.log("🏷️  Running Capability-Absence Sweep (assets added since last release tag)...");
-  const res = sweepUndocumentedCapabilities(targetDir);
-  console.log(`  • Baseline (last release tag):   ${res.baseline}`);
-  console.log(`  • Assets/feat-commits swept:     ${res.checked + res.gaps.length}`);
-  console.log(`  • Capabilities documented nowhere: ${res.gaps.length}`);
-  for (const g of res.gaps) {
-    console.log(`    ❌ [${g.kind}] ${g.asset}`);
-    console.log(`       ➔ ${g.evidence}; write it into: ${g.suggestedDocs.join(", ")}`);
+  if (values["test-snippets"]) {
+    console.log("🧪 Running Code Snippet Syntax Verifier...");
+    const res = verifyCodeSnippets(targetDir);
+    console.log(`  • Code blocks tested:            ${res.tested}`);
+    console.log(`  • Valid syntax blocks:           ${res.valid}`);
+    console.log(`  • Syntax errors:                 ${res.errors.length}`);
+    for (const err of res.errors) {
+      console.log(`    ❌ ${err.file} (${err.language}): ${err.error}`);
+    }
+    process.exit(res.errors.length > 0 ? 1 : 0);
   }
-  console.log(`  📊 Capability-Doc Sync Score:    ${res.score}%`);
-  if (res.gaps.length === 0) {
-    console.log("  ✅ Every shipped capability surfaces in a discovery document.");
+
+  if (values["density-check"]) {
+    console.log("📝 Running Answer-First Information Density Check...");
+    const res = checkAnswerFirstDensity(targetDir);
+    console.log(`  • Total documentation words:     ${res.totalWords}`);
+    console.log(`  • Conversational filler phrases: ${res.fillerCount}`);
+    for (const f of res.flaggedPhrases) {
+      console.log(`    ⚠️ ${f.file}:${f.line} ➔ "${f.phrase}"`);
+    }
+    console.log(`  📊 Information Density Score:    ${res.densityScore}%`);
+    process.exit(res.densityScore < 80 ? 1 : 0);
+  }
+
+  if (values["client-manual"]) {
+    console.log("📘 Generating Client Content & Maintenance Guide...");
+    generateClientHandoffManual(targetDir);
+    process.exit(0);
+  }
+
+  if (values["check-freshness"]) {
+    const freshness = checkDocsFreshness(targetDir);
+    if (values.json) {
+      console.log(JSON.stringify(freshness, null, 2));
+    } else {
+      console.log(`\n⚡ Documentation Freshness Gate: ${targetDir}`);
+      console.log(
+        `  Verdict: ${freshness.isFresh ? "✅ FRESH (Zero Token Waste)" : "⚠️ DRIFT (Documentation Outdated)"}`,
+      );
+      console.log(`  Reason:  ${freshness.reason}`);
+    }
+    process.exit(freshness.isFresh ? 0 : 1);
+  }
+
+  if (values["client-changelog"] !== undefined) {
+    console.log("🚀 Generating Client Delivery Release Notes...");
+    const outPath =
+      typeof values["client-changelog"] === "string" && values["client-changelog"].length > 0
+        ? values["client-changelog"]
+        : undefined;
+    const res = generateClientChangelog(targetDir, "HEAD~5", outPath);
+    recordDocsFreshness(targetDir);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    }
+    process.exit(0);
+  }
+
+  if (values["html-report"] !== undefined) {
+    console.log("📊 Generating Executive Single-File HTML Work Report...");
+    const outPath =
+      typeof values["html-report"] === "string" && values["html-report"].length > 0 ? values["html-report"] : undefined;
+    let receipts: WorkReportReceipts | undefined;
+    if (typeof values.receipts === "string" && values.receipts.length > 0) {
+      try {
+        receipts = JSON.parse(readFileSync(resolve(targetDir, values.receipts), "utf8")) as WorkReportReceipts;
+      } catch {
+        console.error(`❌ Could not read receipts file: ${values.receipts}`);
+        process.exit(1);
+      }
+    }
+    const res = generateHtmlWorkReport(targetDir, { outPath, receipts });
+    recordDocsFreshness(targetDir);
+    if (values.json) {
+      console.log(JSON.stringify(res, null, 2));
+    }
+    process.exit(0);
+  }
+
+  if (values["credits-sync"]) {
+    console.log("📜 Synchronizing Open Source Credits Ledger...");
+    syncCreditsLedger(targetDir);
+    process.exit(0);
+  }
+
+  // Full Comprehensive Audit (--audit or default)
+  console.log("📚 Running Full 21-Point Documentation Governance Audit...");
+  const envRes = auditEnvironmentVariables(targetDir);
+  const linkRes = lintMarkdownLinks(targetDir);
+  const mermaidRes = lintMermaidDiagrams(targetDir, false);
+  const densityRes = checkAnswerFirstDensity(targetDir);
+  const snippetRes = verifyCodeSnippets(targetDir);
+  const audienceRes = auditDualAudienceSync(targetDir);
+  const ledgerCheck = checkDocumentationPoints(targetDir);
+  const ledgerScore = !ledgerCheck.ledgerExists
+    ? 100
+    : Math.max(0, 100 - ledgerCheck.pending * 10 - (ledgerCheck.headBehind ? 10 : 0));
+
+  // Overall Score Calculation (Weighted composite)
+  const overallScore = Math.round(
+    envRes.score * 0.2 +
+      linkRes.score * 0.2 +
+      densityRes.densityScore * 0.15 +
+      (snippetRes.errors.length === 0 ? 100 : 50) * 0.15 +
+      (audienceRes.inSync ? 100 : 60) * 0.1 +
+      ledgerScore * 0.2,
+  );
+
+  console.log("\n========================================================");
+  console.log(`🎯 DOCUMENTATION QUALITY & DRIFT SCORE: ${overallScore}/100`);
+  console.log("========================================================");
+  console.log(
+    `  1. Environment Variables:     ${envRes.score}% (${envRes.missingInExample.length} missing in example)`,
+  );
+  console.log(`  2. Markdown Links & Anchors:  ${linkRes.score}% (${linkRes.brokenLinks.length} broken links)`);
+  console.log(
+    `  3. Mermaid Diagrams:          ${mermaidRes.diagnostics.length === 0 ? "100%" : "Needs quoting"} (${mermaidRes.diagnostics.length} issues)`,
+  );
+  console.log(`  4. Answer-First Density:      ${densityRes.densityScore}% (${densityRes.fillerCount} filler phrases)`);
+  console.log(
+    `  5. Code Snippet Integrity:    ${snippetRes.errors.length === 0 ? "100%" : "Errors detected"} (${snippetRes.errors.length} errors)`,
+  );
+  console.log(`  6. Dual-Audience Parity:      ${audienceRes.inSync ? "100% In Sync" : "Drift detected"}`);
+  console.log(
+    `  7. Documentation Points:      ${
+      !ledgerCheck.ledgerExists
+        ? "100% (no ledger initialized)"
+        : ledgerCheck.ok
+          ? `100% (watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
+          : `${ledgerScore}% (${ledgerCheck.pending} pending, watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
+    }`,
+  );
+
+  // Save fresh docs hash
+  if (!isDryRun) {
+    const newHash = computeDocsHash(targetDir);
+    writeFileSync(docsHashFile, newHash, "utf8");
+    console.log(`\n  🔑 Updated .docs.hash: ${newHash.slice(0, 12)}... (Documentation Fast-Skip armed)`);
+  }
+
+  const failUnder = values["fail-under"] ? Number.parseInt(values["fail-under"], 10) : 80;
+  if (isCheck && overallScore < failUnder) {
+    console.log(`\n❌ Documentation Quality Check failed: Score ${overallScore} is below threshold ${failUnder}.`);
+    process.exit(1);
   } else {
-    console.log("  ⚠️  An audit score of 100 is not evidence of sync — write the missing sections.");
+    console.log("\n✅ Documentation Governance Audit Passed.");
+    process.exit(0);
   }
-  process.exit(res.gaps.length > 0 ? 1 : 0);
-}
-
-if (values["env-audit"]) {
-  console.log("🔍 Running Environment Variable Documentation Audit...");
-  const res = auditEnvironmentVariables(targetDir);
-  console.log(`  • Code variables detected:      ${res.codeVars.length}`);
-  console.log(`  • Variables in .env.example:     ${res.exampleVars.length}`);
-  console.log(`  • Variables in README:           ${res.readmeVars.length}`);
-  if (res.missingInExample.length > 0) {
-    console.log(`  ❌ Missing in .env.example:      ${res.missingInExample.join(", ")}`);
-  }
-  if (res.obsoleteInExample.length > 0) {
-    console.log(`  ⚠️ Obsolete in .env.example:     ${res.obsoleteInExample.join(", ")}`);
-  }
-  console.log(`  📊 Env Var Health Score:        ${res.score}%`);
-  process.exit(res.missingInExample.length > 0 ? 1 : 0);
-}
-
-if (values["link-lint"]) {
-  console.log("🔗 Running Markdown Link & Anchor Linter...");
-  const res = lintMarkdownLinks(targetDir);
-  console.log(`  • Total links verified:          ${res.totalLinks}`);
-  console.log(`  • Broken links detected:         ${res.brokenLinks.length}`);
-  for (const b of res.brokenLinks) {
-    console.log(`    ❌ ${b.file}: [${b.linkText}](${b.target}) ➔ ${b.reason}`);
-  }
-  console.log(`  📊 Link Integrity Score:        ${res.score}%`);
-  process.exit(res.brokenLinks.length > 0 ? 1 : 0);
-}
-
-if (values["mermaid-guard"]) {
-  console.log("📊 Running Mermaid Diagram Syntax Guard...");
-  const res = lintMermaidDiagrams(targetDir, !isDryRun);
-  console.log(`  • Diagnostics flagged:           ${res.diagnostics.length}`);
-  console.log(`  • Diagrams auto-sanitized:       ${res.fixedCount}`);
-  for (const d of res.diagnostics) {
-    console.log(`    ⚠️ ${d.file}:${d.line} ➔ ${d.error}`);
-  }
-  process.exit(0);
-}
-
-if (values["test-snippets"]) {
-  console.log("🧪 Running Code Snippet Syntax Verifier...");
-  const res = verifyCodeSnippets(targetDir);
-  console.log(`  • Code blocks tested:            ${res.tested}`);
-  console.log(`  • Valid syntax blocks:           ${res.valid}`);
-  console.log(`  • Syntax errors:                 ${res.errors.length}`);
-  for (const err of res.errors) {
-    console.log(`    ❌ ${err.file} (${err.language}): ${err.error}`);
-  }
-  process.exit(res.errors.length > 0 ? 1 : 0);
-}
-
-if (values["density-check"]) {
-  console.log("📝 Running Answer-First Information Density Check...");
-  const res = checkAnswerFirstDensity(targetDir);
-  console.log(`  • Total documentation words:     ${res.totalWords}`);
-  console.log(`  • Conversational filler phrases: ${res.fillerCount}`);
-  for (const f of res.flaggedPhrases) {
-    console.log(`    ⚠️ ${f.file}:${f.line} ➔ "${f.phrase}"`);
-  }
-  console.log(`  📊 Information Density Score:    ${res.densityScore}%`);
-  process.exit(res.densityScore < 80 ? 1 : 0);
-}
-
-if (values["client-manual"]) {
-  console.log("📘 Generating Client Content & Maintenance Guide...");
-  generateClientHandoffManual(targetDir);
-  process.exit(0);
-}
-
-if (values["check-freshness"]) {
-  const freshness = checkDocsFreshness(targetDir);
-  if (values.json) {
-    console.log(JSON.stringify(freshness, null, 2));
-  } else {
-    console.log(`\n⚡ Documentation Freshness Gate: ${targetDir}`);
-    console.log(`  Verdict: ${freshness.isFresh ? "✅ FRESH (Zero Token Waste)" : "⚠️ DRIFT (Documentation Outdated)"}`);
-    console.log(`  Reason:  ${freshness.reason}`);
-  }
-  process.exit(freshness.isFresh ? 0 : 1);
-}
-
-if (values["client-changelog"] !== undefined) {
-  console.log("🚀 Generating Client Delivery Release Notes...");
-  const outPath =
-    typeof values["client-changelog"] === "string" && values["client-changelog"].length > 0
-      ? values["client-changelog"]
-      : undefined;
-  const res = generateClientChangelog(targetDir, "HEAD~5", outPath);
-  recordDocsFreshness(targetDir);
-  if (values.json) {
-    console.log(JSON.stringify(res, null, 2));
-  }
-  process.exit(0);
-}
-
-if (values["html-report"] !== undefined) {
-  console.log("📊 Generating Executive Single-File HTML Work Report...");
-  const outPath =
-    typeof values["html-report"] === "string" && values["html-report"].length > 0 ? values["html-report"] : undefined;
-  const res = generateHtmlWorkReport(targetDir, { outPath });
-  recordDocsFreshness(targetDir);
-  if (values.json) {
-    console.log(JSON.stringify(res, null, 2));
-  }
-  process.exit(0);
-}
-
-if (values["credits-sync"]) {
-  console.log("📜 Synchronizing Open Source Credits Ledger...");
-  syncCreditsLedger(targetDir);
-  process.exit(0);
-}
-
-// Full Comprehensive Audit (--audit or default)
-console.log("📚 Running Full 21-Point Documentation Governance Audit...");
-const envRes = auditEnvironmentVariables(targetDir);
-const linkRes = lintMarkdownLinks(targetDir);
-const mermaidRes = lintMermaidDiagrams(targetDir, false);
-const densityRes = checkAnswerFirstDensity(targetDir);
-const snippetRes = verifyCodeSnippets(targetDir);
-const audienceRes = auditDualAudienceSync(targetDir);
-const ledgerCheck = checkDocumentationPoints(targetDir);
-const ledgerScore = !ledgerCheck.ledgerExists
-  ? 100
-  : Math.max(0, 100 - ledgerCheck.pending * 10 - (ledgerCheck.headBehind ? 10 : 0));
-
-// Overall Score Calculation (Weighted composite)
-const overallScore = Math.round(
-  envRes.score * 0.2 +
-    linkRes.score * 0.2 +
-    densityRes.densityScore * 0.15 +
-    (snippetRes.errors.length === 0 ? 100 : 50) * 0.15 +
-    (audienceRes.inSync ? 100 : 60) * 0.1 +
-    ledgerScore * 0.2,
-);
-
-console.log("\n========================================================");
-console.log(`🎯 DOCUMENTATION QUALITY & DRIFT SCORE: ${overallScore}/100`);
-console.log("========================================================");
-console.log(`  1. Environment Variables:     ${envRes.score}% (${envRes.missingInExample.length} missing in example)`);
-console.log(`  2. Markdown Links & Anchors:  ${linkRes.score}% (${linkRes.brokenLinks.length} broken links)`);
-console.log(
-  `  3. Mermaid Diagrams:          ${mermaidRes.diagnostics.length === 0 ? "100%" : "Needs quoting"} (${mermaidRes.diagnostics.length} issues)`,
-);
-console.log(`  4. Answer-First Density:      ${densityRes.densityScore}% (${densityRes.fillerCount} filler phrases)`);
-console.log(
-  `  5. Code Snippet Integrity:    ${snippetRes.errors.length === 0 ? "100%" : "Errors detected"} (${snippetRes.errors.length} errors)`,
-);
-console.log(`  6. Dual-Audience Parity:      ${audienceRes.inSync ? "100% In Sync" : "Drift detected"}`);
-console.log(
-  `  7. Documentation Points:      ${
-    !ledgerCheck.ledgerExists
-      ? "100% (no ledger initialized)"
-      : ledgerCheck.ok
-        ? `100% (watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
-        : `${ledgerScore}% (${ledgerCheck.pending} pending, watermark DP-${String(ledgerCheck.watermark).padStart(4, "0")})`
-  }`,
-);
-
-// Save fresh docs hash
-if (!isDryRun) {
-  const newHash = computeDocsHash(targetDir);
-  writeFileSync(docsHashFile, newHash, "utf8");
-  console.log(`\n  🔑 Updated .docs.hash: ${newHash.slice(0, 12)}... (Documentation Fast-Skip armed)`);
-}
-
-const failUnder = values["fail-under"] ? Number.parseInt(values["fail-under"], 10) : 80;
-if (isCheck && overallScore < failUnder) {
-  console.log(`\n❌ Documentation Quality Check failed: Score ${overallScore} is below threshold ${failUnder}.`);
-  process.exit(1);
-} else {
-  console.log("\n✅ Documentation Governance Audit Passed.");
-  process.exit(0);
 }

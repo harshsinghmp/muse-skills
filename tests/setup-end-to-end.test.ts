@@ -34,8 +34,6 @@ const SECRETARY_START = "[//]: # (muse-secretary-router:start)";
 const SECRETARY_END = "[//]: # (muse-secretary-router:end)";
 
 /** Directories that are machine-local caches, not repo artefacts. */
-const IGNORED_REPO_ENTRIES = new Set([".git", "node_modules"]);
-
 interface RegistrySkill {
   name: string;
   path: string;
@@ -75,18 +73,8 @@ function extractModeRefs(markdown: string): string[] {
   return [...markdown.matchAll(/references\/([A-Za-z0-9_.-]+\.md)/g)].map((match) => match[1]);
 }
 
-function listFilesRecursive(root: string): string[] {
-  const out: string[] = [];
-  const walk = (dir: string): void => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (IGNORED_REPO_ENTRIES.has(entry.name)) continue;
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) walk(full);
-      else out.push(path.relative(root, full));
-    }
-  };
-  walk(root);
-  return out.sort();
+function repoStatus(): string {
+  return (spawnSync("git", ["status", "--porcelain"], { cwd: REPO_ROOT, encoding: "utf8" }).stdout ?? "").trim();
 }
 
 function sha256File(file: string): string {
@@ -105,7 +93,7 @@ let fakeHome = "";
 let fakeWorkspace = "";
 let installedSkillsRoot = "";
 let seededAgentsMd = "";
-let repoFilesBefore: string[] = [];
+let repoStatusBefore = "";
 let repoAgentsMdHashBefore = "";
 let run: { status: number | null; stdout: string; stderr: string };
 
@@ -130,7 +118,7 @@ beforeEach(() => {
   fs.writeFileSync(path.join(fakeWorkspace, "AGENTS.md"), seededAgentsMd, "utf8");
 
   repoAgentsMdHashBefore = sha256File(REPO_AGENTS_MD);
-  repoFilesBefore = listFilesRecursive(REPO_ROOT);
+  repoStatusBefore = repoStatus();
 
   run = spawnSync("bun", [EXPORTER_CLI, "--setup"], {
     encoding: "utf8",
@@ -263,7 +251,7 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     cleanRun();
 
     expect(sha256File(REPO_AGENTS_MD)).toBe(repoAgentsMdHashBefore);
-    expect(listFilesRecursive(REPO_ROOT)).toEqual(repoFilesBefore);
+    expect(repoStatus()).toBe(repoStatusBefore);
     // The run's artefacts must live inside the throwaway sandbox, not the repo.
     expect(fs.existsSync(path.join(fakeWorkspace, "AGENTS.md"))).toBe(true);
     expect(path.dirname(path.dirname(installedSkillsRoot))).toBe(fakeHome);

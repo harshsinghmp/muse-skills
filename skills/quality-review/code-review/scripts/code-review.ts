@@ -357,47 +357,86 @@ export function auditConventionalComments(content: string): ConventionalComments
 /**
  * Audit lockfiles for untrusted or insecure package registry endpoints.
  */
+const TRUSTED_REGISTRY_DOMAINS = [
+  "registry.npmjs.org",
+  "registry.yarnpkg.com",
+  "npm.pkg.github.com",
+  "github.com",
+  "gitlab.com",
+  "bitbucket.org",
+];
+
+function validateRegistryUrls(urls: string[], suspiciousRegistries: string[]): void {
+  for (const urlStr of urls) {
+    if (urlStr.startsWith("http://")) {
+      suspiciousRegistries.push(`Insecure HTTP registry endpoint: ${urlStr}`);
+      continue;
+    }
+
+    try {
+      const parsed = new URL(urlStr);
+      const host = parsed.hostname.toLowerCase();
+      const isTrusted = TRUSTED_REGISTRY_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
+      if (!isTrusted) {
+        suspiciousRegistries.push(`Untrusted third-party registry host: ${urlStr}`);
+      }
+    } catch {
+      // Ignore unparseable registry URL format
+    }
+  }
+}
+
 export function auditLockfile(lockfilePath: string): LockfileAuditReport {
   const suspiciousRegistries: string[] = [];
   let totalDependencies = 0;
 
   if (!fs.existsSync(lockfilePath)) {
-    return { lockfile: lockfilePath, totalDependencies: 0, suspiciousRegistries: [], passed: true };
+    return {
+      lockfile: lockfilePath,
+      totalDependencies: 0,
+      suspiciousRegistries: ["Lockfile missing; cannot verify registry provenance."],
+      passed: false,
+    };
   }
 
   try {
     const content = fs.readFileSync(lockfilePath, "utf8");
-    const resolvedUrls = content.match(/https?:\/\/[^\s"')]+/g) ?? [];
-    totalDependencies = resolvedUrls.length;
+    const basename = path.basename(lockfilePath);
 
-    const trustedDomains = [
-      "registry.npmjs.org",
-      "registry.yarnpkg.com",
-      "npm.pkg.github.com",
-      "github.com",
-      "gitlab.com",
-      "bitbucket.org",
-    ];
-
-    for (const urlStr of resolvedUrls) {
-      if (urlStr.startsWith("http://")) {
-        suspiciousRegistries.push(`Insecure HTTP registry endpoint: ${urlStr}`);
-        continue;
-      }
-
-      try {
-        const parsed = new URL(urlStr);
-        const host = parsed.hostname.toLowerCase();
-        const isTrusted = trustedDomains.some((d) => host === d || host.endsWith(`.${d}`));
-        if (!isTrusted) {
-          suspiciousRegistries.push(`Untrusted third-party registry host: ${urlStr}`);
+    if (basename === "package.json") {
+      // A package manifest declares intent, not resolutions. Count the declared
+      // dependencies instead of mistaking repository URLs for resolved packages.
+      const pkg = JSON.parse(content) as Record<string, unknown>;
+      for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
+        const value = pkg[section];
+        if (value && typeof value === "object" && !Array.isArray(value)) {
+          totalDependencies += Object.keys(value).length;
         }
-      } catch {
-        // Ignore unparseable registry URL format
+      }
+      if (totalDependencies === 0) {
+        suspiciousRegistries.push("package.json declares no dependencies; nothing to verify.");
+      }
+    } else if (basename === "bun.lock") {
+      // bun.lock is JSONC (line comments + trailing commas).
+      const normalized = content.replace(/^\s*\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
+      const parsed = JSON.parse(normalized) as { packages?: Record<string, unknown> };
+      if (parsed.packages && typeof parsed.packages === "object" && !Array.isArray(parsed.packages)) {
+        totalDependencies = Object.keys(parsed.packages).length;
+      }
+      validateRegistryUrls(content.match(/https?:\/\/[^\s"')]+/g) ?? [], suspiciousRegistries);
+      if (totalDependencies === 0) {
+        suspiciousRegistries.push("bun.lock contains no resolved packages.");
+      }
+    } else {
+      const resolvedUrls = content.match(/https?:\/\/[^\s"')]+/g) ?? [];
+      totalDependencies = resolvedUrls.length;
+      validateRegistryUrls(resolvedUrls, suspiciousRegistries);
+      if (totalDependencies === 0) {
+        suspiciousRegistries.push("No resolved registry URLs found; lockfile format not recognized.");
       }
     }
   } catch {
-    // Ignore lockfile read/parse errors
+    suspiciousRegistries.push("Lockfile unreadable; cannot verify registry provenance.");
   }
 
   return {
@@ -607,9 +646,10 @@ export function auditAll(targetPath: string): AllAuditsReport {
   const runtimePitfalls = auditRuntimePitfalls(targetPath);
   const edgeSsr = auditEdgeSsrPitfalls(targetPath);
   const lifecycleScripts = auditLifecycleScripts(targetPath);
-  const lockfilePath = fs.existsSync(path.join(targetPath, "package-lock.json"))
-    ? path.join(targetPath, "package-lock.json")
-    : path.join(targetPath, "package.json");
+  const lockfileCandidates = ["bun.lock", "package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
+  const lockfilePath =
+    lockfileCandidates.map((name) => path.join(targetPath, name)).find((candidate) => fs.existsSync(candidate)) ??
+    path.join(targetPath, "package.json");
   const lockfile = auditLockfile(lockfilePath);
 
   const totalViolations =

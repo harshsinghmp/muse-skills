@@ -44,7 +44,7 @@ flowchart TD
 
 ### Invariant 3: File Permission Fences (POSIX)
 - **Private Keys & Certificates** (`*.pem`, `*.key`, `id_rsa`, `id_ed25519`): Must have file permissions `<= 0600` (`-rw-------` or `-r--------`). Any group or world readability (`0644`, `0664`, `0777`) is an immediate critical violation.
-- **Environment Files** (`.env`, `.env.local`): Must never have execute permissions (`-x`). Must be listed in `.gitignore`.
+- **Environment Files** (`.env`, `.env.local`): Must be owner-only (`0600`). Any group or world read bit (`0640`, `0644`, `0664`) is a critical violation, as is any execute bit. `.env.example`/`.env.template` are placeholders and exempt. Must be listed in `.gitignore`.
 - **Scripts** (`scripts/*.sh`, `scripts/*.ts`): Executable by owner/group only (`0755` or `0700`), never world-writable (`0777`).
 
 ### Invariant 4: Process Argv Credential Hygiene
@@ -72,8 +72,9 @@ bun skills/quality-review/muse-security/scripts/boundary-audit.ts --path ./proje
 # Emit machine-readable JSON report
 bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
 
-# Run specific boundary checks
-bun skills/quality-review/muse-security/scripts/boundary-audit.ts --check-symlinks --check-permissions
+# All boundary invariants (symlink, permission, worktree, process, tenant) run by default;
+# filter the machine-readable report instead of selecting checks
+bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
 ```
 
 ---
@@ -83,7 +84,7 @@ bun skills/quality-review/muse-security/scripts/boundary-audit.ts --check-symlin
 | Finding ID | Severity | Root Cause | Automated Remediation |
 | :--- | :--- | :--- | :--- |
 | **BND-001** | `CRITICAL` | Symlink escapes workspace root | Remove escaping symlink (`rm <link>`) or replace with internal copy. |
-| **BND-002** | `CRITICAL` | Stale or colliding worktree lease | Release expired lease (`bun coupling-router/scripts/worktree-lease.ts release`) or isolate to new worktree. |
+| **BND-002** | `CRITICAL` | Stale or colliding worktree lease | Release expired lease (`bun skills/context-orchestration/coupling-router/scripts/worktree-lease.ts release`) or isolate to new worktree. |
 | **BND-003** | `CRITICAL` | Insecure private key permissions | Enforce strict permissions: `chmod 600 <key_file>`. |
 | **BND-004** | `WARNING` | Executable `.env` file | Remove execute bit: `chmod -x .env`. |
 | **BND-005** | `CRITICAL` | Credential passed in process argv | Refactor subagent command invocation to read from `process.env`. |

@@ -159,11 +159,16 @@ export async function handleShopifyWebhook(req: Request): Promise<Response> {
   }
 
   const rawBody = await req.text();
-  const secret = process.env.SHOPIFY_WEBHOOK_SECRET!;
+  const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+  if (!secret) {
+    return new Response("Webhook secret not configured", { status: 500 });
+  }
   const generatedHash = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("base64");
 
-  // Constant-time comparison
-  const isValid = crypto.timingSafeEqual(Buffer.from(generatedHash), Buffer.from(hmacHeader));
+  // Constant-time comparison; timingSafeEqual throws unless lengths match.
+  const generatedBuf = Buffer.from(generatedHash);
+  const headerBuf = Buffer.from(hmacHeader || "");
+  const isValid = generatedBuf.length === headerBuf.length && crypto.timingSafeEqual(generatedBuf, headerBuf);
   if (!isValid) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -183,8 +188,11 @@ export async function handleShopifyWebhook(req: Request): Promise<Response> {
 import crypto from "node:crypto";
 
 export function verifyGenericWebhook(rawBody: string, signature: string, secret: string): boolean {
+  if (!secret || !signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  const expectedBuf = Buffer.from(expected);
+  const signatureBuf = Buffer.from(signature);
+  return expectedBuf.length === signatureBuf.length && crypto.timingSafeEqual(expectedBuf, signatureBuf);
 }
 `;
 }
@@ -248,7 +256,9 @@ export async function handleContactSubmission(req: Request): Promise<Response> {
   }
 
   // 3. Process Verified Lead (Database insertion, CRM webhook, or Notification)
-  console.log(\`[FormShield] Verified lead from \${email} (\${name})\`);
+  // Log an opaque reference only; never print lead PII to application logs.
+  const leadRef = \`lead_\${crypto.randomUUID()}\`;
+  console.log(\`[FormShield] Verified lead \${leadRef}\`);
 
   return new Response(
     JSON.stringify({ success: true, message: "Submission received and verified." }),
@@ -1000,9 +1010,36 @@ export function checkPortAvailability(
   });
 }
 
+const DEV_SERVER_PROCESSES = [
+  /node/i,
+  /bun/i,
+  /deno/i,
+  /vite/i,
+  /next/i,
+  /nuxt/i,
+  /webpack/i,
+  /esbuild/i,
+  /wrangler/i,
+  /python/i,
+  /php/i,
+  /ruby/i,
+  /java/i,
+  /cargo/i,
+  /expo/i,
+];
+
 export async function releasePort(
   port: number,
+  options: { confirm?: boolean; force?: boolean } = {},
 ): Promise<{ port: number; released: boolean; pid?: number; message: string }> {
+  if (options.confirm !== true) {
+    return {
+      port,
+      released: false,
+      message: `Refusing to terminate a process on port ${port} without explicit confirmation.`,
+    };
+  }
+
   const status = await checkPortAvailability(port);
   if (status.available) {
     return { port, released: true, message: `Port ${port} is already free.` };
@@ -1010,27 +1047,62 @@ export async function releasePort(
   if (!status.pid) {
     return { port, released: false, message: `Port ${port} is in use, but PID could not be determined.` };
   }
-  try {
-    process.kill(status.pid, "SIGTERM");
+
+  const processName = status.processName || "";
+  const looksLikeDevServer = DEV_SERVER_PROCESSES.some((pattern) => pattern.test(processName));
+  if (!looksLikeDevServer && options.force !== true) {
     return {
       port,
-      released: true,
+      released: false,
       pid: status.pid,
-      message: `Process ${status.pid} (${status.processName || "unknown"}) terminated via SIGTERM.`,
+      message: `PID ${status.pid} (${processName || "unknown"}) does not look like a dev server. Re-run with --force to terminate it.`,
     };
+  }
+
+  try {
+    process.kill(status.pid, "SIGTERM");
   } catch (err) {
-    try {
-      process.kill(status.pid, "SIGKILL");
-      return { port, released: true, pid: status.pid, message: `Process ${status.pid} force killed via SIGKILL.` };
-    } catch {
-      const errMsg = err instanceof Error ? err.message : String(err);
+    return {
+      port,
+      released: false,
+      pid: status.pid,
+      message: `Failed to terminate PID ${status.pid}: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+
+  // Give the process a grace period to exit before escalating.
+  for (let attempt = 0; attempt < 12; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    const check = await checkPortAvailability(port);
+    if (check.available) {
       return {
         port,
-        released: false,
+        released: true,
         pid: status.pid,
-        message: `Failed to terminate PID ${status.pid}: ${errMsg}`,
+        message: `Process ${status.pid} (${processName || "unknown"}) terminated via SIGTERM.`,
       };
     }
+  }
+
+  if (options.force !== true) {
+    return {
+      port,
+      released: false,
+      pid: status.pid,
+      message: `PID ${status.pid} did not exit after SIGTERM; refusing SIGKILL without --force.`,
+    };
+  }
+
+  try {
+    process.kill(status.pid, "SIGKILL");
+    return { port, released: true, pid: status.pid, message: `Process ${status.pid} force killed via SIGKILL.` };
+  } catch (err) {
+    return {
+      port,
+      released: false,
+      pid: status.pid,
+      message: `Failed to force-kill PID ${status.pid}: ${err instanceof Error ? err.message : String(err)}`,
+    };
   }
 }
 
@@ -1354,12 +1426,13 @@ if (import.meta.main) {
       console.error("Error: Please provide a valid port number (e.g. 3000)");
       process.exit(1);
     }
-    const res = await releasePort(portNum);
+    const res = await releasePort(portNum, { confirm: true, force: args.includes("--force") });
     if (isJson) {
       console.log(JSON.stringify(res, null, 2));
     } else {
       console.log(`\n🔌 Port Release Result: ${res.message}`);
     }
+    process.exit(res.released ? 0 : 1);
   } else if (args.includes("--verify-package")) {
     const idx = args.indexOf("--verify-package");
     const pkg = args[idx + 1];

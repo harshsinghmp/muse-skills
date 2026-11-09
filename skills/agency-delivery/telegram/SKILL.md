@@ -2,7 +2,7 @@
 name: telegram
 aliases: ["tg", "telegram-bot", "telegram-skill", "telegram-notify"]
 description: "Telegram messaging department: pure-bash bot alerts and approval boards via curl + jq, zero pip installs, config-file multi-bot/multi-target routing with mode-600 protection, Kafka-event routing for alert → ack → dispatch, Claude Code hook integration for session start/end/tool-use/error notices, and production webhook ingress receiver with timing-safe token verification and deduplication. Use when asked to notify a Telegram chat, build a notification bot, dimension approval buttons for a long-running task, integrate Claude Code hooks, route events to Telegram, stand up a bot with a config-file token, or deploy a webhook receiver. Not for Instagram/social content posting (social-media), Notion sync (content-creator), or Google passkey OAuth (use telegram bot token only)."
-argument-hint: "[notify|approve|hook|route|setup|webhook]"
+argument-hint: "[notify|approve|hook|route|setup|webhook|audit]"
 user-invocable: true
 version: 1.1.0
 author: Harsh Singh
@@ -65,7 +65,7 @@ Run before reporting completion:
 - [ ] Hook scripts (if registered) are executable bash
 - [ ] Fail-closed behavior confirmed: Telegram down → log + continue, never block
 
-For live notification testing: `test-notification` sends a verify message to the configured chat.
+For live notification testing: read the token and chat id from the mode-600 config into a temporary curl config file (never argv or shell history), then `curl --silent --config telegram-curl.conf`; expect `{"ok":true}`. The token must not appear in the command line.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 

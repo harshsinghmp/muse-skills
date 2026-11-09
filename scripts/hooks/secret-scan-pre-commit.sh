@@ -23,7 +23,7 @@ THRESHOLD="low"
 FORMAT="text"
 RULES_FILE=""
 OUTPUT=""
-FAIL_ON_FINDINGS=0
+FAIL_ON_FINDINGS=1
 FOUND=0
 
 while [ $# -gt 0 ]; do
@@ -33,6 +33,7 @@ while [ $# -gt 0 ]; do
     --rules-file) RULES_FILE="${2:-}"; shift 2 ;;
     --output) OUTPUT="${2:-}"; shift 2 ;;
     --fail-on-findings) FAIL_ON_FINDINGS=1; shift ;;
+    --advisory) FAIL_ON_FINDINGS=0; shift ;;
     -h|--help) sed -n '1,/^set /p' "$0"; exit 0 ;;
     *) shift ;;
   esac

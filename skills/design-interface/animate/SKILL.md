@@ -55,6 +55,15 @@ Every invocation resolves to one of nine modes. Route on the *verb*, not the nou
 | **gsap** | "gsap", "scrolltrigger", "scroll trigger", "pin layout", "timeline", "flip plugin", "svg morph" | High-performance GSAP 3 animation: ScrollTrigger pinning, complex timelines, FLIP layout transitions, SVG morphing, and strict reduced-motion invariants | [references/gsap.md](references/gsap.md) |
 | **delight** | "delight", "whimsy", "easter egg", "micro-delight", "playful interaction", "confetti", "celebration" | Purposeful whimsy, personality spectrum, delightful empty states, celebratory feedback, and accessible micro-interactions | [references/delight.md](references/delight.md) |
 | **find** | "what could animate here?", "make this more alive" | Gate-driven hunt; rejects most candidates, proposes only high-leverage motion | [review-checklist.md](references/review-checklist.md) |
+| **accessibility** | "accessibility" | Motion Safety | [references/accessibility.md](references/accessibility.md) |
+| **css-animations** | "css-animations" | CSS Animations, Transitions & Modern Motion | [references/css-animations.md](references/css-animations.md) |
+| **mobile** | "mobile" | Native Mobile Animation | [references/mobile.md](references/mobile.md) |
+| **motion-dev** | "motion-dev" | Motion (motion.dev / Framer Motion) | [references/motion-dev.md](references/motion-dev.md) |
+| **other-libraries** | "other-libraries" | Anime.js, Lottie, Rive, SVG, Three.js | [references/other-libraries.md](references/other-libraries.md) |
+| **performance** | "performance" | 60fps Motion | [references/performance.md](references/performance.md) |
+| **principles** | "principles" | Animation Principles | [references/principles.md](references/principles.md) |
+| **review-checklist** | "review-checklist" | Review Checklist & Quality Gate | [references/review-checklist.md](references/review-checklist.md) |
+| **technical-diagrams** | "technical-diagrams" | Animated Moving SVG Technical & Architecture Diagrams | [references/technical-diagrams.md](references/technical-diagrams.md) |
 
 In **review / improve / audit / find**, load `references/review-checklist.md` and follow its workflow — do not write animation code in those modes. In **threejs**, load `references/threejs.md` for 3D/WebGL workflows. In **delight**, load `references/delight.md` for purposeful whimsy and celebratory feedback. In **gsap**, load `references/gsap.md` for GSAP 3 timelines and scroll pinning. Only **build** edits code.
 

@@ -37,7 +37,7 @@ instructions: |
   remediation and coupling-router for multi-module audits;
   (6) /evidence brief — generate context-switch briefing from ledger (decisions, commitments, facts,
   blockers, stale items); invoke context-anchor to park current workstream first; optionally invoke
-  handoff to generate dispatch packet for subagent work.
+  relay to generate dispatch packet for subagent work.
   All entries use the 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]) and
   [EMPIRICAL]/[SPECULATIVE] epistemological classification. Entries are append-only with
   sequential EVD-IDs. Dashboard is regenerated after every write.

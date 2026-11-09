@@ -174,6 +174,10 @@ export function formatSlackPayload(alert: AlertPayload, occurrences = 1): SlackB
   };
 }
 
+function escapeTelegramHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 export function formatTelegramPayload(alert: AlertPayload, occurrences = 1): TelegramMessagePayload {
   const occSuffix = occurrences > 1 ? ` <b>[x${occurrences} in 5m]</b>` : "";
   const headerIcon = alert.tier === "P1" ? "🚨" : alert.tier === "P2" ? "⚠️" : alert.tier === "P3" ? "🟡" : "ℹ️";
@@ -187,11 +191,11 @@ export function formatTelegramPayload(alert: AlertPayload, occurrences = 1): Tel
         .join("\n");
   }
 
-  const html = `${headerIcon} <b>[${alert.tier}] ${alert.title}</b>${occSuffix}
+  const html = `${headerIcon} <b>[${alert.tier}] ${escapeTelegramHtml(alert.title)}</b>${occSuffix}
 
-${alert.message}
+${escapeTelegramHtml(alert.message)}
 
-<b>Service:</b> <code>${alert.service ?? "production"}</code>${metaText}
+<b>Service:</b> <code>${escapeTelegramHtml(alert.service ?? "production")}</code>${metaText}
 <i>Router: Muse Automation Engine</i>`;
 
   return {
@@ -232,14 +236,25 @@ export async function dispatchAlert(
     };
   }
 
+  const webhookUrls = options.webhookUrls ?? {
+    slack: process.env.ALERT_SLACK_WEBHOOK,
+    discord: process.env.ALERT_DISCORD_WEBHOOK,
+    telegram: process.env.ALERT_TELEGRAM_WEBHOOK,
+  };
+
   for (const ch of channels) {
-    if (options.dryRun || !options.webhookUrls?.[ch as keyof typeof options.webhookUrls]) {
+    if (options.dryRun) {
       results.push({ channel: ch, status: "DRY_RUN" });
       continue;
     }
 
+    const url = webhookUrls[ch as keyof typeof webhookUrls];
+    if (!url) {
+      results.push({ channel: ch, status: "FAILED", error: "No webhook configured" });
+      continue;
+    }
+
     try {
-      const url = options.webhookUrls[ch as keyof typeof options.webhookUrls] as string;
       let body: unknown;
       if (ch === "discord") {
         body = formatDiscordPayload(alert, occurrences);
@@ -253,6 +268,7 @@ export async function dispatchAlert(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(10_000),
       });
 
       if (res.ok) {
@@ -296,7 +312,7 @@ if (import.meta.main) {
     const chIdx = args.indexOf("--channels");
     const rawChannels = chIdx !== -1 ? args[chIdx + 1].split(",").map((c) => c.trim()) : undefined;
 
-    const dryRun = args.includes("--dry-run") || !process.env.ALERT_DISCORD_WEBHOOK;
+    const dryRun = args.includes("--dry-run");
 
     const alert: AlertPayload = {
       title,
@@ -307,6 +323,9 @@ if (import.meta.main) {
     };
 
     dispatchAlert(alert, { channels: rawChannels, dryRun }).then((res) => {
+      if (!dryRun && !res.results.some((r) => r.status === "SENT") && res.results.some((r) => r.status === "FAILED")) {
+        process.exitCode = 1;
+      }
       if (args.includes("--json")) {
         console.log(JSON.stringify(res, null, 2));
       } else {

@@ -10,7 +10,7 @@
  * Council Lead: Nexus (Technical Director) & Jasper (Growth Mastermind)
  */
 
-import { createHash } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 
 export interface UserTouchpoint {
   anonymousId: string;
@@ -45,8 +45,8 @@ export interface ShapleyChannelMetric {
   linearShare: number; // 0 - 1
   shapleyShare: number; // 0 - 1
   attributedRevenue: number;
-  spend: number;
-  attributedRoas: number;
+  spend: number | null;
+  attributedRoas: number | null;
 }
 
 export interface HaircutResult {
@@ -80,11 +80,28 @@ export interface AttributionReport {
 }
 
 export class AttributionGraphEngine {
+  private readonly pepper: string;
+  public readonly pepperIsEphemeral: boolean;
+
+  constructor(options: { pepper?: string } = {}) {
+    const configured = options.pepper?.trim();
+    if (configured) {
+      this.pepper = configured;
+      this.pepperIsEphemeral = false;
+    } else {
+      this.pepper = randomBytes(32).toString("hex");
+      this.pepperIsEphemeral = true;
+      console.warn(
+        "⚠️ ATTRIBUTION_HASH_PEPPER is not set; using an ephemeral pepper. Identifier hashes will not be stable across runs.",
+      );
+    }
+  }
+
   /**
-   * Helper: SHA-256 Hasher for PII (Zero-Leak Standard)
+   * Helper: HMAC-SHA-256 identifier hasher (peppered so the digest is not reversible via rainbow tables).
    */
   public hashIdentifier(identifier: string): string {
-    return createHash("sha256").update(identifier.trim().toLowerCase()).digest("hex");
+    return createHmac("sha256", this.pepper).update(identifier.trim().toLowerCase()).digest("hex");
   }
 
   /**
@@ -220,8 +237,8 @@ export class AttributionGraphEngine {
 
     return channelList.map((ch) => {
       const shapleyRev = shapleyValues[ch] ?? 0;
-      const spend = channelSpend[ch] ?? 1000;
-      const roas = spend > 0 ? Math.round((shapleyRev / spend) * 100) / 100 : 0;
+      const spend = channelSpend[ch] ?? null;
+      const roas = spend !== null && spend > 0 ? Math.round((shapleyRev / spend) * 100) / 100 : null;
 
       return {
         channel: ch,
@@ -285,7 +302,8 @@ export class AttributionGraphEngine {
     const recommendations: BudgetRecommendation[] = [];
 
     for (const metric of shapleyMetrics) {
-      if (metric.spend <= 0) continue;
+      if (metric.spend === null || metric.spend <= 0) continue;
+      if (metric.attributedRoas === null) continue;
 
       if (metric.attributedRoas >= roiFloor * 1.5) {
         // High performer: recommend scaling spend
@@ -373,7 +391,7 @@ ${shapleyMetrics
         m.shapleyShare * 100
       ).toFixed(
         1,
-      )}% | $${m.attributedRevenue.toLocaleString()} | $${m.spend.toLocaleString()} | **${m.attributedRoas}x** |`,
+      )}% | $${m.attributedRevenue.toLocaleString()} | ${m.spend === null ? "Not provided" : `$${m.spend.toLocaleString()}`} | ${m.attributedRoas === null ? "Not computed" : `**${m.attributedRoas}x**`} |`,
   )
   .join("\n")}
 
@@ -411,7 +429,9 @@ ${budgetRecommendations
 
 // CLI runner if executed directly
 if (import.meta.main) {
-  const engine = new AttributionGraphEngine();
+  const pepperIndex = process.argv.indexOf("--pepper");
+  const pepper = pepperIndex !== -1 ? process.argv[pepperIndex + 1] : process.env.ATTRIBUTION_HASH_PEPPER;
+  const engine = new AttributionGraphEngine({ pepper: pepper || undefined });
 
   const mockTouchpoints: UserTouchpoint[] = [
     { anonymousId: "cookie-101", timestamp: Date.now() - 86400000 * 5, channel: "organic_seo", deviceType: "mobile" },

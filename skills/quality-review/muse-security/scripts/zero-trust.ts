@@ -11,6 +11,9 @@
  */
 
 import { createHash, createHmac, randomBytes } from "node:crypto";
+import { existsSync, realpathSync } from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
+import { parseArgs } from "node:util";
 
 export interface SpiffeIdentity {
   spiffeId: string;
@@ -36,6 +39,7 @@ export interface MtlsVerificationResult {
   cipherSuite: string;
   protocolVersion: string;
   handshakeLatencyMs: number;
+  simulated: boolean;
   error?: string;
 }
 
@@ -57,6 +61,31 @@ export interface AuditChainVerification {
   totalEntries: number;
   tamperedIndex?: number;
   latestHash: string;
+}
+
+/**
+ * Resolve a path for the capability jail. Returns the canonical form (symlinks
+ * resolved) or null when the input contains traversal/encoded-escape markers or
+ * cannot be canonicalized. Works for paths that do not exist yet by resolving
+ * the nearest existing ancestor and re-appending the remaining segments.
+ */
+export function canonicalizeJailPath(input: string): string | null {
+  if (!input || input.includes("\0") || /%2e%2e/i.test(input) || /%2f/i.test(input)) return null;
+
+  let current = resolve(input);
+  const suffix: string[] = [];
+  while (!existsSync(current)) {
+    const parent = dirname(current);
+    if (parent === current) return null;
+    suffix.unshift(basename(current));
+    current = parent;
+  }
+
+  try {
+    return join(realpathSync(current), ...suffix);
+  } catch {
+    return null;
+  }
 }
 
 export class ZeroTrustEngine {
@@ -152,16 +181,21 @@ export class ZeroTrustEngine {
       return { allowed: false, reason: `Tool '${requested.tool}' not permitted in capability scope` };
     }
 
-    // 2. Path jail check (Prevent symlink or path traversal outside allowed prefixes)
+    // 2. Path jail check. Canonicalize (including symlinks) and compare on a
+    //    directory boundary so '/srv/jail-evil' cannot match '/srv/jail'.
     if (requested.path) {
-      const normalizedPath = requested.path.replace(/\\/g, "/");
-      if (normalizedPath.includes("../") || normalizedPath.startsWith("/etc/") || normalizedPath.startsWith("/root/")) {
+      const resolvedPath = canonicalizeJailPath(requested.path);
+      if (!resolvedPath) {
         this.recordAuditEvent(identity.spiffeId, "ACCESS_PATH", requested.path, "deny");
-        return { allowed: false, reason: "Path traversal or privileged root escape attempt blocked" };
+        return { allowed: false, reason: "Path traversal, encoded escape, or unresolvable symlink blocked" };
       }
-      const isAllowedPrefix = scope.allowedPathPrefixes.some(
-        (prefix) => prefix === "*" || normalizedPath.startsWith(prefix),
-      );
+      const isAllowedPrefix = scope.allowedPathPrefixes.some((prefix) => {
+        if (prefix === "*") return true;
+        const resolvedPrefix = canonicalizeJailPath(prefix);
+        if (!resolvedPrefix) return false;
+        const boundary = resolvedPrefix.endsWith("/") ? resolvedPrefix : `${resolvedPrefix}/`;
+        return resolvedPath === resolvedPrefix || resolvedPath.startsWith(boundary);
+      });
       if (!isAllowedPrefix) {
         this.recordAuditEvent(identity.spiffeId, "ACCESS_PATH", requested.path, "deny");
         return { allowed: false, reason: `Path '${requested.path}' outside designated workspace jail` };
@@ -197,6 +231,7 @@ export class ZeroTrustEngine {
         serverSpiffeId: serverSvid.spiffeId,
         cipherSuite: "TLS_AES_256_GCM_SHA384",
         protocolVersion: "TLSv1.3",
+        simulated: true,
         handshakeLatencyMs: performance.now() - start,
         error: "Client SVID certificate rejected",
       };
@@ -210,6 +245,7 @@ export class ZeroTrustEngine {
         serverSpiffeId: serverSvid.spiffeId,
         cipherSuite: "TLS_AES_256_GCM_SHA384",
         protocolVersion: "TLSv1.3",
+        simulated: true,
         handshakeLatencyMs: performance.now() - start,
         error: "Server SVID certificate rejected",
       };
@@ -221,6 +257,7 @@ export class ZeroTrustEngine {
       serverSpiffeId: serverSvid.spiffeId,
       cipherSuite: "TLS_AES_256_GCM_SHA384",
       protocolVersion: "TLSv1.3",
+      simulated: true,
       handshakeLatencyMs: Math.round((performance.now() - start) * 100) / 100,
     };
   }
@@ -322,33 +359,123 @@ export class ZeroTrustEngine {
 
 // CLI runner if executed directly
 if (import.meta.main) {
-  const engine = new ZeroTrustEngine();
-  const solToken = engine.issueSpiffeIdentity("sol", 45);
-  const nexusToken = engine.issueSpiffeIdentity("nexus", 45);
+  const { values } = parseArgs({
+    args: Bun.argv.slice(2),
+    options: {
+      attest: { type: "boolean", default: false },
+      "audit-chain": { type: "boolean", default: false },
+      "verify-mtls": { type: "boolean", default: false },
+      demo: { type: "boolean", default: false },
+      role: { type: "string", default: "" },
+      "peer-role": { type: "string", default: "nexus" },
+      ttl: { type: "string", default: "30" },
+      json: { type: "boolean", default: false },
+      help: { type: "boolean", short: "h", default: false },
+    },
+    allowPositionals: true,
+  });
 
-  console.log("🌟 Issued SVID Token:", solToken.spiffeId);
+  const usage = `
+🛡️ zero-trust.ts — Ephemeral SVID Attestation, mTLS Verification & Audit Chain
 
-  const mtls = engine.verifyMtlsHandshake(solToken, nexusToken);
-  console.log("🔒 mTLS Handshake Status:", mtls.verified ? "VERIFIED (TLS 1.3)" : "FAILED");
+Usage:
+  bun zero-trust.ts --attest --role <name> [--ttl <1-60>] [--json]
+  bun zero-trust.ts --verify-mtls --role <client> [--peer-role <server>] [--ttl <1-60>] [--json]
+  bun zero-trust.ts --audit-chain [--json]
+  bun zero-trust.ts --demo [--json]
+  bun zero-trust.ts --help
 
-  const solScope: CapabilityScope = {
-    role: "sol",
-    allowedTools: ["git", "edit_file", "run_command"],
-    allowedPathPrefixes: ["src/", "tests/", "skills/"],
-    allowedTables: ["users", "sessions"],
-    maxPrivilegeLevel: "standard",
-  };
+Options:
+  --role <name>       Subagent role to attest (required for --attest/--verify-mtls)
+  --peer-role <name>  Server role for --verify-mtls (default: nexus)
+  --ttl <minutes>     SVID lifetime, 1-60 (default: 30)
+  --json              Emit the full result object
+`;
 
-  const check1 = engine.validateCapability(solToken, { tool: "edit_file", path: "src/index.ts" }, solScope);
-  console.log("Capability Gate (Valid):", check1.allowed ? "PASS" : "BLOCK");
+  if (values.help) {
+    console.log(usage);
+    process.exit(0);
+  }
 
-  const check2 = engine.validateCapability(solToken, { path: "/etc/shadow" }, solScope);
-  console.log("Capability Gate (Jail Escape):", check2.allowed ? "PASS" : `BLOCKED (${check2.reason})`);
+  const ttl = Number(values.ttl);
+  if (!Number.isFinite(ttl) || ttl <= 0 || ttl > 60) {
+    console.error("Error: --ttl must be between 1 and 60 minutes.");
+    process.exit(2);
+  }
 
-  const auditStatus = engine.verifyAuditChain();
-  console.log(
-    "Audit Chain Integrity:",
-    auditStatus.valid ? "VALID" : "TAMPERED",
-    `(${auditStatus.totalEntries} entries)`,
-  );
+  if (values.attest) {
+    if (!values.role) {
+      console.error("Error: --attest requires --role <name>.");
+      process.exit(1);
+    }
+    const engine = new ZeroTrustEngine();
+    const identity = engine.issueSpiffeIdentity(values.role, ttl);
+    if (values.json) {
+      console.log(JSON.stringify(identity, null, 2));
+    } else {
+      console.log(`SVID:        ${identity.spiffeId}`);
+      console.log(`Role:        ${identity.subagentRole}`);
+      console.log(`Fingerprint: ${identity.fingerprint}`);
+      console.log(`Expires:     ${new Date(identity.expiresAt).toISOString()}`);
+    }
+    process.exit(0);
+  }
+
+  if (values["verify-mtls"]) {
+    if (!values.role) {
+      console.error("Error: --verify-mtls requires --role <client> (use --peer-role for the server).");
+      process.exit(1);
+    }
+    const engine = new ZeroTrustEngine();
+    const client = engine.issueSpiffeIdentity(values.role, ttl);
+    const server = engine.issueSpiffeIdentity(values["peer-role"], ttl);
+    const result = engine.verifyMtlsHandshake(client, server);
+    if (values.json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log(
+        `mTLS: ${result.verified ? "VERIFIED" : "FAILED"} (${result.protocolVersion}, ${result.cipherSuite})`,
+      );
+      if (result.error) console.error(result.error);
+    }
+    process.exit(result.verified ? 0 : 1);
+  }
+
+  if (values["audit-chain"]) {
+    const engine = new ZeroTrustEngine();
+    const result = engine.verifyAuditChain();
+    if (values.json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log(`Audit chain: ${result.valid ? "VALID" : "TAMPERED"} (${result.totalEntries} entries)`);
+    }
+    process.exit(result.valid ? 0 : 1);
+  }
+
+  if (values.demo) {
+    const engine = new ZeroTrustEngine();
+    const solToken = engine.issueSpiffeIdentity("sol", ttl);
+    const nexusToken = engine.issueSpiffeIdentity("nexus", ttl);
+
+    const demo = {
+      issued: solToken.spiffeId,
+      mtls: engine.verifyMtlsHandshake(solToken, nexusToken),
+      audit: engine.verifyAuditChain(),
+    };
+    if (values.json) {
+      console.log(JSON.stringify(demo, null, 2));
+    } else {
+      console.log("🌟 Issued SVID Token:", solToken.spiffeId);
+      console.log("🔒 mTLS Handshake Status:", demo.mtls.verified ? "VERIFIED (TLS 1.3)" : "FAILED");
+      console.log(
+        "Audit Chain Integrity:",
+        demo.audit.valid ? "VALID" : "TAMPERED",
+        `(${demo.audit.totalEntries} entries)`,
+      );
+    }
+    process.exit(demo.mtls.verified && demo.audit.valid ? 0 : 1);
+  }
+
+  console.log(usage);
+  process.exit(2);
 }

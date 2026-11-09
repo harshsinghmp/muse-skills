@@ -2,7 +2,7 @@
 name: design
 aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "canvas", "canvas-relay"]
 description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes — routed through fifteen modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, stream live component canvas previews, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
-argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d]"
+argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -52,6 +52,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **canvas** | "design canvas", "canvas relay", "live component preview", "component preview pipe", "oklch visualizer", "mermaid export", "visual sandbox" | Dynamic visual artifact streaming, live component preview pipe (375px/768px/1440px), OKLCH palette contrast visualizer, and interactive Mermaid graph exporter | [references/canvas.md](references/canvas.md) |
 | **3d** | "3d scene", "spline", "three.js", "r3f", "blender model", "3d asset optimization" | Interactive 3D web scenes, Spline embeds, Three.js/R3F setups, and glTF optimization | [references/3d.md](references/3d.md) |
 | **audit** | "design audit", "design QA", "audit this screen", "contrast check", "design handoff review" | Score the view against hierarchy, contrast, states, tokens, and responsive integrity; severity-routed fixes | [references/audit.md](references/audit.md) |
+| **brand-immersion** | "brand-immersion" | 🎨 Brand Immersion & Adaptive Asset Standard | [references/brand-immersion.md](references/brand-immersion.md) |
+| **slides** | "slides" | Presentation Decks, Slide Layouts & Narrative Pitch Structures | [references/slides.md](references/slides.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

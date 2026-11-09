@@ -1,7 +1,7 @@
 # programmatic-cro — Multi-Armed Bandit Dynamic Optimization Engine
 
 > **Council Lead**: **Jasper** (Creative Technologist & Growth Mastermind) & **Nexus** (Technical Director & Review Head)  
-> **Tooling**: `bun growth/scripts/bandit-cro.ts`  
+> **Tooling**: `bun skills/agency-delivery/growth/scripts/bandit-cro.ts`  
 > **Mode Command**: `/growth programmatic-cro`  
 > **Standards**: Bayesian Thompson Sampling, Zero-CLS Fences ($CLS \le 0.05$), Statistical Significance ($P \ge 95\%$)
 
@@ -56,17 +56,17 @@ flowchart TD
 
 ```bash
 # Run default benchmark experiment evaluation
-bun growth/scripts/bandit-cro.ts
+bun skills/agency-delivery/growth/scripts/bandit-cro.ts
 
 # Evaluate custom experiment dataset with 95% confidence threshold
-bun growth/scripts/bandit-cro.ts \
+bun skills/agency-delivery/growth/scripts/bandit-cro.ts \
   --evaluate-variants data/experiments.json \
   --confidence 0.95 \
   --traffic 100000 \
   --aov 200
 
 # Structured JSON output for automated traffic router integration
-bun growth/scripts/bandit-cro.ts --evaluate-variants data/experiments.json --json
+bun skills/agency-delivery/growth/scripts/bandit-cro.ts --evaluate-variants data/experiments.json --json
 ```
 
 ---

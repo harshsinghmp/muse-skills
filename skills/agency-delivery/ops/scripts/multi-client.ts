@@ -36,7 +36,13 @@ export function verifyClientBoundary(targetDir = process.cwd()): BoundaryReport 
   const gitignorePath = path.join(targetDir, ".gitignore");
   if (fs.existsSync(gitignorePath)) {
     const gitignoreContent = fs.readFileSync(gitignorePath, "utf8");
-    if (!gitignoreContent.includes(".env")) {
+    const hasEnvRule = gitignoreContent
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .some(
+        (line) => /^\.env$/.test(line) || (/^\.env\..+$/.test(line) && !/\.(example|sample|template|dist)$/.test(line)),
+      );
+    if (!hasEnvRule) {
       violations.push({
         file: ".gitignore",
         line: 1,
@@ -192,7 +198,7 @@ export function verifyEnvironmentUrls(
               violations.push({
                 file: path.relative(targetDir, current),
                 line: idx + 1,
-                matchedText: stripeTestMatch[0],
+                matchedText: `${stripeTestMatch[0].slice(0, 8)}[REDACTED]`,
                 reason: "Test Stripe credential detected in production target.",
               });
             }
@@ -203,7 +209,7 @@ export function verifyEnvironmentUrls(
               violations.push({
                 file: path.relative(targetDir, current),
                 line: idx + 1,
-                matchedText: stripeLiveMatch[0],
+                matchedText: `${stripeLiveMatch[0].slice(0, 8)}[REDACTED]`,
                 reason: "Live production Stripe credential detected in staging target.",
               });
             }

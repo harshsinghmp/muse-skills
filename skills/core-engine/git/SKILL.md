@@ -54,6 +54,9 @@ Do **NOT** use this skill for:
 
 ---
 
+### Anti-Triggers
+Not for code correctness review (code-review), CI/CD configuration (devops), or documenting shipped changes (updatedocs).
+
 ## Quick Reference
 
 ### The 11-Phase Lifecycle Protocol
@@ -87,8 +90,20 @@ Do **NOT** use this skill for:
 | `cleanup` | Pruning + worktree audit | `worktree-parallel-lanes.md` |
 | `resolve` | Conflict resolution | `conflict-resolution-and-recovery.md` |
 | `history` | Session-linked commit history | `history.md` |
-| `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit", "gitignore audit" | History, secret exposure, and .gitignore wildcard trap/cache audit | `audit.md` + `exposure-audit.md` + `gitignore-audit.md` |
+| `audit` | "audit git", "branch hygiene", "commit audit", "workflow audit", "gitignore audit" — History, secret exposure, and .gitignore wildcard trap/cache audit | `audit.md` + `exposure-audit.md` + `gitignore-audit.md` |
 | `mine` | "mine conventions", "extract PR rules", "audit commit", "synthesize guidelines" | `convention-mining.md` |
+| **anti-slop-triage** | Anti-Slop Issue & PR Triage Guide | [references/anti-slop-triage.md](references/anti-slop-triage.md) |
+| **branching-and-release-matrix** | Branching, Commits & Release Matrix | [references/branching-and-release-matrix.md](references/branching-and-release-matrix.md) |
+| **conflict-resolution-and-recovery** | ⚔️ Merge Conflict Resolution & Git Recovery Playbook | [references/conflict-resolution-and-recovery.md](references/conflict-resolution-and-recovery.md) |
+| **convention-mining** | Automated PR & Commit Convention Mining Engine | [references/convention-mining.md](references/convention-mining.md) |
+| **exposure-audit** | Git Secret Exposure Auditing & History Sanitization | [references/exposure-audit.md](references/exposure-audit.md) |
+| **github-seo-and-presentation** | GitHub SEO, Presentation & Copywriting Guide | [references/github-seo-and-presentation.md](references/github-seo-and-presentation.md) |
+| **gitignore-audit** | Recursive .gitignore Wildcard Traps & Cache Auditing | [references/gitignore-audit.md](references/gitignore-audit.md) |
+| **issue-to-pr-discipline** | Issue-to-PR Discipline | [references/issue-to-pr-discipline.md](references/issue-to-pr-discipline.md) |
+| **monorepo-and-sanitization** | 📦 Monorepo Tagging & Pre-Release Sanitization Protocol | [references/monorepo-and-sanitization.md](references/monorepo-and-sanitization.md) |
+| **pr-checks** | Git Skill | [references/pr-checks.md](references/pr-checks.md) |
+| **report-template** | Run Report Template | [references/report-template.md](references/report-template.md) |
+| **worktree-parallel-lanes** | 🌲 Worktree Parallel Lanes Protocol | [references/worktree-parallel-lanes.md](references/worktree-parallel-lanes.md) |
 
 Token rule: in a mode, load only the references in its row — never the full set.
 
@@ -113,7 +128,7 @@ Run before reporting completion:
 - [ ] Changelog entry added (not under `### Unreleased` alone)
 - [ ] `.agents/artifacts/WORKTREE-LEASE.md` released (if held)
 
-For shared-worktree safety: `audit-lease` checks `WORKTREE-LEASE.md` before git mutations.
+For shared-worktree safety: `bun skills/context-orchestration/coupling-router/scripts/worktree-lease.ts probe` checks `WORKTREE-LEASE.md` before git mutations.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 
@@ -372,7 +387,7 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
    - **Synthetic ADE/IDE Artifact Sweep**: Audit for and unwrap any synthetic ADE/IDE placeholders before release:
      ```bash
      if rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}; then
-       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun updateagents/scripts/updateagents.ts . --sanitize' before release."
+       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun skills/core-engine/updateagents/scripts/updateagents.ts . --sanitize' before release."
        exit 1
      fi
      ```

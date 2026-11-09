@@ -1,8 +1,8 @@
 ---
 name: coach
 aliases: ["daily-standup-coach","standup-coach","daily-standup","agency-coach","executive-coach","delivery-coach"]
-description: "Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across five operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md."
-argument-hint: "[team|client|founder|audit]"
+description: "Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across five operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md. Use when asked for coaching, a standup check-in, or founder leverage calibration."
+argument-hint: "[team|client|founder|audit|effort-rubric]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -41,6 +41,7 @@ metadata:
 | **`client`** | Intercepts out-of-scope requests, generates polite Phase 2 change orders, issues 48h stop-the-clock memos, and compiles 24h client evidence digests. | **Crew** | [`references/client.md`](references/client.md) |
 | **`founder`** | Audits founder capacity distribution across Tiers 1–4, enforces the 70/30 leverage rule, and secures 15% weekly pipeline cadence. | **Sol & Crew** | [`references/founder.md`](references/founder.md) |
 | **`audit`** | Audits standup logs, link integrity, and secret hygiene in alignment with canonical RFC audit guidance. | **Nexus** | [`references/audit.md`](references/audit.md) |
+| **effort-rubric** | "effort-rubric" | Effort Scorecard Scoring Rubric | [references/effort-rubric.md](references/effort-rubric.md) |
 
 ---
 

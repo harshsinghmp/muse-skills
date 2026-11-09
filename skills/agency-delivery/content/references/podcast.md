@@ -1,7 +1,7 @@
 # podcast — AI Audio Showrunner & Dialogue Synthesis Engine
 
 > **Council Lead**: **Jasper** (Creative Technologist & Growth Mastermind) & **Crew** (Client Delivery Specialist)  
-> **Tooling**: `bun content/scripts/podcast-showrunner.ts`  
+> **Tooling**: `bun skills/agency-delivery/content/scripts/podcast-showrunner.ts`  
 > **Mode Command**: `/content podcast`  
 > **Standards**: Broadcast Audio (-16.0 LUFS), SSML Prosody, 18-Token Standalone Quotability Gate
 
@@ -53,10 +53,10 @@ flowchart TD
 
 ```bash
 # Generate full podcast script and show notes
-bun content/scripts/podcast-showrunner.ts --topic "High-Scale Microservices vs Monoliths" --duration 15m
+bun skills/agency-delivery/content/scripts/podcast-showrunner.ts --topic "High-Scale Microservices vs Monoliths" --duration 15m
 
 # Scrape or ingest source whitepaper and export assets
-bun content/scripts/podcast-showrunner.ts \
+bun skills/agency-delivery/content/scripts/podcast-showrunner.ts \
   --source docs/architecture.md \
   --host1 "Alex" \
   --host2 "Jordan" \
@@ -64,7 +64,7 @@ bun content/scripts/podcast-showrunner.ts \
   --export-ssml dist/master.ssml
 
 # Structured JSON output for API or pipeline ingestion
-bun content/scripts/podcast-showrunner.ts --topic "Sovereign AI Infrastructure" --json
+bun skills/agency-delivery/content/scripts/podcast-showrunner.ts --topic "Sovereign AI Infrastructure" --json
 ```
 
 ---

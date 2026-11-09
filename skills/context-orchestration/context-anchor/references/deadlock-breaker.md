@@ -29,8 +29,10 @@ In academic and industry evaluations (e.g., SWE-bench, HumanEval), agent perform
 2. **Threshold Halt**: If `consecutiveFailures >= 3`:
    - Execution is immediately halted with `DEADLOCK_DETECTED`.
    - The agent is forbidden from continuing along the failed trajectory.
-3. **Automated Workspace Rollback (`--rollback`)**:
-   - Reverts uncommitted workspace edits back to the last clean anchor commit or checkpoint (`git checkout -- .` and clean).
+3. **Snapshotted Workspace Rollback (`--rollback --yes`)**:
+   - Writes the full tracked diff to `.agents/artifacts/rollbacks/<timestamp>.patch` **before** touching the worktree.
+   - Reverts only tracked changes to `HEAD`; `--scope <paths>` limits the revert, and untracked files are never removed.
+   - Refuses without `--yes`, so a deadlock warning cannot delete another session's work by accident.
    - Prunes the intermediate debugging noise from conversational working memory.
    - Re-loads the clean baseline `.agents/anchor.md`.
 4. **Strategic Pivoting**:

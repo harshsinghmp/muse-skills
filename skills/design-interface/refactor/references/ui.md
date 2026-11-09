@@ -16,7 +16,7 @@ Every UI refactoring pass verifies these 10 invariants:
 6. **Eliminating Visual Clutter**: Remove unnecessary borders, divider lines, and card containers. Use whitespace and background tone shifts to group related items.
 7. **Intentional Empty States**: Empty states must inform, reassure, and provide an instant call-to-action to create the first item.
 8. **Elevation & Shadows**: Shadows must be soft, diffuse, and directional (e.g. `box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05)`). Dark mode uses elevation lightness rather than drop shadows.
-9. **Contrast & WCAG 2.2 AA Parity**: Minimum 4.5:1 contrast for regular text; 3:1 for large text and interactive UI controls. Run `bun refactor/scripts/check-contrast.ts` to verify.
+9. **Contrast & WCAG 2.2 AA Parity**: Minimum 4.5:1 contrast for regular text; 3:1 for large text and interactive UI controls. Run `bun skills/design-interface/refactor/scripts/check-contrast.ts "<fg>" "<bg>" [--large|--ui] [--aaa]` to verify.
 10. **Alignment & Optical Grouping**: Align labels with inputs; keep text left-aligned for scannability; group labels closer to their inputs than to the preceding field.
 
 ---
@@ -35,8 +35,8 @@ When refactoring a screen or component:
 ## 3. Automation Tools
 ```bash
 # Scan layout anti-patterns:
-bun refactor/scripts/audit-ui.ts <file_or_dir>
+bun skills/design-interface/refactor/scripts/audit-ui.ts <file_or_dir>
 
 # Verify WCAG contrast compliance:
-bun refactor/scripts/check-contrast.ts <file_or_dir>
+bun skills/design-interface/refactor/scripts/check-contrast.ts "#111827" "#ffffff" --large
 ```

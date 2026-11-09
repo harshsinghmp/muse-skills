@@ -35,9 +35,13 @@ Before executing high-risk system commands:
 Before finalizing commits, merges, or deliverables, run the Vibeguard security scan (using your environment's secret scanner, e.g. `SecretScan`, `trufflehog`, or `gitleaks`):
 
 ```bash
-# Verify no credentials, private keys, or API tokens exist in files
-git diff --staged 2>/dev/null || echo "Clean"
+# Blocking scan; the matched value must never be printed
+gitleaks protect --staged --redact
+# or: trufflehog git file://. --only-verified
+# or: bun scripts/secret-scan.ts .
 ```
+
+The scan must exit non-zero on any finding. Never echo the staged diff or the matched value into the transcript; report the file path and rule only.
 
 If the scan reports any credential leakage or pattern matches, resolve them immediately before declaring completion.
 

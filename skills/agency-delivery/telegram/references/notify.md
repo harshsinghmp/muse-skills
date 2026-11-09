@@ -16,7 +16,7 @@ Sent confirmation: message ID (when returned), chat target, timestamp, and any e
 
 1. Resolve the target: bot token and chat ID from config (mode-600 on the config file; token never printed).
 2. Build the curl call:
-   - URL: `https://api.telegram.org/bot<token>/sendMessage`
+   - Write the full URL `https://api.telegram.org/bot<token>/sendMessage` into a mode-600 curl config file and pass it with `curl --config <file>`; the token must not appear in argv, shell history, or CI job logs.
    - Body: JSON with `chat_id`, `text`, optional `parse_mode`, `reply_to_message_id`, `disable_web_page_preview`.
 3. Send via curl, parse the response with jq to confirm `ok: true` and read `result.message_id` and `result.date`.
 4. On failure: surface the Telegram API error reason (e.g. `chat not found`, `bot was blocked`), not a generic curl error.

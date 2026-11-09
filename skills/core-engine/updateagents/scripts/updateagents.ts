@@ -40,7 +40,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import * as readline from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
@@ -162,6 +162,7 @@ const { values, positionals } = parseArgs({
     interview: { type: "boolean", default: false },
     onboard: { type: "boolean", default: false },
     global: { type: "boolean", default: false },
+    project: { type: "boolean", default: false },
     "stack-guard": { type: "boolean", default: false },
     closeout: { type: "string", default: "" },
     delta: { type: "string", default: "" },
@@ -219,6 +220,7 @@ Options:
   --onboard        Run interactive identity onboarding interview (--global or --project)
   --interview      Alias for --onboard
   --global         Target global identity (~/.agents/identity/) instead of project context
+  --project        Target project scope (default) for --onboard
   --stack-guard    Verify package.json dependencies against .agents/context/stack.md allowlist
   --closeout "msg" Append verified milestone to current.md, update roadmap, and refresh context.hash
   --delta "msg"    Alias for --closeout
@@ -267,6 +269,10 @@ const isAudit = values.audit || false;
 const isScaffold = values.scaffold || false;
 const isSanitize = values.sanitize || false;
 const isOnboard = values.onboard || values.interview || false;
+if (values.global && values.project) {
+  console.error("Error: --global and --project are mutually exclusive.");
+  process.exit(2);
+}
 const isGlobalScope = values.global || false;
 const followNestedRepos = values["follow-nested-repos"] || false;
 
@@ -606,8 +612,11 @@ export function checkStackDrift(targetDir: string): { valid: boolean; errors: st
   let pkg: Record<string, unknown> = {};
   try {
     pkg = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-  } catch {
-    return { valid: true, errors, warnings };
+  } catch (error) {
+    errors.push(
+      `package.json is unparseable (${error instanceof Error ? error.message : String(error)}); stack drift cannot be verified.`,
+    );
+    return { valid: false, errors, warnings };
   }
 
   const allDeps = {
@@ -1717,6 +1726,9 @@ exit 0
 }
 
 export function sliceSubAppContext(targetDir: string, subappName: string): string {
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(subappName)) {
+    throw new Error(`Invalid sub-app name '${subappName}': use letters, digits, dots, dashes, or underscores.`);
+  }
   let subappDir = join(targetDir, "apps", subappName);
   if (!existsSync(subappDir)) {
     const pkgDir = join(targetDir, "packages", subappName);
@@ -2500,9 +2512,14 @@ export function generateWorkReportHtml(workspaceDir: string, outPath?: string): 
   if (!existsSync(reportsDir)) {
     mkdirSync(reportsDir, { recursive: true });
   }
-  const dest = outPath
-    ? resolve(workspaceDir, outPath)
-    : join(reportsDir, `work-report-${new Date().toISOString().split("T")[0]}.html`);
+  const resolvedOut = outPath ? resolve(workspaceDir, outPath) : "";
+  if (resolvedOut) {
+    const relOut = relative(resolve(workspaceDir), resolvedOut);
+    if (relOut.startsWith("..") || isAbsolute(relOut)) {
+      throw new Error(`Report destination '${outPath}' escapes the workspace.`);
+    }
+  }
+  const dest = resolvedOut || join(reportsDir, `work-report-${new Date().toISOString().split("T")[0]}.html`);
 
   let projectName = basename(workspaceDir);
   let projectDesc = "Autonomous application managed by Agency Council.";
@@ -3498,7 +3515,7 @@ if (isAudit) {
   const score = checks.filter((c) => c.passed).length;
   const failUnder = values["fail-under"] ? parseInt(values["fail-under"], 10) : null;
   // Derive the denominator from the actual checks so adding an asset can never
-  // silently produce a false "13/13 AI-Ready" pass again.
+  // silently produce a false "14/14 AI-Ready" pass again.
   const TOTAL_ASSETS = checks.length;
 
   // Stage-0 Fast-Skip Gate

@@ -5,6 +5,12 @@
  * Usage:
  *   bun anti-drift.ts --scan-duplicates [dir] [--json]
  *   bun anti-drift.ts --check-scope [since-git-ref]
+ *   bun anti-drift.ts --scan-cms-cohesion [dir] [--force]
+ *   bun anti-drift.ts --verify-deploy <url> [--expected-status <status>]
+ *   bun anti-drift.ts --scan-silent-catches [dir]
+ *   bun anti-drift.ts --scan-flaky-tests [dir]
+ *   bun anti-drift.ts --audit-deps [package.json]
+ *   bun anti-drift.ts --scan-hydration-risks [dir]
  */
 
 import { execFileSync } from "node:child_process";

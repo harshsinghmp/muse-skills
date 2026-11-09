@@ -109,7 +109,9 @@ function packageAuthor(packageJson: PackageJsonRecord): string | undefined {
   return oneLine(rawName?.replace(/\s*(?:<[^>]*@[^>]*>|\([^)]*@[^)]*\))\s*$/, ""));
 }
 
-function detectedContributors(targetDir: string, packageJson: PackageJsonRecord): string[] {
+function detectedContributors(packageJson: PackageJsonRecord): string[] {
+  // Only names the project explicitly declares. Git-log authors are deliberately
+  // not harvested: scaffolding would otherwise publish contributor identities.
   const fromPackage = Array.isArray(packageJson.contributors)
     ? packageJson.contributors
         .map((person) => oneLine(typeof person === "string" ? person : person.name))
@@ -117,9 +119,7 @@ function detectedContributors(targetDir: string, packageJson: PackageJsonRecord)
         .filter(Boolean)
     : [];
   const author = packageAuthor(packageJson);
-  const gitAuthors = spawnSync("git", ["log", "-n", "100", "--format=%an"], { cwd: targetDir, encoding: "utf8" });
-  const committedAuthors = gitAuthors.status === 0 ? gitAuthors.stdout.split(/\r?\n/).map(oneLine).filter(Boolean) : [];
-  return [...new Set([...fromPackage, author, ...committedAuthors].filter((name): name is string => Boolean(name)))];
+  return [...new Set([...fromPackage, author].filter((name): name is string => Boolean(name)))];
 }
 
 function detectedNodeVersion(targetDir: string, packageJson: PackageJsonRecord): string {
@@ -246,7 +246,7 @@ function workflowContext(
         existsSync(join(targetDir, file)),
       ),
     authorName: profile.authorName || packageAuthor(pkg),
-    contributors: [...new Set([...(profile.contributors || []), ...detectedContributors(targetDir, pkg)])],
+    contributors: [...new Set([...(profile.contributors || []), ...detectedContributors(pkg)])],
     packageScripts: scripts,
     framework,
     hasPythonProject:

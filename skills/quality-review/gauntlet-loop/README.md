@@ -49,7 +49,7 @@ Trigger using slash commands or natural language:
 
 ## 🛡️ Automated Gate Capabilities
 
-- **Automated Proofs**: Runs pinned test suites (`bun test`, `tsc --noEmit`, `SecretScan.ts`).
+- **Automated Proofs**: Runs pinned test suites (`bun test`, `tsc --noEmit`, `bun scripts/secret-scan.ts`).
 - **Web Security Headers**: Audits CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, and `Referrer-Policy`.
 - **Responsive Viewport Audit**: Validates `375px` (mobile), `768px` (tablet), and `1280px` (desktop) for zero horizontal overflow.
 

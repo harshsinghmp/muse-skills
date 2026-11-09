@@ -19,11 +19,13 @@ if [ -n "$BAD" ]; then
 fi
 
 # Also fail when the index already tracks internal paths (legacy leak).
+CHECKER_FOUND=0
 for p in \
   "skills/core-engine/updateagents/scripts/updateagents.ts" \
   ".agents/skills/updateagents/scripts/updateagents.ts" \
   "$HOME/.agents/skills/updateagents/scripts/updateagents.ts"; do
   if [ -f "$p" ] && command -v bun >/dev/null 2>&1; then
+    CHECKER_FOUND=1
     bun "$p" . --hygiene --check-public >/dev/null 2>&1 || {
       echo "[hooks] ❌ Tracked agent artifacts detected. Run: updateagents . --hygiene --check-public"
       exit 1
@@ -31,5 +33,14 @@ for p in \
     break
   fi
 done
+
+if [ "$CHECKER_FOUND" -eq 0 ]; then
+  if [ "${MUSE_HYGIENE_SKIP:-0}" = "1" ]; then
+    echo "[hooks] hygiene checker unavailable; skipping (MUSE_HYGIENE_SKIP=1)"
+    exit 0
+  fi
+  echo "[hooks] ❌ Hygiene checker unavailable; refusing to pass. Set MUSE_HYGIENE_SKIP=1 to override." >&2
+  exit 1
+fi
 
 exit 0

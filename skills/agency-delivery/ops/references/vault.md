@@ -30,6 +30,7 @@ Airtight multi-client context segregation, proprietary asset fencing, shared wor
     │ • .memory/memory.db      │            │ • .memory/memory.db      │
     │ • .memory/CURRENT.md     │  AIRTIGHT  │ • .memory/CURRENT.md     │
     │ • .agents/brand/tokens   │ ◄────────► │ • .agents/brand/tokens   │
+    │   (vault pointers only)  │            │   (mode 0600, ignored)   │
     │ • .agents/context/       │  BOUNDARY  │ • .agents/context/       │
     │ • worktree lease: active │            │ • worktree lease: active │
     └──────────────────────────┘            └──────────────────────────┘

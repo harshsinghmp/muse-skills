@@ -27,7 +27,7 @@ Install via `npx skills` shorthand:
 npx skills add harshsinghmp/muse-skills --skill code-review
 ```
 
-*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/code-review` is also supported).*
+*(Direct URL syntax `npx skills add https://github.com/harshsinghmp/muse-skills/tree/main/skills/quality-review/code-review` is also supported).*
 
 ---
 
@@ -64,7 +64,7 @@ Trigger this skill using slash commands or natural language:
 
 ## 🧩 Modes
 
-Every invocation resolves to exactly one mode, routed on the verb and blast radius.
+Every invocation resolves to exactly nineteen mode, routed on the verb and blast radius.
 The SKILL.md is a router that loads only what the mode needs — token-minimal by design:
 
 | Mode | Use when | Loads |
@@ -77,6 +77,25 @@ The SKILL.md is a router that loads only what the mode needs — token-minimal b
 | **security** | numbered control pass (SEC-01..13), evidence-first findings, EDR & runtime safety | `references/security-controls.md`, `references/edr-and-execution-safety.md` |
 | **receive** | feedback arrived on your work — verify → implement / rebut / ask | `references/receiving-feedback.md` |
 | **fix** | findings → test-first fixes, one commit per finding or root-cause cluster, skip ledger, re-review to convergence | `references/fixing-findings.md` |
+| **agreement-review** | the cross-boundary falsification engine | [references/agreement-review.md](references/agreement-review.md) |
+| **boundary-governance** | Mission-Focused Boundary Governance & Quality Gate | [references/boundary-governance.md](references/boundary-governance.md) |
+| **coupling-audit** | whole-codebase change-coupling audit | [references/coupling-audit.md](references/coupling-audit.md) |
+| **cross-file-invariants** | Cross-File Invariant Review | [references/cross-file-invariants.md](references/cross-file-invariants.md) |
+| **delegate** | deterministic scope, then LLM judgment | [references/delegate.md](references/delegate.md) |
+| **edr-and-execution-safety** | Antivirus/EDR Heuristics & Runtime Execution Safety | [references/edr-and-execution-safety.md](references/edr-and-execution-safety.md) |
+| **fixing-findings** | review report → verified fixes | [references/fixing-findings.md](references/fixing-findings.md) |
+| **go-traps** | defensive-Go checklist for reviewing Go diffs | [references/go-traps.md](references/go-traps.md) |
+| **intended-vs-implemented** | documentation-to-code drift | [references/intended-vs-implemented.md](references/intended-vs-implemented.md) |
+| **multi-reviewer** | parallel dimensions, dedup, calibration | [references/multi-reviewer.md](references/multi-reviewer.md) |
+| **pr-context** | gather the review's full evidence surface before judging | [references/pr-context.md](references/pr-context.md) |
+| **receiving-feedback** | rigor over compliance | [references/receiving-feedback.md](references/receiving-feedback.md) |
+| **review-render** | findings → shareable 2-column review artifact | [references/review-render.md](references/review-render.md) |
+| **security-controls** | numbered control pass | [references/security-controls.md](references/security-controls.md) |
+| **security-process** | process methods (threat model · differential · fix verification) | [references/security-process.md](references/security-process.md) |
+| **simplify** | behavior-preserving simplification, not refactor | [references/simplify.md](references/simplify.md) |
+| **skill-bundle-scan** | pre-install agent skill gate | [references/skill-bundle-scan.md](references/skill-bundle-scan.md) |
+| **themes** | The Review Theme Trigger Catalog | [references/themes.md](references/themes.md) |
+| **triage-matrix** | 5-Axis Quick-Triage Review Matrix + Review Input Gates | [references/triage-matrix.md](references/triage-matrix.md) |
 
 `audit` is the default: an unqualified review request widens to the relevant module and
 grounds itself in the project's own conventions before judging. `diff` is the explicit

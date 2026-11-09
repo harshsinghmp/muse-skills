@@ -1,8 +1,8 @@
 ---
 name: relay
 aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
-description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts."
-argument-hint: "[resume|handoff|dispatch|context-packet]"
+description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts. Use when asked to hand off work, resume a session, or write a context packet."
+argument-hint: "[ambient-handoff|resumption-protocol|audit]"
 user-invocable: true
 version: 2.2.1
 author: Harsh Singh
@@ -34,7 +34,7 @@ metadata:
 
 > **Aliases**: `agent-handoff` | `subagent-handoff` | `context-packet` | `resume` | `where-were-we`
 
-`handoff` provides context continuity across agent lifecycles in three modes:
+`relay` provides context continuity across agent lifecycles in three modes:
 1. **Inbound Resumption**: Resumes previous agent sessions with boundary-safe directory matching, leading with any unanswered open questions.
 2. **Outbound Dispatch**: Generates lean, bounded context packets before dispatching subagents or stepping away.
 3. **Ambient Continuity** (v2.1.0): Passively maintains a live state file and probes for it on every workspace entry, so work continues across conversations, agents, and runtimes — even after abrupt endings and even when no one asked for a handoff.
@@ -71,6 +71,9 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 
 ---
 
+### Anti-Triggers
+Not for durable project memory (updateagents) or live cross-agent messaging (automation:integrations).
+
 ## Quick Reference
 
 ### Mode Comparison
@@ -80,7 +83,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **Trigger** | *"where were we"*, *"resume"* | *"dispatch worker"*, *"handoff to subagent"* | Workspace entry; checkpoints; incomplete end-of-turn |
 | **Matching Rule** | Strict directory-boundary matching (`===` or `startsWith(cwd + sep)`) | Explicit destination file and line range scope | Current working directory, always |
 | **First Output** | Unanswered user question (if any) | Single 1-sentence actionable objective | ≤5-line resumption block, then first productive action |
-| **Persistence** | Session memory / `.agents/artifacts/` | `.agents/artifacts/handoff-<timestamp>.md` | `.agents/artifacts/HANDOFF.md` (overwritten, never appended) |
+| **Persistence** | Session memory / `.agents/artifacts/` | `.agents/artifacts/relay-<timestamp>.md` | `.agents/artifacts/HANDOFF.md` (overwritten, never appended) |
 | **Closing Token** | Concrete atomic next-step pointer | Deterministic verification command | Refreshed live file + optional memory write |
 
 ### Token Budgets (hard limits)
@@ -104,7 +107,9 @@ On workspace entry, resolve prior state by climbing the ladder; stop at the firs
 
 ### The Live Handoff File (`.agents/artifacts/HANDOFF.md`)
 
-One fixed-name file, ≤30 lines, overwritten on every state change — the bridge from any session to any future conversation:
+One fixed-name file, ≤30 lines, overwritten on every state change — the bridge from any session to any future conversation.
+
+**No-secrets invariant:** HANDOFF.md must never contain tokens, passwords, connection strings, `.env` lines, or client PII. Reference a secret by name (`env:STRIPE_KEY`, `1Password:staging-db`) or by the file that holds it; redact before writing. This file is often committed or shared, so a value written here is a durable disclosure.
 
 ```markdown
 # HANDOFF — <ISO timestamp>
@@ -174,7 +179,7 @@ Omit empty sections. Full schema and write-trigger contract: [references/ambient
     - **No placeholders** (same source): `TBD`, "appropriate handling", and "etc." fail the packet — every section carries exact paths, verbatim code, or a concrete command.
     - **If Blocked**: Escalation fallback.
     - **Assumptions-first + spec template** (source: `addyosmani/agent-skills` `spec-driven-development`): every packet opens with an assumptions block (each assumption evidence-backed or flagged for the human gate), then fills the 6-area spec template — Objective / Commands / Structure / Style / Testing / 3-tier Boundaries. Human gate per phase: SPECIFY → PLAN → TASKS → IMPLEMENT never advances on an unapproved phase.
-2. **Write Handoff Packet** to `.agents/artifacts/handoff-<timestamp>.md` (structure in [README](README.md#packet-structure) and worked example in [examples/sample-handoff.md](examples/sample-handoff.md)).
+2. **Write Handoff Packet** to `.agents/artifacts/relay-<timestamp>.md` (structure in [README](README.md#packet-structure) and worked example in [examples/sample-handoff.md](examples/sample-handoff.md)).
 3. **Lease hand-off to workers** (shared checkouts): if the packet's Target Scope includes git mutations (branch switches, stashes, commits to shared surfaces), embed the worktree-lease instruction in the dispatch prompt — the worker probes `.agents/artifacts/WORKTREE-LEASE.md` before its first git mutation and inherits or acquires per the lease protocol (`coupling-router` Step 0). Never dispatch two workers whose scopes overlap on one checkout.
 4. **Echo & Dispatch**: Embed the packet directly into the subagent invocation prompt.
 5. **Refresh the live file**: update HANDOFF.md to point at the dispatched task so an interrupting conversation still lands correctly.
@@ -249,12 +254,12 @@ Handoff integrates with Muse Memory's dual-scope architecture, without ever touc
 
 - [ ] Inbound resumption surfaces any unanswered question before status text.
 - [ ] Session matching strictly validates directory boundaries.
-- [ ] Outbound handoff packet is written to `.agents/artifacts/handoff-<timestamp>.md`.
+- [ ] Outbound handoff packet is written to `.agents/artifacts/relay-<timestamp>.md`.
 - [ ] Workspace entry performed the HANDOFF.md probe before other work.
 - [ ] HANDOFF.md is ≤30 lines, overwritten (not appended), and carries an atomic Next Step.
 - [ ] Resumption output stayed within the ≤5-line budget before the first productive action.
 - [ ] Memory integration used the runtime's tool API (or reported the durable fact) — `.memory/**` never touched by hand.
-- [ ] All 7 outbound packet sections are populated with zero placeholder text.
+- [ ] All 8 outbound packet sections are populated with zero placeholder text.
 - [ ] Mode B dispatch announced its triage path (spike / bounded / architectural) and carried explicit human approval before any code.
 - [ ] Outbound packet carries an Interfaces consumes/produces block covering every file in scope.
 - [ ] Outbound packet opens with an assumptions block and fills the 6-area spec template; no phase advanced without human approval.
@@ -268,4 +273,4 @@ Handoff integrates with Muse Memory's dual-scope architecture, without ever touc
 - 🔄 [Inbound Resumption & Boundary Protection Protocol](references/resumption-protocol.md)
 - 🌊 [Ambient Continuity & Live Handoff File Contract](references/ambient-handoff.md)
 - 📄 [Sample Handoff Packet](examples/sample-handoff.md)
-- 📄 [Sample Live Handoff File](examples/sample-HANDOFF.md)
+- 📄 [Sample Live Handoff File](examples/sample-live-handoff.md)

@@ -53,6 +53,7 @@
   ],
   "license": "MIT",
   "name": "@harshsinghmp/muse-skills",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/harshsinghmp/muse-skills.git"
@@ -64,23 +65,28 @@
     "sync": "python3 scripts/sync_registry.py && bun scripts/sync-dispatch.ts",
     "setup": "bun scripts/export-commands.ts --setup",
     "test": "bun test",
+    "test:parallel": "bun test --parallel --timeout 30000",
     "secret-scan": "bun scripts/secret-scan.ts",
     "validate": "bash skills/core-engine/updateagents/scripts/validate-memory-file.sh",
     "lint": "biome check . && bash scripts/ruff-check.sh",
     "type-check": "tsc --noEmit",
     "check:landed": "bun scripts/check-landed.ts",
     "check:sync": "bun scripts/check-sync.ts",
+    "check:docs-commands": "bun scripts/audit-doc-commands.ts",
+    "check:mcp": "bun scripts/check-mcp.ts",
+    "check:surface": "bun scripts/sync-skill-surface.ts --check",
+    "sync:surface": "bun scripts/sync-skill-surface.ts --write",
     "check:hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public",
     "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene"
   },
   "type": "module",
-  "version": "8.3.0",
+  "version": "8.4.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
     "bun-types": "^1.4.2",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "^3.0.2"
+    "musememory": "3.0.2"
   }
 }

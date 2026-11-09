@@ -24,7 +24,7 @@ A working integration: authenticated API calls or webhook handlers, field mappin
 8. Log sync results and provide a re-sync path for failures.
 9. Enforce Webhook Inbound Byte-Size Ceiling (Payload Limiter):
    - Enforce upfront `Content-Length` validation and streaming byte counters (default: 1MB / 1,048,576 bytes) to reject oversized payloads with HTTP 413 Payload Too Large before JSON parsing or memory exhaustion (OOM).
-   - Scaffolding: `bun automation/scripts/webhook-guard.ts --scaffold bun`.
+   - Scaffolding: `bun skills/agency-delivery/automation/scripts/webhook-guard.ts --scaffold bun`.
 
 ## Quality gate
 

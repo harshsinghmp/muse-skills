@@ -99,6 +99,9 @@ sanitize_text() {
     -e 's/npm_[a-zA-Z0-9]{36,}/[REDACTED]/g' \
     -e 's/Bearer [a-zA-Z0-9_.-]{20,}/Bearer [REDACTED]/g' \
     -e 's/AKIA[0-9A-Z]{16}/[REDACTED]/g' \
+    -e 's/(AWS_SECRET_ACCESS_KEY|AWS_ACCESS_KEY_ID)=[^[:space:]&]+/\1=[REDACTED]/gi' \
+    -e 's/Authorization: Basic [A-Za-z0-9+\/=]{10,}/Authorization: Basic [REDACTED]/gi' \
+    -e 's/eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/[REDACTED]/g' \
     -e 's/xox[baprs]-[0-9a-zA-Z-]{10,72}/[REDACTED]/g' \
     -e 's/-----BEGIN [A-Z ]+ PRIVATE KEY-----/[REDACTED]/g' \
     -e 's/(password|secret|token|api_key)=[^[:space:]&]+/\\1=[REDACTED]/gi')
@@ -137,7 +140,7 @@ observe_signal() {
   local out
   out="$(bun "$TASTE_ENGINE" observe --signal="$sanitized" 2>&1 || true)"
   if [ -n "$out" ]; then
-    echo "[hooks] taste-observer: observed signal '$sanitized'"
+    echo "[hooks] taste-observer: signal recorded"
   fi
 }
 

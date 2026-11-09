@@ -1,7 +1,7 @@
 ---
 name: clean-system-cache
 aliases: ["clean-cache","purge-cache","cache-cleaner","disk-cleanup"]
-description: "Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. On every run it scans the system for safe-to-delete caches and removes them: XDG cache dirs (~/.cache/*), exact editor/app cache dirs (Cache, GPUCache, CachedData, Code Cache), AUR helper caches (yay, shelly, paru), desktop indexes (tracker3, thumbnails, fontconfig, AppStream, KDE kcache, GPU shaders), package-manager and browser-automation caches, and dormant project build caches (.next, .turbo, .parcel-cache, __pycache__, pytest/mypy/ruff caches, node_modules/.cache, .vite). Anything that could affect a running session, config, or data is skipped and presented as numbered options grouped per app and per project, with a browse mode that shows the exact files. Decisions are remembered per app and per project so later runs already know what to clean. Trash/Recycle Bin, Downloads, /tmp strays, and data folders ALWAYS require explicit confirmation, even after learning. Enforces active-session protection and cache-only isolation with zero external runtimes."
+description: "Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. On every run it scans the system for safe-to-delete caches and removes them: XDG cache dirs (~/.cache/*), exact editor/app cache dirs (Cache, GPUCache, CachedData, Code Cache), AUR helper caches (yay, shelly, paru), desktop indexes (tracker3, thumbnails, fontconfig, AppStream, KDE kcache, GPU shaders), package-manager and browser-automation caches, and dormant project build caches (.next, .turbo, .parcel-cache, __pycache__, pytest/mypy/ruff caches, node_modules/.cache, .vite). Anything affecting a running session, config, or data is skipped and offered as numbered per-app/per-project options, with a browse mode. Decisions are remembered per app and per project. Trash/Recycle Bin, Downloads, /tmp strays, and data folders ALWAYS require explicit confirmation, even after learning. Enforces active-session protection and cache-only isolation. Use when asked to clean caches, free disk space, or purge build layers."
 argument-hint: "clean cache, free disk space, purge build layers"
 user-invocable: true
 version: 1.0.0
@@ -49,6 +49,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`audit`** | "cache audit", "inventory caches", "pre-purge audit" | Classify purge candidates safe/protected/ask-first with du-verified reclaim estimates; dry-run only. | [references/audit.md](references/audit.md) |
 | **`select`** | "what would you delete", "let me choose", "browse candidates" | Catalog → browse → numbered multi-select → confirmed delete; decisions are learned. | [references/candidate-catalog.md](references/candidate-catalog.md) |
 | **`learn`** | "remember this", "stop asking", "forget that" | Inspect and edit the persisted per-app/per-project decisions. | this file |
+| **candidate-catalog** | "candidate-catalog" | what each candidate owns and what it costs to delete | [references/candidate-catalog.md](references/candidate-catalog.md) |
 
 ## When to Use
 
@@ -136,7 +137,7 @@ deserve a question because it is expensive, needs `sudo`, or is irreversible.
 | Browse | `--browse <key\|id\|num>` | `/browse <key>` | The files/folders that would be deleted, largest first |
 | Depth | `--depth <n>` | — | Deeper tree for `--browse` |
 | Select | `--interactive` | `/interactive` | Grouped menu: `1,3`, `1-3`, `all`, `none`, `b <n>`, `k <n>`, `q` |
-| Apply | `--only <key,..> [--yes]` | `/only <key,..> [/yes]` | Delete exactly the chosen items |
+| Apply | `--only <key,..> [--yes] [--confirm-irreversible]` | `/only <key,..> [/yes]` | Delete exactly the chosen items |
 | Preview | `--dry-run` | `/dry-run` | Prints the plan without deleting |
 | Projects | `--projects <dirs>` | — | Colon-separated roots to scan (persisted) |
 | Dormant | `--dormant <days>` | — | Dormancy threshold for project caches (default 14, persisted) |
@@ -155,8 +156,10 @@ Non-negotiables when acting on someone's behalf:
    `--discover`, and `--browse <key>` output quoted when the user asks "what exactly?".
 2. **Never broaden a selection.** `--only` takes explicit keys; do not translate "clean
    what's safe" into a selection containing `ASK!` items.
-3. **`--yes` is consent, not convenience.** Only pass it after the user approved a plan
-   that listed the same keys. Non-interactive shells refuse `ASK`/`ASK!` without it.
+3. **`--yes` is consent for `ASK`, not for `ASK!`.** Only pass it after the user approved a plan
+   that listed the same keys. Non-interactive shells refuse `ASK` without it; an `ASK!`
+   selection additionally needs `--confirm-irreversible`, and an interactive terminal always
+   asks for a typed `yes` for `ASK!`.
 4. **Report what stayed.** Finish by naming the confirmation-gated items left alone,
    grouped by app/project, with their sizes.
 
@@ -223,7 +226,7 @@ Learning is per key, so per app (`app:mpv`), per Flatpak app
 | **Virtual Environments (`.venv`)** | **PRESERVED.** Cleans package download wheels only; never touches virtual environments. |
 | **Active Containers & Volumes** | **PRESERVED.** Prunes dangling build layers only; active containers, images, and volumes are untouched. |
 | **Installed Global Binaries** | **PRESERVED.** Binaries in `~/.cargo/bin`, `~/.nvm`, `%APPDATA%`, etc. are never touched. |
-| **Confirmation-Gated Candidates** | **NEVER AUTO-DELETED.** Trash, package archives, `/tmp` strays, session snapshots, and other `ASK`/`ASK!` entries require explicit selection; `ASK!` also requires typed confirmation or `--yes`. |
+| **Confirmation-Gated Candidates** | **NEVER AUTO-DELETED.** Trash, package archives, `/tmp` strays, session snapshots, and other `ASK`/`ASK!` entries require explicit selection. `ASK!` requires a typed `yes` in a terminal or the separate `--confirm-irreversible` flag; `--yes` alone is **not** sufficient for irreversible data. |
 | **profile-sync-daemon Lowerdirs** | **EXPLAINED, NOT DELETED.** `~/.config/*-backup*` are live lowerdirs while `psd` runs. The skill reports the candidate and the stop-`psd` requirement instead of touching it. |
 | **Sudo-Backed Cleanups** | **NEVER HANG ON A PASSWORD.** System candidates run only when `sudo -n true` succeeds; otherwise the exact command is printed for the user to run. |
 
@@ -237,23 +240,24 @@ or irreversible is a decision the user made with the paths in front of them.
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --discover           # full scan, nothing deleted
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --discover           # full scan, nothing deleted
   clean-system-cache/scripts/clean-cache.sh --browse app:mpv     # exact files, largest first
   clean-system-cache/scripts/clean-cache.sh --interactive        # grouped menu, then confirm
   clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --dry-run
-  clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --yes
+  clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --yes --confirm-irreversible
   ```
 - **Windows CMD**:
   ```cmd
   clean-system-cache\scripts\clean-cache.cmd /discover
   clean-system-cache\scripts\clean-cache.cmd /browse win-temp
   clean-system-cache\scripts\clean-cache.cmd /interactive
-  clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes
+  clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes /confirm-irreversible
   ```
 
 When the user cannot type into a terminal, run `--discover`, present the `ASK`/`ASK!`
 items as numbered options grouped per app and per project with real paths and sizes, and
-apply only the chosen keys with `--only ... --yes`. This is the agent-facing equivalent
+apply only the chosen keys with `--only ... --yes`, adding `--confirm-irreversible`
+when the selection includes any `ASK!` item. This is the agent-facing equivalent
 of the interactive menu.
 
 ### Phase 1: Pre-Flight Inspection & Capability Inventory (Dry Run)
@@ -261,7 +265,7 @@ Before modifying disk contents, run an inspection to calculate reclaimable space
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --dry-run
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --dry-run
   ```
 - **Windows CMD**:
   ```cmd
@@ -277,7 +281,7 @@ running sessions, and reports the rest:
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh
   ```
 - **Windows CMD**:
   ```cmd
@@ -317,7 +321,7 @@ When disk capacity requires purging capability-coupled caches, use the explicit 
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --include-coupled
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --include-coupled
   ```
 - **Windows CMD**:
   ```cmd
@@ -329,15 +333,15 @@ Target specific subsystems (e.g. only browsers, agent runtimes, or package manag
 
 - **Web Browsers Only**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool browser
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool browser
   ```
 - **Agent Runtimes Only**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool agents
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool agents
   ```
 - **Specific Tools**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool uv,npm,firefox,zen,docker,adobe
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool uv,npm,firefox,zen,docker,adobe
   ```
 
 ### Phase 7: Dormant `node_modules` Audit
@@ -345,7 +349,7 @@ Scan project directories for abandoned node_modules folders consuming massive di
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
   ```
 - **Windows CMD**:
   ```cmd
@@ -356,7 +360,7 @@ Scan project directories for abandoned node_modules folders consuming massive di
 
 ## Pitfalls
 
-- **The 2026-10-08 OpenCode Capability Loss Incident**: Purging `~/.cache/opencode/packages/*` and `~/.cache/opencode/npm/*` reclaimed ~2.5 GB, but deleted installed plugin payloads and language servers, stripping skills (`simplify`, `codemap`, `deepwork`, etc.) mid-session until an unannounced 550 MB re-download. Reinstallable $\neq$ disposable. The cleaner must preserve T2 capability caches by default, guard active runtimes, and provide explicit rehydration manifests.
+- **Capability-Cache Purge Loses Installed Payloads**: purging agent-runtime package caches (`~/.cache/opencode/packages/*`, `~/.cache/opencode/npm/*`) can reclaim gigabytes but deletes installed plugin payloads and language servers, stripping skills mid-session until an unannounced re-download. Reinstallable is not disposable: preserve T2 capability caches by default, guard active runtimes, and provide rehydration manifests.
 - **Never Clean Caches of Actively Running Browsers or Agents**: Attempting to purge active browser or agent files can crash open tabs, invalidate websockets, or kill language servers mid-session. The script automatically guards against this by checking running processes.
 - **Never Touch Profile or State Directories**: Cookies, sessions, bookmarks, passwords, and agent cognitive memories live in `~/.mozilla`, `~/.config`, `~/.claude`, `.memory/**`, `%APPDATA%`, and `~/Library/Application Support/`. Never delete these directories.
 - **Never Assume Python or External Interpreters**: Developer machines may have corrupted Python or node runtimes; cache cleaners must run on native shell (`bash` on POSIX, `cmd` on Windows).
@@ -382,7 +386,7 @@ Before marking cleanup complete, verify:
 4. Active browser and agent sessions were protected and skipped if running.
 5. User cookies, credentials, agent memory, and repository code remain 100% intact.
 6. Disk free space increased as reported by `df -h` or `dir`.
-7. **Every deletion was inspectable first**: each `ASK`/`ASK!` item was shown with its paths (`--discover` / `--browse <key>`) before selection, and no irreversible item was deleted without a typed `yes` or an approved `--only ... --yes`.
+7. **Every deletion was inspectable first**: each `ASK`/`ASK!` item was shown with its paths (`--discover` / `--browse <key>`) before selection, and no irreversible item was deleted without a typed `yes` or an approved `--only ... --yes --confirm-irreversible`.
 8. `--list` and `--list --json` agree on ids, tiers, and sizes; `--browse <key>` lists the same paths the delete path uses.
 9. Sudo-backed candidates either ran with passwordless sudo or reported the exact command instead of hanging.
 10. **Discovery stayed in scope**: every auto-cleaned path matched `~/.cache/*`, an exact app `Cache` dir, or a dormant project build cache. No browser profile, agent runtime, orca/ryoku state, or `*-backup*` tree was touched.

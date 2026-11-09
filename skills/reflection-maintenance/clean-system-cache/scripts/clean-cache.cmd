@@ -37,6 +37,7 @@ set T2_PRESERVED=0
 set CATALOG_MODE=
 set CATALOG_ARG=
 set ASSUME_YES=0
+set CONFIRM_IRREV=0
 set LEARN_ACTION=
 set LEARN_KEYS=
 set STATE_DIR=%LOCALAPPDATA%\clean-system-cache
@@ -135,6 +136,11 @@ if /i "%~1"=="/yes" (
     shift
     goto parse_args
 )
+if /i "%~1"=="/confirm-irreversible" (
+    set CONFIRM_IRREV=1
+    shift
+    goto parse_args
+)
 if /i "%~1"=="/discover" (
     set CATALOG_MODE=discover
     shift
@@ -177,7 +183,9 @@ echo   /scan-node-modules dir       Audit directory tree for dormant node_module
 echo   /list                        Catalog every candidate: id, tier, size, path. Deletes nothing.
 echo   /discover                    Scan %USERPROFILE%\projects for dormant project build caches.
 echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
-echo   /only id,id^|proj:path [/yes] Delete exactly these candidates.
+echo   /only id,id^|proj:path [/yes] [/confirm-irreversible]
+echo                                Delete exactly these candidates. ASK! items need the
+echo                                explicit flag or a typed yes; /yes alone is not enough.
 echo   /interactive                 Numbered menu for confirmation-gated (ASK) candidates.
 echo   /learn allow^|deny^|forget k Record a decision so later runs already know.
 echo   /learned                     Show learned decisions.
@@ -1473,11 +1481,24 @@ exit /b 0
 
 :cat_only
 if "%~1"=="" (
-    echo Usage: clean-cache.cmd /only ^<id,id^> [/yes]
+    echo Usage: clean-cache.cmd /only ^<id,id^> [/yes] [/confirm-irreversible]
     exit /b 1
 )
+call :hazard_banner %~1
+call :has_irreversible %~1
+if errorlevel 1 (
+    rem ASK! is irreversible; /yes alone is not consent. Require the explicit flag
+    rem or a typed yes, even in a non-interactive shell.
+    if "%CONFIRM_IRREV%"=="1" goto cat_only_delete
+    set "CONFIRM="
+    set /p "CONFIRM=Type yes to permanently delete the irreversible selections: "
+    if /i not "!CONFIRM!"=="yes" (
+        echo Aborted - nothing was deleted.
+        exit /b 0
+    )
+    goto cat_only_delete
+)
 if "%ASSUME_YES%"=="0" (
-    call :hazard_banner %~1
     set "CONFIRM="
     set /p "CONFIRM=Type yes to delete the selected candidates: "
     if /i not "!CONFIRM!"=="yes" (
@@ -1485,8 +1506,17 @@ if "%ASSUME_YES%"=="0" (
         exit /b 0
     )
 )
+:cat_only_delete
 for %%s in (%~1) do call :cat_resolve_delete %%s
 exit /b 0
+
+:has_irreversible
+for /l %%i in (1,1,%CAND_N%) do (
+    for %%a in (%~1) do (
+        if /i "!C_ID_%%i!"=="%%~a" if /i "!C_TIER_%%i!"=="ASK!" exit /b 0
+    )
+)
+exit /b 1
 
 :cat_interactive
 call :cat_list

@@ -166,8 +166,7 @@ When L3 or above is triggered, complete and report each item:
 ### 5. Debug Discipline: Red-Capable Loop + Falsifiable Hypotheses
 
 When L2+ debugging stalls, procedure above is not enough — add this
-discipline block (source: `mattpocock/skills` `diagnosing-bugs`, full-raw
-per lane-d-abubakar.md #1–2; enrich-only, no new skill).
+discipline block (source: `mattpocock/skills` `diagnosing-bugs`; enrich-only, no new skill).
 
 #### 5a. Red-capable loop ladder (loop first, hypothesise second)
 

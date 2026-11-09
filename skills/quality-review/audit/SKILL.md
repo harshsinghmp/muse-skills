@@ -1,7 +1,7 @@
 ---
 name: audit
 aliases: ["brain-audit","memory-audit","knowledge-audit"]
-description: "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md."
+description: "Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. Audits memory stores, .memory/wiki/, and project documentation for dead links, broken symbol references, orphaned notes, leaked credentials, and stale contradictions, then remediates through a severity-routed repair loop with per-step progress reporting and companion-skill routing. Generates brain-audit-report.md. Use when asked to audit memory banks, documentation links, or knowledge-base integrity."
 argument-hint: "[Quick|Standard|Deep]"
 user-invocable: true
 version: 1.1.1
@@ -94,6 +94,8 @@ Do NOT use this skill when:
 | **Quick** | One document or one directory touched this session | 1, 4, 5 | Condensed report + routing line |
 | **Standard** | Full knowledge tree (`docs/`, root docs, `.agents/context/`) | All 5 | Full report + routing table |
 | **Deep** | Standard + `.memory/wiki/` structure review + cross-repo references | All 5 + orphan reachability walk | Full report + persistent progress log |
+| **hygiene-rules** | "hygiene-rules" | Knowledge Hygiene Rules Reference | [references/hygiene-rules.md](references/hygiene-rules.md) |
+| **remediation-matrix** | "remediation-matrix" | Remediation Matrix & Routing Boundaries | [references/remediation-matrix.md](references/remediation-matrix.md) |
 
 Mode is selected once at Step 1 and stated in the report. Escalate Quick → Standard when the target document links into the wider tree; never silently de-escalate.
 

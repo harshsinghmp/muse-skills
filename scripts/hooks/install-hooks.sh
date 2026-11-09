@@ -6,14 +6,21 @@
 set -euo pipefail
 
 REPO_ROOT="$(pwd)"
-HOOKS_DIR="$REPO_ROOT/scripts/hooks"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --repo-root) REPO_ROOT="$2"; shift 2 ;;
+    --repo-root)
+      [ -n "${2:-}" ] || { echo "--repo-root requires a path" >&2; exit 1; }
+      REPO_ROOT="$2"
+      shift 2
+      ;;
     *) shift ;;
   esac
 done
+
+# Resolve the hooks dir AFTER --repo-root is applied; computing it earlier
+# silently installed hooks from the invocation directory instead of the repo.
+HOOKS_DIR="$REPO_ROOT/scripts/hooks"
 
 [ ! -d "$HOOKS_DIR" ] && { echo "hooks dir not found: $HOOKS_DIR"; exit 1; }
 
@@ -62,8 +69,14 @@ for harness in "${!HOOK_SUBDIR[@]}"; do
   for f in "$HOOKS_DIR"/*.sh "$HOOKS_DIR"/agent-dirs.conf; do
     name=$(basename "$f")
     test -f "$f" || continue
-    cp -f "$f" "$hook_dest/$name"
-    chmod +x "$hook_dest/$name"
+    dest="$hook_dest/$name"
+    if [ -e "$dest" ] && ! cmp -s "$f" "$dest"; then
+      cp -f "$f" "$dest.muse-new"
+      echo "[hooks] $harness: $name differs; wrote $name.muse-new (review before replacing)"
+      continue
+    fi
+    cp -f "$f" "$dest"
+    chmod +x "$dest"
   done
 
   hook_count=$(ls -1 "$hook_dest"/*.sh 2>/dev/null | wc -l)
@@ -100,12 +113,21 @@ install_git_wrapper pre-push "$HOOKS_DIR/harness-hygiene-pre-push.sh"
 # ─── Cron hook registration ────────────────────────────────────────────────
 # Cron hooks (dead-letter-nightly, cache-pressure-check) have no event to hook
 # into — they need a scheduler. Register them with crontab if available.
+CRON_ROOT="$(cd "$HOOKS_DIR/../.." && pwd)"
+CRON_SAFE=true
+case "$CRON_ROOT" in
+  *$'\n'*|*$'\r'*|*%*|*'"'*)
+    echo "[hooks] refusing cron registration: repo path contains a newline, '%', or double quote: $CRON_ROOT" >&2
+    CRON_SAFE=false
+    ;;
+esac
+
 CRON_HOOKS=(
-  "0 22 * * * cd $HOOKS_DIR/../.. && bash scripts/hooks/dead-letter-nightly.sh"
-  "0 3 * * 0 cd $HOOKS_DIR/../.. && bash scripts/hooks/cache-pressure-check.sh"
+  "0 22 * * * cd \"$CRON_ROOT\" && bash scripts/hooks/dead-letter-nightly.sh"
+  "0 3 * * 0 cd \"$CRON_ROOT\" && bash scripts/hooks/cache-pressure-check.sh"
 )
 
-if command -v crontab >/dev/null 2>&1; then
+if [ "$CRON_SAFE" = true ] && command -v crontab >/dev/null 2>&1; then
   INSTALLED_CRON=0
   for entry in "${CRON_HOOKS[@]}"; do
     if ! crontab -l 2>/dev/null | grep -qF "$entry"; then
@@ -118,6 +140,8 @@ if command -v crontab >/dev/null 2>&1; then
   else
     echo "[hooks] cron: hooks already registered (verify: crontab -l)"
   fi
+elif [ "$CRON_SAFE" != true ]; then
+  echo "[hooks] cron: skipped — repo path is not safe to place in a crontab"
 else
   echo "[hooks] cron: crontab not available — cron hooks not auto-registered"
   echo "[hooks] cron: add manually: crontab -e"

@@ -77,6 +77,9 @@ Loadable by topic; also routable as `/humanize-<file>` commands (not separate ro
 - [ast-shield-and-cadence.md](references/ast-shield-and-cadence.md)
 - [verification.md](references/verification.md)
 
+### Anti-Triggers
+Not for factual verification (evidence-ledger), search optimization (seo), or translation into another language.
+
 ## Quick Reference
 
 ### Anti-Slop Pattern Cheat Sheet (Inspect & Fix)

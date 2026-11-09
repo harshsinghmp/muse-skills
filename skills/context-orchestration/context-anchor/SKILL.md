@@ -124,7 +124,7 @@ Precedence on conflict: `HANDOFF.md` wins for cross-session truth; the active an
 
 | Command | Action | Output / Target |
 |:---|:---|:---|
-| `bun anchor.ts --drop` | Drop micro-anchor (≤15 lines) | `.agents/anchor.md` |
+| `bun anchor.ts --drop` | Drop micro-anchor (≤15 lines; requires `--state` or `--next`) | `.agents/anchor.md` |
 | `bun anchor.ts --park <slug>` | Park active workstream to named anchor | `.agents/anchors/<slug>.md` |
 | `bun anchor.ts --switch <slug>` | Park current context, restore `<slug>` | `.agents/anchor.md` (freshness check) |
 | `bun anchor.ts --list` | List active and parked workstreams | Structured status table |
@@ -134,7 +134,7 @@ Precedence on conflict: `HANDOFF.md` wins for cross-session truth; the active an
 | `bun anchor.ts --partition` | Prompt-Cache-Aware Partitioning | Static prefix (`anchor-static.md`) & dynamic tail |
 | `bun anchor.ts --record-outcome` | Outcome & Streak Tracking | Updates `.agents/artifacts/.anchor_streak.json` |
 | `bun anchor.ts --deadlock-check` | Toxic Retry Detection | Halts on $\ge 3$ consecutive failures |
-| `bun anchor.ts --rollback` | Automated Workspace Rollback | Reverts git workspace to clean anchor state |
+| `bun anchor.ts --rollback --yes` | Snapshot + Workspace Rollback | Patch snapshot in `.agents/artifacts/rollbacks/`, then tracked files revert to `HEAD`; `--scope <paths>` limits the revert |
 
 ---
 
@@ -216,7 +216,7 @@ To avoid busting prompt caches across consecutive turns:
 When encountering persistent test or build failures:
 - Record outcomes via `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --record-outcome --cmd "<command>" --success <bool>` ([references/deadlock-breaker.md](references/deadlock-breaker.md)).
 - If $\ge 3$ consecutive failures occur, `anchor.ts --deadlock-check` flags `DEADLOCK DETECTED`.
-- Execute `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback` to revert uncommitted workspace churn, discard toxic retry memory, and restart from the last verified anchor state.
+- Execute `bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback --yes` to snapshot the current tracked diff to `.agents/artifacts/rollbacks/<timestamp>.patch`, revert those files to `HEAD`, discard toxic retry memory, and restart from the last verified anchor state. Pass `--scope <comma-separated-paths>` to limit the revert; a rollback without `--yes` is refused.
 
 ---
 

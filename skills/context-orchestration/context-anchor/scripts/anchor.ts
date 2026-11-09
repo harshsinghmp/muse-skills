@@ -26,8 +26,17 @@ process.on("unhandledRejection", (reason, _promise) => {
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
+
+function isWithinRoot(root: string, target: string): boolean {
+  const rel = relative(resolve(root), resolve(target));
+  return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export interface DropOptions {
   workstream?: string;
@@ -105,7 +114,15 @@ export interface RollbackResult {
   success: boolean;
   rolledBack: boolean;
   message: string;
+  snapshotPath?: string;
   error?: string;
+}
+
+export interface RollbackOptions {
+  /** Destructive rollback requires explicit confirmation. */
+  yes?: boolean;
+  /** Paths to revert; defaults to every tracked change. */
+  scope?: string[];
 }
 
 export function getGitBranch(targetDir: string): string {
@@ -443,6 +460,13 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
   const symbolOrRange = parts.slice(1).join(":");
   const absFile = resolve(workspaceRoot, relFile);
 
+  if (!isWithinRoot(workspaceRoot, absFile)) {
+    return {
+      success: false,
+      error: `Target file '${relFile}' resolves outside the workspace.`,
+    };
+  }
+
   if (!existsSync(absFile)) {
     return {
       success: false,
@@ -464,7 +488,8 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
     endLine = Math.min(lines.length, parseInt(rangeMatch[2], 10));
     snippetLines = lines.slice(startLine - 1, endLine);
   } else {
-    const symbol = symbolOrRange.trim();
+    const rawSymbol = symbolOrRange.trim();
+    const symbol = escapeRegExp(rawSymbol);
     let foundIdx = -1;
 
     if (isPython) {
@@ -482,7 +507,7 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
     }
 
     if (foundIdx === -1) {
-      foundIdx = lines.findIndex((l) => l.includes(symbol));
+      foundIdx = lines.findIndex((l) => l.includes(rawSymbol));
     }
 
     if (foundIdx === -1) {
@@ -621,6 +646,14 @@ export function verifyNextAction(workspaceRoot: string, anchorPath?: string): Ve
 
   const absTarget = resolve(workspaceRoot, matchedFile);
   const relTarget = relative(workspaceRoot, absTarget);
+
+  if (relTarget.startsWith("..") || isAbsolute(relTarget)) {
+    return {
+      success: false,
+      ghostTask: true,
+      reason: `Next Action target '${matchedFile}' resolves outside the workspace.`,
+    };
+  }
 
   // Invariant 1: Target file must exist on disk
   if (!existsSync(absTarget)) {
@@ -945,52 +978,122 @@ export function checkDeadlock(workspaceRoot: string): DeadlockStatus {
   }
 }
 
-export function rollbackDeadlock(workspaceRoot: string): RollbackResult {
+export function rollbackDeadlock(workspaceRoot: string, options: RollbackOptions = {}): RollbackResult {
   const streakFile = getStreakFilePath(workspaceRoot);
+
+  if (!options.yes) {
+    return {
+      success: false,
+      rolledBack: false,
+      message:
+        "Refusing to roll back without explicit confirmation. Re-run with --rollback --yes; a patch snapshot is written to .agents/artifacts/rollbacks/ before any revert.",
+    };
+  }
+
+  const resetStreak = () => {
+    if (!existsSync(streakFile)) return;
+    writeFileSync(
+      streakFile,
+      JSON.stringify(
+        {
+          command: "reset",
+          consecutiveFailures: 0,
+          history: [],
+          lastRollback: new Date().toISOString(),
+        },
+        null,
+        2,
+      ),
+      "utf8",
+    );
+  };
+
   try {
-    // Reset failure streak
-    if (existsSync(streakFile)) {
-      writeFileSync(
-        streakFile,
-        JSON.stringify(
-          {
-            command: "reset",
-            consecutiveFailures: 0,
-            history: [],
-            lastRollback: new Date().toISOString(),
-          },
-          null,
-          2,
-        ),
-        "utf8",
-      );
+    const inside = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: workspaceRoot, encoding: "utf8" });
+    if (inside.status !== 0) {
+      resetStreak();
+      return {
+        success: true,
+        rolledBack: false,
+        message: "Not a git worktree; failure streak reset with no file changes.",
+      };
     }
 
-    // Revert uncommitted changes in git if repo has commits
-    try {
-      const revParse = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
-        cwd: workspaceRoot,
-        encoding: "utf8",
-      });
-      if (revParse.status === 0) {
-        const hasCommits =
-          spawnSync("git", ["rev-parse", "--verify", "HEAD"], {
-            cwd: workspaceRoot,
-            encoding: "utf8",
-          }).status === 0;
-        if (hasCommits) {
-          spawnSync("git", ["checkout", "--", "."], {
-            cwd: workspaceRoot,
-            encoding: "utf8",
-          });
-        }
-      }
-    } catch {}
+    const head = spawnSync("git", ["rev-parse", "--verify", "HEAD"], { cwd: workspaceRoot, encoding: "utf8" });
+    if (head.status !== 0) {
+      resetStreak();
+      return {
+        success: true,
+        rolledBack: false,
+        message: "Repository has no commits; failure streak reset with no file changes.",
+      };
+    }
 
+    const diff = spawnSync("git", ["diff", "HEAD", "--binary"], {
+      cwd: workspaceRoot,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    if (diff.status !== 0) {
+      return {
+        success: false,
+        rolledBack: false,
+        message: "Could not read the working-tree diff.",
+        error: (diff.stderr || "").trim(),
+      };
+    }
+
+    const diffText = diff.stdout || "";
+    if (!diffText.trim()) {
+      resetStreak();
+      return { success: true, rolledBack: false, message: "No tracked changes to roll back; failure streak reset." };
+    }
+
+    const snapshotDir = join(workspaceRoot, ".agents", "artifacts", "rollbacks");
+    mkdirSync(snapshotDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const snapshotPath = join(snapshotDir, `${stamp}.patch`);
+    writeFileSync(snapshotPath, diffText, "utf8");
+
+    let paths = (options.scope || []).map((entry) => entry.trim()).filter(Boolean);
+    if (paths.length === 0) {
+      const names = spawnSync("git", ["diff", "--name-only", "HEAD"], { cwd: workspaceRoot, encoding: "utf8" });
+      paths = (names.stdout || "")
+        .split("\n")
+        .map((entry) => entry.trim())
+        .filter(Boolean);
+    }
+
+    if (paths.length === 0) {
+      resetStreak();
+      return {
+        success: true,
+        rolledBack: false,
+        message: "No rollback targets resolved; failure streak reset.",
+        snapshotPath,
+      };
+    }
+
+    const restore = spawnSync("git", ["checkout", "HEAD", "--", ...paths], {
+      cwd: workspaceRoot,
+      encoding: "utf8",
+    });
+    if (restore.status !== 0) {
+      return {
+        success: false,
+        rolledBack: false,
+        message: `Rollback failed; snapshot preserved at ${snapshotPath}.`,
+        snapshotPath,
+        error: (restore.stderr || "").trim(),
+      };
+    }
+
+    resetStreak();
     return {
       success: true,
       rolledBack: true,
-      message: "Workspace successfully rolled back to last clean state; failure streak reset.",
+      snapshotPath,
+      message: `Rolled back ${paths.length} path(s) to HEAD. Snapshot: ${snapshotPath}`,
     };
   } catch (err: unknown) {
     return {
@@ -1224,6 +1327,8 @@ if (import.meta.main) {
       "record-outcome": { type: "boolean", default: false },
       "deadlock-check": { type: "boolean", default: false },
       rollback: { type: "boolean", default: false },
+      yes: { type: "boolean", short: "y", default: false },
+      scope: { type: "string" },
       cmd: { type: "string" },
       raw: { type: "string" },
       file: { type: "string" },
@@ -1269,7 +1374,10 @@ Advanced Focus & Cache Commands:
   --partition          Partition anchor into cache-stable prefix & ephemeral dynamic tail
   --record-outcome     Record execution result to track consecutive failure streak
   --deadlock-check     Inspect consecutive failure streak and detect toxic retry loops
-  --rollback           Revert workspace to last verified anchor state and reset failure streak
+  --rollback           Revert tracked changes to HEAD and reset the failure streak
+                       (requires --yes; a patch snapshot is written first)
+  --yes, -y            Confirm the destructive rollback
+  --scope <paths>      Comma-separated paths to revert (default: all tracked changes)
 
 Options:
   --goal <text>        Goal description for task stashing
@@ -1346,8 +1454,9 @@ Options:
   if (values["mask-output"]) {
     const cmd = values.cmd || "unknown-cmd";
     let rawOutput = values.raw || "";
-    if (values.file && existsSync(resolve(workspaceRoot, values.file))) {
-      rawOutput = readFileSync(resolve(workspaceRoot, values.file), "utf8");
+    const inputFile = values.file ? resolve(workspaceRoot, values.file) : "";
+    if (values.file && isWithinRoot(workspaceRoot, inputFile) && existsSync(inputFile)) {
+      rawOutput = readFileSync(inputFile, "utf8");
     }
     const exitCode = values.exit ? parseInt(values.exit, 10) : 0;
     const res = maskObservation(workspaceRoot, {
@@ -1423,19 +1532,32 @@ Options:
   }
 
   if (values.rollback) {
-    const res = rollbackDeadlock(workspaceRoot);
+    const scope = values.scope
+      ? values.scope
+          .split(",")
+          .map((entry) => entry.trim())
+          .filter(Boolean)
+      : undefined;
+    const res = rollbackDeadlock(workspaceRoot, { yes: values.yes, scope });
     if (values.json) {
       console.log(JSON.stringify(res, null, 2));
     } else {
       console.log(`\n🔄 Deadlock Rollback:`);
       console.log(`  Status:  ${res.success ? "✅ SUCCESS" : "❌ FAILED"}`);
       console.log(`  Message: ${res.message}`);
+      if (res.snapshotPath) console.log(`  Snapshot: ${res.snapshotPath}`);
       if (res.error) console.error(`  Error:   ${res.error}`);
     }
     process.exit(res.success ? 0 : 1);
   }
 
   if (values.drop) {
+    if (!values.state && !values.next) {
+      console.error(
+        "Error: --drop requires --state <text> or --next <action>; refusing to write placeholder anchor state.",
+      );
+      process.exit(2);
+    }
     const res = dropAnchor(workspaceRoot, {
       workstream: values.workstream,
       branch: values.branch,

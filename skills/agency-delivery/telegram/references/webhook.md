@@ -72,12 +72,13 @@ Generate a cryptographically secure 32+ character alphanumeric token:
 # Generate 32-character URL-safe secret token
 openssl rand -base64 24 | tr '+/' '-_' | tr -d '='
 ```
-Store token in `telegram-config.json` with strict `mode 600` file permissions (`chmod 600 telegram-config.json`).
+Store the config outside the repository at `~/.config/muse-skills/telegram-config.json` with `chmod 600`; never commit it and never pass the secret or bot token on the command line (argv is visible to `ps` and shell history). Use `--config`, `--secret-file`, `--bot-token-file`, or `TELEGRAM_BOT_TOKEN` instead.
 
 ### 2. Stand Up Webhook Receiver Listener
 Start the pure-runtime receiver using `webhook-receiver.ts` CLI:
 ```bash
-bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --listen-webhook --port 8080 --config telegram-config.json
+bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --listen-webhook --port 8080 \
+  --config ~/.config/muse-skills/telegram-config.json
 ```
 Endpoints exposed:
 - `POST /webhook`: Telegram webhook ingestion target.
@@ -149,17 +150,22 @@ curl -s -X GET "https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo" | jq .
 ## CLI Reference
 
 ```bash
-# Start standalone webhook receiver
-bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --listen-webhook --port 8080 --secret-token "$TG_SECRET"
+# Start standalone webhook receiver (secret read from the mode-600 config)
+bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --listen-webhook --port 8080 \
+  --config ~/.config/muse-skills/telegram-config.json
 
 # Audit webhook configuration and secret entropy
-bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --audit-config --config ./telegram-config.json
+bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --audit-config \
+  --config ~/.config/muse-skills/telegram-config.json
 
-# Test secret token verification
-bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --verify-secret --secret "$SECRET" --header "$HEADER"
+# Test secret token verification (reads secret_token from the config)
+bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --verify-secret \
+  --config ~/.config/muse-skills/telegram-config.json --header "$HEADER"
 
 # Generate setWebhook curl command and registration payload
-bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --register-webhook --url "https://api.agency.com/telegram/webhook" --secret "$SECRET"
+bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --register-webhook \
+  --url "https://api.agency.com/telegram/webhook" \
+  --config ~/.config/muse-skills/telegram-config.json
 
 # Scaffold a production webhook receiver server
 bun skills/agency-delivery/telegram/scripts/webhook-receiver.ts --scaffold-receiver --output ./src/telegram-receiver

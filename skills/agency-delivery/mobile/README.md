@@ -29,13 +29,13 @@ Build a React Native inventory app with offline barcode scanning.
 | **cross** | cross-platform (Expo/React Native/Flutter) | Cross-platform: Expo for React teams, Flutter for fresh starts — one codebase, both stores. |
 | **pwa** | PWA conversion | PWA: installable, offline-capable web app — service worker, manifest, storage strategy. |
 | **aso** | app store visibility (ASO) | ASO: keyword optimization, listing assets, ratings loop, review responses. |
-| **expo** | Universal Expo SDK 52 (React Native) | Universal Expo SDK 52 app: expo-router v4, New Architecture, NativeWind v4, deep links, hardware mocking. |
+| **expo** | Universal Expo (React Native) | Universal Expo app: expo-router v4, New Architecture, NativeWind v4, deep links, hardware mocking. |
 | **audit** | mobile app and compliance audit | App Store audit (keywords, listing, ratings, compliance) + mobile accessibility audit. |
 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — seven mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

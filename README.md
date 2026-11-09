@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.3.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.4.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -19,7 +19,7 @@
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Option B: Instant Remote Setup (46 Skills + 460 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.0/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -29,6 +29,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
+- **Security wave 3, skill-quality gates & faster CI** (v8.4.0): the 2026-11-09 security audit's remaining waves land — honest receipts instead of fabricated client claims, integer money math, producer-ID metering with clamped invoices, fail-closed CI/secret scanning, a pinned installer with a release checksum, constant-time review tokens, HMAC-verified webhook scaffolds, and SSRF-safe fetchers. All 46 skills now pass a discovery-surface parity gate (`bun run check:surface`); the import-guard suite covers `updatedocs`, `new-project`, `tunnel`, and `sample-size`; and CI runs the 693-test suite in parallel (≈48s vs ≈89s) with package-tarball caching and superseded-run cancellation.
 - **Release safety & agent follow-ups** (v8.3.0): `updateagents` is entry-point gated so importing it never runs a sync or rewrites curated standards; the generated `AGENTS.md` ends highly technical work with a prioritized **Next 3** follow-up block; the three-scenario agency simulation now covers all 46 skills and gates releases; and CI caches and pins Bun to end release-asset `504` failures.
 - **Universal pre-merge sync gate** (v8.2.0): every scaffolded project now ships a self-contained `sync-gate.yml`; `updateagents --refresh-workflows` updates existing copies. The English-only policy also binds narration between tool calls, and URL intake is documented in the root router.
 - **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
@@ -288,6 +289,21 @@ npx skills add harshsinghmp/muse-skills --skill animate
 npx skills add harshsinghmp/muse-skills --skill git
 ```
 
+### Local Model Evaluation (qa-launch:evals)
+
+Run the dual-judge quality gate against local models, cloud models, or one of each — no cloud credential required for local runs:
+
+```bash
+# Both judges on local runtimes
+bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
+  --evaluate-sample --input sample.json \
+  --judge-a ollama --judge-a-model llama3.2 \
+  --judge-b vllm --judge-b-model Qwen/Qwen2.5-7B-Instruct \
+  --seed 42 --telemetry --json
+```
+
+Defaults: Ollama `http://127.0.0.1:11434/v1`, vLLM `http://127.0.0.1:8000/v1`; point either judge at any OpenAI-compatible endpoint with `--judge-a-base-url`/`--judge-b-base-url` and credentials via `EVAL_API_KEY`/`OPENAI_API_KEY`. A fixed `--seed` makes local runs deterministic, and local token cost is `$0`. The consensus gate is unchanged: score ≥ 8.5, judge delta ≤ 1.5, safety ≥ 8.
+
 ---
 
 ## 🧪 Verification & Quality Standards
@@ -312,6 +328,9 @@ bun run check:landed
 
 # Verify branch freshness before opening or merging a PR (SYNCED / NOT SYNCED)
 bun run check:sync
+
+# Validate .mcp.json server allowlist, transports, and literal-secret detection (scripts/check-mcp.ts)
+bun run check:mcp
 ```
 
 - **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).

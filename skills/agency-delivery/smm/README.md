@@ -1,6 +1,6 @@
 # 📣 smm
 
-The organic social department head: one skill, eleven modes — strategy, calendar, content, community, influencer, ugc, analytics, postiz, carousel, x, audit. Platform-native strategy, viral carousels, X account growth, and multi-channel publishing.
+The organic social department head: one skill, thirteen modes — strategy, calendar, content, community, influencer, ugc, analytics, creator-vetting, postiz, carousel, x, audit, social-intel. Platform-native strategy, viral carousels, X account growth, and multi-channel publishing.
 
 ## Install
 
@@ -35,6 +35,8 @@ Design an influencer and UGC program to launch our new skincare line.
 | **carousel** | viral carousel generator | Carousel: 6-slide narrative carousels via Playwright, Gemini, and Upload-Post, with aspect ratio & safe-zone validation. |
 | **x** | grow an X account | X: storefront audit, For You algorithm leverage, content archetypes, cold-start playbook, engagement strategy, monetization pyramid. |
 | **audit** | audit social channels | Audit: content consistency, style compliance, and engagement diagnostics. |
+| **creator-vetting** | Influencer & Creator Evaluation Protocol | [references/creator-vetting.md](references/creator-vetting.md) |
+| **social-intel** | Multi-Platform Social Intelligence & Trend Harvesting | [references/social-intel.md](references/social-intel.md) |
 
 ### Specialized References
 
@@ -43,7 +45,7 @@ Design an influencer and UGC program to launch our new skincare line.
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — thirteen mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

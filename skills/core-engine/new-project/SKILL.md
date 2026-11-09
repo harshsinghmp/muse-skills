@@ -1,7 +1,7 @@
 ---
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-description: "Purpose-First interactive project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. Runs a 7-stage pipeline: identity, a granular hierarchical decision tree (archetype to framework to CMS/commerce to DB/auth to styling/motion to palette to deployment), official package installation and full companion wiring, OKLCH/BEM token injection, a full client onboarding interview (contacts, business model, ICP, objections, competitors, offerings, scope boundaries, engagement terms, access, integrations) that renders every Client-Intake document plus start-here.md from real answers, brand/context compilation, and closeout. Bootstraps Agents-First architecture (AGENTS.md, 9-folder .agents/ container, modular standards, brand tokens, cognitive memory) for Next.js 16, Astro, Instatic, Roots Bedrock, Expo, plus Payload/Puck, StudioCMS, Emdash, Keystatic, WollyCMS, Medusa v2, Stripe/Razorpay/Vendure, Drizzle/Neon/Supabase/Postgres/SQLite, and Capacitor. Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'onboard a client project', 'scaffold Project OS', or to initialize an agent-governed workspace."
+description: "Project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. 7-stage pipeline: identity, hierarchical decision tree (archetype → framework → CMS/commerce → DB/auth → styling/motion → palette → deployment), official installs and companion wiring, OKLCH/BEM tokens, a client onboarding interview (contacts, business model, ICP, objections, competitors, offerings, scope, terms, access, integrations) rendering every Client-Intake doc plus start-here.md from real answers, context compilation, and closeout. Bootstraps Agents-First architecture (AGENTS.md, 9-folder .agents/ container, standards, brand tokens, cognitive memory) for Next.js 16, Astro, Instatic, Roots Bedrock, Expo, plus Payload/Puck, StudioCMS, Emdash, Keystatic, WollyCMS, Medusa v2, Stripe/Razorpay/Vendure, Drizzle/Neon/Supabase/Postgres/SQLite, and Capacitor. Trigger on 'new-project', 'Agent Engine', 'DOX Engine', 'onboard a client project', 'scaffold Project OS', or 'agent-governed workspace'."
 argument-hint: "[scaffold|new-project|Agent-Engine|DOX-Engine|client-onboarding]"
 user-invocable: true
 version: 2.8.0
@@ -91,6 +91,9 @@ Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + 
 - Converting an Astro or Next.js web application to native iOS and Android APK via Ionic Capacitor.
 
 ---
+
+### Anti-Triggers
+Not for syncing agent context in an existing repository (updateagents), authoring or restructuring project docs (updatedocs), or adding features to a shipped project (webdev).
 
 ## Quick Reference & Presets
 
@@ -252,11 +255,11 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `tests/health.test.ts`: Out-of-the-box health check asserting environment configuration, AI governance container, and design tokens baseline.
   - `biome.json`: High-speed zero-config linter and formatter.
 - **Day-1 Secret Defense (Vibeguard Pre-Commit Hook)**:
-  - `scripts/pre-commit.sh` & `.git/hooks/pre-commit`: Executable pre-commit hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
+  - A generated pre-commit shell hook installed at `.git/hooks/pre-commit`: executable hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
 - **Package Scripts & Secrets Injection**:
-  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash scripts/pre-commit.sh`).
+  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash .git/hooks/pre-commit`).
   - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
-  - Automatically populates all required connection strings, database URLs, and API secret keys into `.env.example`.
+  - Populates `.env.example` with every required key name and an unmistakable placeholder (`<your-value>`); real secrets go only into the ignored `.env`, never into a committed file.
   - Synchronizes official dependencies in `package.json` with self-verification gate.
 
 ### Stage 4: Modern Tokens & BEM Architecture Injection
@@ -311,228 +314,11 @@ It then runs `brand/scripts/intake-compiler.ts` to compile `.agents/brand/` (`vo
 
 ## CLI Usage & Flags Reference
 
-```bash
-# Interactive Mode (Prompts for Purpose -> Hierarchical Tree -> Stack)
-bun new-project/scripts/new-project.ts
+See [references/CLI.md](references/CLI.md) for every flag, preset, and non-interactive example.
 
-# 1-Click Agency Golden Presets
-bun new-project/scripts/new-project.ts <targetPath> --preset=powerhouse
-bun new-project/scripts/new-project.ts <targetPath> --preset=astro-mobile
+## Official Stack Setup References (Post-Scaffold)
 
-# Granular Non-Interactive Mode
-bun new-project/scripts/new-project.ts <targetPath> \
-  --intent=ecommerce \
-  --type=nextjs \
-  --styling=hybrid \
-  --animation=motion \
-  --state=nanostores \
-  --mobile=capacitor \
-  --cms=payload \
-  --puck \
-  --ecommerce=medusa \
-  --db=postgres \
-  --auth=better-auth \
-  --github \
-  --non-interactive
-
-# Full client onboarding (interactive interview, docs generated in tandem)
-bun new-project/scripts/new-project.ts <targetPath> --onboard-client
-
-# Full client onboarding from a JSON or Markdown intake file
-bun new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
-
-# Granular client flags (answers prefill the intake docs and brand/context)
-bun new-project/scripts/new-project.ts <targetPath> \
-  --client-name="Acme Health LLC" \
-  --client-brand="Acme Health" \
-  --client-contact="Dana Lee" --client-email="dana@acme.health" \
-  --business-model=b2b-saas --company-stage=seed --revenue-band=1m-10m \
-  --industry="Healthcare" --audience="Regional clinics" \
-  --problem="Manual paper intake" --offerings="Intake Suite, EHR Sync" \
-  --competitors="Epic, Cerner" --objections="Price, Migration effort" \
-  --launch-goal="50 clinics onboarded" --boundaries="Native mobile app, Multi-language" \
-  --domain=acme.health --dns-provider=cloudflare --git-host=github \
-  --payments=stripe --integrations=hubspot,segment \
-  --engagement=fixed-scope --sla-tier=priority --budget="USD 40k" \
-  --comms-channel=slack --comms-cadence=weekly \
-  --kickoff-date=2026-11-10 --deadline=2027-02-01 \
-  --access-items="DNS, GitHub org, Stripe account" \
-  --non-interactive
-```
-
-| Flag | Type | Description |
-| :--- | :--- | :--- |
-| `-n, --name <name>` | String | Project name (default: directory basename) |
-| `-p, --path <path>` | String | Target directory path |
-| `--author <name>` | String | Project author or organization name |
-| `--tagline <desc>` | String | Project mission or summary |
-| `--audience <aud>` | String | Target audience or user persona |
-| `--problem <prob>` | String | Core problem solved by the project |
-| `--features <list>` | String | Comma-separated core features |
-| `--industry <niche>`| String | Industry or vertical |
-| `--offerings <items>`| String | Core catalog items or services |
-| `--tone <tone>` | String | Brand voice / design aesthetic |
-| `--palette <color>` | String | Brand theme: `slate` \| `indigo` \| `emerald` \| `amber` \| `violet` |
-| `--first-milestone <m>` | String | Immediate next task / initial milestone |
-| `--planned-milestones <l>`| String | Comma-separated planned milestones |
-| `--agent-name <name>` | String | Agent name configured for this workspace; otherwise use the user's global assistant identity and prompt if unavailable |
-| `--agent-role <role>` | String | Lead agent functional role description |
-| `--constraint <text>` | String | Primary operational constraint or invariant |
-| `--onboard-client` | Boolean | Run the full 5-section client onboarding interview and render every intake doc |
-| `--skip-client-onboarding` | Boolean | Write only the brief; leave doc generation to a later agent pass |
-| `--intake <path>` | String | Prefill onboarding from a JSON object or a Markdown `**Label**: value` brief |
-| `--client-name <name>` | String | Client legal entity / company name |
-| `--client-brand <name>` | String | Public brand / trade name |
-| `--client-slug <slug>` | String | Stable client identifier (default: slugged brand name) |
-| `--client-contact <name>` | String | Day-to-day client contact |
-| `--client-role <role>` | String | Day-to-day contact role |
-| `--client-email <email>` | String | Day-to-day contact email |
-| `--decision-maker <name>` | String | Final approval stakeholder |
-| `--tech-lead <name>` | String | Client-side technical lead |
-| `--business-model <model>` | String | `b2b-saas` \| `b2c-ecommerce` \| `agency-service` \| `marketplace` \| `media-publisher` \| `nonprofit` \| `local-business` \| `enterprise` \| `custom` |
-| `--company-stage <stage>` | String | `idea` \| `bootstrapped` \| `seed` \| `series-a` \| `growth` \| `enterprise` \| `established` |
-| `--revenue-band <band>` | String | `pre-revenue` \| `<100k` \| `100k-1m` \| `1m-10m` \| `10m-100m` \| `100m+` |
-| `--mission <text>` | String | Mission statement |
-| `--vision <text>` | String | Vision statement |
-| `--competitors <list>` | String | Comma-separated competitors |
-| `--objections <list>` | String | Comma-separated customer objections |
-| `--launch-goal <text>` | String | Single measurable launch-success metric |
-| `--boundaries <list>` | String | Comma-separated explicit out-of-scope items |
-| `--domain <domain>` | String | Primary production domain |
-| `--dns-provider <name>` | String | `cloudflare` \| `route53` \| `namecheap` \| `godaddy` \| `vercel` \| `other` |
-| `--git-host <host>` | String | `github` \| `gitlab` \| `bitbucket` \| `self-hosted` \| `none` |
-| `--payments <list>` | String | Comma-separated payment rails |
-| `--integrations <list>` | String | Comma-separated third-party services in use |
-| `--brand-assets <path>` | String | Brand asset drive/folder location |
-| `--figma <url>` | String | Figma or design file URL |
-| `--sla-tier <tier>` | String | `standard` \| `priority` \| `enterprise` \| `none` |
-| `--engagement <type>` | String | `fixed-scope` \| `retainer` \| `time-materials` \| `productized-sku` \| `internal` \| `oss` |
-| `--comms-channel <channel>` | String | `slack` \| `email` \| `telegram` \| `whatsapp` \| `weekly-call` \| `other` |
-| `--comms-cadence <cadence>` | String | `daily` \| `weekly` \| `biweekly` \| `monthly` \| `milestone` |
-| `--kickoff-date <date>` | String | Engagement kickoff date (`YYYY-MM-DD`) |
-| `--deadline <date>` | String | Hard delivery deadline (`YYYY-MM-DD`) |
-| `--budget <text>` | String | Budget band or commercial ceiling |
-| `--access-items <list>` | String | Comma-separated access items required from the client |
-| `-i, --intent <intent>` | String | `brochure` \| `content` \| `ecommerce` \| `app` \| `mobile` \| `governance` |
-| `--preset <preset>` | String | `powerhouse` \| `astro-commerce` \| `publisher` \| `edge` \| `visual` \| `astro-visual` \| `plain-astro` \| `git-cms` \| `instatic` \| `pure-html` \| `mobile` \| `astro-mobile` \| `atomic-payload` |
-| `-t, --type <framework>` | String | `nextjs` \| `astro` \| `instatic` \| `wordpress` \| `expo` \| `custom` \| `none` |
-| `-s, --styling <styling>` | String | `hybrid` (UnoCSS Wind 4 + BEM) \| `unocss` \| `bem` \| `tailwind` \| `custom` \| `none` |
-| `-a, --animation <anim>` | String | `css` (Hardware presets) \| `motion` \| `gsap` \| `webgl` \| `custom` \| `none` |
-| `--state <engine>` | String | `nanostores` (Sub-1KB cross-island store) \| `custom` \| `none` |
-| `-m, --mobile <target>` | String | `capacitor` (Ionic Capacitor iOS/APK wrapper) \| `expo` (React Native) \| `custom` \| `none` |
-| `-c, --cms <cms>` | String | `ariabuilder` \| `atomic-payload` \| `studiocms` \| `tina` \| `keystatic` \| `emdash` \| `payload` \| `wollycms` \| `decap` \| `keystone` \| `sanity` \| `strapi` \| `custom` \| `none` |
-| `--puck` | Boolean | Enable Puck Visual Builder (for Payload CMS) |
-| `-e, --ecommerce <ecom>` | String | `payload` \| `medusa` \| `vendure` \| `fastrr` \| `razorpay` \| `stripe` \| `custom` \| `none` |
-| `--db <db>` | String | `neon` \| `supabase` \| `postgres` \| `sqlite` \| `custom` \| `none` |
-| `--auth <auth>` | String | `better-auth` \| `supabase` \| `authjs` \| `custom` \| `none` |
-| `--deploy <deploy>` | String | `cloudflare` \| `docker` \| `vercel` \| `custom` \| `none` |
-| `--github` / `--no-github` | Boolean | Explicitly include or omit GitHub-specific files; interactive setup asks when unknown |
-| `--skip-install` | Boolean | Skip running bun install |
-| `--dry-run` | Boolean | Simulate without writing files |
-| `--non-interactive` | Boolean | Run without interactive prompts |
-| `-f, --force` | Boolean | Overwrite existing files |
-
----
-
-## Official Stack Setup References (Post-Scaffold Agent Procedures)
-
-When the intake brief or a stack change requires provisioning a companion manually, follow these official procedures. Always use `@latest` resolution (`bun add <pkg>` / `npm i <pkg>`), never pinned versions.
-
-### Payload CMS 3.0
-Official docs: **Astro** → https://docs.astro.build/en/guides/cms/payload/ · **All other frameworks** → https://payloadcms.com/docs/getting-started/installation
-1. Next.js App Router: install `payload`, `@payloadcms/next`, `@payloadcms/db-sqlite` (or `@payloadcms/db-postgres`), `@payloadcms/richtext-lexical`, `@payloadcms/translations`, `sharp`.
-2. Copy the `(payload)` route group into `src/app/(payload)/` from `node_modules/@payloadcms/templates` (or generate `payload.config.ts` with collections, Lexical editor, `secret: process.env.PAYLOAD_SECRET`, and the chosen `db` adapter).
-3. Wire `next.config.mjs` with `withPayload` and add `"@payload-config": ["./src/payload.config.ts"]` to `tsconfig.json` paths.
-4. Add `PAYLOAD_SECRET` to `.env`, then `npm run dev` and open `/admin` to create the first user.
-
-### Payload E-Commerce Module
-Follow the official overview: https://payloadcms.com/docs/ecommerce/overview
-
-### Aria Builder (isolated official scaffold — Astro + UnoCSS + CMS + SQLite included)
-1. `git clone https://github.com/ariabuilder/aria.git`
-2. `cd aria && npm install`
-3. `npm run dev`
-4. Open `http://localhost:4321/admin`. On first visit, complete setup at `http://localhost:4321/admin/setup` to create the first administrator.
-5. The engine additionally ensures the UnoCSS **Wind 4 preset** in `./uno.user.config.ts` (upstream ships Wind3). Nothing else is added or overlaid — no framework re-scaffold, no companion wiring, no token injection. Request extra features after scaffolding and they will be layered on explicitly.
-
-### Atomic Payload (isolated official scaffold — Payload + Next.js + Tailwind website builder)
-1. `npx @pro-laico/create-atomic-payload my-site` (or `.` for the current directory; `--template atomic-payload` skips the prompt; minimal examples `fonts-only` / `icons-only` / `images-only` / `styles-only`). Project names must be lowercase/hyphens; the CLI exits 1 on an existing non-empty target.
-2. The CLI copies the official template, installs with pnpm, rebuilds sharp, and copies `.env.example` to `.env`.
-3. Fill `.env`: `MONGODB_URI` (MongoDB Atlas), `BLOB_READ_WRITE_TOKEN` (Vercel Blob), `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL` (plus `FONT_DOWNLOAD_URL` when using the fonts plugin).
-4. `pnpm generate:types && pnpm generate:importmap && pnpm generate:icons` (the icon-usage manifest runs automatically in `prebuild`), then `pnpm dev`.
-5. Open `http://localhost:42100/admin` (dev server port is 42100, NOT 3000): create the first admin user on first visit, then seed via the 'Seed database' dashboard banner; per upstream docs, afterwards pass `enabled: false` to `seedPlugin()` in `src/plugins/index.ts` to drop the seed endpoint. Not an e-commerce engine — commerce is added later via the Payload E-Commerce plugin (payloadcms.com/docs/ecommerce/overview).
-6. Engine path note: the engine extracts the official published template untouched — no overlays, no companion wiring, no token injection. Full docs at atomicpayload.com (upstream is not affiliated with Payload CMS).
-
-### WollyCMS (self-hosted headless CMS for Astro)
-1. New WollyCMS project: `npx create-wolly@latest my-site && cd my-site && npm run migrate && npm run seed && npm run dev` (requires Node.js 22 LTS; API + admin at `http://localhost:4321`, default login `admin@wollycms.local` / `admin123`). Templates: `blog`, `marketing`, `wordpress`, `drupal`, `college` via `--template=<name>`.
-2. In the scaffolded Astro project the engine wires the official integration: `npm install @wollycms/astro` + `wollycms({ endpoint: 'http://localhost:4321' })` in `astro.config.mjs`.
-3. Docker/self-host: `ghcr.io/wollycms/wollycms:latest` with `JWT_SECRET` set and `/app/data` persisted. Full docs at `https://docs.wollycms.com/` — always refer to the latest upstream docs before changing this flow.
-
-### Emdash CMS (Astro edge CMS)
-1. Create a new project: `npm create emdash@latest`, then follow the prompts to name the project and set your preferences.
-2. Move in and start the dev server: `cd my-emdash-site && npm install && npm run dev`, then open http://localhost:4321.
-3. Complete the Setup Wizard: visit http://localhost:4321/_emdash/admin — you are redirected to the wizard. Enter **Site Title**, **Tagline**, and **Admin Email**, then click **Create Site** to register your passkey (Touch ID, Face ID, Windows Hello, or a security key). Once registered you are logged in and redirected to the admin dashboard.
-4. Content lives as `_emdash` live collections; edit via `/admin`, consume via `getLiveCollection`/`getLiveEntry`.
-5. For production on Cloudflare Workers, provision D1/R2 bindings (this is what the engine's `preset=edge` path generates with `wrangler.jsonc` and `src/worker.ts`; the engine also wires `adminRoute: '/_emdash/admin'` to match the official wizard URL).
-
-### Tina CMS
-- **Interactive TinaCMS starter site locally**: `npx create-tina-app@latest`
-- **Scaffold the Astro starter directly**: `npx create-tina-app@latest --template tina-astro-starter`
-
-### Keystatic CMS
-- Starting a new Astro + Keystatic project from scratch: `npm create @keystatic@latest` (generates a ready-to-run project in seconds). In an existing scaffold, the engine wires `keystatic.config.ts` plus `/keystatic` admin pages and `/api/keystatic` handlers.
-
-### Decap CMS (Astro)
-Two options for adding Decap to Astro:
-1. Install Decap via a package manager: `npm install decap-cms-app`, then import the package into a `<script>` tag in your page `<body>` (e.g. `/admin`).
-2. Or include the CDN bundle directly in the `/admin` page body: `<script src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>`
-
-### Keystone CMS
-Follow the official walkthrough: https://keystonejs.com/docs/walkthroughs/lesson-1
-
-### Sanity CMS
-- **Astro**: official integration at https://www.sanity.io/plugins/sanity-astro — install with `npx astro add @sanity/astro @astrojs/react` (note: `@astrojs/react` is only needed if you plan to embed a Sanity Studio in the project). Manual dependency install: `npm install @astrojs/react @sanity/astro @sanity/client sanity @types/react-dom @types/react-is @types/react react-dom react-is react styled-components`. Starter template: https://www.sanity.io/templates/astro-sanity-clean
-- **Next.js**: follow the Studio quickstart at https://www.sanity.io/docs/next-js-quickstart/setting-up-your-studio
-
-### Strapi CMS
-- **Astro**: https://docs.astro.build/en/guides/cms/strapi/
-- **Other frameworks**: `npx create-strapi-app@latest`
-
-### Custom CMS
-Bring your own: wire the CMS strictly per its official documentation, keep credentials in `.env` (never committed), and record the integration as an ADR in `.agents/context/decisions.md`.
-
-### Puck Visual Editor
-1. Install `@puckeditor/core` (the official package — renamed from `@measured/puck`): `npm i @puckeditor/core --save`.
-2. Or generate a Puck application using a recipe: `npx create-puck-app my-app`.
-3. Full getting-started detail (rendering the editor): https://puckeditor.com/docs/getting-started#render-the-editor — render pages with `<Puck>` (edit route) / `<Render>` (public route).
-
-### Medusa JS (Sovereign Commerce Backend)
-1. **Prerequisites**: Node.js v20.19.0+ or v22.12.0+ (LTS versions only; use Node v24 LTS or lower if installing the Next.js Starter Storefront), the Git CLI, and PostgreSQL installed and running.
-2. Create the application: `npx create-medusa-app@latest my-medusa-store` (tip: yarn/pnpm install faster than npm — `yarn dlx create-medusa-app@latest my-medusa-store` or add `--use-yarn`). The PostgreSQL database created is named `medusa-my-medusa-store`; you are asked whether to install the Next.js Starter Storefront.
-3. The command installs a monorepo: backend + admin dashboard in `apps/backend`, and (if chosen) the storefront in `apps/storefront`.
-4. On success the Medusa app runs at http://localhost:9000 and the Admin dashboard at http://localhost:9000/app (the installer opens it to create the first user). The Next.js Starter Storefront runs at http://localhost:8000.
-5. Engine path: when provisioned by the engine, `./backend/` ships `medusa-config.ts`, `docker-compose.yml` (PostgreSQL 16 + Redis 7), and the frontend SDK in `src/lib/medusa.ts` — always defer to the official `create-medusa-app` flow above for a fresh backend.
-
-### Vendure
-1. `npx @vendure/create my-shop` (replace `my-shop` with your project name), then choose the **Quick Start** option — the fastest path, handling all configuration.
-2. With Docker Desktop installed it creates and configures a Postgres database; otherwise it uses SQLite.
-3. Official docs: https://docs.vendure.io/current/core/getting-started/installation
-
-### Neon Serverless Postgres
-- **Next.js**: https://neon.com/docs/guides/nextjs
-- **Astro**: https://neon.com/docs/guides/astro
-- **Medusa**: https://neon.com/docs/guides/medusajs
-
-### Supabase
-- **Next.js**: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
-- **Astro**: https://supabase.com/docs/guides/getting-started/quickstarts/astrojs
-- **Expo React Native**: https://supabase.com/docs/guides/getting-started/quickstarts/expo-react-native
-
-### Instatic (zero-runtime SSG)
-1. `npx create-instatic@latest` (or wire `instatic` into an existing Astro/HTML project) to generate `instatic.json`, content collections, and layout templates.
-2. Author Markdown/MDX under the configured content directory; the compiler emits fully static pages at build time with zero client runtime.
-
----
+See [references/STACK-SETUP.md](references/STACK-SETUP.md) for the official CMS, commerce, and framework setup procedures.
 
 ## Pitfalls
 

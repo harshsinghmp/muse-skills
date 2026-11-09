@@ -1,7 +1,7 @@
 # realtime-bus — Distributed WebSockets & Server-Sent Events Engine
 
 > **Council Lead**: **Sol** (Product Architect & Full-Stack Automator)  
-> **Tooling**: `bun webdev/scripts/realtime-bus.ts`  
+> **Tooling**: `bun skills/agency-delivery/webdev/scripts/realtime-bus.ts`  
 > **Mode Command**: `/webdev realtime-bus`  
 > **Standards**: Cloudflare Durable Objects / Redis Pub/Sub, Monotonic Sequence IDs, 45s Heartbeat Pruning, Sub-50ms Fanout SLA
 
@@ -47,13 +47,13 @@ flowchart TD
 
 ```bash
 # Run standard fanout benchmark (500 subscribers, 10 rooms)
-bun webdev/scripts/realtime-bus.ts
+bun skills/agency-delivery/webdev/scripts/realtime-bus.ts
 
 # Scale simulation to 2,000 concurrent subscribers across 20 rooms
-bun webdev/scripts/realtime-bus.ts --simulate-subscribers 2000 --rooms 20
+bun skills/agency-delivery/webdev/scripts/realtime-bus.ts --simulate-subscribers 2000 --rooms 20
 
 # Output structured JSON report for observability pipelines
-bun webdev/scripts/realtime-bus.ts --simulate-subscribers 1000 --json
+bun skills/agency-delivery/webdev/scripts/realtime-bus.ts --simulate-subscribers 1000 --json
 ```
 
 ---

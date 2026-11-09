@@ -67,7 +67,7 @@ Each command integrates with sibling muse-skills:
 | `decide` | — | `secretary` (high-stakes) | `updatedocs` |
 | `commit` | — | — | `updatedocs` |
 | `audit` | `context-anchor` | `dead-letter` | `updatedocs` · `coupling-router` |
-| `brief` | `context-anchor` | `handoff` | — |
+| `brief` | `context-anchor` | `relay` | — |
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: updateagents
 aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
-description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes."
+description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes. Use when asked to sync agent instructions, audit AI-readiness, or clean harness artifacts."
 argument-hint: "[sync|audit|sanitize|scaffold|promote|docs-backlog|hygiene]"
 user-invocable: true
 version: 2.7.0
@@ -76,6 +76,16 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **`docs-backlog`** | "consume docs ledger", "catch agents up on documented changes", "forgotten session context" | Fold documented points since `agentWatermark` into `.agents/context/current.md`; stop at the first point still owing agent docs | [references/docs-backlog.md](references/docs-backlog.md) |
 | **`hygiene`** | "clean project root", "keep agent folders out of git", "consolidate harness folders", "don't upload agent state" | Detect root harness/IDE/CLI artifacts, skip the active harness, consolidate the rest into `.agents/`, install local-only excludes, and gate public pushes | [references/harness-hygiene.md](references/harness-hygiene.md) |
 | **`audit`** | "repo AI-readiness audit", "audit the 14 assets", "grade agent context" | Grade the 14 tracked assets on the 4-tier matrix with evidence paths; emit the remediation plan. Read-only — an audit never writes. | [references/audit.md](references/audit.md) |
+| **advanced-audit-passes** | "advanced-audit-passes" | 🔬 Deep-Audit Passes | [references/advanced-audit-passes.md](references/advanced-audit-passes.md) |
+| **discovery-commands** | "discovery-commands" | Discovery Commands Reference | [references/discovery-commands.md](references/discovery-commands.md) |
+| **fast-skip-protocol** | "fast-skip-protocol" | ⚡ Stage-0 Fast-Skip Protocol | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
+| **global-atoms** | "global-atoms" | The ≤20 Global Invariant Atom Table & Task Observation Loop | [references/global-atoms.md](references/global-atoms.md) |
+| **harness-hygiene** | "harness-hygiene" | Clean Root, Local-Only Agent State | [references/harness-hygiene.md](references/harness-hygiene.md) |
+| **legacy-promotion** | "legacy-promotion" | 🛡️ Legacy-Write Promotion Policy & Interception Specification | [references/legacy-promotion.md](references/legacy-promotion.md) |
+| **memory-file-priorities** | "memory-file-priorities" | Agent Instruction Source & Migration Policy | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
+| **pr-review-mining** | "pr-review-mining" | 🔍 PR Review Mining Protocol | [references/pr-review-mining.md](references/pr-review-mining.md) |
+| **skill-authoring** | "skill-authoring" | TDD for Agent Instructions | [references/skill-authoring.md](references/skill-authoring.md) |
+| **twelve-asset-matrix** | "twelve-asset-matrix" | 📋 The 14-Asset AI-Readiness Matrix | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
 
 ---
 
@@ -88,6 +98,9 @@ Loadable by topic; also routable as `/updateagents-<file>` commands (not separat
 - [skill-authoring.md](references/skill-authoring.md)
 - [global-atoms.md](references/global-atoms.md)
 - [advanced-audit-passes.md](references/advanced-audit-passes.md)
+### Anti-Triggers
+Not for generating a new project scaffold (new-project) or authoring or restructuring feature documentation (updatedocs).
+
 ## Quick Reference
 
 ### Core Principle
@@ -160,7 +173,7 @@ Identify the project's source of truth before documenting behavior:
 Execute the synchronization workflow via the automation CLI:
 
 ```bash
-bun path/to/updateagents/scripts/updateagents.ts [options]
+bun skills/core-engine/updateagents/scripts/updateagents.ts [options]
 ```
 
 Instruction-adaptation safety options:

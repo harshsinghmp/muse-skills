@@ -35,10 +35,12 @@ QA the release candidate and give me a Block-or-Ship verdict.
 | **chaos** | chaos test / fault injection / resilience testing | Chaos: Synthetic fault injection testing (latency jitter, 502/504 drop simulation, database pool throttling, and zero data loss audit). |
 | **audit** | audit the quality gate / launch audit | Audit: functional + regression + UAT sign-off, then a launch-gate audit (rollback plan, perf budget, docs). |
 
+**Local models**: `scripts/eval-provider.ts` runs the evals judges against Ollama or vLLM through the OpenAI-compatible API, with deterministic seeds and token telemetry — no cloud credential or external network required.
+
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — ten mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

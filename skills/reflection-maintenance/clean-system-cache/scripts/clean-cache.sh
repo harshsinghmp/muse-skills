@@ -65,6 +65,7 @@ BROWSE_DEPTH=1
 INTERACTIVE=false
 ONLY_SELECTION=""
 ASSUME_YES=false
+CONFIRM_IRREVERSIBLE=false
 INCLUDE_SYSTEM=false
 DISCOVER_ONLY=false
 CLEAN_SAFE=false
@@ -102,7 +103,8 @@ Options:
   --interactive, -i         Numbered menu of items that need a decision (grouped by scope).
   --only <key,..>           Delete exactly these items (catalog ids or discovered keys).
   --include-system          Permit sudo-backed candidates (pacman/apt/dnf/journal) in this run.
-  --yes, -y                 Skip the interactive confirmation prompt (still prints the plan).
+  --yes, -y                 Consent to ASK selections and skip their prompt (still prints the plan).
+  --confirm-irreversible    Required for ASK! selections in non-interactive shells; --yes alone is not enough.
   --projects <dirs>         Colon-separated project roots to scan (persisted to config).
   --dormant <days>          Only treat project caches untouched this long as dormant (default 14).
   --min-size <mb>           Hide discovered items smaller than this (default 1 MB).
@@ -215,6 +217,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --yes|-y)
             ASSUME_YES=true
+            shift
+            ;;
+        --confirm-irreversible)
+            CONFIRM_IRREVERSIBLE=true
             shift
             ;;
         --scan-node-modules)
@@ -833,7 +839,10 @@ browse_path_body() {
     children=$(find "$p" -mindepth 1 -maxdepth 1 2>/dev/null | wc -l | tr -d ' ')
     printf ' Files  : %s across %s top-level entries\n' "$files" "$children"
     echo " Contents (largest first):"
-    tmpf=$(mktemp 2>/dev/null) || tmpf="/tmp/.cc-browse.$$"
+    tmpf=$(mktemp 2>/dev/null) || {
+        echo "[clean-cache] mktemp failed; refusing to use a predictable temp path" >&2
+        return 1
+    }
     : > "$tmpf" 2>/dev/null || true
     if [ "$depth" -le 1 ]; then
         find "$p" -mindepth 1 -maxdepth 1 2>/dev/null | while IFS= read -r entry; do
@@ -878,7 +887,15 @@ run_cand_method() {
             ;;
         cmd)
             [ -z "${CAND_CMD[$i]}" ] && return 0
-            bash -c "${CAND_CMD[$i]}" >/dev/null 2>&1 || return 1
+            # Catalog commands are static, but never allow dynamic substitution
+            # or newline injection through the string.
+            case "${CAND_CMD[$i]}" in
+                *$'\n'*|*$'\r'*|*'`'*|*'$('*|*'${'*)
+                    echo "[clean-cache] refusing unsafe catalog command for ${CAND_KEY[$i]}" >&2
+                    return 1
+                    ;;
+            esac
+            bash -c "${CAND_CMD[$i]}" </dev/null >/dev/null 2>&1 || return 1
             ;;
         tmp-old)
             find /tmp -mindepth 1 -maxdepth 1 -mtime +7 ! -name 'systemd-private*' \
@@ -1237,7 +1254,10 @@ discover_projects() {
 
 disc_sort() {
     local tmp i sz
-    tmp=$(mktemp 2>/dev/null) || tmp="/tmp/.cc-disc.$$"
+    tmp=$(mktemp 2>/dev/null) || {
+        echo "[clean-cache] mktemp failed; refusing to use a predictable temp path" >&2
+        return 1
+    }
     : > "$tmp" 2>/dev/null || true
     for i in "${!D_KEY[@]}"; do
         printf '%s\t%s\n' "${D_SIZE[$i]}" "$i" >> "$tmp"
@@ -1566,6 +1586,17 @@ selection_needs_confirmation() {
     return 1
 }
 
+# ASK! is irreversible data loss. --yes is consent for ASK, not for ASK!:
+# an irreversible selection additionally needs --confirm-irreversible or a
+# typed "yes" in a real terminal.
+selection_has_irreversible() {
+    local a
+    for a in "$@"; do
+        [ "${ACT_TIER[$a]}" = "ASK!" ] && return 0
+    done
+    return 1
+}
+
 resolve_selection() {
     local input="$1" quiet="${2:-}" part a b k idx
     SEL_RESULT=()
@@ -1623,9 +1654,26 @@ execute_selection() {
     if selection_needs_confirmation "$@"; then
         if [ "$DRY_RUN" = true ]; then
             echo " Dry run: nothing will be deleted."
+        elif selection_has_irreversible "$@"; then
+            if [ "$CONFIRM_IRREVERSIBLE" = true ]; then
+                echo " Irreversible selection explicitly confirmed with --confirm-irreversible."
+            elif [ ! -t 0 ]; then
+                echo " Refusing: this selection contains irreversible ASK! candidates." >&2
+                echo " --yes is not enough here. Re-run with --confirm-irreversible after the user" >&2
+                echo " has approved the exact paths and warning above." >&2
+                return 1
+            else
+                local answer
+                printf ' Type "yes" to permanently delete the irreversible selections: '
+                read -r answer || true
+                if [ "$answer" != "yes" ]; then
+                    echo " Aborted — nothing was deleted."
+                    return 1
+                fi
+            fi
         elif [ "$ASSUME_YES" != true ]; then
             if [ ! -t 0 ]; then
-                echo " Refusing: this selection contains ASK/ASK! candidates." >&2
+                echo " Refusing: this selection contains ASK candidates." >&2
                 echo " Re-run with --yes after the user has approved the plan above." >&2
                 return 1
             fi

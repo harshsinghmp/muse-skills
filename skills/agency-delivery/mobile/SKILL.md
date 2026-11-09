@@ -1,7 +1,7 @@
 ---
 name: mobile
 aliases: ["mobile-apps", "app-development", "ios-development", "android-development", "react-native", "expo", "flutter"]
-description: "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), Universal Expo SDK 52, progressive web apps, and app store optimization — routed through seven modes. Use when asked to build, refactor, or ship mobile apps, build universal Expo apps with New Architecture and NativeWind, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs)."
+description: "Full mobile app department: iOS (SwiftUI), Android (Compose), cross-platform (React Native/Expo, Flutter), Universal Expo, progressive web apps, and app store optimization — routed through seven modes. Use when asked to build, refactor, or ship mobile apps, build universal Expo apps with New Architecture and NativeWind, convert web apps to native/PWA, implement native features (camera, push, offline), or improve app store visibility. Not for websites (webdev) or UI motion (animate mobile refs)."
 argument-hint: "[ios|android|cross|pwa|aso|expo|audit]"
 user-invocable: true
 version: 1.1.0
@@ -22,7 +22,7 @@ metadata:
   openclaw:
     category: agency-delivery
     suggested_skills: ["new-project", "webdev", "design", "code-review"]
-    primary_triggers: ["mobile app", "ios app", "android app", "react native", "expo app", "expo sdk 52", "nativewind", "flutter app", "pwa", "app store optimization", "push notifications", "offline app"]
+    primary_triggers: ["mobile app", "ios app", "android app", "react native", "expo app", "expo sdk", "nativewind", "flutter app", "pwa", "app store optimization", "push notifications", "offline app"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
 ---
@@ -44,7 +44,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **cross** | "react native", "expo app", "flutter app", "cross-platform mobile" | Expo (React Native) or Flutter cross-platform build | [references/cross.md](references/cross.md) |
 | **pwa** | "pwa", "make it installable", "offline web app" | Installable, offline-capable progressive web app | [references/pwa.md](references/pwa.md) |
 | **aso** | "app store optimization", "aso", "store ranking", "more app installs" | App Store Optimization: keywords, listing, ratings loop, review responses | [references/aso.md](references/aso.md) |
-| **expo** | "expo", "expo sdk 52", "expo app", "expo router", "nativewind" | Universal Expo SDK 52 mobile app: file-based routing, New Architecture, NativeWind v4, deep links | [references/expo.md](references/expo.md) |
+| **expo** | "expo", "expo sdk", "expo app", "expo router", "nativewind" | Universal Expo mobile app: file-based routing, New Architecture, NativeWind v4, deep links | [references/expo.md](references/expo.md) |
 | **audit** | "audit the app", "store audit", "launch audit", "compliance audit", "accessibility audit" | App Store audit (keywords, listing, ratings, screenshots, compliance check) + mobile a11y audit (labels/roles/hints, touch targets, screen-reader flow) | [references/audit.md](references/audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.

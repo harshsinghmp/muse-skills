@@ -1,6 +1,6 @@
 # accounts
 
-Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance — routed through eight modes.
+Agency and client financial operations engine: milestone invoicing, value-based pricing models, recurring retainer billing, Chart of Accounts bookkeeping, client profitability and P&L modeling, cash flow runway forecasting, automated dunning escalation ladders, and cross-border digital tax compliance — routed through nine modes.
 
 ## Modes
 
@@ -21,12 +21,14 @@ Agency and client financial operations engine: milestone invoicing, value-based 
 
 ```bash
 # Run multi-gateway transaction reconciliation
-bun accounts/scripts/reconcile-gateways.ts
+bun skills/agency-delivery/accounts/scripts/reconcile-gateways.ts
 ```
 
 ## Installation & Usage
 
 ```bash
-# Run with npx skills
-npx skills run harshsinghmp/muse-skills/accounts -- invoicing "Send milestone 2 invoice to Acme Corp"
+# Install
+npx skills add harshsinghmp/muse-skills --skill accounts
+
+# Then ask: invoicing "Send milestone 2 invoice to Acme Corp"
 ```

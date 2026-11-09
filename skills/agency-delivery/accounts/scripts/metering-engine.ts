@@ -10,7 +10,8 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { parseArgs } from "node:util";
 
 process.on("unhandledRejection", (reason) => {
@@ -27,6 +28,7 @@ export interface RawUsageEvent {
   timestamp: number; // Unix ms
   metricName: string; // e.g. "api_requests", "compute_seconds", "ai_tokens"
   quantity: number;
+  eventId?: string; // Producer-assigned idempotency key (preferred)
   sequenceId?: string | number;
   metadata?: Record<string, unknown>;
 }
@@ -81,6 +83,8 @@ export interface InvoicingSummary {
   periodEnd: string;
   subtotalDollars: number;
   taxDollars: number;
+  rawTotalDollars: number;
+  clampedDollars: number;
   totalDollars: number;
   taxJurisdiction: string;
   spendLimitDollars: number;
@@ -132,9 +136,28 @@ export interface FullBillingReport {
 
 export class MeteringBillingEngine {
   private seenEventIds = new Set<string>();
+  private readonly statePath?: string;
+
+  constructor(options: { statePath?: string } = {}) {
+    this.statePath = options.statePath;
+    if (!this.statePath || !existsSync(this.statePath)) return;
+    try {
+      const raw = JSON.parse(readFileSync(this.statePath, "utf8"));
+      if (Array.isArray(raw)) {
+        for (const id of raw) {
+          if (typeof id === "string") this.seenEventIds.add(id);
+        }
+      }
+    } catch {
+      console.warn(
+        `⚠️ Metering dedupe state at ${this.statePath} is unreadable; starting a fresh set instead of trusting corrupt state.`,
+      );
+    }
+  }
 
   /**
-   * Generates deterministic SHA-256 fingerprint for event idempotency (BIL-001)
+   * Generates deterministic SHA-256 fingerprint for event idempotency (BIL-001).
+   * Used only as a fallback when the producer supplies no eventId/sequenceId.
    */
   generateEventFingerprint(event: RawUsageEvent): string {
     const raw = `${event.tenantId}:${event.timestamp}:${event.metricName}:${event.quantity}:${event.sequenceId ?? "0"}`;
@@ -142,14 +165,36 @@ export class MeteringBillingEngine {
   }
 
   /**
-   * BIL-001: Ingests raw telemetry events, deduplicating via SHA-256
+   * Resolves the idempotency key. Producer-assigned IDs win so two legitimate
+   * events with identical content are never collapsed into one.
+   */
+  resolveEventId(event: RawUsageEvent): string {
+    const producerId =
+      event.eventId?.trim() ||
+      (event.sequenceId !== undefined && event.sequenceId !== null
+        ? `${event.tenantId}:${event.metricName}:${event.sequenceId}`
+        : "");
+    if (producerId) {
+      return createHash("sha256").update(`producer:${producerId}`).digest("hex");
+    }
+    return this.generateEventFingerprint(event);
+  }
+
+  private persistState(): void {
+    if (!this.statePath) return;
+    mkdirSync(dirname(this.statePath), { recursive: true });
+    writeFileSync(this.statePath, JSON.stringify([...this.seenEventIds], null, 2), { encoding: "utf8", mode: 0o600 });
+  }
+
+  /**
+   * BIL-001: Ingests raw telemetry events, deduplicating via producer event IDs.
    */
   ingestEvents(events: RawUsageEvent[]): { ingested: IngestedEvent[]; duplicatesCount: number } {
     const ingested: IngestedEvent[] = [];
     let duplicatesCount = 0;
 
     for (const event of events) {
-      const eventId = this.generateEventFingerprint(event);
+      const eventId = this.resolveEventId(event);
       if (this.seenEventIds.has(eventId)) {
         duplicatesCount++;
         ingested.push({
@@ -169,6 +214,7 @@ export class MeteringBillingEngine {
       }
     }
 
+    this.persistState();
     return { ingested, duplicatesCount };
   }
 
@@ -176,8 +222,10 @@ export class MeteringBillingEngine {
    * BIL-002: Calculates graduated tiered pricing across consumption metrics
    */
   calculateMetricCost(metricName: string, quantity: number, tiers: PricingTier[]): MetricLineItem {
+    const MICROS_PER_DOLLAR = 1_000_000;
+    const MICROS_PER_CENT = 10_000;
     let remaining = quantity;
-    let subtotalDollars = 0;
+    let subtotalMicros = 0;
     let prevTierCap = 0;
     const breakdown: TierCalculation[] = [];
 
@@ -187,14 +235,15 @@ export class MeteringBillingEngine {
       const tierCapacity = tier.upTo !== null ? tier.upTo - prevTierCap : Number.POSITIVE_INFINITY;
       const unitsInThisTier = Math.min(remaining, tierCapacity);
 
-      const tierCost = Number((unitsInThisTier * tier.unitPriceDollars).toFixed(4));
-      subtotalDollars += tierCost;
+      const unitPriceMicros = Math.round(tier.unitPriceDollars * MICROS_PER_DOLLAR);
+      const tierCostMicros = Math.round(unitsInThisTier * unitPriceMicros);
+      subtotalMicros += tierCostMicros;
 
       breakdown.push({
         tierIndex: i + 1,
         unitsInTier: unitsInThisTier,
         unitPriceDollars: tier.unitPriceDollars,
-        tierCostDollars: tierCost,
+        tierCostDollars: Math.round(tierCostMicros / MICROS_PER_CENT) / 100,
       });
 
       remaining -= unitsInThisTier;
@@ -204,7 +253,7 @@ export class MeteringBillingEngine {
     return {
       metricName,
       totalQuantity: quantity,
-      subtotalDollars: Number(subtotalDollars.toFixed(2)),
+      subtotalDollars: Math.round(subtotalMicros / MICROS_PER_CENT) / 100,
       breakdown,
     };
   }
@@ -218,23 +267,31 @@ export class MeteringBillingEngine {
     invoicePeriod = { start: "2026-10-01", end: "2026-10-31" },
   ): InvoicingSummary {
     const lineItems: MetricLineItem[] = [];
-    let subtotalDollars = 0;
+    let subtotalCents = 0;
 
     for (const metricConfig of config.metrics) {
       const qty = metricQuantities[metricConfig.metricName] || 0;
       const lineItem = this.calculateMetricCost(metricConfig.metricName, qty, metricConfig.tiers);
-      subtotalDollars += lineItem.subtotalDollars;
+      subtotalCents += Math.round(lineItem.subtotalDollars * 100);
       lineItems.push(lineItem);
     }
 
-    subtotalDollars = Number(subtotalDollars.toFixed(2));
-    const taxDollars = Number(((subtotalDollars * config.taxRatePercent) / 100).toFixed(2));
-    const totalDollars = Number((subtotalDollars + taxDollars).toFixed(2));
+    const taxCents = Math.round((subtotalCents * config.taxRatePercent) / 100);
+    const rawTotalCents = subtotalCents + taxCents;
+    const limitCents = Math.round(config.spendLimitDollars * 100);
+    const totalCents = Math.min(rawTotalCents, limitCents);
+    const clampedCents = rawTotalCents - totalCents;
 
-    const utilization = Number(((totalDollars / config.spendLimitDollars) * 100).toFixed(1));
+    const subtotalDollars = subtotalCents / 100;
+    const taxDollars = taxCents / 100;
+    const rawTotalDollars = rawTotalCents / 100;
+    const totalDollars = totalCents / 100;
+    const clampedDollars = clampedCents / 100;
+
+    const utilization = limitCents > 0 ? Number(((totalCents / limitCents) * 100).toFixed(1)) : 0;
     let status: "NORMAL" | "WARNING_80_PERCENT" | "HARD_CAP_TRIGGERED" = "NORMAL";
 
-    if (utilization >= 100) {
+    if (rawTotalCents >= limitCents) {
       status = "HARD_CAP_TRIGGERED";
     } else if (utilization >= 80) {
       status = "WARNING_80_PERCENT";
@@ -257,6 +314,8 @@ export class MeteringBillingEngine {
       periodEnd: invoicePeriod.end,
       subtotalDollars,
       taxDollars,
+      rawTotalDollars,
+      clampedDollars,
       totalDollars,
       taxJurisdiction: config.taxJurisdiction,
       spendLimitDollars: config.spendLimitDollars,
@@ -266,9 +325,9 @@ export class MeteringBillingEngine {
       stripePayload: {
         customer: `cus_${config.tenantId}`,
         currency: config.currency.toLowerCase(),
-        subtotal: Math.round(subtotalDollars * 100),
-        tax: Math.round(taxDollars * 100),
-        total: Math.round(totalDollars * 100),
+        subtotal: subtotalCents,
+        tax: taxCents,
+        total: totalCents,
         idempotencyKey: invoiceId,
         lines: stripeLines,
       },
@@ -372,6 +431,11 @@ export class MeteringBillingEngine {
       `- **Spend Limit Ceiling**: $${config.spendLimitDollars.toLocaleString()}`,
       `- **Current Period Spend**: $${invoicing.totalDollars.toLocaleString()} (${invoicing.limitUtilizationPercent}% utilized)`,
       `- **Circuit Breaker Status**: \`${invoicing.circuitBreakerStatus}\``,
+      ...(invoicing.clampedDollars > 0
+        ? [
+            `- **Clamped Amount**: $${invoicing.clampedDollars.toLocaleString()} (raw usage total $${invoicing.rawTotalDollars.toLocaleString()} exceeded the spend ceiling)`,
+          ]
+        : []),
       "",
       "## 🧾 Stripe & Tax Invoice Synchronization (BIL-003)",
       `- **Invoice ID**: \`${invoicing.invoiceId}\``,
@@ -413,6 +477,7 @@ export function runCli() {
     args: process.argv.slice(2),
     options: {
       events: { type: "string" },
+      state: { type: "string" },
       tenant: { type: "string", default: "client-acme-corp" },
       "days-past-due": { type: "string", default: "0" },
       json: { type: "boolean", default: false },
@@ -431,6 +496,7 @@ Usage:
 
 Options:
   --events <path>         JSON file containing usage events array
+  --state <path>          Persist producer event IDs across runs (prevents re-billing after restart)
   --tenant <id>           Tenant / Client identifier (default: client-acme-corp)
   --days-past-due <days>  Simulate overdue account days for dunning ladder (default: 0)
   --json                  Output structured JSON
@@ -486,7 +552,9 @@ Options:
     ];
   }
 
-  const engine = new MeteringBillingEngine();
+  const engine = new MeteringBillingEngine({
+    statePath: typeof values.state === "string" ? values.state : undefined,
+  });
   const report = engine.generateFullReport(defaultBillingConfig, rawEvents, daysPastDue);
 
   if (values.json) {

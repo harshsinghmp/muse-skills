@@ -15,10 +15,14 @@
  *   bun new-project/scripts/new-project.ts [targetPath] [options]
  */
 
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled Rejection:", reason);
-  process.exit(1);
-});
+const IS_ENTRY_POINT = import.meta.main;
+
+if (IS_ENTRY_POINT) {
+  process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled Rejection:", reason);
+    process.exit(1);
+  });
+}
 
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
@@ -57,7 +61,7 @@ function installAgentExcludes(targetDir: string): boolean {
 
 // CLI Flags Parsing
 const { values, positionals } = parseArgs({
-  args: Bun.argv.slice(2),
+  args: IS_ENTRY_POINT ? Bun.argv.slice(2) : [],
   options: {
     name: { type: "string", short: "n" },
     desc: { type: "string", short: "d" },
@@ -3322,6 +3326,17 @@ async function main() {
       console.log("  ✅ Created: `./.gitignore` (public-safe rules only)");
     } else {
       console.log("  ⏩ Skipped: `./.gitignore` (already exists)");
+    }
+  }
+
+  // 1.2a Initialize git when scaffolding a fresh directory so the agent-state
+  // excludes and pre-commit hook can actually be installed.
+  if (!isDryRun && !existsSync(join(resolvedTarget, ".git"))) {
+    const init = spawnSync("git", ["init", "-q"], { cwd: resolvedTarget, encoding: "utf8" });
+    if (init.status === 0) {
+      console.log("  ✅ Initialized git repository (agent state stays local-only)");
+    } else {
+      console.log("  ⚠️ Could not initialize git; run `git init` then `updateagents --install-excludes`.");
     }
   }
 
@@ -7478,7 +7493,7 @@ input, button, textarea, select {
 | **test** | \`${testCmd}\` | Test suite executes and reports passes/failures |
 | **lint** | \`${lintCmd}\` | Static analysis passes with zero violations |
 | **type-check** | \`${typecheckCmd}\` | TypeScript compilation emits zero errors |
-| **secret-scan** | \`bun run secret-scan\` | Pre-ship secret audit passes with zero leaks |
+| **secret-scan** | \`gitleaks detect --source . --no-banner\` | Zero findings; install gitleaks in CI (no scaffold-local scanner is generated) |
 `;
 
     const habitsContent = `# 🗺️ Terrain Map: Developer Habits & Engineering Conventions — ${name}
@@ -7602,7 +7617,7 @@ input, button, textarea, select {
 | **Full Test Suite** | \`${testCmd}\` | 100% tests pass cleanly |
 | **Lint Violations** | \`${lintCmd}\` | Exit code 0, zero warnings |
 | **Type Check Errors** | \`${typecheckCmd}\` | Clean compilation (\`noEmit\`) |
-| **Secret Leaks** | \`bun run secret-scan\` | Zero credentials detected |
+| **Secret Leaks** | \`gitleaks detect --source . --no-banner\` | Zero credentials detected (install gitleaks in CI) |
 
 ## 2. Common Failure Signatures & Cures
 - **Missing Environment Variable**: Inspect \`.env.example\`, populate \`.env\` locally (never commit \`.env\`).
@@ -7984,7 +7999,9 @@ ${offerItems}
   console.log("=======================================================\n");
 }
 
-main().catch((err) => {
-  console.error("❌ Scaffolding Error:", err);
-  process.exit(1);
-});
+if (IS_ENTRY_POINT) {
+  main().catch((err) => {
+    console.error("❌ Scaffolding Error:", err);
+    process.exit(1);
+  });
+}

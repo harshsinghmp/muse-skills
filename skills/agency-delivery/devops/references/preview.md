@@ -19,7 +19,7 @@ Architecture, workflow, and quality gates for scaffolding ephemeral client revie
    - Isolated `worker.ts` proxying the local target port.
    - Declarative `wrangler.jsonc` configured for local `workerd` / Miniflare execution.
 2. **Ephemeral Token-Gated Review Link**:
-   - Public Cloudflare Quick Tunnel URL (`https://<hash>.trycloudflare.com/?review_token=<token>`).
+   - A one-time signed link exchanges the review token for an `HttpOnly; Secure; SameSite=Lax` cookie scoped to the tunnel host; never carry the token in a long-lived query string (it leaks via Referer, history, and access logs).
    - Rejects unauthenticated traffic with HTTP 401.
 3. **Interactive Client Review Overlay**:
    - Floating review banner with client codename and live countdown timer.
@@ -71,8 +71,8 @@ Architecture, workflow, and quality gates for scaffolding ephemeral client revie
 
 ```bash
 # Scaffold new living deliverable for client ACME pointing to port 3000
-bun devops/scripts/living-deliverable.ts --scaffold "client-acme-v1" --client "ACME" --target-port 3000
+bun skills/agency-delivery/devops/scripts/living-deliverable.ts --scaffold "client-acme-v1" --client "ACME" --target-port 3000
 
 # Check expiration status
-bun devops/scripts/living-deliverable.ts --check-expiry "client-acme-v1"
+bun skills/agency-delivery/devops/scripts/living-deliverable.ts --check-expiry "client-acme-v1"
 ```

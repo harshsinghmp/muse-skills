@@ -23,7 +23,7 @@ The agent decides at runtime. These are prioritized suggestions, not hard-wired 
 | `/evidence decide` | — | `secretary` (high-stakes gate) | `updatedocs` (sync architecture docs) |
 | `/evidence commit` | — | — | `updatedocs` (sync project docs) |
 | `/evidence audit` | `context-anchor` (park workstream) | `dead-letter` (quarantine failures) | `updatedocs` (remediate docs), `coupling-router` (multi-module) |
-| `/evidence brief` | `context-anchor` (park workstream) | `handoff` (dispatch packet) | — |
+| `/evidence brief` | `context-anchor` (park workstream) | `relay` (dispatch packet) | — |
 
 ---
 
@@ -37,7 +37,7 @@ The agent decides at runtime. These are prioritized suggestions, not hard-wired 
 
 ---
 
-### `handoff` → Post-hook for `/evidence brief`
+### `relay` → Post-hook for `/evidence brief`
 
 **Condition**: Only if the user or orchestrator intends to dispatch a subagent to work on the briefed project. The agent offers: *"Want me to generate a handoff packet for a subagent?"*
 

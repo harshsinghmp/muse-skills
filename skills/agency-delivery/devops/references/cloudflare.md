@@ -130,7 +130,7 @@ Use modern Wrangler CLI (v4.x+) for deploying, developing, and managing Workers,
 | **D1 Local Migrate** | `wrangler d1 migrations apply DB --local` | Runs SQL migrations on local dev SQLite database. |
 | **D1 Remote Migrate**| `wrangler d1 migrations apply DB --remote`| Applies SQL migrations to production D1 database. |
 | **Set Secret** | `wrangler secret put <NAME>` | Encrypted variable stored in Cloudflare HSM. |
-| **Pipe Secret** | `echo "$KEY" \| wrangler secret put <NAME>` | Non-interactive secret injection for CI/CD. |
+| **Pipe Secret** | `wrangler secret put <NAME> < secret.txt` | Non-interactive secret injection for CI/CD; disable shell tracing and delete the file afterward. Never use `echo "$KEY" | wrangler secret put`: `set -x`/CI job tracing and process listings can capture it. |
 | **List Secrets** | `wrangler secret list` | Displays encrypted secret names (values hidden). |
 | **Local Dev Secrets**| Edit `.dev.vars` | Key-value file for local runtime (strictly `.gitignore`'d). |
 
@@ -150,7 +150,7 @@ Ephemeral tunnels provision an immediate, publicly accessible HTTPS URL (`https:
 1. **One-Command Ingress via CLI**:
    ```bash
    # Run via repository tunnel script
-   bun devops/scripts/tunnel.ts 3000
+   bun skills/agency-delivery/devops/scripts/tunnel.ts 3000
 
    # Or direct cloudflared binary
    cloudflared tunnel --url http://localhost:3000
@@ -217,8 +217,8 @@ Traditional client handoffs rely on static design links, video walkthroughs, or 
    - Embeds responsive viewport switch buttons: Mobile (390px), Tablet (820px), and Desktop (100%).
    - Ingests structured client feedback via `POST /__deliverable/feedback`.
 4. **CLI Automation**:
-   - Scaffolding: `bun devops/scripts/living-deliverable.ts --scaffold <slug> --client <codename> --target-port 3000`
-   - Expiry check: `bun devops/scripts/living-deliverable.ts --check-expiry <slug>`
+   - Scaffolding: `bun skills/agency-delivery/devops/scripts/living-deliverable.ts --scaffold <slug> --client <codename> --target-port 3000`
+   - Expiry check: `bun skills/agency-delivery/devops/scripts/living-deliverable.ts --check-expiry <slug>`
 
 ## Quality gate
 

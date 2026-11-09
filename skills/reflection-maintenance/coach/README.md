@@ -4,7 +4,7 @@
 [![Type: Agent Skill](https://img.shields.io/badge/Type-Agent%20Skill-blue.svg?style=for-the-badge)](#)
 [![Triggers: /standup | /coach](https://img.shields.io/badge/Triggers-%2Fstandup%20%7C%20%2Fcoach-purple.svg?style=for-the-badge)](#)
 
-Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across three operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md.
+Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. Resolves the top 50 agency pain points across five operating modes: internal team optimization (git-grounded standups, TDD seam gates, 60-minute blocker escalation, atomic diff ceilings), client boundary defense (scope creep change-order interceptor, 48h stop-the-clock memos, proactive evidence digests, shared DoD), and founder leverage calibration (the 70/30 leverage rule, feast-or-famine pipeline cadence, delegation matrix). Evaluates controllable inputs on a 1-10 effort rubric. Generates daily-standup.md.
 
 ---
 
@@ -37,6 +37,7 @@ npx skills add harshsinghmp/muse-skills --skill coach
 | **`client`** | `bun coach.ts --client-digest` | Compiles 24h technical commits into plain-English client progress digests. |
 | **`founder`**| `bun coach.ts --founder-audit` | Evaluates weekly capacity distribution and enforces the 70/30 leverage rule. |
 | **`audit`**  | `bun coach.ts --audit` | Audits forensic integrity, link health, and secret isolation of coach artifacts. |
+| **effort-rubric** | Effort Scorecard Scoring Rubric | [references/effort-rubric.md](references/effort-rubric.md) |
 
 ---
 

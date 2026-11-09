@@ -36,8 +36,8 @@ Technical findings doc: crawl report, index-coverage issues with causes, canonic
 
 17. **Trailing-Slash Normalization & BreadcrumbList Schema**:
     - Enforce strict trailing-slash consistency across sitemaps, internal links, and canonical tags to eliminate split link equity and duplicate content penalties.
-    - Audit directory URLs with `bun seo/scripts/breadcrumb-schema.ts --audit <file>` and normalize incoming links via `--normalize`.
-    - Automatically provision Schema.org `BreadcrumbList` JSON-LD mirroring the URL path hierarchy (`bun seo/scripts/breadcrumb-schema.ts --breadcrumb <url>`).
+    - Audit directory URLs with `bun skills/agency-delivery/seo/scripts/breadcrumb-schema.ts --audit <file>` and normalize incoming links via `--normalize`.
+    - Automatically provision Schema.org `BreadcrumbList` JSON-LD mirroring the URL path hierarchy (`bun skills/agency-delivery/seo/scripts/breadcrumb-schema.ts --breadcrumb <url>`).
 
 ## Quality gate
 

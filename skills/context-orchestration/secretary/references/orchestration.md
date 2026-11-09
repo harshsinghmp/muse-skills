@@ -167,10 +167,10 @@ Secretary **never** duplicates the responsibilities of companion skills. It dele
 
 | Responsibility | Delegated Canonical Skill | Command / Protocol |
 | :--- | :--- | :--- |
-| **Coupling & File Locking** | `coupling-router` | `bun skills/.../coupling-router/scripts/worktree-lease.ts` |
+| **Coupling & File Locking** | `coupling-router` | `bun skills/context-orchestration/coupling-router/scripts/worktree-lease.ts` |
 | **Failure Sweeping** | `dead-letter` | Route to `dead-letter/references/sweep-protocol.md` |
-| **Context Hygiene & Hashing** | `updateagents` | `bun skills/.../updateagents/scripts/updateagents.ts --check` |
-| **Milestone Archiving** | `updateagents` | `bun skills/.../updateagents/scripts/updateagents.ts --archive-sprints` |
+| **Context Hygiene & Hashing** | `updateagents` | `bun skills/core-engine/updateagents/scripts/updateagents.ts --check` |
+| **Milestone Archiving** | `updateagents` | `bun skills/core-engine/updateagents/scripts/updateagents.ts --archive-sprints` |
 | **Adversarial Hardening** | `gauntlet-loop` | "The Bar is the Whole Trick" blind critique |
 | **Multi-Client Isolation** | `ops:multi-client` | Sub-app workspace air-gapping rules |
 | **Persistent Claim Ledger** | `evidence-ledger` | Append to `.agents/context/evidence-ledger.md` |

@@ -2,7 +2,7 @@
 
 **Universal Refactoring Engine: Systematically evaluate, modernize, and refactor UI, code, architecture, performance, database schemas, and multi-page consistency.**
 
-`refactor` provides coding agents with a deterministic, engineering-grade refactoring engine spanning seven specialized modes. Transforms legacy, messy, or inconsistent code and interfaces into clean, maintainable, and high-performance production assets without altering external behavior.
+`refactor` provides coding agents with a deterministic, engineering-grade refactoring engine spanning twenty specialized modes. Transforms legacy, messy, or inconsistent code and interfaces into clean, maintainable, and high-performance production assets without altering external behavior.
 
 ---
 
@@ -12,8 +12,6 @@
 # Install this skill
 npx skills add harshsinghmp/muse-skills --skill refactor
 
-# Or the complete suite
-npx skills add harshsinghmp/muse-skills
 ```
 
 ---
@@ -35,8 +33,8 @@ npx skills add harshsinghmp/muse-skills
 ## 🔍 Built-in Scripts & Tools
 
 Zero-dependency Bun verification scripts:
-- **Anti-Pattern Scanner**: `bun refactor/scripts/audit-ui.ts <file_or_dir>`
-- **WCAG Contrast Checker**: `bun refactor/scripts/check-contrast.ts <file_or_dir>`
+- **Anti-Pattern Scanner**: `bun skills/design-interface/refactor/scripts/audit-ui.ts <file_or_dir>`
+- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts "#3b82f6" "#ffffff" [--large|--ui] [--aaa]`
 
 ---
 

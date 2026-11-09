@@ -1,7 +1,7 @@
 ---
 name: evidence-ledger
 aliases: ["claim-ledger","verification-ledger","citation-gate","project-evidence","evidence-tracker"]
-description: "Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only evidence-ledger.md per project tracking decisions (with options considered and evidence trail), client commitments (with deadlines and delivery proof), verified claims (with confidence taxonomy and receipts), and status facts (with blocker tracking). Six commands: /evidence onboard, /evidence status, /evidence decide, /evidence commit, /evidence audit, /evidence brief. Enforces the doctrine: 'No source, no claim. No verification path, no release.' Uses a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, empirical vs speculative classification, and automatic staleness detection."
+description: "Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. Maintains an append-only evidence-ledger.md per project tracking decisions (with options considered and evidence trail), client commitments (with deadlines and delivery proof), verified claims (with confidence taxonomy and receipts), and status facts (with blocker tracking). Six commands: /evidence onboard, /evidence status, /evidence decide, /evidence commit, /evidence audit, /evidence brief. Enforces the doctrine: 'No source, no claim. No verification path, no release.' Uses a 4-tier confidence taxonomy ([RAW], [FETCH], [SEARCH], [INFER]), academic DOI receipts, empirical vs speculative classification, and automatic staleness detection. Use when asked to record a decision, verify a claim, or audit evidence."
 argument-hint: "onboard project, record decision, verify claims, project brief"
 user-invocable: true
 version: 2.0.0
@@ -158,7 +158,7 @@ Each command declares which sibling skills run before, after, or alongside it. S
 | `/evidence decide` | — | `secretary` → hash-approval for high-stakes | `updatedocs` → sync architecture docs |
 | `/evidence commit` | — | — | `updatedocs` → sync project docs |
 | `/evidence audit` | `context-anchor` → park workstream | `dead-letter` → quarantine failures | `updatedocs` → remediate · `coupling-router` → multi-module |
-| `/evidence brief` | `context-anchor` → park workstream | `handoff` → dispatch packet | — |
+| `/evidence brief` | `context-anchor` → park workstream | `relay` → dispatch packet | — |
 
 **Execution semantics**: Pre/post hooks fire when their stated condition applies. Optional companions are offered but not required. The agent decides at runtime. See `references/skill-orchestration.md` for conditions.
 
@@ -287,7 +287,7 @@ This is the original v1.x claim verification procedure, enhanced to integrate wi
 
 **Trigger**: "Brief me on this project", "what do I need to know?", "context switch to Client X"
 
-**Pre-hook**: `context-anchor` (if active workstream) · **Post-hook**: `handoff` (optional, if subagent dispatch)
+**Pre-hook**: `context-anchor` (if active workstream) · **Post-hook**: `relay` (optional, if subagent dispatch)
 
 #### Steps
 
@@ -302,7 +302,7 @@ This is the original v1.x claim verification procedure, enhanced to integrate wi
    - **Stale items**: Anything flagged by staleness rules
    - **Health score**: From dashboard
 4. **Output** as a concise briefing artifact. See `examples/sample-evidence-brief.md` for format.
-5. **Offer handoff**: "Want me to generate a handoff packet for a subagent to continue this work?" If yes, invoke `handoff` with the briefing folded into the dispatch context.
+5. **Offer handoff**: "Want me to generate a handoff packet for a subagent to continue this work?" If yes, invoke `relay` with the briefing folded into the dispatch context.
 
 ---
 

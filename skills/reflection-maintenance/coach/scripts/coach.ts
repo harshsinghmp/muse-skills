@@ -105,7 +105,26 @@ export function evaluateEffortScorecard(cwd: string): EffortScorecard {
   };
 }
 
-export function generateClientDigest(cwd: string, projectName?: string): string {
+export interface DeliveryReceipts {
+  tests?: string;
+  security?: string;
+  typecheck?: string;
+  generatedAt?: string;
+}
+
+export function loadDeliveryReceipts(cwd: string, receiptPath?: string): DeliveryReceipts | undefined {
+  const candidate = receiptPath ? resolve(cwd, receiptPath) : join(cwd, ".delivery-receipts.json");
+  if (!existsSync(candidate)) return undefined;
+  try {
+    const parsed = JSON.parse(readFileSync(candidate, "utf8"));
+    if (!parsed || typeof parsed !== "object") return undefined;
+    return parsed as DeliveryReceipts;
+  } catch {
+    return undefined;
+  }
+}
+
+export function generateClientDigest(cwd: string, projectName?: string, receipts?: DeliveryReceipts): string {
   const name = projectName || basename(resolve(cwd));
   const recentCommits: string[] = [];
 
@@ -135,9 +154,18 @@ export function generateClientDigest(cwd: string, projectName?: string): string 
 ${bulletList}
 
 #### 2. Quality & Verification Evidence
-- Automated test suites passing with 100% green integrity.
-- Code hygiene, security audits, and type-checks clean.
-- Zero credential or private token exposure.
+${
+  receipts
+    ? [
+        `- Tests: ${receipts.tests ?? "not reported"}`,
+        `- Security scan: ${receipts.security ?? "not reported"}`,
+        `- Type-check: ${receipts.typecheck ?? "not reported"}`,
+        receipts.generatedAt ? `- Receipt generated: ${receipts.generatedAt}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n")
+    : "- Not run — no delivery receipt supplied. This digest makes no claim about test, security, or type-check status."
+}
 
 #### 3. Immediate Next Focus
 - Continuing scheduled sprint deliverables in accordance with Milestone acceptance criteria.`;
@@ -165,6 +193,14 @@ export function evaluateScopeRequest(requestText: string): {
     reason: "Request appears aligned with typical in-scope delivery adjustments.",
     responseTemplate: "Acknowledged and scheduled within current sprint delivery backlog.",
   };
+}
+
+export function parseTierHoursInput(
+  raw: string,
+): { tier1: number; tier2: number; tier3: number; tier4: number } | undefined {
+  const parts = raw.split(",").map((value) => Number(value.trim()));
+  if (parts.length !== 4 || parts.some((value) => !Number.isFinite(value) || value < 0)) return undefined;
+  return { tier1: parts[0], tier2: parts[1], tier3: parts[2], tier4: parts[3] };
 }
 
 export function evaluateFounderLeverage(tierHours: { tier1: number; tier2: number; tier3: number; tier4: number }): {
@@ -197,17 +233,47 @@ export function evaluateFounderLeverage(tierHours: { tier1: number; tier2: numbe
   };
 }
 
+const COACH_ARTIFACTS = ["daily-standup.md", "CLIENT_DIGEST.md", "client-digest.md", "coach-digest.md"];
+
+const COACH_RED_FLAGS: Array<{ label: string; pattern: RegExp }> = [
+  { label: "API key or token", pattern: /(?:sk-|ghp_|glpat-|gho_|ghs_)[A-Za-z0-9_-]{20,}/ },
+  { label: "private key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
+  { label: "AWS secret", pattern: /aws_secret_access_key\s*[:=]/i },
+  { label: "bearer token", pattern: /bearer\s+[A-Za-z0-9._-]{20,}/i },
+  { label: "credential assignment", pattern: /(?:password|secret|token)\s*[:=]\s*["']?[^\s"']{8,}/i },
+  { label: "email address (client PII)", pattern: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/ },
+  {
+    label: "unverified assurance claim",
+    pattern: /\b(?:100%\s+(?:green|pass(?:ing)?)|zero defects|0\s+(?:leaks|failures|broken links))\b/i,
+  },
+];
+
 export function auditCoachArtifacts(cwd: string): {
   passed: boolean;
   errors: string[];
 } {
   const errors: string[] = [];
-  const standupPath = join(cwd, "daily-standup.md");
+  const present = COACH_ARTIFACTS.map((name) => join(cwd, name)).filter((path) => existsSync(path));
 
-  if (existsSync(standupPath)) {
-    const content = readFileSync(standupPath, "utf8");
-    if (/sk-[a-zA-Z0-9_-]{20,}/.test(content) || /ghp_[a-zA-Z0-9]{20,}/.test(content)) {
-      errors.push("CRITICAL: Detected hardcoded credential in daily-standup.md!");
+  if (present.length === 0) {
+    return { passed: true, errors: [] };
+  }
+
+  for (const artifactPath of present) {
+    const name = artifactPath.slice(cwd.length + 1);
+    let content = "";
+    try {
+      content = readFileSync(artifactPath, "utf8");
+    } catch {
+      errors.push(`${name}: unreadable; cannot audit.`);
+      continue;
+    }
+
+    for (const flag of COACH_RED_FLAGS) {
+      if (flag.pattern.test(content)) {
+        // Never echo the matched value.
+        errors.push(`${name}: contains ${flag.label}.`);
+      }
     }
   }
 
@@ -226,6 +292,8 @@ if (import.meta.main) {
       "client-digest": { type: "boolean", default: false },
       "scope-check": { type: "string", default: "" },
       "founder-audit": { type: "boolean", default: false },
+      "tier-hours": { type: "string" },
+      receipts: { type: "string" },
       audit: { type: "boolean", default: false },
       json: { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
@@ -245,8 +313,10 @@ USAGE:
 OPTIONS:
   --standup              Evaluate 5-pillar controllable effort scorecard (Team Mode)
   --client-digest        Generate plain-English progress digest for clients (Client Mode)
+  --receipts <path>      Attach verified JSON receipts to the client digest (default: .delivery-receipts.json)
   --scope-check "<text>" Intercept client requests against scope boundaries (Client Mode)
   --founder-audit        Evaluate founder leverage and the 70/30 rule (Founder Mode)
+  --tier-hours <a,b,c,d> Measured hours for tiers 1-4 (required by --founder-audit; never invented)
   --audit                Audit forensic integrity and secret hygiene of coach artifacts
   --json                 Output structured JSON
   -h, --help             Show this help screen
@@ -282,7 +352,11 @@ OPTIONS:
   }
 
   if (values["client-digest"]) {
-    const digest = generateClientDigest(targetDir);
+    const receipts = loadDeliveryReceipts(
+      targetDir,
+      typeof values.receipts === "string" && values.receipts.length > 0 ? values.receipts : undefined,
+    );
+    const digest = generateClientDigest(targetDir, undefined, receipts);
     console.log(`\n${digest}\n`);
     process.exit(0);
   }
@@ -304,9 +378,14 @@ OPTIONS:
   }
 
   if (values["founder-audit"]) {
-    // Demonstration audit based on baseline distribution
-    const demoHours = { tier1: 15, tier2: 20, tier3: 5, tier4: 10 };
-    const evalRes = evaluateFounderLeverage(demoHours);
+    const tierHours = typeof values["tier-hours"] === "string" ? parseTierHoursInput(values["tier-hours"]) : undefined;
+    if (!tierHours) {
+      console.error(
+        "❌ --founder-audit requires --tier-hours <tier1,tier2,tier3,tier4> measured from your time tracking. Refusing to invent a distribution.",
+      );
+      process.exit(1);
+    }
+    const evalRes = evaluateFounderLeverage(tierHours);
     if (values.json) {
       console.log(JSON.stringify(evalRes, null, 2));
     } else {

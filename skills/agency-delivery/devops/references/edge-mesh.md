@@ -1,7 +1,7 @@
 # edge-mesh — Distributed Cloudflare Workers Anycast Routing Mesh
 
 > **Council Lead**: **Sol** (Product Architect & Full-Stack Automator)  
-> **Tooling**: `bun devops/scripts/edge-mesh.ts`  
+> **Tooling**: `bun skills/agency-delivery/devops/scripts/edge-mesh.ts`  
 > **Mode Command**: `/devops edge-mesh`  
 > **Standards**: Geographic Anycast Proximity, Edge SWR Caching ($\ge 90\%$), Sub-500ms Failover, Declarative IaC Manifests
 
@@ -50,13 +50,13 @@ flowchart TD
 
 ```bash
 # Run default 6-PoP global edge mesh simulation
-bun devops/scripts/edge-mesh.ts
+bun skills/agency-delivery/devops/scripts/edge-mesh.ts
 
 # Scaffold IaC manifests to project directory
-bun devops/scripts/edge-mesh.ts --project "production-api-mesh" --export-dir config/
+bun skills/agency-delivery/devops/scripts/edge-mesh.ts --project "production-api-mesh" --export-dir config/
 
 # Output structured JSON telemetry for monitoring pipelines
-bun devops/scripts/edge-mesh.ts --json
+bun skills/agency-delivery/devops/scripts/edge-mesh.ts --json
 ```
 
 ---

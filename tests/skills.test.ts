@@ -500,6 +500,8 @@ describe("Invocation UX & conventions", () => {
     expect(digestRes.status).toBe(0);
     expect(digestRes.stdout).toContain("Milestone Progress Digest");
     expect(digestRes.stdout).toContain("What Shipped & Verified");
+    expect(digestRes.stdout).toContain("Not run — no delivery receipt supplied");
+    expect(digestRes.stdout).not.toContain("100% green integrity");
 
     // Test --scope-check mode
     const scopeRes = spawnSync(
@@ -515,8 +517,15 @@ describe("Invocation UX & conventions", () => {
     expect(scopeData.isOutScope).toBe(true);
     expect(scopeData.responseTemplate).toContain("Phase 2");
 
-    // Test --founder-audit mode
-    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], {
+    // Test --founder-audit mode (measured hours are required; the CLI must not invent them)
+    const founderMissingRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(founderMissingRes.status).toBe(1);
+    expect(founderMissingRes.stderr).toContain("requires --tier-hours");
+
+    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--tier-hours", "15,20,5,10", "--json"], {
       encoding: "utf8",
       cwd: REPO_ROOT,
     });
@@ -1520,7 +1529,8 @@ Disallow: /
     );
     expect(sanitizeRes.status).toBe(0);
     const sanitizeData = JSON.parse(sanitizeRes.stdout);
-    expect(sanitizeData.strippedPii).toContain("email=ceo@client.com");
+    expect(sanitizeData.strippedPii).toContain("email");
+    expect(sanitizeData.strippedPii.join(" ")).not.toContain("ceo@client.com");
     expect(sanitizeData.sanitizedUrl).not.toContain("ceo@client.com");
     expect(sanitizeData.cleanUtms.utm_source).toBe("twitter");
     expect(sanitizeData.cleanUtms.utm_medium).toBe("social-post");
@@ -2204,7 +2214,11 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(creditsRes.status).toBe(0);
       expect(fs.existsSync(path.join(tempDir, "CREDITS.md"))).toBe(true);
-      expect(fs.readFileSync(path.join(tempDir, "CREDITS.md"), "utf8")).toContain("lucide-react");
+      const creditsContent = fs.readFileSync(path.join(tempDir, "CREDITS.md"), "utf8");
+      expect(creditsContent).toContain("lucide-react");
+      // Licenses come from package metadata; without node_modules the row must say UNVERIFIED.
+      expect(creditsContent).toContain("UNVERIFIED");
+      expect(creditsContent).not.toContain("MIT / Open Source");
 
       // 6. Test --audit & fast-skip
       const auditRes = spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--audit"], {
@@ -2234,7 +2248,13 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(htmlRes.status).toBe(0);
       expect(fs.existsSync(htmlReportPath)).toBe(true);
-      expect(fs.readFileSync(htmlReportPath, "utf8")).toContain("Executive Delivery Report");
+      const htmlContent = fs.readFileSync(htmlReportPath, "utf8");
+      expect(htmlContent).toContain("Executive Delivery Report");
+      // Without receipts the report must label claims unverified instead of inventing 100%/0/0.
+      expect(htmlContent).toContain("NOT VERIFIED");
+      expect(htmlContent).toContain("Not run");
+      expect(htmlContent).not.toContain("100%");
+      expect(htmlContent).not.toContain('0</div>\n          <div class="stat-label">Secret / Token Leaks');
 
       // 9. Test --check-freshness
       const freshRes = spawnSync(
@@ -2343,7 +2363,18 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       const checkData = JSON.parse(checkRes.stdout);
       expect(checkData.canSkip).toBe(false);
 
-      // 2. Run preflight (should succeed and write receipts)
+      // 2. Run preflight (should succeed and write receipts). Provide no-op
+      // syncer stubs: a missing syncer now fails closed instead of stamping a receipt.
+      const stubs = [
+        ["skills/core-engine/updateagents/scripts", "updateagents.ts"],
+        ["skills/core-engine/updatedocs/scripts", "updatedocs.ts"],
+      ] as const;
+      for (const [dir, file] of stubs) {
+        const fullDir = path.join(tempDir, dir);
+        fs.mkdirSync(fullDir, { recursive: true });
+        fs.writeFileSync(path.join(fullDir, file), "process.exit(0);\n", "utf8");
+      }
+
       const runRes = spawnSync(
         "bun",
         ["skills/core-engine/git/scripts/git-preflight.ts", tempDir, "--preflight-run", "--json"],
@@ -2638,15 +2669,33 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       expect(deadlockData.deadlockDetected).toBe(true);
       expect(deadlockData.consecutiveFailures).toBe(3);
 
-      // Verify rollback resets failure streak
-      const rollbackRes = spawnSync(
+      // Verify rollback snapshots and reverts tracked changes, then resets the failure streak
+      spawnSync("git", ["init", "-q"], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["config", "user.email", "test@example.com"], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["config", "user.name", "Test"], { cwd: tempDir, encoding: "utf8" });
+      fs.writeFileSync(path.join(tempDir, "state.txt"), "clean\n", "utf8");
+      spawnSync("git", ["add", "."], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["commit", "-q", "-m", "init"], { cwd: tempDir, encoding: "utf8" });
+      fs.writeFileSync(path.join(tempDir, "state.txt"), "dirty\n", "utf8");
+
+      const refusedRes = spawnSync(
         "bun",
         ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--rollback", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(refusedRes.status).toBe(1);
+      expect(fs.readFileSync(path.join(tempDir, "state.txt"), "utf8")).toBe("dirty\n");
+
+      const rollbackRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--rollback", "--yes", "--json"],
         { encoding: "utf8", cwd: REPO_ROOT },
       );
       expect(rollbackRes.status).toBe(0);
       const rollbackData = JSON.parse(rollbackRes.stdout);
       expect(rollbackData.rolledBack).toBe(true);
+      expect(rollbackData.snapshotPath).toBeDefined();
+      expect(fs.readFileSync(path.join(tempDir, "state.txt"), "utf8")).toBe("clean\n");
 
       const checkAfterRollback = spawnSync(
         "bun",
