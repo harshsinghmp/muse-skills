@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- **Release notes publish the curated section**: the tag-triggered Release workflow now extracts the `RELEASE_NOTES.md` section for the tagged version and publishes it via `body_path`, instead of a fixed body plus auto-generated PR titles. It falls back to a changelog link when no section exists, and a test guards both the section and the wiring.
+
 ## [8.3.0] - 2026-11-09
 
 ### Added
