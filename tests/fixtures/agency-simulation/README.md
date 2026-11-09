@@ -4,11 +4,14 @@ Three end-to-end client engagements used by `tests/agency-simulation-workflows.t
 Each fixture is a DAG plan whose tasks name a real shipped skill and mode, so the
 harness fails if a scenario references routing that does not exist.
 
+Together the three fixtures exercise **all 46 shipped skills**; the harness fails
+if the union of scenario skills diverges from `skills.json`.
+
 | Fixture | Profile | Client | Shape |
 | --- | --- | --- | --- |
-| `ecommerce.json` | E-commerce | Northwind Supply Co. | Brand → design/copy → funnel (critical seam) → ads/analytics → QA → handover → invoicing |
-| `b2b-saas.json` | B2B SaaS | Helios Analytics | Research → brief → wireframe → rebuild (critical seam) → migration → SAST (critical seam) → QA → status → pricing |
-| `productized-agency.json` | Turnkey productized agency | Beacon Studio | Onboarding → intake → positioning (critical seam) → content → social/analytics → check-in → P&L |
+| `ecommerce.json` | E-commerce | Northwind Supply Co. | Brand → design/motion/copy/humanize/SEO → funnel (critical seam) → ads/analytics/CRM/automation/Telegram/mobile → QA → handover → invoicing |
+| `b2b-saas.json` | B2B SaaS | Helios Analytics | Research/evidence → brief/demo → wireframe → rebuild (critical seam) → migration/CI/CD → review/refactor/git → SAST (critical seam) → runbook/QA/audit → status → pricing |
+| `productized-agency.json` | Turnkey productized agency | Beacon Studio | Onboarding/scaffold/context sync → dispatch/swarm/anchor/relay/dead-letter → intake/designscope → positioning/pua (critical seam) → content/gauntlet/social/analytics → check-in → P&L → retreat → coaching |
 
 ## Schema
 
@@ -41,6 +44,7 @@ resolve inside the same plan, and the DAG must be acyclic.
 ## What the harness proves
 
 - Every task's skill/mode exists in the shipped tree.
+- The three scenarios together cover every skill in `skills.json`.
 - Waves are topological and every dependency runs before its dependent.
 - A rejected critical seam fails consensus and prunes downstream dependents.
 - The token ceiling halts dispatch instead of overspending.

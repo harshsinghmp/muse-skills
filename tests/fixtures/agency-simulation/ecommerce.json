@@ -4,7 +4,7 @@
   "profile": "E-commerce",
   "billing": { "model": "claude-3-7-sonnet", "inputTokens": 1850000, "outputTokens": 420000 },
   "planId": "northwind-ecommerce-launch",
-  "maxTokenCeiling": 150000,
+  "maxTokenCeiling": 200000,
   "requiredQuorum": 3,
   "tasks": [
     {
@@ -25,6 +25,15 @@
       "estimatedTokens": 12000
     },
     {
+      "id": "design-motion",
+      "name": "Product motion and micro-interactions",
+      "skill": "animate",
+      "mode": "css-animations",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["design-ui"],
+      "estimatedTokens": 9000
+    },
+    {
       "id": "content-copy",
       "name": "Product and landing copy",
       "skill": "content",
@@ -32,6 +41,24 @@
       "assignedDivision": "Jasper",
       "dependsOn": ["brand-intake"],
       "estimatedTokens": 10000
+    },
+    {
+      "id": "content-humanize",
+      "name": "De-slop product prose",
+      "skill": "humanize",
+      "mode": "patterns",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["content-copy"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "seo-aeo",
+      "name": "Answer-engine product page optimization",
+      "skill": "seo",
+      "mode": "aeo",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["content-copy"],
+      "estimatedTokens": 8000
     },
     {
       "id": "webdev-funnel",
@@ -60,6 +87,42 @@
       "assignedDivision": "Nexus",
       "dependsOn": ["webdev-funnel"],
       "estimatedTokens": 9000
+    },
+    {
+      "id": "crm-abandon",
+      "name": "Abandoned-cart recovery flow",
+      "skill": "crm",
+      "mode": "abandon",
+      "assignedDivision": "Crew",
+      "dependsOn": ["analytics-tracking"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "automation-alerts",
+      "name": "Order and stock alert automation",
+      "skill": "automation",
+      "mode": "alerts",
+      "assignedDivision": "Sol",
+      "dependsOn": ["analytics-tracking"],
+      "estimatedTokens": 8000
+    },
+    {
+      "id": "telegram-notify",
+      "name": "Ops notification routing",
+      "skill": "telegram",
+      "mode": "notify",
+      "assignedDivision": "Sol",
+      "dependsOn": ["automation-alerts"],
+      "estimatedTokens": 5000
+    },
+    {
+      "id": "mobile-pwa",
+      "name": "Mobile storefront PWA shell",
+      "skill": "mobile",
+      "mode": "pwa",
+      "assignedDivision": "Sol",
+      "dependsOn": ["webdev-funnel"],
+      "estimatedTokens": 11000
     },
     {
       "id": "qa-e2e",

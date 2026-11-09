@@ -4,7 +4,7 @@
   "profile": "Turnkey productized agency",
   "billing": { "model": "claude-3-5-haiku", "inputTokens": 1400000, "outputTokens": 900000 },
   "planId": "beacon-productized-growth",
-  "maxTokenCeiling": 120000,
+  "maxTokenCeiling": 240000,
   "requiredQuorum": 3,
   "tasks": [
     {
@@ -16,6 +16,87 @@
       "estimatedTokens": 7000
     },
     {
+      "id": "new-project-workspace",
+      "name": "Client workspace scaffold",
+      "skill": "new-project",
+      "mode": "client-onboarding",
+      "assignedDivision": "Sol",
+      "dependsOn": ["ops-onboarding"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "updateagents-sync",
+      "name": "Agent context sync for client repo",
+      "skill": "updateagents",
+      "mode": "onboard",
+      "assignedDivision": "Sol",
+      "dependsOn": ["new-project-workspace"],
+      "estimatedTokens": 8000
+    },
+    {
+      "id": "updatedocs-audit",
+      "name": "Client documentation audit",
+      "skill": "updatedocs",
+      "mode": "audit",
+      "assignedDivision": "Crew",
+      "dependsOn": ["updateagents-sync"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "clean-cache",
+      "name": "Host and build cache hygiene",
+      "skill": "clean-system-cache",
+      "mode": "audit",
+      "assignedDivision": "Sol",
+      "dependsOn": ["ops-onboarding"],
+      "estimatedTokens": 4000
+    },
+    {
+      "id": "secretary-dispatch",
+      "name": "Multi-client dispatch plan",
+      "skill": "secretary",
+      "mode": "dispatch",
+      "assignedDivision": "Crew",
+      "dependsOn": ["ops-onboarding"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "coupling-swarm",
+      "name": "Swarm worktree lease plan",
+      "skill": "coupling-router",
+      "mode": "swarm",
+      "assignedDivision": "Sol",
+      "dependsOn": ["secretary-dispatch"],
+      "estimatedTokens": 10000
+    },
+    {
+      "id": "context-anchor",
+      "name": "Cross-client context switching",
+      "skill": "context-anchor",
+      "mode": "task-interruption-and-recovery",
+      "assignedDivision": "Sol",
+      "dependsOn": ["coupling-swarm"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "relay-handoff",
+      "name": "Session resumption packet",
+      "skill": "relay",
+      "mode": "resumption-protocol",
+      "assignedDivision": "Crew",
+      "dependsOn": ["context-anchor"],
+      "estimatedTokens": 5000
+    },
+    {
+      "id": "dead-letter-sweep",
+      "name": "Failed-task sweep",
+      "skill": "dead-letter",
+      "mode": "sweep-protocol",
+      "assignedDivision": "Sol",
+      "dependsOn": ["coupling-swarm"],
+      "estimatedTokens": 5000
+    },
+    {
       "id": "brand-intake",
       "name": "Brand and offer intake",
       "skill": "brand",
@@ -23,6 +104,15 @@
       "assignedDivision": "Crew",
       "dependsOn": ["ops-onboarding"],
       "estimatedTokens": 8000
+    },
+    {
+      "id": "designscope-tokens",
+      "name": "Client design token extraction",
+      "skill": "designscope",
+      "mode": "token-extraction",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-intake"],
+      "estimatedTokens": 10000
     },
     {
       "id": "growth-positioning",
@@ -35,6 +125,15 @@
       "criticalSeam": true
     },
     {
+      "id": "pua-audit",
+      "name": "Persuasion and receipt audit",
+      "skill": "pua",
+      "mode": "audit",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["growth-positioning"],
+      "estimatedTokens": 6000
+    },
+    {
       "id": "content-blog",
       "name": "Pillar content batch",
       "skill": "content",
@@ -42,6 +141,15 @@
       "assignedDivision": "Jasper",
       "dependsOn": ["growth-positioning"],
       "estimatedTokens": 14000
+    },
+    {
+      "id": "gauntlet-loop",
+      "name": "Deliverable quality gauntlet",
+      "skill": "gauntlet-loop",
+      "mode": "gauntlet-protocol",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["content-blog"],
+      "estimatedTokens": 12000
     },
     {
       "id": "smm-calendar",
@@ -78,6 +186,24 @@
       "assignedDivision": "Crew",
       "dependsOn": ["retain-checkin"],
       "estimatedTokens": 8000
+    },
+    {
+      "id": "periodic-retreat",
+      "name": "Quarterly portfolio retreat",
+      "skill": "periodic-retreat",
+      "mode": "retreat-protocol",
+      "assignedDivision": "Crew",
+      "dependsOn": ["accounts-pnl"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "coach-team",
+      "name": "Team leverage coaching",
+      "skill": "coach",
+      "mode": "team",
+      "assignedDivision": "Crew",
+      "dependsOn": ["periodic-retreat"],
+      "estimatedTokens": 6000
     }
   ]
 }
