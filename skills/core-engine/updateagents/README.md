@@ -42,77 +42,77 @@ This skill is not merely an `AGENTS.md` updater. It determines what project info
 ### Direct CLI Execution
 ```bash
 # Run context synchronization in current working directory
-bun path/to/updateagents/scripts/updateagents.ts
+bun skills/core-engine/updateagents/scripts/updateagents.ts
 
 # Intercept and promote a foreign-harness instruction write into .agents/
-bun path/to/updateagents/scripts/updateagents.ts --promote CLAUDE.md
+bun skills/core-engine/updateagents/scripts/updateagents.ts --promote CLAUDE.md
 
 # Promote explicit content string into .agents/
-bun path/to/updateagents/scripts/updateagents.ts --promote .cursorrules --content "Always run bun test before pushing."
+bun skills/core-engine/updateagents/scripts/updateagents.ts --promote .cursorrules --content "Always run bun test before pushing."
 
 # Audit 14 tracked assets for repository AI-readiness
-bun path/to/updateagents/scripts/updateagents.ts --audit
+bun skills/core-engine/updateagents/scripts/updateagents.ts --audit
 
 # Gate CI on minimum readiness score (exits 1 if score < 12)
-bun path/to/updateagents/scripts/updateagents.ts --audit --fail-under 12
+bun skills/core-engine/updateagents/scripts/updateagents.ts --audit --fail-under 12
 
 # Scan and sanitize synthetic ADE/IDE artifacts
-bun path/to/updateagents/scripts/updateagents.ts --sanitize
+bun skills/core-engine/updateagents/scripts/updateagents.ts --sanitize
 
 # Directly scaffold missing Agent Engine assets
-bun path/to/updateagents/scripts/updateagents.ts --scaffold
+bun skills/core-engine/updateagents/scripts/updateagents.ts --scaffold
 
 # Explicitly confirm GitHub hosting when no remote/package metadata is set
-bun path/to/updateagents/scripts/updateagents.ts --scaffold --github
+bun skills/core-engine/updateagents/scripts/updateagents.ts --scaffold --github
 
 # Confirm a non-GitHub host; workflow files are removed only with a second explicit confirmation
-bun path/to/updateagents/scripts/updateagents.ts --scaffold --no-github --confirm-remove-github-workflows
+bun skills/core-engine/updateagents/scripts/updateagents.ts --scaffold --no-github --confirm-remove-github-workflows
 
 # Remove existing GitHub workflows only after confirming a non-GitHub project
-bun path/to/updateagents/scripts/updateagents.ts --scaffold --confirm-remove-github-workflows
+bun skills/core-engine/updateagents/scripts/updateagents.ts --scaffold --confirm-remove-github-workflows
 
 # Context Token-Budget & Decay Health Meter
-bun path/to/updateagents/scripts/updateagents.ts --budget
+bun skills/core-engine/updateagents/scripts/updateagents.ts --budget
 
 # Install Git Pre-Commit Hook (Stack Guard + Freshness Check)
-bun path/to/updateagents/scripts/updateagents.ts --install-hook
+bun skills/core-engine/updateagents/scripts/updateagents.ts --install-hook
 
 # Provision Monorepo Sub-App Context
-bun path/to/updateagents/scripts/updateagents.ts --subapp <name>
+bun skills/core-engine/updateagents/scripts/updateagents.ts --subapp <name>
 
 # Lint Context Markdown Links & @-imports
-bun path/to/updateagents/scripts/updateagents.ts --lint-context
+bun skills/core-engine/updateagents/scripts/updateagents.ts --lint-context
 
 # Compile standards into .cursor/rules/*.mdc and .github/copilot-instructions.md
-bun path/to/updateagents/scripts/updateagents.ts --sync-ide
+bun skills/core-engine/updateagents/scripts/updateagents.ts --sync-ide
 
 # Validate standards against installed package.json dependencies
-bun path/to/updateagents/scripts/updateagents.ts --lint-rules
+bun skills/core-engine/updateagents/scripts/updateagents.ts --lint-rules
 
 # Archive completed historical milestones (>14d) into .agents/archive/milestones/
-bun path/to/updateagents/scripts/updateagents.ts --archive-sprints
+bun skills/core-engine/updateagents/scripts/updateagents.ts --archive-sprints
 
 # Consume documented points since the last agent watermark into .agents/context/current.md
-bun path/to/updateagents/scripts/updateagents.ts --docs-backlog
-bun path/to/updateagents/scripts/updateagents.ts --docs-backlog --docs-backlog-limit 20
+bun skills/core-engine/updateagents/scripts/updateagents.ts --docs-backlog
+bun skills/core-engine/updateagents/scripts/updateagents.ts --docs-backlog --docs-backlog-limit 20
 
 # Clean the project root (active harness is always skipped)
-bun path/to/updateagents/scripts/updateagents.ts . --hygiene
-bun path/to/updateagents/scripts/updateagents.ts . --hygiene --consolidate
-bun path/to/updateagents/scripts/updateagents.ts . --hygiene --check-public
+bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene
+bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --consolidate
+bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public
 
 # Keep agent state internal via .git/info/exclude (never committed .gitignore)
-bun path/to/updateagents/scripts/updateagents.ts . --install-excludes
+bun skills/core-engine/updateagents/scripts/updateagents.ts . --install-excludes
 
 # Canon-drift check: compare .agents/standards/ against master canon (no writes; exits 1 on drift)
-bun path/to/updateagents/scripts/updateagents.ts --check-canon
+bun skills/core-engine/updateagents/scripts/updateagents.ts --check-canon
 
 # Selectively adopt the master-canon version of one standard (or "all")
-bun path/to/updateagents/scripts/updateagents.ts --refresh <name>   # e.g. git-workflow.md
-bun path/to/updateagents/scripts/updateagents.ts --refresh all
+bun skills/core-engine/updateagents/scripts/updateagents.ts --refresh <name>   # e.g. git-workflow.md
+bun skills/core-engine/updateagents/scripts/updateagents.ts --refresh all
 
 # Run in simulation mode without writing files
-bun path/to/updateagents/scripts/updateagents.ts --dry-run
+bun skills/core-engine/updateagents/scripts/updateagents.ts --dry-run
 ```
 
 ---

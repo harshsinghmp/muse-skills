@@ -1,7 +1,7 @@
 # billing-engine — Sovereign Usage-Based Metering & Automated Dunning Engine
 
 > **Council Lead**: **Crew** (Client Delivery Specialist) & **Sol** (Product Architect & Full-Stack Automator)  
-> **Tooling**: `bun accounts/scripts/metering-engine.ts`  
+> **Tooling**: `bun skills/agency-delivery/accounts/scripts/metering-engine.ts`  
 > **Mode Command**: `/accounts billing-engine`  
 > **Standards**: SHA-256 Idempotency, Graduated Tiered Pricing, Automated Circuit Breakers, Stripe Tax Sync, 3-Tier Dunning ($\ge 70\%$ Recovery)
 
@@ -54,16 +54,16 @@ flowchart TD
 
 ```bash
 # Evaluate usage events for default tenant
-bun accounts/scripts/metering-engine.ts
+bun skills/agency-delivery/accounts/scripts/metering-engine.ts
 
 # Ingest usage events JSON file and evaluate 4-day overdue dunning
-bun accounts/scripts/metering-engine.ts \
+bun skills/agency-delivery/accounts/scripts/metering-engine.ts \
   --events data/usage-events.json \
   --tenant "client-pied-piper" \
   --days-past-due 4
 
 # Output structured JSON for billing webhook dispatch
-bun accounts/scripts/metering-engine.ts --tenant "client-pied-piper" --json
+bun skills/agency-delivery/accounts/scripts/metering-engine.ts --tenant "client-pied-piper" --json
 ```
 
 ---

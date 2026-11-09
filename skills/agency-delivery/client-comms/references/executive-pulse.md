@@ -1,7 +1,7 @@
 # executive-pulse — Autonomous C-Suite Weekly Briefing Generator
 
 > **Council Lead**: **Crew** (Client Delivery Specialist) & **Jasper** (Creative Technologist & Copywriting Lead)  
-> **Tooling**: `bun client-comms/scripts/executive-pulse.ts`  
+> **Tooling**: `bun skills/agency-delivery/client-comms/scripts/executive-pulse.ts`  
 > **Mode Command**: `/client-comms executive-pulse`  
 > **Standards**: Layman Impact Translation (Zero Jargon), Velocity & Runway Tracking, 48h Risk Radar, Print-Ready HTML/PDF
 
@@ -51,16 +51,16 @@ flowchart TD
 
 ```bash
 # Generate terminal executive briefing for project
-bun client-comms/scripts/executive-pulse.ts --project "Project Nexus" --client "Fintech Global"
+bun skills/agency-delivery/client-comms/scripts/executive-pulse.ts --project "Project Nexus" --client "Fintech Global"
 
 # Export print-ready executive HTML one-pager
-bun client-comms/scripts/executive-pulse.ts \
+bun skills/agency-delivery/client-comms/scripts/executive-pulse.ts \
   --project "Sovereign Commerce Platform" \
   --client "Nordic Retail Group" \
   --export-html dist/executive-pulse.html
 
 # Output structured JSON for client portals and dashboard widgets
-bun client-comms/scripts/executive-pulse.ts --json
+bun skills/agency-delivery/client-comms/scripts/executive-pulse.ts --json
 ```
 
 ---

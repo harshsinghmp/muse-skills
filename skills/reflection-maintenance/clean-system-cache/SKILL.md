@@ -237,7 +237,7 @@ or irreversible is a decision the user made with the paths in front of them.
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --discover           # full scan, nothing deleted
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --discover           # full scan, nothing deleted
   clean-system-cache/scripts/clean-cache.sh --browse app:mpv     # exact files, largest first
   clean-system-cache/scripts/clean-cache.sh --interactive        # grouped menu, then confirm
   clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --dry-run
@@ -261,7 +261,7 @@ Before modifying disk contents, run an inspection to calculate reclaimable space
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --dry-run
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --dry-run
   ```
 - **Windows CMD**:
   ```cmd
@@ -277,7 +277,7 @@ running sessions, and reports the rest:
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh
   ```
 - **Windows CMD**:
   ```cmd
@@ -317,7 +317,7 @@ When disk capacity requires purging capability-coupled caches, use the explicit 
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --include-coupled
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --include-coupled
   ```
 - **Windows CMD**:
   ```cmd
@@ -329,15 +329,15 @@ Target specific subsystems (e.g. only browsers, agent runtimes, or package manag
 
 - **Web Browsers Only**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool browser
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool browser
   ```
 - **Agent Runtimes Only**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool agents
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool agents
   ```
 - **Specific Tools**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --tool uv,npm,firefox,zen,docker,adobe
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --tool uv,npm,firefox,zen,docker,adobe
   ```
 
 ### Phase 7: Dormant `node_modules` Audit
@@ -345,7 +345,7 @@ Scan project directories for abandoned node_modules folders consuming massive di
 
 - **Linux & macOS**:
   ```bash
-  clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
+  skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh --scan-node-modules ~/Projects
   ```
 - **Windows CMD**:
   ```cmd

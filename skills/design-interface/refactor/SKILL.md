@@ -109,8 +109,8 @@ When executing the `ui` or `sweep` mode, adhere strictly to the 10 atomic heuris
 ## Automated Tooling
 
 Ships zero-dependency Bun scripts under `scripts/`:
-- **Anti-Pattern Scanner**: `bun refactor/scripts/audit-ui.ts <file_or_dir>`
-- **WCAG Contrast Checker**: `bun refactor/scripts/check-contrast.ts <file_or_dir>`
+- **Anti-Pattern Scanner**: `bun skills/design-interface/refactor/scripts/audit-ui.ts <file_or_dir>`
+- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts <file_or_dir>`
 
 ---
 

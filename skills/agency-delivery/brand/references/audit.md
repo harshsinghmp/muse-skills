@@ -74,7 +74,7 @@ Evaluate client onboarding across 5 critical dimensions (10 points each, 50 poin
 
 Run the automated audit script:
 ```bash
-bun brand/scripts/intake-audit.ts
+bun skills/agency-delivery/brand/scripts/intake-audit.ts
 ```
 
 | Score Threshold | Verdict | Action |

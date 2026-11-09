@@ -83,7 +83,7 @@ bun skills/quality-review/muse-security/scripts/boundary-audit.ts --check-symlin
 | Finding ID | Severity | Root Cause | Automated Remediation |
 | :--- | :--- | :--- | :--- |
 | **BND-001** | `CRITICAL` | Symlink escapes workspace root | Remove escaping symlink (`rm <link>`) or replace with internal copy. |
-| **BND-002** | `CRITICAL` | Stale or colliding worktree lease | Release expired lease (`bun coupling-router/scripts/worktree-lease.ts release`) or isolate to new worktree. |
+| **BND-002** | `CRITICAL` | Stale or colliding worktree lease | Release expired lease (`bun skills/context-orchestration/coupling-router/scripts/worktree-lease.ts release`) or isolate to new worktree. |
 | **BND-003** | `CRITICAL` | Insecure private key permissions | Enforce strict permissions: `chmod 600 <key_file>`. |
 | **BND-004** | `WARNING` | Executable `.env` file | Remove execute bit: `chmod -x .env`. |
 | **BND-005** | `CRITICAL` | Credential passed in process argv | Refactor subagent command invocation to read from `process.env`. |

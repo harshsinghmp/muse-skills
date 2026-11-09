@@ -160,7 +160,7 @@ Identify the project's source of truth before documenting behavior:
 Execute the synchronization workflow via the automation CLI:
 
 ```bash
-bun path/to/updateagents/scripts/updateagents.ts [options]
+bun skills/core-engine/updateagents/scripts/updateagents.ts [options]
 ```
 
 Instruction-adaptation safety options:

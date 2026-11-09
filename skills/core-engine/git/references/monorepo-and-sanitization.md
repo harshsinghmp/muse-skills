@@ -90,7 +90,7 @@ Verify that no editor metadata or rich markdown artifacts have overtaken origina
 # Audit for synthetic ADE/IDE wrappers
 rg -l "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}
 ```
-*Action*: If contaminated files are detected, unwrap them immediately via `bun updateagents/scripts/updateagents.ts . --sanitize`.
+*Action*: If contaminated files are detected, unwrap them immediately via `bun skills/core-engine/updateagents/scripts/updateagents.ts . --sanitize`.
 
 ### 3. Private Repo Visibility & License Sanity Check
 Before tagging and publishing release notes:

@@ -21,7 +21,7 @@ Agency and client financial operations engine: milestone invoicing, value-based 
 
 ```bash
 # Run multi-gateway transaction reconciliation
-bun accounts/scripts/reconcile-gateways.ts
+bun skills/agency-delivery/accounts/scripts/reconcile-gateways.ts
 ```
 
 ## Installation & Usage

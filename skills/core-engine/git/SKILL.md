@@ -372,7 +372,7 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
    - **Synthetic ADE/IDE Artifact Sweep**: Audit for and unwrap any synthetic ADE/IDE placeholders before release:
      ```bash
      if rg "\[\[ORCA_RICH_MD|<antArtifact|\[cursor:|<<<windsurf" . --exclude-dir={.git,node_modules,dist,.worktrees}; then
-       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun updateagents/scripts/updateagents.ts . --sanitize' before release."
+       echo "🚨 Synthetic ADE/IDE artifacts detected! Run 'bun skills/core-engine/updateagents/scripts/updateagents.ts . --sanitize' before release."
        exit 1
      fi
      ```

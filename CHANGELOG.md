@@ -17,6 +17,7 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **P0 safety: destructive and fabricated defaults (part 1)**: `context-anchor --rollback` now requires `--yes`, writes a patch snapshot to `.agents/artifacts/rollbacks/` before reverting, supports `--scope`, and leaves untracked files alone; `--drop` refuses to write placeholder state without `--state`/`--next`. `retain --scorecard` requires `--in` instead of fabricating a demo portfolio. `content` honours `--author` and defaults Article JSON-LD to `Organization` instead of a personal name. Regression tests: `tests/context-anchor-rollback.test.ts`, `tests/retain-scorecard.test.ts`, `tests/content-aeo-author.test.ts`.
+- **P0 safety: documented commands (part 2)**: `muse-security` zero-trust now honours `--attest`/`--audit-chain`/`--verify-mtls` instead of printing a canned demo; `periodic-retreat` fails with an explicit install hint when `coach` is absent. Documented `bun <skill>/scripts/...` paths were normalized across 30+ docs, and `scripts/audit-doc-commands.ts` plus `tests/doc-commands.test.ts` now gate path drift in CI.
 
 ## [8.3.0] - 2026-11-09
 
