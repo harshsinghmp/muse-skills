@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.4.1)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.4.2)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.1/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.2/scripts/install.sh | bash
 #
 # Supply-chain overrides:
-#   MUSE_SKILLS_REF=<tag>     install from this git tag (default: v8.4.1)
+#   MUSE_SKILLS_REF=<tag>     install from this git tag (default: v8.4.2)
 #   MUSE_SKILLS_COMMIT=<sha>  require the checkout to match this commit
 #   MUSE_SKILLS_ALLOW_UNVERIFIED=1  proceed when a release has no checksum asset (not recommended)
 #
@@ -24,7 +24,7 @@ ORIGINAL_PWD="$(pwd)"
 
 # Pinned distribution ref. The default tag is verified against the recorded
 # commit so a moved tag cannot silently change what this installer executes.
-MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-v8.4.1}"
+MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-v8.4.2}"
 MUSE_SKILLS_COMMIT="${MUSE_SKILLS_COMMIT:-}"
 if [ "$MUSE_SKILLS_REF" = "v8.3.0" ] && [ -z "$MUSE_SKILLS_COMMIT" ]; then
   MUSE_SKILLS_COMMIT="5c91a309d64f568c1e957110832a38d471ee568e"
@@ -38,7 +38,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.4.1)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.4.2)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 

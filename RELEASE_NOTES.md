@@ -1,3 +1,37 @@
+# 🏛️ Muse Skills v8.4.2 — Release Hygiene Gates & Faster CI
+
+> **Patch release: adds dependency and docs-ledger release gates, a weekly dependency-refresh tracker, backfills the ledger agent watermark, and cuts the parallel suite to about 40 seconds.** 699 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.4.2
+
+- **Dependency gate**: `bun run check:deps` fails when a direct dependency is behind the registry or the pinned `musememory` MCP runtime cannot start; CI runs it in the lint job.
+- **Docs-ledger gate**: `bun run check:ledger` fails on pending docs debt or a stale release tag; the Release workflow blocks the tag on it.
+- **Weekly tracker**: `.github/workflows/dependency-refresh.yml` runs every Monday, opens or updates a `dependencies` / `area:ci` / `p2` issue, and closes it when the gate is green.
+- **Ledger backfill**: the agent watermark advances through DP-0126, so `updateagents --docs-backlog` starts from current state.
+- **Faster suite**: the five isolated `new-project` scaffolds run concurrently (14.4s → 5.0s), lowering the parallel suite to about 40s.
+
+## 📊 Verification
+
+| Metric | v8.4.1 | v8.4.2 |
+|:---|:---|:---|
+| Automated Tests | 698 | **699** |
+| Test Files | 47 | **47** |
+| Suite time | ≈47s | **≈40s** |
+| Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.1...v8.4.2
+
+---
+
 # 🏛️ Muse Skills v8.4.1 — Audit Follow-ups & Release Smoke
 
 > **Patch release: closes the four post-audit follow-ups, refreshes dependencies and the docs ledger, and adds an automatic checksum-pinned smoke check for every published release.** 698 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
