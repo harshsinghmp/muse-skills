@@ -3325,6 +3325,17 @@ async function main() {
     }
   }
 
+  // 1.2a Initialize git when scaffolding a fresh directory so the agent-state
+  // excludes and pre-commit hook can actually be installed.
+  if (!isDryRun && !existsSync(join(resolvedTarget, ".git"))) {
+    const init = spawnSync("git", ["init", "-q"], { cwd: resolvedTarget, encoding: "utf8" });
+    if (init.status === 0) {
+      console.log("  ✅ Initialized git repository (agent state stays local-only)");
+    } else {
+      console.log("  ⚠️ Could not initialize git; run `git init` then `updateagents --install-excludes`.");
+    }
+  }
+
   // 1.2b Keep agent state internal: install local-only excludes when a git
   // repository already exists. Never puts harness names in the public .gitignore.
   if (!isDryRun && existsSync(join(resolvedTarget, ".git"))) {

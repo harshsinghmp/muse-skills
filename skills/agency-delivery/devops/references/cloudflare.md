@@ -130,7 +130,7 @@ Use modern Wrangler CLI (v4.x+) for deploying, developing, and managing Workers,
 | **D1 Local Migrate** | `wrangler d1 migrations apply DB --local` | Runs SQL migrations on local dev SQLite database. |
 | **D1 Remote Migrate**| `wrangler d1 migrations apply DB --remote`| Applies SQL migrations to production D1 database. |
 | **Set Secret** | `wrangler secret put <NAME>` | Encrypted variable stored in Cloudflare HSM. |
-| **Pipe Secret** | `echo "$KEY" \| wrangler secret put <NAME>` | Non-interactive secret injection for CI/CD. |
+| **Pipe Secret** | `wrangler secret put <NAME> < secret.txt` | Non-interactive secret injection for CI/CD; disable shell tracing and delete the file afterward. |
 | **List Secrets** | `wrangler secret list` | Displays encrypted secret names (values hidden). |
 | **Local Dev Secrets**| Edit `.dev.vars` | Key-value file for local runtime (strictly `.gitignore`'d). |
 

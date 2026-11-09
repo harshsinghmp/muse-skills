@@ -47,6 +47,15 @@ function execGit(repo: string, args: string[]): string {
   }
 }
 
+function gitOk(repo: string, args: string[]): boolean {
+  try {
+    execFileSync("git", args, { cwd: repo, stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function parsePorcelainWorktrees(porcelainText: string, repoRoot: string): FederatedWorktree[] {
   const worktrees: FederatedWorktree[] = [];
   const blocks = porcelainText
@@ -302,6 +311,11 @@ export function quarantineWorktree(
     return { success: false, quarantineRef: "", message: `Worktree path not found: ${resolved}` };
   }
 
+  const insideWorkTree = execGit(resolved, ["rev-parse", "--is-inside-work-tree"]);
+  if (insideWorkTree !== "true") {
+    return { success: false, quarantineRef: "", message: "Not a git worktree; refusing to quarantine." };
+  }
+
   const statusOut = execGit(resolved, ["status", "--porcelain"]);
   const timestamp = Date.now();
   const branchName = execGit(resolved, ["rev-parse", "--abbrev-ref", "HEAD"]) || "detached";
@@ -311,9 +325,36 @@ export function quarantineWorktree(
   let checkpointSha = "";
   if (statusOut.length > 0) {
     execGit(resolved, ["add", "-A"]);
-    checkpointSha = execGit(resolved, ["commit-tree", "HEAD^{tree}", "-m", `[QUARANTINE] ${reason} on ${safeBranch}`]);
-    if (checkpointSha) {
-      execGit(resolved, ["update-ref", quarantineRef, checkpointSha]);
+    const treeSha = execGit(resolved, ["write-tree"]);
+    if (!treeSha) {
+      return {
+        success: false,
+        quarantineRef: "",
+        message: "Could not snapshot the worktree index; refusing to clean.",
+      };
+    }
+    checkpointSha = execGit(resolved, [
+      "commit-tree",
+      treeSha,
+      "-p",
+      "HEAD",
+      "-m",
+      `[QUARANTINE] ${reason} on ${safeBranch}`,
+    ]);
+    if (!checkpointSha || !gitOk(resolved, ["update-ref", quarantineRef, checkpointSha])) {
+      return {
+        success: false,
+        quarantineRef: "",
+        message: "Could not create the quarantine ref; refusing to clean the worktree.",
+      };
+    }
+    const verified = execGit(resolved, ["rev-parse", "--verify", quarantineRef]);
+    if (!verified || verified !== checkpointSha) {
+      return {
+        success: false,
+        quarantineRef: "",
+        message: "Quarantine ref verification failed; refusing to clean the worktree.",
+      };
     }
   } else {
     const headSha = execGit(resolved, ["rev-parse", "HEAD"]);
@@ -360,7 +401,7 @@ export function quarantineWorktree(
 
 export function sweepFederatedWorktrees(
   worktrees: FederatedWorktree[],
-  opts: { prune?: boolean; maxAgeDays?: number; quarantineStale?: boolean } = {},
+  opts: { prune?: boolean; yes?: boolean; maxAgeDays?: number; quarantineStale?: boolean } = {},
 ): SweepReport {
   const maxAge = opts.maxAgeDays ?? 7;
   const prunedPaths: string[] = [];
@@ -377,9 +418,13 @@ export function sweepFederatedWorktrees(
         const qRes = quarantineWorktree(wt.path, "Automated stale sweep quarantine");
         if (qRes.success) {
           quarantinedPaths.push(`${wt.path} -> ${qRes.quarantineRef}`);
-          if (opts.prune) {
+          if (opts.prune && opts.yes) {
             execGit(wt.repo, ["worktree", "remove", "--force", wt.path]);
             prunedPaths.push(wt.path);
+            continue;
+          }
+          if (opts.prune) {
+            preservedPaths.push(`${wt.path} (PRUNE_REQUIRES_YES: quarantined at ${qRes.quarantineRef})`);
             continue;
           }
         }
@@ -394,9 +439,11 @@ export function sweepFederatedWorktrees(
     }
 
     if (wt.ageDays >= maxAge || wt.status === "STALE") {
-      if (opts.prune) {
+      if (opts.prune && opts.yes) {
         execGit(wt.repo, ["worktree", "remove", "--force", wt.path]);
         prunedPaths.push(wt.path);
+      } else if (opts.prune) {
+        prunedPaths.push(`${wt.path} (DRY_RUN: --yes required to prune)`);
       } else {
         prunedPaths.push(`${wt.path} (DRY_RUN: eligible for prune)`);
       }
@@ -503,6 +550,7 @@ if (import.meta.main) {
     }
   } else if (args.includes("sweep")) {
     const doPrune = args.includes("--prune");
+    const doYes = args.includes("--yes");
     const ageIdx = args.indexOf("--max-age");
     const maxAge = ageIdx !== -1 ? Number.parseInt(args[ageIdx + 1], 10) : 7;
     const quarantineStale = args.includes("--quarantine-stale");
@@ -510,6 +558,7 @@ if (import.meta.main) {
     const wts = discoverFederation();
     const rep = sweepFederatedWorktrees(wts, {
       prune: doPrune,
+      yes: doYes,
       maxAgeDays: maxAge,
       quarantineStale,
     });
@@ -530,7 +579,7 @@ if (import.meta.main) {
     }
   } else {
     console.log(
-      "Usage: bun worktree-federation.ts [list|status|spawn|pulse|quarantine|sweep] [--json] [--prune] [--namespaced] [--quarantine-stale]",
+      "Usage: bun worktree-federation.ts [list|status|spawn|pulse|quarantine|sweep] [--json] [--prune --yes] [--namespaced] [--quarantine-stale]",
     );
   }
 }

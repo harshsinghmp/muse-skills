@@ -47,7 +47,6 @@ export function isGitClean(targetDir: string): boolean {
 
 export function checkPreflightSync(workspaceRoot = process.cwd()): PreflightCheckResult {
   const artifactsDir = join(workspaceRoot, ".agents/artifacts");
-  const clean = isGitClean(workspaceRoot);
 
   // 1. Check updateagents freshness
   const contextReceiptPath = join(artifactsDir, ".context_fresh");
@@ -59,17 +58,15 @@ export function checkPreflightSync(workspaceRoot = process.cwd()): PreflightChec
       const data = JSON.parse(readFileSync(contextReceiptPath, "utf8"));
       updateagentsTimestamp = data.timestamp;
       const ageMs = Date.now() - new Date(data.timestamp).getTime();
-      if (clean || ageMs < 10 * 60 * 1000) {
+      // A clean tree is the state *before* a commit; only a recent receipt proves a sync ran.
+      if (ageMs < 10 * 60 * 1000) {
         updateagentsFresh = true;
       }
     } catch {}
-  } else if (clean) {
-    updateagentsFresh = true;
   }
 
   // 2. Check updatedocs freshness
   const docsReceiptPath = join(artifactsDir, ".docs_fresh");
-  const docsHashPath = join(workspaceRoot, ".docs.hash");
   let updatedocsFresh = false;
   let updatedocsTimestamp: string | undefined;
 
@@ -78,17 +75,15 @@ export function checkPreflightSync(workspaceRoot = process.cwd()): PreflightChec
       const data = JSON.parse(readFileSync(docsReceiptPath, "utf8"));
       updatedocsTimestamp = data.timestamp;
       const ageMs = Date.now() - new Date(data.timestamp).getTime();
-      if (clean || ageMs < 10 * 60 * 1000) {
+      if (ageMs < 10 * 60 * 1000) {
         updatedocsFresh = true;
       }
     } catch {}
-  } else if (clean || existsSync(docsHashPath)) {
-    updatedocsFresh = true;
   }
 
   const canSkip = updateagentsFresh && updatedocsFresh;
   const reason = canSkip
-    ? "CACHE_HIT: Context and documentation are fresh from recent turn/clean working tree."
+    ? "CACHE_HIT: Context and documentation have receipts younger than 10 minutes."
     : `DRIFT: ${!updateagentsFresh ? "updateagents context stale. " : ""}${!updatedocsFresh ? "updatedocs documentation stale." : ""}`.trim();
 
   return {
@@ -126,14 +121,23 @@ export function runPreflightSync(workspaceRoot = process.cwd(), options: { force
 
   const actionsExecuted: string[] = [];
   const skipped: string[] = [];
+  let syncOk = true;
 
   // Execute updateagents if stale or forced
   if (!check.updateagentsFresh || options.force) {
     const updateagentsScript = join(workspaceRoot, "skills/core-engine/updateagents/scripts/updateagents.ts");
     if (existsSync(updateagentsScript)) {
       try {
-        spawnSync("bun", [updateagentsScript, "--stack-guard"], { cwd: workspaceRoot, encoding: "utf8" });
-      } catch {}
+        const result = spawnSync("bun", [updateagentsScript, "--stack-guard"], {
+          cwd: workspaceRoot,
+          encoding: "utf8",
+        });
+        if (result.status !== 0) syncOk = false;
+      } catch {
+        syncOk = false;
+      }
+    } else {
+      syncOk = false;
     }
     actionsExecuted.push("updateagents (Context & Stack-Guard Sync)");
   } else {
@@ -145,8 +149,13 @@ export function runPreflightSync(workspaceRoot = process.cwd(), options: { force
     const updatedocsScript = join(workspaceRoot, "skills/core-engine/updatedocs/scripts/updatedocs.ts");
     if (existsSync(updatedocsScript)) {
       try {
-        spawnSync("bun", [updatedocsScript, "--fast-skip"], { cwd: workspaceRoot, encoding: "utf8" });
-      } catch {}
+        const result = spawnSync("bun", [updatedocsScript, "--fast-skip"], { cwd: workspaceRoot, encoding: "utf8" });
+        if (result.status !== 0) syncOk = false;
+      } catch {
+        syncOk = false;
+      }
+    } else {
+      syncOk = false;
     }
     actionsExecuted.push("updatedocs (Documentation Fast-Skip & Hash Sync)");
   } else {
@@ -154,7 +163,7 @@ export function runPreflightSync(workspaceRoot = process.cwd(), options: { force
   }
 
   // Public-surface safety: never push tracked agent/harness state to a remote.
-  let publicSurfaceOk = true;
+  let publicSurfaceOk = false;
   const hygieneScript = join(workspaceRoot, "skills/core-engine/updateagents/scripts/updateagents.ts");
   if (existsSync(hygieneScript)) {
     const res = spawnSync("bun", [hygieneScript, workspaceRoot, "--hygiene", "--check-public"], {
@@ -165,16 +174,19 @@ export function runPreflightSync(workspaceRoot = process.cwd(), options: { force
     actionsExecuted.push("updateagents (Harness Hygiene public-surface check)");
   }
 
-  // Record freshness receipts
-  recordPreflightReceipts(workspaceRoot);
+  // Never stamp a receipt for a failed sync: a later run would trust it.
+  if (publicSurfaceOk && syncOk) {
+    recordPreflightReceipts(workspaceRoot);
+  }
 
   return {
-    success: publicSurfaceOk,
+    success: publicSurfaceOk && syncOk,
     skipped,
     actionsExecuted,
-    reason: publicSurfaceOk
-      ? "Pre-flight synchronization executed and freshness receipts recorded."
-      : "Pre-flight blocked: tracked agent/harness artifacts must be removed from the index before delivery.",
+    reason:
+      publicSurfaceOk && syncOk
+        ? "Pre-flight synchronization executed and freshness receipts recorded."
+        : "Pre-flight blocked: a sync step failed or tracked agent/harness artifacts must be removed from the index.",
   };
 }
 

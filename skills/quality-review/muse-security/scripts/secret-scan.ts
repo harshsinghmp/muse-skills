@@ -17,7 +17,7 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
 export interface SecretFinding {
@@ -52,6 +52,11 @@ export const IGNORED_DIRS = new Set([
   "coverage",
   ".artifacts",
   "pulse-state",
+  ".agents",
+  ".memory",
+  ".musememory",
+  ".venv-report",
+  ".worktrees",
 ]);
 
 export const BINARY_EXTS = new Set([
@@ -182,14 +187,13 @@ function isExcludedLine(line: string): boolean {
     trimmed.includes("sk-[a-zA-Z0-9") ||
     trimmed.includes("ghp_[a-zA-Z0-9") ||
     trimmed.includes("`sk-*`") ||
-    trimmed.includes("`ghp_*`") ||
-    trimmed.includes("regex:") ||
-    trimmed.includes("RegExp") ||
-    trimmed.includes("PATTERN =") ||
-    trimmed.includes("PATTERN=")
+    trimmed.includes("`ghp_*`")
   ) {
     return true;
   }
+  // Skip scanner definitions, not arbitrary lines that merely mention a pattern.
+  if (/^\s*(?:const|let|var)\s+\w+\s*=\s*(?:new\s+)?RegExp\b/.test(trimmed)) return true;
+  if (/^\s*(?:const|let|var)\s+\w*PATTERN\w*\s*=/.test(trimmed)) return true;
   return false;
 }
 
@@ -197,9 +201,6 @@ export function isIgnoredPath(relPath: string): boolean {
   const parts = relPath.split(/[\\/]/);
   for (const part of parts) {
     if (IGNORED_DIRS.has(part)) return true;
-    if (part.startsWith(".") && part !== ".env" && part !== ".env.example" && part !== ".env.local" && part !== ".") {
-      return true;
-    }
   }
   const ext = extname(relPath).toLowerCase();
   if (BINARY_EXTS.has(ext)) return true;
@@ -221,13 +222,14 @@ function collectFiles(dir: string, baseDir: string, collected: string[] = []): s
       continue;
     }
 
-    let stat: ReturnType<typeof statSync>;
+    let stat: ReturnType<typeof lstatSync>;
     try {
-      stat = statSync(fullPath);
+      stat = lstatSync(fullPath);
     } catch {
       continue;
     }
 
+    if (stat.isSymbolicLink()) continue;
     if (stat.isDirectory()) {
       collectFiles(fullPath, baseDir, collected);
     } else if (stat.isFile()) {

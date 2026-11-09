@@ -65,7 +65,7 @@ Run before reporting completion:
 - [ ] Hook scripts (if registered) are executable bash
 - [ ] Fail-closed behavior confirmed: Telegram down → log + continue, never block
 
-For live notification testing: `curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d text="muse-skills verify"` returns `{"ok":true}`.
+For live notification testing: read the token and chat id from the mode-600 config into a temporary curl config file (never argv or shell history), then `curl --silent --config telegram-curl.conf`; expect `{"ok":true}`. The token must not appear in the command line.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 

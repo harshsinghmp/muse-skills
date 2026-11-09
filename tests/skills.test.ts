@@ -2343,7 +2343,18 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       const checkData = JSON.parse(checkRes.stdout);
       expect(checkData.canSkip).toBe(false);
 
-      // 2. Run preflight (should succeed and write receipts)
+      // 2. Run preflight (should succeed and write receipts). Provide no-op
+      // syncer stubs: a missing syncer now fails closed instead of stamping a receipt.
+      const stubs = [
+        ["skills/core-engine/updateagents/scripts", "updateagents.ts"],
+        ["skills/core-engine/updatedocs/scripts", "updatedocs.ts"],
+      ] as const;
+      for (const [dir, file] of stubs) {
+        const fullDir = path.join(tempDir, dir);
+        fs.mkdirSync(fullDir, { recursive: true });
+        fs.writeFileSync(path.join(fullDir, file), "process.exit(0);\n", "utf8");
+      }
+
       const runRes = spawnSync(
         "bun",
         ["skills/core-engine/git/scripts/git-preflight.ts", tempDir, "--preflight-run", "--json"],

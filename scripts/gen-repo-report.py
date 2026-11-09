@@ -13,7 +13,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import date
+from datetime import date, datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFTS = os.path.join(ROOT, ".agents", "artifacts", "drafts")
@@ -54,6 +54,9 @@ def main():
     today = date.today().isoformat()
     dest_name = f"session-{sid}--{today}.html"
     dest = os.path.join(ARCHIVE, dest_name)
+    if os.path.exists(dest):
+        unique = datetime.now().strftime("%H%M%S")
+        dest = os.path.join(ARCHIVE, f"session-{sid}--{today}-{unique}.html")
 
     shutil.copy2(source, dest)
     size = os.path.getsize(dest)

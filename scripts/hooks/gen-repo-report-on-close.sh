@@ -18,6 +18,9 @@ HTML=$(ls -t "$DRAFTS"/session-history-*.html 2>/dev/null | head -1 || true)
 BASENAME=$(basename "$HTML")
 SESSION_ID=$(echo "$BASENAME" | sed -E 's/session-history-([0-9-]+)\.html/\1/')
 DEST="$ARCHIVE/session-${SESSION_ID}--$(date +%Y-%m-%d).html"
+if [ -e "$DEST" ]; then
+  DEST="$ARCHIVE/session-${SESSION_ID}--$(date +%Y-%m-%d-%H%M%S).html"
+fi
 
 cp -f "$HTML" "$DEST"
 echo "[hooks] report archived: $DEST ($(wc -c < "$DEST") bytes)"
