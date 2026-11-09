@@ -2,13 +2,16 @@ name: Landing Gate
 
 # Enforces the Landing Gate standard: a commit is not a delivery.
 # Pre-review gate on pull_request (against github.head_ref);
-# post-merge gate on push to the integration branch (against github.ref_name).
+# post-merge gate on push to the integration/production branches only.
+# Feature-branch pushes are covered by the pull_request run; triggering on
+# them too produced duplicate `landing-gate` checks that briefly blocked merges.
 
 on:
   pull_request:
   push:
     branches:
-      - "**"
+      - dev
+      - main
 
 permissions:
   contents: read

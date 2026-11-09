@@ -100,7 +100,8 @@ changes
 2. **Static checks**: `bun run lint` and `bunx tsc --noEmit` are clean.
 3. **Freshness**: `bun run check:sync` confirms the release branch contains the latest `dev`.
 4. **Version + derived artifacts**: move the `Unreleased` changelog block into `## [X.Y.Z]`, bump `package.json` and the README version, and regenerate every declared derived artifact in the same commit.
-5. **Delivery**: tag `vX.Y.Z`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
+5. **Release notes**: add the new version's section to `RELEASE_NOTES.md` — the tag-triggered Release workflow publishes that section, and `tests/release-notes.test.ts` fails when the current `package.json` version has none.
+6. **Delivery**: tag `vX.Y.Z`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
 
 ---
 

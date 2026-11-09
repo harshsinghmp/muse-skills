@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ### Changed
 
 - **Release notes publish the curated section**: the tag-triggered Release workflow now extracts the `RELEASE_NOTES.md` section for the tagged version and publishes it via `body_path`, instead of a fixed body plus auto-generated PR titles. It falls back to a changelog link when no section exists, and a test guards both the section and the wiring.
+- **Release pipeline hardening**: `landing-gate` now runs on `pull_request` and on pushes to `dev`/`main` only, removing the duplicate `landing-gate` check runs that briefly blocked merges. The release checklist now requires a curated `RELEASE_NOTES.md` section for the new version, enforced by `tests/release-notes.test.ts`.
 
 ## [8.3.0] - 2026-11-09
 
