@@ -41,7 +41,8 @@ jobs:
           STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
           test "$STATE" = "OPEN"
 
-          REQUIRED_CHECKS="lint type-check bun test secret-scan"
+          # Array, not a space-separated string: "bun test" is one check name.
+          REQUIRED_CHECKS=("lint" "type-check" "bun test" "secret-scan")
           for _attempt in $(seq 1 40); do
             JSON=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/check-runs?per_page=100")
             FAILED=$(printf '%s' "$JSON" | jq '[.check_runs[] | select(.name != "landing-gate" and .name != "Landing Gate") | select(.status == "completed" and (.conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped"))] | length')
@@ -51,7 +52,7 @@ jobs:
               exit 1
             fi
             MISSING=""
-            for name in $REQUIRED_CHECKS; do
+            for name in "${REQUIRED_CHECKS[@]}"; do
               if ! printf '%s' "$JSON" | jq -e --arg n "$name" '.check_runs[] | select(.name == $n and .status == "completed" and .conclusion == "success")' >/dev/null; then
                 MISSING="${MISSING}${name}, "
               fi

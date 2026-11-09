@@ -71,7 +71,8 @@ describe("CI and supply-chain hardening (#395)", () => {
     const landing = read(".github/workflows/landing-gate.yml");
     expect(landing).toMatch(/PR_NUMBER: \$\{\{ github\.event\.pull_request\.number \}\}/);
     expect(landing).toContain("check-runs");
-    expect(landing).toContain("REQUIRED_CHECKS");
+    expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "secret-scan")');
+    expect(landing).toContain('for name in "${REQUIRED_CHECKS[@]}"');
     expect(landing).not.toMatch(/BRANCH="\$\{\{ github\.ref_name \}\}"/);
 
     const ci = read(".github/workflows/ci.yml");
