@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-09T20:54:13.314Z",
-  "head": "962a01bd864324986755144d09ea22886302645c",
+  "updatedAt": "2026-11-09T20:56:14.335Z",
+  "head": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
   "watermark": {
-    "point": 125,
-    "commit": "962a01bd864324986755144d09ea22886302645c",
-    "date": "2026-11-09T20:54:12.779Z",
+    "point": 126,
+    "commit": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
+    "date": "2026-11-09T20:56:13.800Z",
     "releaseTag": "v8.4.1"
   },
   "agentWatermark": {
@@ -4977,6 +4977,56 @@
       "shipped": true,
       "releaseTag": "v8.4.1",
       "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0126",
+      "point": 126,
+      "commit": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
+      "shortCommit": "c68cd79",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "",
+      "summary": "add dependency and docs-ledger release gates",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "llms.txt",
+        "package.json",
+        "scripts/check-deps.ts",
+        "scripts/check-docs-ledger.ts",
+        "tests/agent-engine.test.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/version-consistency.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"dependency ledger\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["README.md"],
+          "evidence": "manually documented in README.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"dependency ledger\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:56:04.987Z"
     }
   ]
 }
