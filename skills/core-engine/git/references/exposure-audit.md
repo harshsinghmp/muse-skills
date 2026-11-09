@@ -47,11 +47,18 @@ git log -p -n 50 | rg -i "api[_-]?key|secret|token|password|sk-[a-zA-Z0-9]{20,}"
    git commit -m "feat: clean commit without credentials"
    ```
 4. **Purge from History Across Branches (If Pushed to Remote)**:
-   Use `git-filter-repo` (modern standard replacing BFG / git filter-branch):
+   Use `git-filter-repo` (modern standard replacing BFG / git filter-branch), then coordinate the rewrite:
    ```bash
+   # 1. Announce a push freeze first; every collaborator stops pushing.
+   # 2. Rewrite the history.
    git filter-repo --path .env --invert-paths
-   git push origin --force --all
+   # 3. Push only the affected branches with a lease, never --all/--tags.
+   git push origin --force-with-lease main dev
    ```
+   - **Rotate every credential exposed in the old history first**; a rewrite does not un-leak a key that was already reachable.
+   - **Freeze shared branches** for the rewrite window and re-enable pushes only after the force-push lands.
+   - **Every collaborator must re-clone.** Existing clones, forks, and cached CI checkouts still contain the secret; `filter-repo` cannot reach them.
+   - Avoid `git push --force --all`: it force-updates every branch (including other people's in-flight work) and hides which refs changed.
 
 ---
 

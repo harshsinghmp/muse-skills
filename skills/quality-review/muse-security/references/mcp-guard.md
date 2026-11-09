@@ -123,6 +123,7 @@ bun skills/quality-review/muse-security/scripts/mcp-sanitizer.ts \
 Before enabling any external MCP server:
 - [ ] Tool manifest scanned for prompt injection and system prompt overrides (MCP-001).
 - [ ] Server transport verified as `stdio` or authenticated loopback (MCP-002).
+- [ ] Server package is pinned to an exact version and recorded in the project lockfile; no floating `@latest`, bare `npx -y <pkg>`, or unversioned Docker tag.
 - [ ] No hardcoded API keys or secrets in server launch arguments (MCP-002/MCP-004).
 - [ ] Dynamic JIT tool hydration verified to achieve $\ge 70\%$ token reduction (MCP-003).
 - [ ] Runtime payload tripwire tested against simulated credential leaks (MCP-004).

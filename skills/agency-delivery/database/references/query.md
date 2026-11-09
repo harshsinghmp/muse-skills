@@ -19,7 +19,7 @@ Tabulated read-only results plus a short data note if the query touches sensitiv
    - When the env-manager layer is present, check it for a binded client or env aliases first; it is authoritative when it offers one. The JSON config is the fallback when the env layer is silent.
    - Discover in two places when prompted: the top-level config folder (e.g. `workspace/.env/databases/` or the env-manager layer) and the service folder for a named `databases/` subfolder. Permissions boundary: do not read files the trust boundary forbids.
    - Common fields inspected: `host`/`port`/`dbname` (or `database`), `user`/`password` (or `password_env`/`pass`), TLS/SSL toggle, timeout and batch-size tuning, and per-database overrides noted for MySQL/MSSQL context.
-   - Credential config (`password` vs `password_env` vs `pass`) is permission-checked; real secret values stay in the source config, never printed in results or logs.
+   - Credential config: prefer `password_env` (or the env-manager reference) so the value never lives in a config file. A plaintext `password`/`pass` is used only when the file is owner-only (`0600`) and the user explicitly approves; otherwise refuse and ask for an env reference. Never read the value into the transcript, and mask it in errors, results, and logs.
 2. Launch the query session with defense-in-depth settings.
    - Read-only session mode: enforce `MATERIALIZED` cold-transaction isolation so reads are repeatable; set the session state so writes are blocked at the connection level.
    - Timeout constant at 30 seconds (clear bounty + intent constant) so a runaway query aborts fast and the caller sees a clean error.

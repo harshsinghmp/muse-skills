@@ -23,6 +23,7 @@ Every event collection pipeline and analytics ingestion layer must satisfy four 
 - **Idempotency Fingerprint**: Every event calculates a deterministic deduplication hash:
   $$\text{eventId} = \text{sha256}(\text{timestamp} + \text{distinct\_id} + \text{event})$$
   Duplicate events within a 24-hour sliding window are deduplicated with HTTP 200 acknowledgment.
+- **Context PII minimization**: never persist raw `context.ip`, `context.user_agent`, `page_url`, or `referrer`. Truncate IPv4 to `/24` and IPv6 to `/48` (or store an HMAC with a rotating server-side pepper), reduce the user agent to a coarse family/version, strip query strings from URLs, and attach a retention TTL (≤ 30 days) that deletes the context fields at expiry. Do not place these fields in the event `properties` bag.
 
 ### EVT-003: Dual-Rail Transport & Non-Blocking Edge Ingestion
 - **Browser Transport**: Primary transport uses `navigator.sendBeacon()` for page unloads and background flushes; falls back to `fetch()` with `keepalive: true`.
@@ -32,7 +33,7 @@ Every event collection pipeline and analytics ingestion layer must satisfy four 
 ### EVT-004: Deterministic Multi-Touch Attribution Binding
 - **Attribution Parameters**: Ingest and preserve `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `ref`, `gclid`, `fbclid`, and `ttclid`.
 - **Dual-Touch Model**:
-  - `first_touch`: Captured on initial anonymous session and persisted in secure `HttpOnly` or `SameSite=Lax` cookie for 90 days.
+  - `first_touch`: Captured on initial anonymous session and persisted in a host-only cookie with `Secure; HttpOnly; SameSite=Lax; Path=/` for at most 90 days, set only after analytics consent is granted. Without consent, keep attribution in memory or first-party session storage and do not write the cookie.
   - `last_touch`: Updated on the current converting session.
 - **Organic & Direct Handling**: Explicitly classifies direct navigation vs organic search vs paid campaigns.
 

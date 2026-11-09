@@ -65,6 +65,7 @@ BROWSE_DEPTH=1
 INTERACTIVE=false
 ONLY_SELECTION=""
 ASSUME_YES=false
+CONFIRM_IRREVERSIBLE=false
 INCLUDE_SYSTEM=false
 DISCOVER_ONLY=false
 CLEAN_SAFE=false
@@ -102,7 +103,8 @@ Options:
   --interactive, -i         Numbered menu of items that need a decision (grouped by scope).
   --only <key,..>           Delete exactly these items (catalog ids or discovered keys).
   --include-system          Permit sudo-backed candidates (pacman/apt/dnf/journal) in this run.
-  --yes, -y                 Skip the interactive confirmation prompt (still prints the plan).
+  --yes, -y                 Consent to ASK selections and skip their prompt (still prints the plan).
+  --confirm-irreversible    Required for ASK! selections in non-interactive shells; --yes alone is not enough.
   --projects <dirs>         Colon-separated project roots to scan (persisted to config).
   --dormant <days>          Only treat project caches untouched this long as dormant (default 14).
   --min-size <mb>           Hide discovered items smaller than this (default 1 MB).
@@ -215,6 +217,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --yes|-y)
             ASSUME_YES=true
+            shift
+            ;;
+        --confirm-irreversible)
+            CONFIRM_IRREVERSIBLE=true
             shift
             ;;
         --scan-node-modules)
@@ -1572,6 +1578,17 @@ selection_needs_confirmation() {
     return 1
 }
 
+# ASK! is irreversible data loss. --yes is consent for ASK, not for ASK!:
+# an irreversible selection additionally needs --confirm-irreversible or a
+# typed "yes" in a real terminal.
+selection_has_irreversible() {
+    local a
+    for a in "$@"; do
+        [ "${ACT_TIER[$a]}" = "ASK!" ] && return 0
+    done
+    return 1
+}
+
 resolve_selection() {
     local input="$1" quiet="${2:-}" part a b k idx
     SEL_RESULT=()
@@ -1629,9 +1646,26 @@ execute_selection() {
     if selection_needs_confirmation "$@"; then
         if [ "$DRY_RUN" = true ]; then
             echo " Dry run: nothing will be deleted."
+        elif selection_has_irreversible "$@"; then
+            if [ "$CONFIRM_IRREVERSIBLE" = true ]; then
+                echo " Irreversible selection explicitly confirmed with --confirm-irreversible."
+            elif [ ! -t 0 ]; then
+                echo " Refusing: this selection contains irreversible ASK! candidates." >&2
+                echo " --yes is not enough here. Re-run with --confirm-irreversible after the user" >&2
+                echo " has approved the exact paths and warning above." >&2
+                return 1
+            else
+                local answer
+                printf ' Type "yes" to permanently delete the irreversible selections: '
+                read -r answer || true
+                if [ "$answer" != "yes" ]; then
+                    echo " Aborted — nothing was deleted."
+                    return 1
+                fi
+            fi
         elif [ "$ASSUME_YES" != true ]; then
             if [ ! -t 0 ]; then
-                echo " Refusing: this selection contains ASK/ASK! candidates." >&2
+                echo " Refusing: this selection contains ASK candidates." >&2
                 echo " Re-run with --yes after the user has approved the plan above." >&2
                 return 1
             fi
