@@ -517,37 +517,13 @@ Options:
   }
 
   if (values.scorecard) {
-    let accounts: AccountHealthInput[] = [];
-    if (values.in && existsSync(values.in)) {
-      accounts = JSON.parse(readFileSync(values.in, "utf8"));
-    } else {
-      // Default demo portfolio
-      accounts = [
-        {
-          accountName: "Apex SaaS Solutions",
-          monthlyRevenue: 24000,
-          productTelemetry: 92,
-          sentimentScore: 88,
-          financialVelocity: 95,
-        },
-        {
-          accountName: "Beacon Logistics",
-          monthlyRevenue: 15000,
-          productTelemetry: 68,
-          sentimentScore: 62,
-          financialVelocity: 70,
-        },
-        {
-          accountName: "Cascade E-Commerce",
-          monthlyRevenue: 18000,
-          productTelemetry: 42,
-          sentimentScore: 40,
-          financialVelocity: 45,
-          hasSponsorTurnover: true,
-          overdueDays: 21,
-        },
-      ];
+    if (!values.in || !existsSync(values.in)) {
+      console.error(
+        "Error: --scorecard requires --in <portfolio.json>; refusing to fabricate a demo portfolio for a client report.",
+      );
+      process.exit(1);
     }
+    const accounts: AccountHealthInput[] = JSON.parse(readFileSync(values.in, "utf8"));
 
     const scorecard = generatePortfolioScorecard(accounts);
     if (values.json) {

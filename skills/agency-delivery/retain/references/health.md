@@ -148,9 +148,9 @@ bun skills/agency-delivery/retain/scripts/client-health-telemetry.ts \
   --financial 45 \
   --out cap-plan.md
 
-# 4. Generate portfolio health scorecard across accounts
+# 4. Generate portfolio health scorecard across accounts (portfolio file is required)
 bun skills/agency-delivery/retain/scripts/client-health-telemetry.ts \
-  --scorecard \
+  --scorecard --in portfolio.json \
   --json
 
 # 5. Model agency Net Retention Rate (NRR) and Gross Retention Rate (GRR)
