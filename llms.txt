@@ -64,6 +64,7 @@ All skills conform to RFC specifications with YAML frontmatter, standardized sec
 
 ## Core Architecture Context
 
+- [MCP allowlist gate](scripts/check-mcp.ts): validates `.mcp.json` server names, transport, command allowlist, and literal-secret detection (`bun run check:mcp`).
 - [Project Architecture](.agents/context/architecture.md)
 - [Product Definition](.agents/context/product.md)
 - [Current Shipped Reality](.agents/context/current.md)

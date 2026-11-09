@@ -49,4 +49,4 @@ jobs:
           # Run the gate from the base ref, not the PR checkout: a PR must not be
           # able to neuter the script that judges it.
           git worktree add --detach gate-base base-ref >/dev/null
-          ( cd gate-base && bun scripts/check-sync.ts --base="origin/${BASE_REF}" --head=pr-head --no-local-base --no-fetch )
+          ( cd gate-base && bun scripts/check-sync.ts --base="${BASE_REF}" --head=pr-head --no-local-base --no-fetch )

@@ -327,6 +327,9 @@ bun run check:landed
 
 # Verify branch freshness before opening or merging a PR (SYNCED / NOT SYNCED)
 bun run check:sync
+
+# Validate .mcp.json server allowlist, transports, and literal-secret detection (scripts/check-mcp.ts)
+bun run check:mcp
 ```
 
 - **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).
