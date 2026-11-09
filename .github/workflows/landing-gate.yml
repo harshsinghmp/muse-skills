@@ -16,6 +16,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  checks: read
 
 jobs:
   landing-gate:
@@ -30,22 +31,49 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.head_ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -e
-          HEAD="$HEAD_REF"
-          # pushed?
-          test -n "$(git ls-remote --heads origin "$HEAD")"
-          # open PR with green checks
-          STATE=$(gh pr view "$HEAD" --json state -q .state)
+          set -euo pipefail
+          test -n "$PR_NUMBER"
+          test -n "$HEAD_SHA"
+
+          STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
           test "$STATE" = "OPEN"
-          echo "REVIEWABLE"
+
+          REQUIRED_CHECKS="lint type-check bun test secret-scan"
+          for _attempt in $(seq 1 40); do
+            JSON=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/check-runs?per_page=100")
+            FAILED=$(printf '%s' "$JSON" | jq '[.check_runs[] | select(.name != "landing-gate" and .name != "Landing Gate") | select(.status == "completed" and (.conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped"))] | length')
+            if [ "$FAILED" -ne 0 ]; then
+              echo "Required checks failed:"
+              printf '%s' "$JSON" | jq -r '.check_runs[] | select(.status == "completed" and (.conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped")) | "  - \(.name): \(.conclusion)"'
+              exit 1
+            fi
+            MISSING=""
+            for name in $REQUIRED_CHECKS; do
+              if ! printf '%s' "$JSON" | jq -e --arg n "$name" '.check_runs[] | select(.name == $n and .status == "completed" and .conclusion == "success")' >/dev/null; then
+                MISSING="${MISSING}${name}, "
+              fi
+            done
+            if [ -z "$MISSING" ]; then
+              echo "REVIEWABLE — required checks green for PR #${PR_NUMBER}"
+              exit 0
+            fi
+            echo "Waiting on checks: ${MISSING%, }"
+            sleep 15
+          done
+          echo "Timed out waiting for required checks"
+          exit 1
 
       - name: Post-merge gate (push)
         if: github.event_name == 'push' && github.ref_type == 'branch'
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
         run: |
-          set -e
-          BRANCH="${{ github.ref_name }}"
+          set -euo pipefail
+          BRANCH="$TARGET_BRANCH"
+          test -n "$BRANCH"
           git fetch origin "$BRANCH" --quiet
           git merge-base --is-ancestor HEAD "origin/$BRANCH"
           echo "LANDED"

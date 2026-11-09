@@ -487,7 +487,9 @@ export function runSetup(options: SetupOptions = {}): void {
 
   const doSkills = options.installSkills !== false;
   const doCommands = options.exportCommands !== false;
-  const doWire = options.wireAgentsMd !== false;
+  // Opt-in only: never append to a global/local AGENTS.md unless the caller
+  // explicitly requests it (--wire-agents).
+  const doWire = options.wireAgentsMd === true;
 
   // 1. Install Skills
   if (doSkills) {

@@ -16,6 +16,7 @@ for (const a of process.argv.slice(2)) {
 const mode = (args.get("mode") ?? "post-merge") as Mode;
 const branch = args.get("branch") ?? process.env.INTEGRATION_BRANCH ?? "dev";
 const head = args.get("head") ?? process.env.GITHUB_HEAD_REF ?? "";
+const prNumber = args.get("pr") ?? process.env.PR_NUMBER ?? "";
 
 function run(cmd: string, args: string[], env?: Record<string, string>): { code: number; out: string } {
   const r = spawnSync(cmd, args, { encoding: "utf8", env: { ...process.env, ...env } });
@@ -73,22 +74,30 @@ if (mode === "post-merge") {
   process.exit(landed ? 0 : 1);
 } else {
   // pre-review
-  const headRef = head || process.argv.find((a) => a.startsWith("--head="))?.slice(7) || "";
-  if (!headRef) {
-    console.error("pre-review mode requires --head=<branch> or GITHUB_HEAD_REF");
+  const requestedHead = head || process.argv.find((a) => a.startsWith("--head="))?.slice(7) || "";
+  if (!requestedHead && !prNumber) {
+    console.error("pre-review mode requires --pr=<number>, --head=<branch>, or GITHUB_HEAD_REF");
     process.exit(2);
   }
-  const pushed = run("git", ["ls-remote", "--heads", "origin", headRef]);
-  const isPushed = pushed.code === 0 && pushed.out.trim().length > 0;
-  const prJson = run("gh", ["pr", "view", headRef, "--json", "number,state,statusCheckRollup"], {
-    GH_TOKEN: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? "",
-  });
+  const ghEnv = { GH_TOKEN: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? "" };
+  // Resolve by PR number when supplied: head branch names are ambiguous across forks.
+  const prJson = prNumber
+    ? run("gh", ["pr", "view", prNumber, "--json", "number,state,headRefName,headRefOid,statusCheckRollup"], ghEnv)
+    : run(
+        "gh",
+        ["pr", "view", requestedHead, "--json", "number,state,headRefName,headRefOid,statusCheckRollup"],
+        ghEnv,
+      );
   let prState = "none";
   let checksGreen = false;
+  let headRef = requestedHead;
+  let headSha = "";
   if (prJson.code === 0) {
     try {
       const j = JSON.parse(prJson.out.trim());
       prState = `#${j.number} ${j.state}`;
+      headRef = String(j.headRefName ?? requestedHead);
+      headSha = String(j.headRefOid ?? "");
       const rollup = Array.isArray(j.statusCheckRollup) ? j.statusCheckRollup : [];
       // Only judge checks that have already concluded; ignore in-progress ones
       // (including this gate's own job) so the gate can run after the others.
@@ -104,11 +113,13 @@ if (mode === "post-merge") {
       prState = "parse-error";
     }
   }
+  const pushed = headRef ? run("git", ["ls-remote", "--heads", "origin", headRef]) : { code: 1, out: "" };
+  const isPushed = pushed.code === 0 && pushed.out.trim().length > 0 && (!headSha || pushed.out.includes(headSha));
   const open = prState.includes("OPEN");
   const reviewable = isPushed && open && checksGreen;
-  const headSha = sha(`origin/${headRef}`) !== "unknown" ? sha(`origin/${headRef}`) : sha("HEAD");
+  const headShaDisplay = headSha ? headSha.slice(0, 7) : sha(`origin/${headRef}`);
   table([
-    ["Branch + sha", `${headRef} @ ${headSha}`],
+    ["Branch + sha", `${headRef || "unknown"} @ ${headShaDisplay}`],
     ["Integration branch + sha", `${branch} @ ${sha(`origin/${branch}`)}`],
     [
       "Landed? (exact command + exit code)",
