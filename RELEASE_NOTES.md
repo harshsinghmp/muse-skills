@@ -1,6 +1,6 @@
 # 🏛️ Muse Skills v8.4.2 — Release Hygiene Gates & Faster CI
 
-> **Patch release: adds dependency and docs-ledger release gates, a weekly dependency-refresh tracker, backfills the ledger agent watermark, and cuts the parallel suite to about 40 seconds.** 699 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
+> **Patch release: adds dependency and docs-ledger release gates, a weekly dependency-refresh tracker, backfills the ledger agent watermark, and cuts the parallel suite to about 40 seconds.** 700 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
@@ -16,7 +16,7 @@
 
 | Metric | v8.4.1 | v8.4.2 |
 |:---|:---|:---|
-| Automated Tests | 698 | **699** |
+| Automated Tests | 698 | **700** |
 | Test Files | 47 | **47** |
 | Suite time | ≈47s | **≈40s** |
 | Failures | 0 | **0** |
