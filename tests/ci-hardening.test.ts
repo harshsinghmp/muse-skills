@@ -61,7 +61,18 @@ describe("CI and supply-chain hardening (#395)", () => {
     const smoke = read(".github/workflows/release-smoke.yml");
     expect(smoke).toContain("release:");
     expect(smoke).toContain("release:smoke");
+    expect(read(".github/workflows/release.yml")).toContain("bun run release:smoke");
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
+    expect(ci).toContain("bun run check:deps");
+    expect(read(".github/workflows/release.yml")).toContain("bun run check:ledger");
+  });
+
+  test("weekly dependency refresh is tracked in an issue", () => {
+    const refresh = read(".github/workflows/dependency-refresh.yml");
+    expect(refresh).toContain("schedule:");
+    expect(refresh).toContain("bun run check:deps");
+    expect(refresh).toContain("--label dependencies");
+    expect(refresh).toContain("gh issue comment");
   });
 
   test("CI parallelizes tests, caches package tarballs, and cancels superseded runs", () => {

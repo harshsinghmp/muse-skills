@@ -103,6 +103,8 @@ changes
 5. **Release notes**: add the new version's section to `RELEASE_NOTES.md` — the tag-triggered Release workflow publishes that section, and `tests/release-notes.test.ts` fails when the current `package.json` version has none.
 6. **Delivery**: tag `vX.Y.Z` on a commit reachable from `main`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
 7. **Release smoke**: run `bun run release:smoke` (also run by the `Release Smoke` workflow on publish). It verifies the tag commit against the release `checksums.txt` asset and the installer default ref; a failure means the published installer cannot verify itself.
+8. **Docs ledger**: stamp the release with `bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release vX.Y.Z`, then confirm `bun run check:ledger` passes. The Release workflow gates on this check, so a stale ledger blocks the tag.
+9. **Dependency smoke**: `bun run check:deps` fails when a direct dependency is behind the registry or the pinned `musememory` MCP runtime cannot start. CI runs it in the lint job.
 
 ---
 

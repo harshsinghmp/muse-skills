@@ -50,6 +50,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Verify docs ledger is current
+        run: bun run check:ledger
+
       - name: Verify tests pass
         run: bun test
 
@@ -97,3 +100,8 @@ jobs:
           files: checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify published release (smoke)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bun run release:smoke

@@ -68,6 +68,7 @@ All skills conform to RFC specifications with YAML frontmatter, standardized sec
 - [Skill surface sync](scripts/sync-skill-surface.ts): derives SKILL tables, argument-hint, READMEs, skills.json, llms.txt, and agents/openai.yaml from references/*.md; gate with `bun run check:surface`.
 - [Skill support references](skills/core-engine/updatedocs/references/PIPELINE.md): PIPELINE.md, CLI-ENGINE.md, OUTPUT-FORMAT.md, GOVERNANCE.md, LEDGER.md (updatedocs); CLI.md, STACK-SETUP.md (new-project).
 - [Release smoke](scripts/release-smoke.ts): verifies a published tag against the release `checksums.txt` asset and the installer default ref; runs in `.github/workflows/release-smoke.yml`.
+- [Dependency + ledger gates](scripts/check-deps.ts): `bun run check:deps` fails on outdated direct dependencies and verifies the `musememory` MCP runtime; `scripts/check-docs-ledger.ts` (`bun run check:ledger`) fails on docs debt or a stale release tag.
 - [Project Architecture](.agents/context/architecture.md)
 - [Product Definition](.agents/context/product.md)
 - [Current Shipped Reality](.agents/context/current.md)
