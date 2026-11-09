@@ -4349,7 +4349,12 @@ NextApp relies on RedisCache
 
       const qaSkill = fs.readFileSync(path.join(REPO_ROOT, "skills/agency-delivery/qa-launch", "SKILL.md"), "utf8");
       expect(qaSkill).toContain("chaos");
-      expect(qaSkill).toContain("version: 1.6.0");
+      const qaRegistry = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "skills.json"), "utf8")) as {
+        skills: Array<{ name: string; version: string }>;
+      };
+      const qaVersion = qaRegistry.skills.find((skill) => skill.name === "qa-launch")?.version;
+      expect(qaVersion).toBeDefined();
+      expect(qaSkill).toContain(`version: ${qaVersion}`);
       expect(qaSkill).toContain("[matrix|functional|performance|gate|regression|e2e|vitals|evals|chaos|audit]");
 
       const scriptPath = path.join(REPO_ROOT, "skills/agency-delivery/qa-launch/scripts/chaos-runner.ts");

@@ -127,6 +127,32 @@ bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
 
 ---
 
+## 🔌 Local Provider Adapters (Ollama & vLLM)
+
+`scripts/eval-provider.ts` is an OpenAI-compatible adapter for the dual-judge gate. It lets EVL-002 run fully offline (Ollama or vLLM) or split local/cloud without changing the consensus contract.
+
+| Kind | Default base URL | Default model | Credential |
+| :--- | :--- | :--- | :--- |
+| `ollama` | `http://127.0.0.1:11434/v1` | `llama3.2` | `OLLAMA_API_KEY` (default `ollama`) |
+| `vllm` | `http://127.0.0.1:8000/v1` | `Qwen/Qwen2.5-7B-Instruct` | `VLLM_API_KEY` (default `vllm`) |
+| `openai-compatible` | `https://api.openai.com/v1` | `gpt-4o-mini` | `EVAL_API_KEY` / `OPENAI_API_KEY` |
+
+1. **Determinism**: `seed` defaults to `42` and temperature to `0`; the same seed, model, and messages produce the same completion on a backend that honours `seed`.
+2. **Telemetry**: every call returns token usage, latency, and `costUsd`. Local runtimes are free; cloud cost applies when a price table is supplied. `EvalTelemetry` accumulates a whole run.
+3. **Failures**: non-2xx responses surface the status and a body snippet; `timeoutMs` aborts the request. Importing the module has no side effects — the CLI runs only when the file is the process entry point.
+
+```bash
+# Judge with a local Ollama model (no network)
+bun skills/agency-delivery/qa-launch/scripts/eval-provider.ts \
+  --provider ollama --model llama3.2 --seed 42 --prompt "Score this output" --json
+
+# Same contract against vLLM or a cloud endpoint
+bun skills/agency-delivery/qa-launch/scripts/eval-provider.ts \
+  --provider vllm --base-url http://127.0.0.1:8000/v1 --prompt "Score this output"
+```
+
+---
+
 ## 📊 Quality Verification Checklist
 
 Before certifying any agent pipeline update:
