@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.4.1] - 2026-11-09
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.0...v8.4.1
+
 ## [8.4.0] - 2026-11-09
 
 ### Added
@@ -18,6 +22,7 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Post-v8.4.0 audit follow-ups**: `code-review --audit-lockfile <dir>` resolves the authoritative lockfile; CI runs a dedicated `security-audit` job (boundary, EDR, lockfile) and gates the landing gate on it; the repository publishes a `Release Smoke` workflow (`.github/workflows/release-smoke.yml`, `scripts/release-smoke.ts`) that verifies the tag commit against the release checksum asset and installer pin; issue labels/blocked-by and the distribution-path threat model are documented; dependencies are refreshed and `.docs-ledger.json` is current.
 - **Skill-quality program (#373/#377–#380)**: one canonical discovery surface now drives `references/*.md`, SKILL mode tables, `argument-hint`, per-skill READMEs, `skills.json`, `llms.txt`, and `agents/openai.yaml`, enforced by `bun run check:surface` plus `tests/skill-parity.test.ts`. `updatedocs` and `new-project` moved reference-grade material into support docs (now under the 500-line router cap). `updatedocs`, `new-project`, `devops/tunnel`, and `research/sample-size` are import-safe behind entry guards. Install URLs and relay branding are repaired and gated by `tests/readme-install-urls.test.ts`; the `#380` contradictions (lease window, layer/section counts, step numbers, SDK pins, dated anecdotes) are reconciled and gated by `tests/skill-consistency.test.ts`.
 - **Security wave 3 — honest outputs (#394)**: generated artifacts now either carry a verified receipt or say "not run". `updatedocs --credits-sync` reads real SPDX licenses instead of hardcoding MIT, and the client HTML report escapes interpolated HTML and stops inventing 100%/0/0 quality claims. `coach --client-digest` only reports tests/security when receipts exist, and `--founder-audit` requires measured `--tier-hours`. Repro packs refuse to assert a stubbed runner. Attribution identity hashing is peppered HMAC and unknown spend no longer invents ROAS; scrubbed PII is reported by key only. Metering uses producer event IDs with a persisted dedupe set and clamps invoices to the spend ceiling; reconciliation asserts `gross − fee − GST = net`. Pricing, SKU, and billing money math uses integer minor units. Host vitals, GitHub scaffolds, webhook registration output, and lead logging redact device, contributor, secret, and PII values.
 - **Security wave 3 — guidance and scanner false negatives (#396)**: guidance now matches the hardened code. `webdev` uses an SSRF allowlist/resolve-all/no-redirect pattern, adds CSP to the manual header recipe, and prefers `__Host-` host-only session cookies. `analytics` documents IP/UA minimization with retention TTLs and consent-gated attribution cookies. The gauntlet gate audits `Set-Cookie`, CORS, CSRF, and exempts loopback from HSTS. The exposure audit freezes branches, uses `--force-with-lease`, and requires re-clones. Database, relay, SMM, designscope, research, boundary, and MCP guidance gained credential, privacy, SSRF, misinformation, owner-only `.env`, and pinned-server rules. `clean-system-cache` requires `--confirm-irreversible` (or a typed `yes`) for `ASK!` deletions on both bash and Windows instead of letting `--yes` bypass them. `code-review --audit-lockfile` now parses `bun.lock` and fails on insecure resolutions, and `boundary-audit` skips gitignored paths while flagging group/world-readable `.env` files as critical.
