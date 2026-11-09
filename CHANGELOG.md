@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **`qa-launch:evals` local provider adapters**: `scripts/eval-provider.ts` runs the dual-judge gate against Ollama, vLLM, or any OpenAI-compatible endpoint with deterministic seeds, token/latency/cost telemetry, explicit timeouts, and import-safe CLI behavior. `tests/eval-provider.test.ts` proves local/cloud parity against a mock server with no external network access.
+
 ### Changed
 
 - **Release notes publish the curated section**: the tag-triggered Release workflow now extracts the `RELEASE_NOTES.md` section for the tagged version and publishes it via `body_path`, instead of a fixed body plus auto-generated PR titles. It falls back to a changelog link when no section exists, and a test guards both the section and the wiring.
