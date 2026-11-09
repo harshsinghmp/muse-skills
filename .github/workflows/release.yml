@@ -58,26 +58,35 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      # Publish the curated section for this version, not just auto-generated
+      # PR titles. The section runs from its "# ... Muse Skills vX.Y.Z" heading
+      # to the next version heading.
+      - name: Extract release notes for this version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          awk -v ver="v${VERSION}" '
+            /^# / && /Muse Skills / {
+              if (capturing) exit
+              if (index($0, "Muse Skills " ver " ")) capturing = 1
+            }
+            capturing { lines[++n] = $0 }
+            END {
+              while (n > 0 && (lines[n] == "" || lines[n] == "---")) n--
+              for (i = 1; i <= n; i++) print lines[i]
+            }
+          ' RELEASE_NOTES.md > release-body.md
+          if [ ! -s release-body.md ]; then
+            printf '## muse-skills v%s\n\nSee [CHANGELOG.md](https://github.com/%s/blob/main/CHANGELOG.md) for details.\n' \
+              "$VERSION" "$GITHUB_REPOSITORY" > release-body.md
+          fi
+          echo "Release notes bytes: $(wc -c < release-body.md)"
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         with:
           generate_release_notes: true
           tag_name: ${{ github.ref }}
           name: "muse-skills v${{ steps.version.outputs.VERSION }}"
-          body: |
-            ## muse-skills v${{ steps.version.outputs.VERSION }}
-
-            ### Installation
-            \`\`\`bash
-            npx skills add harshsinghmp/muse-skills
-            \`\`\`
-
-            ### What's new in this release
-            See [CHANGELOG.md](https://github.com/harshsinghmp/muse-skills/blob/main/CHANGELOG.md)
-
-            ### Release verification
-            - [x] bun test → green
-            - [x] secret scan → clean
-            - [x] registry parity → 0 mismatches
+          body_path: release-body.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
