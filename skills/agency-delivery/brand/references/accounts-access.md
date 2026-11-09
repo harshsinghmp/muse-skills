@@ -90,8 +90,8 @@ Send the client's non-technical administrator exact, foolproof delegation steps:
 
 When direct logins or 2FA codes are required:
 1. **Dedicated Account Rule**: Never use the founder's personal Gmail or phone number. Require a dedicated seat (`agency@clientdomain.com` or alias).
-2. **Coordinated Handshake Window**: Schedule a 10-minute Slack/WhatsApp sync window for immediate entry of one-time SMS or TOTP passcodes during initial setup.
-3. **Authenticator Transfer**: Where supported, guide the client to export a secondary TOTP QR code directly into the agency's secure 1Password shared team vault.
+2. **Agency-Enrolled Authenticator**: Enroll the agency's own TOTP device on the dedicated seat. Never relay SMS/TOTP codes through chat, email, or a shared window; a relayed code is phishable and breaks MFA guarantees.
+3. **No Seed Export**: Never import or copy the client's authenticator seed/QR. Use the platform's native teammate/delegation feature and record the revoke path for offboarding.
 
 ---
 

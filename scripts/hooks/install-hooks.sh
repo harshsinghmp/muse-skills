@@ -62,8 +62,14 @@ for harness in "${!HOOK_SUBDIR[@]}"; do
   for f in "$HOOKS_DIR"/*.sh "$HOOKS_DIR"/agent-dirs.conf; do
     name=$(basename "$f")
     test -f "$f" || continue
-    cp -f "$f" "$hook_dest/$name"
-    chmod +x "$hook_dest/$name"
+    dest="$hook_dest/$name"
+    if [ -e "$dest" ] && ! cmp -s "$f" "$dest"; then
+      cp -f "$f" "$dest.muse-new"
+      echo "[hooks] $harness: $name differs; wrote $name.muse-new (review before replacing)"
+      continue
+    fi
+    cp -f "$f" "$dest"
+    chmod +x "$dest"
   done
 
   hook_count=$(ls -1 "$hook_dest"/*.sh 2>/dev/null | wc -l)

@@ -20,5 +20,11 @@ for p in \
   fi
 done
 
-echo "[hooks] updateagents not found — skipping public-surface check"
-exit 0
+if [ "${MUSE_HYGIENE_SKIP:-0}" = "1" ]; then
+  echo "[hooks] updateagents not found — skipping public-surface check (MUSE_HYGIENE_SKIP=1)"
+  exit 0
+fi
+
+echo "[hooks] ❌ updateagents/bun not found; refusing to pass the public-surface gate." >&2
+echo "[hooks] Install Bun and the updateagents skill, or set MUSE_HYGIENE_SKIP=1 to override." >&2
+exit 1

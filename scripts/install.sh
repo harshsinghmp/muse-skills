@@ -270,6 +270,14 @@ if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
     RESOLVED_PROJECT_DIR="${ORIGINAL_PWD}/${NEW_PROJECT_DIR}"
   fi
 
+  case "$RESOLVED_PROJECT_DIR" in
+    "$ORIGINAL_PWD"|"$ORIGINAL_PWD"/*) ;;
+    *)
+      echo "Error: --new-project must stay inside ${ORIGINAL_PWD}." >&2
+      exit 1
+      ;;
+  esac
+
   echo -e "\n⚡ ${CYAN}Launching new-project interactive scaffolder...${RESET}\n"
   if [ "${RUNTIME}" = "bun" ]; then
     bun "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" || true

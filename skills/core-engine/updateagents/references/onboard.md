@@ -14,7 +14,7 @@ Onboarding runs seamlessly across three interfaces with identical question struc
 | :--- | :--- | :--- |
 | **Conversational Agent** | `secretary:onboard` or `updateagents:onboard` | Global (`--global`) or Project (`--project`) |
 | **Terminal CLI Wizard** | `bun run setup --onboard` or `bun updateagents.ts --interview` | Global or Project (interactive prompt) |
-| **Remote One-Liner** | `curl -fsSL https://.../install.sh \| bash -s -- --onboard` | Global machine initialization |
+| **Remote One-Liner** | Download `install.sh`, verify its published SHA-256, then run it with `--onboard` (never pipe an unverified remote script into `bash`) | Global machine initialization |
 
 ---
 

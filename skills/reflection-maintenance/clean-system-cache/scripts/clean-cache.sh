@@ -833,7 +833,10 @@ browse_path_body() {
     children=$(find "$p" -mindepth 1 -maxdepth 1 2>/dev/null | wc -l | tr -d ' ')
     printf ' Files  : %s across %s top-level entries\n' "$files" "$children"
     echo " Contents (largest first):"
-    tmpf=$(mktemp 2>/dev/null) || tmpf="/tmp/.cc-browse.$$"
+    tmpf=$(mktemp 2>/dev/null) || {
+        echo "[clean-cache] mktemp failed; refusing to use a predictable temp path" >&2
+        return 1
+    }
     : > "$tmpf" 2>/dev/null || true
     if [ "$depth" -le 1 ]; then
         find "$p" -mindepth 1 -maxdepth 1 2>/dev/null | while IFS= read -r entry; do
@@ -1237,7 +1240,10 @@ discover_projects() {
 
 disc_sort() {
     local tmp i sz
-    tmp=$(mktemp 2>/dev/null) || tmp="/tmp/.cc-disc.$$"
+    tmp=$(mktemp 2>/dev/null) || {
+        echo "[clean-cache] mktemp failed; refusing to use a predictable temp path" >&2
+        return 1
+    }
     : > "$tmp" 2>/dev/null || true
     for i in "${!D_KEY[@]}"; do
         printf '%s\t%s\n' "${D_SIZE[$i]}" "$i" >> "$tmp"

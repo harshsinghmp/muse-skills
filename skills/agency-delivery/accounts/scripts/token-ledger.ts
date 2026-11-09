@@ -68,10 +68,15 @@ export function recordTokenUsage(
 
   let existing: TokenEntry[] = [];
   if (fs.existsSync(ledgerFile)) {
+    const raw = fs.readFileSync(ledgerFile, "utf8");
     try {
-      existing = JSON.parse(fs.readFileSync(ledgerFile, "utf8"));
+      existing = JSON.parse(raw) as TokenEntry[];
     } catch {
-      existing = [];
+      const backup = `${ledgerFile}.corrupt-${Date.now()}`;
+      fs.renameSync(ledgerFile, backup);
+      throw new Error(
+        `Refusing to overwrite a corrupt token ledger. Backed up to ${backup}; repair or remove it before recording usage.`,
+      );
     }
   }
 

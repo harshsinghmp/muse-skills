@@ -259,7 +259,7 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
 - **Package Scripts & Secrets Injection**:
   - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash .git/hooks/pre-commit`).
   - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
-  - Automatically populates all required connection strings, database URLs, and API secret keys into `.env.example`.
+  - Populates `.env.example` with every required key name and an unmistakable placeholder (`<your-value>`); real secrets go only into the ignored `.env`, never into a committed file.
   - Synchronizes official dependencies in `package.json` with self-verification gate.
 
 ### Stage 4: Modern Tokens & BEM Architecture Injection
@@ -467,7 +467,7 @@ Follow the official overview: https://payloadcms.com/docs/ecommerce/overview
 6. Engine path note: the engine extracts the official published template untouched — no overlays, no companion wiring, no token injection. Full docs at atomicpayload.com (upstream is not affiliated with Payload CMS).
 
 ### WollyCMS (self-hosted headless CMS for Astro)
-1. New WollyCMS project: `npx create-wolly@latest my-site && cd my-site && npm run migrate && npm run seed && npm run dev` (requires Node.js 22 LTS; API + admin at `http://localhost:4321`, default login `admin@wollycms.local` / `admin123`). Templates: `blog`, `marketing`, `wordpress`, `drupal`, `college` via `--template=<name>`.
+1. New WollyCMS project: `npx create-wolly@latest my-site && cd my-site && npm run migrate && npm run seed && npm run dev` (requires Node.js 22 LTS; API + admin at `http://localhost:4321`, default login `admin@wollycms.local` / `admin123`; **rotate this credential before any deploy**). Templates: `blog`, `marketing`, `wordpress`, `drupal`, `college` via `--template=<name>`.
 2. In the scaffolded Astro project the engine wires the official integration: `npm install @wollycms/astro` + `wollycms({ endpoint: 'http://localhost:4321' })` in `astro.config.mjs`.
 3. Docker/self-host: `ghcr.io/wollycms/wollycms:latest` with `JWT_SECRET` set and `/app/data` persisted. Full docs at `https://docs.wollycms.com/` — always refer to the latest upstream docs before changing this flow.
 
