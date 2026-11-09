@@ -51,6 +51,14 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("steps.secret-scan.outputs.report");
   });
 
+  test("CI parallelizes tests, caches package tarballs, and cancels superseded runs", () => {
+    const ci = read(".github/workflows/ci.yml");
+    expect(ci).toContain("bun test --parallel");
+    expect(ci).toContain("~/.bun/install/cache");
+    expect(ci).toContain("cancel-in-progress: true");
+    expect((ci.match(/name: Install dependencies/g) ?? []).length).toBe(2);
+  });
+
   test("workflows do not cache the Bun binary or swallow setup failures", () => {
     for (const file of workflowFiles(WORKFLOWS)) {
       const content = fs.readFileSync(path.join(WORKFLOWS, file), "utf8");
@@ -72,7 +80,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(landing).toMatch(/PR_NUMBER: \$\{\{ github\.event\.pull_request\.number \}\}/);
     expect(landing).toContain("check-runs");
     expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "secret-scan")');
-    expect(landing).toContain('for name in "${REQUIRED_CHECKS[@]}"');
+    expect(landing).toMatch(/for name in "\$\{REQUIRED_CHECKS\[@\]\}"/);
     expect(landing).not.toMatch(/BRANCH="\$\{\{ github\.ref_name \}\}"/);
 
     const ci = read(".github/workflows/ci.yml");

@@ -38,7 +38,7 @@ Run the QBR from this transcript and ask for a review at the close.
 ## How it works
 
 1. **Intake** — delivery date, client, last contact before anything sends.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — ten mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

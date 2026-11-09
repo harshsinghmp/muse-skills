@@ -36,12 +36,12 @@ Research these ten target accounts and score the leads against our ICP.
 | **outreach** | cold email sequence | Outreach: sequenced touches with deliverability rules, caps, and breakup. |
 | **list** | prospect list building | List: deduplicated, verified, enriched CSV ready to send. |
 | **handover** | sales handover | Handover: context packet sales can run the first call from. |
-| **audit** | launch audit / anti-puffery audit | Audit: launch readiness, developer quickstart TTFV, and anti-puffery report. |
+| **audit** | gtm launch audit / anti-puffery audit | Audit: launch readiness, developer quickstart TTFV, and anti-puffery report. |
 
 ## How it works
 
 1. **Context Grounding** — reads `./.agents/context/product.md` and `./.agents/context/roadmap.md`.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — nine mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

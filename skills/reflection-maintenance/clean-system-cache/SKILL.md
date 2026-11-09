@@ -49,6 +49,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`audit`** | "cache audit", "inventory caches", "pre-purge audit" | Classify purge candidates safe/protected/ask-first with du-verified reclaim estimates; dry-run only. | [references/audit.md](references/audit.md) |
 | **`select`** | "what would you delete", "let me choose", "browse candidates" | Catalog → browse → numbered multi-select → confirmed delete; decisions are learned. | [references/candidate-catalog.md](references/candidate-catalog.md) |
 | **`learn`** | "remember this", "stop asking", "forget that" | Inspect and edit the persisted per-app/per-project decisions. | this file |
+| **candidate-catalog** | "candidate-catalog" | what each candidate owns and what it costs to delete | [references/candidate-catalog.md](references/candidate-catalog.md) |
 
 ## When to Use
 
@@ -359,7 +360,7 @@ Scan project directories for abandoned node_modules folders consuming massive di
 
 ## Pitfalls
 
-- **The 2026-10-08 OpenCode Capability Loss Incident**: Purging `~/.cache/opencode/packages/*` and `~/.cache/opencode/npm/*` reclaimed ~2.5 GB, but deleted installed plugin payloads and language servers, stripping skills (`simplify`, `codemap`, `deepwork`, etc.) mid-session until an unannounced 550 MB re-download. Reinstallable $\neq$ disposable. The cleaner must preserve T2 capability caches by default, guard active runtimes, and provide explicit rehydration manifests.
+- **Capability-Cache Purge Loses Installed Payloads**: purging agent-runtime package caches (`~/.cache/opencode/packages/*`, `~/.cache/opencode/npm/*`) can reclaim gigabytes but deletes installed plugin payloads and language servers, stripping skills mid-session until an unannounced re-download. Reinstallable is not disposable: preserve T2 capability caches by default, guard active runtimes, and provide rehydration manifests.
 - **Never Clean Caches of Actively Running Browsers or Agents**: Attempting to purge active browser or agent files can crash open tabs, invalidate websockets, or kill language servers mid-session. The script automatically guards against this by checking running processes.
 - **Never Touch Profile or State Directories**: Cookies, sessions, bookmarks, passwords, and agent cognitive memories live in `~/.mozilla`, `~/.config`, `~/.claude`, `.memory/**`, `%APPDATA%`, and `~/Library/Application Support/`. Never delete these directories.
 - **Never Assume Python or External Interpreters**: Developer machines may have corrupted Python or node runtimes; cache cleaners must run on native shell (`bash` on POSIX, `cmd` on Windows).

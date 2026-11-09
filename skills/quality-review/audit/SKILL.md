@@ -94,6 +94,8 @@ Do NOT use this skill when:
 | **Quick** | One document or one directory touched this session | 1, 4, 5 | Condensed report + routing line |
 | **Standard** | Full knowledge tree (`docs/`, root docs, `.agents/context/`) | All 5 | Full report + routing table |
 | **Deep** | Standard + `.memory/wiki/` structure review + cross-repo references | All 5 + orphan reachability walk | Full report + persistent progress log |
+| **hygiene-rules** | "hygiene-rules" | Knowledge Hygiene Rules Reference | [references/hygiene-rules.md](references/hygiene-rules.md) |
+| **remediation-matrix** | "remediation-matrix" | Remediation Matrix & Routing Boundaries | [references/remediation-matrix.md](references/remediation-matrix.md) |
 
 Mode is selected once at Step 1 and stated in the report. Escalate Quick → Standard when the target document links into the wider tree; never silently de-escalate.
 

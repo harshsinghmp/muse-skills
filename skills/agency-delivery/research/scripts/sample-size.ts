@@ -12,14 +12,14 @@
  *
  * Defaults: p=0.5, delta_p=0.05, z=1.96 (95%), N=0 (unknown population → no FPC).
  */
-const [mode, a, b, c, d] = process.argv.slice(2);
+const [mode, a, b, c, d] = import.meta.main ? process.argv.slice(2) : [];
 
 function z2w(z: number): number {
   // two-sided weight for the confidence level z (z ~ 1.96 → 1.96²)
   return z * z;
 }
 
-function sampleSize(p: number, delta: number, z: number, N: number): number {
+export function sampleSize(p: number, delta: number, z: number, N: number): number {
   // ponytail: uncorrected sample for a proportion; adds finite-population correction only when N given.
   const w = z2w(z);
   const nInf = (w * p * (1 - p)) / (delta * delta);
@@ -28,13 +28,13 @@ function sampleSize(p: number, delta: number, z: number, N: number): number {
   return Math.ceil((nInf * N) / (nInf + N - 1));
 }
 
-function themeGate(K: number): number {
+export function themeGate(K: number): number {
   // qualitative saturation gate — a theme is worth paying attention to once it recurs in K participants.
   // Minimal floor: a single participant (K=1) is an anecdote, not a finding; insist the caller proves 2+.
   return Math.max(2, K);
 }
 
-if (mode === "eq") {
+if (import.meta.main && mode === "eq") {
   const p = parseFloat(a ?? "0.5");
   const delta = parseFloat(b ?? "0.05");
   const z = parseFloat(c ?? "1.96");
@@ -44,10 +44,10 @@ if (mode === "eq") {
     process.exit(2);
   }
   console.log(sampleSize(p, delta, z, N));
-} else if (mode === "gist") {
+} else if (import.meta.main && mode === "gist") {
   const K = parseInt(a ?? "2", 10);
   console.log(themeGate(K));
-} else {
+} else if (import.meta.main) {
   console.error("usage: sample-size.ts eq <p> <delta_p> <z> [N]  |  gist <K>");
   process.exit(2);
 }
@@ -61,4 +61,4 @@ function selfCheck(): void {
     throw new Error("FPC must shrink the sample for a small finite population");
   if (themeGate(1) !== 2) throw new Error("themeGate floor failed");
 }
-if (process.env.SELF_CHECK) selfCheck();
+if (import.meta.main && process.env.SELF_CHECK) selfCheck();

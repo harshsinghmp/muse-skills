@@ -1,8 +1,8 @@
 ---
 name: growth
 aliases: ["strategy", "scaling", "positioning", "go-to-market", "gtm", "pricing-strategy", "competitive-analysis", "producthunt", "product-hunt", "viral-loop", "k-factor"]
-description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, conversion rate optimization (CRO), viral loop coefficient engineering (K-factor), and growth audits — routed through thirteen modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, audit landing page conversion rates, model viral loops and K-factors, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
-argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit]"
+description: "Full strategy and scaling department: positioning, marketing funnels, pricing, product launch, competitor analysis, referral/partnership growth, churn prevention, public relations, community building, conversion rate optimization (CRO), viral loop coefficient engineering (K-factor), and growth audits — routed through fourteen modes. Use when asked to sharpen positioning or a value proposition, map an acquisition/conversion funnel, set or test pricing, plan a product or feature launch, analyze competitors and the market, audit landing page conversion rates, model viral loops and K-factors, build a referral or affiliate program, reduce churn and drive renewals, draft press releases and media pitches, architect and engage Discord/Skool/Slack communities, or audit growth experiments. Not for executing channels (paidads/seo/smm) or measuring results (analytics)."
+argument-hint: "[positioning|funnels|pricing|launch|competitor|referral|retention|pr|community|cro|viral|programmatic-cro|audit|affiliates-referrals]"
 user-invocable: true
 version: 1.3.0
 author: Harsh Singh
@@ -38,6 +38,7 @@ One head skill for strategy and scaling. Win by choosing where to compete and wh
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
+|:---|:---|:---|:---|
 | **positioning** | "positioning", "value proposition", "messaging", "differentiation", "ai defensibility", "moat", "beyond the wrapper" | Positioning and value proposition from audience, competitive gap, and AI defensibility moats | [references/positioning.md](references/positioning.md) |
 | **funnels** | "funnel", "acquisition funnel", "conversion funnel", "customer journey" | Funnel mapping and stage-by-stage improvement plan | [references/funnels.md](references/funnels.md) |
 | **pricing** | "pricing", "pricing strategy", "how much to charge", "pricing tiers" | Pricing structure from value, willingness, and positioning | [references/pricing.md](references/pricing.md) |
@@ -51,6 +52,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **viral** | "viral loop", "viral coefficient", "k factor", "referral loop", "viral mechanics", "cycle time compression", "invitation rate", "viral growth model" | Mathematical Viral Loop ($K = i \times c$) modeling, cycle time ($ct \le 72\text{h}$) compression, asymmetric double-sided incentives, and 'Aha!' trigger placement | [references/viral.md](references/viral.md) |
 | **programmatic-cro** | "programmatic cro", "bandit cro", "multi armed bandit", "thompson sampling", "dynamic ab test" | Bayesian Thompson Sampling dynamic variant traffic allocation, zero-CLS layout shift fences, statistical significance gates, and revenue triangulation | [references/programmatic-cro.md](references/programmatic-cro.md) |
 | **audit** | "audit growth", "experiment audit", "channel audit", "growth audit" | Experiment audit (hypothesis, end date, results) + channel audit (strategy, CAC, LTV) | [references/audit.md](references/audit.md) |
+| **affiliates-referrals** | "affiliates-referrals" | Partner Programs & Viral Referral Architectures | [references/affiliates-referrals.md](references/affiliates-referrals.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

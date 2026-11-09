@@ -2,7 +2,7 @@
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, and manages multi-tenant worktree federation and lease arbitration across concurrent subagent fleets. Completion claims require verification receipts. Use when asked to route multi-agent work, plan task DAGs, or arbitrate worktree leases."
-argument-hint: "[route|decouple|skill-audit|worktree-lease|federation|swarm]"
+argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm]"
 user-invocable: true
 version: 1.6.0
 author: Harsh Singh

@@ -2,7 +2,7 @@
 name: client-comms
 aliases: ["client-communication", "status-update", "change-request", "project-handover", "client-feedback", "handover-docs"]
 description: "Client-facing communication: status reporting, change-request triage with scoping and approval, project handover with docs and training, client feedback intake, B2B proposals with stop-the-clock terms, automated onboarding intake with scope boundaries, and autonomous C-suite executive pulse briefings — routed through ten modes. Use when asked to write a client status update, triage a scope-change request, hand over a finished project, generate a high-converting client proposal, collect client feedback, generate an executive pulse one-pager, or ingest a new client intake form. Not for internal agency ops (ops) or pricing strategy (growth)."
-argument-hint: "[status|change|handover|feedback|proposal|intake|executive-pulse|audit|inbox-triage]"
+argument-hint: "[status|change|handover|feedback|proposal|intake|executive-pulse|audit|inbox-triage|factual-reporting]"
 user-invocable: true
 version: 1.6.0
 author: Harsh Singh
@@ -48,6 +48,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **executive-pulse** | "executive pulse", "c-suite briefing", "weekly executive update", "client pulse", "one pager report" | Autonomous C-suite weekly briefing generator: layman impact translation (zero jargon), sprint velocity & runway tracking, 48h risk radar, and print-ready HTML one-pagers | [references/executive-pulse.md](references/executive-pulse.md) |
 | **`audit`** | "communication audit", "audit client comms", "SLA audit" | Bidirectional SLA conformance, cadence integrity, channel discipline, unresolved threads, escalation signals. | [references/audit.md](references/audit.md) |
 | **`inbox-triage`** | "triage the inbox", "client emails", "executive email triage" | Executive email triage and follow-up protocols | [references/inbox-triage.md](references/inbox-triage.md) |
+| **factual-reporting** | "factual-reporting" | Factual Daily, Sprint & Milestone Progress Reporting | [references/factual-reporting.md](references/factual-reporting.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

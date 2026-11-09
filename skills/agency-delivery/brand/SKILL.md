@@ -2,7 +2,7 @@
 name: brand
 aliases: ["brand-onboarding", "client-intake", "brand-research", "brand-dossier", "sales-pipeline", "brand-lifecycle", "client-offboarding", "cross-border-ecommerce", "amazon-operations", "marketplace-operations"]
 description: "Client and brand lifecycle engine: comprehensive brand intake, autonomous web research, sales pipeline qualification, ad and payment account access, cross-department brief synthesis, cross-border e-commerce operations, offboarding, brand asset fencing/font auditing, and multimodal story engine genesis — routed through eleven modes. Use when onboarding a new client or brand, scraping brand assets and web signals, qualifying sales leads, gathering ad account and payment credentials, synthesizing cross-department briefs, scaling cross-border e-commerce, generating brand narrative archetypes and OKLCH story matrices, auditing brand asset fencing and font licenses, offboarding an account, or auditing brand readiness checklists. Not for designing brand marks (design) or negotiating contracts (ops)."
-argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|audit|story-engine]"
+argument-hint: "[intake|research|pipeline|accounts-access|brief|ecommerce|offboard|assets|story-engine|audit|persona]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -49,6 +49,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **assets** | "brand assets", "font licensing", "vector logo check", "brand asset fencing", "color contrast certification", "asset audit" | Brand asset fencing, font license isolation, SVG sanitization, and OKLCH color contrast certification | [references/assets.md](references/assets.md) |
 | **story-engine** | "brand genesis", "story engine", "founder story", "brand narrative", "brand archetype", "voice constitution" | Multimodal brand narrative genesis, founder archetype synthesis, OKLCH visual color resonance, tagline matrix, and voice constitution | [references/story-engine.md](references/story-engine.md) |
 | **audit** | "brand audit", "readiness check", "intake checklist", "missing brand info" | Pre-flight brand readiness gate auditing completeness before teams begin work | [references/audit.md](references/audit.md) |
+| **persona** | "persona" | Ideal Customer Profile (ICP) & Persona Architecture | [references/persona.md](references/persona.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

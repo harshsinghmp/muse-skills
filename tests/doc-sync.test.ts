@@ -16,7 +16,7 @@ import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const SCRIPT_PATH = join(REPO_ROOT, "skills/core-engine/new-project/scripts/new-project.ts");
-const SKILL_PATH = join(REPO_ROOT, "skills/core-engine/new-project/SKILL.md");
+const SKILL_PATH = join(REPO_ROOT, "skills/core-engine/new-project/references/CLI.md");
 const README_PATH = join(REPO_ROOT, "skills/core-engine/new-project/README.md");
 
 /** Values declared in the script's help text: `-c, --cms <cms>  CMS: a | b | ...` */
@@ -52,7 +52,7 @@ describe("📄 Doc-Sync Parity — new-project CMS flag list", () => {
     expect(declared.length).toBeGreaterThan(0);
   });
 
-  it("SKILL.md CMS list exactly matches the script's declared enumeration", () => {
+  it("CLI reference CMS list exactly matches the script's declared enumeration", () => {
     const docValues = extractDocCmsValues(skillMd);
     expect(docValues.length).toBeGreaterThan(0);
     expect(diff(declared, docValues)).toEqual([]);

@@ -117,7 +117,7 @@ export function parsePorcelainWorktrees(porcelainText: string, repoRoot: string)
       status = "DIRTY_LOCKED";
     } else if (owner && heartbeat) {
       const hbTime = new Date(heartbeat).getTime();
-      if (!Number.isNaN(hbTime) && Date.now() - hbTime < 300 * 1000) {
+      if (!Number.isNaN(hbTime) && Date.now() - hbTime < 30 * 60 * 1000) {
         status = "ACTIVE";
       } else {
         status = "STALE";

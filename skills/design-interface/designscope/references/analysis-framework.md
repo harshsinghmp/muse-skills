@@ -1,4 +1,4 @@
-# Analysis Framework — The 5 analysis layers
+# Analysis Framework — The 6 analysis layers
 
 This reference defines how to analyze the captured material. Consult it when you start Step 3
 of the main workflow.

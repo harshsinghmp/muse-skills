@@ -2,7 +2,7 @@
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
 description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, real-time pub/sub bus, deploy, and responsive audits — routed through twenty-two modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, deploy WebSockets and pub/sub messaging, implement e-commerce or CMS functionality, build funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|offline|deploy|realtime-bus|audit]"
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|offline|realtime-bus|deploy|audit|hydration-polish|security-headers|technical-resilience]"
 user-invocable: true
 version: 1.9.0
 author: Harsh Singh
@@ -38,6 +38,7 @@ One head skill for web engineering. The stack is whatever the project already us
 Every invocation resolves to exactly **one** mode. Match the request, then load only the matched reference:
 
 | Mode | Trigger phrases | Behavior | Reference |
+|:---|:---|:---|:---|
 | **frontend** | "build this page/component", "frontend work", "react/astro/vue work", "popular-web-design", "imagegen-frontend-mobile", "userinterface-wiki", "developer homepage", "developer landing page", "anti-fouc", "zero-cls" | Component/page implementation against design spec, including developer 7-block architecture, anti-FOUC hydrator, and zero-CLS font fallbacks | [references/frontend.md](references/frontend.md) & [references/hydration-polish.md](references/hydration-polish.md) |
 | **backend** | "api design", "endpoint", "database schema", "auth flow", "cli-developer" | APIs, data models, integrations, auth, and CLI developer tooling | [references/backend.md](references/backend.md) |
 | **fullstack** | "fullstack feature", "end-to-end build", "ship the feature", "fullstack-guardian" | Full-feature build with Three-Perspective Security Architecture (Frontend, Backend, Security): data → API → UI → verified | [references/fullstack.md](references/fullstack.md) |
@@ -57,6 +58,9 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **realtime-bus** | "realtime bus", "websockets", "pub sub", "durable objects websocket", "sse stream", "live presence" | Distributed WebSockets & Server-Sent Events engine: Cloudflare Durable Objects backplane, monotonic sequence IDs, 45s heartbeat pruning, and sub-50ms fanout | [references/realtime-bus.md](references/realtime-bus.md) |
 | **deploy** | "ship the build", "static upload", "one-command deploy", "deploy the frontend" | App-side ship: one-command full-stack deploy, static-upload fallback, object-storage contract (pipelines live in `devops`) | [references/deploy.md](references/deploy.md) |
 | **audit** | "audit responsiveness", "responsiveness-check", "mobile responsiveness", "viewport audit", "touch targets", "overflow check" | Responsive design audits (responsiveness-check), mobile viewports (375px–1920px), touch targets, and code health | [references/audit.md](references/audit.md) |
+| **hydration-polish** | "hydration-polish" | Anti-FOUC, Zero-CLS Typography, Print Styles & Anchor Offsets | [references/hydration-polish.md](references/hydration-polish.md) |
+| **security-headers** | "security-headers" | Security Headers | [references/security-headers.md](references/security-headers.md) |
+| **technical-resilience** | "technical-resilience" | Subprocess Zombie Sanitizer, Typosquatting Shield & SSR Hydration Guard | [references/technical-resilience.md](references/technical-resilience.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

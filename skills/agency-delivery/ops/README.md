@@ -1,6 +1,6 @@
 # 🗂️ ops
 
-The agency operations department head: one skill, thirteen modes — onboarding, proposal, sow, sku, milestone, shape, retro, multi-client, vault, vendor, obsidian, legal, audit. Clean intake, written scope, productized SKU packaging, shaped asks, tracked delivery, honest retrospectives, client context vault isolation, and Obsidian PKM vault automation.
+The agency operations department head: one skill, sixteen modes — onboarding, proposal, sow, sku, milestone, shape, retro, multi-client, vault, contracts, vendor, obsidian, legal, audit, meeting-notes, product-marketing-template. Clean intake, written scope, productized SKU packaging, shaped asks, tracked delivery, honest retrospectives, client context vault isolation, and Obsidian PKM vault automation.
 
 ## Install
 
@@ -41,11 +41,14 @@ Structure our Obsidian client vault with wikilinks, callouts, and frontmatter pr
 | **obsidian** | obsidian vault & markdown | Obsidian: OFM grammar, wikilinks, callouts, embeds, CLI automation, and plugin dev. |
 | **legal** | agency legal templates | Legal: MSAs, subcontractor IP assignments, NDAs, and AI compliance templates. |
 | **audit** | ops audit | Audit: process compliance, milestone risk, and cross-reference validation. |
+| **contracts** | Legal Document & Contract Drafting Standards | [references/contracts.md](references/contracts.md) |
+| **meeting-notes** | Meeting Capture, Decision Logs & Action Routing | [references/meeting-notes.md](references/meeting-notes.md) |
+| **product-marketing-template** | Shared versioned context template (shippable) | [references/product-marketing-template.md](references/product-marketing-template.md) |
 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — sixteen mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

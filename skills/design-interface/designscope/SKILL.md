@@ -47,7 +47,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 
 | Mode | Trigger phrases | Behavior | Reference |
 | :--- | :--- | :--- | :--- |
-| **`analysis-framework`** | "designscope analysis-framework", "analysis-framework" | Analysis Framework — The 5 analysis layers | [references/analysis-framework.md](references/analysis-framework.md) |
+| **`analysis-framework`** | "designscope analysis-framework", "analysis-framework" | Analysis Framework — The 6 analysis layers | [references/analysis-framework.md](references/analysis-framework.md) |
 | **`capture-flows`** | "designscope capture-flows", "capture-flows" | Capture Flows — How to capture each source type | [references/capture-flows.md](references/capture-flows.md) |
 | **`element-copy`** | "designscope element-copy", "element-copy" | Element Copy — the "copy element" mode | [references/element-copy.md](references/element-copy.md) |
 | **`layout-tree-extraction`** | "designscope layout-tree-extraction", "layout-tree-extraction" | Layout Tree Extraction Reference | [references/layout-tree-extraction.md](references/layout-tree-extraction.md) |

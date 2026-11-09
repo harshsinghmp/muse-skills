@@ -1,6 +1,6 @@
 # ✍️ content
 
-The content studio department head: one skill, twelve modes — blog, copy, email, video, case-study, humanize, launch, podcast, thumbnails, vsl, ugc, audit. Source-anchored writing, then an editorial pass that keeps it human.
+The content studio department head: one skill, fourteen modes — blog, copy, email, video, podcast, case-study, humanize, thumbnails, launch, vsl, ugc, audit, frontmatter-guard, voice-archetypes. Source-anchored writing, then an editorial pass that keeps it human.
 
 ## Install
 
@@ -36,11 +36,13 @@ Record a podcast episode outline with broadcast engineering standards, or run a 
 | **vsl** | video sales letter script | VSL: 6-beat narrative spine, 3-second retention hook, and two-column A/V storyboards. |
 | **ugc** | direct-response UGC script / creator brief | UGC: 4-hook matrix, 5-beat narrative storyboard spine, 9:16 vertical safe zones, and creator production briefs. |
 | **audit** | content & copy audit | Audit: readability metrics, hook strength, and conversion leak detection. |
+| **frontmatter-guard** | Unquoted YAML Syntax Protection & Frontmatter Sanitizer | [references/frontmatter-guard.md](references/frontmatter-guard.md) |
+| **voice-archetypes** | Newsletter Archetype Defaults | [references/voice-archetypes.md](references/voice-archetypes.md) |
 
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — fourteen mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

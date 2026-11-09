@@ -1,10 +1,10 @@
-# expo — Universal Mobile App & Expo SDK 52 Architecture
+# expo — Universal Mobile App & Current Expo SDK Architecture
 
 > **Operating Role**: Sol (Agency Council Product Architect & Full-Stack Automator)  
-> **Direct Triggers**: "expo", "expo sdk 52", "expo app", "expo router", "nativewind", "react native expo", "universal mobile app", "expo scaffold", "hermes bytecode"  
+> **Direct Triggers**: "expo", "expo sdk", "expo app", "expo router", "nativewind", "react native expo", "universal mobile app", "expo scaffold", "hermes bytecode"  
 > **Core Directives**: EXP-001 through EXP-004  
 
-The `expo` mode delivers production-grade universal mobile applications powered by Expo SDK 52, React Native New Architecture, `expo-router` v4 file-based navigation, NativeWind v4 design token styling, verified deep link routing, and hardware abstraction mocking fences.
+The `expo` mode delivers production-grade universal mobile applications powered by the current Expo SDK, React Native New Architecture, `expo-router` v4 file-based navigation, NativeWind v4 design token styling, verified deep link routing, and hardware abstraction mocking fences.
 
 ---
 
@@ -24,7 +24,7 @@ flowchart TD
     Hardware --> MockFence["EXP-004: Ephemeral Simulator Mock Fence\nGraceful Fallback & In-Memory Storage"]
 ```
 
-### EXP-001: Modern Expo SDK 52 Universal Architecture
+### EXP-001: Modern Expo Universal Architecture
 1. **File-Based Routing via `expo-router` v4**:
    - Universal navigation tree rooted in `app/` directory with typed routes (`experiments.typedRoutes: true`).
    - Root layout (`app/_layout.tsx`) wraps the application in `SafeAreaProvider`, theme contexts, and splash screen coordinator (`expo-splash-screen`).
@@ -94,7 +94,7 @@ flowchart TD
 
 ## Architecture Comparison
 
-| Architectural Dimension | Expo SDK 52 (New Architecture) | Legacy React Native (Bridge) | Pure Native (SwiftUI / Compose) | Progressive Web App (PWA) |
+| Architectural Dimension | the current Expo SDK (New Architecture) | Legacy React Native (Bridge) | Pure Native (SwiftUI / Compose) | Progressive Web App (PWA) |
 | :--- | :--- | :--- | :--- | :--- |
 | **Runtime & JS Engine** | Hermes Bytecode + C++ TurboModules | JSC / Hermes over JSON Bridge | Native LLVM / JVM Bytecode | Browser V8 / WebKit |
 | **Rendering Pipeline** | Fabric Concurrent Renderer (Direct C++) | Asynchronous Bridge Batching | Direct Metal / Skia rendering | DOM / CSS Layout Engine |
@@ -125,7 +125,7 @@ mobile-app/
 ├── components/
 │   ├── hardware-fence.tsx    # Ephemeral simulator mock wrappers (EXP-004)
 │   └── safe-screen.tsx       # Native safe-area wrapper (EXP-002)
-├── app.json                  # Expo SDK 52 config (EXP-001 & EXP-003)
+├── app.json                  # the current Expo SDK config (EXP-001 & EXP-003)
 ├── package.json              # NativeWind v4 & Expo 52 dependencies
 ├── tailwind.config.js        # OKLCH color token mappings (EXP-002)
 └── global.css                # NativeWind styles & Tailwind directives
@@ -135,10 +135,10 @@ mobile-app/
 
 ## Automated Inspection via `expo-scaffold.ts` CLI
 
-Run Sol's Expo SDK 52 scaffolding, configuration audit, and deep link verification CLI directly:
+Run Sol's Expo scaffolding, configuration audit, and deep link verification CLI directly:
 
 ```bash
-# 1. Scaffold a fresh Expo SDK 52 project structure
+# 1. Scaffold a fresh Expo project structure
 bun skills/agency-delivery/mobile/scripts/expo-scaffold.ts \
   --scaffold-app \
   --name "Nova App" \

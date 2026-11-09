@@ -2,7 +2,7 @@
 name: ops
 aliases: ["agency-ops", "client-operations", "project-management", "proposals", "sow", "account-management", "obsidian", "obsidian-vault", "obsidian-cli", "obsidian-markdown", "sku", "productized-sku"]
 description: "Internal agency operations department: client onboarding, proposals, statements of work, productized agency SKU packaging and value triangulation, shaping an ambiguous ask and setting its appetite, milestone tracking, project retrospectives, multi-client portfolio management, multi-client context vault and asset fencing, vendor management, Obsidian PKM vault workflows, and agency legal templates (MSAs, subcontractor IP, NDAs, and AI disclosures) — routed through sixteen modes. Use when asked to onboard a new client, write a proposal or SOW, package productized agency service SKUs, triangulate outcome-based pricing, shape an unsized or grab-bag ask before it is priced, track project milestones and scope, run a project retro, manage across multiple client engagements, enforce client context vault isolation, manage vendors, interact with Obsidian knowledge vaults, or draft agency legal agreements. Not for client-facing delivery work (design/webdev/seo) or session handoffs between agents (handoff)."
-argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit]"
+argument-hint: "[onboarding|proposal|sow|sku|milestone|shape|retro|multi-client|vault|contracts|vendor|obsidian|legal|audit|meeting-notes|product-marketing-template]"
 user-invocable: true
 version: 1.8.0
 author: Harsh Singh
@@ -53,6 +53,8 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **obsidian** | "obsidian", "obsidian vault", "obsidian cli", "obsidian markdown", "wikilinks", "callouts", "vault notes", "daily note" | Obsidian PKM vault operations, wikilinks, callouts, embeds, frontmatter properties, CLI commands, and plugin dev | [references/obsidian.md](references/obsidian.md) |
 | **legal** | "agency contract", "msa", "subcontractor agreement", "ip assignment", "nda", "legal templates", "privacy policy" | Master Services Agreements (MSAs), subcontractor IP assignments, NDAs, and AI compliance | [references/legal.md](references/legal.md) |
 | **audit** | "audit ops", "process audit", "documentation audit", "milestone audit" | Process audit (proposals, SOWs, milestones) + documentation audit (cross-refs resolve) | [references/audit.md](references/audit.md) |
+| **meeting-notes** | "meeting-notes" | Meeting Capture, Decision Logs & Action Routing | [references/meeting-notes.md](references/meeting-notes.md) |
+| **product-marketing-template** | "product-marketing-template" | Shared versioned context template (shippable) | [references/product-marketing-template.md](references/product-marketing-template.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

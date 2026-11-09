@@ -11,10 +11,10 @@
 - **🛡️ Strict `.memory/` Boundary**: Zero read, write, or modification of `.memory/` (owned exclusively by `musememory`).
 - **🗂️ Working-Artifacts Boundary**: `.agents/artifacts/` is session-owned research/planning working state — never synced as documentation, never committed; durable findings are promoted to `.agents/context/` via `updateagents`.
 - **🔐 Protected `.agents/` DOX Gate**: Treats `.agents/` as protected operational infrastructure; requires explicit human permission before any mutation.
-- **🔍 20-Step Synchronization Pipeline**: Traces code changes through direct and second-order documentation consequences, gated by operating mode (Quick, Change, Release, Sprint, Full, Ledger).
+- **🔍 21-Step Synchronization Pipeline**: Traces code changes through direct and second-order documentation consequences, gated by operating mode (Quick, Change, Release, Sprint, audit, Ledger).
 - **🧭 Documentation Point Ledger**: A session-proof `.docs-ledger.json` records every change that owes docs as a sequential `DP-####` point with developer, user, and agent coverage, a documented watermark, shipped state, and what's-new generation. Forgotten sessions catch up from the last point; `updateagents --docs-backlog` folds agent-facing points into `.agents/context/`. The `.docs.hash` fast-skip can never hide a pending point.
 - **⚖️ Automatic Change Safety Matrix**: Classifies docs by ownership (`SOURCE-OF-TRUTH`, `DERIVED`, `PROTECTED`, `HISTORICAL`, `CLIENT-FACING`) with least-privileged actions.
-- **📊 Mode-Scaled Reporting**: Full governance report for Change/Release/Sprint/Full modes; condensed report for Quick mode.
+- **📊 Mode-Scaled Reporting**: Full governance report for Change/Release/Sprint/audit modes; condensed report for Quick mode.
 - **💡 Worked Examples**: Sample full and condensed reports in [`examples/`](examples/sample-sync-report.md).
 - **✅ 14-Point Pre-Ship Audit**: Rigorous quality checklist covering internal links, commands, schemas, secret scrubbing, and prompt-injection defense.
 - **🤝 Clean Companion Handoff**: Coordinates smoothly with `updateagents` for agent-context refactoring and `musememory` for cognitive state.

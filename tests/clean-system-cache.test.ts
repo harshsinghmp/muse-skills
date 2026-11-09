@@ -132,7 +132,7 @@ describe("clean-system-cache — Agent Capabilities & Three-Tier Safety Engine",
     expect(skillContent).toContain("T2");
     expect(skillContent).toContain("T3");
     expect(skillContent).toContain("Active Agent Runtime Sessions");
-    expect(skillContent).toContain("The 2026-10-08 OpenCode Capability Loss Incident");
+    expect(skillContent).toContain("Capability-Cache Purge Loses Installed Payloads");
     expect(skillContent).toContain("Capability Inventory Snapshot & Diff Contract");
     expect(skillContent).toContain("--include-coupled");
   });

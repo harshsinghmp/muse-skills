@@ -24,9 +24,19 @@ Audit report: structure review (campaign/object mapping), tracking verification 
 7. Phase reallocation over 4–8 weeks with weekly checkpoints; rollback trigger: revert the week's shift if blended CPA/ROAS degrades beyond tolerance two checkpoints running.
 8. Pacing check: flag overpace above 110% and underspend below 70% of the pacing curve; project end-of-period spend from daily burn and correct before the period closes.
 9. Hold back 10–15% contingency; deploy only on pre-defined triggers (winner needs scale, seasonal spike, emergency cover) — never to plug leaks.
-6. Correlate with business changes (offer/site/pricing changes explain many 'account problems').
-7. Rank findings by spend impact; write the 30-day plan with owners and expected effect.
-8. Judge scale calls on LTV-horizon ROAS, not 7-day platform-reported ROAS; discount view-through credit before moving budget — platform self-attribution over-claims by design.
+10. Correlate with business changes (offer/site/pricing changes explain many 'account problems').
+11. Rank findings by spend impact; write the 30-day plan with owners and expected effect.
+12. Judge scale calls on LTV-horizon ROAS, not 7-day platform-reported ROAS; discount view-through credit before moving budget — platform self-attribution over-claims by design.
+
+## Severity & routing
+
+| Severity | Definition | Action class |
+| :--- | :--- | :--- |
+| **Critical** | Tracking is broken, or spend is pacing to breach the hard ceiling | `AUTO-REPAIR` only for reversible settings; otherwise `REPORT-ONLY` + escalate to the account owner immediately |
+| **Warning** | Material efficiency loss (CPA/ROAS drift, creative fatigue, overlap) | `PROPOSE-DIFF` with the exact budget/creative change and expected effect |
+| **Notice** | Hygiene or documentation drift with no immediate spend risk | `REPORT-ONLY`, batch into the 30-day plan |
+
+Routing: account-access or billing changes → `accounts`; tracking implementation → `analytics`; landing-page conversion issues → `growth` CRO.
 
 ## Quality gate
 

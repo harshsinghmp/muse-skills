@@ -1,6 +1,6 @@
 # crm
 
-Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through seven modes.
+Customer relationship management and event-driven marketing flow engine: audience segmentation, RFM scoring, welcome and activation onboarding drips, cart and checkout recovery flows, lead nurture journeys, churn winback sequences, bulk deliverability infrastructure (SPF, DKIM, DMARC, BIMI, warming curves), and transactional SMS triggers — routed through eight modes.
 
 ## Modes
 
@@ -16,7 +16,9 @@ Customer relationship management and event-driven marketing flow engine: audienc
 ## Installation & Usage
 
 ```bash
-# Run with npx skills
-npx skills run harshsinghmp/muse-skills/crm -- onboard "Build 5-day welcome sequence for SaaS signups"
-npx skills run harshsinghmp/muse-skills/crm -- abandon "Create 3-step abandoned cart recovery flow"
+# Install
+npx skills add harshsinghmp/muse-skills --skill crm
+
+# Then ask: onboard "Build 5-day welcome sequence for SaaS signups"
+# Then ask: abandon "Create 3-step abandoned cart recovery flow"
 ```

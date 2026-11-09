@@ -2,7 +2,7 @@
 name: refactor
 aliases: ["refactor-ui", "refactoring", "code-refactor", "ui-polish", "ui-audit", "architecture-refactor", "perf-refactor", "database-refactor", "refactor-anything"]
 description: "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security)."
-argument-hint: "[ui|code|architecture|perf|database|sweep|polish|audit]"
+argument-hint: "[ui|code|architecture|perf|database|sweep|polish|audit|01-visual-hierarchy|02-typography-scale|03-color-palette|04-spacing-layout|05-button-hierarchy|06-visual-clutter|07-empty-states|08-shadows-elevation|09-contrast-accessibility|10-grouping-alignment|11-five-state-anti-slop|modern-techniques]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -51,6 +51,18 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **sweep** | "sweep consistency", "unify all pages", "standardize components across app", "design consistency" | Multi-page consistency refactoring (strictly on-demand, never runs automatically): sweeping duplicate components into single sources of truth, aligning button styles, cards, and patterns across the app | [references/sweep.md](references/sweep.md) |
 | **polish** | "final polish before release", "clean up deprecated code", "pre-merge polish", "ship readiness" | Pre-launch refactoring pass: dead-letter triage, deprecated API cleanup, lint/formatting sweep, and edge-case hardening | [references/polish.md](references/polish.md) |
 | **`audit`** | "pre-refactor audit", "audit codebase health", "refactor scope audit" | Measured pain, test-covered seams, blast radius, surgical-diff and rollback discipline — before code moves. | [references/audit.md](references/audit.md) |
+| **01-visual-hierarchy** | "01-visual-hierarchy" | Establish Visual Hierarchy | [references/01-visual-hierarchy.md](references/01-visual-hierarchy.md) |
+| **02-typography-scale** | "02-typography-scale" | Apply a Stepped Typography Scale | [references/02-typography-scale.md](references/02-typography-scale.md) |
+| **03-color-palette** | "03-color-palette" | Build a Functional Color System | [references/03-color-palette.md](references/03-color-palette.md) |
+| **04-spacing-layout** | "04-spacing-layout" | Apply a Consistent Spacing Grid | [references/04-spacing-layout.md](references/04-spacing-layout.md) |
+| **05-button-hierarchy** | "05-button-hierarchy" | Design Button Hierarchy | [references/05-button-hierarchy.md](references/05-button-hierarchy.md) |
+| **06-visual-clutter** | "06-visual-clutter" | Eliminate Visual Clutter | [references/06-visual-clutter.md](references/06-visual-clutter.md) |
+| **07-empty-states** | "07-empty-states" | Design High-Value Empty States | [references/07-empty-states.md](references/07-empty-states.md) |
+| **08-shadows-elevation** | "08-shadows-elevation" | Shadows and Elevation | [references/08-shadows-elevation.md](references/08-shadows-elevation.md) |
+| **09-contrast-accessibility** | "09-contrast-accessibility" | Color Contrast and Accessibility | [references/09-contrast-accessibility.md](references/09-contrast-accessibility.md) |
+| **10-grouping-alignment** | "10-grouping-alignment" | Grouping, Proximity, and Alignment | [references/10-grouping-alignment.md](references/10-grouping-alignment.md) |
+| **11-five-state-anti-slop** | "11-five-state-anti-slop" | The 5-State Anti-Slop Coverage Gate | [references/11-five-state-anti-slop.md](references/11-five-state-anti-slop.md) |
+| **modern-techniques** | "modern-techniques" | v1.1.0 additions from corpus research | [references/modern-techniques.md](references/modern-techniques.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run. Note: `sweep` mode carries codebase-wide blast radius and is strictly on-demand; automated agents must never run it automatically without explicit user direction.
 

@@ -1,6 +1,6 @@
 # 🛠️ webdev
 
-The web engineering department head: one skill across twenty-one modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, deploy, funnel, edge, rate-limit, offline, onboard, audit, hydration-polish, technical-resilience, and security-headers. Stack-agnostic: uses what the project uses.
+The web engineering department head: one skill across twenty-two modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, onboard, funnel, edge, rate-limit, offline, realtime-bus, deploy, audit, hydration-polish, security-headers, technical-resilience security-headers. Stack-agnostic: uses what the project uses.
 
 ## Install
 
@@ -46,6 +46,10 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 | **offline** | pwa, service worker, offline caching | Offline: PWA CacheFirst & NetworkFirst strategies, IndexedDB mutation queues, and manifest compliance. |
 | **onboard** | developer repo onboarding | Onboard: rapid codebase orientation, architecture map, and first PR readiness. |
 | **audit** | responsive & technical web audit | Audit: mobile responsiveness matrix, touch target audit, and security headers. |
+| **hydration-polish** | Anti-FOUC, Zero-CLS Typography, Print Styles & Anchor Offsets | [references/hydration-polish.md](references/hydration-polish.md) |
+| **realtime-bus** | Distributed WebSockets & Server-Sent Events Engine | [references/realtime-bus.md](references/realtime-bus.md) |
+| **security-headers** | Security Headers | [references/security-headers.md](references/security-headers.md) |
+| **technical-resilience** | Subprocess Zombie Sanitizer, Typosquatting Shield & SSR Hydration Guard | [references/technical-resilience.md](references/technical-resilience.md) |
 
 Chain: `prototype` → `spec` → `implement` → `qa-launch` gate. Visual prototyping lives in `design`.
 
@@ -94,7 +98,7 @@ bun skills/agency-delivery/webdev/scripts/webdev.ts --ssr-boundary-scan ./src
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — one mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — twenty-two mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 
