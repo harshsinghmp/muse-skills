@@ -1,0 +1,83 @@
+name: Dependency Refresh
+
+# Weekly dependency audit. Dependabot opens the actual upgrade PRs; this job
+# opens/updates a tracked issue when a direct dependency falls behind or the
+# pinned musememory MCP runtime cannot start.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: dependency-refresh
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: dependency-refresh
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun (pinned)
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.4
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Audit direct dependencies
+        id: deps
+        run: |
+          set +e
+          bun run check:deps > deps-audit.txt 2>&1
+          CODE=$?
+          set -e
+          cat deps-audit.txt
+          if [ "$CODE" -eq 0 ]; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=failure" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Track the result in an issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATUS: ${{ steps.deps.outputs.status }}
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh issue list --state open --label dependencies --search "Dependency refresh required" --json number --jq '.[0].number // empty')
+          if [ "$STATUS" = "success" ]; then
+            if [ -n "$EXISTING" ]; then
+              gh issue comment "$EXISTING" --body "✅ Automated dependency refresh check now passes as of $(date -u +%Y-%m-%d). Closing."
+              gh issue close "$EXISTING"
+            fi
+            exit 0
+          fi
+
+          BODY_FILE="$(mktemp)"
+          {
+            echo "The weekly dependency gate failed."
+            echo ""
+            echo '```text'
+            cat deps-audit.txt
+            echo '```'
+            echo ""
+            echo "Run \`bun update\` (or merge the matching Dependabot PR), then re-run \`bun run check:deps\`."
+          } > "$BODY_FILE"
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file "$BODY_FILE"
+          else
+            gh issue create \
+              --title "Dependency refresh required ($(date -u +%Y-%m-%d))" \
+              --body-file "$BODY_FILE" \
+              --label dependencies --label area:ci --label p2
+          fi
+          exit 1
