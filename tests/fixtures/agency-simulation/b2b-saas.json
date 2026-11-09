@@ -1,0 +1,174 @@
+{
+  "scenarioId": "b2b-saas-rescue",
+  "client": "Helios Analytics",
+  "profile": "B2B SaaS",
+  "billing": { "model": "gpt-4o", "inputTokens": 3200000, "outputTokens": 640000 },
+  "planId": "helios-saas-rescue",
+  "maxTokenCeiling": 260000,
+  "requiredQuorum": 3,
+  "tasks": [
+    {
+      "id": "gtm-research",
+      "name": "ICP and competitor research",
+      "skill": "gtm",
+      "mode": "research",
+      "assignedDivision": "Nexus",
+      "estimatedTokens": 11000
+    },
+    {
+      "id": "research-dossier",
+      "name": "Entity dossier and market pulse",
+      "skill": "research",
+      "mode": "entity-dossier",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["gtm-research"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "evidence-claims",
+      "name": "Verified claims for sales collateral",
+      "skill": "evidence-ledger",
+      "mode": "claim-verification-taxonomy",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["research-dossier"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "brand-brief",
+      "name": "Repositioning brief",
+      "skill": "brand",
+      "mode": "brief",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["gtm-research"],
+      "estimatedTokens": 9000
+    },
+    {
+      "id": "sales-demo",
+      "name": "Demo narrative and discovery script",
+      "skill": "sales-enablement",
+      "mode": "demo",
+      "assignedDivision": "Crew",
+      "dependsOn": ["brand-brief"],
+      "estimatedTokens": 8000
+    },
+    {
+      "id": "design-wireframe",
+      "name": "Onboarding flow wireframes",
+      "skill": "design",
+      "mode": "wireframe",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["brand-brief"],
+      "estimatedTokens": 12000
+    },
+    {
+      "id": "webdev-fullstack",
+      "name": "Activation flow rebuild",
+      "skill": "webdev",
+      "mode": "fullstack",
+      "assignedDivision": "Sol",
+      "dependsOn": ["design-wireframe"],
+      "estimatedTokens": 26000,
+      "criticalSeam": true
+    },
+    {
+      "id": "database-migrations",
+      "name": "Tenant schema migration",
+      "skill": "database",
+      "mode": "migrations",
+      "assignedDivision": "Sol",
+      "dependsOn": ["webdev-fullstack"],
+      "estimatedTokens": 14000
+    },
+    {
+      "id": "devops-cicd",
+      "name": "CI/CD and hosting pipeline",
+      "skill": "devops",
+      "mode": "cicd",
+      "assignedDivision": "Sol",
+      "dependsOn": ["database-migrations"],
+      "estimatedTokens": 10000
+    },
+    {
+      "id": "code-review-context",
+      "name": "Diff review and PR context",
+      "skill": "code-review",
+      "mode": "pr-context",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["webdev-fullstack"],
+      "estimatedTokens": 14000
+    },
+    {
+      "id": "refactor-activation",
+      "name": "Activation flow UI polish",
+      "skill": "refactor",
+      "mode": "ui",
+      "assignedDivision": "Jasper",
+      "dependsOn": ["code-review-context"],
+      "estimatedTokens": 12000
+    },
+    {
+      "id": "git-pr-checks",
+      "name": "Branch and release matrix discipline",
+      "skill": "git",
+      "mode": "pr-checks",
+      "assignedDivision": "Sol",
+      "dependsOn": ["code-review-context"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "security-sast",
+      "name": "SAST and tenant-boundary review",
+      "skill": "muse-security",
+      "mode": "sast",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["webdev-fullstack", "database-migrations"],
+      "estimatedTokens": 16000,
+      "criticalSeam": true
+    },
+    {
+      "id": "incident-runbook",
+      "name": "Launch incident runbook",
+      "skill": "incident-response",
+      "mode": "mitigate",
+      "assignedDivision": "Crew",
+      "dependsOn": ["security-sast"],
+      "estimatedTokens": 7000
+    },
+    {
+      "id": "qa-e2e",
+      "name": "Activation and billing regression",
+      "skill": "qa-launch",
+      "mode": "e2e",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["security-sast"],
+      "estimatedTokens": 13000
+    },
+    {
+      "id": "audit-hygiene",
+      "name": "Repository hygiene audit",
+      "skill": "audit",
+      "mode": "hygiene-rules",
+      "assignedDivision": "Nexus",
+      "dependsOn": ["qa-e2e"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "comms-status",
+      "name": "Executive status report",
+      "skill": "client-comms",
+      "mode": "status",
+      "assignedDivision": "Crew",
+      "dependsOn": ["qa-e2e"],
+      "estimatedTokens": 6000
+    },
+    {
+      "id": "accounts-pricing",
+      "name": "Usage-tier repricing",
+      "skill": "accounts",
+      "mode": "pricing",
+      "assignedDivision": "Crew",
+      "dependsOn": ["comms-status"],
+      "estimatedTokens": 8000
+    }
+  ]
+}

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-08T21:02:44.181Z",
-  "head": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
+  "updatedAt": "2026-11-09T06:22:01.019Z",
+  "head": "51a06c82d5cfe28898b1c831613b72f65da2e9d6",
   "watermark": {
     "point": 55,
     "commit": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
     "date": "2026-11-08T21:02:05.061Z",
-    "releaseTag": "v8.2.0"
+    "releaseTag": "v8.3.0"
   },
   "agentWatermark": {
     "point": 1,
@@ -2044,6 +2044,412 @@
       "shipped": true,
       "releaseTag": "v8.2.0",
       "createdAt": "2026-11-08T21:02:04.782Z"
+    },
+    {
+      "id": "DP-0056",
+      "point": 56,
+      "commit": "114101fdf40ab2039aa627d6c2a5dabefb972f99",
+      "shortCommit": "114101f",
+      "date": "2026-11-09",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.2.0",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package-lock.json",
+        "package.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0057",
+      "point": 57,
+      "commit": "388fc3103536ab0189c0134271f3ffa77bf9431b",
+      "shortCommit": "388fc31",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #360 from harshsinghmp/release/v8.2.0",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.2.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0058",
+      "point": 58,
+      "commit": "674997c6aa979103cf1e9144ac7a0eb7f40b2989",
+      "shortCommit": "674997c",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "updateagents",
+      "summary": "gate CLI on entry point and add Next 3 follow-ups",
+      "breaking": false,
+      "files": [
+        "AGENTS.md",
+        "CHANGELOG.md",
+        "README.md",
+        "skills.json",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updateagents/templates/AGENTS.md",
+        "tests/updateagents-import-guard.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"entry point\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"entry point\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["AGENTS.md"],
+          "evidence": "phrase \"entry point\" found in AGENTS.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0059",
+      "point": 59,
+      "commit": "47abb3009b741721b4aaf7742ec8480ccefd36e5",
+      "shortCommit": "47abb30",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #361 from harshsinghmp/feat/updateagents-import-guard-and-next-actions",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0060",
+      "point": 60,
+      "commit": "6f4cbc83b7d0fff2e6ae361471110444274c3f40",
+      "shortCommit": "6f4cbc8",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #362 from harshsinghmp/docs/updatedocs-next-3-mirror",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0061",
+      "point": 61,
+      "commit": "3c0389265dd6d93f5a74eae09ce38e2cff167e4b",
+      "shortCommit": "3c03892",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #363 from harshsinghmp/feat/agency-simulation-workflows",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0062",
+      "point": 62,
+      "commit": "5d45ea5dc8776ef2150afdad074aa42535083e57",
+      "shortCommit": "5d45ea5",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #364 from harshsinghmp/test/agency-simulation-full-coverage",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.544Z"
+    },
+    {
+      "id": "DP-0063",
+      "point": 63,
+      "commit": "a12a97b2d28d09b73b1300e2ff8cfd282ef1bfdc",
+      "shortCommit": "a12a97b",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #365 from harshsinghmp/test/updateagents-next-3-template",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.545Z"
+    },
+    {
+      "id": "DP-0064",
+      "point": 64,
+      "commit": "d2af14c1f2be8329b3b45fdd55f161c55b729de6",
+      "shortCommit": "d2af14c",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #366 from harshsinghmp/docs/release-checklist-simulation-coverage",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.545Z"
+    },
+    {
+      "id": "DP-0065",
+      "point": 65,
+      "commit": "3dce20667359c67bd34ffbe1b8898d55ffc2493c",
+      "shortCommit": "3dce206",
+      "date": "2026-11-09",
+      "type": "ci",
+      "scope": "",
+      "summary": "cache and pin the Bun runtime instead of downloading it each job",
+      "breaking": false,
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        ".github/workflows/sync-gate.yml",
+        "CHANGELOG.md"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"downloading each\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"downloading each\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["AGENTS.md"],
+          "evidence": "phrase \"downloading each\" found in AGENTS.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.545Z"
+    },
+    {
+      "id": "DP-0066",
+      "point": 66,
+      "commit": "51a06c82d5cfe28898b1c831613b72f65da2e9d6",
+      "shortCommit": "51a06c8",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #367 from harshsinghmp/ci/bun-runtime-cache",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T06:20:56.545Z"
     }
   ]
 }

@@ -1,3 +1,40 @@
+# 🏛️ Muse Skills v8.3.0 — Entry-Point Guard, Next 3 Follow-ups & Full-Coverage Simulations
+
+> **Minor release: `updateagents` is entry-point gated so importing it never runs a sync, generated `AGENTS.md` files end highly technical work with a prioritized Next 3 follow-up block, the three-scenario agency simulation covers all 46 skills and gates releases, and CI caches and pins Bun to end release-asset 504 failures.** 408 automated tests. 14,729 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.3.0
+
+- **Entry-point guard**: `updateagents.ts` gates its CLI program and argv parsing on `import.meta.main` (with a `process.argv[1]` fallback). Importing the module for helpers no longer runs a default sync or rewrites curated standards. Covered by `tests/updateagents-import-guard.test.ts`.
+- **Next 3 follow-ups**: the generated `AGENTS.md` now requires user-facing highly technical work (code, debugging, architecture, security, infrastructure, dependencies, releases) to end with a prioritized **Next 3** block after the Layman Report. Mirrored in the root router and `updatedocs`.
+- **Template render test**: `tests/updateagents-next-3-template.test.ts` proves the rule reaches rendered and freshly scaffolded `AGENTS.md` files with no unresolved placeholders.
+- **Full-coverage simulations**: the three client scenarios (e-commerce, B2B SaaS, productized agency) now span every skill in `skills.json`, and the harness fails if the union drifts.
+- **Release checklist**: `CONTRIBUTING.md` documents the per-release gate, including the 46/46 simulation coverage requirement.
+- **CI Bun runtime**: workflows restore `~/.bun/bin/bun` from the Actions cache and pin `bun-version` to `1.4.4`, so `setup-bun` reuses the existing binary and avoids downloading each release asset on a warm cache instead of hitting the `504` failures.
+
+## 📊 Verification
+
+| Metric | v8.2.0 | v8.3.0 |
+|:---|:---|:---|
+| Automated Tests | 391 | **408** |
+| Test Assertions | 14,335 | **14,729** |
+| Test Files | 25 | **28** |
+| Skills Count | 46 | **46** |
+| Slash Commands / Harness | 460 | **460** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Quick Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.2.0...v8.3.0
+
+---
+
 # 🏛️ Muse Skills v8.2.0 — Universal Sync Gate & Language Enforcement
 
 > **Minor release: every scaffolded project receives a self-contained pre-merge sync gate, `updateagents` can refresh existing workflow templates, the English-only policy now binds narration between tool calls, and URL intake rules are in the root router.** 391 automated tests. 14,335 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
