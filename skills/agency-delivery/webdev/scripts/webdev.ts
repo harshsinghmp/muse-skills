@@ -256,7 +256,9 @@ export async function handleContactSubmission(req: Request): Promise<Response> {
   }
 
   // 3. Process Verified Lead (Database insertion, CRM webhook, or Notification)
-  console.log(\`[FormShield] Verified lead from \${email} (\${name})\`);
+  // Log an opaque reference only; never print lead PII to application logs.
+  const leadRef = \`lead_\${crypto.randomUUID()}\`;
+  console.log(\`[FormShield] Verified lead \${leadRef}\`);
 
   return new Response(
     JSON.stringify({ success: true, message: "Submission received and verified." }),

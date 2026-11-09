@@ -281,6 +281,11 @@ describe("🛡️ Wave 23 Terrain Engine & Absolute Sovereignty Test Suite", () 
       expect(vitals.cpu.cores).toBeGreaterThanOrEqual(1);
       expect(vitals.cpu.model.length).toBeGreaterThan(0);
       expect(vitals.kernelVersion.length).toBeGreaterThan(0);
+      // Device fingerprints are redacted unless explicitly requested.
+      expect(vitals.hostname).toBe("redacted-host");
+      expect(vitals.kernelVersion).toBe("redacted-kernel");
+      expect(vitals.cpu.model).toContain("Redacted");
+      expect(vitals.gpu.devices.every((device) => device.startsWith("gpu-"))).toBe(true);
       expect(vitals.memory.totalGb).toBeGreaterThan(0);
       expect(vitals.gpu.devices.length).toBeGreaterThanOrEqual(1);
       expect(vitals.display.resolution).toMatch(/\d+x\d+/);

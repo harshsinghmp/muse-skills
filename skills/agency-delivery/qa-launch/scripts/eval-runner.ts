@@ -118,6 +118,8 @@ export interface AgentFailureRecord {
   expectedOutput: string;
   errorMessage?: string;
   systemContext?: Record<string, unknown>;
+  runnerModule?: string;
+  runnerExport?: string;
 }
 
 export interface ReproPack {
@@ -524,24 +526,34 @@ export function scaffoldReproPack(failure: AgentFailureRecord, outputDir?: strin
     2,
   );
 
-  const testScript = `import { describe, test, expect } from "bun:test";
+  const reproIdLiteral = JSON.stringify(reproId);
+  const failureIdLiteral = JSON.stringify(failure.failureId);
+  const runnerExport = failure.runnerExport ?? "runTask";
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(runnerExport)) {
+    throw new Error(`Invalid runnerExport identifier: ${runnerExport}`);
+  }
+
+  const testScript = failure.runnerModule
+    ? `import { describe, test, expect } from "bun:test";
+import fixture from "./fixture.json";
+import { ${runnerExport} } from ${JSON.stringify(failure.runnerModule)};
+
+describe("Deterministic Repro: " + ${reproIdLiteral}, () => {
+  test("reproduces failure with the real runner", async () => {
+    const actual = await ${runnerExport}(fixture.taskPrompt, fixture.agentInput);
+    expect(actual).toEqual(fixture.expectedOutput);
+  });
+});
+`
+    : `import { describe, test } from "bun:test";
 import fixture from "./fixture.json";
 
-describe("Deterministic Repro: ${reproId}", () => {
-  test("reproduces failure with exact isolated inputs", async () => {
-    // 1. Arrange inputs from failure record
-    const { taskPrompt, agentInput, expectedOutput } = fixture;
-    
-    // 2. Mock or invoke the target unit under test
-    const runner = async (_prompt: string, _input: unknown) => {
-      // Direct invocation stub for reproduction
-      return expectedOutput;
-    };
-
-    const actual = await runner(taskPrompt, agentInput);
-
-    // 3. Assert correct expected behavior
-    expect(actual).toEqual(expectedOutput);
+describe("Deterministic Repro: " + ${reproIdLiteral}, () => {
+  test("requires a real runner instead of asserting a stub", () => {
+    throw new Error(
+      "Repro pack " + ${failureIdLiteral} + " is not executable: no runnerModule was supplied. " +
+        "Wire the real unit under test before asserting behavior."
+    );
   });
 });
 `;
@@ -558,10 +570,11 @@ describe("Deterministic Repro: ${reproId}", () => {
 ${failure.errorMessage ? `- **Error:** \`${failure.errorMessage}\`\n` : ""}
 
 ## Steps to Reproduce
-1. Run \`bun test repro.test.ts\` in this folder.
-2. Confirm the reproduction matches the recorded failure.
-3. Apply targeted fix to root cause.
-4. Re-run \`bun test repro.test.ts\` to verify fix before merging.
+1. Supply the real unit under test as \`runnerModule\` (and optionally \`runnerExport\`) in the failure record, then regenerate the pack. Without it the generated test intentionally fails instead of asserting a stub.
+2. Run \`bun test repro.test.ts\` in this folder.
+3. Confirm the reproduction matches the recorded failure.
+4. Apply targeted fix to root cause.
+5. Re-run \`bun test repro.test.ts\` to verify fix before merging.
 `;
 
   if (outputDir) {

@@ -48,45 +48,52 @@ export function calculatePricingModel(
   clientUpside: number,
   targetMargin = 0.55,
 ): PricingModelAnalysis {
-  // Cost-plus floor with 55% margin
-  const costFloorPrice = Math.round(directCost / (1 - targetMargin));
+  const toCents = (value: number) => Math.round(value * 100);
+  const toWholeDollarCents = (cents: number) => Math.round(cents / 100) * 100;
+
+  const directCostCents = toCents(directCost);
+  const upsideCents = toCents(clientUpside);
+
+  // Cost-plus floor with 55% margin (integer cents until the final dollar rounding)
+  const costFloorCents = toWholeDollarCents(directCostCents / (1 - targetMargin));
 
   // Value anchor (12.5% of projected annual upside)
-  const valueAnchorPrice = Math.round(clientUpside * 0.125);
+  const valueAnchorCents = toWholeDollarCents(upsideCents * 0.125);
 
   // Recommended Tier 2 price: higher of costFloor + 25% or value anchor
-  const tier2Price = Math.max(costFloorPrice * 1.25, valueAnchorPrice);
-  const tier1Price = Math.max(costFloorPrice, Math.round(tier2Price * 0.6));
-  const tier3Price = Math.round(tier2Price * 1.75);
+  const tier2Cents = Math.max(toWholeDollarCents(costFloorCents * 1.25), valueAnchorCents);
+  const tier1Cents = Math.max(costFloorCents, toWholeDollarCents(tier2Cents * 0.6));
+  const tier3Cents = toWholeDollarCents(tier2Cents * 1.75);
 
-  const calcMargin = (price: number) => Math.round(((price - directCost) / price) * 100);
+  const calcMargin = (priceCents: number) =>
+    priceCents > 0 ? Math.round(((priceCents - directCostCents) / priceCents) * 100) : 0;
 
-  const roiMultiplier = Math.round((clientUpside / tier2Price) * 10) / 10;
+  const roiMultiplier = tier2Cents > 0 ? Math.round((upsideCents / tier2Cents) * 10) / 10 : 0;
 
   return {
-    directCost,
-    clientUpside,
-    costFloorPrice,
-    valueAnchorPrice,
+    directCost: directCostCents / 100,
+    clientUpside: upsideCents / 100,
+    costFloorPrice: costFloorCents / 100,
+    valueAnchorPrice: valueAnchorCents / 100,
     clientRoiMultiplier: roiMultiplier,
-    marginHealthy: calcMargin(tier1Price) >= 55,
+    marginHealthy: calcMargin(tier1Cents) >= 55,
     tiers: {
       tier1: {
         name: "Tier 1: Core Foundation (Fixed-Scope)",
-        price: tier1Price,
-        margin: calcMargin(tier1Price),
+        price: tier1Cents / 100,
+        margin: calcMargin(tier1Cents),
         model: "Fixed Milestone (50% deposit / 50% UAT sign-off)",
       },
       tier2: {
         name: "Tier 2: Growth & Velocity (Recommended)",
-        price: tier2Price,
-        margin: calcMargin(tier2Price),
+        price: tier2Cents / 100,
+        margin: calcMargin(tier2Cents),
         model: "Phased Milestone (40% deposit / 30% alpha / 30% release)",
       },
       tier3: {
         name: "Tier 3: Dedicated Sprint Pod Retainer",
-        price: tier3Price,
-        margin: Math.round(((tier3Price - directCost * 1.5) / tier3Price) * 100),
+        price: tier3Cents / 100,
+        margin: tier3Cents > 0 ? Math.round(((tier3Cents - toCents(directCost * 1.5)) / tier3Cents) * 100) : 0,
         model: "Bi-Weekly Sprint Retainer (Guaranteed capacity, zero roll-over)",
       },
     },
@@ -99,8 +106,10 @@ export function auditQuote(
   directCost: number,
   minEhr = 125,
 ): QuoteAuditReport {
-  const effectiveHourlyRate = Math.round(quotedPrice / Math.max(1, estimatedHours));
-  const grossMarginPercent = Math.round(((quotedPrice - directCost) / quotedPrice) * 100);
+  const quoteCents = Math.round(quotedPrice * 100);
+  const costCents = Math.round(directCost * 100);
+  const effectiveHourlyRate = Math.round(quoteCents / Math.max(1, estimatedHours) / 100);
+  const grossMarginPercent = quoteCents > 0 ? Math.round(((quoteCents - costCents) / quoteCents) * 100) : 0;
 
   const issues: string[] = [];
   if (grossMarginPercent < 55) {

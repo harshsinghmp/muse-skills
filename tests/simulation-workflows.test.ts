@@ -497,6 +497,29 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(res.stdout).toContain("PAYTM");
       expect(res.stdout).toContain("Total Recoverable GST Input Tax Credit (ITC on Fees)");
       expect(res.stdout).toContain("CLASSIFIED");
+      expect(res.stdout).toContain("Settlement Invariant");
+      expect(res.stdout).toContain("PASSED");
+
+      const { reconcileTransactions } = require(scriptPath);
+      const bad = reconcileTransactions([
+        {
+          id: "bad-settlement",
+          gateway: "stripe",
+          date: "2026-09-20",
+          counterparty: "Mismatched Client",
+          currency: "USD",
+          grossAmount: 1000,
+          feeAmount: 30,
+          feeGst: 0,
+          netSettlement: 900,
+          classification: "CLASSIFIED",
+          coaCode: "2020 Deferred Revenue",
+          notes: "Deliberately broken settlement row.",
+        },
+      ]);
+      expect(bad.invariantPassed).toBe(false);
+      expect(bad.settlementDiscrepancies[0].id).toBe("bad-settlement");
+      expect(bad.settlementDiscrepancies[0].difference).toBe(-70);
     });
   });
 
@@ -3173,6 +3196,9 @@ window.alert('Blocking modal');`,
         expect(fs.existsSync(path.join(tempDir, "README.md"))).toBe(true);
         const fixtureContent = JSON.parse(fs.readFileSync(path.join(tempDir, "fixture.json"), "utf8"));
         expect(fixtureContent.actualOutput).toBe("??? ??????");
+        const generatedTest = fs.readFileSync(path.join(tempDir, "repro.test.ts"), "utf8");
+        expect(generatedTest).toContain("not executable: no runnerModule was supplied");
+        expect(generatedTest).not.toContain("return expectedOutput");
       } finally {
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
@@ -3924,8 +3950,30 @@ window.alert('Blocking modal');`,
         expect(regRes.status).toBe(0);
         const regData = JSON.parse(regRes.stdout);
         expect(regData.payload.url).toBe("https://api.agency.com/telegram/webhook");
-        expect(regData.payload.secret_token).toBe(testSecret);
+        // Secrets are masked by default so they cannot be pasted into logs or tickets.
+        expect(regData.payload.secret_token).not.toBe(testSecret);
+        expect(regData.payload.secret_token).toContain("…");
+        expect(regData.curl).not.toContain(testSecret);
         expect(regData.curl).toContain("setWebhook");
+
+        const revealRes = spawnSync(
+          "bun",
+          [
+            scriptPath,
+            "--register-webhook",
+            "--url",
+            "https://api.agency.com/telegram/webhook",
+            "--secret",
+            testSecret,
+            "--reveal",
+            "--json",
+          ],
+          { encoding: "utf8", cwd: REPO_ROOT },
+        );
+        expect(revealRes.status).toBe(0);
+        const revealData = JSON.parse(revealRes.stdout);
+        expect(revealData.payload.secret_token).toBe(testSecret);
+        expect(revealData.curl).toContain(testSecret);
 
         // 4. Scaffold Receiver CLI
         const scaffoldDir = path.join(tempDir, "scaffolded-receiver");
@@ -4532,11 +4580,14 @@ NextApp relies on RedisCache
       expect(fs.existsSync(scriptPath)).toBe(true);
 
       const { AttributionGraphEngine } = require(scriptPath);
-      const engine = new AttributionGraphEngine();
+      const engine = new AttributionGraphEngine({ pepper: "test-pepper" });
+      expect(engine.pepperIsEphemeral).toBe(false);
 
-      // ATB-002 Identity Stitching
+      // ATB-002 Identity Stitching (peppered HMAC, stable for one pepper, different across peppers)
       const hash1 = engine.hashIdentifier("user@domain.com");
-      expect(hash1).toBe("f7ee5ec7312165148b69fcca1d29075b14b8aef0b5048a332b18b88d09069fb7");
+      expect(hash1).toMatch(/^[a-f0-9]{64}$/);
+      expect(engine.hashIdentifier(" USER@domain.com ")).toBe(hash1);
+      expect(new AttributionGraphEngine({ pepper: "other-pepper" }).hashIdentifier("user@domain.com")).not.toBe(hash1);
 
       const rawTouchpoints = [
         { anonymousId: "c-1", timestamp: 1000, channel: "organic_seo", deviceType: "mobile" },
@@ -4581,6 +4632,12 @@ NextApp relies on RedisCache
       expect(metaMetric.shapleyShare).toBeGreaterThan(0);
       expect(metaMetric.attributedRevenue).toBeGreaterThan(0);
 
+      // Unknown spend is not invented: ROAS stays unavailable instead of defaulting to $1,000 spend.
+      const partialSpend = engine.calculateShapleyAttribution(journeys, { organic_seo: 100 });
+      const unknownMeta = partialSpend.find((m: { channel: string }) => m.channel === "meta_ads");
+      expect(unknownMeta.spend).toBeNull();
+      expect(unknownMeta.attributedRoas).toBeNull();
+
       // ATB-003 Channel Haircut Deduplication
       const claimed = {
         meta_ads: { count: 20, revenue: 4000 },
@@ -4609,7 +4666,11 @@ NextApp relies on RedisCache
       expect(fullReport.summaryMarkdown).toContain("Multi-Touch Shapley Attribution & Identity Report");
 
       // CLI Execution
-      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      const cliRes = spawnSync("bun", [scriptPath], {
+        encoding: "utf8",
+        cwd: REPO_ROOT,
+        env: { ...process.env, ATTRIBUTION_HASH_PEPPER: "test-pepper" },
+      });
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Stitched Clusters:");
       expect(cliRes.stdout).toContain("Game Theory Shapley Value Attribution (ATB-001)");
@@ -4835,6 +4896,30 @@ NextApp relies on RedisCache
       expect(ingested[1].isDuplicate).toBe(true);
       expect(ingested[2].isDuplicate).toBe(false);
 
+      // Producer IDs distinguish events with identical content instead of collapsing them.
+      const identicalContent = engine.ingestEvents([
+        { tenantId: "tenant-1", timestamp: 5000, metricName: "api_calls", quantity: 10, eventId: "evt-a" },
+        { tenantId: "tenant-1", timestamp: 5000, metricName: "api_calls", quantity: 10, eventId: "evt-b" },
+      ]);
+      expect(identicalContent.duplicatesCount).toBe(0);
+
+      // Persisted producer IDs survive a restart (no re-billing after process restart).
+      const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "metering-state-test-"));
+      try {
+        const statePath = path.join(stateDir, "seen-events.json");
+        const firstRun = new MeteringBillingEngine({ statePath });
+        firstRun.ingestEvents([
+          { tenantId: "tenant-1", timestamp: 6000, metricName: "api_calls", quantity: 10, eventId: "persist-1" },
+        ]);
+        const secondRun = new MeteringBillingEngine({ statePath });
+        const replay = secondRun.ingestEvents([
+          { tenantId: "tenant-1", timestamp: 6000, metricName: "api_calls", quantity: 10, eventId: "persist-1" },
+        ]);
+        expect(replay.duplicatesCount).toBe(1);
+      } finally {
+        fs.rmSync(stateDir, { recursive: true, force: true });
+      }
+
       // BIL-002 Tiered Pricing Calculation
       const tiers = [
         { upTo: 1000, unitPriceDollars: 0.1 },
@@ -4869,6 +4954,10 @@ NextApp relies on RedisCache
       const highSpendInvoice = engine.generateInvoice(config, { api_calls: 15000 });
       // 15000 units: 1000@0.10 (100) + 4000@0.08 (320) + 10000@0.05 (500) = $920 + 10% tax ($92) = $1012 > $1000 limit
       expect(highSpendInvoice.circuitBreakerStatus).toBe("HARD_CAP_TRIGGERED");
+      expect(highSpendInvoice.rawTotalDollars).toBe(1012);
+      expect(highSpendInvoice.totalDollars).toBe(1000);
+      expect(highSpendInvoice.clampedDollars).toBe(12);
+      expect(highSpendInvoice.stripePayload.total).toBe(100000);
 
       // BIL-004 Smart Dunning Evaluation
       const dunningCurrent = engine.evaluateDunning("tenant-1", 198, 0);

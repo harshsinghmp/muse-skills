@@ -500,6 +500,8 @@ describe("Invocation UX & conventions", () => {
     expect(digestRes.status).toBe(0);
     expect(digestRes.stdout).toContain("Milestone Progress Digest");
     expect(digestRes.stdout).toContain("What Shipped & Verified");
+    expect(digestRes.stdout).toContain("Not run — no delivery receipt supplied");
+    expect(digestRes.stdout).not.toContain("100% green integrity");
 
     // Test --scope-check mode
     const scopeRes = spawnSync(
@@ -515,8 +517,15 @@ describe("Invocation UX & conventions", () => {
     expect(scopeData.isOutScope).toBe(true);
     expect(scopeData.responseTemplate).toContain("Phase 2");
 
-    // Test --founder-audit mode
-    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], {
+    // Test --founder-audit mode (measured hours are required; the CLI must not invent them)
+    const founderMissingRes = spawnSync("bun", [scriptPath, "--founder-audit", "--json"], {
+      encoding: "utf8",
+      cwd: REPO_ROOT,
+    });
+    expect(founderMissingRes.status).toBe(1);
+    expect(founderMissingRes.stderr).toContain("requires --tier-hours");
+
+    const founderRes = spawnSync("bun", [scriptPath, "--founder-audit", "--tier-hours", "15,20,5,10", "--json"], {
       encoding: "utf8",
       cwd: REPO_ROOT,
     });
@@ -1520,7 +1529,8 @@ Disallow: /
     );
     expect(sanitizeRes.status).toBe(0);
     const sanitizeData = JSON.parse(sanitizeRes.stdout);
-    expect(sanitizeData.strippedPii).toContain("email=ceo@client.com");
+    expect(sanitizeData.strippedPii).toContain("email");
+    expect(sanitizeData.strippedPii.join(" ")).not.toContain("ceo@client.com");
     expect(sanitizeData.sanitizedUrl).not.toContain("ceo@client.com");
     expect(sanitizeData.cleanUtms.utm_source).toBe("twitter");
     expect(sanitizeData.cleanUtms.utm_medium).toBe("social-post");
@@ -2204,7 +2214,11 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(creditsRes.status).toBe(0);
       expect(fs.existsSync(path.join(tempDir, "CREDITS.md"))).toBe(true);
-      expect(fs.readFileSync(path.join(tempDir, "CREDITS.md"), "utf8")).toContain("lucide-react");
+      const creditsContent = fs.readFileSync(path.join(tempDir, "CREDITS.md"), "utf8");
+      expect(creditsContent).toContain("lucide-react");
+      // Licenses come from package metadata; without node_modules the row must say UNVERIFIED.
+      expect(creditsContent).toContain("UNVERIFIED");
+      expect(creditsContent).not.toContain("MIT / Open Source");
 
       // 6. Test --audit & fast-skip
       const auditRes = spawnSync("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", tempDir, "--audit"], {
@@ -2234,7 +2248,13 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       );
       expect(htmlRes.status).toBe(0);
       expect(fs.existsSync(htmlReportPath)).toBe(true);
-      expect(fs.readFileSync(htmlReportPath, "utf8")).toContain("Executive Delivery Report");
+      const htmlContent = fs.readFileSync(htmlReportPath, "utf8");
+      expect(htmlContent).toContain("Executive Delivery Report");
+      // Without receipts the report must label claims unverified instead of inventing 100%/0/0.
+      expect(htmlContent).toContain("NOT VERIFIED");
+      expect(htmlContent).toContain("Not run");
+      expect(htmlContent).not.toContain("100%");
+      expect(htmlContent).not.toContain('0</div>\n          <div class="stat-label">Secret / Token Leaks');
 
       // 9. Test --check-freshness
       const freshRes = spawnSync(
