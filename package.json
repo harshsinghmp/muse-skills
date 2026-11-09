@@ -87,6 +87,6 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.0.2"
+    "musememory": "3.2.0"
   }
 }
