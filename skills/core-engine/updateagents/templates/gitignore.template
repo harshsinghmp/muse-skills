@@ -26,6 +26,9 @@ secrets.*
 .mcp.json
 *.jsonl
 
+# Client onboarding intake (contains client PII; keep local, never commit)
+Client-Intake/
+
 # Databases & Local SQLite
 *.sqlite
 *.sqlite3

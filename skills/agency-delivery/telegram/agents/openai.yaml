@@ -68,7 +68,9 @@ skill:
     requires_toolsets: []
   tools:
     - type: bash
-      full_base_command: "curl -s -X POST 'https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage' -H 'Content-Type: application/json' -d '${JSON_PAYLOAD}'"
+      full_base_command: "curl -s --config \"$TELEGRAM_CURL_CONFIG\" -H 'Content-Type: application/json' -d '${JSON_PAYLOAD}'"
+      # TELEGRAM_CURL_CONFIG is a mode-600 file containing url = "https://api.telegram.org/bot<token>/sendMessage".
+      # The bot token never appears in argv, shell history, or job logs.
       description: "Send a Telegram message via the Bot API (curl + jq)."
       installed: true
       state: installed

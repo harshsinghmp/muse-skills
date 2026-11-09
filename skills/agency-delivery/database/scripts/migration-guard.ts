@@ -469,6 +469,23 @@ export function analyzeStatement(
     return { lockLevel, issues };
   }
 
+  // Unknown DDL must not silently pass as a safe ACCESS_SHARE statement.
+  if (/^(?:CREATE|ALTER|DROP|TRUNCATE|REINDEX|CLUSTER|COMMENT|GRANT|REVOKE)\b/i.test(normalized)) {
+    issues.push({
+      id: "DDL-012",
+      statement: normalized,
+      line,
+      table,
+      lockLevel: "ACCESS_EXCLUSIVE",
+      severity: "warning",
+      causesTableRewrite: false,
+      rule: "Unrecognized DDL Statement",
+      message: "Statement was not matched by any safety rule; its lock level is unknown and must be reviewed manually.",
+      remediation: "Review the statement against the zero-downtime playbook or add a rule for it before deploying.",
+    });
+    return { lockLevel: "ACCESS_EXCLUSIVE", issues };
+  }
+
   return { lockLevel, issues };
 }
 

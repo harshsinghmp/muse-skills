@@ -224,12 +224,20 @@ export function auditFrontmatterPath(targetPath: string): {
   return { filesScanned, totalIssues, results };
 }
 
-export function fixFrontmatterPath(targetPath: string): {
+export function fixFrontmatterPath(
+  targetPath: string,
+  options: { dryRun?: boolean; backup?: boolean } = {},
+): {
   filesScanned: number;
   filesFixed: number;
   fixedFiles: string[];
+  dryRun: boolean;
+  errors: string[];
 } {
   const fixedFiles: string[] = [];
+  const errors: string[] = [];
+  const dryRun = options.dryRun === true;
+  const backup = options.backup !== false;
   let filesScanned = 0;
 
   function fix(p: string) {
@@ -249,16 +257,21 @@ export function fixFrontmatterPath(targetPath: string): {
           const content = fs.readFileSync(p, "utf8");
           const res = fixFrontmatter(content);
           if (res.fixed) {
-            fs.writeFileSync(p, res.content, "utf8");
+            if (!dryRun) {
+              if (backup) fs.copyFileSync(p, `${p}.bak`);
+              fs.writeFileSync(p, res.content, "utf8");
+            }
             fixedFiles.push(p);
           }
         }
       }
-    } catch {}
+    } catch (error) {
+      errors.push(`${p}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   fix(targetPath);
-  return { filesScanned, filesFixed: fixedFiles.length, fixedFiles };
+  return { filesScanned, filesFixed: fixedFiles.length, fixedFiles, dryRun, errors };
 }
 
 if (import.meta.main) {
@@ -268,17 +281,22 @@ if (import.meta.main) {
   if (args.includes("--fix")) {
     const idx = args.indexOf("--fix");
     const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
-    const res = fixFrontmatterPath(target);
+    const res = fixFrontmatterPath(target, {
+      dryRun: args.includes("--dry-run"),
+      backup: !args.includes("--no-backup"),
+    });
     if (isJson) {
       console.log(JSON.stringify(res, null, 2));
     } else {
-      console.log(`\n✍️ Frontmatter Guard Fixer: ${target}`);
+      console.log(`\n✍️ Frontmatter Guard Fixer: ${target}${res.dryRun ? " (dry run)" : ""}`);
       console.log(`  Files Scanned: ${res.filesScanned}`);
-      console.log(`  Files Fixed:   ${res.filesFixed}`);
+      console.log(`  Files ${res.dryRun ? "Would Fix" : "Fixed"}: ${res.filesFixed}`);
       for (const f of res.fixedFiles) {
-        console.log(`    - ✅ Fixed unquoted scalars in ${f}`);
+        console.log(`    - ${res.dryRun ? "Would fix" : "✅ Fixed"} unquoted scalars in ${f}`);
       }
+      for (const error of res.errors) console.error(`  ❌ ${error}`);
     }
+    process.exit(res.errors.length === 0 ? 0 : 1);
   } else if (args.includes("--lint")) {
     const idx = args.indexOf("--lint");
     const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
@@ -299,6 +317,6 @@ if (import.meta.main) {
     }
     process.exit(res.totalIssues === 0 ? 0 : 1);
   } else {
-    console.log("Usage: bun frontmatter-guard.ts [--lint [path]] [--fix [path]] [--json]");
+    console.log("Usage: bun frontmatter-guard.ts [--lint [path]] [--fix [path]] [--dry-run] [--no-backup] [--json]");
   }
 }

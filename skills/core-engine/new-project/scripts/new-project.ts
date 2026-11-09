@@ -7489,7 +7489,7 @@ input, button, textarea, select {
 | **test** | \`${testCmd}\` | Test suite executes and reports passes/failures |
 | **lint** | \`${lintCmd}\` | Static analysis passes with zero violations |
 | **type-check** | \`${typecheckCmd}\` | TypeScript compilation emits zero errors |
-| **secret-scan** | \`bun run secret-scan\` | Pre-ship secret audit passes with zero leaks |
+| **secret-scan** | \`gitleaks detect --source . --no-banner\` | Zero findings; install gitleaks in CI (no scaffold-local scanner is generated) |
 `;
 
     const habitsContent = `# 🗺️ Terrain Map: Developer Habits & Engineering Conventions — ${name}
@@ -7613,7 +7613,7 @@ input, button, textarea, select {
 | **Full Test Suite** | \`${testCmd}\` | 100% tests pass cleanly |
 | **Lint Violations** | \`${lintCmd}\` | Exit code 0, zero warnings |
 | **Type Check Errors** | \`${typecheckCmd}\` | Clean compilation (\`noEmit\`) |
-| **Secret Leaks** | \`bun run secret-scan\` | Zero credentials detected |
+| **Secret Leaks** | \`gitleaks detect --source . --no-banner\` | Zero credentials detected (install gitleaks in CI) |
 
 ## 2. Common Failure Signatures & Cures
 - **Missing Environment Variable**: Inspect \`.env.example\`, populate \`.env\` locally (never commit \`.env\`).

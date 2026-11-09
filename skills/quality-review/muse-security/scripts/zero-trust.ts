@@ -11,6 +11,8 @@
  */
 
 import { createHash, createHmac, randomBytes } from "node:crypto";
+import { existsSync, realpathSync } from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
 export interface SpiffeIdentity {
@@ -59,6 +61,31 @@ export interface AuditChainVerification {
   totalEntries: number;
   tamperedIndex?: number;
   latestHash: string;
+}
+
+/**
+ * Resolve a path for the capability jail. Returns the canonical form (symlinks
+ * resolved) or null when the input contains traversal/encoded-escape markers or
+ * cannot be canonicalized. Works for paths that do not exist yet by resolving
+ * the nearest existing ancestor and re-appending the remaining segments.
+ */
+export function canonicalizeJailPath(input: string): string | null {
+  if (!input || input.includes("\0") || /%2e%2e/i.test(input) || /%2f/i.test(input)) return null;
+
+  let current = resolve(input);
+  const suffix: string[] = [];
+  while (!existsSync(current)) {
+    const parent = dirname(current);
+    if (parent === current) return null;
+    suffix.unshift(basename(current));
+    current = parent;
+  }
+
+  try {
+    return join(realpathSync(current), ...suffix);
+  } catch {
+    return null;
+  }
 }
 
 export class ZeroTrustEngine {
@@ -154,16 +181,21 @@ export class ZeroTrustEngine {
       return { allowed: false, reason: `Tool '${requested.tool}' not permitted in capability scope` };
     }
 
-    // 2. Path jail check (Prevent symlink or path traversal outside allowed prefixes)
+    // 2. Path jail check. Canonicalize (including symlinks) and compare on a
+    //    directory boundary so '/srv/jail-evil' cannot match '/srv/jail'.
     if (requested.path) {
-      const normalizedPath = requested.path.replace(/\\/g, "/");
-      if (normalizedPath.includes("../") || normalizedPath.startsWith("/etc/") || normalizedPath.startsWith("/root/")) {
+      const resolvedPath = canonicalizeJailPath(requested.path);
+      if (!resolvedPath) {
         this.recordAuditEvent(identity.spiffeId, "ACCESS_PATH", requested.path, "deny");
-        return { allowed: false, reason: "Path traversal or privileged root escape attempt blocked" };
+        return { allowed: false, reason: "Path traversal, encoded escape, or unresolvable symlink blocked" };
       }
-      const isAllowedPrefix = scope.allowedPathPrefixes.some(
-        (prefix) => prefix === "*" || normalizedPath.startsWith(prefix),
-      );
+      const isAllowedPrefix = scope.allowedPathPrefixes.some((prefix) => {
+        if (prefix === "*") return true;
+        const resolvedPrefix = canonicalizeJailPath(prefix);
+        if (!resolvedPrefix) return false;
+        const boundary = resolvedPrefix.endsWith("/") ? resolvedPrefix : `${resolvedPrefix}/`;
+        return resolvedPath === resolvedPrefix || resolvedPath.startsWith(boundary);
+      });
       if (!isAllowedPrefix) {
         this.recordAuditEvent(identity.spiffeId, "ACCESS_PATH", requested.path, "deny");
         return { allowed: false, reason: `Path '${requested.path}' outside designated workspace jail` };

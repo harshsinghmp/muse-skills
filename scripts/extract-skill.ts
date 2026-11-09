@@ -125,8 +125,16 @@ const ALLOWED_TEST_CMD_PREFIXES = [
   "python -m pytest",
 ];
 
+// Flags that can load or execute arbitrary code before the test runner starts.
+const FORBIDDEN_TEST_FLAGS =
+  /(^|\s)(--preload|--loader|--import|--require|--eval|-e|--exec|--inspect|--inspect-brk|--tsconfig|--config)(=|\s|$)/;
+// The runner is spawned without a shell; these characters would only be
+// arguments, but reject them anyway so a "command" cannot look like a pipeline.
+const FORBIDDEN_COMMAND_CHARS = /[;&|<>`$()]/;
+
 function isAllowedTestCommand(cmd: string): boolean {
   const trimmed = cmd.trim();
+  if (FORBIDDEN_COMMAND_CHARS.test(trimmed) || FORBIDDEN_TEST_FLAGS.test(trimmed)) return false;
   return ALLOWED_TEST_CMD_PREFIXES.some((prefix) => trimmed === prefix || trimmed.startsWith(`${prefix} `));
 }
 

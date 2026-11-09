@@ -24,8 +24,10 @@ Stdlib only. No pip install required.
 """
 
 import argparse
+import ipaddress
 import json
 import re
+import socket
 import sys
 from pathlib import Path
 from urllib import error as urlerror
@@ -50,6 +52,51 @@ USER_AGENT = (
     "Chrome/120.0.0.0 Safari/537.36"
 )
 
+ALLOW_LOCAL = False
+MAX_FETCH_BYTES = 5 * 1024 * 1024
+
+
+class _NoRedirect(urlrequest.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urlerror.HTTPError(req.full_url, code, "redirects are not allowed", headers, fp)
+
+
+def _address_forbidden(ip):
+    if ip.is_loopback:
+        return not ALLOW_LOCAL
+    return (
+        ip.is_private
+        or ip.is_link_local
+        or ip.is_multicast
+        or ip.is_reserved
+        or ip.is_unspecified
+    )
+
+
+def validate_public_url(url):
+    """Reject non-http(s), userinfo, and any private/loopback/link-local/metadata answer."""
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("only http:// and https:// are allowed")
+    if parsed.username or parsed.password:
+        raise ValueError("userinfo is not allowed")
+    host = parsed.hostname
+    if not host:
+        raise ValueError("missing host")
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    try:
+        infos = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
+    except socket.gaierror as exc:
+        raise ValueError(f"host does not resolve: {exc}") from exc
+    if not infos:
+        raise ValueError("host has no addresses")
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if _address_forbidden(ip):
+            raise ValueError(f"address {ip} is private, loopback, link-local, or metadata")
+    return parsed
+
+
 CSS_VAR_RE = re.compile(
     r"--([A-Za-z0-9_-]+)\s*:\s*([^;}]+?)\s*(?:!important\s*)?(?:;|(?=\}))",
     re.DOTALL,
@@ -67,11 +114,21 @@ HEX_RE = re.compile(r"#([0-9a-fA-F]{3,8})")
 
 
 def http_get(url, timeout=15):
-    req = urlrequest.Request(url, headers={"User-Agent": USER_AGENT})
     try:
-        with urlrequest.urlopen(req, timeout=timeout) as resp:
+        validate_public_url(url)
+    except ValueError as exc:
+        print(f"   warn: refusing {url}: {exc}", file=sys.stderr)
+        return None
+    req = urlrequest.Request(url, headers={"User-Agent": USER_AGENT})
+    opener = urlrequest.build_opener(_NoRedirect)
+    try:
+        with opener.open(req, timeout=timeout) as resp:
             charset = resp.headers.get_content_charset() or "utf-8"
-            return resp.read().decode(charset, errors="replace")
+            data = resp.read(MAX_FETCH_BYTES + 1)
+            if len(data) > MAX_FETCH_BYTES:
+                print(f"   warn: refusing {url}: response exceeds {MAX_FETCH_BYTES} bytes", file=sys.stderr)
+                return None
+            return data.decode(charset, errors="replace")
     except (urlerror.URLError, urlerror.HTTPError, TimeoutError, OSError) as e:
         print(f"   warn: failed to fetch {url}: {e}", file=sys.stderr)
         return None
@@ -272,16 +329,22 @@ def main():
                         help="Emit JSON instead of markdown.")
     parser.add_argument("--timeout", type=int, default=15,
                         help="HTTP timeout per request (default: 15).")
+    parser.add_argument("--allow-local", action="store_true",
+                        help="Allow loopback hosts for local development "
+                             "(private/link-local/metadata stay blocked).")
     args = parser.parse_args()
+    global ALLOW_LOCAL
+    ALLOW_LOCAL = args.allow_local
 
     tokens_path = Path(args.tokens)
     if not tokens_path.exists():
         print(f"Tokens file not found: {tokens_path}", file=sys.stderr)
         sys.exit(2)
 
-    parsed = urlparse(args.url)
-    if not parsed.scheme:
-        print("URL must include scheme (http:// or https://)", file=sys.stderr)
+    try:
+        validate_public_url(args.url)
+    except ValueError as exc:
+        print(f"Refusing URL: {exc}", file=sys.stderr)
         sys.exit(2)
 
     try:
