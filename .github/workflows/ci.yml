@@ -115,11 +115,14 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Secret scan (rg, free)
+      - name: Secret scan (git grep, free)
         id: secret-scan
         run: |
-          # Free community secret patterns — same coverage as gitleaks basic config
-          PATTERN="sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key\s*[:=]|GOOGLE_API_KEY\s*[:=]"
+          # Free community secret patterns — same coverage as gitleaks basic config.
+          # git grep is a git dependency: unlike rg it is always present, searches
+          # tracked dotfiles, and never reports a "clean" result when the scanner
+          # itself is missing.
+          PATTERN="sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key[[:space:]]*[:=]|GOOGLE_API_KEY[[:space:]]*[:=]"
           if [ -n "${AUDIT_RULES_FILE:-}" ] && [ -f "${AUDIT_RULES_FILE:-}" ]; then
             EXTRA="$(grep -v '^#' "$AUDIT_RULES_FILE" | grep -v '^$' | grep -v '^threshold:' | grep -v '^format:' | grep -v '^patterns:' | sed 's/^[[:space:]]*-[[:space:]]*//;s/^"//;s/"$//' | paste -sd'|' - || true)"
             [ -n "$EXTRA" ] && PATTERN="$PATTERN|$EXTRA"
@@ -127,11 +130,11 @@ jobs:
           echo "threshold: ${AUDIT_THRESHOLD:-low} (documented; gate fails on any match)"
           TMP="$(mktemp)"
           set +e
-          rg -i "$PATTERN" . --no-heading -n > "$TMP" 2>/dev/null
-          RG_STATUS=$?
+          git grep -nEI "$PATTERN" -- . > "$TMP" 2>/dev/null
+          GREP_STATUS=$?
           set -e
-          if [ "$RG_STATUS" -gt 1 ]; then
-            echo "Secret scanner failed (rg exit $RG_STATUS) — failing closed"
+          if [ "$GREP_STATUS" -gt 1 ]; then
+            echo "Secret scanner failed (git grep exit $GREP_STATUS) — failing closed"
             exit 2
           fi
 
@@ -179,7 +182,7 @@ jobs:
           echo "output=${OUT}" >> "$GITHUB_OUTPUT"
           echo "report=${OUT}" >> "$GITHUB_OUTPUT"
 
-          if [ "$RG_STATUS" -eq 0 ]; then
+          if [ "$GREP_STATUS" -eq 0 ]; then
             # Locations only. Never print the matched line: it contains the secret.
             echo "Potential secrets found. Locations:"
             sed -E 's/^([^:]+:[0-9]+):.*/  - \1/' "$TMP" | head -50

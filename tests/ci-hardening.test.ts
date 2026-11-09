@@ -42,6 +42,8 @@ describe("CI and supply-chain hardening (#395)", () => {
   test("secret scan prints locations only, emits real SARIF, and the upload fails closed", () => {
     const ci = read(".github/workflows/ci.yml");
     expect(ci).not.toContain('head -20 "$TMP"');
+    expect(ci).toContain("git grep");
+    expect(ci).not.toContain("rg -i");
     expect(ci).toContain("Locations:");
     expect(ci).toContain("artifactLocation");
     expect(ci).toContain("startLine");
@@ -136,7 +138,7 @@ describe("CI and supply-chain hardening (#395)", () => {
       fs.writeFileSync(
         path.join(dir, ".mcp.json"),
         JSON.stringify({
-          mcpServers: { leaky: { command: "npx", env: { API_KEY: "sk-abcdefghijklmnopqrstuvwxyz" } } },
+          mcpServers: { leaky: { command: "npx", env: { API_KEY: "sk-test-abcdefghijklmnopqrstuvwxyz" } } },
         }),
       );
       const leaky = spawnSync("bun", [script], { cwd: dir, encoding: "utf8" });

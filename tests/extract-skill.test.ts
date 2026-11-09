@@ -105,7 +105,7 @@ describe("Skill Extraction Helper (extract-skill)", () => {
     expect(pathFail.message).toContain("Hardcoded Linux home directory detected");
 
     // Hardcoded secret
-    const secretFail = checkGeneralizationGate(["Connect using key sk-1234567890abcdef123456"]);
+    const secretFail = checkGeneralizationGate(["Connect using key sk-ant-api03-EXAMPLE-abcdef1234567890"]);
     expect(secretFail.ok).toBe(false);
     expect(secretFail.message).toContain("Potential credential/secret detected");
 
