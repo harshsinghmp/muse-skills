@@ -34,7 +34,7 @@ const SECRETARY_START = "[//]: # (muse-secretary-router:start)";
 const SECRETARY_END = "[//]: # (muse-secretary-router:end)";
 
 /** Directories that are machine-local caches, not repo artefacts. */
-const IGNORED_REPO_ENTRIES = new Set([".git", "node_modules"]);
+const IGNORED_REPO_ENTRIES = new Set([".git", "node_modules", ".bun", ".cache", "coverage", "dist"]);
 
 interface RegistrySkill {
   name: string;
