@@ -384,6 +384,12 @@ export function generateSetWebhookCurl(
   -d '${jsonString.replace(/'/g, "'\\''")}' | jq .`;
 }
 
+export function maskSecret(value: string): string {
+  if (!value) return "<unset>";
+  if (value.length <= 8) return "****";
+  return `${value.slice(0, 4)}…${value.slice(-4)}`;
+}
+
 /**
  * Audit Webhook Configuration
  */
@@ -555,7 +561,8 @@ Usage:
 Commands:
   --listen-webhook          Start standalone HTTP webhook receiver
   --verify-secret           Test secret token verification
-  --register-webhook        Generate setWebhook curl command and JSON payload
+  --register-webhook        Generate setWebhook curl command and JSON payload (secrets masked)
+  --reveal                  Print unmasked secrets in register-webhook output (default: masked)
   --audit-config            Audit webhook configuration file permissions and entropy
   --scaffold-receiver       Scaffold ready-to-run receiver service directory
   --generate-secret         Generate high-entropy 32+ character secret token
@@ -589,6 +596,7 @@ function parseCliArgs(): { command: string; options: Record<string, unknown> } {
     else if (arg === "--generate-secret") command = "generate-secret";
     else if (arg === "--help" || arg === "-h") command = "help";
     else if (arg === "--json") options.json = true;
+    else if (arg === "--reveal") options.reveal = true;
     else if (arg === "--port") options.port = Number(args[++i]);
     else if (arg === "--host") options.host = args[++i];
     else if (arg === "--config") options.config = args[++i];
@@ -689,15 +697,19 @@ export function runCli(): void {
     const url = typeof options.url === "string" ? options.url : "https://api.yourdomain.com/webhook";
     const secret = typeof options.secretToken === "string" ? options.secretToken : generateSecretToken(32);
     const botToken = typeof options.botToken === "string" ? options.botToken : undefined;
+    const reveal = options.reveal === true;
 
     const payload = generateSetWebhookPayload(url, secret);
-    const curl = generateSetWebhookCurl(botToken || "<BOT_TOKEN>", url, secret);
+    const shownBotToken = reveal ? botToken || "<BOT_TOKEN>" : botToken ? maskSecret(botToken) : "<BOT_TOKEN>";
+    const shownSecret = reveal ? secret : maskSecret(secret);
+    const curl = generateSetWebhookCurl(shownBotToken, url, shownSecret);
+    const shownPayload = reveal ? payload : { ...payload, secret_token: maskSecret(payload.secret_token) };
 
     if (options.json) {
-      console.log(JSON.stringify({ payload, curl }, null, 2));
+      console.log(JSON.stringify({ payload: shownPayload, curl }, null, 2));
     } else {
-      console.log("\n📡 Telegram setWebhook Registration Payload:");
-      console.log(JSON.stringify(payload, null, 2));
+      console.log("\n📡 Telegram setWebhook Registration Payload (secrets masked; pass --reveal to print):");
+      console.log(JSON.stringify(shownPayload, null, 2));
       console.log("\nExecutable Curl Command:");
       console.log(curl);
       console.log();

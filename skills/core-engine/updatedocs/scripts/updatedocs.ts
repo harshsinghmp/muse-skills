@@ -51,6 +51,7 @@ const { values, positionals } = parseArgs({
     "client-manual": { type: "boolean", default: false },
     "client-changelog": { type: "string" },
     "html-report": { type: "string" },
+    receipts: { type: "string" },
     "check-freshness": { type: "boolean", default: false },
     "sanitize-jargon": { type: "boolean", default: false },
     "credits-sync": { type: "boolean", default: false },
@@ -99,6 +100,7 @@ Core Capabilities:
       --client-manual       Generate non-technical, client-ready CLIENT_HANDOFF.md guide
       --client-changelog    Generate client-ready business release notes (CLIENT_CHANGELOG.md)
       --html-report         Generate single-file self-contained HTML work report (CLIENT_WORK_REPORT.html)
+      --receipts <path>     Attach verified JSON receipts to the HTML work report (otherwise marks claims unverified)
       --check-freshness     Token-saving cache check: exit 0 if docs fresh from recent turn
       --sanitize-jargon     Sanitize internal ticket IDs (PROJ-123) and secrets from client docs
       --credits-sync        Sync CREDITS.md open-source attribution with package.json dependencies
@@ -1684,25 +1686,53 @@ export function sanitizeClientJargon(content: string): { sanitized: string; reda
 // 9. Open Source Attribution Ledger (--credits-sync)
 // =========================================================================
 
+export function resolveDependencyLicense(targetDir: string, packageName: string): string {
+  const packageJsonPath = join(targetDir, "node_modules", packageName, "package.json");
+  if (!existsSync(packageJsonPath)) return "UNVERIFIED (install dependencies to resolve)";
+
+  try {
+    const meta = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+    if (typeof meta.license === "string" && meta.license.trim()) return meta.license.trim();
+    if (Array.isArray(meta.licenses)) {
+      const licenses = meta.licenses
+        .map((entry: unknown) => (typeof entry === "string" ? entry : (entry as { type?: string })?.type))
+        .filter((value: unknown): value is string => typeof value === "string" && value.trim().length > 0);
+      if (licenses.length > 0) return licenses.join(", ");
+    }
+  } catch {}
+
+  return "UNVERIFIED (package metadata unreadable)";
+}
+
 export function syncCreditsLedger(targetDir: string): { dependenciesTracked: number; path: string } {
   const pkgPath = join(targetDir, "package.json");
   const creditsPath = join(targetDir, "CREDITS.md");
   let depsCount = 0;
 
-  const depList: Array<{ name: string; version: string; type: string }> = [];
+  const depList: Array<{ name: string; version: string; type: string; license: string }> = [];
 
   if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
       if (pkg.dependencies) {
         for (const [name, version] of Object.entries(pkg.dependencies)) {
-          depList.push({ name, version: String(version), type: "Production" });
+          depList.push({
+            name,
+            version: String(version),
+            type: "Production",
+            license: resolveDependencyLicense(targetDir, name),
+          });
           depsCount++;
         }
       }
       if (pkg.devDependencies) {
         for (const [name, version] of Object.entries(pkg.devDependencies)) {
-          depList.push({ name, version: String(version), type: "Development" });
+          depList.push({
+            name,
+            version: String(version),
+            type: "Development",
+            license: resolveDependencyLicense(targetDir, name),
+          });
           depsCount++;
         }
       }
@@ -1711,7 +1741,7 @@ export function syncCreditsLedger(targetDir: string): { dependenciesTracked: num
 
   let tableRows = "";
   for (const d of depList) {
-    tableRows += `| \`${d.name}\` | \`${d.version}\` | ${d.type} | MIT / Open Source |\n`;
+    tableRows += `| \`${d.name}\` | \`${d.version}\` | ${d.type} | ${d.license} |\n`;
   }
 
   const creditsContent = `# 📜 Open Source Attribution & Credits Ledger
@@ -1724,7 +1754,8 @@ ${tableRows}
 ---
 
 ## License Invariants
-- All third-party dependencies are licensed under permissive open-source licenses (MIT, Apache 2.0, BSD, ISC).
+- License values above are read from installed package metadata; \`UNVERIFIED\` rows must be checked before redistribution.
+- Review any dependency whose resolved license is not on the approved permissive list (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC).
 - Proprietary agency client code and assets remain solely owned by the principal.
 `;
 
@@ -1839,9 +1870,33 @@ export function generateClientChangelog(
 // 11. Self-Contained HTML Work Report Generator (--html-report)
 // =========================================================================
 
+export interface WorkReportReceipts {
+  gatePassPercent?: number;
+  secretLeaks?: number;
+  brokenLinks?: number;
+  cmsStatus?: string;
+  docsParity?: boolean;
+  deploymentVerified?: boolean;
+  verifiedAt?: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function generateHtmlWorkReport(
   targetDir: string,
-  options: { clientName?: string; outPath?: string; summary?: string } = {},
+  options: {
+    clientName?: string;
+    outPath?: string;
+    summary?: string;
+    receipts?: WorkReportReceipts;
+  } = {},
 ): { html: string; path: string } {
   let dest = options.outPath ? resolve(targetDir, options.outPath) : join(targetDir, "CLIENT_WORK_REPORT.html");
   if (existsSync(dest) && statSync(dest).isDirectory()) {
@@ -1856,13 +1911,39 @@ export function generateHtmlWorkReport(
   }
 
   const dateStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const receipts = options.receipts;
+  const hasReceipts = Boolean(receipts);
+  const gatePass = receipts?.gatePassPercent !== undefined ? `${receipts.gatePassPercent}%` : "Not run";
+  const secretLeaks = receipts?.secretLeaks !== undefined ? String(receipts.secretLeaks) : "Not run";
+  const brokenLinks = receipts?.brokenLinks !== undefined ? String(receipts.brokenLinks) : "Not run";
+  const cmsStatus = receipts?.cmsStatus ? escapeHtml(receipts.cmsStatus) : "Not reported";
+  const safeSummary = escapeHtml(
+    options.summary ||
+      "No verified executive summary was supplied. This report intentionally makes no quality or security claims without a receipt.",
+  );
+  const docsParity =
+    receipts?.docsParity === true
+      ? "Verified — dual-audience documentation parity receipt attached."
+      : receipts?.docsParity === false
+        ? "FAILED — documentation parity receipt reports drift."
+        : "Not verified — no documentation parity receipt attached.";
+  const deploymentStatus =
+    receipts?.deploymentVerified === true
+      ? "Verified — staging deployment receipt attached."
+      : receipts?.deploymentVerified === false
+        ? "FAILED — deployment verification receipt reports a failure."
+        : "Not verified — no deployment receipt attached.";
+  const receiptNote = hasReceipts
+    ? `Receipts attached${receipts?.verifiedAt ? ` (verified ${escapeHtml(receipts.verifiedAt)})` : ""}.`
+    : "No receipts attached; all quality and security values below are unverified.";
+  const badge = hasReceipts ? "📎 RECEIPTS ATTACHED" : "⚠️ NOT VERIFIED";
 
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Work Report — ${pName}</title>
+  <title>Client Work Report — ${escapeHtml(pName)}</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -1950,31 +2031,32 @@ export function generateHtmlWorkReport(
     <header>
       <div>
         <h1>Executive Delivery Report</h1>
-        <p>Project: <strong>${pName}</strong> | Agency Delivery Lead</p>
+        <p>Project: <strong>${escapeHtml(pName)}</strong> | Agency Delivery Lead</p>
       </div>
       <div>
-        <span class="badge">✅ STABLE & VERIFIED</span>
+        <span class="badge">${badge}</span>
       </div>
     </header>
 
     <div class="card">
       <h2>Executive Summary</h2>
-      <p>${options.summary || "All milestones and documentation deliverables for this delivery cycle have been audited, synchronized, and verified against automated quality gates."}</p>
+      <p>${safeSummary}</p>
+      <p><small>${escapeHtml(receiptNote)}</small></p>
       <div class="grid">
         <div class="stat-box">
-          <div class="stat-number">100%</div>
+          <div class="stat-number">${escapeHtml(gatePass)}</div>
           <div class="stat-label">Automated Gate Pass</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">0</div>
+          <div class="stat-number">${escapeHtml(secretLeaks)}</div>
           <div class="stat-label">Secret / Token Leaks</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">0</div>
+          <div class="stat-number">${escapeHtml(brokenLinks)}</div>
           <div class="stat-label">Broken Doc Links</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number">Active</div>
+          <div class="stat-number">${cmsStatus}</div>
           <div class="stat-label">CMS Cohesion Status</div>
         </div>
       </div>
@@ -1983,10 +2065,10 @@ export function generateHtmlWorkReport(
     <div class="card">
       <h2>Deliverables & Governance Invariants</h2>
       <ul>
-        <li><span class="check">✔</span> <strong>Complete Technical Synchronization</strong>: Dual-audience documentation parity maintained between developer guides, API references, and LLM prompt context.</li>
-        <li><span class="check">✔</span> <strong>Client-Safe Documentation</strong>: Zero internal Jira/GitHub issue tickets or raw server credentials leaked into client-facing artifacts.</li>
-        <li><span class="check">✔</span> <strong>CMS & Page Builder Architecture</strong>: Editable marketing content isolated into CMS collections and design tokens, protecting client staff from touching code.</li>
-        <li><span class="check">✔</span> <strong>Verified Pre-Flight Deployment</strong>: Staging preview builds actively polled and verified accessible with HTTP 200 before milestone sign-off.</li>
+        <li><strong>Documentation Synchronization</strong>: ${escapeHtml(docsParity)}</li>
+        <li><strong>Client-Safe Documentation</strong>: Secret/PII scan result: ${escapeHtml(secretLeaks)} leak(s) ${hasReceipts ? "(receipt attached)" : "(not run)"}.</li>
+        <li><strong>CMS & Page Builder Architecture</strong>: ${cmsStatus}.</li>
+        <li><strong>Deployment Verification</strong>: ${escapeHtml(deploymentStatus)}</li>
       </ul>
     </div>
 
@@ -2336,7 +2418,16 @@ if (values["html-report"] !== undefined) {
   console.log("📊 Generating Executive Single-File HTML Work Report...");
   const outPath =
     typeof values["html-report"] === "string" && values["html-report"].length > 0 ? values["html-report"] : undefined;
-  const res = generateHtmlWorkReport(targetDir, { outPath });
+  let receipts: WorkReportReceipts | undefined;
+  if (typeof values.receipts === "string" && values.receipts.length > 0) {
+    try {
+      receipts = JSON.parse(readFileSync(resolve(targetDir, values.receipts), "utf8")) as WorkReportReceipts;
+    } catch {
+      console.error(`❌ Could not read receipts file: ${values.receipts}`);
+      process.exit(1);
+    }
+  }
+  const res = generateHtmlWorkReport(targetDir, { outPath, receipts });
   recordDocsFreshness(targetDir);
   if (values.json) {
     console.log(JSON.stringify(res, null, 2));

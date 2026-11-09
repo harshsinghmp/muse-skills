@@ -41,6 +41,14 @@ export interface GatewayTransaction {
   notes: string;
 }
 
+export interface SettlementDiscrepancy {
+  id: string;
+  gateway: string;
+  expectedNet: number;
+  reportedNet: number;
+  difference: number;
+}
+
 export interface ReconciliationReport {
   timestamp: string;
   transactionCount: number;
@@ -49,6 +57,8 @@ export interface ReconciliationReport {
   totalGstItc: number;
   totalNet: number;
   gatewayBreakdown: Record<string, { count: number; gross: number; fees: number; net: number }>;
+  settlementDiscrepancies: SettlementDiscrepancy[];
+  invariantPassed: boolean;
   workingPapers: GatewayTransaction[];
 }
 
@@ -131,10 +141,12 @@ export function generateDemoTransactions(): GatewayTransaction[] {
 }
 
 export function reconcileTransactions(txns: GatewayTransaction[]): ReconciliationReport {
-  let totalGross = 0;
-  let totalFees = 0;
-  let totalGstItc = 0;
-  let totalNet = 0;
+  const toCents = (value: number) => Math.round(value * 100);
+  let totalGrossCents = 0;
+  let totalFeesCents = 0;
+  let totalGstItcCents = 0;
+  let totalNetCents = 0;
+  const settlementDiscrepancies: SettlementDiscrepancy[] = [];
 
   const breakdown: Record<string, { count: number; gross: number; fees: number; net: number }> = {
     stripe: { count: 0, gross: 0, fees: 0, net: 0 },
@@ -145,10 +157,27 @@ export function reconcileTransactions(txns: GatewayTransaction[]): Reconciliatio
   };
 
   for (const t of txns) {
-    totalGross += t.grossAmount;
-    totalFees += t.feeAmount;
-    totalGstItc += t.feeGst;
-    totalNet += t.netSettlement;
+    const grossCents = toCents(t.grossAmount);
+    const feeCents = toCents(t.feeAmount);
+    const gstCents = toCents(t.feeGst);
+    const netCents = toCents(t.netSettlement);
+
+    totalGrossCents += grossCents;
+    totalFeesCents += feeCents;
+    totalGstItcCents += gstCents;
+    totalNetCents += netCents;
+
+    const expectedNetCents = grossCents - feeCents - gstCents;
+    const differenceCents = netCents - expectedNetCents;
+    if (Math.abs(differenceCents) > 1) {
+      settlementDiscrepancies.push({
+        id: t.id,
+        gateway: t.gateway,
+        expectedNet: expectedNetCents / 100,
+        reportedNet: t.netSettlement,
+        difference: differenceCents / 100,
+      });
+    }
 
     if (breakdown[t.gateway]) {
       breakdown[t.gateway].count++;
@@ -161,11 +190,13 @@ export function reconcileTransactions(txns: GatewayTransaction[]): Reconciliatio
   return {
     timestamp: new Date().toISOString(),
     transactionCount: txns.length,
-    totalGross,
-    totalFees,
-    totalGstItc,
-    totalNet,
+    totalGross: totalGrossCents / 100,
+    totalFees: totalFeesCents / 100,
+    totalGstItc: totalGstItcCents / 100,
+    totalNet: totalNetCents / 100,
     gatewayBreakdown: breakdown,
+    settlementDiscrepancies,
+    invariantPassed: settlementDiscrepancies.length === 0,
     workingPapers: txns,
   };
 }
@@ -197,6 +228,16 @@ export function formatReportMarkdown(report: ReconciliationReport): string {
   lines.push(
     "- **Virtual Account Tracking**: AutoCollect (Cashfree) & Smart Collect (Razorpay) reconciled without manual bank statement parsing.",
   );
+  lines.push(
+    `- **Settlement Invariant (gross − fee − GST = net)**: ${report.invariantPassed ? "PASSED" : `FAILED — ${report.settlementDiscrepancies.length} discrepanc${report.settlementDiscrepancies.length === 1 ? "y" : "ies"}`}`,
+  );
+  if (!report.invariantPassed) {
+    for (const d of report.settlementDiscrepancies) {
+      lines.push(
+        `  - \`${d.id}\` (${d.gateway}): expected net ${d.expectedNet.toFixed(2)}, reported ${d.reportedNet.toFixed(2)}, difference ${d.difference.toFixed(2)}`,
+      );
+    }
+  }
   lines.push("");
   lines.push("## 📝 OpenAccountants Standardized Working Papers");
   lines.push("");
@@ -229,4 +270,5 @@ if (import.meta.main) {
   const txns = generateDemoTransactions();
   const report = reconcileTransactions(txns);
   console.log(formatReportMarkdown(report));
+  process.exit(report.invariantPassed ? 0 : 1);
 }

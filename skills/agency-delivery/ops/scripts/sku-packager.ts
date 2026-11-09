@@ -192,34 +192,40 @@ export function scaffoldProductizedSku(params: Partial<SkuConfig> & { name: stri
 // =========================================================================
 
 export function calculateSkuPricing(input: SkuPricingInput): SkuPricingOutput {
+  const toCents = (value: number) => Math.round(value * 100);
+  const toWholeDollarCents = (cents: number) => Math.round(cents / 100) * 100;
+
   const targetRoi =
     input.targetClientRoiMultiple && input.targetClientRoiMultiple >= 1.0 ? input.targetClientRoiMultiple : 5.0; // 5.0x ROI floor
 
   const targetMargin =
     input.targetGrossMarginPercent && input.targetGrossMarginPercent > 0 ? input.targetGrossMarginPercent : 80.0; // 80% gross margin target
 
+  const upsideCents = toCents(input.estimatedClientAnnualUpsideUsd);
+  const costCents = toCents(input.agencyDirectDeliveryCostUsd);
+
   // Price ceiling based on client value realization (e.g. 100k upside / 5.0 ROI = $20,000 price ceiling)
-  const valueCeilingPrice = Math.round(input.estimatedClientAnnualUpsideUsd / targetRoi);
+  const valueCeilingCents = toWholeDollarCents(upsideCents / targetRoi);
 
   // Price floor based on agency direct cost and target gross margin (e.g. $2,500 cost / (1 - 0.80) = $12,500 floor)
-  const costFloorPrice = Math.round(input.agencyDirectDeliveryCostUsd / (1 - targetMargin / 100));
+  const costFloorCents = toWholeDollarCents(costCents / (1 - targetMargin / 100));
 
   // Optimal recommended price is max of cost floor and 85% of value ceiling
-  const recommendedPrice = Math.max(costFloorPrice, Math.round(valueCeilingPrice * 0.85));
+  const recommendedCents = Math.max(costFloorCents, toWholeDollarCents(valueCeilingCents * 0.85));
 
-  const clientRoi =
-    input.estimatedClientAnnualUpsideUsd > 0 && recommendedPrice > 0
-      ? Number((input.estimatedClientAnnualUpsideUsd / recommendedPrice).toFixed(1))
-      : 0;
+  const clientRoi = upsideCents > 0 && recommendedCents > 0 ? Number((upsideCents / recommendedCents).toFixed(1)) : 0;
 
-  const agencyProfit = recommendedPrice - input.agencyDirectDeliveryCostUsd;
-  const grossMargin = recommendedPrice > 0 ? Number(((agencyProfit / recommendedPrice) * 100).toFixed(1)) : 0;
+  const agencyProfitCents = recommendedCents - costCents;
+  const grossMargin = recommendedCents > 0 ? Number(((agencyProfitCents / recommendedCents) * 100).toFixed(1)) : 0;
 
   // Maximum allowable discount before gross margin drops below 70% hard agency floor
-  const minAllowedPrice = Math.round(input.agencyDirectDeliveryCostUsd / 0.3);
-  const maxDiscountDollars = Math.max(0, recommendedPrice - minAllowedPrice);
+  const minAllowedCents = toWholeDollarCents(costCents / 0.3);
+  const maxDiscountCents = Math.max(0, recommendedCents - minAllowedCents);
   const maxDiscountPercent =
-    recommendedPrice > 0 ? Number(((maxDiscountDollars / recommendedPrice) * 100).toFixed(1)) : 0;
+    recommendedCents > 0 ? Number(((maxDiscountCents / recommendedCents) * 100).toFixed(1)) : 0;
+
+  const recommendedPrice = recommendedCents / 100;
+  const agencyProfit = agencyProfitCents / 100;
 
   const marginFloorBreached = grossMargin < 70.0;
   const meetsRoiFloor = clientRoi >= targetRoi;

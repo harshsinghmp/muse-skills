@@ -131,7 +131,7 @@ export function sanitizeUtmUrl(rawUrl: string, siteHost?: string): SanitizeResul
     const containsEmailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(value);
 
     if (isPiiParam || containsEmailPattern) {
-      strippedPii.push(`${key}=${value}`);
+      strippedPii.push(key);
       warnings.push(
         `PII Scrubber: Removed sensitive parameter '${key}' to prevent privacy violation and analytics pollution.`,
       );

@@ -144,10 +144,13 @@ export function detectDisplayResolution(): string {
   return "1920x1080 (Estimated / Headless Default)";
 }
 
-export function getHostVitals(): HostVitals {
+export function getHostVitals(options: { includeIdentifiers?: boolean } = {}): HostVitals {
+  const includeIdentifiers = options.includeIdentifiers === true;
   const cpuList = cpus();
   const coreCount = cpuList.length;
-  const cpuModel = cpuList[0]?.model || "Generic Processor";
+  const cpuModel = includeIdentifiers
+    ? cpuList[0]?.model || "Generic Processor"
+    : "Redacted (pass --identifiers to include)";
   const speed = cpuList[0]?.speed;
 
   const totalBytes = totalmem();
@@ -160,16 +163,18 @@ export function getHostVitals(): HostVitals {
   const resolution = detectDisplayResolution();
 
   return {
-    hostname: hostname(),
+    hostname: includeIdentifiers ? hostname() : "redacted-host",
     platform: platform(),
     arch: process.arch,
-    kernelVersion: release(),
+    kernelVersion: includeIdentifiers ? release() : "redacted-kernel",
     cpu: {
       cores: coreCount,
       model: cpuModel,
       speedMhz: speed,
     },
-    gpu: gpuInfo,
+    gpu: includeIdentifiers
+      ? gpuInfo
+      : { ...gpuInfo, devices: gpuInfo.devices.map((_device, index) => `gpu-${index + 1}`), primaryBus: undefined },
     display: {
       resolution,
     },
@@ -213,7 +218,8 @@ export function formatHostVitalsMarkdown(vitals: HostVitals): string {
 export async function main() {
   const args = process.argv.slice(2);
   const jsonOutput = args.includes("--json");
-  const vitals = getHostVitals();
+  const includeIdentifiers = args.includes("--identifiers");
+  const vitals = getHostVitals({ includeIdentifiers });
 
   if (jsonOutput) {
     console.log(JSON.stringify(vitals, null, 2));

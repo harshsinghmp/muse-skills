@@ -15,7 +15,7 @@
  *   bun skills/reflection-maintenance/coach/scripts/wisdom-updater.ts --domain development --observation "Never mock database calls in integration tests" --type anti-pattern
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -134,11 +134,15 @@ export function updateWisdomFrame(
     }
   }
 
+  const succeeded = options.dryRun === true || persistedToWiki;
+
   return {
-    success: true,
+    success: succeeded,
     domain: obs.domain,
     type: obs.type,
-    message: `Recorded ${obs.type} in domain '${obs.domain}'`,
+    message: succeeded
+      ? `Recorded ${obs.type} in domain '${obs.domain}'`
+      : `Failed to persist ${obs.type} in domain '${obs.domain}' — the wisdom frame could not be written.`,
     framePath,
     persistedToWiki,
     persistedToUserMd,
@@ -250,9 +254,10 @@ export async function main() {
   if (jsonOutput) {
     console.log(JSON.stringify(result, null, 2));
   } else {
-    console.log(`✅ [WISDOM COMPOUNDED] ${result.message}`);
+    console.log(`${result.success ? "✅ [WISDOM COMPOUNDED]" : "❌ [WISDOM NOT PERSISTED]"} ${result.message}`);
     console.log(`📁 Wiki frame: ${result.framePath}`);
   }
+  if (!result.success) process.exit(1);
 }
 
 if (import.meta.main) {
