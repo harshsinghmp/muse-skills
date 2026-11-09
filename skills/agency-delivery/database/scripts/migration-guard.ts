@@ -788,6 +788,7 @@ Options:
 
   const hasCritical = auditResults.some((r) => r.summary.criticalCount > 0);
   const isClean = !hasCritical && fkResults.length === 0;
+  const hardFail = (hasCritical || fkResults.length > 0) && values["fail-on-critical"];
 
   if (values.json) {
     console.log(
@@ -801,13 +802,13 @@ Options:
         2,
       ),
     );
-    process.exit(hasCritical && values["fail-on-critical"] ? 1 : 0);
+    process.exit(hardFail ? 1 : 0);
   }
 
   const report = formatAuditReport(auditResults, fkResults);
   console.log(report);
 
-  if (hasCritical && values["fail-on-critical"]) {
+  if (hardFail) {
     process.exit(1);
   }
 }

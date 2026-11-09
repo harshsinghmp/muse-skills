@@ -324,13 +324,14 @@ export function auditProcessArgv(commandOrArgs: string | string[]): BoundaryIssu
     { regex: /--password=['"]?[^'"\s]{6,}['"]?/i, name: "CLI Password Flag" },
   ];
 
+  const redactedText = patterns.reduce((acc, p) => acc.replace(p.regex, "[REDACTED]"), text);
   for (const p of patterns) {
     if (p.regex.test(text)) {
       issues.push({
         id: "BND-005",
         category: "process",
         severity: "critical",
-        target: text.slice(0, 80) + (text.length > 80 ? "..." : ""),
+        target: redactedText.slice(0, 80) + (redactedText.length > 80 ? "..." : ""),
         rule: "Credential Exposed in Process Argv",
         message: `Command invocation leaks ${p.name} directly in process argument list.`,
         remediation:
@@ -383,6 +384,12 @@ export function runBoundaryAudit(rootPath: string): BoundaryAuditResult {
 
   // 3. Worktree lease audit
   issues.push(...auditWorktreeLeases(resolvedRoot));
+
+  // 4. Process argv credential audit
+  issues.push(...auditProcessArgv(process.argv.slice(2)));
+
+  // 5. Tenant boundary audit
+  issues.push(...auditTenantBoundary(resolvedRoot, resolvedRoot));
 
   const criticalCount = issues.filter((i) => i.severity === "critical").length;
   const warningCount = issues.filter((i) => i.severity === "warning").length;

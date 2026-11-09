@@ -13,14 +13,36 @@ import argparse
 import json
 import os
 import re
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(ROOT, "skills.json")
 LLM_PATH = os.path.join(ROOT, "llms.txt")
 
 
+def safe_path(rel_path: str) -> str:
+    """Resolve a repo-relative path and refuse anything that escapes ROOT."""
+    resolved = os.path.realpath(os.path.join(ROOT, rel_path))
+    if resolved != ROOT and not resolved.startswith(ROOT + os.sep):
+        raise ValueError(f"path escapes repository: {rel_path}")
+    return resolved
+
+
+def atomic_write(path: str, text: str) -> None:
+    """Write via a sibling temp file so a crash never truncates the registry."""
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), prefix=".tmp-registry-")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+
+
 def fm_fields(skill_path: str) -> dict:
-    raw = open(os.path.join(ROOT, skill_path), encoding="utf-8").read()
+    raw = open(safe_path(skill_path), encoding="utf-8").read()
     m = re.match(r"^---\n([\s\S]*?)\n---\n", raw)
     if not m:
         return {}
@@ -80,10 +102,7 @@ def main():
                 why.append("desc")
             fixed.append(f"{s['name']:<22} {', '.join(why)}")
 
-    json.dump(data, open(JSON_PATH, "w", encoding="utf-8"), indent=2)
-    # json.dump writes \n at end when indent is set; ensure trailing newline
-    with open(JSON_PATH, "a", encoding="utf-8") as f:
-        f.write("\n")
+    atomic_write(JSON_PATH, json.dumps(data, indent=2) + "\n")
 
     print(f"skills.json: fixed {len(fixed)} skill(s)")
     for line in fixed:
@@ -101,7 +120,7 @@ def main():
                     llms[i] = new_line
                     ll_fixed.append(s["name"])
                 break
-    open(LLM_PATH, "w", encoding="utf-8").write("\n".join(llms))
+    atomic_write(LLM_PATH, "\n".join(llms))
     if ll_fixed:
         print(f"\nllms.txt: fixed {len(ll_fixed)} line(s)")
         for n in ll_fixed:

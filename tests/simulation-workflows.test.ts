@@ -1933,6 +1933,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
           "Active pool utilization at 98%",
           "--channels",
           "slack,discord,telegram",
+          "--dry-run",
           "--json",
         ],
         { encoding: "utf8", cwd: REPO_ROOT },

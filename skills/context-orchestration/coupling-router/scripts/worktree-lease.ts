@@ -65,15 +65,19 @@ function writeLease(body: string): void {
   writeFileSync(LEASE_PATH, body);
 }
 
+function oneLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
+}
+
 function acquire(owner: string, scope: string): void {
   const branch = execGit(["rev-parse", "--abbrev-ref", "HEAD"]) ?? "unknown";
   const body = [
     "# WORKTREE LEASE",
-    `owner: ${owner}`,
+    `owner: ${oneLine(owner)}`,
     `branch: ${branch}`,
     `acquired: ${nowIso()}`,
     `heartbeat: ${nowIso()}`,
-    `scope: ${scope || "unspecified"}`,
+    `scope: ${oneLine(scope) || "unspecified"}`,
     "notes: none",
     "",
   ].join("\n");
@@ -90,11 +94,11 @@ function takeover(l: LeaseInfo, owner: string, scope: string): void {
   const branch = execGit(["rev-parse", "--abbrev-ref", "HEAD"]) ?? "unknown";
   const body = [
     "# WORKTREE LEASE",
-    `owner: ${owner}`,
+    `owner: ${oneLine(owner)}`,
     `branch: ${branch}`,
     `acquired: ${nowIso()}`,
     `heartbeat: ${nowIso()}`,
-    `scope: ${scope || "unspecified"}`,
+    `scope: ${oneLine(scope) || "unspecified"}`,
     `notes: took over from ${l.owner ?? "unknown"} (stale heartbeat >${WINDOW_MIN}m); preserve any WIP they recorded`,
     "",
   ].join("\n");

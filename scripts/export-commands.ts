@@ -400,6 +400,10 @@ export function exportAntigravityCommands(destDir: string, skills: SkillItem[]):
 export function resolveSkillSourceDir(skill: SkillItem): string {
   const raw = typeof skill.path === "string" && skill.path.trim() !== "" ? skill.path.trim() : skill.name;
   const resolved = path.resolve(REPO_ROOT, raw);
+  const rel = path.relative(REPO_ROOT, resolved);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(`Skill path '${raw}' escapes the repository.`);
+  }
   return path.basename(resolved) === "SKILL.md" ? path.dirname(resolved) : resolved;
 }
 
@@ -409,13 +413,20 @@ export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   const missing: string[] = [];
 
   for (const skill of skills) {
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(skill.name)) {
+      throw new Error(`Invalid skill name '${skill.name}': refusing to write outside the target directory.`);
+    }
     const srcDir = resolveSkillSourceDir(skill);
     const destDir = path.join(targetDir, skill.name);
     if (!fs.existsSync(srcDir) || !fs.statSync(srcDir).isDirectory()) {
       missing.push(`${skill.name} → ${srcDir}`);
       continue;
     }
-    fs.cpSync(srcDir, destDir, { recursive: true, force: true });
+    const staging = `${destDir}.staging-${process.pid}`;
+    fs.rmSync(staging, { recursive: true, force: true });
+    fs.cpSync(srcDir, staging, { recursive: true });
+    fs.rmSync(destDir, { recursive: true, force: true });
+    fs.renameSync(staging, destDir);
     count++;
   }
 
@@ -556,8 +567,12 @@ if (import.meta.main) {
   const opts: SetupOptions = {
     installSkills: true,
     exportCommands: true,
-    wireAgentsMd: true,
+    wireAgentsMd: false,
   };
+
+  if (args.includes("--wire-agents")) {
+    opts.wireAgentsMd = true;
+  }
 
   if (args.includes("--skills-only")) {
     opts.exportCommands = false;

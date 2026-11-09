@@ -376,6 +376,12 @@ export function processClientIntake(input: string | ClientIntakeInput, explicitC
     if (!clientId) clientId = "client-intake";
   }
 
+  clientId =
+    clientId
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "client-intake";
+
   const lower = rawText.toLowerCase();
 
   let assignedLead: "Sol" | "Jasper" | "Crew" | "Nexus" = "Crew";
@@ -545,7 +551,9 @@ if (import.meta.main) {
     console.log(draftPushback(scenario, client, details));
   } else if (args.includes("--changelog")) {
     const idx = args.indexOf("--changelog");
-    const ref = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "HEAD~5..HEAD";
+    const rawRef = args[idx + 1];
+    const ref =
+      rawRef && !rawRef.startsWith("-") && /^[A-Za-z0-9][A-Za-z0-9._/~^@{}-]*$/.test(rawRef) ? rawRef : "HEAD~5..HEAD";
     const stagingIdx = args.indexOf("--staging-url");
     const stagingUrl = stagingIdx !== -1 ? args[stagingIdx + 1] : "https://staging.agencyclient.com";
 

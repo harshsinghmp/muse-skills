@@ -593,6 +593,8 @@ function parseCliArgs(): { command: string; options: Record<string, unknown> } {
     else if (arg === "--host") options.host = args[++i];
     else if (arg === "--config") options.config = args[++i];
     else if (arg === "--secret-token" || arg === "--secret") options.secretToken = args[++i];
+    else if (arg === "--secret-file") options.secretFile = args[++i];
+    else if (arg === "--bot-token-file") options.botTokenFile = args[++i];
     else if (arg === "--header") options.header = args[++i];
     else if (arg === "--url") options.url = args[++i];
     else if (arg === "--bot-token") options.botToken = args[++i];
@@ -604,6 +606,27 @@ function parseCliArgs(): { command: string; options: Record<string, unknown> } {
 
 export function runCli(): void {
   const { command, options } = parseCliArgs();
+
+  // Resolve credentials from files/config/env so they never appear in argv.
+  if (!options.secretToken) {
+    if (typeof options.secretFile === "string" && fs.existsSync(options.secretFile)) {
+      options.secretToken = fs.readFileSync(options.secretFile, "utf8").trim();
+    } else if (typeof options.config === "string" && fs.existsSync(options.config)) {
+      try {
+        const config = JSON.parse(fs.readFileSync(options.config, "utf8"));
+        options.secretToken = config.secret_token ?? config.webhook?.secret_token;
+      } catch {
+        // A malformed config is reported by --audit-config; do not invent a token.
+      }
+    }
+  }
+  if (!options.botToken) {
+    if (typeof options.botTokenFile === "string" && fs.existsSync(options.botTokenFile)) {
+      options.botToken = fs.readFileSync(options.botTokenFile, "utf8").trim();
+    } else if (process.env.TELEGRAM_BOT_TOKEN) {
+      options.botToken = process.env.TELEGRAM_BOT_TOKEN;
+    }
+  }
 
   if (command === "help") {
     printHelp();

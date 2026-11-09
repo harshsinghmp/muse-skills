@@ -17,7 +17,7 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
 export interface SecretFinding {

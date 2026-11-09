@@ -385,8 +385,22 @@ export async function main() {
   }
 
   const rawPlan: SwarmPlan = JSON.parse(fs.readFileSync(values.plan, "utf8"));
-  if (values["max-tokens"]) rawPlan.maxTokenCeiling = Number.parseInt(values["max-tokens"], 10);
-  if (values.quorum) rawPlan.requiredQuorum = Number.parseInt(values.quorum, 10);
+  if (values["max-tokens"]) {
+    const ceiling = Number.parseInt(values["max-tokens"], 10);
+    if (!Number.isInteger(ceiling) || ceiling <= 0) {
+      console.error("--max-tokens must be a positive integer");
+      process.exit(2);
+    }
+    rawPlan.maxTokenCeiling = ceiling;
+  }
+  if (values.quorum) {
+    const quorum = Number.parseInt(values.quorum, 10);
+    if (!Number.isInteger(quorum) || quorum < 1) {
+      console.error("--quorum must be a positive integer");
+      process.exit(2);
+    }
+    rawPlan.requiredQuorum = quorum;
+  }
 
   const ledger = dispatchSwarmPlan(rawPlan);
 
