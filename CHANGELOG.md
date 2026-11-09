@@ -14,6 +14,10 @@ All notable changes to this project are documented in this file.
 - **Release notes publish the curated section**: the tag-triggered Release workflow now extracts the `RELEASE_NOTES.md` section for the tagged version and publishes it via `body_path`, instead of a fixed body plus auto-generated PR titles. It falls back to a changelog link when no section exists, and a test guards both the section and the wiring.
 - **Release pipeline hardening**: `landing-gate` now runs on `pull_request` and on pushes to `dev`/`main` only, removing the duplicate `landing-gate` check runs that briefly blocked merges. The release checklist now requires a curated `RELEASE_NOTES.md` section for the new version, enforced by `tests/release-notes.test.ts`.
 
+### Fixed
+
+- **P0 safety: destructive and fabricated defaults (part 1)**: `context-anchor --rollback` now requires `--yes`, writes a patch snapshot to `.agents/artifacts/rollbacks/` before reverting, supports `--scope`, and leaves untracked files alone; `--drop` refuses to write placeholder state without `--state`/`--next`. `retain --scorecard` requires `--in` instead of fabricating a demo portfolio. `content` honours `--author` and defaults Article JSON-LD to `Organization` instead of a personal name. Regression tests: `tests/context-anchor-rollback.test.ts`, `tests/retain-scorecard.test.ts`, `tests/content-aeo-author.test.ts`.
+
 ## [8.3.0] - 2026-11-09
 
 ### Added

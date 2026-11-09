@@ -2638,15 +2638,33 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
       expect(deadlockData.deadlockDetected).toBe(true);
       expect(deadlockData.consecutiveFailures).toBe(3);
 
-      // Verify rollback resets failure streak
-      const rollbackRes = spawnSync(
+      // Verify rollback snapshots and reverts tracked changes, then resets the failure streak
+      spawnSync("git", ["init", "-q"], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["config", "user.email", "test@example.com"], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["config", "user.name", "Test"], { cwd: tempDir, encoding: "utf8" });
+      fs.writeFileSync(path.join(tempDir, "state.txt"), "clean\n", "utf8");
+      spawnSync("git", ["add", "."], { cwd: tempDir, encoding: "utf8" });
+      spawnSync("git", ["commit", "-q", "-m", "init"], { cwd: tempDir, encoding: "utf8" });
+      fs.writeFileSync(path.join(tempDir, "state.txt"), "dirty\n", "utf8");
+
+      const refusedRes = spawnSync(
         "bun",
         ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--rollback", "--json"],
+        { encoding: "utf8", cwd: REPO_ROOT },
+      );
+      expect(refusedRes.status).toBe(1);
+      expect(fs.readFileSync(path.join(tempDir, "state.txt"), "utf8")).toBe("dirty\n");
+
+      const rollbackRes = spawnSync(
+        "bun",
+        ["skills/context-orchestration/context-anchor/scripts/anchor.ts", tempDir, "--rollback", "--yes", "--json"],
         { encoding: "utf8", cwd: REPO_ROOT },
       );
       expect(rollbackRes.status).toBe(0);
       const rollbackData = JSON.parse(rollbackRes.stdout);
       expect(rollbackData.rolledBack).toBe(true);
+      expect(rollbackData.snapshotPath).toBeDefined();
+      expect(fs.readFileSync(path.join(tempDir, "state.txt"), "utf8")).toBe("clean\n");
 
       const checkAfterRollback = spawnSync(
         "bun",

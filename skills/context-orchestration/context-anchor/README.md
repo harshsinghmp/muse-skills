@@ -97,8 +97,10 @@ bun skills/context-orchestration/context-anchor/scripts/anchor.ts --record-outco
   --cmd "bun test" --success false --summary "AssertionError on line 42"
 bun skills/context-orchestration/context-anchor/scripts/anchor.ts --deadlock-check
 
-# Automated Rollback: revert uncommitted churn to clean anchor state
-bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback
+# Snapshotted rollback: patch first, then revert tracked changes (requires --yes)
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback --yes
+# Limit the revert to specific paths
+bun skills/context-orchestration/context-anchor/scripts/anchor.ts --rollback --yes --scope src/api,src/auth
 
 # Interruption Recovery: Stash active in-flight task during urgent human interrupts
 bun skills/context-orchestration/context-anchor/scripts/anchor.ts --stash-task "api-refactor" \
