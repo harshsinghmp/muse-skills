@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.4.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.4.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -19,7 +19,7 @@
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Option B: Instant Remote Setup (46 Skills + 460 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.1/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -29,6 +29,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
+- **v8.4.1 follow-ups** (v8.4.1): the lockfile audit accepts a project directory, CI gained a dedicated boundary/EDR/lockfile security job, issue labels and a distribution-path threat model are documented, dependencies and the docs ledger are refreshed, and every published release now gets an automatic checksum-pinned smoke check.
 - **Security wave 3, skill-quality gates & faster CI** (v8.4.0): the 2026-11-09 security audit's remaining waves land — honest receipts instead of fabricated client claims, integer money math, producer-ID metering with clamped invoices, fail-closed CI/secret scanning, a pinned installer with a release checksum, constant-time review tokens, HMAC-verified webhook scaffolds, and SSRF-safe fetchers. All 46 skills now pass a discovery-surface parity gate (`bun run check:surface`); the import-guard suite covers `updatedocs`, `new-project`, `tunnel`, and `sample-size`; and CI runs the 693-test suite in parallel (≈48s vs ≈89s) with package-tarball caching and superseded-run cancellation.
 - **Release safety & agent follow-ups** (v8.3.0): `updateagents` is entry-point gated so importing it never runs a sync or rewrites curated standards; the generated `AGENTS.md` ends highly technical work with a prioritized **Next 3** follow-up block; the three-scenario agency simulation now covers all 46 skills and gates releases; and CI caches and pins Bun to end release-asset `504` failures.
 - **Universal pre-merge sync gate** (v8.2.0): every scaffolded project now ships a self-contained `sync-gate.yml`; `updateagents --refresh-workflows` updates existing copies. The English-only policy also binds narration between tool calls, and URL intake is documented in the root router.
@@ -331,6 +332,9 @@ bun run check:sync
 
 # Validate .mcp.json server allowlist, transports, and literal-secret detection (scripts/check-mcp.ts)
 bun run check:mcp
+
+# Verify a published release: tag commit, checksums.txt asset, installer pin (scripts/release-smoke.ts)
+bun run release:smoke
 ```
 
 - **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).

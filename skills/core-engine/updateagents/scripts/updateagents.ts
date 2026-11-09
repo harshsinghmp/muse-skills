@@ -71,7 +71,7 @@ import {
 const SCRIPT_DIR = resolve(import.meta.dir, "..");
 const TEMPLATES_DIR = join(SCRIPT_DIR, "templates");
 
-/** Lean DOX router line limit (single source of truth: SKILL.md & twelve-asset-matrix.md). */
+/** Lean DOX router line limit (single source of truth: SKILL.md & fourteen-asset-matrix.md). */
 const AGENTS_MD_MAX_LINES = 90;
 
 /**

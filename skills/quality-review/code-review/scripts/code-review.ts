@@ -386,6 +386,22 @@ function validateRegistryUrls(urls: string[], suspiciousRegistries: string[]): v
   }
 }
 
+/**
+ * Resolve a file-or-directory argument to the project's authoritative lockfile.
+ * Mirrors the candidate order used by `auditAll` so the CLI and aggregate audit
+ * cannot disagree.
+ */
+export function resolveLockfilePath(targetPath: string): string {
+  if (fs.existsSync(targetPath) && fs.statSync(targetPath).isDirectory()) {
+    const candidates = ["bun.lock", "package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
+    return (
+      candidates.map((name) => path.join(targetPath, name)).find((candidate) => fs.existsSync(candidate)) ??
+      path.join(targetPath, "package.json")
+    );
+  }
+  return targetPath;
+}
+
 export function auditLockfile(lockfilePath: string): LockfileAuditReport {
   const suspiciousRegistries: string[] = [];
   let totalDependencies = 0;
@@ -646,11 +662,7 @@ export function auditAll(targetPath: string): AllAuditsReport {
   const runtimePitfalls = auditRuntimePitfalls(targetPath);
   const edgeSsr = auditEdgeSsrPitfalls(targetPath);
   const lifecycleScripts = auditLifecycleScripts(targetPath);
-  const lockfileCandidates = ["bun.lock", "package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
-  const lockfilePath =
-    lockfileCandidates.map((name) => path.join(targetPath, name)).find((candidate) => fs.existsSync(candidate)) ??
-    path.join(targetPath, "package.json");
-  const lockfile = auditLockfile(lockfilePath);
+  const lockfile = auditLockfile(resolveLockfilePath(targetPath));
 
   const totalViolations =
     edr.violations.length +
@@ -794,13 +806,14 @@ if (import.meta.main) {
 
   if (args.includes("--audit-lockfile")) {
     const idx = args.indexOf("--audit-lockfile");
-    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : "package-lock.json";
-    const res = auditLockfile(target);
+    const target = args[idx + 1] && !args[idx + 1].startsWith("-") ? args[idx + 1] : process.cwd();
+    const lockfilePath = resolveLockfilePath(target);
+    const res = auditLockfile(lockfilePath);
 
     if (isJson) {
       console.log(JSON.stringify(res, null, 2));
     } else {
-      console.log(`\n🔒 Lockfile Registry & Supply Chain Audit: ${target}`);
+      console.log(`\n🔒 Lockfile Registry & Supply Chain Audit: ${lockfilePath}`);
       console.log(`  Resolved Dependencies: ${res.totalDependencies}`);
       if (res.suspiciousRegistries.length === 0) {
         console.log("  ✅ All package registries are verified HTTPS official mirrors.");

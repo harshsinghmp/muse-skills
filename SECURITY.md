@@ -2,6 +2,20 @@
 
 This document addresses findings from automated security scanners (SkillSpector, CodeQL, semgrep) that flag patterns in this repository without understanding their context.
 
+## Distribution-Path Threat Model
+
+The highest-risk surfaces are not runtime skills; they are the installer, the clone, the scaffolder, and the CI generated for downstream projects.
+
+| Stage | Threat | Control |
+| :--- | :--- | :--- |
+| `curl …/install.sh \| bash` | A moved tag or compromised branch runs arbitrary code as the user | The installer clones a **pinned tag**, verifies the cloned commit against the release `checksums.txt` asset (`source-commit`), and refuses unverified tags unless `MUSE_SKILLS_ALLOW_UNVERIFIED=1` is set loudly |
+| `git clone` of a tag | Force-moved tag changes the code under a fixed version | Tag protection + release checksum verification; `MUSE_SKILLS_COMMIT` pins an exact SHA |
+| Scaffold execution (`new-project`, `updateagents`) | Generated code or dependency installs execute with the user's privileges | Run only from a verified tag; generated `.env.example` holds placeholders only; scaffolds commit the lockfile and install from it |
+| Generated CI | Third-party actions or PR-controlled scripts gain repository/OIDC access | Actions are SHA-pinned in every template; release jobs require a protected environment and `main` ancestry; `sync-gate` runs the checker from the base ref; workflow-level `id-token: write` is not granted |
+| Secrets | Tokens land in argv, logs, generated files, or client artifacts | Mode-600 config/files, env indirection, redaction at the tool that detects a secret, and a `git grep` secret scan that fails closed |
+
+**Trust boundary:** the tagged release commit plus its published checksum is the root of trust. Anything outside that boundary — a branch, a fork, an old clone, or a locally modified installer — is unverified. Report a bypass privately via the channel above.
+
 ## Summary
 
 | Category | Count | Verdict |
@@ -115,7 +129,7 @@ chmod +x "$hook_dest/$name"
 
 ## How to Verify
 
-1. **Run the test suite:** `bun test` — 53 tests, all green
+1. **Run the test suite:** `bun test` — full suite, all green
 2. **Run the secret scan:** `bash scripts/hooks/secret-scan-pre-commit.sh` — clean
 3. **Review hook behavior:** All hooks are advisory (log + continue), never block
 4. **Check network activity:** Hooks make zero network calls

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-09T06:22:01.019Z",
-  "head": "51a06c82d5cfe28898b1c831613b72f65da2e9d6",
+  "updatedAt": "2026-11-09T19:37:41.055Z",
+  "head": "df5984f988347642282d46177603e272df46f213",
   "watermark": {
-    "point": 55,
-    "commit": "59d0ba4a62a4e9cb64ad17b64ddd7200ecbbba9b",
-    "date": "2026-11-08T21:02:05.061Z",
-    "releaseTag": "v8.3.0"
+    "point": 116,
+    "commit": "df5984f988347642282d46177603e272df46f213",
+    "date": "2026-11-09T19:37:40.382Z",
+    "releaseTag": "v8.4.0"
   },
   "agentWatermark": {
     "point": 1,
@@ -2450,6 +2450,2188 @@
       "shipped": true,
       "releaseTag": "v8.3.0",
       "createdAt": "2026-11-09T06:20:56.545Z"
+    },
+    {
+      "id": "DP-0067",
+      "point": 67,
+      "commit": "e84f06f8456d75507a8c43a66d23d053893eee0d",
+      "shortCommit": "e84f06f",
+      "date": "2026-11-09",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.3.0",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "AGENTS.md",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package-lock.json",
+        "package.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0068",
+      "point": 68,
+      "commit": "5c91a309d64f568c1e957110832a38d471ee568e",
+      "shortCommit": "5c91a30",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #368 from harshsinghmp/release/v8.3.0",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.3.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0069",
+      "point": 69,
+      "commit": "dde1b8ed8ced4ac4762007db6a4a3758928fb039",
+      "shortCommit": "dde1b8e",
+      "date": "2026-11-09",
+      "type": "ci",
+      "scope": "",
+      "summary": "publish curated release notes in the GitHub release",
+      "breaking": false,
+      "files": [".github/workflows/release.yml", "CHANGELOG.md", "tests/release-notes.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"curated release\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"curated release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"release notes\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0070",
+      "point": 70,
+      "commit": "5b8fdbd07f70f3d57f743cdd294a70def22592f3",
+      "shortCommit": "5b8fdbd",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #369 from harshsinghmp/ci/release-notes-body",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0071",
+      "point": 71,
+      "commit": "3a510534547e8f392aa901be065a648e20e89a58",
+      "shortCommit": "3a51053",
+      "date": "2026-11-09",
+      "type": "chore",
+      "scope": "release",
+      "summary": "dedupe landing gate and require release notes",
+      "breaking": false,
+      "files": [".github/workflows/landing-gate.yml", "CHANGELOG.md", "CONTRIBUTING.md"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"landing gate\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"landing gate\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0072",
+      "point": 72,
+      "commit": "5e3219b9c3d6b67537e8c5d428534426a34555ff",
+      "shortCommit": "5e3219b",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #370 from harshsinghmp/chore/release-pipeline-hardening",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0073",
+      "point": 73,
+      "commit": "1912985498af40242bae496dac8c7b8c1706153c",
+      "shortCommit": "1912985",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "qa-launch",
+      "summary": "add local Ollama/vLLM eval provider adapter",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "llms.txt",
+        "skills.json",
+        "skills/agency-delivery/qa-launch/README.md",
+        "skills/agency-delivery/qa-launch/SKILL.md",
+        "skills/agency-delivery/qa-launch/references/evals.md",
+        "skills/agency-delivery/qa-launch/scripts/eval-provider.ts",
+        "tests/eval-provider.test.ts",
+        "tests/simulation-workflows.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"local ollama\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"ollama vllm\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"local ollama\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0074",
+      "point": 74,
+      "commit": "7bad529310d6ec6ae2ca5ee0572b8763e26dfd8f",
+      "shortCommit": "7bad529",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #371 from harshsinghmp/feat/qa-launch-local-provider-adapter",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0075",
+      "point": 75,
+      "commit": "f268241019508a6625cae44c4beef593e53d418f",
+      "shortCommit": "f268241",
+      "date": "2026-11-09",
+      "type": "feat",
+      "scope": "qa-launch",
+      "summary": "run dual judges through local/cloud providers",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills.json",
+        "skills/agency-delivery/qa-launch/SKILL.md",
+        "skills/agency-delivery/qa-launch/references/evals.md",
+        "skills/agency-delivery/qa-launch/scripts/eval-runner.ts",
+        "tests/eval-runner-providers.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"local cloud\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"local cloud\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"local cloud\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0076",
+      "point": 76,
+      "commit": "d59e9c8f3fba6b5d7bf7a1cfa8ee6f1292421e28",
+      "shortCommit": "d59e9c8",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #372 from harshsinghmp/feat/qa-launch-provider-judges",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0077",
+      "point": 77,
+      "commit": "28d35ec39e76b0bfb7df657fb61e209d01f48834",
+      "shortCommit": "28d35ec",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #381 from harshsinghmp/docs/readme-local-eval",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.751Z"
+    },
+    {
+      "id": "DP-0078",
+      "point": 78,
+      "commit": "a8be6bc9807219ec3169254bb4785a7bbf1ff794",
+      "shortCommit": "a8be6bc",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "retain",
+      "summary": "require a real portfolio for the health scorecard",
+      "breaking": false,
+      "files": [
+        "skills/agency-delivery/retain/references/health.md",
+        "skills/agency-delivery/retain/scripts/client-health-telemetry.ts",
+        "tests/retain-scorecard.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0079",
+      "point": 79,
+      "commit": "5463247488bb98611dac91d2600e7e1e76da5dca",
+      "shortCommit": "5463247",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #383 from harshsinghmp/fix/retain-scorecard-requires-input",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0080",
+      "point": 80,
+      "commit": "1eb26e4e461b512e9d4c7d025446a80f355cd490",
+      "shortCommit": "1eb26e4",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "context-anchor",
+      "summary": "snapshot and confirm destructive rollback",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/context-orchestration/context-anchor/README.md",
+        "skills/context-orchestration/context-anchor/SKILL.md",
+        "skills/context-orchestration/context-anchor/references/deadlock-breaker.md",
+        "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+        "tests/context-anchor-rollback.test.ts",
+        "tests/skills.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0081",
+      "point": 81,
+      "commit": "74fc884e85152d6aaec1663ecdd8aa838e23fe76",
+      "shortCommit": "74fc884",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #382 from harshsinghmp/fix/context-anchor-rollback-safety",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0082",
+      "point": 82,
+      "commit": "ba2458bba23a29b0500edd01afc0192556a7584d",
+      "shortCommit": "ba2458b",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "content",
+      "summary": "honour --author and stop hardcoding a personal name",
+      "breaking": false,
+      "files": ["skills/agency-delivery/content/scripts/aeo-schema.ts", "tests/content-aeo-author.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0083",
+      "point": 83,
+      "commit": "84eb81b141c0891c6d0814f9eb418314d71468f0",
+      "shortCommit": "84eb81b",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #384 from harshsinghmp/fix/content-aeo-author",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0084",
+      "point": 84,
+      "commit": "7add465f9629bc22d4d3a6b63a2d8063fabdf01a",
+      "shortCommit": "7add465",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "periodic-retreat",
+      "summary": "fail clearly when the coach skill is absent",
+      "breaking": false,
+      "files": [
+        "skills/reflection-maintenance/periodic-retreat/SKILL.md",
+        "skills/reflection-maintenance/periodic-retreat/scripts/wisdom-updater.ts",
+        "tests/periodic-retreat-dependency.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"coach skill\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"when coach\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"coach skill\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0085",
+      "point": 85,
+      "commit": "04f6cfb5fa8eda0365d378181f774dcf3ae6f33b",
+      "shortCommit": "04f6cfb",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #386 from harshsinghmp/fix/periodic-retreat-coach-dependency",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0086",
+      "point": 86,
+      "commit": "04fca0c3537cf2f7351072b0ce047cdc8569b68b",
+      "shortCommit": "04fca0c",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "muse-security",
+      "summary": "make the zero-trust CLI honour its documented flags",
+      "breaking": false,
+      "files": [
+        "skills/quality-review/muse-security/references/zero-trust.md",
+        "skills/quality-review/muse-security/scripts/zero-trust.ts",
+        "tests/muse-security-zero-trust.test.ts",
+        "tests/simulation-workflows.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"zero trust\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"zero trust\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"zero trust\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0087",
+      "point": 87,
+      "commit": "b3d33148e48958c10c9f6efc31b50bbeb7d1eeea",
+      "shortCommit": "b3d3314",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #385 from harshsinghmp/fix/muse-security-zero-trust-cli",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0088",
+      "point": 88,
+      "commit": "8981642db4693b3f640445cb7843f32202398d49",
+      "shortCommit": "8981642",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "skills",
+      "summary": "normalize documented script paths and gate drift",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/audit-doc-commands.ts",
+        "skills/agency-delivery/accounts/README.md",
+        "skills/agency-delivery/accounts/references/billing-engine.md",
+        "skills/agency-delivery/automation/references/integrations.md",
+        "skills/agency-delivery/brand/references/audit.md",
+        "skills/agency-delivery/brand/references/intake.md",
+        "skills/agency-delivery/client-comms/references/executive-pulse.md",
+        "skills/agency-delivery/content/references/podcast.md",
+        "skills/agency-delivery/devops/references/cloudflare.md",
+        "skills/agency-delivery/devops/references/edge-mesh.md",
+        "skills/agency-delivery/devops/references/preview.md",
+        "skills/agency-delivery/growth/references/programmatic-cro.md",
+        "skills/agency-delivery/seo/references/technical.md",
+        "skills/agency-delivery/smm/references/carousel.md",
+        "skills/agency-delivery/webdev/references/realtime-bus.md",
+        "skills/context-orchestration/secretary/references/orchestration.md",
+        "skills/core-engine/git/SKILL.md",
+        "skills/core-engine/git/references/monorepo-and-sanitization.md",
+        "skills/core-engine/new-project/README.md",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/updateagents/README.md",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/design-interface/refactor/README.md",
+        "skills/design-interface/refactor/SKILL.md",
+        "skills/design-interface/refactor/references/ui.md",
+        "skills/quality-review/muse-security/references/boundary.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "tests/doc-commands.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0089",
+      "point": 89,
+      "commit": "c2f3894167a1d42a785f7a60ba63bf8fda41fd73",
+      "shortCommit": "c2f3894",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #387 from harshsinghmp/fix/doc-command-paths",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0090",
+      "point": 90,
+      "commit": "6cd24629af967991309a7f37a5124e8beb2a3293",
+      "shortCommit": "6cd2462",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "skills",
+      "summary": "finish command correctness and enforce the Agent Skills spec",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "llms.txt",
+        "skills.json",
+        "skills/agency-delivery/analytics/references/tracking.md",
+        "skills/agency-delivery/brand/SKILL.md",
+        "skills/agency-delivery/crm/SKILL.md",
+        "skills/agency-delivery/database/SKILL.md",
+        "skills/agency-delivery/qa-launch/SKILL.md",
+        "skills/agency-delivery/telegram/SKILL.md",
+        "skills/agency-delivery/webdev/SKILL.md",
+        "skills/context-orchestration/coupling-router/SKILL.md",
+        "skills/context-orchestration/evidence-ledger/SKILL.md",
+        "skills/context-orchestration/relay/SKILL.md",
+        "skills/context-orchestration/secretary/SKILL.md",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/core-engine/git/SKILL.md",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updatedocs/SKILL.md",
+        "skills/design-interface/refactor/README.md",
+        "skills/design-interface/refactor/SKILL.md",
+        "skills/design-interface/refactor/examples/sample-5-state-refactor.md",
+        "skills/design-interface/refactor/references/ui.md",
+        "skills/quality-review/audit/SKILL.md",
+        "skills/quality-review/dead-letter/SKILL.md",
+        "skills/quality-review/gauntlet-loop/README.md",
+        "skills/quality-review/gauntlet-loop/SKILL.md",
+        "skills/quality-review/gauntlet-loop/scripts/anti-drift.ts",
+        "skills/quality-review/humanize/SKILL.md",
+        "skills/quality-review/muse-security/references/boundary.md",
+        "skills/references/audit-mode-guidance.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/coach/SKILL.md",
+        "skills/reflection-maintenance/periodic-retreat/SKILL.md",
+        "tests/skill-spec.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0091",
+      "point": 91,
+      "commit": "dbaceadfc2f21c30ccc3f7b75823e65a10da8875",
+      "shortCommit": "dbacead",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #388 from harshsinghmp/fix/skill-command-and-spec-compliance",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0092",
+      "point": 92,
+      "commit": "011780871051128d86eeded5adee7d7e8126ef40",
+      "shortCommit": "0117808",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "close data-loss, credential-default, and fail-open gates",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "scripts/gen-repo-report.py",
+        "scripts/hooks/gen-repo-report-on-close.sh",
+        "scripts/hooks/harness-hygiene-pre-commit.sh",
+        "scripts/hooks/harness-hygiene-pre-push.sh",
+        "scripts/hooks/install-hooks.sh",
+        "scripts/hooks/secret-scan-pre-commit.sh",
+        "scripts/install.sh",
+        "skills/agency-delivery/accounts/scripts/token-ledger.ts",
+        "skills/agency-delivery/brand/references/accounts-access.md",
+        "skills/agency-delivery/devops/references/cloudflare.md",
+        "skills/agency-delivery/devops/references/preview.md",
+        "skills/agency-delivery/ops/references/vault.md",
+        "skills/agency-delivery/telegram/SKILL.md",
+        "skills/context-orchestration/coupling-router/scripts/worktree-federation.ts",
+        "skills/core-engine/git/scripts/git-preflight.ts",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/new-project/scripts/new-project.ts",
+        "skills/core-engine/updateagents/references/onboard.md",
+        "skills/core-engine/updateagents/templates/.agents/standards/security-vibeguard.md",
+        "skills/core-engine/updateagents/templates/gitignore.template",
+        "skills/quality-review/muse-security/scripts/secret-scan.ts",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "tests/security-regressions.test.ts",
+        "tests/skills.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"data loss\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"data loss\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"data loss\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0093",
+      "point": 93,
+      "commit": "f9adc31ef577153314dc387f36f76e86a53ef3d5",
+      "shortCommit": "f9adc31",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #398 from harshsinghmp/fix/security-p0-hardening",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0094",
+      "point": 94,
+      "commit": "9ec1fd2a3c89ca2ab39fe3b849059fc3b23611ad",
+      "shortCommit": "9ec1fd2",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "close credential, fail-closed, and containment gaps",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "scripts/export-commands.ts",
+        "scripts/extract-skill.ts",
+        "scripts/hooks/taste-observer.sh",
+        "scripts/sync_registry.py",
+        "skills/agency-delivery/automation/scripts/alert-router.ts",
+        "skills/agency-delivery/client-comms/scripts/client-comms.ts",
+        "skills/agency-delivery/database/scripts/migration-guard.ts",
+        "skills/agency-delivery/design/scripts/canvas-relay.ts",
+        "skills/agency-delivery/devops/scripts/living-deliverable.ts",
+        "skills/agency-delivery/ops/scripts/multi-client.ts",
+        "skills/agency-delivery/telegram/references/webhook.md",
+        "skills/agency-delivery/telegram/scripts/webhook-receiver.ts",
+        "skills/agency-delivery/webdev/scripts/webdev.ts",
+        "skills/context-orchestration/context-anchor/scripts/anchor.ts",
+        "skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts",
+        "skills/context-orchestration/coupling-router/scripts/worktree-lease.ts",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/quality-review/code-review/scripts/code-review.ts",
+        "skills/quality-review/muse-security/references/zero-trust.md",
+        "skills/quality-review/muse-security/scripts/boundary-audit.ts",
+        "skills/quality-review/muse-security/scripts/mcp-sanitizer.ts",
+        "skills/quality-review/muse-security/scripts/secret-scan.ts",
+        "skills/quality-review/muse-security/scripts/zero-trust.ts",
+        "skills/reflection-maintenance/coach/scripts/wisdom-updater.ts",
+        "tests/security-regressions.test.ts",
+        "tests/simulation-workflows.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0095",
+      "point": 95,
+      "commit": "5c276ce5025276c5162110e2094b2863a39b81b3",
+      "shortCommit": "5c276ce",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #399 from harshsinghmp/fix/security-wave-2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0096",
+      "point": 96,
+      "commit": "26451b6d57d2cb23768aae9e9d32413966692b4b",
+      "shortCommit": "26451b6",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "stop fabricated assurance, money, and PII outputs",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/agency-delivery/accounts/scripts/metering-engine.ts",
+        "skills/agency-delivery/accounts/scripts/pricing-calculator.ts",
+        "skills/agency-delivery/accounts/scripts/reconcile-gateways.ts",
+        "skills/agency-delivery/analytics/scripts/attribution-graph.ts",
+        "skills/agency-delivery/analytics/scripts/utm-sanitizer.ts",
+        "skills/agency-delivery/ops/scripts/sku-packager.ts",
+        "skills/agency-delivery/qa-launch/scripts/eval-runner.ts",
+        "skills/agency-delivery/telegram/scripts/webhook-receiver.ts",
+        "skills/agency-delivery/webdev/scripts/webdev.ts",
+        "skills/core-engine/updateagents/scripts/github-scaffold.ts",
+        "skills/core-engine/updatedocs/scripts/updatedocs.ts",
+        "skills/reflection-maintenance/clean-system-cache/scripts/host-vitals.ts",
+        "skills/reflection-maintenance/coach/scripts/coach.ts",
+        "skills/reflection-maintenance/coach/scripts/wisdom-updater.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/skills.test.ts",
+        "tests/wave23-terrain-sovereignty.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0097",
+      "point": 97,
+      "commit": "a07296ceb9bd93ef72b6e3614b47eb18e0a3e157",
+      "shortCommit": "a07296c",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #400 from harshsinghmp/fix/security-394-honest-outputs",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0098",
+      "point": 98,
+      "commit": "9145a4eba6c974bb7da2767ab7992a5a3b0250c5",
+      "shortCommit": "9145a4e",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "harden guidance and close scanner false negatives",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/agency-delivery/analytics/references/events.md",
+        "skills/agency-delivery/database/references/query.md",
+        "skills/agency-delivery/research/references/entity-dossier.md",
+        "skills/agency-delivery/smm/references/x.md",
+        "skills/agency-delivery/webdev/references/backend.md",
+        "skills/agency-delivery/webdev/references/security-headers.md",
+        "skills/context-orchestration/relay/SKILL.md",
+        "skills/core-engine/git/references/exposure-audit.md",
+        "skills/design-interface/designscope/references/capture-flows.md",
+        "skills/quality-review/code-review/scripts/code-review.ts",
+        "skills/quality-review/gauntlet-loop/references/web-security-visual-gate.md",
+        "skills/quality-review/muse-security/references/boundary.md",
+        "skills/quality-review/muse-security/references/mcp-guard.md",
+        "skills/quality-review/muse-security/scripts/boundary-audit.ts",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.cmd",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "tests/security-guidance.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0099",
+      "point": 99,
+      "commit": "43e8061bb005ccaafaf65f2c06ac120829d8e772",
+      "shortCommit": "43e8061",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #402 from harshsinghmp/fix/security-396-guidance-scanners",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0100",
+      "point": 100,
+      "commit": "49f3fecdcbab32f1e9adb1b27d6ce996ec489347",
+      "shortCommit": "49f3fec",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "close orphaned audit findings and scanner gaps",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "scripts/extract-skill.ts",
+        "scripts/hooks/cache-pressure-check.sh",
+        "scripts/hooks/install-hooks.sh",
+        "scripts/taste-engine.ts",
+        "skills/agency-delivery/automation/scripts/webhook-guard.ts",
+        "skills/agency-delivery/brand/references/accounts-access.md",
+        "skills/agency-delivery/content/scripts/frontmatter-guard.ts",
+        "skills/agency-delivery/database/scripts/migration-guard.ts",
+        "skills/agency-delivery/devops/references/cloudflare.md",
+        "skills/agency-delivery/devops/scripts/living-deliverable.ts",
+        "skills/agency-delivery/qa-launch/scripts/e2e-runner.ts",
+        "skills/agency-delivery/telegram/agents/openai.yaml",
+        "skills/agency-delivery/telegram/references/notify.md",
+        "skills/agency-delivery/webdev/scripts/webdev.ts",
+        "skills/context-orchestration/coupling-router/scripts/worktree-federation.ts",
+        "skills/core-engine/new-project/scripts/new-project.ts",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updateagents/templates/gitignore.template",
+        "skills/design-interface/designscope/scripts/extract_css_vars.py",
+        "skills/design-interface/designscope/scripts/verify_design.py",
+        "skills/quality-review/muse-security/scripts/zero-trust.ts",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "skills/reflection-maintenance/coach/scripts/coach.ts",
+        "tests/security-coverage.test.ts",
+        "tests/simulation-workflows.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0101",
+      "point": 101,
+      "commit": "30422e49310404e2215c5dd1247fcb5b18ec835d",
+      "shortCommit": "30422e4",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #403 from harshsinghmp/fix/security-397-coverage-gaps",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0102",
+      "point": 102,
+      "commit": "f79c94caf6c24674d0870f35ad020e9daa224c15",
+      "shortCommit": "f79c94c",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "security",
+      "summary": "harden CI, release, and distribution supply chain",
+      "breaking": false,
+      "files": [
+        ".github/dependabot.yml",
+        ".github/pull_request_template.md",
+        ".github/workflows/ci.yml",
+        ".github/workflows/landing-gate.yml",
+        ".github/workflows/release.yml",
+        ".github/workflows/sync-gate.yml",
+        "CHANGELOG.md",
+        "bun.lock",
+        "package-lock.json",
+        "package.json",
+        "scripts/check-landed.ts",
+        "scripts/check-mcp.ts",
+        "scripts/export-commands.ts",
+        "scripts/install.sh",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/updateagents/templates/env.example",
+        "skills/core-engine/updateagents/templates/github/workflows/ai-slop.yml",
+        "skills/core-engine/updateagents/templates/github/workflows/codeql.yml",
+        "skills/core-engine/updateagents/templates/github/workflows/docs-sync.yml",
+        "skills/core-engine/updateagents/templates/github/workflows/trivy.yml",
+        "tests/ci-hardening.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"supply chain\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"supply chain\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"release distribution\" found in .agents/context/imported-agent-instructions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0103",
+      "point": 103,
+      "commit": "3757dcd42d629d80974591bd1d9912f15fd6d122",
+      "shortCommit": "3757dcd",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "make the secret scan dependency-free and fail closed",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml", "tests/ci-hardening.test.ts", "tests/extract-skill.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"secret scan\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"secret scan\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/decisions.md"],
+          "evidence": "phrase \"secret scan\" found in .agents/context/decisions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0104",
+      "point": 104,
+      "commit": "a69fa1e0ec0ea6dbc30229966d69dd9755d3efe4",
+      "shortCommit": "a69fa1e",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "repair sync-gate base ref and document the MCP gate",
+      "breaking": false,
+      "files": [".github/workflows/sync-gate.yml", "CHANGELOG.md", "README.md", "llms.txt"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"sync gate\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"sync gate\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/invariants.md"],
+          "evidence": "phrase \"sync gate\" found in .agents/context/invariants.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0105",
+      "point": 105,
+      "commit": "bae696334cb97a4f4612a271673ba6f11d1aade9",
+      "shortCommit": "bae6963",
+      "date": "2026-11-09",
+      "type": "fix",
+      "scope": "ci",
+      "summary": "treat \"bun test\" as one check name in the landing gate",
+      "breaking": false,
+      "files": [".github/workflows/landing-gate.yml", "tests/ci-hardening.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0106",
+      "point": 106,
+      "commit": "ee630c3322b8051c7eba6769338b308481079794",
+      "shortCommit": "ee630c3",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #401 from harshsinghmp/fix/security-395-ci-supply-chain",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.752Z"
+    },
+    {
+      "id": "DP-0107",
+      "point": 107,
+      "commit": "99c13873ed22a729300beabb5491ba29c7658b84",
+      "shortCommit": "99c1387",
+      "date": "2026-11-09",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #404 from harshsinghmp/fix/secret-scan-fixture",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0108",
+      "point": 108,
+      "commit": "233d8fac8b05139d6756100ce7e6dc88d8d2f2c8",
+      "shortCommit": "233d8fa",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "skills",
+      "summary": "unify discovery surfaces and close the quality backlog",
+      "breaking": false,
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/landing-gate.yml",
+        ".github/workflows/sync-gate.yml",
+        "llms.txt",
+        "package.json",
+        "scripts/sync-skill-surface.ts",
+        "skills.json",
+        "skills/agency-delivery/accounts/README.md",
+        "skills/agency-delivery/accounts/agents/openai.yaml",
+        "skills/agency-delivery/analytics/README.md",
+        "skills/agency-delivery/analytics/agents/openai.yaml",
+        "skills/agency-delivery/automation/README.md",
+        "skills/agency-delivery/automation/SKILL.md",
+        "skills/agency-delivery/automation/agents/openai.yaml",
+        "skills/agency-delivery/brand/README.md",
+        "skills/agency-delivery/brand/SKILL.md",
+        "skills/agency-delivery/brand/agents/openai.yaml",
+        "skills/agency-delivery/client-comms/README.md",
+        "skills/agency-delivery/client-comms/SKILL.md",
+        "skills/agency-delivery/client-comms/agents/openai.yaml",
+        "skills/agency-delivery/content/README.md",
+        "skills/agency-delivery/content/SKILL.md",
+        "skills/agency-delivery/content/agents/openai.yaml",
+        "skills/agency-delivery/crm/README.md",
+        "skills/agency-delivery/crm/SKILL.md",
+        "skills/agency-delivery/crm/agents/openai.yaml",
+        "skills/agency-delivery/database/README.md",
+        "skills/agency-delivery/database/SKILL.md",
+        "skills/agency-delivery/database/agents/openai.yaml",
+        "skills/agency-delivery/database/references/audit.md",
+        "skills/agency-delivery/design/README.md",
+        "skills/agency-delivery/design/SKILL.md",
+        "skills/agency-delivery/design/agents/openai.yaml",
+        "skills/agency-delivery/devops/README.md",
+        "skills/agency-delivery/devops/SKILL.md",
+        "skills/agency-delivery/devops/agents/openai.yaml",
+        "skills/agency-delivery/devops/scripts/tunnel.ts",
+        "skills/agency-delivery/growth/README.md",
+        "skills/agency-delivery/growth/SKILL.md",
+        "skills/agency-delivery/growth/agents/openai.yaml",
+        "skills/agency-delivery/gtm/README.md",
+        "skills/agency-delivery/gtm/SKILL.md",
+        "skills/agency-delivery/gtm/references/handover.md",
+        "skills/agency-delivery/gtm/references/list.md",
+        "skills/agency-delivery/gtm/references/outreach.md",
+        "skills/agency-delivery/gtm/references/research.md",
+        "skills/agency-delivery/incident-response/README.md",
+        "skills/agency-delivery/incident-response/SKILL.md",
+        "skills/agency-delivery/incident-response/agents/openai.yaml",
+        "skills/agency-delivery/mobile/README.md",
+        "skills/agency-delivery/mobile/SKILL.md",
+        "skills/agency-delivery/mobile/agents/openai.yaml",
+        "skills/agency-delivery/mobile/references/expo.md",
+        "skills/agency-delivery/mobile/scripts/expo-scaffold.ts",
+        "skills/agency-delivery/ops/README.md",
+        "skills/agency-delivery/ops/SKILL.md",
+        "skills/agency-delivery/ops/agents/openai.yaml",
+        "skills/agency-delivery/paidads/README.md",
+        "skills/agency-delivery/paidads/references/audit.md",
+        "skills/agency-delivery/qa-launch/README.md",
+        "skills/agency-delivery/qa-launch/agents/openai.yaml",
+        "skills/agency-delivery/research/SKILL.md",
+        "skills/agency-delivery/research/agents/openai.yaml",
+        "skills/agency-delivery/research/scripts/sample-size.ts",
+        "skills/agency-delivery/retain/README.md",
+        "skills/agency-delivery/retain/agents/openai.yaml",
+        "skills/agency-delivery/sales-enablement/agents/openai.yaml",
+        "skills/agency-delivery/sales-enablement/references/demo.md",
+        "skills/agency-delivery/seo/README.md",
+        "skills/agency-delivery/seo/agents/openai.yaml",
+        "skills/agency-delivery/smm/README.md",
+        "skills/agency-delivery/smm/SKILL.md",
+        "skills/agency-delivery/smm/agents/openai.yaml",
+        "skills/agency-delivery/telegram/SKILL.md",
+        "skills/agency-delivery/telegram/agents/openai.yaml",
+        "skills/agency-delivery/webdev/README.md",
+        "skills/agency-delivery/webdev/SKILL.md",
+        "skills/agency-delivery/webdev/agents/openai.yaml",
+        "skills/context-orchestration/coupling-router/SKILL.md",
+        "skills/context-orchestration/coupling-router/scripts/worktree-federation.ts",
+        "skills/context-orchestration/evidence-ledger/README.md",
+        "skills/context-orchestration/evidence-ledger/SKILL.md",
+        "skills/context-orchestration/evidence-ledger/agents/openai.yaml",
+        "skills/context-orchestration/evidence-ledger/references/skill-orchestration.md",
+        "skills/context-orchestration/relay/README.md",
+        "skills/context-orchestration/relay/SKILL.md",
+        "skills/context-orchestration/relay/examples/sample-live-handoff.md",
+        "skills/context-orchestration/secretary/SKILL.md",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/core-engine/git/SKILL.md",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/new-project/references/CLI.md",
+        "skills/core-engine/new-project/references/STACK-SETUP.md",
+        "skills/core-engine/new-project/scripts/new-project.ts",
+        "skills/core-engine/updateagents/README.md",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updatedocs/README.md",
+        "skills/core-engine/updatedocs/SKILL.md",
+        "skills/core-engine/updatedocs/references/CLI-ENGINE.md",
+        "skills/core-engine/updatedocs/references/GOVERNANCE.md",
+        "skills/core-engine/updatedocs/references/LEDGER.md",
+        "skills/core-engine/updatedocs/references/OUTPUT-FORMAT.md",
+        "skills/core-engine/updatedocs/references/PIPELINE.md",
+        "skills/core-engine/updatedocs/scripts/updatedocs.ts",
+        "skills/design-interface/animate/SKILL.md",
+        "skills/design-interface/designscope/SKILL.md",
+        "skills/design-interface/designscope/references/analysis-framework.md",
+        "skills/design-interface/refactor/README.md",
+        "skills/design-interface/refactor/SKILL.md",
+        "skills/design-interface/refactor/agents/openai.yaml",
+        "skills/quality-review/audit/SKILL.md",
+        "skills/quality-review/code-review/README.md",
+        "skills/quality-review/code-review/SKILL.md",
+        "skills/quality-review/dead-letter/README.md",
+        "skills/quality-review/humanize/README.md",
+        "skills/quality-review/muse-security/README.md",
+        "skills/quality-review/muse-security/agents/openai.yaml",
+        "skills/quality-review/pua/README.md",
+        "skills/quality-review/pua/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/coach/README.md",
+        "skills/reflection-maintenance/coach/SKILL.md",
+        "skills/reflection-maintenance/coach/agents/openai.yaml",
+        "tests/ci-hardening.test.ts",
+        "tests/clean-system-cache.test.ts",
+        "tests/doc-sync.test.ts",
+        "tests/import-guards.test.ts",
+        "tests/readme-install-urls.test.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/skill-consistency.test.ts",
+        "tests/skill-parity.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0109",
+      "point": 109,
+      "commit": "7fd22b6dfae57b08fa264ba3ff70865917717596",
+      "shortCommit": "7fd22b6",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #405 from harshsinghmp/feat/skill-quality-program",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0110",
+      "point": 110,
+      "commit": "d1c8a2af36cb130fc0b044b21df1eb3bbc505b38",
+      "shortCommit": "d1c8a2a",
+      "date": "2026-11-10",
+      "type": "fix",
+      "scope": "test",
+      "summary": "ignore Bun's cache in the repo containment snapshot",
+      "breaking": false,
+      "files": ["tests/setup-end-to-end.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0111",
+      "point": 111,
+      "commit": "f9b0e6fb1267849e845ee473efb1ea15e48aecf9",
+      "shortCommit": "f9b0e6f",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #407 from harshsinghmp/fix/parallel-containment",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0112",
+      "point": 112,
+      "commit": "4812adbac1c554a89a9d9a471a0449c43d0a441f",
+      "shortCommit": "4812adb",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #408 from harshsinghmp/fix/parallel-containment-2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0113",
+      "point": 113,
+      "commit": "2e0b57a8a2ce7e24ccad39ef9f6061c3152dea45",
+      "shortCommit": "2e0b57a",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #409 from harshsinghmp/fix/parallel-timeout",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0114",
+      "point": 114,
+      "commit": "5b61bc0a97fef91eb43b3e20e72b45c044d79c8c",
+      "shortCommit": "5b61bc0",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #417 from harshsinghmp/fix/containment-tracked",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0115",
+      "point": 115,
+      "commit": "d1db4ffa6e700bb929439f775ea324d2b93d8a49",
+      "shortCommit": "d1db4ff",
+      "date": "2026-11-10",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.4.0",
+      "breaking": false,
+      "files": [
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json",
+        "scripts/install.sh",
+        "tests/version-consistency.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0116",
+      "point": 116,
+      "commit": "df5984f988347642282d46177603e272df46f213",
+      "shortCommit": "df5984f",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #416 from harshsinghmp/chore/backmerge-v8.4.0",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.0",
+      "createdAt": "2026-11-09T19:36:55.753Z"
     }
   ]
 }

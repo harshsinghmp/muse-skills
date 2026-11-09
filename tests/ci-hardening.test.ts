@@ -51,6 +51,19 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("steps.secret-scan.outputs.report");
   });
 
+  test("CI runs the security audit and a post-release smoke workflow", () => {
+    const ci = read(".github/workflows/ci.yml");
+    expect(ci).toContain("security-audit:");
+    expect(ci).toContain("boundary-audit.ts -p .");
+    expect(ci).toContain("--audit-lockfile .");
+    expect(ci).toContain("needs: [lint, type-check, test, secret-scan, security-audit]");
+
+    const smoke = read(".github/workflows/release-smoke.yml");
+    expect(smoke).toContain("release:");
+    expect(smoke).toContain("release:smoke");
+    expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
+  });
+
   test("CI parallelizes tests, caches package tarballs, and cancels superseded runs", () => {
     const ci = read(".github/workflows/ci.yml");
     expect(ci).toContain("bun test --parallel");
@@ -108,7 +121,7 @@ describe("CI and supply-chain hardening (#395)", () => {
 
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.private).toBe(true);
-    expect(pkg.dependencies.musememory).toBe("3.0.2");
+    expect(pkg.dependencies.musememory).toBe("3.3.0");
     expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
   });
 

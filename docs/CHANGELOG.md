@@ -1,5 +1,7 @@
 # Changelog
 
+> **Historical archive — frozen at v7.8.0.** The canonical, current changelog is [../CHANGELOG.md](../CHANGELOG.md). Do not add new entries here.
+
 All notable changes to the **Muse Skills** suite are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

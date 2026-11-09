@@ -1,3 +1,36 @@
+# 🏛️ Muse Skills v8.4.1 — Audit Follow-ups & Release Smoke
+
+> **Patch release: closes the four post-audit follow-ups, refreshes dependencies and the docs ledger, and adds an automatic checksum-pinned smoke check for every published release.** 698 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.4.1
+
+- **Lockfile audit accepts directories**: `code-review --audit-lockfile <dir>` resolves `bun.lock`/`package-lock.json`/`pnpm-lock.yaml`/`yarn.lock` instead of failing with EISDIR.
+- **CI security job**: a dedicated `security-audit` job runs boundary/tenant checks, EDR heuristic checks, and the lockfile supply-chain audit; the landing gate depends on it.
+- **Release smoke**: `.github/workflows/release-smoke.yml` and `bun run release:smoke` verify the published tag commit against the release `checksums.txt` asset and the installer default ref.
+- **Triage and threat model**: issue type/priority/area labels, blocked-by convention, and the installer→clone→scaffold→generated-CI threat model are documented.
+- **Dependency and docs refresh**: `musememory` 3.3.0, Biome 2.6.6, `bun-types` 1.4.4; `docs/CHANGELOG.md` is marked historical; `.docs-ledger.json` is current; `twelve-asset-matrix` is now `fourteen-asset-matrix`.
+
+## 📊 Verification
+
+| Metric | v8.4.0 | v8.4.1 |
+|:---|:---|:---|
+| Automated Tests | 697 | **698** |
+| Test Files | 47 | **47** |
+| Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.0...v8.4.1
+
+---
+
 # 🏛️ Muse Skills v8.4.0 — Security Wave 3, Skill-Quality Gates & Faster CI
 
 > **Minor release: the 2026-11-09 security audit's remaining waves land — honest client outputs, fail-closed gates, supply-chain pinning, path containment, and constant-time review auth — alongside the complete skill-quality program (one canonical discovery surface, import-safe scripts, repaired install URLs, reconciled docs) and a CI suite that runs in about half the time.** 697 automated tests. 16,400+ assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
