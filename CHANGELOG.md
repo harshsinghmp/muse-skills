@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [8.3.0] - 2026-11-09
 
 ### Added
 
@@ -11,11 +11,13 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **`updateagents` module import is side-effect-free**: the CLI body is gated on the entry-point guard (`import.meta.main` with a `process.argv[1]` fallback), and an imported module parses an empty argv instead of the importer's. Importing `updateagents.ts` for its helpers no longer runs a default sync or overwrites curated standards. New regression tests assert import cleanliness and curated-standard preservation.
-- **CI: Bun setup reuses a cached binary instead of the release CDN**: every job restores `~/.bun/bin/bun` from the Actions cache and pins `bun-version` to `1.4.4`, so `setup-bun` reuses the existing binary and skips the GitHub release-asset download that intermittently returns `504`. The cold-start retry remains as the fallback.
+- **CI: Bun setup reuses a cached binary instead of the release CDN**: every job restores `~/.bun/bin/bun` from the Actions cache and pins `bun-version` to `1.4.4`, so `setup-bun` reuses the existing binary, avoids downloading each release asset on a warm cache, and skips the GitHub `504` failures that blocked merges. The cold-start retry remains as the fallback.
 
 ### Tests
 
 - **Agency simulation covers all 46 skills**: the three client scenarios (e-commerce, B2B SaaS, productized agency) now span every skill in `skills.json`, asserted by the harness. The release checklist requires the 46/46 coverage gate before tagging, so a new skill without a scenario blocks a release.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.2.0...v8.3.0
 
 ## [8.2.0] - 2026-11-08
 

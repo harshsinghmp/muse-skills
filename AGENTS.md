@@ -69,7 +69,8 @@ matters. Keep them concrete; do not pad to three with filler.
 ## Infrastructure
 
 - **Hooks** (15 shell hooks): `bash scripts/hooks/install-hooks.sh` — detects agent runtimes, installs into existing dirs only
-- **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish)
+- **CI/CD**: push/PR → `bun test` + lint + secret-scan; tag push → GitHub release (npx skills add fetches from GitHub — no npm publish). Jobs cache and pin the Bun runtime (`1.4.4`) and avoid downloading each release asset on a warm cache; one cold-start retry remains.
+- **Import safety**: `updateagents` is entry-point gated (`import.meta.main`), so importing the module never runs a sync or rewrites curated standards.
 - **Audit modes**: 39 skills have a dedicated `audit` mode with `references/audit.md`; canonical spec at `skills/references/audit-mode-guidance.md`
 - **Evidence ledger**: `.agents/context/evidence-ledger.md` — persistent decision/commitment/claim tracking
 - **Session reports**: `.agents/archive/reports/` — auto-archived via `gen-repo-report-on-close.sh` or startup safety net
