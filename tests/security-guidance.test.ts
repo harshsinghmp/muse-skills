@@ -125,6 +125,14 @@ describe("scanner false negatives (#396)", () => {
     expect(manifest.totalDependencies).toBeGreaterThan(0);
     expect(manifest.passed).toBe(true);
 
+    // A directory argument resolves to the authoritative lockfile, not EISDIR.
+    const directory = spawnSync("bun", [scriptPath, "--audit-lockfile", REPO_ROOT, "--json"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+    });
+    expect(directory.status).toBe(0);
+    expect(JSON.parse(directory.stdout).totalDependencies).toBeGreaterThan(0);
+
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "bun-lock-audit-"));
     try {
       const bad = path.join(dir, "bun.lock");

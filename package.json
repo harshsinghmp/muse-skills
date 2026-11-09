@@ -77,16 +77,17 @@
     "check:surface": "bun scripts/sync-skill-surface.ts --check",
     "sync:surface": "bun scripts/sync-skill-surface.ts --write",
     "check:hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public",
-    "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene"
+    "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene",
+    "release:smoke": "bun scripts/release-smoke.ts"
   },
   "type": "module",
   "version": "8.4.0",
   "devDependencies": {
-    "@biomejs/biome": "2.6.5",
-    "bun-types": "^1.4.2",
+    "@biomejs/biome": "2.6.6",
+    "bun-types": "^1.4.4",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.0.2"
+    "musememory": "3.3.0"
   }
 }

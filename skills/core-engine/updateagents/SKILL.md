@@ -68,7 +68,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 | Mode | Focus | Key Output | Reference Document |
 | :--- | :--- | :--- | :--- |
 | **`sync`** (Default) | Synchronize instructions with codebase reality, preserve human rules, sync 22 standards | Updated `.agents/context/*`, lean `AGENTS.md` router, standards sync | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
-| **`scorecard`** | 14-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
+| **`scorecard`** | 14-asset AI readiness scorecard, Stage-0 Fast-Skip, and `--fail-under` CI gating | Readiness report & maturity medal (🏆 AI-Ready to 🥉 Getting Started) | [references/fourteen-asset-matrix.md](references/fourteen-asset-matrix.md) |
 | **`sanitize`** | Strip synthetic ADE/IDE markers (`ORCA_RICH_MD`, Cursor, Windsurf) | Sanitized clean codebase without proprietary token wrappers | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **`scaffold`** | Direct Day-0 provisioning of agent context, AGENTS.md, .github templates, .env.example | Workspace instruction & governance templates | [references/fast-skip-protocol.md](references/fast-skip-protocol.md) |
 | **`promote`** | Intercept & promote foreign-harness instruction writes to DOX standards/context | Promoted standards/context, preserved archive, resynced router | [references/legacy-promotion.md](references/legacy-promotion.md) |
@@ -85,7 +85,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **memory-file-priorities** | "memory-file-priorities" | Agent Instruction Source & Migration Policy | [references/memory-file-priorities.md](references/memory-file-priorities.md) |
 | **pr-review-mining** | "pr-review-mining" | 🔍 PR Review Mining Protocol | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **skill-authoring** | "skill-authoring" | TDD for Agent Instructions | [references/skill-authoring.md](references/skill-authoring.md) |
-| **twelve-asset-matrix** | "twelve-asset-matrix" | 📋 The 14-Asset AI-Readiness Matrix | [references/twelve-asset-matrix.md](references/twelve-asset-matrix.md) |
+| **fourteen-asset-matrix** | "fourteen-asset-matrix" | 📋 The 14-Asset AI-Readiness Matrix | [references/fourteen-asset-matrix.md](references/fourteen-asset-matrix.md) |
 
 ---
 
