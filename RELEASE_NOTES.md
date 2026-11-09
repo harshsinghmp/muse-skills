@@ -1,3 +1,40 @@
+# 🏛️ Muse Skills v8.4.0 — Security Wave 3, Skill-Quality Gates & Faster CI
+
+> **Minor release: the 2026-11-09 security audit's remaining waves land — honest client outputs, fail-closed gates, supply-chain pinning, path containment, and constant-time review auth — alongside the complete skill-quality program (one canonical discovery surface, import-safe scripts, repaired install URLs, reconciled docs) and a CI suite that runs in about half the time.** 697 automated tests. 16,400+ assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.4.0
+
+- **Honest outputs (#394)**: generated client artifacts carry a verified receipt or say "not run"; money math uses integer minor units; metering uses producer event IDs with a persisted dedupe set and clamps invoices to the spend ceiling; PII is reported by key only.
+- **Fail-closed CI and supply chain (#395)**: the secret scan prints locations only and emits real SARIF; sync/landing gates run from the base ref and read check runs; release requires `vX.Y.Z`, `main` ancestry, and a protected environment; actions are SHA-pinned; `install.sh` verifies the tagged commit against a release checksum asset; `.mcp.json` has an allowlist gate.
+- **Guidance and scanner truth (#396)**: SSRF allowlists, CSP/`__Host-` cookies, analytics retention and consent, Set-Cookie/CORS/CSRF gates, owner-only `.env`, pinned MCP servers, `--confirm-irreversible`, and `bun.lock` parsing.
+- **Coverage gaps (#397)**: canonical path jail, constant-time review tokens, HMAC-before-parse webhook scaffolds, runner-flag rejection, cron-safe hooks, unknown-DDL flagging, Playwright error assertions, frontmatter dry-run/backups, confirmed port release, and SSRF-safe Python fetchers.
+- **Skill-quality program (#373/#377–#380)**: one generated discovery surface (`bun run check:surface`) keeps SKILL tables, `argument-hint`, READMEs, `skills.json`, `llms.txt`, and `agents/openai.yaml` aligned; `updatedocs`/`new-project` are under the router cap; four scripts are import-safe; install URLs and relay branding are repaired; the `#380` contradictions are reconciled.
+- **Production optimization**: `bun test --parallel` cuts the suite from ≈89s to ≈48s; CI caches package tarballs, drops two needless installs, and cancels superseded runs.
+- **Release safety**: a new `tests/version-consistency.test.ts` pins `package.json` ⇄ README badge/install URL ⇄ installer default ⇄ release notes ⇄ checksum asset.
+
+## 📊 Verification
+
+| Metric | v8.3.0 | v8.4.0 |
+|:---|:---|:---|
+| Automated Tests | 408 | **697** |
+| Test Files | 28 | **47** |
+| Skills | 46 | **46** |
+| Slash Commands / Harness | 460 | **460** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.3.0...v8.4.0
+
+---
+
 # 🏛️ Muse Skills v8.3.0 — Entry-Point Guard, Next 3 Follow-ups & Full-Coverage Simulations
 
 > **Minor release: `updateagents` is entry-point gated so importing it never runs a sync, generated `AGENTS.md` files end highly technical work with a prioritized Next 3 follow-up block, the three-scenario agency simulation covers all 46 skills and gates releases, and CI caches and pins Bun to end release-asset 504 failures.** 408 automated tests. 14,729 assertions. 46 production-grade skills. 460 slash commands per harness. Zero test failures. Zero tracked agent artifacts. Zero credential leaks.
