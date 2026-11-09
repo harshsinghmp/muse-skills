@@ -107,7 +107,9 @@ On workspace entry, resolve prior state by climbing the ladder; stop at the firs
 
 ### The Live Handoff File (`.agents/artifacts/HANDOFF.md`)
 
-One fixed-name file, ≤30 lines, overwritten on every state change — the bridge from any session to any future conversation:
+One fixed-name file, ≤30 lines, overwritten on every state change — the bridge from any session to any future conversation.
+
+**No-secrets invariant:** HANDOFF.md must never contain tokens, passwords, connection strings, `.env` lines, or client PII. Reference a secret by name (`env:STRIPE_KEY`, `1Password:staging-db`) or by the file that holds it; redact before writing. This file is often committed or shared, so a value written here is a durable disclosure.
 
 ```markdown
 # HANDOFF — <ISO timestamp>

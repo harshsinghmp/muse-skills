@@ -119,7 +119,7 @@ Six working patterns, in order of safety:
 
 1. **Value question** — an open question that aggregates useful replies.
 2. **A/B stance** — a professional-opinion fork that invites debate within your domain.
-3. **Cunningham's Law** — post a confidently wrong answer to attract corrections. Effective but capped: overuse burns professional credibility.
+3. **Open hypothesis** — state a genuine, clearly-labelled hypothesis and invite corrections. Never post deliberately false claims (the "Cunningham's Law" tactic) for a client: it is misinformation, it burns trust, and it can create real product or safety harm.
 4. **Researched ask** — show the homework you already did, then ask a specific question.
 5. **Everyday human posts** — lower the reply barrier; accounts are followed by humans, not press releases.
 6. **Provocation** — last resort; 2025+ algorithm actively downweights rage-bait via negative weights.

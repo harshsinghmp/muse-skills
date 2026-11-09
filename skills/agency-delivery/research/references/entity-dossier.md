@@ -5,6 +5,13 @@
 - The entity (company, person, vendor, partner, acquirer, client) and the decision (trust, partner, buy, hire, deal).
 - The concrete hypothesis about them that the dossier must test (e.g. "is a credible long-term partner", "is financially healthy").
 
+## Privacy guardrail (person dossiers)
+
+- Collect only what the stated decision needs, from public or professional sources.
+- Do not collect sensitive personal data: health, sexuality, religion, ethnicity, precise location, family details, private contact information, or anything from a breach.
+- No pretexting, no authenticated scraping, no purchased leaked data, and no doxxing-adjacent aggregation.
+- Record public business contact details only; keep the dossier inside the client access boundary, set a retention date, and support deletion on request.
+
 ## Gather — hypothesis first
 
 1. State the hypothesis up front in writing. This is the anti-confirmation-bias gate.

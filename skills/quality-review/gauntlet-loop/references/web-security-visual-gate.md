@@ -21,16 +21,29 @@ The Automated Gate verifies that the application or server configuration returns
 | Header Name | Required Directive / Standard | Failure Condition |
 | :--- | :--- | :--- |
 | **`Content-Security-Policy`** (CSP) | Restricts resource origins (`default-src 'self' ...`) | Missing, allows `unsafe-eval` without nonce, or allows unrestricted wildcard `*` origins |
-| **`Strict-Transport-Security`** (HSTS) | `max-age=31536000; includeSubDomains; preload` | Missing on HTTPS endpoints or `max-age < 15768000` |
+| **`Strict-Transport-Security`** (HSTS) | `max-age=31536000; includeSubDomains; preload` | Missing on HTTPS endpoints (loopback/localhost exempt) or `max-age < 15768000` |
 | **`X-Frame-Options`** | `DENY` or `SAMEORIGIN` | Missing or allows arbitrary framing (clickjacking vulnerability) |
 | **`X-Content-Type-Options`** | `nosniff` | Missing (MIME-sniffing vulnerability) |
 | **`Referrer-Policy`** | `strict-origin-when-cross-origin` or `no-referrer` | Missing or set to `unsafe-url` |
 
 ### Audit Command Recipe
 ```bash
-# Verify headers on local server or preview build
-curl -s -I http://localhost:3000 | rg -i "(content-security-policy|strict-transport-security|x-frame-options|x-content-type-options|referrer-policy)"
+# Verify headers on the deployed HTTPS preview (not plain http://localhost).
+curl -s -I https://preview.example.com | rg -i "(content-security-policy|strict-transport-security|x-frame-options|x-content-type-options|referrer-policy)"
+
+# Session cookie flags (HttpOnly/Secure/SameSite; no over-broad Domain).
+curl -s -I https://preview.example.com/login | rg -i "^set-cookie:"
 ```
+
+### Session, CORS, and CSRF Gate
+These are hard blockers alongside the headers above:
+
+| Check | Pass Condition | Failure Condition |
+| :--- | :--- | :--- |
+| **`Set-Cookie`** | Session/auth cookies are `HttpOnly; Secure; SameSite=Lax or Strict; Path=/` (prefer the `__Host-` prefix), with no `Domain` attribute unless cross-subdomain auth is an explicit requirement | Missing `HttpOnly`/`Secure` on an auth cookie, `SameSite=None` without `Secure`, or `Domain=.example.com` on a session cookie |
+| **CORS** | Exact allowlisted origins; `Access-Control-Allow-Credentials: true` only with a specific origin | `Access-Control-Allow-Origin: *` with credentials, origin reflection, or `null` origin allowed |
+| **CSRF** | State-changing browser requests require a synchronized token or strict `SameSite` + origin check; JSON-only APIs still verify `Origin`/`Sec-Fetch-Site` | No token and no origin check on cookie-authenticated mutations, or tokens accepted from the query string |
+| **HSTS scope** | `Strict-Transport-Security` on deployed HTTPS hosts | Treating a missing HSTS header on `http://localhost` as a failure (loopback is not HTTPS) |
 
 ---
 

@@ -44,7 +44,7 @@ flowchart TD
 
 ### Invariant 3: File Permission Fences (POSIX)
 - **Private Keys & Certificates** (`*.pem`, `*.key`, `id_rsa`, `id_ed25519`): Must have file permissions `<= 0600` (`-rw-------` or `-r--------`). Any group or world readability (`0644`, `0664`, `0777`) is an immediate critical violation.
-- **Environment Files** (`.env`, `.env.local`): Must never have execute permissions (`-x`). Must be listed in `.gitignore`.
+- **Environment Files** (`.env`, `.env.local`): Must be owner-only (`0600`). Any group or world read bit (`0640`, `0644`, `0664`) is a critical violation, as is any execute bit. `.env.example`/`.env.template` are placeholders and exempt. Must be listed in `.gitignore`.
 - **Scripts** (`scripts/*.sh`, `scripts/*.ts`): Executable by owner/group only (`0755` or `0700`), never world-writable (`0777`).
 
 ### Invariant 4: Process Argv Credential Hygiene

@@ -136,7 +136,7 @@ deserve a question because it is expensive, needs `sudo`, or is irreversible.
 | Browse | `--browse <key\|id\|num>` | `/browse <key>` | The files/folders that would be deleted, largest first |
 | Depth | `--depth <n>` | — | Deeper tree for `--browse` |
 | Select | `--interactive` | `/interactive` | Grouped menu: `1,3`, `1-3`, `all`, `none`, `b <n>`, `k <n>`, `q` |
-| Apply | `--only <key,..> [--yes]` | `/only <key,..> [/yes]` | Delete exactly the chosen items |
+| Apply | `--only <key,..> [--yes] [--confirm-irreversible]` | `/only <key,..> [/yes]` | Delete exactly the chosen items |
 | Preview | `--dry-run` | `/dry-run` | Prints the plan without deleting |
 | Projects | `--projects <dirs>` | — | Colon-separated roots to scan (persisted) |
 | Dormant | `--dormant <days>` | — | Dormancy threshold for project caches (default 14, persisted) |
@@ -155,8 +155,10 @@ Non-negotiables when acting on someone's behalf:
    `--discover`, and `--browse <key>` output quoted when the user asks "what exactly?".
 2. **Never broaden a selection.** `--only` takes explicit keys; do not translate "clean
    what's safe" into a selection containing `ASK!` items.
-3. **`--yes` is consent, not convenience.** Only pass it after the user approved a plan
-   that listed the same keys. Non-interactive shells refuse `ASK`/`ASK!` without it.
+3. **`--yes` is consent for `ASK`, not for `ASK!`.** Only pass it after the user approved a plan
+   that listed the same keys. Non-interactive shells refuse `ASK` without it; an `ASK!`
+   selection additionally needs `--confirm-irreversible`, and an interactive terminal always
+   asks for a typed `yes` for `ASK!`.
 4. **Report what stayed.** Finish by naming the confirmation-gated items left alone,
    grouped by app/project, with their sizes.
 
@@ -223,7 +225,7 @@ Learning is per key, so per app (`app:mpv`), per Flatpak app
 | **Virtual Environments (`.venv`)** | **PRESERVED.** Cleans package download wheels only; never touches virtual environments. |
 | **Active Containers & Volumes** | **PRESERVED.** Prunes dangling build layers only; active containers, images, and volumes are untouched. |
 | **Installed Global Binaries** | **PRESERVED.** Binaries in `~/.cargo/bin`, `~/.nvm`, `%APPDATA%`, etc. are never touched. |
-| **Confirmation-Gated Candidates** | **NEVER AUTO-DELETED.** Trash, package archives, `/tmp` strays, session snapshots, and other `ASK`/`ASK!` entries require explicit selection; `ASK!` also requires typed confirmation or `--yes`. |
+| **Confirmation-Gated Candidates** | **NEVER AUTO-DELETED.** Trash, package archives, `/tmp` strays, session snapshots, and other `ASK`/`ASK!` entries require explicit selection. `ASK!` requires a typed `yes` in a terminal or the separate `--confirm-irreversible` flag; `--yes` alone is **not** sufficient for irreversible data. |
 | **profile-sync-daemon Lowerdirs** | **EXPLAINED, NOT DELETED.** `~/.config/*-backup*` are live lowerdirs while `psd` runs. The skill reports the candidate and the stop-`psd` requirement instead of touching it. |
 | **Sudo-Backed Cleanups** | **NEVER HANG ON A PASSWORD.** System candidates run only when `sudo -n true` succeeds; otherwise the exact command is printed for the user to run. |
 
@@ -241,19 +243,20 @@ or irreversible is a decision the user made with the paths in front of them.
   clean-system-cache/scripts/clean-cache.sh --browse app:mpv     # exact files, largest first
   clean-system-cache/scripts/clean-cache.sh --interactive        # grouped menu, then confirm
   clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --dry-run
-  clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --yes
+  clean-system-cache/scripts/clean-cache.sh --only ask-pacman,ask-tmp --yes --confirm-irreversible
   ```
 - **Windows CMD**:
   ```cmd
   clean-system-cache\scripts\clean-cache.cmd /discover
   clean-system-cache\scripts\clean-cache.cmd /browse win-temp
   clean-system-cache\scripts\clean-cache.cmd /interactive
-  clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes
+  clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes /confirm-irreversible
   ```
 
 When the user cannot type into a terminal, run `--discover`, present the `ASK`/`ASK!`
 items as numbered options grouped per app and per project with real paths and sizes, and
-apply only the chosen keys with `--only ... --yes`. This is the agent-facing equivalent
+apply only the chosen keys with `--only ... --yes`, adding `--confirm-irreversible`
+when the selection includes any `ASK!` item. This is the agent-facing equivalent
 of the interactive menu.
 
 ### Phase 1: Pre-Flight Inspection & Capability Inventory (Dry Run)
@@ -382,7 +385,7 @@ Before marking cleanup complete, verify:
 4. Active browser and agent sessions were protected and skipped if running.
 5. User cookies, credentials, agent memory, and repository code remain 100% intact.
 6. Disk free space increased as reported by `df -h` or `dir`.
-7. **Every deletion was inspectable first**: each `ASK`/`ASK!` item was shown with its paths (`--discover` / `--browse <key>`) before selection, and no irreversible item was deleted without a typed `yes` or an approved `--only ... --yes`.
+7. **Every deletion was inspectable first**: each `ASK`/`ASK!` item was shown with its paths (`--discover` / `--browse <key>`) before selection, and no irreversible item was deleted without a typed `yes` or an approved `--only ... --yes --confirm-irreversible`.
 8. `--list` and `--list --json` agree on ids, tiers, and sizes; `--browse <key>` lists the same paths the delete path uses.
 9. Sudo-backed candidates either ran with passwordless sudo or reported the exact command instead of hanging.
 10. **Discovery stayed in scope**: every auto-cleaned path matched `~/.cache/*`, an exact app `Cache` dir, or a dormant project build cache. No browser profile, agent runtime, orca/ryoku state, or `*-backup*` tree was touched.

@@ -34,6 +34,12 @@ app.use((req, res, next) => {
   // Prevent MIME sniffing
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
+  // Content Security Policy (tighten per app; never ship unsafe-eval)
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'",
+  );
+
   // HSTS (HTTPS only)
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 
@@ -105,15 +111,18 @@ app.use(cors({
 ## Cookie Security
 
 ```typescript
-res.cookie('session', token, {
+// __Host- forces Secure + Path=/ + no Domain, so the cookie is host-only and
+// cannot be shared with sibling subdomains by a compromised one.
+res.cookie('__Host-session', token, {
   httpOnly: true,      // No JavaScript access
   secure: true,        // HTTPS only
   sameSite: 'strict',  // CSRF protection
   maxAge: 900000,      // 15 minutes
   path: '/',
-  domain: '.example.com',
 });
 ```
+
+Never set `domain: '.example.com'` on a session cookie: it leaks the session to every subdomain. If you need a cross-subdomain cookie, use a separate non-session value and still prefer host-only cookies for auth.
 
 ## Quick Reference
 
@@ -127,7 +136,9 @@ res.cookie('session', token, {
 
 | Cookie Flag | Purpose |
 |-------------|---------|
+| `__Host-` prefix | Host-only; requires `Secure`, `Path=/`, and no `Domain` |
 | httpOnly | No JS access |
 | secure | HTTPS only |
 | sameSite=strict | CSRF protection |
 | maxAge | Expiration |
+| `Domain` | Omit for session auth; `.example.com` shares the cookie with every subdomain |
