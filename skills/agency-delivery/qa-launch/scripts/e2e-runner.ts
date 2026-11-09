@@ -266,18 +266,25 @@ export function scaffoldJourney(journeyName: string, outputPath?: string): strin
  * Synthetic User Journey: ${journeyName}
  * Built to satisfy E2E-001 (Semantic Locators), E2E-003 (State Isolation), and E2E-004 (Artifacts).
  */
+const consoleErrors: string[] = [];
+
 test.describe('Synthetic Journey: ${journeyName}', () => {
   test.beforeEach(async ({ page }) => {
-    // E2E-004: Catch unhandled browser errors & fail fast
+    consoleErrors.length = 0;
+
+    // E2E-004: Collect browser errors and fail at the end. Throwing from an
+    // event listener is swallowed by Playwright and never fails the suite.
     page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        console.error('[Browser Error]:', msg.text());
-      }
+      if (msg.type() === 'error') consoleErrors.push(msg.text());
+    });
+
+    page.on('pageerror', (error) => {
+      consoleErrors.push(error.message);
     });
 
     page.on('response', (response) => {
       if (response.status() >= 500) {
-        throw new Error(\`Server error 5xx encountered on \${response.url()}: \${response.status()}\`);
+        consoleErrors.push(\`Server error 5xx on \${response.url()}: \${response.status()}\`);
       }
     });
   });
@@ -305,6 +312,9 @@ test.describe('Synthetic Journey: ${journeyName}', () => {
 
     // 4. Verification Checkpoint (Auto-waiting assertion, zero waitForTimeout)
     await expect(page.locator('body')).not.toBeEmpty();
+
+    // 5. Browser errors collected during the journey fail the test here.
+    expect(consoleErrors, 'browser errors: ' + consoleErrors.join('; ')).toEqual([]);
   });
 });
 `;

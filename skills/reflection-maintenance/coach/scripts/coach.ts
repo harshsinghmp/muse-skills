@@ -233,17 +233,47 @@ export function evaluateFounderLeverage(tierHours: { tier1: number; tier2: numbe
   };
 }
 
+const COACH_ARTIFACTS = ["daily-standup.md", "CLIENT_DIGEST.md", "client-digest.md", "coach-digest.md"];
+
+const COACH_RED_FLAGS: Array<{ label: string; pattern: RegExp }> = [
+  { label: "API key or token", pattern: /(?:sk-|ghp_|glpat-|gho_|ghs_)[A-Za-z0-9_-]{20,}/ },
+  { label: "private key", pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
+  { label: "AWS secret", pattern: /aws_secret_access_key\s*[:=]/i },
+  { label: "bearer token", pattern: /bearer\s+[A-Za-z0-9._-]{20,}/i },
+  { label: "credential assignment", pattern: /(?:password|secret|token)\s*[:=]\s*["']?[^\s"']{8,}/i },
+  { label: "email address (client PII)", pattern: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/ },
+  {
+    label: "unverified assurance claim",
+    pattern: /\b(?:100%\s+(?:green|pass(?:ing)?)|zero defects|0\s+(?:leaks|failures|broken links))\b/i,
+  },
+];
+
 export function auditCoachArtifacts(cwd: string): {
   passed: boolean;
   errors: string[];
 } {
   const errors: string[] = [];
-  const standupPath = join(cwd, "daily-standup.md");
+  const present = COACH_ARTIFACTS.map((name) => join(cwd, name)).filter((path) => existsSync(path));
 
-  if (existsSync(standupPath)) {
-    const content = readFileSync(standupPath, "utf8");
-    if (/sk-[a-zA-Z0-9_-]{20,}/.test(content) || /ghp_[a-zA-Z0-9]{20,}/.test(content)) {
-      errors.push("CRITICAL: Detected hardcoded credential in daily-standup.md!");
+  if (present.length === 0) {
+    return { passed: true, errors: [] };
+  }
+
+  for (const artifactPath of present) {
+    const name = artifactPath.slice(cwd.length + 1);
+    let content = "";
+    try {
+      content = readFileSync(artifactPath, "utf8");
+    } catch {
+      errors.push(`${name}: unreadable; cannot audit.`);
+      continue;
+    }
+
+    for (const flag of COACH_RED_FLAGS) {
+      if (flag.pattern.test(content)) {
+        // Never echo the matched value.
+        errors.push(`${name}: contains ${flag.label}.`);
+      }
     }
   }
 

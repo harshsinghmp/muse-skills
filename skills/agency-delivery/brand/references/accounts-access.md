@@ -100,8 +100,12 @@ When direct logins or 2FA codes are required:
 Immediately after receiving access, verify functionality without escalating privilege:
 
 ```bash
-# 1. Test Git repository clone
-git clone git@github.com:client-org/client-repo.git /tmp/test-client-repo
+# 1. Test Git repository clone in a private, auto-cleaned temp dir
+CLONE_DIR="$(mktemp -d)"
+trap 'rm -rf "$CLONE_DIR"' EXIT INT TERM
+git clone --depth 1 git@github.com:client-org/client-repo.git "$CLONE_DIR/client-repo"
+# Verify a file/commit, then remove the clone before the session ends.
+rm -rf "$CLONE_DIR/client-repo"
 
 # 2. Test DNS / Cloudflare API token
 curl -s -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \

@@ -138,6 +138,20 @@ export interface Env {
   ASSETS?: { fetch: (req: Request) => Promise<Response> };
 }
 
+// Constant-time comparison over fixed-length SHA-256 digests (Workers runtime).
+async function tokenMatches(provided: string, expected: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest("SHA-256", encoder.encode(provided)),
+    crypto.subtle.digest("SHA-256", encoder.encode(expected)),
+  ]);
+  const left = new Uint8Array(a);
+  const right = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < left.length; i++) diff |= left[i] ^ right[i];
+  return diff === 0;
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -159,16 +173,33 @@ export default {
       );
     }
 
-    // 2. Token Authentication Gate
-    const reqToken = url.searchParams.get("review_token") || request.headers.get("x-review-token");
-    if (reqToken !== env.REVIEW_TOKEN) {
+    // 2. Token Authentication Gate. Header or cookie only: a query-string
+    //    token leaks into browser history, referrers, and access logs.
+    const cookieHeader = request.headers.get("cookie") || "";
+    const cookieToken = cookieHeader
+      .split(/;\\s*/)
+      .map((part) => part.split("="))
+      .find((pair) => pair[0] === "review_token")?.[1];
+    const reqToken =
+      request.headers.get("x-review-token") || (cookieToken ? decodeURIComponent(cookieToken) : "");
+    const tokenOk = reqToken.length > 0 && (await tokenMatches(reqToken, env.REVIEW_TOKEN));
+    if (!tokenOk) {
       return new Response(
         \`<!DOCTYPE html>
 <html>
 <head><title>Unauthorized Preview</title><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="font-family:system-ui,sans-serif;padding:3rem;text-align:center;background:#0d1117;color:#c9d1d9;">
   <h1 style="color:#e3b341;">🔒 Protected Agency Deliverable</h1>
-  <p>A valid <code>?review_token=</code> query parameter or header is required to access this preview.</p>
+  <p>Open the review link you were sent, or send the token in the <code>x-review-token</code> header.</p>
+  <script>
+    (function () {
+      var match = location.hash.match(/(?:^#|&)review_token=([^&]+)/);
+      if (match && document.cookie.indexOf("review_token=") === -1) {
+        document.cookie = "review_token=" + encodeURIComponent(match[1]) + "; Path=/; SameSite=Strict; Secure";
+        location.replace(location.pathname + location.search);
+      }
+    })();
+  </script>
 </body>
 </html>\`,
         { status: 401, headers: { "Content-Type": "text/html; charset=utf-8" } }
@@ -241,7 +272,10 @@ export default {
       deliverableDir,
       metadata,
       filesCreated,
-      reviewUrlPattern: `https://<tunnel-subdomain>.trycloudflare.com/?review_token=${token}`,
+      // The token lives in the URL fragment: browsers do not send it to the
+      // server, referrers, or access logs. The unlock page exchanges it for a
+      // Secure, SameSite=Strict cookie.
+      reviewUrlPattern: `https://<tunnel-subdomain>.trycloudflare.com/#review_token=${token}`,
     };
   } catch (err: unknown) {
     return {

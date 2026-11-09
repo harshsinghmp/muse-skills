@@ -887,7 +887,15 @@ run_cand_method() {
             ;;
         cmd)
             [ -z "${CAND_CMD[$i]}" ] && return 0
-            bash -c "${CAND_CMD[$i]}" >/dev/null 2>&1 || return 1
+            # Catalog commands are static, but never allow dynamic substitution
+            # or newline injection through the string.
+            case "${CAND_CMD[$i]}" in
+                *$'\n'*|*$'\r'*|*'`'*|*'$('*|*'${'*)
+                    echo "[clean-cache] refusing unsafe catalog command for ${CAND_KEY[$i]}" >&2
+                    return 1
+                    ;;
+            esac
+            bash -c "${CAND_CMD[$i]}" </dev/null >/dev/null 2>&1 || return 1
             ;;
         tmp-old)
             find /tmp -mindepth 1 -maxdepth 1 -mtime +7 ! -name 'systemd-private*' \

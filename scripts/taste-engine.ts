@@ -60,19 +60,59 @@ export class TasteEngine {
     };
   }
 
+  private defaultState(): TasteState {
+    return {
+      schemaVersion: 1,
+      activeAtomCap: DEFAULT_ACTIVE_ATOM_CAP,
+      signals: [],
+      atoms: [],
+    };
+  }
+
   async load(): Promise<void> {
+    let data: string;
     try {
-      const data = await fs.readFile(this.stateFilePath, "utf8");
-      this.state = JSON.parse(data);
+      data = await fs.readFile(this.stateFilePath, "utf8");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+      throw new Error(
+        `Taste state is unreadable (${error instanceof Error ? error.message : String(error)}); refusing to overwrite it.`,
+      );
+    }
+
+    try {
+      const parsed = JSON.parse(data) as Partial<TasteState>;
+      if (
+        typeof parsed !== "object" ||
+        parsed === null ||
+        !Array.isArray(parsed.signals) ||
+        !Array.isArray(parsed.atoms)
+      ) {
+        throw new Error("unexpected shape");
+      }
+      this.state = parsed as TasteState;
     } catch {
-      // Default state will be used if file does not exist
+      // Never silently replace a corrupt state file: keep a recoverable copy and say so.
+      const backupPath = `${this.stateFilePath}.corrupt-${Date.now()}`;
+      try {
+        await fs.copyFile(this.stateFilePath, backupPath);
+      } catch {}
+      console.warn(`⚠️ Taste state was corrupt; backed up to ${backupPath} and started fresh.`);
+      this.state = this.defaultState();
     }
   }
 
   async save(): Promise<void> {
     const dir = path.dirname(this.stateFilePath);
     await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(this.stateFilePath, JSON.stringify(this.state, null, 2), "utf8");
+    await fs.writeFile(this.stateFilePath, JSON.stringify(this.state, null, 2), {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+    try {
+      // Existing files keep their old mode through writeFile; force owner-only.
+      await fs.chmod(this.stateFilePath, 0o600);
+    } catch {}
   }
 
   getState(): TasteState {

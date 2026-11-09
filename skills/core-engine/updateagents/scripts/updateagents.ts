@@ -612,8 +612,11 @@ export function checkStackDrift(targetDir: string): { valid: boolean; errors: st
   let pkg: Record<string, unknown> = {};
   try {
     pkg = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-  } catch {
-    return { valid: true, errors, warnings };
+  } catch (error) {
+    errors.push(
+      `package.json is unparseable (${error instanceof Error ? error.message : String(error)}); stack drift cannot be verified.`,
+    );
+    return { valid: false, errors, warnings };
   }
 
   const allDeps = {

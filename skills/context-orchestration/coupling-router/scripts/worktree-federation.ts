@@ -12,6 +12,7 @@
  *   bun worktree-federation.ts sweep [--prune] [--max-age <days>]
  */
 import { execFileSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
@@ -198,7 +199,7 @@ export function spawnFederatedWorktree(opts: {
 
   if (collision) {
     if (opts.namespaced) {
-      const workerId = Math.random().toString(36).substring(2, 6);
+      const workerId = randomBytes(4).toString("hex");
       targetBranch = `${opts.branch}-worker-${workerId}`;
     } else {
       return {

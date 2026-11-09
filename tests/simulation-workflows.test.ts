@@ -4526,7 +4526,7 @@ NextApp relies on RedisCache
       // Blocked path traversal / root escape
       const pathEscape = engine.validateCapability(solToken, { path: "/etc/shadow" }, scope);
       expect(pathEscape.allowed).toBe(false);
-      expect(pathEscape.reason).toContain("Path traversal or privileged root escape attempt blocked");
+      expect(pathEscape.reason).toContain("outside designated workspace jail");
 
       const relativeEscape = engine.validateCapability(solToken, { path: "../../secret.env" }, scope);
       expect(relativeEscape.allowed).toBe(false);
