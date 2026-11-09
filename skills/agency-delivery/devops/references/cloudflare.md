@@ -150,7 +150,7 @@ Ephemeral tunnels provision an immediate, publicly accessible HTTPS URL (`https:
 1. **One-Command Ingress via CLI**:
    ```bash
    # Run via repository tunnel script
-   bun devops/scripts/tunnel.ts 3000
+   bun skills/agency-delivery/devops/scripts/tunnel.ts 3000
 
    # Or direct cloudflared binary
    cloudflared tunnel --url http://localhost:3000
@@ -217,8 +217,8 @@ Traditional client handoffs rely on static design links, video walkthroughs, or 
    - Embeds responsive viewport switch buttons: Mobile (390px), Tablet (820px), and Desktop (100%).
    - Ingests structured client feedback via `POST /__deliverable/feedback`.
 4. **CLI Automation**:
-   - Scaffolding: `bun devops/scripts/living-deliverable.ts --scaffold <slug> --client <codename> --target-port 3000`
-   - Expiry check: `bun devops/scripts/living-deliverable.ts --check-expiry <slug>`
+   - Scaffolding: `bun skills/agency-delivery/devops/scripts/living-deliverable.ts --scaffold <slug> --client <codename> --target-port 3000`
+   - Expiry check: `bun skills/agency-delivery/devops/scripts/living-deliverable.ts --check-expiry <slug>`
 
 ## Quality gate
 

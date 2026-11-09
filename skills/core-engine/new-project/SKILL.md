@@ -252,9 +252,9 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `tests/health.test.ts`: Out-of-the-box health check asserting environment configuration, AI governance container, and design tokens baseline.
   - `biome.json`: High-speed zero-config linter and formatter.
 - **Day-1 Secret Defense (Vibeguard Pre-Commit Hook)**:
-  - `scripts/pre-commit.sh` & `.git/hooks/pre-commit`: Executable pre-commit hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
+  - A generated pre-commit shell hook installed at `.git/hooks/pre-commit`: executable hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
 - **Package Scripts & Secrets Injection**:
-  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash scripts/pre-commit.sh`).
+  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash .git/hooks/pre-commit`).
   - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
   - Automatically populates all required connection strings, database URLs, and API secret keys into `.env.example`.
   - Synchronizes official dependencies in `package.json` with self-verification gate.
@@ -313,14 +313,14 @@ It then runs `brand/scripts/intake-compiler.ts` to compile `.agents/brand/` (`vo
 
 ```bash
 # Interactive Mode (Prompts for Purpose -> Hierarchical Tree -> Stack)
-bun new-project/scripts/new-project.ts
+bun skills/core-engine/new-project/scripts/new-project.ts
 
 # 1-Click Agency Golden Presets
-bun new-project/scripts/new-project.ts <targetPath> --preset=powerhouse
-bun new-project/scripts/new-project.ts <targetPath> --preset=astro-mobile
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --preset=powerhouse
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --preset=astro-mobile
 
 # Granular Non-Interactive Mode
-bun new-project/scripts/new-project.ts <targetPath> \
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> \
   --intent=ecommerce \
   --type=nextjs \
   --styling=hybrid \
@@ -336,13 +336,13 @@ bun new-project/scripts/new-project.ts <targetPath> \
   --non-interactive
 
 # Full client onboarding (interactive interview, docs generated in tandem)
-bun new-project/scripts/new-project.ts <targetPath> --onboard-client
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --onboard-client
 
 # Full client onboarding from a JSON or Markdown intake file
-bun new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
 
 # Granular client flags (answers prefill the intake docs and brand/context)
-bun new-project/scripts/new-project.ts <targetPath> \
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> \
   --client-name="Acme Health LLC" \
   --client-brand="Acme Health" \
   --client-contact="Dana Lee" --client-email="dana@acme.health" \

@@ -71,8 +71,8 @@ Architecture, workflow, and quality gates for scaffolding ephemeral client revie
 
 ```bash
 # Scaffold new living deliverable for client ACME pointing to port 3000
-bun devops/scripts/living-deliverable.ts --scaffold "client-acme-v1" --client "ACME" --target-port 3000
+bun skills/agency-delivery/devops/scripts/living-deliverable.ts --scaffold "client-acme-v1" --client "ACME" --target-port 3000
 
 # Check expiration status
-bun devops/scripts/living-deliverable.ts --check-expiry "client-acme-v1"
+bun skills/agency-delivery/devops/scripts/living-deliverable.ts --check-expiry "client-acme-v1"
 ```

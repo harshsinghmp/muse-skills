@@ -124,9 +124,9 @@ Publish the validated 6-slide carousel simultaneously to feed:
 ### 6. Aspect Ratio Enforcement & Mobile UI Safe Zone Guard
 Asset dimension mismatches (e.g. delivering 1:1 square assets to 9:16 vertical feeds, or 9:16 to LinkedIn carousels) cause severe algorithmic penalties, letterboxing, or cut-off text.
 - **Aspect Ratio Guard CLI**:
-  - Validate image dimensions: `bun smm/scripts/aspect-ratio-guard.ts --width 1080 --height 1920 --platform tiktok`
-  - Scan directory: `bun smm/scripts/aspect-ratio-guard.ts --dir ./carousel-assets --platform tiktok`
-  - Calculate safe zones: `bun smm/scripts/aspect-ratio-guard.ts --safe-zone --height 1920`
+  - Validate image dimensions: `bun skills/agency-delivery/smm/scripts/aspect-ratio-guard.ts --width 1080 --height 1920 --platform tiktok`
+  - Scan directory: `bun skills/agency-delivery/smm/scripts/aspect-ratio-guard.ts --dir ./carousel-assets --platform tiktok`
+  - Calculate safe zones: `bun skills/agency-delivery/smm/scripts/aspect-ratio-guard.ts --safe-zone --height 1920`
 - **Safe Zone Rule**: For 9:16 mobile feeds (TikTok / Reels / Shorts), maintain a strict clear area: top 15% (avoid status bar/account badge) and bottom 20% (avoid caption, audio title, and interaction buttons).
 
 ---

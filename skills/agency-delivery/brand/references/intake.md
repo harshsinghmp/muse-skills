@@ -91,13 +91,13 @@ Run the automated intake compiler to bridge completed client briefs directly int
 
 ```bash
 # Run intake compilation on active workspace
-bun brand/scripts/intake-compiler.ts .
+bun skills/agency-delivery/brand/scripts/intake-compiler.ts .
 
 # Preview compilation without writing
-bun brand/scripts/intake-compiler.ts . --dry-run
+bun skills/agency-delivery/brand/scripts/intake-compiler.ts . --dry-run
 
 # Compile with explicit intake brief path
-bun brand/scripts/intake-compiler.ts . --brief ./Client-Intake/00-Intake-Brief.md --force
+bun skills/agency-delivery/brand/scripts/intake-compiler.ts . --brief ./Client-Intake/00-Intake-Brief.md --force
 ```
 
 ### Auto-Compiled Assets:
@@ -121,4 +121,4 @@ bun brand/scripts/intake-compiler.ts . --brief ./Client-Intake/00-Intake-Brief.m
 - [ ] Visual assets verified (SVG logos, color hexes, typography fonts).
 - [ ] Technical stack and repository URLs identified.
 - [ ] Missing-field detector run: all missing items prompted via structured clarification questions.
-- [ ] DOX compiler executed (`bun brand/scripts/intake-compiler.ts`): all 6 `.agents/brand/` files synchronized.
+- [ ] DOX compiler executed (`bun skills/agency-delivery/brand/scripts/intake-compiler.ts`): all 6 `.agents/brand/` files synchronized.

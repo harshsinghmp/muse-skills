@@ -39,16 +39,16 @@ Run via Bun:
 
 ```bash
 # Interactive Mode (Prompts for Intent -> Framework -> Companions)
-bun new-project/scripts/new-project.ts
+bun skills/core-engine/new-project/scripts/new-project.ts
 
 # 1-Click Agency Preset
-bun new-project/scripts/new-project.ts <targetPath> --preset=powerhouse
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --preset=powerhouse
 
 # Convert Astro Web App to Native iOS/APK
-bun new-project/scripts/new-project.ts <targetPath> --preset=astro-mobile
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --preset=astro-mobile
 
 # Granular Non-Interactive Mode
-bun new-project/scripts/new-project.ts <targetPath> \
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> \
   --intent=ecommerce \
   --type=nextjs \
   --styling=hybrid \
@@ -62,13 +62,13 @@ bun new-project/scripts/new-project.ts <targetPath> \
   --auth=better-auth
 
 # Full client onboarding (interactive, generates every intake doc)
-bun new-project/scripts/new-project.ts <targetPath> --onboard-client
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --onboard-client
 
 # Client onboarding from a JSON/Markdown intake file
-bun new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> --intake=./client-answers.json --non-interactive
 
 # Granular client flags
-bun new-project/scripts/new-project.ts <targetPath> \
+bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> \
   --client-name="Acme Health LLC" --client-brand="Acme Health" \
   --client-contact="Dana Lee" --client-email="dana@acme.health" \
   --business-model=b2b-saas --company-stage=seed --revenue-band=1m-10m \
