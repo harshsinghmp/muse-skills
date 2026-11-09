@@ -74,7 +74,12 @@ function extractModeRefs(markdown: string): string[] {
 }
 
 function repoStatus(): string {
-  return (spawnSync("git", ["status", "--porcelain"], { cwd: REPO_ROOT, encoding: "utf8" }).stdout ?? "").trim();
+  return (
+    spawnSync("git", ["status", "--porcelain", "--untracked-files=no"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+    }).stdout ?? ""
+  ).trim();
 }
 
 function sha256File(file: string): string {
