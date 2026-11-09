@@ -362,7 +362,12 @@ export function auditLockfile(lockfilePath: string): LockfileAuditReport {
   let totalDependencies = 0;
 
   if (!fs.existsSync(lockfilePath)) {
-    return { lockfile: lockfilePath, totalDependencies: 0, suspiciousRegistries: [], passed: true };
+    return {
+      lockfile: lockfilePath,
+      totalDependencies: 0,
+      suspiciousRegistries: ["Lockfile missing; cannot verify registry provenance."],
+      passed: false,
+    };
   }
 
   try {
@@ -397,7 +402,11 @@ export function auditLockfile(lockfilePath: string): LockfileAuditReport {
       }
     }
   } catch {
-    // Ignore lockfile read/parse errors
+    suspiciousRegistries.push("Lockfile unreadable; cannot verify registry provenance.");
+  }
+
+  if (totalDependencies === 0) {
+    suspiciousRegistries.push("No resolved registry URLs found; lockfile format not recognized.");
   }
 
   return {

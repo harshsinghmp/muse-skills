@@ -37,7 +37,7 @@
 
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
 // Fail fast on unhandled rejections
@@ -278,7 +278,7 @@ export function generateSkillMd(opts: {
   return `---
 name: ${opts.name}
 aliases: ["${opts.name}"]
-description: "${opts.description.replace(/"/g, '\\"')}"
+description: ${JSON.stringify(opts.description)}
 version: ${version}
 author: ${author}
 license: MIT
@@ -417,7 +417,7 @@ export function generateOpenAiYaml(opts: { name: string; description: string; to
   const toolList = tools.map((t) => `  - type: function\n    function:\n      name: ${t}`).join("\n");
 
   return `name: ${opts.name}
-description: "${opts.description.replace(/"/g, '\\"')}"
+description: ${JSON.stringify(opts.description)}
 tools:
 ${toolList}
 instructions: |
@@ -501,10 +501,31 @@ export function extractSkill(options: ExtractionOptions): {
     };
   }
 
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(options.name)) {
+    return {
+      success: false,
+      skillDir: "",
+      filesCreated: [],
+      registered: { skillsJson: false, llmsTxt: false, readme: false },
+      error: `Invalid skill name '${options.name}': use lowercase letters, digits, and dashes.`,
+    };
+  }
+
   // Resolve target directory
   let skillDir = "";
   if (options.dest) {
-    skillDir = resolve(cwd, options.dest);
+    const destRoot = resolve(cwd, options.dest);
+    const relDest = relative(resolve(cwd), destRoot);
+    if (relDest.startsWith("..") || isAbsolute(relDest)) {
+      return {
+        success: false,
+        skillDir: "",
+        filesCreated: [],
+        registered: { skillsJson: false, llmsTxt: false, readme: false },
+        error: `Destination '${options.dest}' escapes the workspace.`,
+      };
+    }
+    skillDir = destRoot;
     if (basename(skillDir) !== options.name) {
       skillDir = join(skillDir, options.name);
     }

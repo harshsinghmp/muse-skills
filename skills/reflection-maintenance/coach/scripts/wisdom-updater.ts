@@ -81,6 +81,9 @@ export function updateWisdomFrame(
   } = {},
 ): FrameUpdateResult {
   const wikiDir = resolveWikiDir();
+  if (!/^[a-zA-Z0-9_-]+$/.test(domain)) {
+    throw new Error(`Invalid wisdom domain '${domain}': use letters, digits, dashes, or underscores.`);
+  }
   const framePath = join(wikiDir, `${domain.toLowerCase()}.md`);
   const dateStr = new Date().toISOString().slice(0, 10);
   const confidence = options.confidence ?? 0.85;

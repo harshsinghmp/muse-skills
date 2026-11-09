@@ -112,6 +112,15 @@ const PROMPT_INJECTION_PATTERNS = [
   /curl\s+-X\s*POST\s+http/i,
 ];
 
+function isLoopbackUrl(value: string): boolean {
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname === "127.0.0.1" || hostname === "::1" || hostname === "[::1]" || hostname === "localhost";
+  } catch {
+    return false;
+  }
+}
+
 const CREDENTIAL_PATTERNS = [
   { name: "Anthropic API Key", regex: /sk-ant-[a-zA-Z0-9_-]{20,}/ },
   { name: "OpenAI API Key", regex: /sk-[a-zA-Z0-9]{32,}/ },
@@ -235,7 +244,7 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
 
       // Check for unencrypted or open network interfaces
       for (const unsafe of UNSAFE_NETWORK_HOSTS) {
-        if (url.includes(unsafe) && !url.includes("127.0.0.1") && !url.includes("localhost")) {
+        if (url.includes(unsafe) && !isLoopbackUrl(url)) {
           serverHasViolation = true;
           violations.push({
             ruleId: "MCP-002",
@@ -249,7 +258,7 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
       }
 
       // Check for missing authorization headers on remote network transport
-      if (!entry.headers?.Authorization && !url.includes("127.0.0.1") && !url.includes("localhost")) {
+      if (!entry.headers?.Authorization && !isLoopbackUrl(url)) {
         serverHasViolation = true;
         violations.push({
           ruleId: "MCP-002",
@@ -267,7 +276,7 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
       }
     }
 
-    // Check for hardcoded raw credentials in command arguments or env
+    // Check for hardcoded raw credentials in command arguments, env, or headers
     if (entry.args) {
       for (const arg of entry.args) {
         for (const cred of CREDENTIAL_PATTERNS) {
@@ -278,6 +287,23 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
               target: `server:${serverName}.args`,
               description: `Hardcoded ${cred.name} detected in MCP launch argument. Use environment variable reference instead.`,
               evidence: `${arg.slice(0, 16)}...[REDACTED]`,
+            });
+          }
+        }
+      }
+    }
+
+    for (const container of [entry.env, entry.headers]) {
+      for (const [key, value] of Object.entries(container ?? {})) {
+        if (typeof value !== "string") continue;
+        for (const cred of CREDENTIAL_PATTERNS) {
+          if (cred.regex.test(value)) {
+            violations.push({
+              ruleId: "MCP-004",
+              severity: "CRITICAL",
+              target: `server:${serverName}.${key}`,
+              description: `Hardcoded ${cred.name} detected in MCP server configuration. Use a secret reference instead.`,
+              evidence: `${key}=[REDACTED]`,
             });
           }
         }
@@ -373,9 +399,20 @@ export function hydrateDynamicTools(manifest: McpToolManifest, taskIntent: strin
 /**
  * MCP-004: Runtime Payload Audit & Credential Exfiltration Tripwire
  */
+function redactValue(value: unknown): unknown {
+  if (typeof value === "string") {
+    return CREDENTIAL_PATTERNS.reduce((acc, cred) => acc.replace(cred.regex, "[REDACTED]"), value);
+  }
+  if (Array.isArray(value)) return value.map(redactValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, redactValue(entry)]));
+  }
+  return value;
+}
+
 export function auditToolPayload(toolName: string, args: Record<string, unknown>): McpPayloadAuditResult {
   const violations: McpViolation[] = [];
-  const sanitizedArgs: Record<string, unknown> = JSON.parse(JSON.stringify(args || {}));
+  const sanitizedArgs = redactValue(args || {}) as Record<string, unknown>;
   let tripwireTriggered = false;
 
   function inspectValue(path: string, val: unknown): void {

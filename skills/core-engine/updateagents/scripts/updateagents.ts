@@ -40,7 +40,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import * as readline from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
@@ -1723,6 +1723,9 @@ exit 0
 }
 
 export function sliceSubAppContext(targetDir: string, subappName: string): string {
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(subappName)) {
+    throw new Error(`Invalid sub-app name '${subappName}': use letters, digits, dots, dashes, or underscores.`);
+  }
   let subappDir = join(targetDir, "apps", subappName);
   if (!existsSync(subappDir)) {
     const pkgDir = join(targetDir, "packages", subappName);
@@ -2506,9 +2509,14 @@ export function generateWorkReportHtml(workspaceDir: string, outPath?: string): 
   if (!existsSync(reportsDir)) {
     mkdirSync(reportsDir, { recursive: true });
   }
-  const dest = outPath
-    ? resolve(workspaceDir, outPath)
-    : join(reportsDir, `work-report-${new Date().toISOString().split("T")[0]}.html`);
+  const resolvedOut = outPath ? resolve(workspaceDir, outPath) : "";
+  if (resolvedOut) {
+    const relOut = relative(resolve(workspaceDir), resolvedOut);
+    if (relOut.startsWith("..") || isAbsolute(relOut)) {
+      throw new Error(`Report destination '${outPath}' escapes the workspace.`);
+    }
+  }
+  const dest = resolvedOut || join(reportsDir, `work-report-${new Date().toISOString().split("T")[0]}.html`);
 
   let projectName = basename(workspaceDir);
   let projectDesc = "Autonomous application managed by Agency Council.";

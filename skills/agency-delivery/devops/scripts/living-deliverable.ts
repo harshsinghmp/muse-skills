@@ -266,6 +266,9 @@ export default {
 }
 
 export function checkDeliverableExpiry(workspaceRoot: string, slug: string): ExpiryCheckResult {
+  if (!/^[a-zA-Z0-9_-]+$/.test(slug)) {
+    throw new Error(`Invalid deliverable slug '${slug}': use letters, digits, dashes, or underscores.`);
+  }
   const metaPath = resolve(workspaceRoot, ".agents", "deliverables", slug, "metadata.json");
   if (!existsSync(metaPath)) {
     throw new Error(`Deliverable metadata not found: ${metaPath}`);

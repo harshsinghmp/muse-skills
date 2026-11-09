@@ -159,11 +159,16 @@ export async function handleShopifyWebhook(req: Request): Promise<Response> {
   }
 
   const rawBody = await req.text();
-  const secret = process.env.SHOPIFY_WEBHOOK_SECRET!;
+  const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+  if (!secret) {
+    return new Response("Webhook secret not configured", { status: 500 });
+  }
   const generatedHash = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("base64");
 
-  // Constant-time comparison
-  const isValid = crypto.timingSafeEqual(Buffer.from(generatedHash), Buffer.from(hmacHeader));
+  // Constant-time comparison; timingSafeEqual throws unless lengths match.
+  const generatedBuf = Buffer.from(generatedHash);
+  const headerBuf = Buffer.from(hmacHeader || "");
+  const isValid = generatedBuf.length === headerBuf.length && crypto.timingSafeEqual(generatedBuf, headerBuf);
   if (!isValid) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -183,8 +188,11 @@ export async function handleShopifyWebhook(req: Request): Promise<Response> {
 import crypto from "node:crypto";
 
 export function verifyGenericWebhook(rawBody: string, signature: string, secret: string): boolean {
+  if (!secret || !signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  const expectedBuf = Buffer.from(expected);
+  const signatureBuf = Buffer.from(signature);
+  return expectedBuf.length === signatureBuf.length && crypto.timingSafeEqual(expectedBuf, signatureBuf);
 }
 `;
 }

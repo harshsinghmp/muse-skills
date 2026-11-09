@@ -26,8 +26,17 @@ process.on("unhandledRejection", (reason, _promise) => {
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
+
+function isWithinRoot(root: string, target: string): boolean {
+  const rel = relative(resolve(root), resolve(target));
+  return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export interface DropOptions {
   workstream?: string;
@@ -451,6 +460,13 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
   const symbolOrRange = parts.slice(1).join(":");
   const absFile = resolve(workspaceRoot, relFile);
 
+  if (!isWithinRoot(workspaceRoot, absFile)) {
+    return {
+      success: false,
+      error: `Target file '${relFile}' resolves outside the workspace.`,
+    };
+  }
+
   if (!existsSync(absFile)) {
     return {
       success: false,
@@ -472,7 +488,8 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
     endLine = Math.min(lines.length, parseInt(rangeMatch[2], 10));
     snippetLines = lines.slice(startLine - 1, endLine);
   } else {
-    const symbol = symbolOrRange.trim();
+    const rawSymbol = symbolOrRange.trim();
+    const symbol = escapeRegExp(rawSymbol);
     let foundIdx = -1;
 
     if (isPython) {
@@ -490,7 +507,7 @@ export function pinAttentionContext(workspaceRoot: string, fileSymbolSpec: strin
     }
 
     if (foundIdx === -1) {
-      foundIdx = lines.findIndex((l) => l.includes(symbol));
+      foundIdx = lines.findIndex((l) => l.includes(rawSymbol));
     }
 
     if (foundIdx === -1) {
@@ -629,6 +646,14 @@ export function verifyNextAction(workspaceRoot: string, anchorPath?: string): Ve
 
   const absTarget = resolve(workspaceRoot, matchedFile);
   const relTarget = relative(workspaceRoot, absTarget);
+
+  if (relTarget.startsWith("..") || isAbsolute(relTarget)) {
+    return {
+      success: false,
+      ghostTask: true,
+      reason: `Next Action target '${matchedFile}' resolves outside the workspace.`,
+    };
+  }
 
   // Invariant 1: Target file must exist on disk
   if (!existsSync(absTarget)) {
@@ -1429,8 +1454,9 @@ Options:
   if (values["mask-output"]) {
     const cmd = values.cmd || "unknown-cmd";
     let rawOutput = values.raw || "";
-    if (values.file && existsSync(resolve(workspaceRoot, values.file))) {
-      rawOutput = readFileSync(resolve(workspaceRoot, values.file), "utf8");
+    const inputFile = values.file ? resolve(workspaceRoot, values.file) : "";
+    if (values.file && isWithinRoot(workspaceRoot, inputFile) && existsSync(inputFile)) {
+      rawOutput = readFileSync(inputFile, "utf8");
     }
     const exitCode = values.exit ? parseInt(values.exit, 10) : 0;
     const res = maskObservation(workspaceRoot, {

@@ -15,6 +15,7 @@
  *   bun canvas-relay.ts --audit-sandbox --input <page.html> [--json]
  */
 
+import { randomBytes } from "node:crypto";
 import fs from "node:fs";
 import { parseArgs } from "node:util";
 
@@ -96,9 +97,10 @@ export interface SandboxSecurityReport {
 // =========================================================================
 
 export function generateComponentPreview(input: PreviewInput): PreviewBundle {
-  const previewId = `PREV-${Math.random().toString(36).slice(2, 9).toUpperCase()}`;
+  const previewId = `PREV-${randomBytes(4).toString("hex").toUpperCase()}`;
   const viewport = input.viewport || "desktop";
   const theme = input.theme || "light";
+  const scriptNonce = randomBytes(16).toString("base64");
 
   const viewportWidths: Record<ViewportMode, number> = {
     mobile: 375,
@@ -108,8 +110,7 @@ export function generateComponentPreview(input: PreviewInput): PreviewBundle {
   };
 
   const width = viewportWidths[viewport];
-  const cspPolicy =
-    "default-src 'none'; style-src 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:;";
+  const cspPolicy = `default-src 'none'; style-src 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'nonce-${scriptNonce}' https://cdn.jsdelivr.net; img-src 'self' data: https:;`;
 
   const containerStyle =
     width > 0
@@ -181,12 +182,23 @@ export function generateComponentPreview(input: PreviewInput): PreviewBundle {
   <div class="canvas-container">
     ${input.componentCode}
   </div>
-  <script>
+  <script nonce="${scriptNonce}">
+    function sanitizeCanvasHtml(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      doc.querySelectorAll('script,iframe,object,embed,link,meta,base').forEach((node) => node.remove());
+      doc.querySelectorAll('*').forEach((el) => {
+        for (const attr of [...el.attributes]) {
+          if (/^on/i.test(attr.name) || attr.name === 'srcdoc') el.removeAttribute(attr.name);
+        }
+      });
+      return doc.body.innerHTML;
+    }
     window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin) return;
       if (event.data && event.data.type === 'CANVAS_UPDATE') {
         const container = document.querySelector('.canvas-container');
         if (container && event.data.html) {
-          container.innerHTML = event.data.html;
+          container.innerHTML = sanitizeCanvasHtml(String(event.data.html));
         }
       }
     });
@@ -284,6 +296,7 @@ export function visualizeOklchPalette(config: OklchPaletteConfig): OklchPaletteR
 
 export function validateAndExportMermaidGraph(mermaidSource: string): MermaidExportResult {
   const errors: string[] = [];
+  const scriptNonce = randomBytes(16).toString("base64");
   const trimmed = mermaidSource.trim();
 
   // 1. Identify graph type
@@ -344,7 +357,7 @@ export function validateAndExportMermaidGraph(mermaidSource: string): MermaidExp
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mermaid Canvas Export</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+  <script nonce="${scriptNonce}">mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -418,7 +431,16 @@ export function auditSandboxSecurity(htmlContent: string): SandboxSecurityReport
     });
   }
 
-  // 2. Check for script injection or dangerous eval
+  // 2. A CSP that permits inline scripts is not a real fence
+  if (/script-src[^;]*'unsafe-inline'/i.test(htmlContent)) {
+    violations.push({
+      ruleId: "CNV-004",
+      description: "CSP allows 'unsafe-inline' scripts; use a nonce or hash instead.",
+      target: "meta:CSP:script-src",
+    });
+  }
+
+  // 3. Check for script injection or dangerous eval
   if (/eval\s*\(/i.test(htmlContent) || /document\.cookie/i.test(htmlContent)) {
     violations.push({
       ruleId: "CNV-004",

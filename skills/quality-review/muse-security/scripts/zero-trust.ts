@@ -37,6 +37,7 @@ export interface MtlsVerificationResult {
   cipherSuite: string;
   protocolVersion: string;
   handshakeLatencyMs: number;
+  simulated: boolean;
   error?: string;
 }
 
@@ -198,6 +199,7 @@ export class ZeroTrustEngine {
         serverSpiffeId: serverSvid.spiffeId,
         cipherSuite: "TLS_AES_256_GCM_SHA384",
         protocolVersion: "TLSv1.3",
+        simulated: true,
         handshakeLatencyMs: performance.now() - start,
         error: "Client SVID certificate rejected",
       };
@@ -211,6 +213,7 @@ export class ZeroTrustEngine {
         serverSpiffeId: serverSvid.spiffeId,
         cipherSuite: "TLS_AES_256_GCM_SHA384",
         protocolVersion: "TLSv1.3",
+        simulated: true,
         handshakeLatencyMs: performance.now() - start,
         error: "Server SVID certificate rejected",
       };
@@ -222,6 +225,7 @@ export class ZeroTrustEngine {
       serverSpiffeId: serverSvid.spiffeId,
       cipherSuite: "TLS_AES_256_GCM_SHA384",
       protocolVersion: "TLSv1.3",
+      simulated: true,
       handshakeLatencyMs: Math.round((performance.now() - start) * 100) / 100,
     };
   }
