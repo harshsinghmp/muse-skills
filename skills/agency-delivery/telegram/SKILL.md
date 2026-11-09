@@ -65,7 +65,7 @@ Run before reporting completion:
 - [ ] Hook scripts (if registered) are executable bash
 - [ ] Fail-closed behavior confirmed: Telegram down → log + continue, never block
 
-For live notification testing: `test-notification` sends a verify message to the configured chat.
+For live notification testing: `curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d text="muse-skills verify"` returns `{"ok":true}`.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 

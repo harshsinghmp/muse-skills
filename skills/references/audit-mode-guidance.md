@@ -21,7 +21,7 @@ Functional and operational skills (database, telegram, automation, devops, git) 
 - `telegram` → `test-notification`
 - `automation` → `dry-run`
 - `devops` → `check-deploy`
-- `git` → `audit-lease`
+- `git` → `coupling-router/scripts/worktree-lease.ts probe`
 
 ## What every `audit` mode must contain
 

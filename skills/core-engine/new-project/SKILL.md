@@ -1,7 +1,7 @@
 ---
 name: new-project
 aliases: ["Agent Engine","DOX Engine","agent-engine","dox-engine"]
-description: "Purpose-First interactive project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. Runs a 7-stage pipeline: identity, a granular hierarchical decision tree (archetype to framework to CMS/commerce to DB/auth to styling/motion to palette to deployment), official package installation and full companion wiring, OKLCH/BEM token injection, a full client onboarding interview (contacts, business model, ICP, objections, competitors, offerings, scope boundaries, engagement terms, access, integrations) that renders every Client-Intake document plus start-here.md from real answers, brand/context compilation, and closeout. Bootstraps Agents-First architecture (AGENTS.md, 9-folder .agents/ container, modular standards, brand tokens, cognitive memory) for Next.js 16, Astro, Instatic, Roots Bedrock, Expo, plus Payload/Puck, StudioCMS, Emdash, Keystatic, WollyCMS, Medusa v2, Stripe/Razorpay/Vendure, Drizzle/Neon/Supabase/Postgres/SQLite, and Capacitor. Trigger whenever the user asks for 'new-project', 'Agent Engine', 'DOX Engine', 'onboard a client project', 'scaffold Project OS', or to initialize an agent-governed workspace."
+description: "Project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. 7-stage pipeline: identity, hierarchical decision tree (archetype → framework → CMS/commerce → DB/auth → styling/motion → palette → deployment), official installs and companion wiring, OKLCH/BEM tokens, a client onboarding interview (contacts, business model, ICP, objections, competitors, offerings, scope, terms, access, integrations) rendering every Client-Intake doc plus start-here.md from real answers, context compilation, and closeout. Bootstraps Agents-First architecture (AGENTS.md, 9-folder .agents/ container, standards, brand tokens, cognitive memory) for Next.js 16, Astro, Instatic, Roots Bedrock, Expo, plus Payload/Puck, StudioCMS, Emdash, Keystatic, WollyCMS, Medusa v2, Stripe/Razorpay/Vendure, Drizzle/Neon/Supabase/Postgres/SQLite, and Capacitor. Trigger on 'new-project', 'Agent Engine', 'DOX Engine', 'onboard a client project', 'scaffold Project OS', or 'agent-governed workspace'."
 argument-hint: "[scaffold|new-project|Agent-Engine|DOX-Engine|client-onboarding]"
 user-invocable: true
 version: 2.8.0
@@ -91,6 +91,9 @@ Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + 
 - Converting an Astro or Next.js web application to native iOS and Android APK via Ionic Capacitor.
 
 ---
+
+### Anti-Triggers
+Not for syncing agent context in an existing repository (updateagents), authoring or restructuring project docs (updatedocs), or adding features to a shipped project (webdev).
 
 ## Quick Reference & Presets
 

@@ -1,7 +1,7 @@
 ---
 name: relay
 aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
-description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts."
+description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts. Use when asked to hand off work, resume a session, or write a context packet."
 argument-hint: "[resume|handoff|dispatch|context-packet]"
 user-invocable: true
 version: 2.2.1
@@ -70,6 +70,9 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 - A brand-new conversation opens in a working directory where prior work happened: the agent resumes context automatically instead of starting blind.
 
 ---
+
+### Anti-Triggers
+Not for durable project memory (updateagents) or live cross-agent messaging (automation:integrations).
 
 ## Quick Reference
 

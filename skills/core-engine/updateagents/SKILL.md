@@ -1,7 +1,7 @@
 ---
 name: updateagents
 aliases: ["sync-agents","update-memory","agent-sync","ai-ready","repo-ai-ready","ai-audit"]
-description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes."
+description: "Universal agent context synchronization and repository AI-readiness engine. Audits 14 tracked assets across AI Context, Dev Workflow, and Governance with a 4-tier grading matrix and sub-100ms Stage-0 Fast-Skip Gate. Houses master Agent Engine DOX templates, sanitizes synthetic ADE artifacts, retrofits legacy instructions, preserves human-authored rules, and continuously synchronizes modular standards. Consumes the updatedocs documentation-point ledger with --docs-backlog, folding every agent-relevant code change since the last agent watermark into .agents/context/current.md so forgotten sessions recover without re-reading Git history. Enforces harness hygiene with --hygiene: detects IDE/ADE/CLI artifacts at the project root, consolidates non-active ones into .agents/<category>, skips the running harness, installs local-only .git/info/exclude patterns, and blocks tracked agent state from public remotes. Use when asked to sync agent instructions, audit AI-readiness, or clean harness artifacts."
 argument-hint: "[sync|audit|sanitize|scaffold|promote|docs-backlog|hygiene]"
 user-invocable: true
 version: 2.7.0
@@ -88,6 +88,9 @@ Loadable by topic; also routable as `/updateagents-<file>` commands (not separat
 - [skill-authoring.md](references/skill-authoring.md)
 - [global-atoms.md](references/global-atoms.md)
 - [advanced-audit-passes.md](references/advanced-audit-passes.md)
+### Anti-Triggers
+Not for generating a new project scaffold (new-project) or authoring or restructuring feature documentation (updatedocs).
+
 ## Quick Reference
 
 ### Core Principle

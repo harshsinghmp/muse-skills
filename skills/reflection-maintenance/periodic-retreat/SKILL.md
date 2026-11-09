@@ -1,7 +1,7 @@
 ---
 name: periodic-retreat
 aliases: ["retreat","quarterly-retreat","strategic-retreat"]
-description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, dead-code purges via automated scan, founder vitality & purpose alignment, and binary next-quarter OKRs with Monday launchpads across the agency ecosystem. Generates quarterly-retreat.md."
+description: "Quarterly personal and project strategic retreat facilitator. Conducts multi-scale deep audits of project health, architecture debt, dead-code purges via automated scan, founder vitality & purpose alignment, and binary next-quarter OKRs with Monday launchpads across the agency ecosystem. Generates quarterly-retreat.md. Use when asked for a quarterly retreat, project-health review, or next-quarter OKRs."
 argument-hint: "quarterly retreat, purge debt, vitality, next-quarter OKRs"
 user-invocable: true
 version: 1.1.0

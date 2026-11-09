@@ -86,6 +86,9 @@ Loadable by topic; also routable as `/refactor-<file>` commands (not separate ro
 
 ---
 
+### Anti-Triggers
+Not for new feature construction (webdev), original visual design (design), or motion work (animate).
+
 ## Quick Reference & Atomic UI Heuristics
 
 When executing the `ui` or `sweep` mode, adhere strictly to the 10 atomic heuristics:
@@ -110,7 +113,7 @@ When executing the `ui` or `sweep` mode, adhere strictly to the 10 atomic heuris
 
 Ships zero-dependency Bun scripts under `scripts/`:
 - **Anti-Pattern Scanner**: `bun skills/design-interface/refactor/scripts/audit-ui.ts <file_or_dir>`
-- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts <file_or_dir>`
+- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts "#3b82f6" "#ffffff" [--large|--ui] [--aaa]`
 
 ---
 

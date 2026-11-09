@@ -63,6 +63,9 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 ---
 
+### Anti-Triggers
+Not for paid acquisition (paidads), social calendars (smm), or invoicing (accounts).
+
 ## Quick Reference
 
 | Mode | Primary Input | Primary Output | Gate / SLA |
