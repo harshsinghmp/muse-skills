@@ -89,6 +89,18 @@ describe("🏢 Multi-client agency simulation workflows", () => {
         expect(new Set(scenario.tasks.map((task) => task.assignedDivision)).size).toBeGreaterThanOrEqual(2);
       }
     });
+
+    test("the three scenarios together cover every shipped skill", () => {
+      const covered = new Set(scenarios.flatMap((scenario) => scenario.tasks.map((task) => task.skill)));
+      expect([...covered].sort()).toEqual(skills.map((skill) => skill.name).sort());
+    });
+
+    test("task ids are unique inside each scenario", () => {
+      for (const scenario of scenarios) {
+        const ids = scenario.tasks.map((task) => task.id);
+        expect(new Set(ids).size).toBe(ids.length);
+      }
+    });
   });
 
   describe("2. DAG wave dispatch", () => {
