@@ -61,6 +61,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     const smoke = read(".github/workflows/release-smoke.yml");
     expect(smoke).toContain("release:");
     expect(smoke).toContain("release:smoke");
+    expect(read(".github/workflows/release.yml")).toContain("bun run release:smoke");
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
   });
 
