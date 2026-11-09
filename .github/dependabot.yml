@@ -4,8 +4,8 @@
 # Adjust ecosystems, schedule, and limits to match this project's stack.
 version: 2
 updates:
-  # JavaScript / TypeScript ecosystems (npm, pnpm, yarn, bun via npm registry)
-  - package-ecosystem: "npm"
+  # Bun is the authoritative lockfile (bun.lock). Do not reintroduce npm.
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"

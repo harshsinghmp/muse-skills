@@ -17,11 +17,12 @@
 
 - [ ] All automated tests pass (`bun test` / project equivalent)
 - [ ] Static type check passes where applicable (`tsc --noEmit`)
-- [ ] Pre-ship secret scan passed (`rg -i "ghp_|sk-[a-zA-Z0-9]{20,}|PRIVATE KEY" .`)
+- [ ] Pre-ship secret scan passed (`bun run secret-scan .`); paste the exit status and finding count only, never the matched values
 - [ ] Documentation synchronized (`CHANGELOG.md`, affected docs)
+- [ ] If `.mcp.json` changed: `bun run check:mcp` passed and the `security-review` label is applied
 
 ```text
-<paste verification command output here>
+<paste verification command output here — redact any credential or PII value before pasting>
 ```
 
 ## Anti-Slop Checklist

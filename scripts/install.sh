@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # install.sh — Interactive & Remote Installer for Muse Skills (v6.0.0)
-# Usage:
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/main/scripts/install.sh | bash
+# Usage (pinned tag, not a mutable branch):
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.3.0/scripts/install.sh | bash
+#
+# Supply-chain overrides:
+#   MUSE_SKILLS_REF=<tag>     install from this git tag (default: v8.3.0)
+#   MUSE_SKILLS_COMMIT=<sha>  require the checkout to match this commit
 #
 # Flags (for non-interactive / CI automation):
 #   --all                 Install all 46 skills & native slash commands (default)
@@ -16,6 +20,14 @@
 set -euo pipefail
 
 ORIGINAL_PWD="$(pwd)"
+
+# Pinned distribution ref. The default tag is verified against the recorded
+# commit so a moved tag cannot silently change what this installer executes.
+MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-v8.3.0}"
+MUSE_SKILLS_COMMIT="${MUSE_SKILLS_COMMIT:-}"
+if [ "$MUSE_SKILLS_REF" = "v8.3.0" ] && [ -z "$MUSE_SKILLS_COMMIT" ]; then
+  MUSE_SKILLS_COMMIT="5c91a309d64f568c1e957110832a38d471ee568e"
+fi
 
 # ─── Terminal Styling ────────────────────────────────────────────────────────
 BOLD="\033[1m"
@@ -144,8 +156,26 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo -e "\n📥 Fetching latest Muse Skills engine (ephemeral)..."
-git clone --depth 1 --quiet https://github.com/harshsinghmp/muse-skills.git "${TMP_DIR}"
+echo -e "\n📥 Fetching Muse Skills engine ${MUSE_SKILLS_REF} (ephemeral, pinned)..."
+git clone --depth 1 --branch "${MUSE_SKILLS_REF}" --quiet https://github.com/harshsinghmp/muse-skills.git "${TMP_DIR}"
+
+ACTUAL_COMMIT="$(git -C "${TMP_DIR}" rev-parse HEAD)"
+if [ -n "${MUSE_SKILLS_COMMIT}" ] && [ "${ACTUAL_COMMIT}" != "${MUSE_SKILLS_COMMIT}" ]; then
+  echo -e "❌ Refusing to run: ${MUSE_SKILLS_REF} resolved to ${ACTUAL_COMMIT}, expected ${MUSE_SKILLS_COMMIT}." >&2
+  exit 1
+fi
+if [ -z "${MUSE_SKILLS_COMMIT}" ]; then
+  echo -e "⚠️  No commit checksum supplied for ${MUSE_SKILLS_REF}; proceeding at ${ACTUAL_COMMIT}." >&2
+fi
+
+# Pinned TypeScript runner for the Node fallback (never a floating npx package).
+run_ts() {
+  if [ "${RUNTIME}" = "bun" ]; then
+    bun "$@"
+  else
+    npx --yes tsx@4.19.2 "$@"
+  fi
+}
 
 # ─── 5. Prepare Flags & Execute Setup Engine ─────────────────────────────────
 EXPORT_ARGS=()
@@ -165,12 +195,9 @@ fi
 cd "${TMP_DIR}"
 echo -e "⚡ ${CYAN}Running setup engine...${RESET}\n"
 
-if [ "${RUNTIME}" = "bun" ]; then
-  bun scripts/export-commands.ts "${EXPORT_ARGS[@]}"
-else
-  npx ts-node scripts/export-commands.ts "${EXPORT_ARGS[@]}" 2>/dev/null || node -e "
-    console.log('⚠️ Running in Node.js fallback mode.');
-  "
+if ! run_ts scripts/export-commands.ts "${EXPORT_ARGS[@]}"; then
+  echo -e "❌ Setup engine failed. Aborting; no success message was printed." >&2
+  exit 1
 fi
 
 # ─── 5.5 Optional Global Identity Onboarding ─────────────────────────────────
@@ -196,10 +223,9 @@ fi
 
 if [ "$DO_ONBOARD" = true ]; then
   echo -e "\n⚡ ${CYAN}Launching Global Identity Onboarding Wizard...${RESET}\n"
-  if [ "${RUNTIME}" = "bun" ]; then
-    bun "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" --onboard --global || true
-  else
-    npx ts-node "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" --onboard --global 2>/dev/null || true
+  if ! run_ts "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" --onboard --global; then
+    echo -e "❌ Global identity onboarding failed." >&2
+    exit 1
   fi
 fi
 
@@ -228,10 +254,9 @@ fi
 
 if [ "$DO_SYNC" = true ]; then
   echo -e "\n⚡ ${CYAN}Running updateagents context synchronization (preserving all rules)...${RESET}\n"
-  if [ "${RUNTIME}" = "bun" ]; then
-    bun "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" || true
-  else
-    npx ts-node "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}" 2>/dev/null || true
+  if ! run_ts "${TMP_DIR}/skills/core-engine/updateagents/scripts/updateagents.ts" "${ORIGINAL_PWD}"; then
+    echo -e "❌ Agent context synchronization failed." >&2
+    exit 1
   fi
   echo -e "\n✅ ${GREEN}Agent context synchronized & rules preserved!${RESET}"
 fi
@@ -279,10 +304,9 @@ if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
   esac
 
   echo -e "\n⚡ ${CYAN}Launching new-project interactive scaffolder...${RESET}\n"
-  if [ "${RUNTIME}" = "bun" ]; then
-    bun "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" || true
-  else
-    npx ts-node "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR" 2>/dev/null || true
+  if ! run_ts "${TMP_DIR}/skills/core-engine/new-project/scripts/new-project.ts" "$RESOLVED_PROJECT_DIR"; then
+    echo -e "❌ New project scaffolding failed." >&2
+    exit 1
   fi
   echo -e "\n✅ ${GREEN}New project scaffolded successfully at: ${RESOLVED_PROJECT_DIR}${RESET}"
 fi

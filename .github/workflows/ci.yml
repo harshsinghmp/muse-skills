@@ -26,30 +26,27 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Restore cached Bun runtime
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ~/.bun/bin/bun
-          key: bun-${{ runner.os }}-1.4.4
-
-      - id: bun-runtime
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
-        continue-on-error: true
-        with:
-          bun-version: 1.4.4
-
-      # GitHub's release-asset CDN intermittently answers 504 on the first
-      # download. A pinned version plus a warm ~/.bun/bin/bun cache makes setup-bun
-      # reuse the existing binary and skip the CDN; the retry below covers a
-      # genuine cold-start failure.
-      - name: Setup Bun (retry after CDN 504)
-        if: steps.bun-runtime.outcome == 'failure'
+      # Fail closed: no cached executable under a static key and no
+      # continue-on-error. The install must succeed from the pinned version.
+      - name: Setup Bun (pinned)
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.4
 
       - name: Install dependencies
         run: bun install
+
+      - name: One authoritative lockfile
+        run: |
+          set -euo pipefail
+          test -f bun.lock
+          if [ -f package-lock.json ] || [ -f pnpm-lock.yaml ] || [ -f yarn.lock ]; then
+            echo "Only bun.lock may exist; remove the extra lockfile." >&2
+            exit 1
+          fi
+
+      - name: Validate .mcp.json allowlist
+        run: bun run check:mcp
 
       - name: Install uv (ruff runner)
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
@@ -64,24 +61,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Restore cached Bun runtime
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ~/.bun/bin/bun
-          key: bun-${{ runner.os }}-1.4.4
-
-      - id: bun-runtime
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
-        continue-on-error: true
-        with:
-          bun-version: 1.4.4
-
-      # GitHub's release-asset CDN intermittently answers 504 on the first
-      # download. A pinned version plus a warm ~/.bun/bin/bun cache makes setup-bun
-      # reuse the existing binary and skip the CDN; the retry below covers a
-      # genuine cold-start failure.
-      - name: Setup Bun (retry after CDN 504)
-        if: steps.bun-runtime.outcome == 'failure'
+      # Fail closed: no cached executable under a static key and no
+      # continue-on-error. The install must succeed from the pinned version.
+      - name: Setup Bun (pinned)
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.4
@@ -103,24 +85,9 @@ jobs:
           # fails on shallow PR merge refs (single non-conventional merge commit).
           fetch-depth: 0
 
-      - name: Restore cached Bun runtime
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ~/.bun/bin/bun
-          key: bun-${{ runner.os }}-1.4.4
-
-      - id: bun-runtime
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
-        continue-on-error: true
-        with:
-          bun-version: 1.4.4
-
-      # GitHub's release-asset CDN intermittently answers 504 on the first
-      # download. A pinned version plus a warm ~/.bun/bin/bun cache makes setup-bun
-      # reuse the existing binary and skip the CDN; the retry below covers a
-      # genuine cold-start failure.
-      - name: Setup Bun (retry after CDN 504)
-        if: steps.bun-runtime.outcome == 'failure'
+      # Fail closed: no cached executable under a static key and no
+      # continue-on-error. The install must succeed from the pinned version.
+      - name: Setup Bun (pinned)
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.4
@@ -148,35 +115,88 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Secret scan (rg, free)
+      - name: Secret scan (git grep, free)
+        id: secret-scan
         run: |
-          # Free community secret patterns — same coverage as gitleaks basic config
-          PATTERN="sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key\s*[:=]|GOOGLE_API_KEY\s*[:=]"
+          # Free community secret patterns — same coverage as gitleaks basic config.
+          # git grep is a git dependency: unlike rg it is always present, searches
+          # tracked dotfiles, and never reports a "clean" result when the scanner
+          # itself is missing.
+          PATTERN="sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{30,}|glpat-[a-zA-Z0-9-]{20,}|-----BEGIN (RSA|OPENSSH|PGP) PRIVATE KEY-----|aws_secret_access_key[[:space:]]*[:=]|GOOGLE_API_KEY[[:space:]]*[:=]"
           if [ -n "${AUDIT_RULES_FILE:-}" ] && [ -f "${AUDIT_RULES_FILE:-}" ]; then
             EXTRA="$(grep -v '^#' "$AUDIT_RULES_FILE" | grep -v '^$' | grep -v '^threshold:' | grep -v '^format:' | grep -v '^patterns:' | sed 's/^[[:space:]]*-[[:space:]]*//;s/^"//;s/"$//' | paste -sd'|' - || true)"
             [ -n "$EXTRA" ] && PATTERN="$PATTERN|$EXTRA"
           fi
           echo "threshold: ${AUDIT_THRESHOLD:-low} (documented; gate fails on any match)"
           TMP="$(mktemp)"
-          if rg -i "$PATTERN" . --no-heading -n > "$TMP" 2>/dev/null; then
-            head -20 "$TMP"
-            case "${AUDIT_FORMAT:-text}" in
-              json) printf '{"tool":"ci-secret-scan","threshold":"%s","count":%s}\n' "${AUDIT_THRESHOLD:-low}" "$(wc -l < "$TMP" | tr -d ' ')" > "${AUDIT_OUTPUT:-secret-scan.json}"; echo "JSON report: ${AUDIT_OUTPUT:-secret-scan.json}" ;;
-              sarif) printf '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[{"tool":{"driver":{"name":"ci-secret-scan","rules":[{"id":"credential-leak"}]}},"results":[]}]}\n' > "${AUDIT_OUTPUT:-skillshare-audit.sarif}"; echo "SARIF report: ${AUDIT_OUTPUT:-skillshare-audit.sarif} (locations: file-level, line 1 fallback)" ;;
-            esac
-            echo "Potential secrets found — review matches above"
-            exit 1
-          else
-            echo "Secret scan clean"
+          set +e
+          git grep -nEI "$PATTERN" -- . > "$TMP" 2>/dev/null
+          GREP_STATUS=$?
+          set -e
+          if [ "$GREP_STATUS" -gt 1 ]; then
+            echo "Secret scanner failed (git grep exit $GREP_STATUS) — failing closed"
+            exit 2
           fi
 
-      - name: Upload SARIF (opt-in, only when AUDIT_FORMAT=sarif)
+          COUNT=$(wc -l < "$TMP" | tr -d ' ')
+          OUT="${AUDIT_OUTPUT:-}"
+          case "${AUDIT_FORMAT:-text}" in
+            json)
+              [ -n "$OUT" ] || OUT="secret-scan.json"
+              node - "$TMP" "$OUT" "$COUNT" <<'NODE'
+          const fs = require("node:fs");
+          const [src, dst, count] = process.argv.slice(2);
+          const locations = fs.readFileSync(src, "utf8").split("\n").filter(Boolean)
+            .map((line) => line.match(/^(.+?):(\d+):/)).filter(Boolean)
+            .map((m) => `${m[1]}:${m[2]}`);
+          fs.writeFileSync(dst, JSON.stringify({
+            tool: "ci-secret-scan", threshold: process.env.AUDIT_THRESHOLD || "low",
+            count: Number(count), locations,
+          }, null, 2));
+          NODE
+              ;;
+            sarif)
+              [ -n "$OUT" ] || OUT="secret-scan.sarif"
+              node - "$TMP" "$OUT" <<'NODE'
+          const fs = require("node:fs");
+          const [src, dst] = process.argv.slice(2);
+          const results = fs.readFileSync(src, "utf8").split("\n").filter(Boolean)
+            .map((line) => line.match(/^(.+?):(\d+):/)).filter(Boolean)
+            .map((m) => ({
+              ruleId: "credential-leak",
+              level: "error",
+              message: { text: "Potential credential detected" },
+              locations: [{ physicalLocation: {
+                artifactLocation: { uri: m[1] },
+                region: { startLine: Number(m[2]) },
+              } }],
+            }));
+          fs.writeFileSync(dst, JSON.stringify({
+            $schema: "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+            version: "2.1.0",
+            runs: [{ tool: { driver: { name: "ci-secret-scan", rules: [{ id: "credential-leak" }] } }, results }],
+          }, null, 2));
+          NODE
+              ;;
+          esac
+          echo "output=${OUT}" >> "$GITHUB_OUTPUT"
+          echo "report=${OUT}" >> "$GITHUB_OUTPUT"
+
+          if [ "$GREP_STATUS" -eq 0 ]; then
+            # Locations only. Never print the matched line: it contains the secret.
+            echo "Potential secrets found. Locations:"
+            sed -E 's/^([^:]+:[0-9]+):.*/  - \1/' "$TMP" | head -50
+            echo "Potential secrets found — review the report and rotate the credentials."
+            exit 1
+          fi
+          echo "Secret scan clean"
+
+      - name: Upload SARIF (opt-in, fails closed)
         if: always() && env.AUDIT_FORMAT == 'sarif'
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
         with:
-          sarif_file: ${{ env.AUDIT_OUTPUT }}
+          sarif_file: ${{ steps.secret-scan.outputs.report || 'secret-scan.sarif' }}
           category: secret-scan
-        continue-on-error: true
 
   landing-gate:
     name: landing-gate
@@ -188,24 +208,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore cached Bun runtime
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ~/.bun/bin/bun
-          key: bun-${{ runner.os }}-1.4.4
-
-      - id: bun-runtime
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
-        continue-on-error: true
-        with:
-          bun-version: 1.4.4
-
-      # GitHub's release-asset CDN intermittently answers 504 on the first
-      # download. A pinned version plus a warm ~/.bun/bin/bun cache makes setup-bun
-      # reuse the existing binary and skip the CDN; the retry below covers a
-      # genuine cold-start failure.
-      - name: Setup Bun (retry after CDN 504)
-        if: steps.bun-runtime.outcome == 'failure'
+      # Fail closed: no cached executable under a static key and no
+      # continue-on-error. The install must succeed from the pinned version.
+      - name: Setup Bun (pinned)
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.4
@@ -213,17 +218,19 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      # Pre-review gate: only on pull requests (against github.head_ref).
+      # Pre-review gate: only on pull requests. Resolve by PR number, not the
+      # head branch name (ambiguous across forks).
       - name: Pre-review gate (pull_request)
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
-          HEAD: ${{ github.head_ref }}
-        run: bun run check:landed -- --mode=pre-review --head="$HEAD"
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: bun run check:landed -- --mode=pre-review --pr="$PR_NUMBER"
 
       # Post-merge gate: only on push to the integration branch (against github.ref_name).
       - name: Post-merge gate (push)
         if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: bun run check:landed -- --mode=post-merge --branch=${{ github.ref_name }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: bun run check:landed -- --mode=post-merge --branch="$TARGET_BRANCH"

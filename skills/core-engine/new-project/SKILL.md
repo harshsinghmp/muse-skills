@@ -439,7 +439,7 @@ bun skills/core-engine/new-project/scripts/new-project.ts <targetPath> \
 
 ## Official Stack Setup References (Post-Scaffold Agent Procedures)
 
-When the intake brief or a stack change requires provisioning a companion manually, follow these official procedures. Always use `@latest` resolution (`bun add <pkg>` / `npm i <pkg>`), never pinned versions.
+When the intake brief or a stack change requires provisioning a companion manually, follow these official procedures. `@latest` is allowed only for the initial create/install command; immediately commit the generated lockfile (`bun.lock`, `package-lock.json`, `pnpm-lock.yaml`, or `yarn.lock`) so the resolved versions are reproducible. Never leave a scaffold with floating `@latest` dependencies and no lockfile, and make CI install from the lockfile (`bun install --frozen-lockfile` / `npm ci`) so lockfile drift fails the build.
 
 ### Payload CMS 3.0
 Official docs: **Astro** → https://docs.astro.build/en/guides/cms/payload/ · **All other frameworks** → https://payloadcms.com/docs/getting-started/installation

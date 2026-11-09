@@ -53,6 +53,7 @@
   ],
   "license": "MIT",
   "name": "@harshsinghmp/muse-skills",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/harshsinghmp/muse-skills.git"
@@ -71,6 +72,7 @@
     "check:landed": "bun scripts/check-landed.ts",
     "check:sync": "bun scripts/check-sync.ts",
     "check:docs-commands": "bun scripts/audit-doc-commands.ts",
+    "check:mcp": "bun scripts/check-mcp.ts",
     "check:hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene --check-public",
     "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene"
   },
@@ -82,6 +84,6 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "^3.0.2"
+    "musememory": "3.0.2"
   }
 }
