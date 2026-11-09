@@ -11,6 +11,7 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **`updateagents` module import is side-effect-free**: the CLI body is gated on the entry-point guard (`import.meta.main` with a `process.argv[1]` fallback), and an imported module parses an empty argv instead of the importer's. Importing `updateagents.ts` for its helpers no longer runs a default sync or overwrites curated standards. New regression tests assert import cleanliness and curated-standard preservation.
+- **CI: Bun setup reuses a cached binary instead of the release CDN**: every job restores `~/.bun/bin/bun` from the Actions cache and pins `bun-version` to `1.4.4`, so `setup-bun` reuses the existing binary and skips the GitHub release-asset download that intermittently returns `504`. The cold-start retry remains as the fallback.
 
 ### Tests
 
