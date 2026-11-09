@@ -13,7 +13,7 @@
 - [ ] Version strings in docs match `package.json` `version`
 - [ ] Skill names referenced in docs exist in `skills.json` (no renamed/removed ghosts)
 - [ ] One canonical source per fact: no doc restates a number another doc already owns
-- [ ] `docs/` mirrors match their root originals (CHANGELOG.md ↔ docs/CHANGELOG.md)
+- [ ] `docs/` mirrors either match their root originals or are explicitly marked as historical archives
 - [ ] Historical snapshots (`docs/README-v*.md`) are classified HISTORICAL and excluded from live-doc linting
 - [ ] Frontmatter of every governed doc: valid YAML delimiters, required keys present
 - [ ] No secrets or personal environment values in any governed doc

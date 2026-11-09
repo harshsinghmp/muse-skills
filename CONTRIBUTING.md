@@ -101,9 +101,24 @@ changes
 3. **Freshness**: `bun run check:sync` confirms the release branch contains the latest `dev`.
 4. **Version + derived artifacts**: move the `Unreleased` changelog block into `## [X.Y.Z]`, bump `package.json` and the README version, and regenerate every declared derived artifact in the same commit.
 5. **Release notes**: add the new version's section to `RELEASE_NOTES.md` — the tag-triggered Release workflow publishes that section, and `tests/release-notes.test.ts` fails when the current `package.json` version has none.
-6. **Delivery**: tag `vX.Y.Z`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
+6. **Delivery**: tag `vX.Y.Z` on a commit reachable from `main`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
+7. **Release smoke**: run `bun run release:smoke` (also run by the `Release Smoke` workflow on publish). It verifies the tag commit against the release `checksums.txt` asset and the installer default ref; a failure means the published installer cannot verify itself.
 
 ---
+
+### B2. Issue Triage, Labels & Blocked-By
+
+Every issue carries exactly one **type**, one **priority**, and at least one **area** label:
+
+| Dimension | Labels |
+| :--- | :--- |
+| Type | `security`, `skill-quality`, `bug`, `enhancement`, `docs` |
+| Priority | `p0` (data loss / credential exposure), `p1` (fail-open / broken contract), `p2` (hardening / drift) |
+| Area | `area:skills`, `area:ci`, `area:scripts`, `area:docs`, `area:templates` |
+
+- **Blocked-by is explicit in the body.** Add a line `Blocked by #123` (one per blocker). Do not start or merge the issue while a blocker is open; resolve the blocker first or record a written waiver in the issue.
+- **Tracking issues** list child issues as `- [ ] #NNN — title` and close only when every child is closed or explicitly declined with a reason.
+- **Security findings are never silently closed.** A finding is closed by a merged fix with a regression test, or by a written false-positive rationale with file/line evidence.
 
 ### C. Skill Directory Anatomy (RFC Standard)
 
