@@ -68,3 +68,5 @@ flowchart TD
    ```bash
    bun skills/quality-review/muse-security/scripts/zero-trust.ts --audit-chain
    ```
+
+All commands accept `--json` for machine-readable output. `--verify-mtls --role sol --peer-role nexus` runs the mutual-TLS handshake check, and `--demo` replays the built-in walkthrough. `--attest` and `--verify-mtls` exit non-zero when the role is missing; `--ttl` is capped at 60 minutes.

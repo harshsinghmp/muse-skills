@@ -4503,7 +4503,7 @@ NextApp relies on RedisCache
       expect(auditChain.totalEntries).toBeGreaterThan(3);
 
       // CLI Execution
-      const cliRes = spawnSync("bun", [scriptPath], { encoding: "utf8", cwd: REPO_ROOT });
+      const cliRes = spawnSync("bun", [scriptPath, "--demo"], { encoding: "utf8", cwd: REPO_ROOT });
       expect(cliRes.status).toBe(0);
       expect(cliRes.stdout).toContain("Issued SVID Token:");
       expect(cliRes.stdout).toContain("mTLS Handshake Status: VERIFIED (TLS 1.3)");
