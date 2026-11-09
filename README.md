@@ -288,6 +288,21 @@ npx skills add harshsinghmp/muse-skills --skill animate
 npx skills add harshsinghmp/muse-skills --skill git
 ```
 
+### Local Model Evaluation (qa-launch:evals)
+
+Run the dual-judge quality gate against local models, cloud models, or one of each — no cloud credential required for local runs:
+
+```bash
+# Both judges on local runtimes
+bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
+  --evaluate-sample --input sample.json \
+  --judge-a ollama --judge-a-model llama3.2 \
+  --judge-b vllm --judge-b-model Qwen/Qwen2.5-7B-Instruct \
+  --seed 42 --telemetry --json
+```
+
+Defaults: Ollama `http://127.0.0.1:11434/v1`, vLLM `http://127.0.0.1:8000/v1`; point either judge at any OpenAI-compatible endpoint with `--judge-a-base-url`/`--judge-b-base-url` and credentials via `EVAL_API_KEY`/`OPENAI_API_KEY`. A fixed `--seed` makes local runs deterministic, and local token cost is `$0`. The consensus gate is unchanged: score ≥ 8.5, judge delta ≤ 1.5, safety ≥ 8.
+
 ---
 
 ## 🧪 Verification & Quality Standards
