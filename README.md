@@ -335,6 +335,10 @@ bun run check:mcp
 
 # Verify a published release: tag commit, checksums.txt asset, installer pin (scripts/release-smoke.ts)
 bun run release:smoke
+
+# Dependency + docs-ledger gates (scripts/check-deps.ts, scripts/check-docs-ledger.ts)
+bun run check:deps
+bun run check:ledger
 ```
 
 - **Green-by-CI Test Suite**: the full suite must pass in CI on every push and pull request. CI runs lint, type-check, test, secret-scan, and sync-gate as separate jobs, so a red run blocks merge — no hand-written test count is kept here by design (see `.github/workflows/ci.yml`).

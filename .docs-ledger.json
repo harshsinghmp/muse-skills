@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-09T19:37:41.055Z",
-  "head": "df5984f988347642282d46177603e272df46f213",
+  "updatedAt": "2026-11-09T20:56:14.335Z",
+  "head": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
   "watermark": {
-    "point": 116,
-    "commit": "df5984f988347642282d46177603e272df46f213",
-    "date": "2026-11-09T19:37:40.382Z",
-    "releaseTag": "v8.4.0"
+    "point": 126,
+    "commit": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
+    "date": "2026-11-09T20:56:13.800Z",
+    "releaseTag": "v8.4.1"
   },
   "agentWatermark": {
     "point": 1,
@@ -4632,6 +4632,401 @@
       "shipped": true,
       "releaseTag": "v8.4.0",
       "createdAt": "2026-11-09T19:36:55.753Z"
+    },
+    {
+      "id": "DP-0117",
+      "point": 117,
+      "commit": "fb45ef42907b11f68c90264ef93ca4c5ed5bba64",
+      "shortCommit": "fb45ef4",
+      "date": "2026-11-10",
+      "type": "release",
+      "scope": "",
+      "summary": "v8.4.0",
+      "breaking": false,
+      "files": [
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json",
+        "scripts/install.sh",
+        "tests/version-consistency.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", "llms.txt"],
+          "evidence": "manually documented in CHANGELOG.md, llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0118",
+      "point": 118,
+      "commit": "df6aa8bf3316d74e3fe24008ed66202714489728",
+      "shortCommit": "df6aa8b",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #406 from harshsinghmp/release/v8.4.0",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0119",
+      "point": 119,
+      "commit": "fd2a39e4e36420ebafa34b5d8a3da9b5dcf41101",
+      "shortCommit": "fd2a39e",
+      "date": "2026-11-10",
+      "type": "chore",
+      "scope": "",
+      "summary": "close audit follow-ups and refresh release hygiene",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/release-smoke.yml",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "biome.json",
+        "bun.lock",
+        "docs/CHANGELOG.md",
+        "package.json",
+        "scripts/release-smoke.ts",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/references/fourteen-asset-matrix.md",
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "skills/core-engine/updatedocs/references/audit.md",
+        "skills/quality-review/code-review/scripts/code-review.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/security-guidance.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"audit follow\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"audit follow\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "manually documented in llms.txt",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0120",
+      "point": 120,
+      "commit": "ffe7f3fcb10cf62f411aea39de25906d04cda472",
+      "shortCommit": "ffe7f3f",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #418 from harshsinghmp/chore/production-followups",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0121",
+      "point": 121,
+      "commit": "ce2a3199b6baf9938737957ace68cde41662caeb",
+      "shortCommit": "ce2a319",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge remote-tracking branch 'origin/main' into release/v8.4.1",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0122",
+      "point": 122,
+      "commit": "85400e5ac4ef4f34c6f9da32d737e26843156026",
+      "shortCommit": "85400e5",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #419 from harshsinghmp/release/v8.4.1",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0123",
+      "point": 123,
+      "commit": "38b0630ad1874cdcf01d95ec04329b1257cc216a",
+      "shortCommit": "38b0630",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #420 from harshsinghmp/chore/backmerge-v8.4.1",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0124",
+      "point": 124,
+      "commit": "da67e7fd77b63e1b4dd4e51e0b3a9d8ada49bf8d",
+      "shortCommit": "da67e7f",
+      "date": "2026-11-10",
+      "type": "ci",
+      "scope": "",
+      "summary": "run release smoke inside the release workflow",
+      "breaking": false,
+      "files": [".github/workflows/release.yml", "tests/ci-hardening.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release smoke\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release smoke\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release smoke\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0125",
+      "point": 125,
+      "commit": "962a01bd864324986755144d09ea22886302645c",
+      "shortCommit": "962a01b",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #421 from harshsinghmp/fix/release-smoke-inline",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:53:58.575Z"
+    },
+    {
+      "id": "DP-0126",
+      "point": 126,
+      "commit": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
+      "shortCommit": "c68cd79",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "",
+      "summary": "add dependency and docs-ledger release gates",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "llms.txt",
+        "package.json",
+        "scripts/check-deps.ts",
+        "scripts/check-docs-ledger.ts",
+        "tests/agent-engine.test.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/version-consistency.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"dependency ledger\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["README.md"],
+          "evidence": "manually documented in README.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"dependency ledger\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.1",
+      "createdAt": "2026-11-09T20:56:04.987Z"
     }
   ]
 }

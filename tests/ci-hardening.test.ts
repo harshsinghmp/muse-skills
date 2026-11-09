@@ -63,6 +63,8 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(smoke).toContain("release:smoke");
     expect(read(".github/workflows/release.yml")).toContain("bun run release:smoke");
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
+    expect(ci).toContain("bun run check:deps");
+    expect(read(".github/workflows/release.yml")).toContain("bun run check:ledger");
   });
 
   test("CI parallelizes tests, caches package tarballs, and cancels superseded runs", () => {

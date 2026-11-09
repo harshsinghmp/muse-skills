@@ -25,6 +25,11 @@ describe("release version consistency", () => {
     expect(notes).toContain(`...v${version}`);
   });
 
+  test("the docs ledger is stamped for this version", () => {
+    const ledger = JSON.parse(read(".docs-ledger.json")) as { watermark?: { releaseTag?: string } };
+    expect(ledger.watermark?.releaseTag).toBe(`v${version}`);
+  });
+
   test("the installer verifies against a release checksum asset", () => {
     const installer = read("scripts/install.sh");
     expect(installer).toMatch(/releases\/download\/\$\{MUSE_SKILLS_REF\}\/checksums\.txt/);
