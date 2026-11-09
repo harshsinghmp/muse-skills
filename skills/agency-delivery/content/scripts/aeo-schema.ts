@@ -50,7 +50,7 @@ export function generateSchema(type: "faq" | "article" | "organization", data: S
       description: data.description || "Technical deep-dive on modern web architecture and development standards.",
       author: {
         "@type": "Person",
-        name: data.author || "Harsh Singh",
+        name: data.author || "Organization",
       },
       publisher: {
         "@type": "Organization",
@@ -166,7 +166,9 @@ if (import.meta.main) {
     const title = titleIdx !== -1 ? args[titleIdx + 1] : undefined;
     const descIdx = args.indexOf("--desc");
     const desc = descIdx !== -1 ? args[descIdx + 1] : undefined;
-    console.log(generateSchema(type, { title, description: desc }));
+    const authorIdx = args.indexOf("--author");
+    const author = authorIdx !== -1 ? args[authorIdx + 1] : undefined;
+    console.log(generateSchema(type, { title, description: desc, author }));
   } else if (args.includes("--audit-quotability")) {
     const idx = args.indexOf("--audit-quotability");
     const target = args[idx + 1];
