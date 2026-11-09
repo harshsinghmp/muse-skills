@@ -19,7 +19,7 @@ src/components/dashboard/StatCard.tsx:31 [WARNING] RAW_Z_INDEX: Raw z-index valu
 
 audit-ui: 4 file(s) scanned, 3 finding(s)
 
-$ bun refactor-ui/scripts/check-contrast.ts #94a3b8 #ffffff
+$ bun skills/design-interface/refactor/scripts/check-contrast.ts #94a3b8 #ffffff
 Contrast ratio #94a3b8 vs #ffffff: 2.54:1 — FAIL (AA (normal), threshold 4.5:1)
 ```
 

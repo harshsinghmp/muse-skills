@@ -80,7 +80,7 @@ Run before reporting completion:
 - [ ] Connection closed after query
 - [ ] For diagnosis: `pg_stat_statements` ranked before `EXPLAIN ANALYZE`
 
-For connection testing: `verify-connection` live-checks the configured DSN, confirms read-write intent is absent.
+For connection testing: use your database client (for example `psql "$DATABASE_URL" -c 'select 1'` or `mysqladmin ping`) — this skill's scripts open read-only query and migration-guard connections and never write.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 

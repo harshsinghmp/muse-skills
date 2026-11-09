@@ -72,8 +72,9 @@ bun skills/quality-review/muse-security/scripts/boundary-audit.ts --path ./proje
 # Emit machine-readable JSON report
 bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
 
-# Run specific boundary checks
-bun skills/quality-review/muse-security/scripts/boundary-audit.ts --check-symlinks --check-permissions
+# All boundary invariants (symlink, permission, worktree, process, tenant) run by default;
+# filter the machine-readable report instead of selecting checks
+bun skills/quality-review/muse-security/scripts/boundary-audit.ts --json
 ```
 
 ---

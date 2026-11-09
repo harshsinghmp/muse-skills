@@ -46,6 +46,7 @@ When instrumenting developer tools, APIs, open-source libraries, or CLI agents, 
 - **Standard GA4 Mediums**: Enforce recognized mediums (`cpc`, `organic`, `organic-social`, `paidsocial`, `email`, `referral`).
 - **Zero Internal UTMs**: Strictly ban UTM parameters on internal site navigation (resets sessions and overwrites user attribution).
 - **PII Scrubbing**: Automatically scrub user emails, phone numbers, and auth tokens from URL search parameters (`utm-sanitizer.ts`).
+- **CLI**: `bun skills/agency-delivery/analytics/scripts/utm-sanitizer.ts --build --url <url> --source <src> --medium <medium> --campaign <name>` builds a canonical link; `--sanitize "<url>"` reports fragmentation, internal-UTM traps, and PII.
 
 ## Quality gate
 

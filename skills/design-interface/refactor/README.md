@@ -36,7 +36,7 @@ npx skills add harshsinghmp/muse-skills
 
 Zero-dependency Bun verification scripts:
 - **Anti-Pattern Scanner**: `bun skills/design-interface/refactor/scripts/audit-ui.ts <file_or_dir>`
-- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts <file_or_dir>`
+- **WCAG Contrast Checker**: `bun skills/design-interface/refactor/scripts/check-contrast.ts "#3b82f6" "#ffffff" [--large|--ui] [--aaa]`
 
 ---
 

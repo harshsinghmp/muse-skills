@@ -1,7 +1,7 @@
 ---
 name: dead-letter
 aliases: ["failure-triage","blocked-task","dead-letter-queue"]
-description: "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix — with a findings ledger that deduplicates recurring sweeps and measures convergence."
+description: "Capture a failed or blocked task before it disappears. Categorizes the failure mode, distinguishes transient from permanent failures, verifies actual state before any retry, preserves partial work and orphaned resources, and generates either a bounded autonomous retry packet with the root cause fixed or an escalation message with a specific decision question. Recovery follows a strict ordered sequence with baseline regression comparison against the last-known-good state, close-out can generate a repro test pack (exact reproduction steps, preconditions, expected-vs-actual, minimal failing test) for Dev/QA handoff, and the status sweep clusters open records by root cause so repeated failures across tasks surface as one systemic finding with one fix — with a findings ledger that deduplicates recurring sweeps and measures convergence. Use when a task fails, is blocked, or needs a retry or escalation record."
 argument-hint: "task failed, blocked task, retry or escalate"
 user-invocable: true
 version: 1.5.0
@@ -54,6 +54,9 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 - On a scheduled sweep (`nightly failure triage`) — open records get clustered by root cause so systemic issues surface once, not per-task.
 
 ---
+
+### Anti-Triggers
+Not for retrying a transient command inside one run (retry in place) or coordinating a production outage (incident-response).
 
 ## Quick Reference
 

@@ -54,6 +54,9 @@ Do **NOT** use this skill for:
 
 ---
 
+### Anti-Triggers
+Not for code correctness review (code-review), CI/CD configuration (devops), or documenting shipped changes (updatedocs).
+
 ## Quick Reference
 
 ### The 11-Phase Lifecycle Protocol
@@ -113,7 +116,7 @@ Run before reporting completion:
 - [ ] Changelog entry added (not under `### Unreleased` alone)
 - [ ] `.agents/artifacts/WORKTREE-LEASE.md` released (if held)
 
-For shared-worktree safety: `audit-lease` checks `WORKTREE-LEASE.md` before git mutations.
+For shared-worktree safety: `bun skills/context-orchestration/coupling-router/scripts/worktree-lease.ts probe` checks `WORKTREE-LEASE.md` before git mutations.
 
 Full audit-mode spec: `skills/references/audit-mode-guidance.md`.
 

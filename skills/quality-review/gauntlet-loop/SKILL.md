@@ -1,7 +1,7 @@
 ---
 name: gauntlet-loop
 aliases: ["gauntlet","quality-loop","verification-loop"]
-description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md."
+description: "Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. Orchestrates Builder, Fresh Critic, Automated Gate (with web application security headers and visual breakpoint audit), and Integrator roles with strict stop conditions (proof of passing, 2-round score plateau, regression, or max iteration budget). Generates GAUNTLET_JOB_CONTRACT.md, ITERATION_LEDGER.md, and ACCEPTANCE_PACKET.md. Use when asked to run a bounded quality loop, blind critique, or multi-round refinement."
 argument-hint: "[gauntlet|quality-loop|refine]"
 user-invocable: true
 version: 1.6.0
@@ -134,7 +134,7 @@ When evaluating web endpoints or frontend components:
    - **Goal**: Precise, measurable objective statement.
    - **Concrete Bar**: Named fetchable reference artifact.
    - **Acceptance Criteria**: 3–5 binary checkboxes + OWASP security headers + responsive viewports.
-   - **Automated Proof Commands**: Pinned commands (`bun test`, `tsc --noEmit`, `SecretScan.ts`, curl header audits).
+   - **Automated Proof Commands**: Pinned commands (`bun test`, `tsc --noEmit`, `bun scripts/secret-scan.ts`, curl header audits).
    - **Iteration Budget**: Max rounds (default 3, hard ceiling 5).
 
 #### Step 2 — Round Execution Loop (with Blind A/B Critique)

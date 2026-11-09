@@ -74,6 +74,9 @@ Loadable by topic; also routable as `/brand-<file>` commands (not separate route
 
 ---
 
+### Anti-Triggers
+Not for paid acquisition (paidads), website implementation (webdev), or financial terms (accounts).
+
 ## Quick Reference
 
 | Mode | Primary Input | Primary Output | Gate / SLA |

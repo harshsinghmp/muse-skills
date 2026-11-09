@@ -1,7 +1,7 @@
 ---
 name: updatedocs
 aliases: ["sync-docs","doc-sync","docs-audit"]
-description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates. Maintains a session-proof .docs-ledger.json point system with developer/user/agent coverage watermarks, shipped-state tracking, what's-new generation, and an updateagents --docs-backlog handoff so forgotten sessions catch up from the last documented point."
+description: "Project-wide documentation synchronization, drift detection, and governance engine. Traces code, schema, API, and configuration changes to all affected documentation (README, changelogs, architecture, APIs, contributing, client docs), enforces strict .memory/ no-touch boundary, .agents/artifacts/ working-state boundary, and .agents/ DOX permission gates, audits for semantic drift, mandates a verify-after-bulk-edit gate (diff audit + mechanical re-check) for sd/sed/scripted sweeps, and applies minimal, evidence-backed updates. Maintains a session-proof .docs-ledger.json point system with developer/user/agent coverage watermarks, shipped-state tracking, what's-new generation, and an updateagents --docs-backlog handoff so forgotten sessions catch up from the last documented point. Use when asked to sync docs, update changelogs, or audit documentation drift."
 argument-hint: "[Quick|Change|Release|Sprint|audit|Ledger]"
 user-invocable: true
 version: 2.8.0
@@ -555,6 +555,9 @@ Never use assumptions as evidence.
 If implementation and intended documentation differ, report the discrepancy rather than silently deciding which one is morally "correct."
 
 ---
+
+### Anti-Triggers
+Not for changing code behavior (updateagents), creating a new project skeleton (new-project), or rewriting released changelog sections (HISTORICAL permission class).
 
 ## Quick Reference
 

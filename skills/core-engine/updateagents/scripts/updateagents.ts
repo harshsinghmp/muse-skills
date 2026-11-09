@@ -162,6 +162,7 @@ const { values, positionals } = parseArgs({
     interview: { type: "boolean", default: false },
     onboard: { type: "boolean", default: false },
     global: { type: "boolean", default: false },
+    project: { type: "boolean", default: false },
     "stack-guard": { type: "boolean", default: false },
     closeout: { type: "string", default: "" },
     delta: { type: "string", default: "" },
@@ -219,6 +220,7 @@ Options:
   --onboard        Run interactive identity onboarding interview (--global or --project)
   --interview      Alias for --onboard
   --global         Target global identity (~/.agents/identity/) instead of project context
+  --project        Target project scope (default) for --onboard
   --stack-guard    Verify package.json dependencies against .agents/context/stack.md allowlist
   --closeout "msg" Append verified milestone to current.md, update roadmap, and refresh context.hash
   --delta "msg"    Alias for --closeout
@@ -267,6 +269,10 @@ const isAudit = values.audit || false;
 const isScaffold = values.scaffold || false;
 const isSanitize = values.sanitize || false;
 const isOnboard = values.onboard || values.interview || false;
+if (values.global && values.project) {
+  console.error("Error: --global and --project are mutually exclusive.");
+  process.exit(2);
+}
 const isGlobalScope = values.global || false;
 const followNestedRepos = values["follow-nested-repos"] || false;
 
