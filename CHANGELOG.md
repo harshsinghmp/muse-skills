@@ -12,6 +12,10 @@ All notable changes to this project are documented in this file.
 
 - **`updateagents` module import is side-effect-free**: the CLI body is gated on the entry-point guard (`import.meta.main` with a `process.argv[1]` fallback), and an imported module parses an empty argv instead of the importer's. Importing `updateagents.ts` for its helpers no longer runs a default sync or overwrites curated standards. New regression tests assert import cleanliness and curated-standard preservation.
 
+### Tests
+
+- **Agency simulation covers all 46 skills**: the three client scenarios (e-commerce, B2B SaaS, productized agency) now span every skill in `skills.json`, asserted by the harness. The release checklist requires the 46/46 coverage gate before tagging, so a new skill without a scenario blocks a release.
+
 ## [8.2.0] - 2026-11-08
 
 ### Added

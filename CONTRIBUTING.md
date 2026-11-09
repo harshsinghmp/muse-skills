@@ -94,6 +94,14 @@ changes
 2. **Linear History & Rebase**: Prefer `git rebase` within feature branches to keep history clean and linear before merging.
 3. **Zero Secrets (Vibeguard Protocol)**: Never commit secrets, tokens (`sk-*`, `ghp_*`, private keys), or `.env` files. Run pre-commit secret scans before staging.
 
+#### Release Checklist (`release/vX.Y.Z`)
+
+1. **Full suite green**: `bun test` — includes the three-scenario agency simulation, which must cover all 46 shipped skills (46/46). The harness asserts the union of scenario skills against `skills.json`; a new skill without a scenario fails here.
+2. **Static checks**: `bun run lint` and `bunx tsc --noEmit` are clean.
+3. **Freshness**: `bun run check:sync` confirms the release branch contains the latest `dev`.
+4. **Version + derived artifacts**: move the `Unreleased` changelog block into `## [X.Y.Z]`, bump `package.json` and the README version, and regenerate every declared derived artifact in the same commit.
+5. **Delivery**: tag `vX.Y.Z`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
+
 ---
 
 ### C. Skill Directory Anatomy (RFC Standard)
