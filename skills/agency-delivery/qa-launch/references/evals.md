@@ -112,6 +112,14 @@ bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
   --evaluate-sample \
   --input sample.json
 
+# 2b. Same gate, but both judges run through provider adapters (local, cloud, or split)
+bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
+  --evaluate-sample \
+  --input sample.json \
+  --judge-a ollama --judge-a-model llama3.2 \
+  --judge-b openai-compatible --judge-b-model judge-mini \
+  --seed 42 --telemetry --json
+
 # 3. Scaffold an isolated minimal failing repro pack
 bun skills/agency-delivery/qa-launch/scripts/eval-runner.ts \
   --scaffold-repro \

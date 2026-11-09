@@ -4,7 +4,7 @@ aliases: ["launch-qa", "pre-launch-qa", "release-qa", "qa-gate", "browser-matrix
 description: "Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist (HTML/CSS/fonts/images/JS/server budgets), Core Web Vitals audit and production gate (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, zero-FOUC web font budget), AI agent evaluation and synthetic edge testing (dual-model consensus, minimal repro packs, regression scorecards, and local Ollama/vLLM provider adapters), synthetic chaos fault injection and resilience testing (latency jitter, 502/504 drop simulation, database throttling, zero data loss audit), release-gate checklist with Block-or-Ship verdict, post-fix regression, and Playwright synthetic user journey smoke suites — routed through ten modes. Use when asked to QA a site before launch, verify a release candidate, run the front-end performance checklist, audit Core Web Vitals (INP/CLS/LCP/fonts), evaluate AI agent pipelines, run synthetic edge test batteries, test chaos fault injection and resilience, scaffold minimal failing repro packs, plan browser and device coverage, run headless Playwright smoke tests, or re-verify after fixes. Not for fixing code (webdev), auditing UI visuals (refactor-ui), or deploying (devops)."
 argument-hint: "[matrix|functional|performance|gate|regression|e2e|vitals|evals|chaos|audit]"
 user-invocable: true
-version: 1.7.0
+version: 1.8.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]

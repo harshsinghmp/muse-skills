@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ### Added
 
 - **`qa-launch:evals` local provider adapters**: `scripts/eval-provider.ts` runs the dual-judge gate against Ollama, vLLM, or any OpenAI-compatible endpoint with deterministic seeds, token/latency/cost telemetry, explicit timeouts, and import-safe CLI behavior. `tests/eval-provider.test.ts` proves local/cloud parity against a mock server with no external network access.
+- **`qa-launch:evals` provider-backed judges**: `--evaluate-sample` accepts `--judge-a`/`--judge-b` provider kinds with per-judge model and base-URL overrides, plus `--seed` and `--telemetry`. Judges can run locally, in the cloud, or split while keeping the ≥ 8.5 consensus, Δ ≤ 1.5, and safety ≥ 8 gate. `tests/eval-runner-providers.test.ts` covers PASS, DISPUTE, FAIL, split providers, and the CLI path.
 
 ### Changed
 
