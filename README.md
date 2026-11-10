@@ -250,7 +250,21 @@ npx skills add harshsinghmp/muse-skills --scope project
 
 ### Option 2: Multi-Harness Native Slash Commands
 
-Export native slash commands into your detected agent harnesses (`.opencode`, `.gemini`, `.cursor`, `.windsurf`):
+Export native slash commands into every detected agent harness — each one in the format it actually reads:
+
+| Harness | Project location | Global location | Format |
+| :--- | :--- | :--- | :--- |
+| OpenCode | `.opencode/commands/` | `~/.config/opencode/commands/` | `.md` |
+| Claude Code | `.claude/commands/` | `~/.claude/commands/` | `.md` |
+| Codex CLI | — | `~/.codex/prompts/` | `.md` |
+| Cursor | `.cursor/commands/` | — | `.md` |
+| Roo Code | `.roo/commands/` | `~/.roo/commands/` | `.md` |
+| Gemini CLI / Antigravity | `.gemini/commands/` | `~/.gemini/commands/` | `.toml` |
+| GitHub Copilot | `.github/prompts/` | — | `.prompt.md` |
+| Continue | `.continue/prompts/` | `~/.continue/prompts/` | `.prompt` |
+| Windsurf | `.windsurf/workflows/` | — | `.md` |
+
+A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 
 ```bash
 # Auto-detects harnesses, installs skills, and exports native slash commands
