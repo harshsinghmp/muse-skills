@@ -40,7 +40,9 @@ declare -A HOOK_CONFIG
 # logic never hardcodes harness directory names — see SECURITY.md).
 CONF="$HOOKS_DIR/agent-dirs.conf"
 if [ -f "$CONF" ]; then
-  while IFS=':' read -r dir subdir fmt; do
+  # `|| [ -n "$dir" ]` keeps the last entry when the file has no trailing newline;
+  # without it `read` returns non-zero at EOF and silently drops that harness.
+  while IFS=':' read -r dir subdir fmt || [ -n "$dir" ]; do
     [ -z "$dir" ] && continue
     [[ "$dir" =~ ^[[:space:]]*# ]] && continue
     HOOK_SUBDIR["$dir"]="$subdir"
