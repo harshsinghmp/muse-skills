@@ -81,7 +81,8 @@
     "release:smoke": "bun scripts/release-smoke.ts",
     "check:deps": "bun scripts/check-deps.ts",
     "check:ledger": "bun scripts/check-docs-ledger.ts",
-    "check:routing": "bun scripts/eval-routing.ts"
+    "check:routing": "bun scripts/eval-routing.ts",
+    "check:install": "bun scripts/check-install-matrix.ts"
   },
   "type": "module",
   "version": "8.4.2",
