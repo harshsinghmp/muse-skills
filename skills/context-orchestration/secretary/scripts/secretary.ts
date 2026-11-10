@@ -238,6 +238,74 @@ export const FAST_PATH_RULES: Array<{
   },
 ];
 
+/**
+ * Intent signals: a phrase that names the work, not just the domain.
+ * "our emails land in spam" is a deliverability problem even though the words
+ * look like generic email; description-only scoring put it in `content:email`.
+ * These are tuned against the training fixture set only — never the held-out set.
+ */
+interface IntentSignal {
+  regex: RegExp;
+  department: string;
+  mode?: string;
+  boost: number;
+}
+
+const INTENT_SIGNALS: IntentSignal[] = [
+  {
+    regex: /land(s)? in spam|spam folder|deliverability|\bspf\b|\bdkim\b|open rates?|unsubscribe/i,
+    department: "crm",
+    mode: "deliverability",
+    boost: 12,
+  },
+  { regex: /conversion|signup form drops|a\/b test|experiment/i, department: "analytics", mode: "cro", boost: 10 },
+  {
+    regex: /\b(footer|header|menu|banner|hero|layout|modal|button|overlaps?|misaligned)\b/i,
+    department: "webdev",
+    mode: "frontend",
+    boost: 8,
+  },
+  { regex: /\b(api|endpoint|backend|server|sso|login|auth)\b/i, department: "webdev", mode: "backend", boost: 8 },
+  { regex: /\b(crash(es|ed)?|broken|doesn'?t|does not|errors?|500|slow|faster)\b/i, department: "webdev", boost: 6 },
+  { regex: /\b(release notes|launch sequence|launch plan)\b/i, department: "growth", mode: "launch", boost: 10 },
+  { regex: /\b(social posts|social calendar|schedule .*posts)\b/i, department: "smm", mode: "calendar", boost: 10 },
+  { regex: /\b(contract|legal|liability|clauses?)\b/i, department: "ops", mode: "legal", boost: 10 },
+  { regex: /\b(testimonials?|case stud(y|ies))\b/i, department: "content", mode: "case-study", boost: 8 },
+  { regex: /\b(health score|churn)\b/i, department: "retain", boost: 8 },
+  { regex: /\b(reduce|cut|lower)\b.*\b(bill|cost|spend)\b/i, department: "devops", mode: "hosting", boost: 10 },
+  { regex: /\b(app store|aso|screenshots?)\b/i, department: "mobile", mode: "aso", boost: 8 },
+  { regex: /\b(sitemap|canonical|schema markup)\b/i, department: "seo", mode: "technical", boost: 8 },
+];
+
+/** Leading-verb prior: what kind of work is being asked for, independent of nouns. */
+const VERB_HINTS: Array<{ regex: RegExp; departments: string[] }> = [
+  { regex: /^(write|draft|compose|rewrite)\b/i, departments: ["content"] },
+  { regex: /^(design|wireframe|sketch)\b/i, departments: ["design"] },
+  { regex: /^(build|implement|add|create|make)\b/i, departments: ["webdev", "automation"] },
+  { regex: /^(fix|repair|debug|resolve)\b/i, departments: ["webdev", "code-review"] },
+  { regex: /^(audit|review)\b/i, departments: ["audit", "code-review"] },
+  { regex: /^(set up|configure|install)\b/i, departments: ["devops", "automation"] },
+  { regex: /^(plan|strategise|strategize|forecast)\b/i, departments: ["growth", "ops"] },
+  { regex: /^(analyse|analyze|measure|report)\b/i, departments: ["analytics"] },
+  { regex: /^(reduce|improve|optimi[sz]e|speed up)\b/i, departments: ["analytics", "devops"] },
+];
+
+function intentBoost(department: string, prompt: string): number {
+  let boost = 0;
+  for (const signal of INTENT_SIGNALS) {
+    if (signal.department === department && signal.regex.test(prompt)) boost += signal.boost;
+  }
+  for (const hint of VERB_HINTS) {
+    if (hint.departments.includes(department) && hint.regex.test(prompt)) boost += 4;
+  }
+  return boost;
+}
+
+function intentMode(department: string, prompt: string): string | undefined {
+  return INTENT_SIGNALS.find((signal) => signal.department === department && signal.mode && signal.regex.test(prompt))
+    ?.mode;
+}
+
 export interface TriageResult {
   department: string;
   mode: string;
@@ -543,6 +611,7 @@ export interface ScoredDepartment {
   entry: DirectoryEntry;
   score: number;
   modeSignal: number;
+  intent: number;
 }
 
 function scoreDepartments(prompt: string): ScoredDepartment[] {
@@ -576,7 +645,9 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       }
     }
     score += Math.min(12, modeSignal);
-    return { entry, score, modeSignal };
+    const intent = intentBoost(entry.skill, prompt);
+    score += intent;
+    return { entry, score, modeSignal, intent };
   });
 
   scored.sort((a, b) => b.score - a.score);
@@ -585,7 +656,9 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
   // common English word (the prompt says "audit" but also "WCAG accessibility").
   const top = scored[0];
   const topWithCue = scored.find((candidate) => candidate.modeSignal > 0);
-  if (top && top.modeSignal === 0 && topWithCue) {
+  // Only a department with no intent evidence of its own can be displaced by a
+  // generic mode cue ("our emails land in spam" must not fall back to content:email).
+  if (top && top.modeSignal === 0 && top.intent === 0 && topWithCue) {
     return [topWithCue, ...scored.filter((candidate) => candidate !== topWithCue)];
   }
   return scored;
@@ -594,7 +667,8 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
 function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score: number } {
   const index = getIndex();
   const promptTokens = tokenize(prompt);
-  const preferred = DEFAULT_MODE[entry.skill];
+  const explicit = intentMode(entry.skill, prompt);
+  const preferred = explicit ?? DEFAULT_MODE[entry.skill];
   let bestMode: string | undefined;
   let bestScore = 0;
   for (const mode of entry.modes) {
@@ -606,6 +680,9 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
       bestMode = mode;
     }
   }
+  // A named intent ("land in spam" -> deliverability) is stronger evidence than
+  // whichever mode happened to share a noun with the prompt.
+  if (explicit && entry.modes.includes(explicit)) return { mode: explicit, score: bestScore };
   return { mode: bestMode ?? DEFAULT_MODE[entry.skill] ?? entry.modes[0] ?? "audit", score: bestScore };
 }
 
