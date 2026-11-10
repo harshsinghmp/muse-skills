@@ -874,6 +874,27 @@
       ]
     },
     {
+      "department": "client-comms",
+      "mode": "feedback",
+      "boost": 9,
+      "tokens": [
+        "feedback",
+        "survey",
+        "csat",
+        "nps"
+      ]
+    },
+    {
+      "department": "client-comms",
+      "mode": "handover",
+      "boost": 9,
+      "tokens": [
+        "handover",
+        "successor",
+        "offboarding"
+      ]
+    },
+    {
       "department": "ops",
       "mode": "meeting-notes",
       "boost": 9,

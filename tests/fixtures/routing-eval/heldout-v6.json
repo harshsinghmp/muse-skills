@@ -1,0 +1,209 @@
+[
+  {
+    "id": "v6-01",
+    "prompt": "I've got to jump on an incident bridge in ten minutes, right in the middle of this billing refactor — when I come back to this same session I don't want to re-derive what I already ruled out",
+    "expect": "context-anchor:task-interruption-and-recovery"
+  },
+  {
+    "id": "v6-02",
+    "prompt": "opened this repo on a new laptop after ten days off and there's no handoff doc anywhere — what state was the billing rewrite actually in",
+    "expect": "relay:resumption-protocol"
+  },
+  {
+    "id": "v6-03",
+    "prompt": "half the market numbers in this investor deck were pulled last spring and I'm presenting Thursday — flag everything that's gone stale",
+    "expect": "evidence-ledger:staleness-rules"
+  },
+  {
+    "id": "v6-04",
+    "prompt": "eleven tickets are sitting in blocked and I'm fairly sure six of them are the same bug wearing different hats — cluster them",
+    "expect": "dead-letter:sweep-protocol"
+  },
+  {
+    "id": "v6-05",
+    "prompt": "this is the third 'fixed' on the flaky checkout test. I want receipts this time, not another paragraph",
+    "expect": "pua:receipt-verification"
+  },
+  {
+    "id": "v6-06",
+    "prompt": "before we commit to this roadmap, tear it apart properly — I want the strongest case against it written down, not just a nod and a yes",
+    "expect": "secretary:socratic-adversarial-gate"
+  },
+  {
+    "id": "v6-07",
+    "prompt": "four subagents are editing the same checkout on one machine and keep overwriting each other's files",
+    "expect": "coupling-router:worktree-lease-protocol"
+  },
+  {
+    "id": "v6-08",
+    "prompt": "user filed #482 with a clean repro, take it all the way to a scoped PR with a regression test",
+    "expect": "git:issue-to-pr-discipline"
+  },
+  {
+    "id": "v6-09",
+    "prompt": "our commit log is half 'fix', half 'wip', and one person writes essays — what convention does this repo actually follow",
+    "expect": "git:convention-mining"
+  },
+  {
+    "id": "v6-10",
+    "prompt": "the PR says it validates GST numbers but reading the diff I'm not convinced it does what the title claims",
+    "expect": "code-review:intended-vs-implemented"
+  },
+  {
+    "id": "v6-11",
+    "prompt": "we need a four-email activation drip for new signups, all wired up in Klaviyo — I'll polish the wording afterwards",
+    "expect": "crm:onboard",
+    "note": "Lifecycle flow setup in the ESP, not email copy craft — a copy request would land in content:email."
+  },
+  {
+    "id": "v6-12",
+    "prompt": "the same card component is styled five different ways across the app — one pass, one version, everything consistent",
+    "expect": "refactor:sweep"
+  },
+  {
+    "id": "v6-13",
+    "prompt": "both of us have Cursor, Copilot and .claude droppings littered across the repo root and git keeps picking them up",
+    "expect": "updateagents:harness-hygiene"
+  },
+  {
+    "id": "v6-14",
+    "prompt": "we pulled in six MCP servers from random GitHub repos last month and one of them can shell out — vet them before I use any",
+    "expect": "muse-security:mcp-guard"
+  },
+  {
+    "id": "v6-15",
+    "prompt": "the client's .com still resolves to the old host and their mail bounced all morning",
+    "expect": "devops:domains"
+  },
+  {
+    "id": "v6-16",
+    "prompt": "our field techs lose signal in basements and the inspection form just throws away everything they typed",
+    "expect": "webdev:offline"
+  },
+  {
+    "id": "v6-17",
+    "prompt": "this 2014 PHP site has no docs and the original dev is gone — I need a spec we can actually rebuild from",
+    "expect": "webdev:spec"
+  },
+  {
+    "id": "v6-18",
+    "prompt": "design signed off on the pricing section but in the browser the columns collapse on tablet and the CTA jumps — the spacing is nothing like the file",
+    "expect": "webdev:frontend",
+    "note": "Implementation bug in the browser, not a design decision — the fix lives in code."
+  },
+  {
+    "id": "v6-19",
+    "prompt": "our semantic search over 40k support articles gets dumber every month — once it passed a million chunks the results are mush",
+    "expect": "database:vector-search"
+  },
+  {
+    "id": "v6-20",
+    "prompt": "the org chart query walks the reporting chain recursively and takes twelve seconds on 50k employees",
+    "expect": "database:graph"
+  },
+  {
+    "id": "v6-21",
+    "prompt": "our GA4 property was set up in 2021 by someone who has since left, nobody has touched it, and I don't trust a single number on it",
+    "expect": "analytics:audit"
+  },
+  {
+    "id": "v6-22",
+    "prompt": "customers churn at month three like clockwork no matter what we ship — I want an actual retention strategy, not another check-in email",
+    "expect": "growth:retention",
+    "note": "Churn strategy and retention modelling sit in growth; the post-delivery follow-up loop is retain."
+  },
+  {
+    "id": "v6-23",
+    "prompt": "4,000 people in our Discord and it's three posts a week, all from us",
+    "expect": "growth:community"
+  },
+  {
+    "id": "v6-24",
+    "prompt": "the client's board wants the launch plan for the new product line — sequence, dates, and what we do if week one flops",
+    "expect": "growth:launch",
+    "note": "Launch strategy and contingency planning, not a formatted ops document."
+  },
+  {
+    "id": "v6-25",
+    "prompt": "we have competitor × city data for 2,100 combinations and nowhere to put it — I want a page per combination",
+    "expect": "seo:programmatic"
+  },
+  {
+    "id": "v6-26",
+    "prompt": "every product page uses the same title tag and an H1 stuffed with the same three keywords",
+    "expect": "seo:onpage"
+  },
+  {
+    "id": "v6-27",
+    "prompt": "our X account has 200 followers and posts into the void — I want a path from here to monetisation",
+    "expect": "smm:x"
+  },
+  {
+    "id": "v6-28",
+    "prompt": "I want the blog posts to go out to X, LinkedIn, Threads and Bluesky on a schedule automatically, through our Postiz account",
+    "expect": "smm:postiz"
+  },
+  {
+    "id": "v6-29",
+    "prompt": "we need a twelve-minute video sales letter for the $4,800 programme, the kind that closes cold traffic",
+    "expect": "content:vsl"
+  },
+  {
+    "id": "v6-30",
+    "prompt": "job shipped five weeks ago and we've gone completely silent — I want to check in without it reading like a disguised sales email",
+    "expect": "retain:check-in",
+    "note": "Post-delivery retention touch, not a status report on live work."
+  },
+  {
+    "id": "v6-31",
+    "prompt": "strip the AI cadence out of this draft — do not touch a single fact, quote or number, just make it sound like a person wrote it",
+    "expect": "humanize:ast-shield-and-cadence",
+    "note": "Editorial de-AI pass with facts locked; drafting new copy would be content."
+  },
+  {
+    "id": "v6-32",
+    "prompt": "screenshot of a competitor's dashboard attached — I want their colour and spacing scale in a form I can hand to the devs",
+    "expect": "designscope:token-extraction"
+  },
+  {
+    "id": "v6-33",
+    "prompt": "client sent one line: 'make us go viral'. I can't price that and I'm not sending a proposal until it's been shaped",
+    "expect": "ops:shape"
+  },
+  {
+    "id": "v6-34",
+    "prompt": "our hosting contractor ghosted us mid-migration and I have no idea who else is out there or how to compare them",
+    "expect": "ops:vendor"
+  },
+  {
+    "id": "v6-35",
+    "prompt": "we're moving off per-project invoices onto metered retainers and I want the whole thing to bill itself every month",
+    "expect": "accounts:billing-engine"
+  },
+  {
+    "id": "v6-36",
+    "prompt": "our buyers are engineers who read changelogs, but every email we send is pitched at a VP of Operations",
+    "expect": "gtm:dev-to-buyer"
+  },
+  {
+    "id": "v6-37",
+    "prompt": "we're about to sign this prospect and something feels off about the founder's background — I want it checked properly, not vibes",
+    "expect": "research:entity-dossier"
+  },
+  {
+    "id": "v6-38",
+    "prompt": "the client's new sales hire has never demoed the product — she needs something she can run a whole conversation from, not a slide deck",
+    "expect": "sales-enablement:playbook"
+  },
+  {
+    "id": "v6-39",
+    "prompt": "we ship Thursday. I want to see what happens if the database disappears mid-checkout — do we lose orders",
+    "expect": "qa-launch:chaos"
+  },
+  {
+    "id": "v6-40",
+    "prompt": "client replied to the timeline with 'a few small tweaks' and it's actually two extra pages — I need to know whether we push back and what we say to them",
+    "expect": "client-comms:change",
+    "note": "Client-facing scope triage and response; the contract instrument itself is ops."
+  }
+]
