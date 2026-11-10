@@ -45,6 +45,7 @@ export function buildRoutingSignals(): string {
       department: rule.department,
       mode: rule.mode,
       reason: rule.reason,
+      confidence: rule.confidence ?? "strong",
     })),
     intents: INTENT_SIGNALS.map((signal) => ({
       pattern: signal.regex.source,

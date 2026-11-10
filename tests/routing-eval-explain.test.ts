@@ -271,3 +271,25 @@ describe("a failing gate explains itself without --verbose", () => {
     expect(parsed.explanations).toBeUndefined();
   });
 });
+
+describe("fast-path confidence", () => {
+  test("a hint-level rule informs scoring instead of short-circuiting it", async () => {
+    const { FAST_PATH_RULES, triagePrompt } = await import(
+      "../skills/context-orchestration/secretary/scripts/secretary"
+    );
+    const hint = FAST_PATH_RULES.find((rule) => rule.confidence === "hint");
+    const strong = FAST_PATH_RULES.find((rule) => (rule.confidence ?? "strong") === "strong");
+    expect(hint).toBeDefined();
+    expect(strong).toBeDefined();
+
+    // A hint rule must produce a scored result, never a fast-path verdict.
+    const probe = "nurture email sequence for new signups";
+    const hintRule = FAST_PATH_RULES.find((rule) => rule.confidence === "hint" && rule.regex.test(probe));
+    if (hintRule) {
+      const result = triagePrompt(probe);
+      expect(result.fastPath).toBe(false);
+    }
+    // A strong rule still short-circuits.
+    expect(triagePrompt("pull request 42 changed the auth flow").fastPath).toBe(true);
+  });
+});
