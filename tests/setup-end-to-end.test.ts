@@ -231,10 +231,11 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     // at REPO_ROOT/<name>, and a silent skip installed nothing.
     expect(stdout).toContain(`Installed ${skills.length} canonical departments → ${installedSkillsRoot}`);
 
+    // .muse/ (the shipped harness registry) and .muse-version live beside the
+    // skills; a skill directory is one that contains SKILL.md.
     const installedDirs = fs
-      .readdirSync(installedSkillsRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
+      .readdirSync(installedSkillsRoot)
+      .filter((entry) => fs.existsSync(path.join(installedSkillsRoot, entry, "SKILL.md")))
       .sort();
 
     expect(installedDirs).toEqual(skills.map((skill) => skill.name).sort());

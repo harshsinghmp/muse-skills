@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 461 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 462 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.2/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -37,7 +37,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 - **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only), plus a prioritized **Next 3** follow-up block for highly technical work.
-- **Command surface**: 46 skills + 405 `<skill>-<mode>` commands + 10 aliases = **461 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 406 `<skill>-<mode>` commands + 10 aliases = **462 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.1.0**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution and ephemeral zero-trust mTLS subagent attestation.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -257,6 +257,9 @@ bun scripts/muse.ts update          # resolve latest tag → pinned install → 
 bun scripts/muse.ts update --check  # exit 1 when behind (cron/CI friendly)
 bun scripts/muse.ts doctor          # inspect what is actually installed
 bun scripts/muse.ts doctor --fix    # re-export a drifted command surface in place
+
+# Without a clone, the doctor that ships with the install covers the same question:
+bun ~/.agents/skills/updateagents/scripts/doctor.ts [--json] [--fix]
 ```
 
 The workflow, in order: `update` resolves the latest release tag and re-runs the checksum-pinned installer for it (skills, command surfaces, version marker), then runs `doctor`. `doctor` checks the disk, not the log: all 46 skills present, each detected harness carrying the expected command count **in its own format**, the installed `secretary/references/dispatch.md` resolving to references that actually exist, and git boundary hooks in place. A device is current only when `doctor` exits 0.

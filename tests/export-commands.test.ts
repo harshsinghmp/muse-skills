@@ -69,7 +69,7 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
     // Pre-fix this was 0: skills live at skills/<category>/<name>/, never REPO_ROOT/<name>.
     expect(count).toBe(EXPECTED_SKILL_COMMANDS);
 
-    const installedDirs = fs.readdirSync(dest).filter((entry) => fs.statSync(path.join(dest, entry)).isDirectory());
+    const installedDirs = fs.readdirSync(dest).filter((entry) => fs.existsSync(path.join(dest, entry, "SKILL.md")));
     expect(installedDirs.length).toBe(EXPECTED_SKILL_COMMANDS);
 
     for (const skill of skills) {

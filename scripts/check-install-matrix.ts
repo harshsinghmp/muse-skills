@@ -252,9 +252,9 @@ export function runInstallMatrix(): MatrixReport {
           : "mirror is a copy, not a link"
         : "~/.claude/skills/webdev is missing",
     );
-    // .muse-version lives beside the skill directories; only dirs are skills.
+    // .muse/ and .muse-version live beside the skills; a skill is a dir with SKILL.md.
     const installed = fs.existsSync(skillsDest)
-      ? fs.readdirSync(skillsDest).filter((entry) => fs.statSync(path.join(skillsDest, entry)).isDirectory())
+      ? fs.readdirSync(skillsDest).filter((entry) => fs.existsSync(path.join(skillsDest, entry, "SKILL.md")))
       : [];
     const missingSkill = skills.filter((skill) => !fs.existsSync(path.join(skillsDest, skill.name, "SKILL.md")));
     add(

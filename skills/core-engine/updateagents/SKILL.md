@@ -86,6 +86,7 @@ Run when the change has a reasonable chance of affecting what future agents need
 | **pr-review-mining** | "pr-review-mining" | 🔍 PR Review Mining Protocol | [references/pr-review-mining.md](references/pr-review-mining.md) |
 | **skill-authoring** | "skill-authoring" | TDD for Agent Instructions | [references/skill-authoring.md](references/skill-authoring.md) |
 | **fourteen-asset-matrix** | "fourteen-asset-matrix" | 📋 The 14-Asset AI-Readiness Matrix | [references/fourteen-asset-matrix.md](references/fourteen-asset-matrix.md) |
+| **doctor** | "doctor" | Portable Install Verification | [references/doctor.md](references/doctor.md) |
 
 ---
 
