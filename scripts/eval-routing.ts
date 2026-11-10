@@ -15,6 +15,14 @@
  * Usage:
  *   bun scripts/eval-routing.ts [--json] [--verbose] [--min-exact 0.72] [--min-skill 0.75]
  *   bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout.json  # honest set, validity only
+ *
+ * `--verbose` explains every miss instead of only labelling it: the prompt, the
+ * expected and actual route, the winning department and its score, the runner-up
+ * (or "none"), the top three modes of the winning department, and a one-line hint
+ * naming the cause — `department miss` (wrong skill), `mode miss` (right skill,
+ * wrong mode) or `fast path fired` (a regex rule short-circuited scoring).
+ * With `--verbose --json` the same explanations ride along under a new
+ * `explanations` key; the rest of the report keeps its existing keys and types.
  */
 
 import { readFileSync } from "node:fs";
@@ -56,6 +64,85 @@ export interface RoutingReport {
   failures: RoutingFailure[];
   thresholds: { minExact: number; minSkill: number };
   passed: boolean;
+}
+
+/**
+ * Why a fixture missed, in one of three buckets:
+ *   - `department miss`  — the router picked the wrong skill (mode is moot),
+ *   - `mode miss`        — right skill, wrong mode: a mode-ranking problem,
+ *   - `fast path fired`  — a FAST_PATH_RULES regex short-circuited scoring, so
+ *                          the miss is a rule problem, not a scoring problem.
+ */
+export type FailureHint = "department miss" | "mode miss" | "fast path fired";
+
+export interface FailureExplanation {
+  id: string;
+  prompt: string;
+  expected: string;
+  actual: string;
+  expectedDepartment: string;
+  actualDepartment: string;
+  /** The department `explainRouting` says won, with its lexical score (∞ on fast path). */
+  winner: { department: string; score: number };
+  runnerUp: { department: string; score: number } | null;
+  /** Top 3 modes of the winning department, highest score first. */
+  modes: Array<{ mode: string; score: number }>;
+  fastPath: boolean;
+  hint: FailureHint;
+  hintDetail: string;
+}
+
+/** Score formatter: fast-path scores are +∞, which would print as "Infinity". */
+function formatScore(score: number): string {
+  return Number.isFinite(score) ? score.toFixed(1) : "∞";
+}
+
+export function explainFailure(failure: RoutingFailure): FailureExplanation {
+  const why = explainRouting(failure.prompt);
+  const expectedDepartment = failure.expected.split(":")[0];
+  const actualDepartment = failure.actual.split(":")[0];
+  const hint: FailureHint = why.fastPath
+    ? "fast path fired"
+    : expectedDepartment === actualDepartment
+      ? "mode miss"
+      : "department miss";
+  const hintDetail =
+    hint === "fast path fired"
+      ? `a fast-path rule routed to ${failure.actual} before any lexical scoring (score ∞); fix the rule, not the weights`
+      : hint === "mode miss"
+        ? `right skill (${actualDepartment}), wrong mode: expected ${failure.expected.split(":")[1]}, got ${failure.actual.split(":")[1]}`
+        : `wrong skill: expected ${expectedDepartment} (${failure.expected}), got ${actualDepartment} (${failure.actual})`;
+  return {
+    id: failure.id,
+    prompt: failure.prompt,
+    expected: failure.expected,
+    actual: failure.actual,
+    expectedDepartment,
+    actualDepartment,
+    winner: { department: why.department, score: why.departmentScore },
+    runnerUp: why.runnerUp,
+    modes: why.modes.slice(0, 3),
+    fastPath: why.fastPath,
+    hint,
+    hintDetail,
+  };
+}
+
+/** The verbose per-failure block: five labelled lines under the existing miss line. */
+export function formatFailureExplanation(explanation: FailureExplanation): string[] {
+  const runnerUp = explanation.runnerUp
+    ? `${explanation.runnerUp.department} (${formatScore(explanation.runnerUp.score)})`
+    : "none";
+  const modes =
+    explanation.modes.map((mode) => `${mode.mode}=${formatScore(mode.score)}`).join(", ") ||
+    "none (no modes on this department)";
+  return [
+    `       prompt   : "${explanation.prompt}"`,
+    `       route    : expected ${explanation.expected} → actual ${explanation.actual}`,
+    `       winner   : ${explanation.winner.department} (${formatScore(explanation.winner.score)}) · runner-up: ${runnerUp}`,
+    `       top modes: ${modes}`,
+    `       hint     : ${explanation.hint} — ${explanation.hintDetail}`,
+  ];
 }
 
 function parseThreshold(raw: string | undefined, fallback: number): number {
@@ -169,8 +256,19 @@ function main(): void {
     report.passed = false;
   }
 
+  // Explanations are opt-in: the report shape above stays untouched, so `--json`
+  // consumers that never pass `--verbose` see byte-identical output.
+  const explanations = verbose ? [...report.invalidPredictions, ...report.failures].map(explainFailure) : [];
+  const explanationById = new Map(explanations.map((explanation) => [explanation.id, explanation]));
+  const printExplanation = (id: string): void => {
+    if (!verbose) return;
+    const explanation = explanationById.get(id);
+    if (explanation) for (const line of formatFailureExplanation(explanation)) console.error(line);
+  };
+
   if (json) {
-    console.log(JSON.stringify(report, null, 2));
+    const payload = verbose ? { ...report, explanations } : report;
+    console.log(JSON.stringify(payload, null, 2));
     process.exit(report.passed ? 0 : 1);
   }
 
@@ -194,24 +292,14 @@ function main(): void {
     console.error("\n❌ Router emitted non-routable targets:");
     for (const failure of report.invalidPredictions) {
       console.error(`   - ${failure.id}: ${failure.actual} (prompt: "${failure.prompt}")`);
+      printExplanation(failure.id);
     }
   }
   if (report.failures.length > 0 && (verbose || !report.passed)) {
     console.error("\n⚠️  Misroutes:");
     for (const failure of report.failures) {
       console.error(`   - ${failure.id} [${failure.reason}] expected ${failure.expected}, got ${failure.actual}`);
-      if (verbose) {
-        const why = explainRouting(failure.prompt);
-        const runnerUp = why.runnerUp
-          ? `; runner-up ${why.runnerUp.department} (${why.runnerUp.score.toFixed(1)})`
-          : "";
-        console.error(
-          `       "${failure.prompt}" — ${failure.actual} scored ${why.departmentScore.toFixed(1)}${runnerUp}`,
-        );
-        console.error(
-          `       modes: ${why.modes.map((mode) => `${mode.mode}=${mode.score.toFixed(1)}`).join(", ") || "none"}`,
-        );
-      }
+      printExplanation(failure.id);
     }
   }
   console.log(report.passed ? "\n✅ Routing quality gate passed." : "\n❌ Routing quality gate failed.");
