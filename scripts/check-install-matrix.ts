@@ -23,6 +23,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { commandSurfaceCounts, getSkills } from "./export-commands";
+import { commandDestinations, loadHarnessRegistry, validateHarnessRegistry } from "./harness-registry";
 
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const HOOKS_DIR = path.join(REPO_ROOT, "scripts", "hooks");
@@ -120,23 +121,19 @@ export function runInstallMatrix(): MatrixReport {
     const harnesses = readHarnessDirs();
     add("harness-config", harnesses.length >= 13, `agent-dirs.conf declares ${harnesses.length} harness dirs`);
 
-    // Harnesses present in the workspace, plus the dirs the exporter writes into.
-    for (const dir of [
-      ...harnesses,
-      ".opencode",
-      ".gemini",
-      ".cursor",
-      ".windsurf",
-      ".roo",
-      ".github",
-      ".continue",
-      ".qwen",
-    ]) {
-      fs.mkdirSync(path.join(workspace, dir), { recursive: true });
-    }
-    for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue", ".qwen"]) {
-      fs.mkdirSync(path.join(home, dir), { recursive: true });
-    }
+    // Harnesses present in the workspace (hooks), plus every command destination
+    // the registry declares — the sandbox exercises the full advertised surface.
+    for (const dir of harnesses) fs.mkdirSync(path.join(workspace, dir), { recursive: true });
+
+    const registry = loadHarnessRegistry();
+    const registryProblems = validateHarnessRegistry(registry);
+    add(
+      "harness-registry",
+      registryProblems.length === 0,
+      registryProblems.join("; ") || `${registry.harnesses.length} harnesses declared in harness.json`,
+    );
+    const destinations = commandDestinations(registry, { home, workspace });
+    for (const destination of destinations) fs.mkdirSync(path.dirname(destination.dir), { recursive: true });
 
     const env: NodeJS.ProcessEnv = { ...process.env, HOME: home, PATH: `${binDir}:${process.env.PATH ?? ""}` };
 
@@ -193,44 +190,36 @@ export function runInstallMatrix(): MatrixReport {
     const setupFirst = run("bun", [EXPORTER, "--setup"], { cwd: workspace, env });
     add("export-exit", setupFirst.status === 0, `export-commands --setup exited ${setupFirst.status}`);
 
-    const destinations = [
-      { label: "opencode (global)", dir: path.join(home, ".config", "opencode", "commands"), extension: ".md" },
-      { label: "opencode (workspace)", dir: path.join(workspace, ".opencode", "commands"), extension: ".md" },
-      { label: "claude (global)", dir: path.join(home, ".claude", "commands"), extension: ".md" },
-      { label: "claude (workspace)", dir: path.join(workspace, ".claude", "commands"), extension: ".md" },
-      { label: "codex (prompts)", dir: path.join(home, ".codex", "prompts"), extension: ".md" },
-      { label: "gemini (global, toml)", dir: path.join(home, ".gemini", "commands"), extension: ".toml" },
-      { label: "gemini (workspace, toml)", dir: path.join(workspace, ".gemini", "commands"), extension: ".toml" },
-      { label: "cursor (workspace)", dir: path.join(workspace, ".cursor", "commands"), extension: ".md" },
-      { label: "windsurf (workspace)", dir: path.join(workspace, ".windsurf", "workflows"), extension: ".md" },
-      { label: "roo (global)", dir: path.join(home, ".roo", "commands"), extension: ".md" },
-      { label: "roo (workspace)", dir: path.join(workspace, ".roo", "commands"), extension: ".md" },
-      { label: "copilot (workspace)", dir: path.join(workspace, ".github", "prompts"), extension: ".prompt.md" },
-      { label: "continue (global)", dir: path.join(home, ".continue", "prompts"), extension: ".prompt" },
-      { label: "continue (workspace)", dir: path.join(workspace, ".continue", "prompts"), extension: ".prompt" },
-      { label: "qwen (global)", dir: path.join(home, ".qwen", "commands"), extension: ".md" },
-      { label: "qwen (workspace)", dir: path.join(workspace, ".qwen", "commands"), extension: ".md" },
-    ].map((destination) => {
+    const surfaceDestinations = destinations.map((destination) => {
       const files = fs.existsSync(destination.dir)
         ? fs.readdirSync(destination.dir).filter((file) => file.endsWith(destination.extension)).length
         : 0;
       const stray = fs.existsSync(destination.dir)
         ? fs.readdirSync(destination.dir).filter((file) => !file.endsWith(destination.extension)).length
         : 0;
-      return { ...destination, files, stray, expected: surface };
+      const scope = destination.scope === "global" ? "global" : "workspace";
+      const suffix = destination.harness.status === "legacy" ? ", legacy" : "";
+      return {
+        label: `${destination.harness.id} (${scope}${suffix})`,
+        dir: destination.dir,
+        extension: destination.extension,
+        files,
+        stray,
+        expected: surface,
+      };
     });
-    const wrong = destinations.filter((destination) => destination.files !== destination.expected);
+    const wrong = surfaceDestinations.filter((destination) => destination.files !== destination.expected);
     add(
       "commands-exported",
       wrong.length === 0,
       wrong.length === 0
-        ? `${surface} commands in ${destinations.length} destinations`
+        ? `${surface} commands in ${surfaceDestinations.length} destinations`
         : wrong.map((d) => `${d.label}: ${d.files}/${d.expected}`).join("; "),
     );
 
     // A format mismatch is invisible-but-fatal: markdown in .gemini/commands is
     // never discovered, so every file in a destination must carry its suffix.
-    const strayFiles = destinations.filter((destination) => destination.stray > 0);
+    const strayFiles = surfaceDestinations.filter((destination) => destination.stray > 0);
     add(
       "command-formats",
       strayFiles.length === 0,
@@ -313,7 +302,7 @@ export function runInstallMatrix(): MatrixReport {
       hookScripts,
       commandSurface: surface,
       skillCount: skills.length,
-      destinations,
+      destinations: surfaceDestinations,
       checks,
     };
     return report;

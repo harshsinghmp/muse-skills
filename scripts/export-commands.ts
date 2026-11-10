@@ -20,6 +20,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { commandDestinations, type HarnessFormat, loadHarnessRegistry } from "./harness-registry";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const SKILLS_JSON_PATH = path.join(REPO_ROOT, "skills.json");
@@ -388,11 +389,6 @@ export function exportClaudeCommands(destDir: string, skills: SkillItem[]): numb
   return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
 }
 
-/** Codex CLI custom prompts: ~/.codex/prompts (home-scoped; explicit invocation). */
-export function exportCodexPrompts(destDir: string, skills: SkillItem[]): number {
-  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
-}
-
 /** Cursor: .cursor/commands (project). */
 export function exportCursorCommands(destDir: string, skills: SkillItem[]): number {
   return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
@@ -610,117 +606,37 @@ export function runSetup(options: SetupOptions = {}): void {
   }
 
   // 2. Export Slash Commands
-  // Every destination is existence-gated: this engine never creates a harness
-  // directory the user did not already have.
+  // Destinations come from harness.json — the same registry the install matrix,
+  // `muse doctor`, and the README table read — so a retired surface (Codex
+  // prompts, Gemini commands beyond migration) is never written silently.
   let totalCommands = 0;
-  const exportTo = (
-    label: string,
-    dest: string,
-    gate: string,
-    exporter: (dir: string, all: SkillItem[]) => number,
-    noun = "commands",
-  ) => {
-    if (!fs.existsSync(gate)) return;
-    const count = exporter(dest, skills);
-    console.log(`✅ ${label}: Exported ${count} ${noun} → ${dest}`);
-    totalCommands += count;
-  };
-
   if (doCommands) {
-    const markdown: Array<[string, string, string, (dir: string, all: SkillItem[]) => number]> = [
-      [
-        "OpenCode (Global)",
-        path.join(userHome, ".config", "opencode", "commands"),
-        path.join(userHome, ".config", "opencode"),
-        exportOpenCodeCommands,
-      ],
-      [
-        "OpenCode (Local)",
-        path.join(workspaceRoot, ".opencode", "commands"),
-        path.join(workspaceRoot, ".opencode"),
-        exportOpenCodeCommands,
-      ],
-      [
-        "Claude Code (Global)",
-        path.join(userHome, ".claude", "commands"),
-        path.join(userHome, ".claude"),
-        exportClaudeCommands,
-      ],
-      [
-        "Claude Code (Local)",
-        path.join(workspaceRoot, ".claude", "commands"),
-        path.join(workspaceRoot, ".claude"),
-        exportClaudeCommands,
-      ],
-      ["Codex (Prompts)", path.join(userHome, ".codex", "prompts"), path.join(userHome, ".codex"), exportCodexPrompts],
-      [
-        "Cursor (Local)",
-        path.join(workspaceRoot, ".cursor", "commands"),
-        path.join(workspaceRoot, ".cursor"),
-        exportCursorCommands,
-      ],
-      ["Roo Code (Global)", path.join(userHome, ".roo", "commands"), path.join(userHome, ".roo"), exportRooCommands],
-      [
-        "Roo Code (Local)",
-        path.join(workspaceRoot, ".roo", "commands"),
-        path.join(workspaceRoot, ".roo"),
-        exportRooCommands,
-      ],
-      [
-        "Copilot (Local)",
-        path.join(workspaceRoot, ".github", "prompts"),
-        path.join(workspaceRoot, ".github"),
-        exportCopilotPrompts,
-      ],
-      [
-        "Continue (Global)",
-        path.join(userHome, ".continue", "prompts"),
-        path.join(userHome, ".continue"),
-        exportContinuePrompts,
-      ],
-      [
-        "Continue (Local)",
-        path.join(workspaceRoot, ".continue", "prompts"),
-        path.join(workspaceRoot, ".continue"),
-        exportContinuePrompts,
-      ],
-      [
-        "Qwen Code (Global)",
-        path.join(userHome, ".qwen", "commands"),
-        path.join(userHome, ".qwen"),
-        exportQwenCommands,
-      ],
-      [
-        "Qwen Code (Local)",
-        path.join(workspaceRoot, ".qwen", "commands"),
-        path.join(workspaceRoot, ".qwen"),
-        exportQwenCommands,
-      ],
-    ];
-    for (const [label, dest, gate, exporter] of markdown) exportTo(label, dest, gate, exporter);
+    const registry = loadHarnessRegistry();
+    const generators: Record<HarnessFormat, (skill: SkillItem, mode?: string, desc?: string) => string> = {
+      markdown: generateMarkdownCommand,
+      toml: generateGeminiToml,
+      copilot: generateCopilotPrompt,
+      continue: generateContinuePrompt,
+      workflow: generateWorkflowMarkdown,
+    };
 
-    // Gemini CLI / Antigravity require TOML, not markdown.
-    exportTo(
-      "Gemini/Antigravity (Global, TOML)",
-      path.join(userHome, ".gemini", "commands"),
-      path.join(userHome, ".gemini"),
-      exportGeminiCommands,
-    );
-    exportTo(
-      "Gemini/Antigravity (Local, TOML)",
-      path.join(workspaceRoot, ".gemini", "commands"),
-      path.join(workspaceRoot, ".gemini"),
-      exportGeminiCommands,
-    );
-
-    // Windsurf stores workflows, not commands.
-    exportTo(
-      "Windsurf (Workflows)",
-      path.join(workspaceRoot, ".windsurf", "workflows"),
-      path.join(workspaceRoot, ".windsurf"),
-      exportWindsurfWorkflows,
-      "workflows",
-    );
+    for (const destination of commandDestinations(registry, { home: userHome, workspace: workspaceRoot })) {
+      if (!fs.existsSync(destination.gate)) continue;
+      // Gemini's writer also prunes markdown left by the pre-TOML releases.
+      const count =
+        destination.format === "toml"
+          ? exportGeminiCommands(destination.dir, skills)
+          : writeHarnessCommands(destination.dir, skills, {
+              extension: destination.extension,
+              generate: generators[destination.format],
+            });
+      const scope = destination.scope === "global" ? "Global" : "Local";
+      const label =
+        destination.harness.status === "legacy" ? `${destination.harness.label} (legacy)` : destination.harness.label;
+      const noun = destination.format === "workflow" ? "workflows" : "commands";
+      console.log(`✅ ${label} (${scope}): Exported ${count} ${noun} → ${destination.dir}`);
+      totalCommands += count;
+    }
   }
 
   // 3. Wire Secretary into AGENTS.md

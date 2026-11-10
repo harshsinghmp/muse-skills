@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "updated": "2026-11-10",
+  "skillRoots": {
+    "canonical": "~/.agents/skills",
+    "project": ".agents/skills",
+    "mirrors": ["~/.claude/skills", "<project>/.claude/skills"],
+    "note": "SKILL.md is the cross-harness surface. Antigravity, Amp and Codex read ~/.agents/skills or .agents/skills; Claude Code reads its own root, so the canonical tree is mirrored there by symlink."
+  },
+  "harnesses": [
+    {
+      "id": "opencode",
+      "label": "OpenCode",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "markdown",
+        "extension": ".md",
+        "global": "~/.config/opencode/commands",
+        "project": ".opencode/commands"
+      },
+      "skills": ["~/.agents/skills", ".agents/skills"],
+      "docs": "https://opencode.ai/docs/commands/"
+    },
+    {
+      "id": "claude-code",
+      "label": "Claude Code",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "markdown",
+        "extension": ".md",
+        "global": "~/.claude/commands",
+        "project": ".claude/commands"
+      },
+      "skills": ["~/.claude/skills", ".claude/skills"],
+      "docs": "https://continuumcode.ai/guides/claude-code-custom-commands/"
+    },
+    {
+      "id": "codex",
+      "label": "Codex CLI",
+      "status": "skills-only",
+      "invocation": "/",
+      "commands": null,
+      "skills": [".agents/skills", "~/.agents/skills"],
+      "note": "Custom prompts were removed in v0.117.0 (the subsystem is gone, not just deprecated). Skills in .agents/skills replace them, so no prompt files are written.",
+      "docs": "https://codex.danielvaughan.com/2026/04/10/migrating-custom-prompts-to-skills/",
+      "retiredPaths": ["~/.codex/prompts"]
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "markdown",
+        "extension": ".md",
+        "project": ".cursor/commands"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://cursor.com/docs"
+    },
+    {
+      "id": "roo",
+      "label": "Roo Code",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "markdown",
+        "extension": ".md",
+        "global": "~/.roo/commands",
+        "project": ".roo/commands"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://roocodeinc.github.io/Roo-Code/features/slash-commands/"
+    },
+    {
+      "id": "qwen",
+      "label": "Qwen Code",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "markdown",
+        "extension": ".md",
+        "global": "~/.qwen/commands",
+        "project": ".qwen/commands"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://qwenlm.github.io/qwen-code-docs/en/users/features/commands/"
+    },
+    {
+      "id": "copilot",
+      "label": "GitHub Copilot",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "copilot",
+        "extension": ".prompt.md",
+        "project": ".github/prompts"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://docs.github.com/en/copilot/concepts/prompting-and-context/prompt-files"
+    },
+    {
+      "id": "continue",
+      "label": "Continue",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "continue",
+        "extension": ".prompt",
+        "global": "~/.continue/prompts",
+        "project": ".continue/prompts"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://docs.continue.dev/customize/deep-dives/prompts"
+    },
+    {
+      "id": "windsurf",
+      "label": "Windsurf",
+      "status": "active",
+      "invocation": "/",
+      "commands": {
+        "format": "workflow",
+        "extension": ".md",
+        "project": ".windsurf/workflows"
+      },
+      "skills": [".agents/skills"],
+      "docs": "https://docs.windsurf.com"
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini CLI",
+      "status": "legacy",
+      "invocation": "/",
+      "commands": {
+        "format": "toml",
+        "extension": ".toml",
+        "global": "~/.gemini/commands",
+        "project": ".gemini/commands"
+      },
+      "skills": ["~/.agents/skills", ".agents/skills"],
+      "note": "Retired 2026-06-18 in favour of Antigravity CLI. TOML is still written because Antigravity's migration imports it and paid/enterprise Gemini CLI users exist.",
+      "docs": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/"
+    },
+    {
+      "id": "antigravity",
+      "label": "Antigravity",
+      "status": "skills-only",
+      "invocation": "/",
+      "commands": null,
+      "skills": ["~/.agents/skills", ".agents/skills"],
+      "note": "Reads skills directly; its built-in slash commands are not extensible by files.",
+      "docs": "https://antigravity.google/docs/slash-commands"
+    },
+    {
+      "id": "amp",
+      "label": "Amp",
+      "status": "skills-only",
+      "invocation": "direct",
+      "commands": null,
+      "skills": ["~/.config/agents/skills", "~/.agents/skills", ".agents/skills", "~/.claude/skills", ".claude/skills"],
+      "note": "Custom commands were removed in favour of skills; ~/.agents/skills is its second search root.",
+      "docs": "https://ampcode.com/docs/customize/skills"
+    }
+  ]
+}
