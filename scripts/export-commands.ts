@@ -33,6 +33,10 @@ interface SkillItem {
   category: string;
   priority: number;
   aliases?: string[];
+  /** Curated council lead (Sol / Jasper / Crew / Nexus, or a pair). */
+  councilLead?: string;
+  /** Mode used when routing cannot infer one. */
+  defaultMode?: string;
 }
 
 interface SkillsRegistry {
@@ -40,55 +44,26 @@ interface SkillsRegistry {
 }
 
 // ─── Council Lead Assignment Mapping ──────────────────────────────────────────
-const COUNCIL_LEADS: Record<string, string> = {
-  webdev: "Sol (Product Architect & Full-Stack Automator)",
-  database: "Sol (Product Architect & Full-Stack Automator)",
-  devops: "Sol (Product Architect & Full-Stack Automator)",
-  mobile: "Sol (Product Architect & Full-Stack Automator)",
-  automation: "Sol (Product Architect & Full-Stack Automator)",
-  telegram: "Sol (Product Architect & Full-Stack Automator)",
-  relay: "Sol (Product Architect & Full-Stack Automator)",
-  pua: "Sol (Product Architect & Full-Stack Automator)",
-  "new-project": "Sol (Product Architect & Full-Stack Automator)",
-  updatedocs: "Sol (Product Architect & Full-Stack Automator)",
-  "clean-system-cache": "Sol (Product Architect & Full-Stack Automator)",
-
-  design: "Jasper (Creative Technologist & Growth Mastermind)",
-  smm: "Jasper (Creative Technologist & Growth Mastermind)",
-  content: "Jasper (Creative Technologist & Growth Mastermind)",
-  seo: "Jasper (Creative Technologist & Growth Mastermind)",
-  crm: "Sol & Jasper (CRM Architect & Retention Copywriter)",
-  brand: "Jasper & Crew (Creative Technologist & Brand Strategy)",
-  growth: "Jasper & Crew (Growth Mastermind & Operations)",
-  animate: "Jasper (Creative Technologist & Growth Mastermind)",
-  designscope: "Jasper (Creative Technologist & Growth Mastermind)",
-  humanize: "Jasper (Creative Technologist & Growth Mastermind)",
-
-  ops: "Crew (Operations Lead & Client Delivery Specialist)",
-  accounts: "Crew (Operations Lead & Client Delivery Specialist)",
-  "client-comms": "Crew (Operations Lead & Client Delivery Specialist)",
-  retain: "Crew (Operations Lead & Client Delivery Specialist)",
-  gtm: "Crew (Operations Lead & Client Delivery Specialist)",
-  "sales-enablement": "Crew (Operations Lead & Client Delivery Specialist)",
-  paidads: "Crew & Jasper (Performance Marketing & Copy)",
-  coach: "Crew (Operations Lead & Agile Coach)",
-  "periodic-retreat": "Sol & Crew (Executive Architecture Strategy)",
-
-  secretary: "Nexus & Sol (Chief of Staff & Technical Governance)",
-  "code-review": "Nexus (Technical Director & Review Head)",
-  audit: "Nexus (Technical Director & Hardening Gate)",
-  "qa-launch": "Nexus (Technical Director & Verification Gate)",
-  "muse-security": "Nexus (Technical Director & Security Gate)",
-  refactor: "Nexus & Sol (Technical Director & Senior Architect)",
-  git: "Nexus (Technical Director & Release Governor)",
-  "gauntlet-loop": "Nexus (Technical Director & Adversarial Challenge)",
-  "dead-letter": "Nexus (Technical Director & Error Triage)",
-  "coupling-router": "Sol & Nexus (Technical Director & Architecture)",
-  "context-anchor": "Sol (Product Architect & State Governor)",
-  "evidence-ledger": "Crew & Nexus (Evidence Verification Gate)",
-  updateagents: "Nexus (Technical Director & Memory Governor)",
-  research: "Sol & Jasper (Architecture & Discovery)",
+/** Presentation-only annotations for a canonical lead from skills.json. */
+const LEAD_ROLES: Record<string, string> = {
+  Sol: "Sol (Product Architect & Full-Stack Automator)",
+  Jasper: "Jasper (Creative Technologist & Growth Mastermind)",
+  Crew: "Crew (Operations Lead & Client Delivery Specialist)",
+  Nexus: "Nexus (Technical Director & Review Head)",
+  "Sol & Jasper": "Sol & Jasper (Architecture & Growth)",
+  "Jasper & Crew": "Jasper & Crew (Creative & Operations)",
+  "Crew & Jasper": "Crew & Jasper (Operations & Creative)",
+  "Sol & Crew": "Sol & Crew (Architecture & Operations)",
+  "Nexus & Sol": "Nexus & Sol (Governance & Architecture)",
+  "Sol & Nexus": "Sol & Nexus (Architecture & Governance)",
+  "Crew & Nexus": "Crew & Nexus (Operations & Governance)",
 };
+
+/** Rendered lead for a skill: annotation when known, canonical value otherwise. */
+function renderLead(skill: SkillItem): string {
+  const lead = skill.councilLead ?? "Nexus";
+  return LEAD_ROLES[lead] ?? `${lead} (Technical Director)`;
+}
 
 // ─── High-Leverage Sub-Mode Aliases ──────────────────────────────────────────
 export const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: string; desc: string }> = [
@@ -261,7 +236,7 @@ export function getSkills(): SkillItem[] {
 
 /** Markdown body shared by every harness that stores a prompt as markdown. */
 export function generateCommandBody(skill: SkillItem, mode?: string, customDesc?: string): string {
-  const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
+  const lead = renderLead(skill);
   const modeText = mode ? ` in \`${mode}\` mode` : "";
   const desc = customDesc || skill.description;
   const refPath = mode ? `references/${mode}.md` : "SKILL.md";
@@ -333,7 +308,7 @@ ${body}"""
 
 /** Kept for the Windsurf workflow body (its files read as workflows, not commands). */
 export function generateWorkflowMarkdown(skill: SkillItem, mode?: string, customDesc?: string): string {
-  const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
+  const lead = renderLead(skill);
   const modeText = mode ? ` - Mode: ${mode}` : "";
   const desc = customDesc || skill.description;
 

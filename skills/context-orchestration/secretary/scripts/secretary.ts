@@ -14,59 +14,11 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { COUNCIL_LEADS, DEFAULT_MODE } from "./routing-defaults";
+
+export { COUNCIL_LEADS, DEFAULT_MODE };
 
 // Council Leads mapping
-export const COUNCIL_LEADS: Record<string, string> = {
-  webdev: "Sol",
-  database: "Sol",
-  devops: "Sol",
-  mobile: "Sol",
-  automation: "Sol",
-  telegram: "Sol",
-  relay: "Sol",
-  pua: "Sol",
-  "new-project": "Sol",
-  git: "Nexus",
-  analytics: "Nexus",
-  research: "Sol & Jasper",
-  updatedocs: "Sol",
-  "clean-system-cache": "Sol",
-
-  design: "Jasper",
-  smm: "Jasper",
-  content: "Jasper",
-  seo: "Jasper",
-  crm: "Sol & Jasper",
-  brand: "Crew & Jasper",
-  growth: "Jasper & Crew",
-  animate: "Jasper",
-  designscope: "Jasper",
-  humanize: "Jasper",
-
-  ops: "Crew",
-  accounts: "Crew",
-  "client-comms": "Crew",
-  retain: "Crew",
-  gtm: "Crew",
-  "sales-enablement": "Crew",
-  paidads: "Crew & Jasper",
-  coach: "Crew",
-  "periodic-retreat": "Sol & Crew",
-
-  secretary: "Nexus & Sol",
-  "code-review": "Nexus",
-  "qa-launch": "Nexus",
-  "incident-response": "Nexus",
-  "coupling-router": "Sol & Nexus",
-  "evidence-ledger": "Crew & Nexus",
-  "dead-letter": "Nexus",
-  audit: "Nexus",
-  "muse-security": "Nexus",
-  refactor: "Nexus & Sol",
-  "context-anchor": "Sol",
-  "gauntlet-loop": "Nexus",
-  updateagents: "Nexus",
-};
 
 // Fast-path heuristic rules: verb-phrase intents that must not be out-scored by
 // lexical similarity. Every target MUST resolve to a real references/<mode>.md —
@@ -610,54 +562,6 @@ const STOPWORDS = new Set([
 ]);
 
 /** Mode used when a department is the right answer but no mode word appears. */
-export const DEFAULT_MODE: Record<string, string> = {
-  webdev: "implement",
-  design: "ui",
-  content: "copy",
-  smm: "content",
-  seo: "content",
-  analytics: "reporting",
-  devops: "hosting",
-  database: "operate",
-  mobile: "cross",
-  automation: "workflow",
-  accounts: "invoicing",
-  crm: "nurture",
-  growth: "positioning",
-  paidads: "google",
-  ops: "onboarding",
-  retain: "check-in",
-  "client-comms": "status",
-  "sales-enablement": "demo",
-  gtm: "outreach",
-  brand: "assets",
-  research: "user-research",
-  telegram: "notify",
-  "incident-response": "triage",
-  "qa-launch": "gate",
-  relay: "ambient-handoff",
-  "context-anchor": "layering-protocol",
-  "coupling-router": "coupling-matrix",
-  secretary: "dispatch",
-  "evidence-ledger": "evidence-entry-schema",
-  updatedocs: "audit",
-  updateagents: "audit",
-  git: "branching-and-release-matrix",
-  "new-project": "project-os-architecture",
-  "code-review": "pr-context",
-  "gauntlet-loop": "gauntlet-protocol",
-  "dead-letter": "record-schema",
-  pua: "audit",
-  audit: "hygiene-rules",
-  humanize: "style-guide",
-  "muse-security": "audit",
-  refactor: "code",
-  designscope: "analysis-framework",
-  animate: "principles",
-  coach: "team",
-  "periodic-retreat": "retreat-protocol",
-  "clean-system-cache": "audit",
-};
 
 function tokenize(text: string): string[] {
   return text

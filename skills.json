@@ -21,7 +21,9 @@
       ],
       "suggested_skills": ["updateagents", "new-project", "git", "code-review"],
       "aliases": ["docs-sync", "doc-sync", "documentation-sync", "doc-update", "docs-update"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol",
+      "defaultMode": "audit"
     },
     {
       "name": "updateagents",
@@ -57,7 +59,9 @@
         "repo-ai-ready",
         "ai-audit"
       ],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Nexus",
+      "defaultMode": "audit"
     },
     {
       "name": "git",
@@ -91,7 +95,9 @@
       ],
       "suggested_skills": ["code-review", "updatedocs", "devops", "qa-launch"],
       "aliases": ["git-flow", "git-lifecycle", "github-workflow", "git-workflow", "github-release"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "branching-and-release-matrix"
     },
     {
       "name": "code-review",
@@ -118,7 +124,9 @@
       ],
       "suggested_skills": ["git", "webdev", "audit", "pua"],
       "aliases": ["review", "code-review-skill", "linus-style-review", "rigorous-review", "torvalds-review"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "pr-context"
     },
     {
       "name": "new-project",
@@ -156,7 +164,9 @@
       ],
       "suggested_skills": ["webdev", "design", "devops", "updatedocs"],
       "aliases": ["project-scaffold", "scaffold", "create-project", "init-project", "agent-engine", "dox-engine"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "project-os-architecture"
     },
     {
       "name": "relay",
@@ -180,7 +190,9 @@
       ],
       "suggested_skills": ["secretary", "context-anchor", "coupling-router"],
       "aliases": ["handoff", "session-handoff", "context-handoff", "agent-handoff", "resume-session"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol",
+      "defaultMode": "ambient-handoff"
     },
     {
       "name": "context-anchor",
@@ -202,7 +214,9 @@
       ],
       "suggested_skills": ["relay", "secretary", "coupling-router"],
       "aliases": ["anchor", "focus-anchor", "park-workstream", "context-park"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol",
+      "defaultMode": "layering-protocol"
     },
     {
       "name": "gauntlet-loop",
@@ -229,7 +243,9 @@
       ],
       "suggested_skills": ["code-review", "webdev", "coupling-router", "dead-letter"],
       "aliases": ["gauntlet", "quality-gauntlet", "improvement-loop", "agent-loop"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Nexus",
+      "defaultMode": "gauntlet-protocol"
     },
     {
       "name": "refactor",
@@ -269,7 +285,9 @@
         "database-refactor",
         "refactor-anything"
       ],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus & Sol",
+      "defaultMode": "code"
     },
     {
       "name": "designscope",
@@ -298,7 +316,9 @@
       ],
       "suggested_skills": ["design", "refactor-ui", "animate"],
       "aliases": ["design_scope", "designscope", "extract_design", "visual_design_analysis"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "analysis-framework"
     },
     {
       "name": "coupling-router",
@@ -332,7 +352,9 @@
       ],
       "suggested_skills": ["relay", "secretary", "dead-letter", "pua"],
       "aliases": ["coupling_router", "couplingrouter", "dependency-router", "task-router"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol & Nexus",
+      "defaultMode": "coupling-matrix"
     },
     {
       "name": "secretary",
@@ -363,7 +385,9 @@
       ],
       "suggested_skills": ["evidence-ledger", "coupling-router", "relay", "dead-letter"],
       "aliases": ["staff-work", "approval-gate", "executive-brief", "delegation-controller"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Nexus & Sol",
+      "defaultMode": "dispatch"
     },
     {
       "name": "evidence-ledger",
@@ -392,7 +416,9 @@
       ],
       "suggested_skills": ["secretary", "coupling-router", "updatedocs"],
       "aliases": ["evidence", "claim-tracking", "source-tracking", "confidence-ledger"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Crew & Nexus",
+      "defaultMode": "evidence-entry-schema"
     },
     {
       "name": "dead-letter",
@@ -420,7 +446,9 @@
       ],
       "suggested_skills": ["pua", "coupling-router", "secretary", "evidence-ledger"],
       "aliases": ["dead_letter", "failure_capture", "blocked-task", "retry-handler"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Nexus",
+      "defaultMode": "record-schema"
     },
     {
       "name": "pua",
@@ -455,7 +483,9 @@
       ],
       "suggested_skills": ["dead-letter", "coupling-router", "code-review"],
       "aliases": ["pip", "performance-improvement-plan", "exhaustive-debugging", "performance-plan"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol",
+      "defaultMode": "audit"
     },
     {
       "name": "coach",
@@ -491,7 +521,9 @@
         "executive-coach",
         "delivery-coach"
       ],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Crew",
+      "defaultMode": "team"
     },
     {
       "name": "audit",
@@ -518,7 +550,9 @@
       ],
       "suggested_skills": ["updatedocs", "evidence-ledger", "coach"],
       "aliases": ["knowledge-audit", "memory-audit", "doc-audit", "integrity-audit"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Nexus",
+      "defaultMode": "hygiene-rules"
     },
     {
       "name": "periodic-retreat",
@@ -541,7 +575,9 @@
       ],
       "suggested_skills": ["coach", "audit", "updatedocs"],
       "aliases": ["quarterly", "retreat", "strategic-retreat", "quarterly-review"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol & Crew",
+      "defaultMode": "retreat-protocol"
     },
     {
       "name": "clean-system-cache",
@@ -599,7 +635,9 @@
       ],
       "suggested_skills": ["coach", "periodic-retreat"],
       "aliases": ["clean-cache", "cache-cleaner", "system-cache", "purge-cache"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Sol",
+      "defaultMode": "audit"
     },
     {
       "name": "humanize",
@@ -626,7 +664,9 @@
       ],
       "suggested_skills": ["content", "code-review", "updatedocs"],
       "aliases": ["humanize_text", "de_ai", "remove_ai_writing", "prose_humanizer"],
-      "scope": "global"
+      "scope": "global",
+      "councilLead": "Jasper",
+      "defaultMode": "style-guide"
     },
     {
       "name": "animate",
@@ -663,7 +703,9 @@
       ],
       "suggested_skills": ["design", "refactor-ui", "designscope", "code-review"],
       "aliases": ["animation", "motion-design", "ui-animation", "add-motion", "animate_this"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "principles"
     },
     {
       "name": "design",
@@ -711,7 +753,9 @@
         "visual-storyteller",
         "storyboarding"
       ],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "ui"
     },
     {
       "name": "paidads",
@@ -744,7 +788,9 @@
       ],
       "suggested_skills": ["analytics", "content", "smm", "evidence-ledger"],
       "aliases": ["paid-ads", "advertising", "google-ads", "meta-ads", "ad-campaigns"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew & Jasper",
+      "defaultMode": "google"
     },
     {
       "name": "seo",
@@ -776,7 +822,9 @@
       ],
       "suggested_skills": ["content", "analytics", "webdev", "evidence-ledger"],
       "aliases": ["search-engine-optimization", "seo-audit", "technical-seo", "local-seo", "aeo"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "content"
     },
     {
       "name": "webdev",
@@ -817,7 +865,9 @@
       ],
       "suggested_skills": ["new-project", "code-review", "gauntlet-loop", "relay"],
       "aliases": ["web-development", "frontend-dev", "backend-dev", "fullstack-dev", "web-engineering"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "implement"
     },
     {
       "name": "mobile",
@@ -851,7 +901,9 @@
       ],
       "suggested_skills": ["new-project", "webdev", "design", "code-review"],
       "aliases": ["mobile-apps", "ios", "android", "react-native", "flutter"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "cross"
     },
     {
       "name": "smm",
@@ -898,7 +950,9 @@
         "carousel-growth-engine",
         "tiktok-carousel"
       ],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "content"
     },
     {
       "name": "content",
@@ -928,7 +982,9 @@
       ],
       "suggested_skills": ["seo", "design", "humanize", "smm"],
       "aliases": ["content-studio", "copywriting", "content-creation", "blog-writing", "content-marketing"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper",
+      "defaultMode": "copy"
     },
     {
       "name": "analytics",
@@ -958,7 +1014,9 @@
       ],
       "suggested_skills": ["seo", "paidads", "webdev", "growth"],
       "aliases": ["analytics", "data-analytics", "measurement", "dashboards", "kpi"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "reporting"
     },
     {
       "name": "automation",
@@ -997,7 +1055,9 @@
       ],
       "suggested_skills": ["webdev", "analytics", "devops", "new-project"],
       "aliases": ["automation", "workflow-automation", "ai-agents", "chatbot", "rag-pipeline"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "workflow"
     },
     {
       "name": "devops",
@@ -1029,7 +1089,9 @@
       ],
       "suggested_skills": ["git", "webdev", "automation", "code-review"],
       "aliases": ["infrastructure", "deployment", "ci-cd", "hosting", "security-hardening", "wrangler"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "hosting"
     },
     {
       "name": "ops",
@@ -1074,7 +1136,9 @@
         "obsidian-cli",
         "obsidian-markdown"
       ],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew",
+      "defaultMode": "onboarding"
     },
     {
       "name": "growth",
@@ -1102,7 +1166,9 @@
       ],
       "suggested_skills": ["analytics", "content", "paidads", "seo"],
       "aliases": ["growth-strategy", "scaling", "positioning", "pricing-strategy", "product-launch"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Jasper & Crew",
+      "defaultMode": "positioning"
     },
     {
       "name": "qa-launch",
@@ -1131,7 +1197,9 @@
       ],
       "suggested_skills": ["webdev", "mobile", "refactor-ui", "devops"],
       "aliases": ["qa", "quality-assurance", "launch-qa", "pre-launch-qa", "release-gate"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "gate"
     },
     {
       "name": "client-comms",
@@ -1157,7 +1225,9 @@
       ],
       "suggested_skills": ["ops", "growth", "analytics"],
       "aliases": ["client-communication", "client-status", "client-handover", "client-feedback"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew",
+      "defaultMode": "status"
     },
     {
       "name": "gtm",
@@ -1190,7 +1260,9 @@
       ],
       "suggested_skills": ["growth", "content", "ops", "analytics"],
       "aliases": ["go-to-market", "outbound-gtm", "lead-generation", "cold-outreach"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew",
+      "defaultMode": "outreach"
     },
     {
       "name": "incident-response",
@@ -1217,7 +1289,9 @@
       ],
       "suggested_skills": ["devops", "webdev", "mobile", "client-comms", "qa-launch"],
       "aliases": ["incident", "incident-command", "oncall", "severity-triage", "postmortem", "incident-management"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "triage"
     },
     {
       "name": "database",
@@ -1252,7 +1326,9 @@
       ],
       "suggested_skills": ["webdev", "devops", "qa-launch"],
       "aliases": ["db", "database-skill", "sql-query", "db-performance", "db-tuning"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "operate"
     },
     {
       "name": "telegram",
@@ -1278,7 +1354,9 @@
       ],
       "suggested_skills": ["automation", "coupling-router", "sentry", "user-onboarding"],
       "aliases": ["tg", "telegram-bot", "telegram-skill", "telegram-notify"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol",
+      "defaultMode": "notify"
     },
     {
       "name": "research",
@@ -1296,7 +1374,9 @@
         "market-sizing",
         "competitive-intel",
         "due-diligence"
-      ]
+      ],
+      "councilLead": "Sol & Jasper",
+      "defaultMode": "user-research"
     },
     {
       "name": "sales-enablement",
@@ -1306,7 +1386,9 @@
       "category": "agency-delivery",
       "scope": "local",
       "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "run_command", "grep_search"],
-      "tags": ["sales", "sales-enablement", "demo", "objection-handling", "one-pager", "playbook", "pitch", "closing"]
+      "tags": ["sales", "sales-enablement", "demo", "objection-handling", "one-pager", "playbook", "pitch", "closing"],
+      "councilLead": "Crew",
+      "defaultMode": "demo"
     },
     {
       "name": "retain",
@@ -1330,7 +1412,9 @@
       ],
       "suggested_skills": ["growth", "client-comms", "ops", "analytics"],
       "aliases": ["retention-loop", "client-retention", "renewals", "qbr", "review-ask", "referrals"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew",
+      "defaultMode": "check-in"
     },
     {
       "name": "muse-security",
@@ -1354,7 +1438,9 @@
       ],
       "suggested_skills": ["code-review", "devops", "webdev", "incident-response", "evidence-ledger"],
       "aliases": ["security", "secops", "cve", "waf", "vulnerability-audit", "sast", "clawsec"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Nexus",
+      "defaultMode": "audit"
     },
     {
       "name": "accounts",
@@ -1379,7 +1465,9 @@
       ],
       "suggested_skills": ["ops", "retain", "client-comms", "growth", "gtm", "webdev"],
       "aliases": ["finance", "invoicing", "billing", "bookkeeping", "cfo", "agency-accounts"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew",
+      "defaultMode": "invoicing"
     },
     {
       "name": "brand",
@@ -1422,7 +1510,9 @@
         "amazon-operations",
         "marketplace-operations"
       ],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Crew & Jasper",
+      "defaultMode": "assets"
     },
     {
       "name": "crm",
@@ -1450,7 +1540,9 @@
       ],
       "suggested_skills": ["content", "webdev", "brand", "analytics", "growth", "accounts"],
       "aliases": ["flows", "customer-flows", "lifecycle-flows", "email-flows", "retention-flows", "customer-journeys"],
-      "scope": "local"
+      "scope": "local",
+      "councilLead": "Sol & Jasper",
+      "defaultMode": "nurture"
     }
   ],
   "categories": [
