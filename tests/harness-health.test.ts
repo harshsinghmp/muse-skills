@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { checkHarnessHealth, detectRetirementSignals } from "../scripts/check-harness-health";
+import { checkHarnessHealth, checkSurfaceSignals, detectRetirementSignals } from "../scripts/check-harness-health";
 import { type Harness, loadHarnessRegistry } from "../scripts/harness-registry";
 
 const registry = loadHarnessRegistry();
@@ -38,6 +38,22 @@ describe("harness retirement detection", () => {
   test("ignores retirement language that names a different product", () => {
     const html = "<p>We are retiring the old dashboard in favour of the new one.</p>";
     expect(detectRetirementSignals(html, qwen)).toEqual([]);
+  });
+
+  test("flags a docs page that no longer mentions the path we write to", () => {
+    const opencode = registry.harnesses.find((harness) => harness.id === "opencode") as Harness;
+    const substantial = `<p>${"Documentation about agent configuration. ".repeat(80)}</p>`;
+    const stillThere = `${substantial}<p>Put commands in .opencode/commands/</p>`;
+    const gone = `${substantial}<p>Use the new plugin registry instead.</p>`;
+
+    expect(checkSurfaceSignals(stillThere, opencode).ok).toBe(true);
+    expect(checkSurfaceSignals(gone, opencode).ok).toBe(false);
+  });
+
+  test("a short or JS-only page is inconclusive, never a surface failure", () => {
+    const opencode = registry.harnesses.find((harness) => harness.id === "opencode") as Harness;
+    // Login wall / client-rendered shell: nothing to judge from.
+    expect(checkSurfaceSignals("<html><body><div id=root></div></body></html>", opencode).ok).toBe(true);
   });
 
   test("offline mode reports every active harness without fetching", async () => {
