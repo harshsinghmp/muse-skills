@@ -25,6 +25,7 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Windsurf verdict recorded**: Cognition/Devin acquired Windsurf and `docs.windsurf.com` redirects to `docs.devin.ai`. Decision: **stays active** — the canonical page still documents `.windsurf/workflows` — and `harness.json` now points `docs` at the canonical page with a `reviewedAt` verdict, so the monthly watch checks where documentation actually lives instead of warning about a redirect forever. Registry validation requires a reviewed harness to record its rationale.
 - **Codex custom prompts removed upstream**: OpenAI deleted the prompts subsystem in v0.117.0 and Codex now reads skills from `.agents/skills`, so the `~/.codex/prompts` exporter is gone rather than writing dead files; `harness.json` records the retired path and `doctor` reports leftovers.
 - **Gemini CLI is legacy, not current**: retired 2026-06-18 in favour of Antigravity CLI. The TOML writer stays as a migration path but is no longer advertised as a primary harness.
 - **Dispatch directory listed modes for only 24 of 46 departments**: `scripts/sync-dispatch.ts` rendered divisions 2–6 with three columns, so 22 departments advertised no canonical modes and neither the model nor the router could resolve a specific mode for them. Every division now uses the same five-column table with a mode list and reference path. Two fast-path targets that never existed (`code-review:audit`, `updateagents:sync`) now point at `code-review:triage-matrix` and `updateagents:memory-file-priorities`.

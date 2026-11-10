@@ -39,6 +39,8 @@ export interface Harness {
   retiredPaths?: string[];
   /** Literal strings the docs page must still contain for the surface to exist. */
   docsSignals?: string[];
+  /** ISO date of the last human verdict on this harness's status. */
+  reviewedAt?: string;
 }
 
 export interface HarnessRegistry {
@@ -72,6 +74,12 @@ export function validateHarnessRegistry(registry: HarnessRegistry): string[] {
       problems.push(`${harness.id}: status must be active, legacy, or skills-only`);
     }
     if (!harness.docs?.startsWith("https://")) problems.push(`${harness.id}: docs must be an https URL`);
+    if (harness.reviewedAt && !/^\d{4}-\d{2}-\d{2}$/.test(harness.reviewedAt)) {
+      problems.push(`${harness.id}: reviewedAt must be YYYY-MM-DD`);
+    }
+    if (harness.reviewedAt && (harness.note ?? "").length < 20) {
+      problems.push(`${harness.id}: a reviewed harness must record the verdict in note`);
+    }
     if (harness.skills.length === 0) problems.push(`${harness.id}: must declare at least one skill root`);
     if (harness.status === "skills-only" && harness.commands !== null) {
       problems.push(`${harness.id}: skills-only harnesses must not declare command destinations`);

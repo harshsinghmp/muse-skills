@@ -32,6 +32,16 @@ describe("harness registry", () => {
     }
   });
 
+  test("a reviewed harness records the verdict and a canonical docs URL", () => {
+    const registry = loadHarnessRegistry();
+    const windsurf = registry.harnesses.find((harness) => harness.id === "windsurf");
+    // Verdict 2026-11-10: stays active, docs moved to the canonical Devin page.
+    expect(windsurf?.status).toBe("active");
+    expect(windsurf?.docs.startsWith("https://docs.devin.ai/")).toBe(true);
+    expect(windsurf?.reviewedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(windsurf?.note ?? "").toContain("stays ACTIVE");
+  });
+
   test("retired and skills-only surfaces are declared, not implied", () => {
     const registry = loadHarnessRegistry();
     const codex = registry.harnesses.find((harness) => harness.id === "codex");
