@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-11-10",
+  "harnesses": {
+    "opencode": {
+      "matched": [".opencode/commands", "commands/"],
+      "signals": []
+    },
+    "claude-code": {
+      "matched": [".claude/commands"],
+      "signals": []
+    },
+    "cursor": {
+      "matched": ["command"],
+      "signals": []
+    },
+    "roo": {
+      "matched": [".roo/commands"],
+      "signals": []
+    },
+    "qwen": {
+      "matched": [".qwen/commands"],
+      "signals": []
+    },
+    "copilot": {
+      "matched": [".github/prompts", ".prompt.md"],
+      "signals": []
+    },
+    "continue": {
+      "matched": ["prompts"],
+      "signals": []
+    },
+    "windsurf": {
+      "matched": ["workflows"],
+      "signals": []
+    }
+  }
+}
