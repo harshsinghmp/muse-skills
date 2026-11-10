@@ -36,9 +36,13 @@ describe("routing matrix", () => {
     expect(compareToBaseline([result("a", 20, 25), result("b", 10, 12)], baseline)).toEqual([]);
   });
 
-  test("a new distribution cannot regress and is recorded by buildBaseline", () => {
+  test("an unregistered distribution must be registered deliberately", () => {
     const baseline: RoutingBaseline = { generatedAt: "2026-11-01", note: "", distributions: {} };
-    expect(compareToBaseline([result("new", 0, 0)], baseline)).toEqual([]);
+    // Not "no regression": an unknown fixture is itself a defect, so a new blind
+    // set cannot be added and silently ignored.
+    expect(compareToBaseline([result("new", 3, 5)], baseline)).toEqual([
+      { name: "new", metric: "unregistered", baseline: 0, current: 3 },
+    ]);
     const built = buildBaseline([result("new", 3, 5)]);
     expect(built.distributions.new).toEqual({ exact: 3, department: 5, total: 40 });
   });
@@ -56,7 +60,7 @@ describe("routing matrix", () => {
       invalidPredictions: number;
     };
     expect(report.results.length).toBeGreaterThanOrEqual(5);
-    expect(report.results.map((entry) => entry.name)).toContain("v8-blind");
+    expect(report.results.map((entry) => entry.name)).toContain("v8");
     expect(report.results.every((entry) => entry.invalidPredictions === 0)).toBe(true);
     expect(report.regressions).toEqual([]);
     expect(report.invalidPredictions).toBe(0);

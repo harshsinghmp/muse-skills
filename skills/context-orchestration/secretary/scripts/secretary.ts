@@ -759,10 +759,14 @@ interface RoutingIndex {
   modeDocCount: number;
   /** Department → tokens that appear in any of its mode descriptions. */
   departmentModeTokens: Map<string, Set<string>>;
+  /** Department → its modes' anchor phrases as token sets. */
+  departmentAnchors: Map<string, Set<string>[]>;
 }
 
 interface ModeDocument {
   tokens: Set<string>;
+  /** Each anchor phrase as a token set, for phrase-level overlap. */
+  anchors: Set<string>[];
 }
 
 let modeDocsCache: Map<string, ModeDocument> | undefined;
@@ -783,11 +787,13 @@ function loadModeDocs(): Map<string, ModeDocument> {
     for (const [skill, modes] of Object.entries(data)) {
       for (const [mode, signal] of Object.entries(modes)) {
         // Older releases shipped a prose blob; new ones ship heading + anchors.
+        const anchors =
+          typeof signal === "string" ? [] : (signal.anchors ?? []).map((anchor) => new Set(tokenize(anchor)));
         const text =
           typeof signal === "string"
             ? signal
             : [signal.heading ?? "", ...(signal.anchors ?? []), signal.text ?? ""].join(" ");
-        modeDocsCache.set(`${skill}:${mode}`, { tokens: new Set(tokenize(text)) });
+        modeDocsCache.set(`${skill}:${mode}`, { tokens: new Set(tokenize(text)), anchors });
       }
     }
   } catch {
@@ -839,6 +845,7 @@ function buildIndex(): RoutingIndex {
   }
 
   const departmentModeTokens = new Map<string, Set<string>>();
+  const departmentAnchors = new Map<string, Set<string>[]>();
   for (const key of docs.keys()) {
     const [skill] = key.split(":");
     const doc = docs.get(key);
@@ -846,8 +853,17 @@ function buildIndex(): RoutingIndex {
     const bucket = departmentModeTokens.get(skill) ?? new Set<string>();
     for (const token of doc.tokens) bucket.add(token);
     departmentModeTokens.set(skill, bucket);
+    if (doc.anchors.length > 0) departmentAnchors.set(skill, [...(departmentAnchors.get(skill) ?? []), ...doc.anchors]);
   }
-  return { entries, descriptionIdf, modeIdf, modeDocIdf, modeDocCount: docs.size, departmentModeTokens };
+  return {
+    entries,
+    descriptionIdf,
+    modeIdf,
+    modeDocIdf,
+    modeDocCount: docs.size,
+    departmentModeTokens,
+    departmentAnchors,
+  };
 }
 
 function getIndex(): RoutingIndex {
@@ -948,6 +964,23 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       }
     }
     score += Math.min(8, modeDocScore * 0.6);
+
+    // Phrase-level evidence: an anchor the prompt substantially covers is a
+    // stronger signal than scattered word overlap across a whole mode.
+    const anchors = index.departmentAnchors.get(entry.skill) ?? [];
+    let phraseHits = 0;
+    for (const anchor of anchors) {
+      if (anchor.size < 3) continue;
+      let hits = 0;
+      for (const token of anchor) {
+        if (promptTokens.some((candidate) => stemsMatch(candidate, token))) hits += 1;
+      }
+      if (hits / anchor.size >= 0.6) {
+        phraseHits += 1;
+        if (phraseHits >= 3) break;
+      }
+    }
+    score += phraseHits * 2;
 
     let hintBoost = 0;
     for (const rule of FAST_PATH_RULES) {
