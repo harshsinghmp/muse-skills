@@ -1033,5 +1033,205 @@
     "id": "v3-40",
     "prompt": "the design system tokens drifted from the brand guide",
     "expect": "design:uikit"
+  },
+  {
+    "id": "v4-01",
+    "prompt": "the sticky header hides the anchor links",
+    "expect": "webdev:frontend"
+  },
+  {
+    "id": "v4-02",
+    "prompt": "our webhook retries storm the endpoint",
+    "expect": "webdev:backend"
+  },
+  {
+    "id": "v4-03",
+    "prompt": "make the dropdown keyboard accessible",
+    "expect": "webdev:accessibility"
+  },
+  {
+    "id": "v4-04",
+    "prompt": "the image carousel jumps on safari",
+    "expect": "webdev:frontend"
+  },
+  {
+    "id": "v4-05",
+    "prompt": "add pagination to the orders endpoint",
+    "expect": "webdev:backend"
+  },
+  {
+    "id": "v4-06",
+    "prompt": "the serverless function cold starts are brutal",
+    "expect": "webdev:performance"
+  },
+  {
+    "id": "v4-07",
+    "prompt": "our JWT refresh loop logs users out",
+    "expect": "webdev:backend"
+  },
+  {
+    "id": "v4-08",
+    "prompt": "the CSS grid collapses on tablet widths",
+    "expect": "webdev:frontend"
+  },
+  {
+    "id": "v4-09",
+    "prompt": "set up a content security policy without breaking embeds",
+    "expect": "webdev:security-headers"
+  },
+  {
+    "id": "v4-10",
+    "prompt": "the query planner ignores our new index",
+    "expect": "database:tuning"
+  },
+  {
+    "id": "v4-11",
+    "prompt": "write a migration that backfills the tenant column",
+    "expect": "database:migrations"
+  },
+  {
+    "id": "v4-12",
+    "prompt": "our Postgres connections keep maxing out",
+    "expect": "database:operate"
+  },
+  {
+    "id": "v4-13",
+    "prompt": "add a unique constraint to the email column",
+    "expect": "database:guard"
+  },
+  {
+    "id": "v4-14",
+    "prompt": "the analytics event payload is malformed",
+    "expect": "analytics:tracking"
+  },
+  {
+    "id": "v4-15",
+    "prompt": "our attribution window looks wrong in reports",
+    "expect": "analytics:attribution"
+  },
+  {
+    "id": "v4-16",
+    "prompt": "build a cohort retention dashboard",
+    "expect": "analytics:dashboards"
+  },
+  {
+    "id": "v4-17",
+    "prompt": "measure whether the new hero increased signups",
+    "expect": "analytics:cro"
+  },
+  {
+    "id": "v4-18",
+    "prompt": "the QR code campaign link is dead",
+    "expect": "growth:launch"
+  },
+  {
+    "id": "v4-19",
+    "prompt": "our referral codes collide across tenants",
+    "expect": "growth:referral"
+  },
+  {
+    "id": "v4-20",
+    "prompt": "plan the pricing change communication",
+    "expect": "growth:pricing"
+  },
+  {
+    "id": "v4-21",
+    "prompt": "write the onboarding sequence for trial users",
+    "expect": "crm:nurture"
+  },
+  {
+    "id": "v4-22",
+    "prompt": "our bounce rate spiked after the DNS change",
+    "expect": "crm:deliverability"
+  },
+  {
+    "id": "v4-23",
+    "prompt": "import the event attendee list into the CRM",
+    "expect": "crm:contacts"
+  },
+  {
+    "id": "v4-24",
+    "prompt": "the abandoned cart flow never fires",
+    "expect": "crm:abandon"
+  },
+  {
+    "id": "v4-25",
+    "prompt": "our support macros need a rewrite",
+    "expect": "client-comms:status"
+  },
+  {
+    "id": "v4-26",
+    "prompt": "summarise the client call into next steps",
+    "expect": "ops:meeting-notes"
+  },
+  {
+    "id": "v4-27",
+    "prompt": "the statement of work needs a payment schedule",
+    "expect": "ops:sow"
+  },
+  {
+    "id": "v4-28",
+    "prompt": "reconcile the Stripe payout with the ledger",
+    "expect": "accounts:bookkeeping"
+  },
+  {
+    "id": "v4-29",
+    "prompt": "our margin drops on the retainer renewal",
+    "expect": "accounts:client-pnl"
+  },
+  {
+    "id": "v4-30",
+    "prompt": "send a late payment reminder that is not rude",
+    "expect": "accounts:dunning"
+  },
+  {
+    "id": "v4-31",
+    "prompt": "the client wants weekly executive summaries",
+    "expect": "client-comms:executive-pulse"
+  },
+  {
+    "id": "v4-32",
+    "prompt": "prepare the quarterly business review deck",
+    "expect": "retain:qbr"
+  },
+  {
+    "id": "v4-33",
+    "prompt": "flag accounts that stopped logging in",
+    "expect": "retain:churn-watch"
+  },
+  {
+    "id": "v4-34",
+    "prompt": "write the renewal offer with a price increase",
+    "expect": "retain:renewal"
+  },
+  {
+    "id": "v4-35",
+    "prompt": "the meta campaign spends without conversions",
+    "expect": "paidads:meta"
+  },
+  {
+    "id": "v4-36",
+    "prompt": "our landing page fails core web vitals",
+    "expect": "webdev:performance"
+  },
+  {
+    "id": "v4-37",
+    "prompt": "audit the contrast ratio of our buttons",
+    "expect": "webdev:accessibility"
+  },
+  {
+    "id": "v4-38",
+    "prompt": "build a slide deck for the board meeting",
+    "expect": "design:slides"
+  },
+  {
+    "id": "v4-39",
+    "prompt": "our icon set is inconsistent with the brand",
+    "expect": "design:branding"
+  },
+  {
+    "id": "v4-40",
+    "prompt": "write the changelog entry for the release",
+    "expect": "updatedocs:audit"
   }
 ]

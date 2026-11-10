@@ -359,7 +359,7 @@ const CONCEPTS: Concept[] = [
     boost: 10,
     tokens: ["csp", "xss", "csrf", "cors", "iframe", "headers"],
   },
-  { department: "database", mode: "index", boost: 8, tokens: ["index", "indexes", "btree", "composite"] },
+  { department: "database", mode: "index", boost: 7, tokens: ["btree", "composite"] },
   {
     department: "database",
     mode: "migrations",
@@ -460,14 +460,14 @@ function conceptBoost(department: string, promptTokens: string[]): number {
   return boost;
 }
 
-function conceptMode(department: string, promptTokens: string[]): string | undefined {
+function conceptMode(department: string, promptTokens: string[]): { mode: string; boost: number } | undefined {
   let best: { mode: string; boost: number } | undefined;
   for (const concept of CONCEPTS) {
     if (concept.department !== department || !concept.mode) continue;
     if (!concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) continue;
     if (!best || concept.boost > best.boost) best = { mode: concept.mode, boost: concept.boost };
   }
-  return best?.mode;
+  return best;
 }
 
 /** Leading-verb prior: what kind of work is being asked for, independent of nouns. */
@@ -919,7 +919,7 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
   const promptTokens = tokenize(prompt);
   const intent = intentMode(entry.skill, prompt);
   const concept = conceptMode(entry.skill, promptTokens);
-  const preferred = intent ?? concept ?? DEFAULT_MODE[entry.skill];
+  const preferred = intent ?? concept?.mode ?? DEFAULT_MODE[entry.skill];
   let bestMode: string | undefined;
   let bestScore = 0;
   for (const mode of entry.modes) {
@@ -933,10 +933,11 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
   }
   // A named intent ("land in spam" -> deliverability) outranks a shared noun.
   if (intent && entry.modes.includes(intent)) return { mode: intent, score: bestScore };
-  // Concept vocabulary fills a gap only: "pricing table" must not become
-  // `database:index` just because both mention a table.
-  if (concept && bestScore === 0 && entry.modes.includes(concept)) {
-    return { mode: concept, score: bestScore };
+  // Concept evidence is curated, a mode-name match may be a coincidence: "index
+  // bloat is slowing writes" is tuning, not `database:index`. It wins when it is
+  // at least as strong as the lexical score, and always when nothing matched.
+  if (concept && entry.modes.includes(concept.mode) && concept.boost >= bestScore) {
+    return { mode: concept.mode, score: bestScore };
   }
   return { mode: bestMode ?? DEFAULT_MODE[entry.skill] ?? entry.modes[0] ?? "audit", score: bestScore };
 }
