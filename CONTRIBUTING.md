@@ -170,6 +170,18 @@ When your pull request respects these standards:
 
 ---
 
+### Routing changes need a blind measurement
+
+Any change to routing behaviour — concepts, intent signals, fast paths, scoring weights — must be measured on **every** distribution before it merges:
+
+```bash
+bun run check:routing:matrix     # fails if any distribution drops below routing-baseline.json
+```
+
+`routing-baseline.json` records the tuned set plus four unseen sets (`v5`–`v8`). A change that improves one set while lowering another is a regression, even if the headline number goes up. Raising the baseline deliberately (`bun run sync:routing:baseline`) is allowed — but the PR must say which distribution moved and why.
+
+History: three routing "improvements" were merged and later found neutral or overfit because only the tuned set was checked. The blind sets exist to stop that repeating.
+
 ## 🚀 5. Transition (Step-by-Step Contribution Checklist)
 
 Follow this 6-step checklist to submit your contribution:
