@@ -445,6 +445,8 @@ export const CONCEPTS: Concept[] = [
     tokens: ["executive", "pulse", "summaries", "weekly"],
   },
   { department: "client-comms", mode: "status", boost: 7, tokens: ["status", "update", "macro", "macros"] },
+  { department: "client-comms", mode: "feedback", boost: 9, tokens: ["feedback", "survey", "csat", "nps"] },
+  { department: "client-comms", mode: "handover", boost: 9, tokens: ["handover", "successor", "offboarding"] },
   { department: "ops", mode: "meeting-notes", boost: 9, tokens: ["call", "transcript", "meeting", "minutes"] },
   { department: "ops", mode: "sow", boost: 10, tokens: ["sow", "statement", "work", "schedule"] },
   { department: "paidads", mode: "meta", boost: 9, tokens: ["meta", "facebook", "instagram"] },

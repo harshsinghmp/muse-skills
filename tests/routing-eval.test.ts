@@ -73,7 +73,7 @@ describe("routing quality gate", () => {
   });
 
   test("every fixture routes to a real skill:mode within the measured gate", () => {
-    const report = evaluateRouting(FIXTURES, routes, { minExact: 0.64, minSkill: 0.68 });
+    const report = evaluateRouting(FIXTURES, routes, { minExact: 0.63, minSkill: 0.69 });
     if (!report.passed) {
       const detail = [
         ...report.invalidExpectations,

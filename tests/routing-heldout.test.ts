@@ -8,6 +8,15 @@ const REPO_ROOT = join(import.meta.dir, "..");
 const HELDOUT = JSON.parse(
   readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v5.json"), "utf8"),
 ) as RoutingFixture[];
+/**
+ * A second held-out set written by a separate agent that deliberately chose
+ * meta/engineering departments (git, code-review, evidence-ledger, relay) and
+ * obscure modes. It measures a different distribution, not a harder version of
+ * the same one — keep the two numbers separate.
+ */
+const ENGINEERING = JSON.parse(
+  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v6.json"), "utf8"),
+) as RoutingFixture[];
 
 const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry.skill}:${entry.mode}`));
 
@@ -30,6 +39,19 @@ describe("routing generalisation (held-out)", () => {
     const report = evaluateRouting(HELDOUT, routes, { minExact: 0, minSkill: 0 });
     expect(report.invalidPredictions).toEqual([]);
     expect(report.total).toBe(HELDOUT.length);
+  });
+
+  test("engineering/meta held-out is measured separately (weak cover accepted)", () => {
+    const report = evaluateRouting(ENGINEERING, routes, { minExact: 0, minSkill: 0 });
+    expect(report.invalidPredictions).toEqual([]);
+    // Baseline 2026-11-10: 12.5% exact / 30% department. The router's concept
+    // vocabulary covers agency delivery; meta/engineering departments are the
+    // long-tail gap this set exists to expose.
+    console.log(
+      `[routing] engineering held-out: exact ${(report.exactRate * 100).toFixed(0)}% · department ${(report.departmentRate * 100).toFixed(0)}% (${report.exact}/${report.total})`,
+    );
+    expect(report.exactRate).toBeGreaterThanOrEqual(0.1);
+    expect(report.departmentRate).toBeGreaterThanOrEqual(0.25);
   });
 
   test("held-out accuracy is measured and does not silently collapse", () => {
