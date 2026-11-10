@@ -172,6 +172,22 @@ export function runDoctor(options: { home?: string; workspace?: string; fix?: bo
   const dispatch = checkDispatchResolves(skillsRoot);
   checks.push({ id: "dispatch-resolves", ...dispatch });
 
+  // Claude Code (and Amp's fallback) read their own skill root; if it exists it
+  // must mirror the canonical tree rather than hold a stale copy.
+  for (const mirror of [path.join(home, ".claude", "skills"), path.join(workspace, ".claude", "skills")]) {
+    if (!fs.existsSync(path.dirname(mirror))) continue;
+    const missing = skills.filter((skill) => !fs.existsSync(path.join(mirror, skill.name, "SKILL.md")));
+    checks.push({
+      id: `skill-mirror:${path.basename(path.dirname(mirror))}`,
+      ok: missing.length === 0,
+      detail:
+        missing.length === 0
+          ? `${mirror} carries all ${skills.length} skills`
+          : `${missing.length} skill(s) missing from ${mirror}`,
+      fixable: true,
+    });
+  }
+
   const harnesses: DoctorReport["harnesses"] = [];
   for (const surface of HARNESS_SURFACES) {
     const candidates = [

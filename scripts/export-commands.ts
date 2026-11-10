@@ -425,7 +425,17 @@ function pruneSupersededMarkdown(destDir: string, skills: SkillItem[]): number {
   return removed;
 }
 
-/** Gemini CLI / Antigravity: .gemini/commands — TOML only. */
+/** Qwen Code: .qwen/commands (markdown with optional frontmatter; TOML is deprecated there). */
+export function exportQwenCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
+
+/**
+ * Gemini CLI was retired on 2026-06-18 in favour of Antigravity CLI, which
+ * reads `.agents/skills` directly. TOML commands remain here because Gemini CLI
+ * paid/enterprise users still exist and Antigravity's migration imports them.
+ */
+/** Gemini CLI (legacy) / Antigravity: .gemini/commands — TOML only. */
 export function exportGeminiCommands(destDir: string, skills: SkillItem[]): number {
   const count = writeHarnessCommands(destDir, skills, { extension: ".toml", generate: generateGeminiToml });
   pruneSupersededMarkdown(destDir, skills);
@@ -463,6 +473,31 @@ export function resolveSkillSourceDir(skill: SkillItem): string {
 }
 
 export const MUSE_VERSION_MARKER = ".muse-version";
+
+/**
+ * Mirror an installed skills tree into another harness's skill root as
+ * symlinks, so an update to the canonical root is immediately visible there
+ * (Amp and Claude Code both read their own roots; copying would go stale).
+ * Falls back to a copy where symlinks are unavailable (e.g. Windows without
+ * developer mode).
+ */
+export function exportSkillMirror(root: string, skills: SkillItem[], sourceRoot: string): number {
+  fs.mkdirSync(root, { recursive: true });
+  let count = 0;
+  for (const skill of skills) {
+    const source = path.resolve(sourceRoot, skill.name);
+    if (!fs.existsSync(source)) continue;
+    const dest = path.join(root, skill.name);
+    fs.rmSync(dest, { recursive: true, force: true });
+    try {
+      fs.symlinkSync(source, dest, "dir");
+    } catch {
+      fs.cpSync(source, dest, { recursive: true });
+    }
+    count++;
+  }
+  return count;
+}
 
 export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   fs.mkdirSync(targetDir, { recursive: true });
@@ -560,10 +595,18 @@ export function runSetup(options: SetupOptions = {}): void {
   const doWire = options.wireAgentsMd === true;
 
   // 1. Install Skills
+  const canonicalSkillsRoot = options.skillsDest || path.join(userHome, ".agents", "skills");
   if (doSkills) {
-    const dest = options.skillsDest || path.join(userHome, ".agents", "skills");
-    const count = exportSkills(dest, skills);
-    console.log(`✅ Skills: Installed ${count} canonical departments → ${dest}`);
+    const count = exportSkills(canonicalSkillsRoot, skills);
+    console.log(`✅ Skills: Installed ${count} canonical departments → ${canonicalSkillsRoot}`);
+
+    // Amp reads ~/.agents/skills already; Claude Code reads its own root, and
+    // Amp also falls back to it. Mirror by symlink so refreshes propagate.
+    for (const mirror of [path.join(userHome, ".claude", "skills"), path.join(workspaceRoot, ".claude", "skills")]) {
+      if (!fs.existsSync(path.dirname(mirror))) continue;
+      const mirrored = exportSkillMirror(mirror, skills, canonicalSkillsRoot);
+      console.log(`✅ Skills (Claude Code / Amp): ${mirrored} linked → ${mirror}`);
+    }
   }
 
   // 2. Export Slash Commands
@@ -640,6 +683,18 @@ export function runSetup(options: SetupOptions = {}): void {
         path.join(workspaceRoot, ".continue", "prompts"),
         path.join(workspaceRoot, ".continue"),
         exportContinuePrompts,
+      ],
+      [
+        "Qwen Code (Global)",
+        path.join(userHome, ".qwen", "commands"),
+        path.join(userHome, ".qwen"),
+        exportQwenCommands,
+      ],
+      [
+        "Qwen Code (Local)",
+        path.join(workspaceRoot, ".qwen", "commands"),
+        path.join(workspaceRoot, ".qwen"),
+        exportQwenCommands,
       ],
     ];
     for (const [label, dest, gate, exporter] of markdown) exportTo(label, dest, gate, exporter);

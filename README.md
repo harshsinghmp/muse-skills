@@ -61,7 +61,7 @@ Every skill follows the open `SKILL.md` specification: rich intent triggers, ste
 | **Context Amnesia**: Agents lose track of architecture, conventions, and past decisions between sessions. | **Persistent Cognitive Context**: `context-anchor` and `updateagents` preserve project truth, active constraints, and architectural invariants indefinitely. |
 | **Premature Victory**: Agents claim code works without running real tests, leaving broken builds behind. | **Automated Verification Gates**: Every workflow enforces executable test commands (`bun test`, `pytest`) before sign-off (Evidence over Claims). |
 | **Chaotic Releases**: Unformatted commits directly to production branches cause merge conflicts and regressions. | **Disciplined Release Flow**: The `git` skill automates semantic versioning, feature branches, and tag creation seamlessly. |
-| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, and Hermes. |
+| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Claude Code, Codex, Cursor, Windsurf, Copilot, Continue, Roo Code, Qwen Code, and Antigravity — plus `SKILL.md` that agents like Amp read directly. |
 | **Messy Client Handoffs**: Scattered requirements, manual onboarding, and accidental credential leaks. | **End-to-End Agency Operations**: Dedicated skills for `brand` intake, `client-comms`, `accounts`, and `qa-launch` with zero credential leakage. |
 
 ---
@@ -114,7 +114,7 @@ Each skill is completely self-contained within its own directory:
 ### 2. Zero-Dependency Portability
 - **Pure Markdown & Modern CLI**: Written in vendor-neutral Markdown and standards-compliant shell/TypeScript.
 - **Cross-Platform**: Operates identically across Linux, macOS, and Windows.
-- **Universal Agent Support**: Compatible with Claude Code, Cursor, OpenCode, Google Antigravity, Hermes, and any runtime implementing the standard skills protocol.
+- **Universal Agent Support**: Compatible with Claude Code, Codex, Cursor, OpenCode, Google Antigravity, Amp, Qwen Code, Copilot, Continue, Roo Code, and any runtime implementing the standard skills protocol.
 
 ### 3. Verification Doctrine (Evidence Over Claims)
 - No agent may claim completion without running executable proof commands.
@@ -274,12 +274,17 @@ Export native slash commands into every detected agent harness — each one in t
 | Codex CLI | — | `~/.codex/prompts/` | `.md` |
 | Cursor | `.cursor/commands/` | — | `.md` |
 | Roo Code | `.roo/commands/` | `~/.roo/commands/` | `.md` |
-| Gemini CLI / Antigravity | `.gemini/commands/` | `~/.gemini/commands/` | `.toml` |
+| Qwen Code | `.qwen/commands/` | `~/.qwen/commands/` | `.md` |
+| Gemini CLI *(legacy — retired 2026-06-18)* | `.gemini/commands/` | `~/.gemini/commands/` | `.toml` |
 | GitHub Copilot | `.github/prompts/` | — | `.prompt.md` |
 | Continue | `.continue/prompts/` | `~/.continue/prompts/` | `.prompt` |
 | Windsurf | `.windsurf/workflows/` | — | `.md` |
 
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
+
+**Skills are the durable surface.** Slash-command files are per-harness and each has its own format; `SKILL.md` is cross-harness. Antigravity and Amp read `~/.agents/skills/` (Amp's second search root) and `.agents/skills/` in a project directly, and Claude Code reads `~/.claude/skills/`. The setup mirrors the canonical tree into `~/.claude/skills/` and `<project>/.claude/skills/` as symlinks, so a refresh of `~/.agents/skills` is immediately visible there instead of going stale.
+
+**Gemini CLI was retired on 2026-06-18** in favour of Antigravity CLI. The `.gemini/commands/` TOML writer stays as a compatibility path: Antigravity's migration imports it, paid and enterprise Gemini CLI users still exist, and it costs nothing when `.gemini/` is absent. New setups should rely on skills.
 
 ```bash
 # Auto-detects harnesses, installs skills, and exports native slash commands
