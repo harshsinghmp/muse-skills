@@ -41,6 +41,7 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Landing gate no longer poisons its own commits** (`scripts/check-landed.ts`): the pre-review gate read the PR's check rollup, which contains its **own** earlier runs — so the first failure on a SHA made every later run fail, permanently. It now ignores its own job and judges only the **latest** run per check name, so a superseded or cancelled run cannot outvote the run that replaced it. `check-landed` is also import-gated (`import.meta.main`), matching the repo convention; importing it no longer executes the gate.
 - **Windsurf verdict recorded**: Cognition/Devin acquired Windsurf and `docs.windsurf.com` redirects to `docs.devin.ai`. Decision: **stays active** — the canonical page still documents `.windsurf/workflows` — and `harness.json` now points `docs` at the canonical page with a `reviewedAt` verdict, so the monthly watch checks where documentation actually lives instead of warning about a redirect forever. Registry validation requires a reviewed harness to record its rationale.
 - **Codex custom prompts removed upstream**: OpenAI deleted the prompts subsystem in v0.117.0 and Codex now reads skills from `.agents/skills`, so the `~/.codex/prompts` exporter is gone rather than writing dead files; `harness.json` records the retired path and `doctor` reports leftovers.
 - **Gemini CLI is legacy, not current**: retired 2026-06-18 in favour of Antigravity CLI. The TOML writer stays as a migration path but is no longer advertised as a primary harness.
