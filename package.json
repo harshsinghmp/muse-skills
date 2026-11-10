@@ -89,6 +89,9 @@
     "check:routing:heldout": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v5.json --min-exact 0 --min-skill 0",
     "check:routing:engineering": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v6.json --min-exact 0 --min-skill 0",
     "check:routing:v7": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v7.json --min-exact 0 --min-skill 0",
+    "check:routing:v8": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v8.json --min-exact 0 --min-skill 0",
+    "check:routing:matrix": "bun scripts/check-routing-matrix.ts",
+    "sync:routing:baseline": "bun scripts/check-routing-matrix.ts --update",
     "check:install": "bun scripts/check-install-matrix.ts",
     "muse": "bun scripts/muse.ts"
   },

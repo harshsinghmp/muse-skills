@@ -26,6 +26,10 @@ const ENGINEERING = JSON.parse(
 const CROSS_DOMAIN = JSON.parse(
   readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v7.json"), "utf8"),
 ) as RoutingFixture[];
+/** v8: written blind after the anchors work; the standing check for new changes. */
+const BLIND_V8 = JSON.parse(
+  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v8.json"), "utf8"),
+) as RoutingFixture[];
 
 const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry.skill}:${entry.mode}`));
 
@@ -70,6 +74,16 @@ describe("routing generalisation (held-out)", () => {
       `[routing] cross-domain held-out: exact ${(report.exactRate * 100).toFixed(0)}% · department ${(report.departmentRate * 100).toFixed(0)}% (${report.exact}/${report.total})`,
     );
     expect(report.exactRate).toBeGreaterThanOrEqual(0.02);
+    expect(report.departmentRate).toBeGreaterThanOrEqual(0.18);
+  });
+
+  test("v8 blind set is the standing check for routing changes (weak cover accepted)", () => {
+    const report = evaluateRouting(BLIND_V8, routes, { minExact: 0, minSkill: 0 });
+    expect(report.invalidPredictions).toEqual([]);
+    console.log(
+      `[routing] v8 blind: exact ${(report.exactRate * 100).toFixed(0)}% · department ${(report.departmentRate * 100).toFixed(0)}% (${report.exact}/${report.total})`,
+    );
+    expect(report.exactRate).toBeGreaterThanOrEqual(0.03);
     expect(report.departmentRate).toBeGreaterThanOrEqual(0.18);
   });
 

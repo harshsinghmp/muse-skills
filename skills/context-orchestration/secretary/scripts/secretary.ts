@@ -757,6 +757,8 @@ interface RoutingIndex {
   /** Token weight across the 406 mode descriptions (rare words identify a mode). */
   modeDocIdf: Map<string, number>;
   modeDocCount: number;
+  /** Department → tokens that appear in any of its mode descriptions. */
+  departmentModeTokens: Map<string, Set<string>>;
 }
 
 interface ModeDocument {
@@ -776,9 +778,15 @@ function loadModeDocs(): Map<string, ModeDocument> {
   const file = join(import.meta.dir, "..", "references", "mode-signals.json");
   if (!existsSync(file)) return modeDocsCache;
   try {
-    const data = JSON.parse(readFileSync(file, "utf8")) as Record<string, Record<string, string>>;
+    type Signal = string | { heading?: string; anchors?: string[]; text?: string };
+    const data = JSON.parse(readFileSync(file, "utf8")) as Record<string, Record<string, Signal>>;
     for (const [skill, modes] of Object.entries(data)) {
-      for (const [mode, text] of Object.entries(modes)) {
+      for (const [mode, signal] of Object.entries(modes)) {
+        // Older releases shipped a prose blob; new ones ship heading + anchors.
+        const text =
+          typeof signal === "string"
+            ? signal
+            : [signal.heading ?? "", ...(signal.anchors ?? []), signal.text ?? ""].join(" ");
         modeDocsCache.set(`${skill}:${mode}`, { tokens: new Set(tokenize(text)) });
       }
     }
@@ -829,7 +837,17 @@ function buildIndex(): RoutingIndex {
   for (const [token, count] of docFrequency) {
     modeDocIdf.set(token, Math.log(Math.max(2, docs.size) / count));
   }
-  return { entries, descriptionIdf, modeIdf, modeDocIdf, modeDocCount: docs.size };
+
+  const departmentModeTokens = new Map<string, Set<string>>();
+  for (const key of docs.keys()) {
+    const [skill] = key.split(":");
+    const doc = docs.get(key);
+    if (!doc) continue;
+    const bucket = departmentModeTokens.get(skill) ?? new Set<string>();
+    for (const token of doc.tokens) bucket.add(token);
+    departmentModeTokens.set(skill, bucket);
+  }
+  return { entries, descriptionIdf, modeIdf, modeDocIdf, modeDocCount: docs.size, departmentModeTokens };
 }
 
 function getIndex(): RoutingIndex {
@@ -919,6 +937,18 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       }
     }
     score += Math.min(12, modeSignal);
+    // Mode-corpus evidence for the DEPARTMENT: what this skill's modes actually
+    // talk about. Capped so a long mode list cannot outvote explicit cues.
+    let modeDocScore = 0;
+    const departmentTokens = index.departmentModeTokens.get(entry.skill);
+    if (departmentTokens) {
+      for (const token of departmentTokens) {
+        if (!promptTokens.some((candidate) => stemsMatch(candidate, token))) continue;
+        modeDocScore += index.modeDocIdf.get(token) ?? 0;
+      }
+    }
+    score += Math.min(8, modeDocScore * 0.6);
+
     let hintBoost = 0;
     for (const rule of FAST_PATH_RULES) {
       if (rule.confidence !== "hint" || rule.department !== entry.skill) continue;

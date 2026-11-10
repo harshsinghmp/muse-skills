@@ -113,10 +113,14 @@ export function buildDirectoryMarkdown(): string {
   return md;
 }
 
-/** A compact signal line for a mode: its heading plus the opening of its body. */
-function modeSignal(skillDir: string, mode: string): string {
+/**
+ * A mode's intent as reviewable anchors: its heading plus the short sentences
+ * and bullets the reference opens with. Anchors are how a person would describe
+ * the work, which makes them a better routing signal than a prose blob.
+ */
+function modeSignal(skillDir: string, mode: string): { heading: string; anchors: string[]; text: string } {
   const file = path.join(skillDir, "references", `${mode}.md`);
-  if (!fs.existsSync(file)) return "";
+  if (!fs.existsSync(file)) return { heading: "", anchors: [], text: "" };
   const text = fs.readFileSync(file, "utf8");
   const heading =
     text
@@ -125,17 +129,42 @@ function modeSignal(skillDir: string, mode: string): string {
       ?.replace(/^#\s+/, "")
       .replace(/^[^\w]+/, "")
       .trim() ?? "";
-  // Keep the first section's prose and bullets: a mode's opening is its intent
-  // statement, and the bullets carry the vocabulary prompts actually use.
-  const body = text
+
+  const trim = (value: string, limit: number): string => {
+    if (value.length <= limit) return value;
+    const cut = value.lastIndexOf(" ", limit);
+    return `${value.slice(0, cut > 0 ? cut : limit)}…`;
+  };
+
+  const anchors: string[] = [];
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (line === "" || line.startsWith("#") || line.startsWith("```")) continue;
+    const cleaned = line
+      .replace(/^[-*\d.]+\s+/, "")
+      .replace(/[`*_]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (cleaned.length < 20) continue;
+    for (const sentence of cleaned.split(/(?<=[.!?])\s+/)) {
+      if (sentence.length < 20) continue;
+      anchors.push(trim(sentence, 90));
+      if (anchors.length >= 5) break;
+    }
+    if (anchors.length >= 5) break;
+  }
+  // Scoring keeps the opening prose (it measured better than anchors alone);
+  // anchors are the human-reviewable view of the same intent.
+  const prose = text
     .split("\n")
     .slice(1)
     .filter((line) => !line.startsWith("## "))
     .join(" ")
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/\s+/g, " ")
-    .trim();
-  return `${heading}. ${body}`.slice(0, 420);
+    .trim()
+    .slice(0, 420);
+  return { heading, anchors, text: prose };
 }
 
 /**
@@ -145,7 +174,7 @@ function modeSignal(skillDir: string, mode: string): string {
  */
 export function buildModeSignals(): string {
   const skills = getSkills();
-  const payload: Record<string, Record<string, string>> = {};
+  const payload: Record<string, Record<string, { heading: string; anchors: string[]; text: string }>> = {};
   for (const skill of skills) {
     const modes = getModesForSkill(skill.name);
     if (modes.length === 0) continue;
