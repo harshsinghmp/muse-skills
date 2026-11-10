@@ -65,27 +65,53 @@ export const COUNCIL_LEADS: Record<string, string> = {
   updateagents: "Nexus",
 };
 
-// Fast-path heuristic rules
-const FAST_PATH_RULES: Array<{
+// Fast-path heuristic rules: verb-phrase intents that must not be out-scored by
+// lexical similarity. Every target MUST resolve to a real references/<mode>.md —
+// tests/routing-eval.test.ts asserts this against the generated command surface.
+export const FAST_PATH_RULES: Array<{
   regex: RegExp;
   department: string;
   mode: string;
   reason: string;
 }> = [
   {
-    regex: /^(bun\s+)?test\b|run\s+test|verify\s+all/i,
+    regex: /^(bun\s+)?test\b|run\s+(the\s+)?tests?|test\s+suite|verify\s+all|add\s+unit\s+tests?|write\s+tests?\s+for/i,
     department: "qa-launch",
     mode: "gate",
     reason: "Direct test verification match",
   },
   {
+    regex: /pull\s+request|code\s+review|review\s+this\s+(pr|diff|patch)/i,
+    department: "code-review",
+    mode: "pr-context",
+    reason: "Pull-request review match",
+  },
+  {
+    regex: /statement\s+of\s+work|\bsow\b/i,
+    department: "ops",
+    mode: "sow",
+    reason: "Statement-of-work match",
+  },
+  {
+    regex: /press\s+release|public\s+relations/i,
+    department: "growth",
+    mode: "pr",
+    reason: "Public relations match",
+  },
+  {
+    regex: /p&l|profit\s+and\s+loss|client\s+pnl/i,
+    department: "accounts",
+    mode: "client-pnl",
+    reason: "Client P&L reporting match",
+  },
+  {
     regex: /^lint\b|run\s+lint|type-check|biome\s+check/i,
     department: "code-review",
-    mode: "audit",
+    mode: "triage-matrix",
     reason: "Direct lint/type-check hygiene match",
   },
   {
-    regex: /ai-ready|audit\s+readiness|readiness\s+score/i,
+    regex: /ai[-\s]readiness|ai-ready|readiness\s+score/i,
     department: "updateagents",
     mode: "audit",
     reason: "Direct AI readiness audit match",
@@ -93,14 +119,86 @@ const FAST_PATH_RULES: Array<{
   {
     regex: /sync\s+context|update\s+agents|update\s+memory/i,
     department: "updateagents",
-    mode: "sync",
+    mode: "memory-file-priorities",
     reason: "Direct context synchronization match",
   },
   {
-    regex: /checkout|stripe|payments|funnel\s+page/i,
+    regex: /checkout\s+(page|funnel)|stripe\s+payments|payment\s+integration|funnel\s+page/i,
     department: "webdev",
     mode: "funnel",
     reason: "E-Commerce checkout and payments match",
+  },
+  {
+    regex: /react\s+native|expo\b|flutter/i,
+    department: "mobile",
+    mode: "cross",
+    reason: "Cross-platform mobile framework match",
+  },
+  {
+    regex: /bundle\s+size|page\s+load|lighthouse\s+score/i,
+    department: "webdev",
+    mode: "performance",
+    reason: "Web performance budget match",
+  },
+  {
+    regex: /competitor\s+(analysis|dossier)|competitive\s+landscape/i,
+    department: "research",
+    mode: "competitor-analysis",
+    reason: "Competitor analysis match",
+  },
+  {
+    regex: /\bretrospective\b|\bretro\b/i,
+    department: "ops",
+    mode: "retro",
+    reason: "Project retrospective match",
+  },
+  {
+    regex: /system\s+cache|free\s+disk\s+space|clean\s+(the\s+)?cache/i,
+    department: "clean-system-cache",
+    mode: "audit",
+    reason: "System cache cleanup match",
+  },
+  {
+    regex: /buyer\s+persona|customer\s+persona/i,
+    department: "brand",
+    mode: "persona",
+    reason: "Buyer persona match",
+  },
+  {
+    regex: /broken\s+links?|link\s+integrity/i,
+    department: "audit",
+    mode: "hygiene-rules",
+    reason: "Documentation link-integrity match",
+  },
+  {
+    regex: /swarm\s+mesh|task\s+claim|mesh\s+protocol/i,
+    department: "coupling-router",
+    mode: "mesh",
+    reason: "Swarm mesh claim-protocol match",
+  },
+  {
+    regex: /agent\s+swarm|swarm\s+dispatcher|\bdag\b|multi-agent\s+quorum/i,
+    department: "coupling-router",
+    mode: "swarm",
+    reason: "Agent swarm dispatcher match",
+  },
+  {
+    regex: /ci\/cd|cicd|github\s+actions|deploy\s+pipeline/i,
+    department: "devops",
+    mode: "cicd",
+    reason: "CI/CD pipeline match",
+  },
+  {
+    regex: /nurture\s+(email|sequence|campaign)|drip\s+campaign/i,
+    department: "crm",
+    mode: "nurture",
+    reason: "Nurture sequence match",
+  },
+  {
+    regex: /^refactor\b|clean\s+up\s+and\s+refactor/i,
+    department: "refactor",
+    mode: "code",
+    reason: "Explicit refactoring request match",
   },
   {
     regex: /carousel|postiz|viral\s+social|linkedin\s+carousel/i,
@@ -115,7 +213,7 @@ const FAST_PATH_RULES: Array<{
     reason: "Identity onboarding interview match",
   },
   {
-    regex: /briefing|morning\s+status|session\s+wakeup/i,
+    regex: /morning\s+(briefing|status)|^briefing\b|session\s+wakeup/i,
     department: "secretary",
     mode: "orchestration",
     reason: "Morning executive orientation match",
@@ -149,6 +247,405 @@ export interface TriageResult {
   reason: string;
 }
 
+/** One parsed row of the generated agency directory in references/dispatch.md. */
+export interface DirectoryEntry {
+  skill: string;
+  modes: string[];
+  lead: string;
+  description: string;
+  tokens: Set<string>;
+}
+
+const STOPWORDS = new Set([
+  "the",
+  "and",
+  "for",
+  "with",
+  "from",
+  "that",
+  "this",
+  "into",
+  "over",
+  "then",
+  "than",
+  "have",
+  "has",
+  "are",
+  "was",
+  "were",
+  "will",
+  "would",
+  "should",
+  "could",
+  "can",
+  "may",
+  "our",
+  "your",
+  "their",
+  "its",
+  "it",
+  "a",
+  "an",
+  "to",
+  "of",
+  "in",
+  "on",
+  "at",
+  "by",
+  "as",
+  "is",
+  "be",
+  "or",
+  "if",
+  "we",
+  "you",
+  "they",
+  "i",
+  "me",
+  "my",
+  "us",
+  "do",
+  "does",
+  "did",
+  "not",
+  "no",
+  "but",
+  "so",
+  "up",
+  "out",
+  "all",
+  "any",
+  "per",
+  "via",
+  "use",
+  "when",
+  "asked",
+  "want",
+  "need",
+  "make",
+  "get",
+  "let",
+  "just",
+  "also",
+  "about",
+  "after",
+  "before",
+  "new",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "please",
+  "help",
+  "build",
+  "create",
+  "write",
+]);
+
+/** Mode used when a department is the right answer but no mode word appears. */
+export const DEFAULT_MODE: Record<string, string> = {
+  webdev: "implement",
+  design: "ui",
+  content: "copy",
+  smm: "content",
+  seo: "content",
+  analytics: "reporting",
+  devops: "hosting",
+  database: "operate",
+  mobile: "cross",
+  automation: "workflow",
+  accounts: "invoicing",
+  crm: "nurture",
+  growth: "positioning",
+  paidads: "google",
+  ops: "onboarding",
+  retain: "check-in",
+  "client-comms": "status",
+  "sales-enablement": "demo",
+  gtm: "outreach",
+  brand: "assets",
+  research: "user-research",
+  telegram: "notify",
+  "incident-response": "triage",
+  "qa-launch": "gate",
+  relay: "ambient-handoff",
+  "context-anchor": "layering-protocol",
+  "coupling-router": "coupling-matrix",
+  secretary: "dispatch",
+  "evidence-ledger": "evidence-entry-schema",
+  updatedocs: "audit",
+  updateagents: "audit",
+  git: "branching-and-release-matrix",
+  "new-project": "project-os-architecture",
+  "code-review": "pr-context",
+  "gauntlet-loop": "gauntlet-protocol",
+  "dead-letter": "record-schema",
+  pua: "audit",
+  audit: "hygiene-rules",
+  humanize: "style-guide",
+  "muse-security": "audit",
+  refactor: "code",
+  designscope: "analysis-framework",
+  animate: "principles",
+  coach: "team",
+  "periodic-retreat": "retreat-protocol",
+  "clean-system-cache": "audit",
+};
+
+function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(" ")
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3 && !STOPWORDS.has(token));
+}
+
+function normalizeToken(token: string): string {
+  // Only derivational suffixes that preserve the stem's meaning. Do NOT strip
+  // "-er"/"-or": "one-pagers" → "pag" would then collide with "page".
+  const stripped = token.replace(/(ations?|ation|ate|ions?|ing|ed|es|s|e)$/, "");
+  return stripped.length >= 3 ? stripped : token;
+}
+
+/** English-derivation tolerant comparison: invoice ≈ invoicing, migrate ≈ migrations. */
+export function stemsMatch(a: string, b: string): boolean {
+  if (a === b) return true;
+  const na = normalizeToken(a);
+  const nb = normalizeToken(b);
+  if (na === nb && na.length >= 3) return true;
+  // Prefix matching only for comparable stems: "access" is not "accessibility",
+  // but "invoice" is a stem of "invoicing".
+  const [shorter, longer] = na.length <= nb.length ? [na, nb] : [nb, na];
+  if (shorter.length >= 5 && longer.startsWith(shorter) && shorter.length / longer.length >= 0.65) return true;
+  return false;
+}
+
+let directoryCache: DirectoryEntry[] | undefined;
+
+/**
+ * Parses the generated agency directory out of references/dispatch.md. The path
+ * is relative to this script, so it resolves in the repo and in an installed
+ * `~/.agents/skills/secretary/` layout alike.
+ */
+export function loadAgencyDirectory(): DirectoryEntry[] {
+  if (directoryCache) return directoryCache;
+  const dispatchPath = join(import.meta.dir, "..", "references", "dispatch.md");
+  if (!existsSync(dispatchPath)) {
+    directoryCache = [];
+    return directoryCache;
+  }
+  const text = readFileSync(dispatchPath, "utf8");
+  const start = text.indexOf("<!-- agency-directory:start -->");
+  const end = text.indexOf("<!-- agency-directory:end -->");
+  const block = start !== -1 && end > start ? text.slice(start, end) : text;
+
+  const entries: DirectoryEntry[] = [];
+  for (const line of block.split("\n")) {
+    const skillMatch = line.match(/^\|\s*\*\*`([a-z0-9-]+)`\*\*\s*\|/);
+    if (!skillMatch) continue;
+    const cells = line
+      .split("|")
+      .slice(1, -1)
+      .map((cell) => cell.trim());
+    const leadIndex = cells.findIndex((cell, index) => index > 0 && /\*\*(Sol|Jasper|Crew|Nexus)/.test(cell));
+    const modes = [...(cells[1] ?? "").matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]);
+    const lead = leadIndex === -1 ? "" : cells[leadIndex].replace(/\*/g, "").trim();
+    const description = leadIndex === -1 ? "" : (cells[leadIndex + 1] ?? "");
+    entries.push({
+      skill: skillMatch[1],
+      modes,
+      lead,
+      description,
+      tokens: new Set(tokenize(description)),
+    });
+  }
+  directoryCache = entries;
+  return entries;
+}
+
+interface RoutingIndex {
+  entries: DirectoryEntry[];
+  descriptionIdf: Map<string, number>;
+  modeIdf: Map<string, number>;
+}
+
+let indexCache: RoutingIndex | undefined;
+
+function buildIndex(): RoutingIndex {
+  const entries = loadAgencyDirectory();
+  const documentFrequency = new Map<string, number>();
+  for (const entry of entries) {
+    for (const token of entry.tokens) {
+      documentFrequency.set(token, (documentFrequency.get(token) ?? 0) + 1);
+    }
+  }
+  const descriptionIdf = new Map<string, number>();
+  for (const [token, count] of documentFrequency) {
+    descriptionIdf.set(token, Math.log(entries.length / count));
+  }
+
+  // Mode names are the sharpest signal: "carousel" or "obsidian" identify one
+  // department, while "client" or "content" appear in dozens of mode names.
+  const modeFrequency = new Map<string, number>();
+  let totalModes = 0;
+  for (const entry of entries) {
+    for (const mode of entry.modes) {
+      totalModes += 1;
+      for (const token of new Set(tokenize(mode.replace(/-/g, " ")))) {
+        modeFrequency.set(token, (modeFrequency.get(token) ?? 0) + 1);
+      }
+    }
+  }
+  const modeIdf = new Map<string, number>();
+  for (const [token, count] of modeFrequency) {
+    modeIdf.set(token, Math.log(totalModes / count));
+  }
+  return { entries, descriptionIdf, modeIdf };
+}
+
+function getIndex(): RoutingIndex {
+  if (!indexCache) indexCache = buildIndex();
+  return indexCache;
+}
+
+function modeWeight(index: RoutingIndex, token: string): number {
+  return Math.max(0.5, index.modeIdf.get(token) ?? 1);
+}
+
+/** Mode words that identify a department; excludes ubiquitous ones like "audit". */
+const SPECIFIC_MODE_WEIGHT = 3;
+
+function scoreMode(promptTokens: string[], mode: string, index: RoutingIndex): number {
+  const modeTokens = tokenize(mode.replace(/-/g, " "));
+  if (modeTokens.length === 0) return 0;
+  let matched = 0;
+  let total = 0;
+  let hits = 0;
+  for (const modeToken of modeTokens) {
+    const weight = modeWeight(index, modeToken);
+    total += weight;
+    if (promptTokens.includes(modeToken)) {
+      matched += weight * 1.25;
+      hits += 1;
+    } else if (promptTokens.some((token) => stemsMatch(token, modeToken))) {
+      matched += weight;
+      hits += 1;
+    }
+  }
+  // Reward modes whose every word is present ("logo" beats "brand-immersion"
+  // when the prompt says "logo and brand identity").
+  return matched + (hits === modeTokens.length ? total * 0.4 : 0);
+}
+
+export interface ScoredDepartment {
+  entry: DirectoryEntry;
+  score: number;
+  modeSignal: number;
+}
+
+function scoreDepartments(prompt: string): ScoredDepartment[] {
+  const index = getIndex();
+  const promptTokens = tokenize(prompt);
+  if (index.entries.length === 0 || promptTokens.length === 0) return [];
+  const normalizedPrompt = ` ${prompt
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")} `;
+
+  const scored: ScoredDepartment[] = index.entries.map((entry) => {
+    let score = 0;
+    if (normalizedPrompt.includes(` ${entry.skill.replace(/-/g, " ")} `)) score += 12;
+    for (const nameToken of entry.skill.split("-")) {
+      if (nameToken.length < 3) continue;
+      if (promptTokens.some((token) => stemsMatch(token, nameToken))) score += 2;
+    }
+    for (const token of entry.tokens) {
+      if (!promptTokens.some((candidate) => stemsMatch(candidate, token))) continue;
+      score += index.descriptionIdf.get(token) ?? 0;
+    }
+    let modeSignal = 0;
+    for (const mode of entry.modes) {
+      for (const modeToken of tokenize(mode.replace(/-/g, " "))) {
+        const weight = modeWeight(index, modeToken);
+        if (weight < SPECIFIC_MODE_WEIGHT) continue;
+        if (promptTokens.some((token) => stemsMatch(token, modeToken))) {
+          modeSignal += weight;
+        }
+      }
+    }
+    score += Math.min(12, modeSignal);
+    return { entry, score, modeSignal };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+
+  // An explicit, *specific* mode cue outranks a department whose name is just a
+  // common English word (the prompt says "audit" but also "WCAG accessibility").
+  const top = scored[0];
+  const topWithCue = scored.find((candidate) => candidate.modeSignal > 0);
+  if (top && top.modeSignal === 0 && topWithCue) {
+    return [topWithCue, ...scored.filter((candidate) => candidate !== topWithCue)];
+  }
+  return scored;
+}
+
+function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score: number } {
+  const index = getIndex();
+  const promptTokens = tokenize(prompt);
+  const preferred = DEFAULT_MODE[entry.skill];
+  let bestMode: string | undefined;
+  let bestScore = 0;
+  for (const mode of entry.modes) {
+    const score = scoreMode(promptTokens, mode, index);
+    if (score > bestScore) {
+      bestMode = mode;
+      bestScore = score;
+    } else if (score === bestScore && score > 0 && mode === preferred) {
+      bestMode = mode;
+    }
+  }
+  return { mode: bestMode ?? DEFAULT_MODE[entry.skill] ?? entry.modes[0] ?? "audit", score: bestScore };
+}
+
+export interface RoutingExplanation {
+  department: string;
+  departmentScore: number;
+  runnerUp: { department: string; score: number } | null;
+  modes: Array<{ mode: string; score: number }>;
+  fastPath: boolean;
+}
+
+/** Debug/eval surface: why did this prompt route where it did? */
+export function explainRouting(prompt: string): RoutingExplanation {
+  const result = triagePrompt(prompt);
+  if (result.fastPath) {
+    return {
+      department: result.department,
+      departmentScore: Number.POSITIVE_INFINITY,
+      runnerUp: null,
+      modes: [{ mode: result.mode, score: Number.POSITIVE_INFINITY }],
+      fastPath: true,
+    };
+  }
+  const scored = scoreDepartments(prompt);
+  const winner = scored[0];
+  const index = getIndex();
+  const promptTokens = tokenize(prompt);
+  const modes = (winner?.entry.modes ?? [])
+    .map((mode) => ({ mode, score: scoreMode(promptTokens, mode, index) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+  return {
+    department: result.department,
+    departmentScore: winner?.score ?? 0,
+    runnerUp: scored[1] ? { department: scored[1].entry.skill, score: scored[1].score } : null,
+    modes,
+    fastPath: false,
+  };
+}
+
 export function triagePrompt(prompt: string): TriageResult {
   const cleanPrompt = prompt.trim();
 
@@ -166,47 +663,27 @@ export function triagePrompt(prompt: string): TriageResult {
     }
   }
 
-  // 2. Keyword density heuristic scoring
-  const lower = cleanPrompt.toLowerCase();
-  if (lower.includes("figma") || lower.includes("css") || lower.includes("ui") || lower.includes("mockup")) {
+  // 2. Lexical scoring over the generated 46-department directory.
+  const scored = scoreDepartments(cleanPrompt);
+  const best = scored[0];
+  if (best && best.score > 0) {
+    const { mode, score: modeScoreValue } = pickMode(best.entry, cleanPrompt);
     return {
-      department: "design",
-      mode: "ui",
-      councilLead: "Jasper",
-      confidence: 0.9,
+      department: best.entry.skill,
+      mode,
+      councilLead: best.entry.lead || COUNCIL_LEADS[best.entry.skill] || "Nexus",
+      confidence: Math.min(0.95, 0.55 + Math.min(0.4, best.score / 40)),
       fastPath: false,
-      reason: "Visual design and UI token cues",
+      reason: `Lexical match on ${best.entry.skill} (${modeScoreValue > 0 ? `mode cue: ${mode}` : "department cue"})`,
     };
   }
 
-  if (lower.includes("deploy") || lower.includes("cloudflare") || lower.includes("dns") || lower.includes("server")) {
-    return {
-      department: "devops",
-      mode: "hosting",
-      councilLead: "Sol",
-      confidence: 0.88,
-      fastPath: false,
-      reason: "Infrastructure and deployment cues",
-    };
-  }
-
-  if (lower.includes("database") || lower.includes("sql") || lower.includes("postgres") || lower.includes("drizzle")) {
-    return {
-      department: "database",
-      mode: "operate",
-      councilLead: "Sol",
-      confidence: 0.92,
-      fastPath: false,
-      reason: "Database query or schema cues",
-    };
-  }
-
-  // Default fallback to webdev implement or general staff work
+  // 3. Default fallback to general development execution.
   return {
     department: "webdev",
     mode: "implement",
     councilLead: "Sol",
-    confidence: 0.75,
+    confidence: 0.4,
     fastPath: false,
     reason: "General development execution fallback",
   };

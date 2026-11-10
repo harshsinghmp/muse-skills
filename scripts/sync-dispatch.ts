@@ -89,6 +89,30 @@ export function getModesForSkill(skillName: string): string[] {
     .sort();
 }
 
+/** Divisions are rendered with one uniform 5-column table so every department
+ *  advertises its routable modes — a department without a mode list cannot be
+ *  dispatched to a specific reference file. */
+const DIVISIONS: Array<{ category: string; heading: string; fallbackLead: string }> = [
+  {
+    category: "agency-delivery",
+    heading: "1. Agency Delivery Division (Client Deliverables & Revenue Engines)",
+    fallbackLead: "Nexus",
+  },
+  { category: "context-orchestration", heading: "2. Context Orchestration & Memory Division", fallbackLead: "Nexus" },
+  { category: "core-engine", heading: "3. Core Engine & Scaffolding Division", fallbackLead: "Sol" },
+  {
+    category: "quality-review",
+    heading: "4. Quality Review & Hardening Division (The Nexus Gate)",
+    fallbackLead: "Nexus",
+  },
+  { category: "design-interface", heading: "5. Interface & Visual Engineering Division", fallbackLead: "Jasper" },
+  {
+    category: "reflection-maintenance",
+    heading: "6. Reflection & Systems Maintenance Division",
+    fallbackLead: "Crew",
+  },
+];
+
 export function buildDirectoryMarkdown(): string {
   const skills = getSkills();
   const byCategory: Record<string, typeof skills> = {};
@@ -99,69 +123,19 @@ export function buildDirectoryMarkdown(): string {
   }
 
   let md = `## 📋 Canonical 46-Department Agency Directory\n\n`;
-  md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n\n`;
+  md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n`;
 
-  // 1. Agency Delivery Division
-  md += `### 1. Agency Delivery Division (Client Deliverables & Revenue Engines)\n\n`;
-  md += `| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |\n`;
-  md += `| :--- | :--- | :--- | :--- | :--- |\n`;
-
-  for (const s of byCategory["agency-delivery"] || []) {
-    const modes = getModesForSkill(s.name);
-    const modeList = modes.length > 0 ? modes.map((m) => `\`${m}\``).join(", ") : "`default`";
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${modeList} | **${lead}** | ${shortDesc}. | \`${s.name}/references/<mode>.md\` |\n`;
-  }
-
-  // 2. Context Orchestration & Memory Division
-  md += `\n---\n\n### 2. Context Orchestration & Memory Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["context-orchestration"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 3. Core Engine & Scaffolding Division
-  md += `\n---\n\n### 3. Core Engine & Scaffolding Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["core-engine"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Sol";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 4. Quality Review & Hardening Division (The Nexus Gate)
-  md += `\n---\n\n### 4. Quality Review & Hardening Division (The Nexus Gate)\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["quality-review"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 5. Interface & Visual Engineering Division
-  md += `\n---\n\n### 5. Interface & Visual Engineering Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["design-interface"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Jasper";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 6. Reflection & Systems Maintenance Division
-  md += `\n---\n\n### 6. Reflection & Systems Maintenance Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["reflection-maintenance"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Crew";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
+  for (const division of DIVISIONS) {
+    md += `\n---\n\n### ${division.heading}\n\n`;
+    md += `| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |\n`;
+    md += `| :--- | :--- | :--- | :--- | :--- |\n`;
+    for (const s of byCategory[division.category] || []) {
+      const modes = getModesForSkill(s.name);
+      const modeList = modes.length > 0 ? modes.map((m) => `\`${m}\``).join(", ") : "—";
+      const lead = COUNCIL_LEADS[s.name] || division.fallbackLead;
+      const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
+      md += `| **\`${s.name}\`** | ${modeList} | **${lead}** | ${shortDesc}. | \`${s.name}/references/<mode>.md\` |\n`;
+    }
   }
 
   return md;

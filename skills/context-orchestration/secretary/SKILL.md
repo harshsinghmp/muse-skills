@@ -4,7 +4,7 @@ aliases: ["secretary-controller","staff-controller","approval-gate","agency-disp
 description: "Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. On session launch or incoming work, triages user intent across 46 canonical agency departments, maps Council Leads (Sol, Jasper, Crew, Nexus), and selectively loads mode playbooks with minimal token overhead. Enforces judgment over authority, Socratic adversarial stress-testing (3-prong devil's advocate challenge), explicit dissent preservation, frozen evidence snapshots, and single-use SHA-256 hash approvals before any filesystem or external mutation. Extends to delegation control: subagent dispatch with teachback confirmation and two-stage review gates, DAG wave dispatch that skips dependents on parent failure, intake triage with WIP limits, blast-radius replan protocol, orientation briefings, a persistent task ledger, and structured session handover with three-tier harvest. Use when asked to dispatch a request, triage intake, or coordinate subagents."
 argument-hint: "[dispatch|orchestration|onboard|socratic-adversarial-gate|staff-work-doctrine]"
 user-invocable: true
-version: 1.8.0
+version: 1.9.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -257,3 +257,4 @@ Before issuing an approval packet, verify:
 7. [ ] Any invalidated plan was re-scoped through the blast-radius ladder and logged.
 8. [ ] Session ended on a boundary: consolidation harvest run, handover file written with structured state + temperature notes.
 9. [ ] Task ledger current: every `DONE` item carries a verification receipt; no wave launched with an unresolved parent failure.
+10. [ ] Routing outcome is a real route: `bun run check:routing` passes (fixture prompts → existing `skill:mode` pairs; a phantom target is a hard failure).
