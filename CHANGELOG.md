@@ -4,8 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.5.0] - 2026-11-10
+
 ### Added
 
+- **Release hygiene receipts** (v8.5.0 rollup): the checkpointed ledger is authoritative over live local docs (`check:ledger` no longer re-evaluates against untracked `.agents/` context); the install matrix proves the 16-destination surface actually installs, offline and sandboxed; `release:smoke` installs the tagged tree and runs the shipped `doctor`; the harness baseline is pinned so a rewritten page that drops a path is `regressed`, and self-updates only when a **new** signal appears; and `eval-routing --verbose` explains every miss (winner, runner-up, top modes, cause).
 - **Phrase n-gram routing signal was implemented, measured, and reverted** (recorded so it is not retried blindly): the router briefly scored departments by order-sensitive bigram/trigram overlap against their modes' anchor phrases — the one mechanism hand-written vocabulary cannot reproduce. It moved the tuned set 161 → **162** and v5 21 → **22** exact with no regressions, but left the blind v8 and the fresh **v9** untouched, so it failed its own acceptance rule and was removed. A sixth blind set (`heldout-v9.json`, 40 prompts / 26 skills, written by an agent that never saw the router) is registered at its honest pre-change score: **1/40 exact, 10/40 department**.
 - **Routing mode coverage is measured and published** (`scripts/audit-routing-coverage.ts`, `routing-coverage.json`, `bun run check:routing:coverage`): three different things were being called "coverage", so the audit separates them — every one of the 406 routable modes has reviewable anchors, but only **134 (33%)** carry a curated routing signal (concept, fast path, intent, or default), leaving **272** reachable only by name/description matching. The split is gated (it may not grow silently) and printed in the README next to the accuracy table.
 - **Routing matrix is its own CI job** (`routing-matrix` in `.github/workflows/ci.yml`): every distribution is evaluated by a dedicated job instead of inside `bun test`, so the gate is legible in the PR check list, wired into `landing-gate.needs` and the landing gate's required checks, and the test suite no longer pays ~25s for it locally.
@@ -52,6 +55,8 @@ All notable changes to this project are documented in this file.
 - **Dispatch directory listed modes for only 24 of 46 departments**: `scripts/sync-dispatch.ts` rendered divisions 2–6 with three columns, so 22 departments advertised no canonical modes and neither the model nor the router could resolve a specific mode for them. Every division now uses the same five-column table with a mode list and reference path. Two fast-path targets that never existed (`code-review:audit`, `updateagents:sync`) now point at `code-review:triage-matrix` and `updateagents:memory-file-priorities`.
 - **The last harness in `agent-dirs.conf` never received hooks**: the file had no trailing newline, so `while IFS=: read` returned non-zero at EOF and silently dropped `.antigravity`. The loop now keeps a final unterminated line (`|| [ -n "$dir" ]`) and the file is newline-terminated; the install matrix asserts every declared harness gets its hooks.
 - **Dependabot update PRs target `dev`**: `.github/dependabot.yml` now sets `target-branch: "dev"` for the `bun` and `github-actions` ecosystems. Dependabot previously defaulted to the default branch, so the action-bump PRs (#410–#412) opened against `main` and would have bypassed the `dev` → `release/vX.Y.Z` → `main` train. `tests/ci-hardening.test.ts` now asserts the target branch for every configured ecosystem. The v8.4.2 section was also un-nested from a stray `## [Unreleased]` heading left by the release cut.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.2...v8.5.0
 
 ## [8.4.2] - 2026-11-09
 

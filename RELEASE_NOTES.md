@@ -1,3 +1,38 @@
+# 🏛️ Muse Skills v8.5.0 — Auditable Routing Gates
+
+> **Minor release: the routing quality gate becomes its own CI job with published numbers, mode coverage is measured instead of assumed, and the landing gate stops blocking its own commits.** 800 automated tests. 63 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.5.0
+
+- **Routing quality is published, not claimed**: the README carries a generated table of every distribution — the tuned 65.2% next to the blind sets at 2.5–7.5% — so the tuned number cannot be mistaken for routing skill. Drift-gated by `check:routing:docs`.
+- **The matrix is a required check**: `routing-matrix` runs as its own CI job, is wired into the landing gate, and no longer inflates local test runs.
+- **Coverage is measured**: `routing-coverage.json` records that 134 of 406 routable modes carry a curated routing signal and 272 are reachable only by name/description; the split may not grow silently.
+- **A sixth blind set (v9)** written by an agent that never saw the router is gated at its honest 1/40 exact, 10/40 department.
+- **The landing gate no longer poisons its own commit**: it ignores its own job and judges only the latest run per check name, so one cancelled check can no longer make a SHA unmergeable forever.
+- **Phrase n-gram routing was measured and rejected**: it gained two prompts on tuned sets and moved nothing blind, so it was removed and recorded rather than kept.
+
+## 📊 Verification
+
+| Metric | v8.4.2 | v8.5.0 |
+|:---|:---|:---|
+| Automated Tests | 700 | **800** |
+| Test Files | 47 | **63** |
+| Skills | 46 | **46** |
+| Commands / Harness | 462 | **462** |
+| Routing distributions gated | 5 | **6** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.4.2...v8.5.0
+
 # 🏛️ Muse Skills v8.4.2 — Release Hygiene Gates & Faster CI
 
 > **Patch release: adds dependency and docs-ledger release gates, a weekly dependency-refresh tracker, backfills the ledger agent watermark, and cuts the parallel suite to about 40 seconds.** 700 automated tests. 47 test files. 46 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
