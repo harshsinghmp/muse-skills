@@ -26,6 +26,9 @@ export const COUNCIL_LEADS: Record<string, string> = {
   relay: "Sol",
   pua: "Sol",
   "new-project": "Sol",
+  git: "Nexus",
+  analytics: "Nexus",
+  research: "Sol & Jasper",
   updatedocs: "Sol",
   "clean-system-cache": "Sol",
 
@@ -244,14 +247,14 @@ export const FAST_PATH_RULES: Array<{
  * look like generic email; description-only scoring put it in `content:email`.
  * These are tuned against the training fixture set only — never the held-out set.
  */
-interface IntentSignal {
+export interface IntentSignal {
   regex: RegExp;
   department: string;
   mode?: string;
   boost: number;
 }
 
-const INTENT_SIGNALS: IntentSignal[] = [
+export const INTENT_SIGNALS: IntentSignal[] = [
   {
     regex: /land(s)? in spam|spam folder|deliverability|\bspf\b|\bdkim\b|open rates?|unsubscribe/i,
     department: "crm",
@@ -283,14 +286,14 @@ const INTENT_SIGNALS: IntentSignal[] = [
  * every skill's prose shares generic words; these are the nouns practitioners
  * actually type. Weights stay below a full fast-path so a stronger cue wins.
  */
-interface Concept {
+export interface Concept {
   department: string;
   mode?: string;
   boost: number;
   tokens: string[];
 }
 
-const CONCEPTS: Concept[] = [
+export const CONCEPTS: Concept[] = [
   // Web UI vs server: the distinction descriptions could not make.
   {
     department: "webdev",
@@ -471,7 +474,7 @@ function conceptMode(department: string, promptTokens: string[]): { mode: string
 }
 
 /** Leading-verb prior: what kind of work is being asked for, independent of nouns. */
-const VERB_HINTS: Array<{ regex: RegExp; departments: string[] }> = [
+export const VERB_HINTS: Array<{ regex: RegExp; departments: string[] }> = [
   { regex: /^(write|draft|compose|rewrite)\b/i, departments: ["content"] },
   { regex: /^(design|wireframe|sketch)\b/i, departments: ["design"] },
   { regex: /^(build|implement|add|create|make)\b/i, departments: ["webdev", "automation"] },

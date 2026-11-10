@@ -1,0 +1,931 @@
+{
+  "version": 1,
+  "generatedFrom": "skills/context-orchestration/secretary/scripts/secretary.ts",
+  "note": "Generated mirror. Edit the TypeScript tables; this file is the reviewable view.",
+  "councilLeads": {
+    "webdev": "Sol",
+    "database": "Sol",
+    "devops": "Sol",
+    "mobile": "Sol",
+    "automation": "Sol",
+    "telegram": "Sol",
+    "relay": "Sol",
+    "pua": "Sol",
+    "new-project": "Sol",
+    "git": "Nexus",
+    "analytics": "Nexus",
+    "research": "Sol & Jasper",
+    "updatedocs": "Sol",
+    "clean-system-cache": "Sol",
+    "design": "Jasper",
+    "smm": "Jasper",
+    "content": "Jasper",
+    "seo": "Jasper",
+    "crm": "Sol & Jasper",
+    "brand": "Crew & Jasper",
+    "growth": "Jasper & Crew",
+    "animate": "Jasper",
+    "designscope": "Jasper",
+    "humanize": "Jasper",
+    "ops": "Crew",
+    "accounts": "Crew",
+    "client-comms": "Crew",
+    "retain": "Crew",
+    "gtm": "Crew",
+    "sales-enablement": "Crew",
+    "paidads": "Crew & Jasper",
+    "coach": "Crew",
+    "periodic-retreat": "Sol & Crew",
+    "secretary": "Nexus & Sol",
+    "code-review": "Nexus",
+    "qa-launch": "Nexus",
+    "incident-response": "Nexus",
+    "coupling-router": "Sol & Nexus",
+    "evidence-ledger": "Crew & Nexus",
+    "dead-letter": "Nexus",
+    "audit": "Nexus",
+    "muse-security": "Nexus",
+    "refactor": "Nexus & Sol",
+    "context-anchor": "Sol",
+    "gauntlet-loop": "Nexus",
+    "updateagents": "Nexus"
+  },
+  "defaultModes": {
+    "webdev": "implement",
+    "design": "ui",
+    "content": "copy",
+    "smm": "content",
+    "seo": "content",
+    "analytics": "reporting",
+    "devops": "hosting",
+    "database": "operate",
+    "mobile": "cross",
+    "automation": "workflow",
+    "accounts": "invoicing",
+    "crm": "nurture",
+    "growth": "positioning",
+    "paidads": "google",
+    "ops": "onboarding",
+    "retain": "check-in",
+    "client-comms": "status",
+    "sales-enablement": "demo",
+    "gtm": "outreach",
+    "brand": "assets",
+    "research": "user-research",
+    "telegram": "notify",
+    "incident-response": "triage",
+    "qa-launch": "gate",
+    "relay": "ambient-handoff",
+    "context-anchor": "layering-protocol",
+    "coupling-router": "coupling-matrix",
+    "secretary": "dispatch",
+    "evidence-ledger": "evidence-entry-schema",
+    "updatedocs": "audit",
+    "updateagents": "audit",
+    "git": "branching-and-release-matrix",
+    "new-project": "project-os-architecture",
+    "code-review": "pr-context",
+    "gauntlet-loop": "gauntlet-protocol",
+    "dead-letter": "record-schema",
+    "pua": "audit",
+    "audit": "hygiene-rules",
+    "humanize": "style-guide",
+    "muse-security": "audit",
+    "refactor": "code",
+    "designscope": "analysis-framework",
+    "animate": "principles",
+    "coach": "team",
+    "periodic-retreat": "retreat-protocol",
+    "clean-system-cache": "audit"
+  },
+  "fastPaths": [
+    {
+      "pattern": "^(bun\\s+)?test\\b|run\\s+(the\\s+)?tests?|test\\s+suite|verify\\s+all|add\\s+unit\\s+tests?|write\\s+tests?\\s+for",
+      "flags": "i",
+      "department": "qa-launch",
+      "mode": "gate",
+      "reason": "Direct test verification match"
+    },
+    {
+      "pattern": "pull\\s+request|code\\s+review|review\\s+this\\s+(pr|diff|patch)",
+      "flags": "i",
+      "department": "code-review",
+      "mode": "pr-context",
+      "reason": "Pull-request review match"
+    },
+    {
+      "pattern": "statement\\s+of\\s+work|\\bsow\\b",
+      "flags": "i",
+      "department": "ops",
+      "mode": "sow",
+      "reason": "Statement-of-work match"
+    },
+    {
+      "pattern": "press\\s+release|public\\s+relations",
+      "flags": "i",
+      "department": "growth",
+      "mode": "pr",
+      "reason": "Public relations match"
+    },
+    {
+      "pattern": "p&l|profit\\s+and\\s+loss|client\\s+pnl",
+      "flags": "i",
+      "department": "accounts",
+      "mode": "client-pnl",
+      "reason": "Client P&L reporting match"
+    },
+    {
+      "pattern": "^lint\\b|run\\s+lint|type-check|biome\\s+check",
+      "flags": "i",
+      "department": "code-review",
+      "mode": "triage-matrix",
+      "reason": "Direct lint/type-check hygiene match"
+    },
+    {
+      "pattern": "ai[-\\s]readiness|ai-ready|readiness\\s+score",
+      "flags": "i",
+      "department": "updateagents",
+      "mode": "audit",
+      "reason": "Direct AI readiness audit match"
+    },
+    {
+      "pattern": "sync\\s+context|update\\s+agents|update\\s+memory",
+      "flags": "i",
+      "department": "updateagents",
+      "mode": "memory-file-priorities",
+      "reason": "Direct context synchronization match"
+    },
+    {
+      "pattern": "checkout\\s+(page|funnel)|stripe\\s+payments|payment\\s+integration|funnel\\s+page",
+      "flags": "i",
+      "department": "webdev",
+      "mode": "funnel",
+      "reason": "E-Commerce checkout and payments match"
+    },
+    {
+      "pattern": "react\\s+native|expo\\b|flutter",
+      "flags": "i",
+      "department": "mobile",
+      "mode": "cross",
+      "reason": "Cross-platform mobile framework match"
+    },
+    {
+      "pattern": "bundle\\s+size|page\\s+load|lighthouse\\s+score",
+      "flags": "i",
+      "department": "webdev",
+      "mode": "performance",
+      "reason": "Web performance budget match"
+    },
+    {
+      "pattern": "competitor\\s+(analysis|dossier)|competitive\\s+landscape",
+      "flags": "i",
+      "department": "research",
+      "mode": "competitor-analysis",
+      "reason": "Competitor analysis match"
+    },
+    {
+      "pattern": "\\bretrospective\\b|\\bretro\\b",
+      "flags": "i",
+      "department": "ops",
+      "mode": "retro",
+      "reason": "Project retrospective match"
+    },
+    {
+      "pattern": "system\\s+cache|free\\s+disk\\s+space|clean\\s+(the\\s+)?cache",
+      "flags": "i",
+      "department": "clean-system-cache",
+      "mode": "audit",
+      "reason": "System cache cleanup match"
+    },
+    {
+      "pattern": "buyer\\s+persona|customer\\s+persona",
+      "flags": "i",
+      "department": "brand",
+      "mode": "persona",
+      "reason": "Buyer persona match"
+    },
+    {
+      "pattern": "broken\\s+links?|link\\s+integrity",
+      "flags": "i",
+      "department": "audit",
+      "mode": "hygiene-rules",
+      "reason": "Documentation link-integrity match"
+    },
+    {
+      "pattern": "swarm\\s+mesh|task\\s+claim|mesh\\s+protocol",
+      "flags": "i",
+      "department": "coupling-router",
+      "mode": "mesh",
+      "reason": "Swarm mesh claim-protocol match"
+    },
+    {
+      "pattern": "agent\\s+swarm|swarm\\s+dispatcher|\\bdag\\b|multi-agent\\s+quorum",
+      "flags": "i",
+      "department": "coupling-router",
+      "mode": "swarm",
+      "reason": "Agent swarm dispatcher match"
+    },
+    {
+      "pattern": "ci\\/cd|cicd|github\\s+actions|deploy\\s+pipeline",
+      "flags": "i",
+      "department": "devops",
+      "mode": "cicd",
+      "reason": "CI/CD pipeline match"
+    },
+    {
+      "pattern": "nurture\\s+(email|sequence|campaign)|drip\\s+campaign",
+      "flags": "i",
+      "department": "crm",
+      "mode": "nurture",
+      "reason": "Nurture sequence match"
+    },
+    {
+      "pattern": "^refactor\\b|clean\\s+up\\s+and\\s+refactor",
+      "flags": "i",
+      "department": "refactor",
+      "mode": "code",
+      "reason": "Explicit refactoring request match"
+    },
+    {
+      "pattern": "carousel|postiz|viral\\s+social|linkedin\\s+carousel",
+      "flags": "i",
+      "department": "smm",
+      "mode": "carousel",
+      "reason": "Social carousel growth match"
+    },
+    {
+      "pattern": "onboard\\s+identity|onboarding\\s+interview|setup\\s+profile",
+      "flags": "i",
+      "department": "secretary",
+      "mode": "onboard",
+      "reason": "Identity onboarding interview match"
+    },
+    {
+      "pattern": "morning\\s+(briefing|status)|^briefing\\b|session\\s+wakeup",
+      "flags": "i",
+      "department": "secretary",
+      "mode": "orchestration",
+      "reason": "Morning executive orientation match"
+    },
+    {
+      "pattern": "standup|daily\\s+standup|effort\\s+scorecard|eod\\s+check-?in",
+      "flags": "i",
+      "department": "coach",
+      "mode": "team",
+      "reason": "Daily standup and controllable effort check-in match"
+    },
+    {
+      "pattern": "scope\\s+creep|change\\s+order|client\\s+boundary|client\\s+digest",
+      "flags": "i",
+      "department": "coach",
+      "mode": "client",
+      "reason": "Client boundary and change-order defense match"
+    },
+    {
+      "pattern": "founder\\s+leverage|70\\/30\\s+rule|founder\\s+bottleneck",
+      "flags": "i",
+      "department": "coach",
+      "mode": "founder",
+      "reason": "Founder leverage diagnostic match"
+    }
+  ],
+  "intents": [
+    {
+      "pattern": "land(s)? in spam|spam folder|deliverability|\\bspf\\b|\\bdkim\\b|open rates?|unsubscribe",
+      "flags": "i",
+      "department": "crm",
+      "mode": "deliverability",
+      "boost": 12
+    },
+    {
+      "pattern": "conversion|signup form drops|a\\/b test|experiment",
+      "flags": "i",
+      "department": "analytics",
+      "mode": "cro",
+      "boost": 10
+    },
+    {
+      "pattern": "\\b(footer|header|menu|banner|hero|layout|modal|button|overlaps?|misaligned)\\b",
+      "flags": "i",
+      "department": "webdev",
+      "mode": "frontend",
+      "boost": 8
+    },
+    {
+      "pattern": "\\b(api|endpoint|backend|server|sso|login|auth)\\b",
+      "flags": "i",
+      "department": "webdev",
+      "mode": "backend",
+      "boost": 8
+    },
+    {
+      "pattern": "\\b(crash(es|ed)?|broken|doesn'?t|does not|errors?|500|slow|faster)\\b",
+      "flags": "i",
+      "department": "webdev",
+      "boost": 6
+    },
+    {
+      "pattern": "\\b(release notes|launch sequence|launch plan)\\b",
+      "flags": "i",
+      "department": "growth",
+      "mode": "launch",
+      "boost": 10
+    },
+    {
+      "pattern": "\\b(social posts|social calendar|schedule .*posts)\\b",
+      "flags": "i",
+      "department": "smm",
+      "mode": "calendar",
+      "boost": 10
+    },
+    {
+      "pattern": "\\b(contract|legal|liability|clauses?)\\b",
+      "flags": "i",
+      "department": "ops",
+      "mode": "legal",
+      "boost": 10
+    },
+    {
+      "pattern": "\\b(testimonials?|case stud(y|ies))\\b",
+      "flags": "i",
+      "department": "content",
+      "mode": "case-study",
+      "boost": 8
+    },
+    {
+      "pattern": "\\b(health score|churn)\\b",
+      "flags": "i",
+      "department": "retain",
+      "boost": 8
+    },
+    {
+      "pattern": "\\b(reduce|cut|lower)\\b.*\\b(bill|cost|spend)\\b",
+      "flags": "i",
+      "department": "devops",
+      "mode": "hosting",
+      "boost": 10
+    },
+    {
+      "pattern": "\\b(app store|aso|screenshots?)\\b",
+      "flags": "i",
+      "department": "mobile",
+      "mode": "aso",
+      "boost": 8
+    },
+    {
+      "pattern": "\\b(sitemap|canonical|schema markup)\\b",
+      "flags": "i",
+      "department": "seo",
+      "mode": "technical",
+      "boost": 8
+    }
+  ],
+  "verbHints": [
+    {
+      "pattern": "^(write|draft|compose|rewrite)\\b",
+      "flags": "i",
+      "departments": [
+        "content"
+      ]
+    },
+    {
+      "pattern": "^(design|wireframe|sketch)\\b",
+      "flags": "i",
+      "departments": [
+        "design"
+      ]
+    },
+    {
+      "pattern": "^(build|implement|add|create|make)\\b",
+      "flags": "i",
+      "departments": [
+        "webdev",
+        "automation"
+      ]
+    },
+    {
+      "pattern": "^(fix|repair|debug|resolve)\\b",
+      "flags": "i",
+      "departments": [
+        "webdev",
+        "code-review"
+      ]
+    },
+    {
+      "pattern": "^(audit|review)\\b",
+      "flags": "i",
+      "departments": [
+        "audit",
+        "code-review"
+      ]
+    },
+    {
+      "pattern": "^(set up|configure|install)\\b",
+      "flags": "i",
+      "departments": [
+        "devops",
+        "automation"
+      ]
+    },
+    {
+      "pattern": "^(plan|strategise|strategize|forecast)\\b",
+      "flags": "i",
+      "departments": [
+        "growth",
+        "ops"
+      ]
+    },
+    {
+      "pattern": "^(analyse|analyze|measure|report)\\b",
+      "flags": "i",
+      "departments": [
+        "analytics"
+      ]
+    },
+    {
+      "pattern": "^(reduce|improve|optimi[sz]e|speed up)\\b",
+      "flags": "i",
+      "departments": [
+        "analytics",
+        "devops"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "department": "webdev",
+      "mode": "frontend",
+      "boost": 8,
+      "tokens": [
+        "navbar",
+        "header",
+        "footer",
+        "dropdown",
+        "carousel",
+        "grid",
+        "css",
+        "layout",
+        "modal",
+        "button",
+        "viewport",
+        "responsive",
+        "sticky",
+        "anchor",
+        "tablet",
+        "safari",
+        "hero",
+        "blurry",
+        "retina",
+        "toggle",
+        "form",
+        "table"
+      ]
+    },
+    {
+      "department": "webdev",
+      "mode": "backend",
+      "boost": 8,
+      "tokens": [
+        "webhook",
+        "endpoint",
+        "payload",
+        "jwt",
+        "pagination",
+        "serverless",
+        "rest",
+        "http",
+        "json",
+        "api",
+        "session",
+        "cookie",
+        "middleware"
+      ]
+    },
+    {
+      "department": "webdev",
+      "mode": "accessibility",
+      "boost": 10,
+      "tokens": [
+        "wcag",
+        "contrast",
+        "aria",
+        "keyboard",
+        "screenreader",
+        "a11y"
+      ]
+    },
+    {
+      "department": "webdev",
+      "mode": "performance",
+      "boost": 9,
+      "tokens": [
+        "vitals",
+        "bundle",
+        "cold",
+        "latency",
+        "lcp",
+        "cls",
+        "jank",
+        "janky",
+        "load",
+        "slow"
+      ]
+    },
+    {
+      "department": "webdev",
+      "mode": "security-headers",
+      "boost": 10,
+      "tokens": [
+        "csp",
+        "xss",
+        "csrf",
+        "cors",
+        "iframe",
+        "headers"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "index",
+      "boost": 7,
+      "tokens": [
+        "btree",
+        "composite"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "migrations",
+      "boost": 9,
+      "tokens": [
+        "migration",
+        "migrations",
+        "backfill",
+        "schema",
+        "column",
+        "table"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "tuning",
+      "boost": 9,
+      "tokens": [
+        "planner",
+        "explain",
+        "tuning",
+        "vacuum",
+        "slow",
+        "query"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "guard",
+      "boost": 8,
+      "tokens": [
+        "constraint",
+        "unique",
+        "foreign",
+        "cascade",
+        "rls"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "operate",
+      "boost": 7,
+      "tokens": [
+        "postgres",
+        "postgresql",
+        "connection",
+        "connections",
+        "backup",
+        "restore",
+        "replica"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "tracking",
+      "boost": 9,
+      "tokens": [
+        "event",
+        "tracking",
+        "ga4",
+        "segment",
+        "pixel",
+        "payload"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "attribution",
+      "boost": 9,
+      "tokens": [
+        "attribution",
+        "touch",
+        "channel",
+        "shapley"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "dashboards",
+      "boost": 9,
+      "tokens": [
+        "dashboard",
+        "cohort",
+        "retention",
+        "kpi",
+        "chart"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "cro",
+      "boost": 9,
+      "tokens": [
+        "conversion",
+        "signup",
+        "experiment",
+        "ab",
+        "test",
+        "funnel",
+        "hero"
+      ]
+    },
+    {
+      "department": "crm",
+      "mode": "deliverability",
+      "boost": 10,
+      "tokens": [
+        "spam",
+        "bounce",
+        "bounces",
+        "deliverability",
+        "spf",
+        "dkim",
+        "dmarc",
+        "dns",
+        "unsubscribe"
+      ]
+    },
+    {
+      "department": "crm",
+      "mode": "contacts",
+      "boost": 8,
+      "tokens": [
+        "contacts",
+        "segment",
+        "segmentation",
+        "import",
+        "suppression"
+      ]
+    },
+    {
+      "department": "crm",
+      "mode": "abandon",
+      "boost": 9,
+      "tokens": [
+        "abandoned",
+        "cart",
+        "browse"
+      ]
+    },
+    {
+      "department": "crm",
+      "mode": "nurture",
+      "boost": 9,
+      "tokens": [
+        "nurture",
+        "drip",
+        "trial",
+        "sequence",
+        "welcome"
+      ]
+    },
+    {
+      "department": "crm",
+      "mode": "winback",
+      "boost": 9,
+      "tokens": [
+        "winback",
+        "churned",
+        "cancelled",
+        "cancellation"
+      ]
+    },
+    {
+      "department": "smm",
+      "mode": "strategy",
+      "boost": 8,
+      "tokens": [
+        "organic",
+        "influencer",
+        "influencers",
+        "social"
+      ]
+    },
+    {
+      "department": "accounts",
+      "mode": "bookkeeping",
+      "boost": 9,
+      "tokens": [
+        "ledger",
+        "payout",
+        "reconcile",
+        "reconciliation",
+        "books",
+        "entry",
+        "entries"
+      ]
+    },
+    {
+      "department": "accounts",
+      "mode": "client-pnl",
+      "boost": 9,
+      "tokens": [
+        "margin",
+        "pnl",
+        "profit",
+        "loss"
+      ]
+    },
+    {
+      "department": "accounts",
+      "mode": "dunning",
+      "boost": 9,
+      "tokens": [
+        "dunning",
+        "overdue",
+        "late",
+        "reminder",
+        "unpaid"
+      ]
+    },
+    {
+      "department": "retain",
+      "mode": "qbr",
+      "boost": 10,
+      "tokens": [
+        "qbr",
+        "deck"
+      ]
+    },
+    {
+      "department": "retain",
+      "mode": "churn-watch",
+      "boost": 9,
+      "tokens": [
+        "churn",
+        "at-risk",
+        "atrisk",
+        "inactive",
+        "login"
+      ]
+    },
+    {
+      "department": "retain",
+      "mode": "renewal",
+      "boost": 9,
+      "tokens": [
+        "renewal",
+        "renew",
+        "increase",
+        "offer"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "referral",
+      "boost": 9,
+      "tokens": [
+        "referral",
+        "rewards",
+        "codes",
+        "affiliate"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "launch",
+      "boost": 8,
+      "tokens": [
+        "launch",
+        "announcement"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "pricing",
+      "boost": 8,
+      "tokens": [
+        "pricing",
+        "tiers",
+        "price",
+        "discount"
+      ]
+    },
+    {
+      "department": "design",
+      "mode": "slides",
+      "boost": 9,
+      "tokens": [
+        "slide",
+        "slides",
+        "deck",
+        "presentation"
+      ]
+    },
+    {
+      "department": "design",
+      "mode": "branding",
+      "boost": 8,
+      "tokens": [
+        "icon",
+        "icons",
+        "typography",
+        "palette",
+        "brand",
+        "identity"
+      ]
+    },
+    {
+      "department": "client-comms",
+      "mode": "executive-pulse",
+      "boost": 10,
+      "tokens": [
+        "executive",
+        "pulse",
+        "summaries",
+        "weekly"
+      ]
+    },
+    {
+      "department": "client-comms",
+      "mode": "status",
+      "boost": 7,
+      "tokens": [
+        "status",
+        "update",
+        "macro",
+        "macros"
+      ]
+    },
+    {
+      "department": "ops",
+      "mode": "meeting-notes",
+      "boost": 9,
+      "tokens": [
+        "call",
+        "transcript",
+        "meeting",
+        "minutes"
+      ]
+    },
+    {
+      "department": "ops",
+      "mode": "sow",
+      "boost": 10,
+      "tokens": [
+        "sow",
+        "statement",
+        "work",
+        "schedule"
+      ]
+    },
+    {
+      "department": "paidads",
+      "mode": "meta",
+      "boost": 9,
+      "tokens": [
+        "meta",
+        "facebook",
+        "instagram"
+      ]
+    },
+    {
+      "department": "paidads",
+      "mode": "retargeting",
+      "boost": 9,
+      "tokens": [
+        "retargeting",
+        "audience",
+        "audiences",
+        "stale"
+      ]
+    },
+    {
+      "department": "updatedocs",
+      "mode": "audit",
+      "boost": 9,
+      "tokens": [
+        "changelog",
+        "release",
+        "notes",
+        "documentation"
+      ]
+    }
+  ]
+}

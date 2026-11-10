@@ -20,7 +20,8 @@
       "!docs/**/*.html",
       "!**/*.css",
       "!**/*.yaml",
-      "!**/*.yml"
+      "!**/*.yml",
+      "!skills/context-orchestration/secretary/references/routing-signals.json"
     ]
   },
   "formatter": {
