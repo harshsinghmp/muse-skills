@@ -156,7 +156,7 @@ describe("CI and supply-chain hardening (#395)", () => {
 
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.private).toBe(true);
-    expect(pkg.dependencies.musememory).toBe("3.3.0");
+    expect(pkg.dependencies.musememory).toBe("3.4.0");
     expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
   });
 
