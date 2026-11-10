@@ -4,8 +4,13 @@
 # Adjust ecosystems, schedule, and limits to match this project's stack.
 version: 2
 updates:
+  # Dependabot defaults to the default branch (main). This repository lands
+  # changes on dev first (dev → release/vX.Y.Z → main), so every update PR must
+  # target dev; otherwise a dependency bump bypasses the release train.
+  #
   # Bun is the authoritative lockfile (bun.lock). Do not reintroduce npm.
   - package-ecosystem: "bun"
+    target-branch: "dev"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -13,6 +18,7 @@ updates:
 
   # GitHub Actions used by repository workflows
   - package-ecosystem: "github-actions"
+    target-branch: "dev"
     directory: "/"
     schedule:
       interval: "weekly"
