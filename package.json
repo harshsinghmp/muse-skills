@@ -84,7 +84,7 @@
     "check:harness": "bun scripts/sync-harness-docs.ts --check",
     "sync:harness": "bun scripts/sync-harness-docs.ts --write",
     "check:routing": "bun scripts/eval-routing.ts",
-    "check:routing:heldout": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v2.json --min-exact 0 --min-skill 0",
+    "check:routing:heldout": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v3.json --min-exact 0 --min-skill 0",
     "check:install": "bun scripts/check-install-matrix.ts",
     "muse": "bun scripts/muse.ts"
   },

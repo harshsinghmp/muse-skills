@@ -291,6 +291,8 @@ Export native slash commands into every detected agent harness — each one in t
 
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 
+**Router mode signals.** `bun scripts/sync-dispatch.ts` also generates `skills/context-orchestration/secretary/references/mode-signals.json` — each mode's heading plus opening prose. The installed dispatch engine cannot read other skills' reference files, so this is how mode *content* reaches routing; `sync-dispatch --check` keeps it, the dispatch directory, and the skill tree in lockstep.
+
 **Harness registry.** `harness.json` is the single source of truth for every destination above: status (`active` / `legacy` / `skills-only`), paths, format, skill roots, docs URL, and retired paths. `scripts/harness-registry.ts` is the loader the exporter, install matrix, and `muse doctor` share; `scripts/sync-harness-docs.ts` renders the table above and `bun run check:harness` fails when it drifts. Adding or retiring a harness is a one-file change.
 
 **Skills are the durable surface.** Slash-command files are per-harness and each has its own format; `SKILL.md` is cross-harness. Antigravity and Amp read `~/.agents/skills/` (Amp's second search root) and `.agents/skills/` in a project directly, and Claude Code reads `~/.claude/skills/`. The setup mirrors the canonical tree into `~/.claude/skills/` and `<project>/.claude/skills/` as symlinks, so a refresh of `~/.agents/skills` is immediately visible there instead of going stale.
