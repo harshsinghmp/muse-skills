@@ -15,6 +15,15 @@
 
 import fs from "node:fs";
 import { parseArgs } from "node:util";
+import {
+  claimTask,
+  completeTask,
+  initMeshFromPlan,
+  type MeshLedger,
+  type MeshPlan,
+  reconcileMesh,
+  releaseTask,
+} from "./swarm-mesh";
 
 // =========================================================================
 // Interfaces & Types
@@ -206,10 +215,19 @@ export function evaluateByzantineConsensus(
 // SWM-003 & SWM-004: Swarm Dispatcher Simulation & Execution Engine
 // =========================================================================
 
+/** Optional external ownership gate (the swarm mesh). */
+export interface DispatchHooks {
+  /** Return false when another node owns the task; it is then skipped and pruned. */
+  claim?: (task: SwarmTask) => boolean;
+  /** Called once the task's outcome is known, so the mesh claim can be settled. */
+  complete?: (task: SwarmTask, status: TaskExecutionResult["status"]) => void;
+}
+
 export function dispatchSwarmPlan(
   plan: SwarmPlan,
   mockExecutionFails: string[] = [],
   mockConsensusRejections: string[] = [],
+  hooks: DispatchHooks = {},
 ): SwarmExecutionLedger {
   const { waves, isValid, error } = partitionDagIntoWaves(plan.tasks);
 
@@ -270,6 +288,20 @@ export function dispatchSwarmPlan(
         continue;
       }
 
+      // MESH claim gate: another node owning this task means we do not run it.
+      if (hooks.claim && !hooks.claim(t)) {
+        failedTaskIds.add(t.id);
+        results.push({
+          taskId: t.id,
+          name: t.name,
+          waveIndex: wave.waveIndex,
+          status: "SKIPPED_UPSTREAM_FAILURE",
+          tokensBurned: 0,
+          reason: "Claimed by another mesh node; dependents pruned in this process.",
+        });
+        continue;
+      }
+
       // Check SWM-003: Token ceiling check
       const taskTokens = t.estimatedTokens || 5000;
       if (totalTokensBurned + taskTokens > tokenCeiling) {
@@ -283,6 +315,7 @@ export function dispatchSwarmPlan(
           tokensBurned: 0,
           reason: `Token budget ceiling reached: requires ${taskTokens} tokens, only ${tokenCeiling - totalTokensBurned} remain.`,
         });
+        hooks.complete?.(t, "FAILED");
         continue;
       }
 
@@ -307,6 +340,7 @@ export function dispatchSwarmPlan(
             consensusVote: consensus,
             reason: consensus.reason,
           });
+          hooks.complete?.(t, "FAILED_CONSENSUS");
           continue;
         }
       }
@@ -323,6 +357,7 @@ export function dispatchSwarmPlan(
           tokensBurned: Math.round(taskTokens * 0.5),
           reason: "Task execution returned non-zero error.",
         });
+        hooks.complete?.(t, "FAILED");
       } else {
         completedTaskIds.add(t.id);
         totalTokensBurned += taskTokens;
@@ -334,6 +369,7 @@ export function dispatchSwarmPlan(
           tokensBurned: taskTokens,
         });
       }
+      hooks.complete?.(t, results[results.length - 1].status);
     }
   }
 
@@ -363,6 +399,56 @@ export function dispatchSwarmPlan(
 }
 
 // =========================================================================
+// MESH-005: Dispatch through the swarm mesh (multi-process ownership)
+// =========================================================================
+
+export interface MeshDispatchOptions {
+  stateDir: string;
+  nodeId: string;
+  ttlSec?: number;
+}
+
+export interface MeshDispatchResult {
+  ledger: SwarmExecutionLedger;
+  mesh: MeshLedger;
+}
+
+/**
+ * Dispatch a DAG where task ownership is arbitrated by the mesh instead of
+ * assumed. Two dispatchers pointed at one state directory never execute the
+ * same task; the loser prunes the dependents it can no longer run, and the
+ * mesh ledger reconciles the whole run.
+ */
+export function dispatchSwarmPlanOnMesh(
+  plan: SwarmPlan,
+  options: MeshDispatchOptions,
+  mockExecutionFails: string[] = [],
+  mockConsensusRejections: string[] = [],
+): MeshDispatchResult {
+  const meshPlan: MeshPlan = {
+    planId: plan.planId,
+    tasks: plan.tasks.map((task) => ({ id: task.id, name: task.name, dependsOn: task.dependsOn })),
+  };
+  const ttlSec = options.ttlSec ?? 120;
+  initMeshFromPlan(options.stateDir, meshPlan);
+
+  const ledger = dispatchSwarmPlan(plan, mockExecutionFails, mockConsensusRejections, {
+    claim: (task) => claimTask(options.stateDir, options.nodeId, { taskId: task.id, ttlSec }).verdict !== "NO_TASK",
+    complete: (task, status) => {
+      try {
+        if (status === "COMPLETED") completeTask(options.stateDir, options.nodeId, task.id);
+        else releaseTask(options.stateDir, options.nodeId, task.id);
+      } catch {
+        // Another node took the claim over while this task ran; the mesh
+        // ledger reports the stale claim rather than hiding it.
+      }
+    },
+  });
+
+  return { ledger, mesh: reconcileMesh(options.stateDir, { ttlSec }) };
+}
+
+// =========================================================================
 // Standalone CLI Runner
 // =========================================================================
 
@@ -374,6 +460,9 @@ export async function main() {
       "max-tokens": { type: "string" },
       quorum: { type: "string" },
       simulate: { type: "boolean" },
+      mesh: { type: "string" },
+      node: { type: "string", default: "dispatcher" },
+      ttl: { type: "string" },
       json: { type: "boolean" },
     },
     strict: false,
@@ -402,10 +491,19 @@ export async function main() {
     rawPlan.requiredQuorum = quorum;
   }
 
-  const ledger = dispatchSwarmPlan(rawPlan);
+  const ttlSec = values.ttl ? Number(values.ttl) : undefined;
+  if (ttlSec !== undefined && (!Number.isFinite(ttlSec) || ttlSec <= 0)) {
+    console.error("--ttl must be a positive number of seconds");
+    process.exit(2);
+  }
+
+  const meshResult = values.mesh
+    ? dispatchSwarmPlanOnMesh(rawPlan, { stateDir: values.mesh, nodeId: values.node, ttlSec })
+    : undefined;
+  const ledger = meshResult ? meshResult.ledger : dispatchSwarmPlan(rawPlan);
 
   if (values.json) {
-    console.log(JSON.stringify(ledger, null, 2));
+    console.log(JSON.stringify(meshResult ?? ledger, null, 2));
   } else {
     console.log(`\n🐝 Swarm Execution Ledger: [${ledger.planId}]`);
     console.log(`Waves: ${ledger.totalWaves} | Tokens: ${ledger.totalTokensBurned}/${ledger.tokenCeiling}`);
@@ -419,6 +517,11 @@ export async function main() {
       );
     }
     console.log(`\n${ledger.summary}`);
+    if (meshResult) {
+      console.log(
+        `\n🕸️  Mesh: ${meshResult.mesh.completed}/${meshResult.mesh.total} done · ${meshResult.mesh.anomalies.length} anomaly(ies)`,
+      );
+    }
   }
 }
 
