@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **`coupling-router:mesh` — swarm mesh node identity, task claim, and lease reconciliation**: `scripts/swarm-mesh.ts` adds the execution layer the DAG dispatcher was missing. Claims are atomic `O_EXCL` file creations, so a second node receives `NO_TASK` rather than duplicate ownership; holders heartbeat at milestones and an expired heartbeat makes the claim takeover-eligible behind an incrementing `attempt` fence. `reconcile` rebuilds truth from plan + claims + nodes and exits non-zero on `UNCLAIMED_TASK`, `ORPHAN_CLAIM`, `STALE_CLAIM`, `PLAN_DRIFT`, or `UNKNOWN_NODE`, and `simulate --workers N` runs real processes against one shared state directory with no cloud control plane. `tests/swarm-mesh.test.ts` covers claim exclusivity, duplicate suppression, stale failover and attempt fencing, every anomaly class, and a three-process simulation that reconciles clean.
+
 ### Fixed
 
 - **Dependabot update PRs target `dev`**: `.github/dependabot.yml` now sets `target-branch: "dev"` for the `bun` and `github-actions` ecosystems. Dependabot previously defaulted to the default branch, so the action-bump PRs (#410–#412) opened against `main` and would have bypassed the `dev` → `release/vX.Y.Z` → `main` train. `tests/ci-hardening.test.ts` now asserts the target branch for every configured ecosystem. The v8.4.2 section was also un-nested from a stray `## [Unreleased]` heading left by the release cut.

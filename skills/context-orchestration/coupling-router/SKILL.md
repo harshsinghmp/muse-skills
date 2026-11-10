@@ -2,9 +2,9 @@
 name: coupling-router
 aliases: ["task-router","skill-router","coupling-analysis","worktree-lease"]
 description: "Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. Evaluates routing plans against a pre-execution gate (spec alignment, verifiable acceptance criteria, DAG integrity, scope overlap, evidence-backed assumptions) with multi-perspective review for plans of 5+ tasks, analyzes task dependency graphs, shared mutable state, type definitions, and active skill interactions to deterministically route tasks to sequential builders or parallel fan-out workers, and manages multi-tenant worktree federation and lease arbitration across concurrent subagent fleets. Completion claims require verification receipts. Use when asked to route multi-agent work, plan task DAGs, or arbitrate worktree leases."
-argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm]"
+argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm|mesh]"
 user-invocable: true
-version: 1.6.0
+version: 1.7.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -47,6 +47,7 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`worktree-lease-protocol`** | "coupling-router worktree-lease-protocol", "worktree-lease-protocol" | Worktree Lease Protocol | [references/worktree-lease-protocol.md](references/worktree-lease-protocol.md) |
 | **`federation`** | "worktree federation", "federate worktrees", "worktree fleet", "spawn worktree", "sweep worktrees" | Multi-tenant worktree federation, zero-collision fleet management, and automated stale sweeper | [references/federation.md](references/federation.md) |
 | **`swarm`** | "swarm dispatcher", "agent swarm", "byzantine consensus", "dag wave", "swarm consensus", "token budget arbiter", "multi-agent quorum" | Multi-agent DAG wave dispatcher, Byzantine consensus quorum, token budget arbiter, and cascade pruning | [references/swarm.md](references/swarm.md) |
+| **`mesh`** | "swarm mesh", "node identity", "task claim", "claim a task", "lease heartbeat", "stale heartbeat failover", "ledger reconciliation", "multi-process swarm simulation" | Node identity, atomic task claim, lease heartbeat and stale failover, ledger reconciliation, and deterministic local multi-process simulation | [references/mesh.md](references/mesh.md) |
 
 ## When to Use
 
@@ -200,6 +201,17 @@ Output structured routing instructions:
 - **Lease Handshake** (shared checkouts): every git-mutating task spec embeds the one-command lease probe (`scripts/worktree-lease.ts probe --owner <task-id> --scope "<paths>"`) as its first step; tasks whose scopes overlap on one checkout are never dispatched concurrently.
 - **Implementation-Existence Clause**: every task marked complete in the plan carries a verification receipt — the test run, file path, or command output proving the work exists and passes. A completion claim without a receipt reopens the task.
 
+### Step 6 — Swarm Mesh Claim & Reconciliation (multi-node execution)
+
+Once the DAG is dispatched, workers claim work through the mesh instead of assuming an assignment:
+
+1. **Register + claim**: `bun <skill-dir>/coupling-router/scripts/swarm-mesh.ts claim --state <dir> --node <id>` — a claim is an `O_EXCL` file creation, so two nodes can never own the same task. Verdicts: `CLAIMED`, `ALREADY_HELD`, `STALE_TAKEOVER`, `RECLAIMED`, `NO_TASK`.
+2. **Heartbeat at milestones**: `beat --state <dir> --node <id> --task <id>`. A `CLAIMED` task whose heartbeat exceeds the TTL is stale and takeover-eligible; the `attempt` number fences the previous holder out of `complete`.
+3. **Reconcile before accepting the run**: `reconcile --state <dir>` must exit `0` with an empty anomaly list. `UNCLAIMED_TASK`, `ORPHAN_CLAIM`, `STALE_CLAIM`, `PLAN_DRIFT`, and `UNKNOWN_NODE` each name the exact task and node that disagree.
+4. **Prove the protocol locally**: `simulate --state <dir> --workers N` spawns real processes against one state directory. Do not expose a network control plane until that simulation is deterministic and green.
+
+Full contract, state layout, and failure modes: `references/mesh.md`.
+
 ---
 
 ## Pitfalls
@@ -227,3 +239,4 @@ Before executing subagent delegation:
 7. [ ] Output `ROUTING_PLAN.md` provides unambiguous subagent assignments, skill stacks, isolation boundaries, and verification receipts for every completion claim.
 8. [ ] Worktree lease probed (and held, if mutating) before every branch switch, stash operation, or shared-surface staging; foreign WIP untouched.
 9. [ ] Phase-0 capability map emitted (module ids, one-way deps, build order) before any module spec.
+10. [ ] Mesh claims reconciled: every dispatched task resolves to exactly one `DONE` claim and `scripts/swarm-mesh.ts reconcile` exits `0` with no anomalies.
