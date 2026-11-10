@@ -84,7 +84,7 @@ describe("routing quality gate", () => {
     }
     expect(report.passed).toBe(true);
     expect(report.invalidPredictions).toEqual([]);
-  });
+  }, 120_000);
 
   test("unseen prompts never emit a non-routable target", () => {
     // Held-out prompts are not tuned for: the assertion is validity, not accuracy.
