@@ -20,7 +20,8 @@
         "project": ".opencode/commands"
       },
       "skills": ["~/.agents/skills", ".agents/skills"],
-      "docs": "https://opencode.ai/docs/commands/"
+      "docs": "https://opencode.ai/docs/commands/",
+      "docsSignals": [".opencode/commands", "commands/"]
     },
     {
       "id": "claude-code",
@@ -34,7 +35,8 @@
         "project": ".claude/commands"
       },
       "skills": ["~/.claude/skills", ".claude/skills"],
-      "docs": "https://continuumcode.ai/guides/claude-code-custom-commands/"
+      "docs": "https://continuumcode.ai/guides/claude-code-custom-commands/",
+      "docsSignals": [".claude/commands"]
     },
     {
       "id": "codex",
@@ -58,7 +60,8 @@
         "project": ".cursor/commands"
       },
       "skills": [".agents/skills"],
-      "docs": "https://cursor.com/docs"
+      "docs": "https://cursor.com/docs",
+      "docsSignals": ["commands", "command"]
     },
     {
       "id": "roo",
@@ -72,7 +75,8 @@
         "project": ".roo/commands"
       },
       "skills": [".agents/skills"],
-      "docs": "https://roocodeinc.github.io/Roo-Code/features/slash-commands/"
+      "docs": "https://roocodeinc.github.io/Roo-Code/features/slash-commands/",
+      "docsSignals": [".roo/commands"]
     },
     {
       "id": "qwen",
@@ -86,7 +90,8 @@
         "project": ".qwen/commands"
       },
       "skills": [".agents/skills"],
-      "docs": "https://qwenlm.github.io/qwen-code-docs/en/users/features/commands/"
+      "docs": "https://qwenlm.github.io/qwen-code-docs/en/users/features/commands/",
+      "docsSignals": [".qwen/commands"]
     },
     {
       "id": "copilot",
@@ -99,7 +104,8 @@
         "project": ".github/prompts"
       },
       "skills": [".agents/skills"],
-      "docs": "https://docs.github.com/en/copilot/concepts/prompting-and-context/prompt-files"
+      "docs": "https://docs.github.com/en/copilot/concepts/prompting-and-context/prompt-files",
+      "docsSignals": [".github/prompts", ".prompt.md"]
     },
     {
       "id": "continue",
@@ -113,7 +119,8 @@
         "project": ".continue/prompts"
       },
       "skills": [".agents/skills"],
-      "docs": "https://docs.continue.dev/customize/deep-dives/prompts"
+      "docs": "https://docs.continue.dev/customize/deep-dives/prompts",
+      "docsSignals": ["prompts"]
     },
     {
       "id": "windsurf",
@@ -126,7 +133,9 @@
         "project": ".windsurf/workflows"
       },
       "skills": [".agents/skills"],
-      "docs": "https://docs.windsurf.com"
+      "docs": "https://docs.windsurf.com",
+      "docsSignals": ["workflows"],
+      "note": "docs.windsurf.com redirects to docs.devin.ai (Cognition/Devin). The workflow surface still exists; the redirect is reported monthly as an early signal."
     },
     {
       "id": "gemini",
@@ -141,7 +150,8 @@
       },
       "skills": ["~/.agents/skills", ".agents/skills"],
       "note": "Retired 2026-06-18 in favour of Antigravity CLI. TOML is still written because Antigravity's migration imports it and paid/enterprise Gemini CLI users exist.",
-      "docs": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/"
+      "docs": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/",
+      "docsSignals": []
     },
     {
       "id": "antigravity",

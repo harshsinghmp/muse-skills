@@ -24,8 +24,35 @@ const GENERIC = new Set(["cli", "code", "the", "custom", "commands"]);
 export interface HealthFinding {
   harness: string;
   status: Harness["status"];
-  signal: "retired" | "unreachable" | "ok";
+  /** retired: announcement wording. surface-changed: docs no longer mention the path we write. */
+  signal: "retired" | "surface-changed" | "moved" | "unreachable" | "ok";
   evidence?: string;
+}
+
+/** Strip tags once, for both the sentence and the surface checks. */
+function pageText(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * The docs page must still mention at least one path we write to. This catches a
+ * surface change even when the vendor never says "retired" — the Codex case.
+ * A short page (a login wall, a JS shell) is inconclusive, never a failure.
+ */
+export function checkSurfaceSignals(html: string, harness: Harness): { ok: boolean; text: string; matched: string[] } {
+  const signals = harness.docsSignals ?? [];
+  if (signals.length === 0) return { ok: true, text: "", matched: [] };
+  const text = pageText(html).toLowerCase();
+  const matched = signals.filter((signal) => text.includes(signal.toLowerCase()));
+  const substantial = text.length > 2000;
+  if (!substantial) return { ok: true, text, matched };
+  return { ok: matched.length > 0, text, matched };
 }
 
 export function harnessNames(harness: Harness): string[] {
@@ -78,7 +105,7 @@ export function detectRetirementSignals(html: string, harness: Harness): string[
     .filter((sentence) => DEATH_SIGNAL.test(sentence) && mentions.test(sentence));
 }
 
-async function fetchDocs(url: string): Promise<string | null> {
+async function fetchDocs(url: string): Promise<{ html: string; finalUrl: string } | null> {
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
@@ -86,7 +113,7 @@ async function fetchDocs(url: string): Promise<string | null> {
       redirect: "follow",
     });
     if (!response.ok) return null;
-    return await response.text();
+    return { html: await response.text(), finalUrl: response.url };
   } catch {
     return null;
   }
@@ -103,17 +130,32 @@ export async function checkHarnessHealth(
       findings.push({ harness: harness.id, status: harness.status, signal: "ok", evidence: "offline: not fetched" });
       continue;
     }
-    const html = await fetchDocs(harness.docs);
-    if (html === null) {
+    const page = await fetchDocs(harness.docs);
+    if (page === null) {
       findings.push({ harness: harness.id, status: harness.status, signal: "unreachable", evidence: harness.docs });
       continue;
     }
-    const signals = detectRetirementSignals(html, harness);
+    const signals = detectRetirementSignals(page.html, harness);
+    if (signals.length > 0) {
+      findings.push({ harness: harness.id, status: harness.status, signal: "retired", evidence: signals[0] });
+      continue;
+    }
+    const surface = checkSurfaceSignals(page.html, harness);
+    if (!surface.ok) {
+      findings.push({
+        harness: harness.id,
+        status: harness.status,
+        signal: "surface-changed",
+        evidence: `docs no longer mention any of: ${(harness.docsSignals ?? []).join(", ")}`,
+      });
+      continue;
+    }
+    const moved = page.finalUrl.replace(/\/$/, "") !== harness.docs.replace(/\/$/, "");
     findings.push({
       harness: harness.id,
       status: harness.status,
-      signal: signals.length > 0 ? "retired" : "ok",
-      evidence: signals[0],
+      signal: moved ? "moved" : "ok",
+      evidence: moved ? `redirected to ${page.finalUrl}` : surface.matched[0],
     });
   }
   return findings;
@@ -133,7 +175,12 @@ function main(): void {
       } else {
         console.log("🩺 Harness health — docs pages scanned for retirement\n");
         for (const finding of findings) {
-          const icon = finding.signal === "retired" ? "❌" : finding.signal === "unreachable" ? "⚠️ " : "✅";
+          const icon =
+            finding.signal === "retired" || finding.signal === "surface-changed"
+              ? "❌"
+              : finding.signal === "unreachable" || finding.signal === "moved"
+                ? "⚠️ "
+                : "✅";
           const suffix = finding.status === "active" ? "" : ` (${finding.status})`;
           console.log(`   ${icon} ${finding.harness.padEnd(14)}${suffix} ${finding.signal}`);
           if (finding.evidence) console.log(`      ${finding.evidence.slice(0, 220)}`);
@@ -148,6 +195,12 @@ function main(): void {
         );
         console.error("   Update harness.json status and the affected exporter before the surface breaks silently.");
         process.exit(strict ? 1 : 0);
+      }
+      const moved = findings.filter((finding) => finding.signal === "moved");
+      if (moved.length > 0) {
+        console.log(
+          `\n⚠️  ${moved.length} docs URL(s) redirect elsewhere: ${moved.map((f) => f.harness).join(", ")} — check whether the surface still exists.`,
+        );
       }
       if (unreachable.length > 0) {
         // Network flakiness must not fail the gate; it is reported instead.

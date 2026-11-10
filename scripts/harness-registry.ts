@@ -37,6 +37,8 @@ export interface Harness {
   note?: string;
   /** Paths we used to write that the vendor no longer reads. */
   retiredPaths?: string[];
+  /** Literal strings the docs page must still contain for the surface to exist. */
+  docsSignals?: string[];
 }
 
 export interface HarnessRegistry {
