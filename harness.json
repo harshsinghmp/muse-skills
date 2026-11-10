@@ -133,9 +133,10 @@
         "project": ".windsurf/workflows"
       },
       "skills": [".agents/skills"],
-      "docs": "https://docs.windsurf.com",
-      "docsSignals": ["workflows"],
-      "note": "docs.windsurf.com redirects to docs.devin.ai (Cognition/Devin). The workflow surface still exists; the redirect is reported monthly as an early signal."
+      "docs": "https://docs.devin.ai/desktop/getting-started",
+      "docsSignals": [".windsurf/workflows", "workflows"],
+      "note": "Verdict 2026-11-10: stays ACTIVE. Cognition/Devin acquired Windsurf and docs.windsurf.com now redirects to docs.devin.ai; the canonical page still documents .windsurf/workflows, so the surface exists. docs points at the canonical page so the watch checks where documentation now lives (migrated from docs.windsurf.com).",
+      "reviewedAt": "2026-11-10"
     },
     {
       "id": "gemini",
