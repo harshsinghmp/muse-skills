@@ -947,6 +947,372 @@
         "notes",
         "documentation"
       ]
+    },
+    {
+      "department": "context-anchor",
+      "mode": "task-interruption-and-recovery",
+      "boost": 10,
+      "tokens": [
+        "interruption",
+        "interrupted",
+        "paused",
+        "derive",
+        "drift",
+        "resume-session"
+      ]
+    },
+    {
+      "department": "relay",
+      "mode": "resumption-protocol",
+      "boost": 10,
+      "tokens": [
+        "laptop",
+        "handoff",
+        "resumption",
+        "resume",
+        "handover-doc"
+      ]
+    },
+    {
+      "department": "evidence-ledger",
+      "mode": "staleness-rules",
+      "boost": 10,
+      "tokens": [
+        "stale",
+        "staleness",
+        "outdated",
+        "aged",
+        "decayed"
+      ]
+    },
+    {
+      "department": "dead-letter",
+      "mode": "sweep-protocol",
+      "boost": 10,
+      "tokens": [
+        "blocked",
+        "orphaned",
+        "cluster",
+        "dead-letter",
+        "sweep"
+      ]
+    },
+    {
+      "department": "pua",
+      "mode": "receipt-verification",
+      "boost": 10,
+      "tokens": [
+        "receipt",
+        "receipts",
+        "flaky",
+        "unverified"
+      ]
+    },
+    {
+      "department": "secretary",
+      "mode": "socratic-adversarial-gate",
+      "boost": 10,
+      "tokens": [
+        "adversarial",
+        "dissent",
+        "critique",
+        "tear"
+      ]
+    },
+    {
+      "department": "coupling-router",
+      "mode": "worktree-lease-protocol",
+      "boost": 10,
+      "tokens": [
+        "subagent",
+        "subagents",
+        "worktree",
+        "lease",
+        "overwriting"
+      ]
+    },
+    {
+      "department": "git",
+      "mode": "issue-to-pr-discipline",
+      "boost": 10,
+      "tokens": [
+        "repro",
+        "reproducer",
+        "scoped",
+        "issue-to-pr"
+      ]
+    },
+    {
+      "department": "git",
+      "mode": "convention-mining",
+      "boost": 10,
+      "tokens": [
+        "convention",
+        "commit",
+        "commits",
+        "commitlog"
+      ]
+    },
+    {
+      "department": "code-review",
+      "mode": "intended-vs-implemented",
+      "boost": 10,
+      "tokens": [
+        "diff",
+        "title",
+        "claims",
+        "mismatch"
+      ]
+    },
+    {
+      "department": "refactor",
+      "mode": "sweep",
+      "boost": 9,
+      "tokens": [
+        "inconsistent",
+        "styled",
+        "duplicate",
+        "sweep",
+        "consistent"
+      ]
+    },
+    {
+      "department": "updateagents",
+      "mode": "harness-hygiene",
+      "boost": 10,
+      "tokens": [
+        "copilot",
+        "cursor",
+        "droppings",
+        "hygiene",
+        "harness"
+      ]
+    },
+    {
+      "department": "devops",
+      "mode": "domains",
+      "boost": 10,
+      "tokens": [
+        "dns",
+        "nameserver",
+        "bounced",
+        "domain"
+      ]
+    },
+    {
+      "department": "webdev",
+      "mode": "offline",
+      "boost": 10,
+      "tokens": [
+        "offline",
+        "basement",
+        "signal",
+        "disconnected",
+        "reconnect"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "graph",
+      "boost": 10,
+      "tokens": [
+        "recursive",
+        "hierarchy",
+        "orgchart"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "audit",
+      "boost": 9,
+      "tokens": [
+        "ga4",
+        "gtag",
+        "measurement",
+        "property"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "retention",
+      "boost": 10,
+      "tokens": [
+        "retention",
+        "cohort"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "community",
+      "boost": 10,
+      "tokens": [
+        "discord",
+        "community",
+        "slack-community"
+      ]
+    },
+    {
+      "department": "seo",
+      "mode": "programmatic",
+      "boost": 10,
+      "tokens": [
+        "combinations",
+        "combination",
+        "city",
+        "locality"
+      ]
+    },
+    {
+      "department": "seo",
+      "mode": "onpage",
+      "boost": 10,
+      "tokens": [
+        "h1",
+        "onpage",
+        "metatags"
+      ]
+    },
+    {
+      "department": "smm",
+      "mode": "x",
+      "boost": 9,
+      "tokens": [
+        "followers",
+        "monetisation",
+        "monetization",
+        "tweets"
+      ]
+    },
+    {
+      "department": "smm",
+      "mode": "postiz",
+      "boost": 10,
+      "tokens": [
+        "postiz",
+        "bluesky",
+        "threads",
+        "crosspost"
+      ]
+    },
+    {
+      "department": "content",
+      "mode": "vsl",
+      "boost": 10,
+      "tokens": [
+        "vsl",
+        "salesletter",
+        "programme",
+        "webinar-pitch"
+      ]
+    },
+    {
+      "department": "retain",
+      "mode": "check-in",
+      "boost": 9,
+      "tokens": [
+        "silent",
+        "checkin",
+        "touchpoint",
+        "quiet"
+      ]
+    },
+    {
+      "department": "designscope",
+      "mode": "token-extraction",
+      "boost": 10,
+      "tokens": [
+        "screenshot",
+        "spacing",
+        "palette"
+      ]
+    },
+    {
+      "department": "ops",
+      "mode": "shape",
+      "boost": 10,
+      "tokens": [
+        "viral",
+        "ambiguous",
+        "shape",
+        "unscoped",
+        "vague"
+      ]
+    },
+    {
+      "department": "ops",
+      "mode": "vendor",
+      "boost": 10,
+      "tokens": [
+        "contractor",
+        "ghosted",
+        "vendor",
+        "vendors"
+      ]
+    },
+    {
+      "department": "accounts",
+      "mode": "billing-engine",
+      "boost": 10,
+      "tokens": [
+        "metered",
+        "metering",
+        "usage-based"
+      ]
+    },
+    {
+      "department": "gtm",
+      "mode": "dev-to-buyer",
+      "boost": 10,
+      "tokens": [
+        "changelogs",
+        "engineers",
+        "developers",
+        "technical-buyers"
+      ]
+    },
+    {
+      "department": "research",
+      "mode": "entity-dossier",
+      "boost": 10,
+      "tokens": [
+        "dossier",
+        "prospect",
+        "founder",
+        "background"
+      ]
+    },
+    {
+      "department": "sales-enablement",
+      "mode": "playbook",
+      "boost": 9,
+      "tokens": [
+        "demoed",
+        "playbook",
+        "demo",
+        "pitch"
+      ]
+    },
+    {
+      "department": "qa-launch",
+      "mode": "chaos",
+      "boost": 10,
+      "tokens": [
+        "chaos",
+        "failover",
+        "resilience",
+        "disappears"
+      ]
+    },
+    {
+      "department": "client-comms",
+      "mode": "change",
+      "boost": 10,
+      "tokens": [
+        "tweaks",
+        "pushback",
+        "timeline",
+        "extra"
+      ]
     }
   ]
 }
