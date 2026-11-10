@@ -94,6 +94,11 @@ export function auditDocCommands(base = ROOT): DocCommandFinding[] {
       while (match) {
         const target = match[1];
         // Only script paths; bare tool mentions and flags are out of scope.
+        // `~/...` and `$HOME/...` are installed-at-runtime paths, not repo files.
+        if (target.startsWith("~") || target.startsWith("$HOME")) {
+          match = COMMAND_RE.exec(line);
+          continue;
+        }
         if (!target.includes("/scripts/") && !target.startsWith("scripts/")) {
           match = COMMAND_RE.exec(line);
           continue;

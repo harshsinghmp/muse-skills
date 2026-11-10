@@ -529,6 +529,14 @@ export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   }
   fs.writeFileSync(path.join(targetDir, MUSE_VERSION_MARKER), `v${version}\n`, "utf8");
 
+  // Ship the harness map with the install so the portable doctor (which lives
+  // inside a skill) can verify destinations without the repository.
+  const registrySource = path.join(REPO_ROOT, "harness.json");
+  if (fs.existsSync(registrySource)) {
+    fs.mkdirSync(path.join(targetDir, ".muse"), { recursive: true });
+    fs.copyFileSync(registrySource, path.join(targetDir, ".muse", "harness.json"));
+  }
+
   // Never swallow a missing source: a silent skip is exactly how the exporter
   // ended up shipping commands that pointed at never-installed skills.
   if (missing.length > 0) {
