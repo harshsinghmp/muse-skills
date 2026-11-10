@@ -83,6 +83,8 @@
     "check:ledger": "bun scripts/check-docs-ledger.ts",
     "check:harness": "bun scripts/sync-harness-docs.ts --check",
     "sync:harness": "bun scripts/sync-harness-docs.ts --write",
+    "check:routing:signals": "bun scripts/sync-routing-signals.ts --check",
+    "sync:routing:signals": "bun scripts/sync-routing-signals.ts --write",
     "check:routing": "bun scripts/eval-routing.ts",
     "check:routing:heldout": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v5.json --min-exact 0 --min-skill 0",
     "check:install": "bun scripts/check-install-matrix.ts",
