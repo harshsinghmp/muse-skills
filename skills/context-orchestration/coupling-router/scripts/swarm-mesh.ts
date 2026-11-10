@@ -202,16 +202,23 @@ export function readPlan(stateDir: string): MeshPlan {
   return plan;
 }
 
-export function initMesh(
+export function initMeshFromPlan(
   stateDir: string,
-  planFile: string,
+  plan: MeshPlan,
 ): { state: string; planId: string; tasks: number; planHash: string } {
-  const plan = JSON.parse(readFileSync(resolve(planFile), "utf8")) as MeshPlan;
   const problems = validatePlan(plan);
   if (problems.length > 0) throw new Error(`Invalid plan: ${problems.join(" ")}`);
   const paths = ensureState(stateDir);
   writeJsonAtomic(paths.plan, plan);
   return { state: paths.state, planId: plan.planId, tasks: plan.tasks.length, planHash: computePlanHash(plan) };
+}
+
+export function initMesh(
+  stateDir: string,
+  planFile: string,
+): { state: string; planId: string; tasks: number; planHash: string } {
+  const plan = JSON.parse(readFileSync(resolve(planFile), "utf8")) as MeshPlan;
+  return initMeshFromPlan(stateDir, plan);
 }
 
 function claimPath(stateDir: string, taskId: string): string {

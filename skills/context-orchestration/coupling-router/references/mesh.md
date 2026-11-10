@@ -52,6 +52,20 @@ An empty anomaly list is the only proof that every task ran exactly once, by a n
 - The outcome is deterministic even though the interleaving is not: every task ends `DONE` exactly once, and the ledger reconciles clean.
 - Do not expose a network control plane until this simulation is deterministic and its tests green — the same guardrail the roadmap applies to the whole mesh.
 
+### MESH-006: Dispatcher Ownership
+
+`swarm-dispatcher.ts --mesh <dir> --node <id>` runs the DAG with ownership arbitrated
+by the mesh instead of assumed:
+
+- every task is claimed before it executes, so two dispatchers on one plan never run
+  the same task; the loser prunes the dependents it can no longer reach and records
+  `Claimed by another mesh node`;
+- `COMPLETED` settles the claim as `DONE`; `FAILED`, `FAILED_CONSENSUS`, and budget
+  refusals `release` it so a retry can claim it instead of finding it stuck;
+- a replayed plan claims nothing — finished tasks are terminal;
+- the run returns both ledgers, so the mesh's `reconcile` proves the DAG actually
+  ran once.
+
 ---
 
 ## CLI
@@ -68,6 +82,9 @@ bun $MESH worker    --state .agents/artifacts/swarm-mesh --node worker-1 [--ttl 
 bun $MESH simulate  --state .agents/artifacts/swarm-mesh --workers 3 [--json]
 bun $MESH reconcile --state .agents/artifacts/swarm-mesh [--json]
 bun $MESH status    --state .agents/artifacts/swarm-mesh [--json]
+
+# DAG dispatch with mesh-arbitrated ownership (two nodes, one plan)
+bun <skill-dir>/coupling-router/scripts/swarm-dispatcher.ts --plan plan.json --mesh <state> --node node-1 --json
 ```
 
 Verdicts from `claim`: `CLAIMED`, `ALREADY_HELD` (idempotent re-claim by the holder), `STALE_TAKEOVER`, `RECLAIMED` (a `RELEASED` task), `NO_TASK`.
