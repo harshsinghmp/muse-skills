@@ -248,6 +248,21 @@ Or install scoped specifically to your current project:
 npx skills add harshsinghmp/muse-skills --scope project
 ```
 
+### Keeping a Device Current
+
+Skills, native commands, and hooks are three separate surfaces — updating one without the others is how a device drifts. One command does all three and proves it:
+
+```bash
+bun scripts/muse.ts update          # resolve latest tag → pinned install → doctor
+bun scripts/muse.ts update --check  # exit 1 when behind (cron/CI friendly)
+bun scripts/muse.ts doctor          # inspect what is actually installed
+bun scripts/muse.ts doctor --fix    # re-export a drifted command surface in place
+```
+
+The workflow, in order: `update` resolves the latest release tag and re-runs the checksum-pinned installer for it (skills, command surfaces, version marker), then runs `doctor`. `doctor` checks the disk, not the log: all 46 skills present, each detected harness carrying the expected command count **in its own format**, the installed `secretary/references/dispatch.md` resolving to references that actually exist, and git boundary hooks in place. A device is current only when `doctor` exits 0.
+
+Why not just re-run `npx skills add`? That refreshes skills only. Native slash commands live in per-harness directories (`.claude/commands`, `~/.codex/prompts`, `.gemini/commands`, …), so they need the export pass too — `update` is what makes a refresh immediate on every device.
+
 ### Option 2: Multi-Harness Native Slash Commands
 
 Export native slash commands into every detected agent harness — each one in the format it actually reads:
