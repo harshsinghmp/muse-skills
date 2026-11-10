@@ -17,6 +17,15 @@ const HELDOUT = JSON.parse(
 const ENGINEERING = JSON.parse(
   readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v6.json"), "utf8"),
 ) as RoutingFixture[];
+/**
+ * v7 was written blind AFTER the engineering vocabulary was added, to test
+ * whether that vocabulary transfers. It does not: 2.5% exact / 20% department.
+ * The floor here only catches further collapse — it is a known-weak
+ * distribution, not a standard to defend.
+ */
+const CROSS_DOMAIN = JSON.parse(
+  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v7.json"), "utf8"),
+) as RoutingFixture[];
 
 const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry.skill}:${entry.mode}`));
 
@@ -52,6 +61,16 @@ describe("routing generalisation (held-out)", () => {
     );
     expect(report.exactRate).toBeGreaterThanOrEqual(0.1);
     expect(report.departmentRate).toBeGreaterThanOrEqual(0.25);
+  });
+
+  test("cross-domain held-out exposes the overfit (weak cover accepted)", () => {
+    const report = evaluateRouting(CROSS_DOMAIN, routes, { minExact: 0, minSkill: 0 });
+    expect(report.invalidPredictions).toEqual([]);
+    console.log(
+      `[routing] cross-domain held-out: exact ${(report.exactRate * 100).toFixed(0)}% · department ${(report.departmentRate * 100).toFixed(0)}% (${report.exact}/${report.total})`,
+    );
+    expect(report.exactRate).toBeGreaterThanOrEqual(0.02);
+    expect(report.departmentRate).toBeGreaterThanOrEqual(0.18);
   });
 
   test("held-out accuracy is measured and does not silently collapse", () => {

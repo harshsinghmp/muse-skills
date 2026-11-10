@@ -1,0 +1,202 @@
+[
+  {
+    "id": "v7-01",
+    "prompt": "every time a writer pastes a draft out of google docs into payload the byline and publish date get eaten and someone re-types them by hand",
+    "expect": "content:frontmatter-guard"
+  },
+  {
+    "id": "v7-02",
+    "prompt": "we picked up a 900-page site from the agency that got fired, i want one ordered list of what's actually broken before anyone touches a template",
+    "expect": "seo:audit"
+  },
+  {
+    "id": "v7-03",
+    "prompt": "linkedin is basically all our organic and i still can't tell which posts produced demo requests vs which just got liked by other agencies",
+    "expect": "smm:analytics"
+  },
+  {
+    "id": "v7-04",
+    "prompt": "we sell self-hosted backup software, our buyers are in r/selfhosted and r/homelab, i want to run a campaign in there without getting banned on day two",
+    "expect": "paidads:reddit"
+  },
+  {
+    "id": "v7-05",
+    "prompt": "two people on the same doc and the cursors jump all over, we're polling every 2s and it looks drunk — want proper presence",
+    "expect": "webdev:realtime-bus"
+  },
+  {
+    "id": "v7-06",
+    "prompt": "six-figure deals touch paid, a webinar, outbound and a partner before they close, and the cfo wants credit split fairly across all four instead of last-click eating everything",
+    "expect": "analytics:attribution-graph"
+  },
+  {
+    "id": "v7-07",
+    "prompt": "the courier keeps missing the window and customers want a text when the delivery slips, right now we only send email and half of them never open it",
+    "expect": "crm:sms"
+  },
+  {
+    "id": "v7-08",
+    "prompt": "our bookkeeper left in june, i'm carrying three clients, and i'm fairly sure we've under-billed one of them for months — sweep it and tell me where the money leaks",
+    "expect": "accounts:audit"
+  },
+  {
+    "id": "v7-09",
+    "prompt": "eighteen deliverables across three projects and every date only exists in my head and one slack thread",
+    "expect": "ops:milestone"
+  },
+  {
+    "id": "v7-10",
+    "prompt": "refer-a-friend currently gives a free month, i want to know what that actually produces per user before we bump it to three months",
+    "expect": "growth:viral"
+  },
+  {
+    "id": "v7-11",
+    "prompt": "the retainer says four-hour response and we've blown it three weeks running — i need the commitment written down and something that tells me when we're about to miss it",
+    "expect": "retain:sla"
+  },
+  {
+    "id": "v7-12",
+    "prompt": "300 inbound forms a month and sales works them in arrival order, so a two-person shop in ohio gets the same afternoon as a 900-seat logistics company",
+    "expect": "gtm:score"
+  },
+  {
+    "id": "v7-13",
+    "prompt": "what is the category actually saying about us on reddit and g2 this quarter — sentiment, not a list of links i have to read myself",
+    "expect": "research:market-pulse"
+  },
+  {
+    "id": "v7-14",
+    "prompt": "cfo meeting thursday, she will not read 20 slides, i want one page she can keep with the numbers already in it",
+    "expect": "sales-enablement:one-pager"
+  },
+  {
+    "id": "v7-15",
+    "prompt": "client walked in june on bad terms, our code is still in their repo and their stripe key is still sitting in our vault",
+    "expect": "brand:offboard"
+  },
+  {
+    "id": "v7-16",
+    "prompt": "60 calls a day that are only ever 'where is my order', i want a voice agent picking up and handing the weird ones to a human",
+    "expect": "automation:voice"
+  },
+  {
+    "id": "v7-17",
+    "prompt": "we've got hosting, two ci pipelines, four domains and five cloudflare workers and nobody has looked at the whole shape of it since 2022",
+    "expect": "devops:audit"
+  },
+  {
+    "id": "v7-18",
+    "prompt": "expo sdk 49, still on old architecture, and the warehouse pilot needs barcode scanning plus push working in three weeks",
+    "expect": "mobile:expo"
+  },
+  {
+    "id": "v7-19",
+    "prompt": "product listing page: lcp 4.2s, inp 380, we launch monday — i want to know where that time actually goes before someone buys a cdn",
+    "expect": "qa-launch:vitals"
+  },
+  {
+    "id": "v7-20",
+    "prompt": "90 second product film for the homepage, i need the frames and the beat-by-beat worked out before anyone opens after effects",
+    "expect": "design:story"
+  },
+  {
+    "id": "v7-21",
+    "prompt": "two features have to land the same week and both rewrite package-lock — last time one of them quietly wiped the other's changes",
+    "expect": "git:worktree-parallel-lanes"
+  },
+  {
+    "id": "v7-22",
+    "prompt": "i resolved the merge wrong and pushed, main now has half of each branch and prod deploys straight from main",
+    "expect": "git:conflict-resolution-and-recovery"
+  },
+  {
+    "id": "v7-23",
+    "prompt": "every order row has to carry a tenant id. it's set in three places and i'm pretty sure a fourth write path skips it entirely",
+    "expect": "code-review:cross-file-invariants"
+  },
+  {
+    "id": "v7-24",
+    "prompt": "reviewer dumped 31 comments on the PR, half of them are naming opinions — tell me which ones actually block the merge",
+    "expect": "code-review:triage-matrix"
+  },
+  {
+    "id": "v7-25",
+    "prompt": "the wiki audit came back with 90 findings and i need an order to burn them down in, not a wall of red",
+    "expect": "audit:remediation-matrix"
+  },
+  {
+    "id": "v7-26",
+    "prompt": "every paragraph on this page opens with a three-word fragment then explains why it matters — fix the rhythm, don't change a single claim",
+    "expect": "humanize:patterns"
+  },
+  {
+    "id": "v7-27",
+    "prompt": "our subagent worktrees can read each other's .env and i found a production key inside a sandbox run yesterday",
+    "expect": "muse-security:boundary"
+  },
+  {
+    "id": "v7-28",
+    "prompt": "1,400 login attempts from twelve ip ranges overnight on /login, classic credential stuffing, we're behind cloudflare and i want it stopped at the edge",
+    "expect": "muse-security:cloud-waf"
+  },
+  {
+    "id": "v7-29",
+    "prompt": "i don't trust our scores on the new pricing page, the three people who built it also graded it — i want a critic who wasn't in the room and a hard stop on rounds",
+    "expect": "gauntlet-loop:bar-selection-and-blind-critique"
+  },
+  {
+    "id": "v7-30",
+    "prompt": "nightly reconciliation has died nine nights straight and our retry just hammers the same broken endpoint harder every hour",
+    "expect": "dead-letter:circuit-breaker"
+  },
+  {
+    "id": "v7-31",
+    "prompt": "six skills stacked into one run and at least two of them tell the agent opposite things about when to commit",
+    "expect": "coupling-router:skill-compatibility-matrix"
+  },
+  {
+    "id": "v7-32",
+    "prompt": "three clients in this one session and i just sent client A a draft written in client B's voice, i keep bleeding them into each other",
+    "expect": "context-anchor:layering-protocol"
+  },
+  {
+    "id": "v7-33",
+    "prompt": "handing this to priya tomorrow morning and i will not get time to write anything up tonight",
+    "expect": "relay:ambient-handoff"
+  },
+  {
+    "id": "v7-34",
+    "prompt": "i'm taking the northwind engagement over mid-flight on monday — brief me on where it actually stands and who decides what before i open a single file",
+    "expect": "secretary:onboard"
+  },
+  {
+    "id": "v7-35",
+    "prompt": "'40% faster onboarding' is on slide 6 of the sales deck — who measured it, on what sample, and how comfortable are we putting that in front of a bank",
+    "expect": "evidence-ledger:claim-verification-taxonomy"
+  },
+  {
+    "id": "v7-36",
+    "prompt": "the agent stopped following our migration rules after we moved everything under src/ — the rules are still in the file, it just ignores them now",
+    "expect": "updateagents:doctor"
+  },
+  {
+    "id": "v7-37",
+    "prompt": "readme still describes the cookie auth we killed in march and the api docs are three versions behind the code",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v7-38",
+    "prompt": "signed the retainer friday — run the intake interview on me properly this time so the Client-Intake docs and start-here come out of my actual answers, not placeholder text",
+    "expect": "new-project:client-onboarding"
+  },
+  {
+    "id": "v7-39",
+    "prompt": "our three services import each other in circles, nothing can be tested on its own, and a one-line change rebuilds the world",
+    "expect": "refactor:architecture"
+  },
+  {
+    "id": "v7-40",
+    "prompt": "transitions feel floaty and slightly too slow and the drawer bounce is just odd — go through the motion we already have before anyone adds more",
+    "expect": "animate:review-checklist"
+  }
+]
