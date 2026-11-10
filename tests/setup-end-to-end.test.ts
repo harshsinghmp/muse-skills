@@ -75,7 +75,6 @@ function harnessTargets(home: string, workspace: string): HarnessTarget[] {
       extension: ".md",
       noun: "commands",
     },
-    { label: "codex (prompts)", dir: path.join(home, ".codex", "prompts"), extension: ".md", noun: "commands" },
     {
       label: "gemini/antigravity (global)",
       dir: path.join(home, ".gemini", "commands"),

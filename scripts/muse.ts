@@ -18,7 +18,14 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { commandSurfaceCounts, getSkills, MUSE_VERSION_MARKER } from "./export-commands";
+import {
+  commandSurfaceCounts,
+  getSkillModeCommands,
+  getSkills,
+  MUSE_VERSION_MARKER,
+  SUBMODE_ALIASES,
+} from "./export-commands";
+import { commandDestinations, expandHarnessPath, loadHarnessRegistry } from "./harness-registry";
 
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const OWNER_REPO = "harshsinghmp/muse-skills";
@@ -36,40 +43,17 @@ export interface DoctorReport {
   skillsRoot: string;
   installedVersion: string | null;
   expectedCommands: number;
-  harnesses: Array<{ label: string; dir: string; files: number; expected: number; extension: string; ok: boolean }>;
+  harnesses: Array<{
+    label: string;
+    dir: string;
+    files: number;
+    expected: number;
+    extension: string;
+    ok: boolean;
+    legacy: boolean;
+  }>;
   checks: DoctorCheck[];
 }
-
-/** harness dir → command subdir + extension (mirrors export-commands' surfaces). */
-const HARNESS_SURFACES: Array<{ label: string; home: string; workspace: string; subdir: string; extension: string }> = [
-  {
-    label: "opencode",
-    home: ".config/opencode/commands",
-    workspace: ".opencode/commands",
-    subdir: ".config/opencode",
-    extension: ".md",
-  },
-  {
-    label: "claude-code",
-    home: ".claude/commands",
-    workspace: ".claude/commands",
-    subdir: ".claude",
-    extension: ".md",
-  },
-  { label: "codex", home: ".codex/prompts", workspace: "", subdir: ".codex", extension: ".md" },
-  { label: "cursor", home: "", workspace: ".cursor/commands", subdir: ".cursor", extension: ".md" },
-  { label: "roo", home: ".roo/commands", workspace: ".roo/commands", subdir: ".roo", extension: ".md" },
-  { label: "gemini", home: ".gemini/commands", workspace: ".gemini/commands", subdir: ".gemini", extension: ".toml" },
-  { label: "copilot", home: "", workspace: ".github/prompts", subdir: ".github", extension: ".prompt.md" },
-  {
-    label: "continue",
-    home: ".continue/prompts",
-    workspace: ".continue/prompts",
-    subdir: ".continue",
-    extension: ".prompt",
-  },
-  { label: "windsurf", home: "", workspace: ".windsurf/workflows", subdir: ".windsurf", extension: ".md" },
-];
 
 function resolveSkillsRoot(home: string, workspace: string): string {
   const project = path.join(workspace, ".agents", "skills");
@@ -133,6 +117,25 @@ export function runDoctor(options: { home?: string; workspace?: string; fix?: bo
   // Repair first, then inspect: the report must describe the post-fix state.
   let fixResult: { ok: boolean; detail: string } | undefined;
   if (options.fix) {
+    // Remove only files we generated into surfaces the vendor no longer reads.
+    const known = new Set([
+      ...skills.map((skill) => skill.name),
+      ...SUBMODE_ALIASES.map((alias) => alias.command),
+      ...getSkillModeCommands(skills).map((entry) => entry.command),
+    ]);
+    let pruned = 0;
+    for (const harness of loadHarnessRegistry().harnesses) {
+      for (const template of harness.retiredPaths ?? []) {
+        const dir = expandHarnessPath(template, { home, workspace });
+        if (!fs.existsSync(dir)) continue;
+        for (const file of fs.readdirSync(dir)) {
+          if (!file.endsWith(".md") || !known.has(file.slice(0, -".md".length))) continue;
+          fs.rmSync(path.join(dir, file), { force: true });
+          pruned += 1;
+        }
+      }
+    }
+    if (pruned > 0) console.log(`🧹 removed ${pruned} stale file(s) from retired harness surfaces`);
     const setup = spawnSync("bun", [path.join(REPO_ROOT, "scripts", "export-commands.ts"), "--setup"], {
       cwd: workspace,
       encoding: "utf8",
@@ -188,31 +191,45 @@ export function runDoctor(options: { home?: string; workspace?: string; fix?: bo
     });
   }
 
+  const registry = loadHarnessRegistry();
   const harnesses: DoctorReport["harnesses"] = [];
-  for (const surface of HARNESS_SURFACES) {
-    const candidates = [
-      surface.home ? { root: home, rel: surface.home, global: true } : undefined,
-      surface.workspace ? { root: workspace, rel: surface.workspace, global: false } : undefined,
-    ].filter((entry): entry is { root: string; rel: string; global: boolean } => Boolean(entry));
-
-    for (const candidate of candidates) {
-      const parent = path.join(candidate.root, path.dirname(candidate.rel));
-      const dir = path.join(candidate.root, candidate.rel);
-      if (!fs.existsSync(parent)) continue; // harness not installed on this device
-      const files = fs.existsSync(dir)
-        ? fs.readdirSync(dir).filter((file) => file.endsWith(surface.extension)).length
-        : 0;
-      harnesses.push({
-        label: `${surface.label} (${candidate.global ? "global" : "workspace"})`,
-        dir,
-        files,
-        expected,
-        extension: surface.extension,
-        ok: files === expected,
-      });
-    }
+  for (const destination of commandDestinations(registry, { home, workspace })) {
+    if (!fs.existsSync(destination.gate)) continue; // harness not installed on this device
+    const files = fs.existsSync(destination.dir)
+      ? fs.readdirSync(destination.dir).filter((file) => file.endsWith(destination.extension)).length
+      : 0;
+    const legacy = destination.harness.status === "legacy";
+    harnesses.push({
+      label: `${destination.harness.id} (${destination.scope}${legacy ? ", legacy" : ""})`,
+      dir: destination.dir,
+      files,
+      expected,
+      extension: destination.extension,
+      ok: files === expected,
+      legacy,
+    });
   }
   const staleSurfaces = harnesses.filter((harness) => !harness.ok);
+  // Surfaces the vendor no longer reads: files we used to write are dead weight.
+  const retired: string[] = [];
+  for (const harness of registry.harnesses) {
+    for (const template of harness.retiredPaths ?? []) {
+      const dir = expandHarnessPath(template, { home, workspace });
+      if (!fs.existsSync(dir)) continue;
+      const files = fs.readdirSync(dir).filter((file) => file.endsWith(".md"));
+      if (files.length > 0) retired.push(`${dir} (${files.length} file(s))`);
+    }
+  }
+  checks.push({
+    id: "retired-surfaces",
+    ok: retired.length === 0,
+    detail:
+      retired.length === 0
+        ? "no files left in surfaces the vendor removed"
+        : `${retired.join("; ")} — run with --fix to remove our stale files`,
+    fixable: retired.length > 0,
+  });
+
   checks.push({
     id: "command-surfaces",
     ok: staleSurfaces.length === 0,

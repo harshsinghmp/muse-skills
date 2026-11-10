@@ -5,7 +5,6 @@ import path from "node:path";
 import {
   commandSurfaceCounts,
   exportClaudeCommands,
-  exportCodexPrompts,
   exportContinuePrompts,
   exportCopilotPrompts,
   exportCursorCommands,
@@ -36,7 +35,6 @@ const EXPECTED_TOTAL_COMMANDS = EXPECTED_SKILL_COMMANDS + EXPECTED_SKILL_MODE_CO
 const COMMAND_EXPORTERS: Array<[string, (dest: string, skills: ReturnType<typeof getSkills>) => number, string]> = [
   ["OpenCode", exportOpenCodeCommands, ".md"],
   ["Claude Code", exportClaudeCommands, ".md"],
-  ["Codex", exportCodexPrompts, ".md"],
   ["Cursor", exportCursorCommands, ".md"],
   ["Roo Code", exportRooCommands, ".md"],
   ["Gemini/Antigravity", exportGeminiCommands, ".toml"],

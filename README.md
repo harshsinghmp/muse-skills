@@ -267,20 +267,28 @@ Why not just re-run `npx skills add`? That refreshes skills only. Native slash c
 
 Export native slash commands into every detected agent harness — each one in the format it actually reads:
 
-| Harness | Project location | Global location | Format |
-| :--- | :--- | :--- | :--- |
-| OpenCode | `.opencode/commands/` | `~/.config/opencode/commands/` | `.md` |
-| Claude Code | `.claude/commands/` | `~/.claude/commands/` | `.md` |
-| Codex CLI | — | `~/.codex/prompts/` | `.md` |
-| Cursor | `.cursor/commands/` | — | `.md` |
-| Roo Code | `.roo/commands/` | `~/.roo/commands/` | `.md` |
-| Qwen Code | `.qwen/commands/` | `~/.qwen/commands/` | `.md` |
-| Gemini CLI *(legacy — retired 2026-06-18)* | `.gemini/commands/` | `~/.gemini/commands/` | `.toml` |
-| GitHub Copilot | `.github/prompts/` | — | `.prompt.md` |
-| Continue | `.continue/prompts/` | `~/.continue/prompts/` | `.prompt` |
-| Windsurf | `.windsurf/workflows/` | — | `.md` |
+<!-- harness-matrix:start -->
+| Harness | Status | Project commands | Global commands | Format |
+| :--- | :--- | :--- | :--- | :--- |
+| OpenCode | ✅ active | `.opencode/commands` | `~/.config/opencode/commands` | `.md` (markdown) |
+| Claude Code | ✅ active | `.claude/commands` | `~/.claude/commands` | `.md` (markdown) |
+| Codex CLI | 🧩 skills-only | — | — | `SKILL.md` only |
+| Cursor | ✅ active | `.cursor/commands` | — | `.md` (markdown) |
+| Roo Code | ✅ active | `.roo/commands` | `~/.roo/commands` | `.md` (markdown) |
+| Qwen Code | ✅ active | `.qwen/commands` | `~/.qwen/commands` | `.md` (markdown) |
+| GitHub Copilot | ✅ active | `.github/prompts` | — | `.prompt.md` (copilot) |
+| Continue | ✅ active | `.continue/prompts` | `~/.continue/prompts` | `.prompt` (continue) |
+| Windsurf | ✅ active | `.windsurf/workflows` | — | `.md` (workflow) |
+| Gemini CLI | ⚠️ legacy | `.gemini/commands` | `~/.gemini/commands` | `.toml` (toml) |
+| Antigravity | 🧩 skills-only | — | — | `SKILL.md` only |
+| Amp | 🧩 skills-only | — | — | `SKILL.md` only |
+
+**8 active · 3 skills-only · 1 legacy.** Skill roots read directly by these harnesses: `~/.agents/skills`, `.agents/skills`, `~/.claude/skills`, `.claude/skills`, `~/.config/agents/skills`.
+<!-- harness-matrix:end -->
 
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
+
+**Harness registry.** `harness.json` is the single source of truth for every destination above: status (`active` / `legacy` / `skills-only`), paths, format, skill roots, docs URL, and retired paths. `scripts/harness-registry.ts` is the loader the exporter, install matrix, and `muse doctor` share; `scripts/sync-harness-docs.ts` renders the table above and `bun run check:harness` fails when it drifts. Adding or retiring a harness is a one-file change.
 
 **Skills are the durable surface.** Slash-command files are per-harness and each has its own format; `SKILL.md` is cross-harness. Antigravity and Amp read `~/.agents/skills/` (Amp's second search root) and `.agents/skills/` in a project directly, and Claude Code reads `~/.claude/skills/`. The setup mirrors the canonical tree into `~/.claude/skills/` and `<project>/.claude/skills/` as symlinks, so a refresh of `~/.agents/skills` is immediately visible there instead of going stale.
 
