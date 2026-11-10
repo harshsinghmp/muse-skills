@@ -16,6 +16,7 @@ import path from "node:path";
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const README_PATH = path.join(REPO_ROOT, "README.md");
 const BASELINE_PATH = path.join(REPO_ROOT, "routing-baseline.json");
+const COVERAGE_PATH = path.join(REPO_ROOT, "routing-coverage.json");
 const START = "<!-- routing-matrix:start -->";
 const END = "<!-- routing-matrix:end -->";
 
@@ -38,10 +39,19 @@ export function renderRoutingTable(): string {
       return `| \`${label}\` | ${kind} | ${result.total} | ${result.exact} (${pct(result.exact, result.total)}) | ${result.department} (${pct(result.department, result.total)}) |`;
     });
 
+  const coverage = JSON.parse(fs.readFileSync(COVERAGE_PATH, "utf8")) as {
+    total: number;
+    curated: number;
+    nameOnly: string[];
+  };
+
   return [
     "| Distribution | Kind | Prompts | Exact `skill:mode` | Department |",
     "| :--- | :--- | ---: | ---: | ---: |",
     ...rows,
+    "",
+    "",
+    `**Mode coverage**: ${coverage.curated} of ${coverage.total} routable modes (${((coverage.curated / coverage.total) * 100).toFixed(0)}%) carry a curated routing signal; the other ${coverage.nameOnly.length} are reachable only by name/description matching (\`routing-coverage.json\`, gated by \`bun run check:routing:coverage\`).`,
     "",
     `Measured ${baseline.generatedAt}. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — \`bun run check:routing:matrix\` fails if any row drops, and \`bun run sync:routing:baseline\` is the only way to accept a lower number.`,
   ].join("\n");
