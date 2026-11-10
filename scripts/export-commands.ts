@@ -462,6 +462,8 @@ export function resolveSkillSourceDir(skill: SkillItem): string {
   return path.basename(resolved) === "SKILL.md" ? path.dirname(resolved) : resolved;
 }
 
+export const MUSE_VERSION_MARKER = ".muse-version";
+
 export function exportSkills(targetDir: string, skills: SkillItem[]): number {
   fs.mkdirSync(targetDir, { recursive: true });
   let count = 0;
@@ -484,6 +486,17 @@ export function exportSkills(targetDir: string, skills: SkillItem[]): number {
     fs.renameSync(staging, destDir);
     count++;
   }
+
+  // Stamp the installed version so `muse doctor` / `muse update` can tell
+  // whether this device is current without guessing from skill versions.
+  let version = "unknown";
+  try {
+    version = (JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "package.json"), "utf8")) as { version: string })
+      .version;
+  } catch {
+    // keep "unknown": doctor reports an unversioned install rather than failing
+  }
+  fs.writeFileSync(path.join(targetDir, MUSE_VERSION_MARKER), `v${version}\n`, "utf8");
 
   // Never swallow a missing source: a silent skip is exactly how the exporter
   // ended up shipping commands that pointed at never-installed skills.
