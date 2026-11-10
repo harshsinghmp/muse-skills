@@ -1,0 +1,437 @@
+[
+  {
+    "id": "content-blog",
+    "prompt": "write a blog post about AI agents for developers",
+    "expect": "content:blog"
+  },
+  {
+    "id": "content-case-study",
+    "prompt": "write a case study about our client results",
+    "expect": "content:case-study"
+  },
+  {
+    "id": "content-copy",
+    "prompt": "rewrite the homepage copy to be more persuasive",
+    "expect": "content:copy"
+  },
+  {
+    "id": "content-email",
+    "prompt": "write a welcome email for new subscribers",
+    "expect": "content:email"
+  },
+  {
+    "id": "content-podcast",
+    "prompt": "write a podcast episode script with two hosts",
+    "expect": "content:podcast"
+  },
+  {
+    "id": "smm-carousel",
+    "prompt": "create an Instagram carousel announcing our launch",
+    "expect": "smm:carousel"
+  },
+  {
+    "id": "smm-calendar",
+    "prompt": "plan a 30 day social media calendar",
+    "expect": "smm:calendar"
+  },
+  {
+    "id": "smm-strategy",
+    "prompt": "build an organic social media strategy for a B2B SaaS brand",
+    "expect": "smm:strategy"
+  },
+  {
+    "id": "smm-influencer",
+    "prompt": "find influencers for a skincare campaign",
+    "expect": "smm:influencer"
+  },
+  {
+    "id": "seo-technical",
+    "prompt": "audit the technical SEO of our site",
+    "expect": "seo:technical"
+  },
+  {
+    "id": "seo-local",
+    "prompt": "set up local SEO for our Toronto storefront",
+    "expect": "seo:local"
+  },
+  {
+    "id": "seo-aeo",
+    "prompt": "optimise our pages for AI answer engines and AEO",
+    "expect": "seo:aeo"
+  },
+  {
+    "id": "paidads-google",
+    "prompt": "set up a Google Ads search campaign",
+    "expect": "paidads:google"
+  },
+  {
+    "id": "paidads-retargeting",
+    "prompt": "create a TikTok ad campaign with retargeting",
+    "expect": "paidads:retargeting"
+  },
+  {
+    "id": "paidads-roas",
+    "prompt": "calculate ROAS and scale the winning ad sets",
+    "expect": "paidads:roas"
+  },
+  {
+    "id": "design-ui",
+    "prompt": "design a landing page hero section in Figma",
+    "expect": "design:ui"
+  },
+  {
+    "id": "design-logo",
+    "prompt": "generate a logo and brand identity",
+    "expect": "design:logo"
+  },
+  {
+    "id": "design-wireframe",
+    "prompt": "wireframe the onboarding screens for the mobile app",
+    "expect": "design:wireframe"
+  },
+  {
+    "id": "design-slides",
+    "prompt": "design a pitch deck slide template",
+    "expect": "design:slides"
+  },
+  {
+    "id": "design-branding",
+    "prompt": "build the branding system with typography and colour tokens",
+    "expect": "design:branding"
+  },
+  {
+    "id": "webdev-accessibility",
+    "prompt": "run a WCAG accessibility audit on the checkout flow",
+    "expect": "webdev:accessibility"
+  },
+  {
+    "id": "webdev-performance",
+    "prompt": "reduce the bundle size and improve page load performance",
+    "expect": "webdev:performance"
+  },
+  {
+    "id": "webdev-backend",
+    "prompt": "build a REST API backend with TypeScript",
+    "expect": "webdev:backend"
+  },
+  {
+    "id": "webdev-deploy",
+    "prompt": "deploy the Next.js app to production",
+    "expect": "webdev:deploy"
+  },
+  {
+    "id": "webdev-funnel",
+    "prompt": "build a checkout funnel with stripe payments",
+    "expect": "webdev:funnel"
+  },
+  {
+    "id": "mobile-cross",
+    "prompt": "build a React Native expo app for iOS and Android",
+    "expect": "mobile:cross"
+  },
+  {
+    "id": "mobile-ios",
+    "prompt": "build an iOS SwiftUI screen for the feed",
+    "expect": "mobile:ios"
+  },
+  {
+    "id": "mobile-aso",
+    "prompt": "improve our App Store optimisation and ASO keywords",
+    "expect": "mobile:aso"
+  },
+  {
+    "id": "database-index",
+    "prompt": "set up a Postgres index to speed up slow queries",
+    "expect": "database:index"
+  },
+  {
+    "id": "database-migrations",
+    "prompt": "migrate the database schema to add a users table",
+    "expect": "database:migrations"
+  },
+  {
+    "id": "database-optimize",
+    "prompt": "optimize this slow SQL query plan",
+    "expect": "database:optimize"
+  },
+  {
+    "id": "devops-cloudflare",
+    "prompt": "set up Cloudflare DNS and a staging preview deployment",
+    "expect": "devops:cloudflare"
+  },
+  {
+    "id": "devops-cicd",
+    "prompt": "set up CI/CD with GitHub Actions",
+    "expect": "devops:cicd"
+  },
+  {
+    "id": "devops-monitoring",
+    "prompt": "add monitoring and alerting for our API uptime",
+    "expect": "devops:monitoring"
+  },
+  {
+    "id": "analytics-attribution",
+    "prompt": "analyse marketing attribution across channels",
+    "expect": "analytics:attribution"
+  },
+  {
+    "id": "analytics-dashboards",
+    "prompt": "build a KPI dashboard for the leadership team",
+    "expect": "analytics:dashboards"
+  },
+  {
+    "id": "analytics-tracking",
+    "prompt": "implement analytics event tracking with GA4",
+    "expect": "analytics:tracking"
+  },
+  {
+    "id": "accounts-invoicing",
+    "prompt": "send an invoice to Acme for the retainer",
+    "expect": "accounts:invoicing"
+  },
+  {
+    "id": "accounts-dunning",
+    "prompt": "chase an unpaid invoice with a dunning email sequence",
+    "expect": "accounts:dunning"
+  },
+  {
+    "id": "accounts-cashflow",
+    "prompt": "forecast cashflow for next quarter",
+    "expect": "accounts:cashflow"
+  },
+  {
+    "id": "accounts-client-pnl",
+    "prompt": "generate a monthly client P&L report",
+    "expect": "accounts:client-pnl"
+  },
+  {
+    "id": "accounts-bookkeeping",
+    "prompt": "prepare the monthly bookkeeping entries and reconcile the ledger",
+    "expect": "accounts:bookkeeping"
+  },
+  {
+    "id": "ops-sow",
+    "prompt": "draft a SOW for a new client project",
+    "expect": "ops:sow"
+  },
+  {
+    "id": "ops-obsidian",
+    "prompt": "create an Obsidian vault for the client",
+    "expect": "ops:obsidian"
+  },
+  {
+    "id": "ops-proposal",
+    "prompt": "write a project proposal for a retainer client",
+    "expect": "ops:proposal"
+  },
+  {
+    "id": "ops-retro",
+    "prompt": "run a project retrospective with the delivery team",
+    "expect": "ops:retro"
+  },
+  {
+    "id": "crm-nurture",
+    "prompt": "set up a nurture email sequence for new signups",
+    "expect": "crm:nurture"
+  },
+  {
+    "id": "crm-winback",
+    "prompt": "run a winback campaign for churned customers",
+    "expect": "crm:winback"
+  },
+  {
+    "id": "crm-deliverability",
+    "prompt": "fix email deliverability with SPF and DKIM",
+    "expect": "crm:deliverability"
+  },
+  {
+    "id": "retain-qbr",
+    "prompt": "run the QBR for Acme",
+    "expect": "retain:qbr"
+  },
+  {
+    "id": "retain-renewal",
+    "prompt": "prepare the contract renewal for the client",
+    "expect": "retain:renewal"
+  },
+  {
+    "id": "retain-churn",
+    "prompt": "set up churn-watch alerts for at-risk accounts",
+    "expect": "retain:churn-watch"
+  },
+  {
+    "id": "client-comms-status",
+    "prompt": "write a weekly client status update",
+    "expect": "client-comms:status"
+  },
+  {
+    "id": "client-comms-feedback",
+    "prompt": "summarise client feedback into action items",
+    "expect": "client-comms:feedback"
+  },
+  {
+    "id": "client-comms-pulse",
+    "prompt": "write the executive pulse briefing for the client",
+    "expect": "client-comms:executive-pulse"
+  },
+  {
+    "id": "gtm-outreach",
+    "prompt": "write a cold outreach email sequence for leads",
+    "expect": "gtm:outreach"
+  },
+  {
+    "id": "gtm-list",
+    "prompt": "score inbound leads and build a cold email list",
+    "expect": "gtm:list"
+  },
+  {
+    "id": "sales-demo",
+    "prompt": "write a sales one-pager for the demo",
+    "expect": "sales-enablement:demo"
+  },
+  {
+    "id": "sales-objection",
+    "prompt": "build an objection handling handbook for pricing pushback",
+    "expect": "sales-enablement:objection"
+  },
+  {
+    "id": "growth-pricing",
+    "prompt": "build a SaaS pricing page in Next.js",
+    "expect": "growth:pricing"
+  },
+  {
+    "id": "growth-pr",
+    "prompt": "write a press release for the launch",
+    "expect": "growth:pr"
+  },
+  {
+    "id": "growth-referral",
+    "prompt": "design a referral programme for existing customers",
+    "expect": "growth:referral"
+  },
+  {
+    "id": "automation-chatbot",
+    "prompt": "build a chatbot with retrieval augmented generation",
+    "expect": "automation:chatbot"
+  },
+  {
+    "id": "automation-workflow",
+    "prompt": "automate the workflow between forms and Slack",
+    "expect": "automation:workflow"
+  },
+  {
+    "id": "telegram-notify",
+    "prompt": "set up a Telegram bot to notify us on deploy",
+    "expect": "telegram:notify"
+  },
+  {
+    "id": "incident-triage",
+    "prompt": "triage a production incident outage",
+    "expect": "incident-response:triage"
+  },
+  {
+    "id": "qa-gate",
+    "prompt": "run the full test suite before launch",
+    "expect": "qa-launch:gate"
+  },
+  {
+    "id": "qa-evals",
+    "prompt": "run model evals on the agent outputs",
+    "expect": "qa-launch:evals"
+  },
+  {
+    "id": "code-review-pr",
+    "prompt": "review this pull request for security issues",
+    "expect": "code-review:pr-context"
+  },
+  {
+    "id": "refactor-code",
+    "prompt": "refactor the dashboard components for readability",
+    "expect": "refactor:code"
+  },
+  {
+    "id": "updateagents-audit",
+    "prompt": "audit our repo AI readiness",
+    "expect": "updateagents:audit"
+  },
+  {
+    "id": "updateagents-memory",
+    "prompt": "sync context and update memory files for the repo",
+    "expect": "updateagents:memory-file-priorities"
+  },
+  {
+    "id": "security-cve",
+    "prompt": "triage the CVE vulnerability in lodash",
+    "expect": "muse-security:cve"
+  },
+  {
+    "id": "coach-team",
+    "prompt": "run daily standup effort scorecard",
+    "expect": "coach:team"
+  },
+  {
+    "id": "coach-founder",
+    "prompt": "diagnose founder leverage bottlenecks in my week",
+    "expect": "coach:founder"
+  },
+  {
+    "id": "retreat",
+    "prompt": "facilitate a quarterly strategic retreat",
+    "expect": "periodic-retreat:retreat-protocol"
+  },
+  {
+    "id": "cache-clean",
+    "prompt": "audit and clean the system cache to free disk space",
+    "expect": "clean-system-cache:audit"
+  },
+  {
+    "id": "research-user",
+    "prompt": "plan user research interviews for the new feature",
+    "expect": "research:user-research"
+  },
+  {
+    "id": "research-competitor",
+    "prompt": "run a competitor analysis on our top three rivals",
+    "expect": "research:competitor-analysis"
+  },
+  {
+    "id": "brand-persona",
+    "prompt": "build a buyer persona for the new offer",
+    "expect": "brand:persona"
+  },
+  {
+    "id": "brand-assets",
+    "prompt": "organise the brand assets and logo files",
+    "expect": "brand:assets"
+  },
+  {
+    "id": "coupling-swarm",
+    "prompt": "plan an agent swarm DAG with a token budget",
+    "expect": "coupling-router:swarm"
+  },
+  {
+    "id": "coupling-mesh",
+    "prompt": "set up the swarm mesh task claim protocol",
+    "expect": "coupling-router:mesh"
+  },
+  {
+    "id": "secretary-briefing",
+    "prompt": "give me the morning briefing",
+    "expect": "secretary:orchestration"
+  },
+  {
+    "id": "git-release",
+    "prompt": "cut a release branch and tag the version",
+    "expect": "git:branching-and-release-matrix"
+  },
+  {
+    "id": "audit-hygiene",
+    "prompt": "audit our knowledge base for broken links",
+    "expect": "audit:hygiene-rules"
+  },
+  {
+    "id": "new-project",
+    "prompt": "scaffold a new client project with the full repo structure",
+    "expect": "new-project:project-os-architecture"
+  }
+]
