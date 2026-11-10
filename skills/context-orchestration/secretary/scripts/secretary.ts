@@ -277,6 +277,199 @@ const INTENT_SIGNALS: IntentSignal[] = [
   { regex: /\b(sitemap|canonical|schema markup)\b/i, department: "seo", mode: "technical", boost: 8 },
 ];
 
+/**
+ * Concept vocabulary: domain words that identify a department (and often a
+ * mode) regardless of phrasing. Description scoring hit its ceiling because
+ * every skill's prose shares generic words; these are the nouns practitioners
+ * actually type. Weights stay below a full fast-path so a stronger cue wins.
+ */
+interface Concept {
+  department: string;
+  mode?: string;
+  boost: number;
+  tokens: string[];
+}
+
+const CONCEPTS: Concept[] = [
+  // Web UI vs server: the distinction descriptions could not make.
+  {
+    department: "webdev",
+    mode: "frontend",
+    boost: 8,
+    tokens: [
+      "navbar",
+      "header",
+      "footer",
+      "dropdown",
+      "carousel",
+      "grid",
+      "css",
+      "layout",
+      "modal",
+      "button",
+      "viewport",
+      "responsive",
+      "sticky",
+      "anchor",
+      "tablet",
+      "safari",
+      "hero",
+      "blurry",
+      "retina",
+      "toggle",
+      "form",
+      "table",
+    ],
+  },
+  {
+    department: "webdev",
+    mode: "backend",
+    boost: 8,
+    tokens: [
+      "webhook",
+      "endpoint",
+      "payload",
+      "jwt",
+      "pagination",
+      "serverless",
+      "rest",
+      "http",
+      "json",
+      "api",
+      "session",
+      "cookie",
+      "middleware",
+    ],
+  },
+  {
+    department: "webdev",
+    mode: "accessibility",
+    boost: 10,
+    tokens: ["wcag", "contrast", "aria", "keyboard", "screenreader", "a11y"],
+  },
+  {
+    department: "webdev",
+    mode: "performance",
+    boost: 9,
+    tokens: ["vitals", "bundle", "cold", "latency", "lcp", "cls", "jank", "janky", "load", "slow"],
+  },
+  {
+    department: "webdev",
+    mode: "security-headers",
+    boost: 10,
+    tokens: ["csp", "xss", "csrf", "cors", "iframe", "headers"],
+  },
+  { department: "database", mode: "index", boost: 8, tokens: ["index", "indexes", "btree", "composite"] },
+  {
+    department: "database",
+    mode: "migrations",
+    boost: 9,
+    tokens: ["migration", "migrations", "backfill", "schema", "column", "table"],
+  },
+  {
+    department: "database",
+    mode: "tuning",
+    boost: 9,
+    tokens: ["planner", "explain", "tuning", "vacuum", "slow", "query"],
+  },
+  { department: "database", mode: "guard", boost: 8, tokens: ["constraint", "unique", "foreign", "cascade", "rls"] },
+  {
+    department: "database",
+    mode: "operate",
+    boost: 7,
+    tokens: ["postgres", "postgresql", "connection", "connections", "backup", "restore", "replica"],
+  },
+  {
+    department: "analytics",
+    mode: "tracking",
+    boost: 9,
+    tokens: ["event", "tracking", "ga4", "segment", "pixel", "payload"],
+  },
+  { department: "analytics", mode: "attribution", boost: 9, tokens: ["attribution", "touch", "channel", "shapley"] },
+  {
+    department: "analytics",
+    mode: "dashboards",
+    boost: 9,
+    tokens: ["dashboard", "cohort", "retention", "kpi", "chart"],
+  },
+  {
+    department: "analytics",
+    mode: "cro",
+    boost: 9,
+    tokens: ["conversion", "signup", "experiment", "ab", "test", "funnel", "hero"],
+  },
+  {
+    department: "crm",
+    mode: "deliverability",
+    boost: 10,
+    tokens: ["spam", "bounce", "bounces", "deliverability", "spf", "dkim", "dmarc", "dns", "unsubscribe"],
+  },
+  {
+    department: "crm",
+    mode: "contacts",
+    boost: 8,
+    tokens: ["contacts", "segment", "segmentation", "import", "suppression"],
+  },
+  { department: "crm", mode: "abandon", boost: 9, tokens: ["abandoned", "cart", "browse"] },
+  { department: "crm", mode: "nurture", boost: 9, tokens: ["nurture", "drip", "trial", "sequence", "welcome"] },
+  { department: "crm", mode: "winback", boost: 9, tokens: ["winback", "churned", "cancelled", "cancellation"] },
+  { department: "smm", mode: "strategy", boost: 8, tokens: ["organic", "influencer", "influencers", "social"] },
+  {
+    department: "accounts",
+    mode: "bookkeeping",
+    boost: 9,
+    tokens: ["ledger", "payout", "reconcile", "reconciliation", "books", "entry", "entries"],
+  },
+  { department: "accounts", mode: "client-pnl", boost: 9, tokens: ["margin", "pnl", "profit", "loss"] },
+  { department: "accounts", mode: "dunning", boost: 9, tokens: ["dunning", "overdue", "late", "reminder", "unpaid"] },
+  { department: "retain", mode: "qbr", boost: 10, tokens: ["qbr", "deck"] },
+  { department: "retain", mode: "churn-watch", boost: 9, tokens: ["churn", "at-risk", "atrisk", "inactive", "login"] },
+  { department: "retain", mode: "renewal", boost: 9, tokens: ["renewal", "renew", "increase", "offer"] },
+  { department: "growth", mode: "referral", boost: 9, tokens: ["referral", "rewards", "codes", "affiliate"] },
+  { department: "growth", mode: "launch", boost: 8, tokens: ["launch", "announcement"] },
+  { department: "growth", mode: "pricing", boost: 8, tokens: ["pricing", "tiers", "price", "discount"] },
+  { department: "design", mode: "slides", boost: 9, tokens: ["slide", "slides", "deck", "presentation"] },
+  {
+    department: "design",
+    mode: "branding",
+    boost: 8,
+    tokens: ["icon", "icons", "typography", "palette", "brand", "identity"],
+  },
+  {
+    department: "client-comms",
+    mode: "executive-pulse",
+    boost: 10,
+    tokens: ["executive", "pulse", "summaries", "weekly"],
+  },
+  { department: "client-comms", mode: "status", boost: 7, tokens: ["status", "update", "macro", "macros"] },
+  { department: "ops", mode: "meeting-notes", boost: 9, tokens: ["call", "transcript", "meeting", "minutes"] },
+  { department: "ops", mode: "sow", boost: 10, tokens: ["sow", "statement", "work", "schedule"] },
+  { department: "paidads", mode: "meta", boost: 9, tokens: ["meta", "facebook", "instagram"] },
+  { department: "paidads", mode: "retargeting", boost: 9, tokens: ["retargeting", "audience", "audiences", "stale"] },
+  { department: "updatedocs", mode: "audit", boost: 9, tokens: ["changelog", "release", "notes", "documentation"] },
+];
+
+function conceptBoost(department: string, promptTokens: string[]): number {
+  let boost = 0;
+  for (const concept of CONCEPTS) {
+    if (concept.department !== department) continue;
+    if (concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) {
+      boost += concept.boost;
+    }
+  }
+  return boost;
+}
+
+function conceptMode(department: string, promptTokens: string[]): string | undefined {
+  let best: { mode: string; boost: number } | undefined;
+  for (const concept of CONCEPTS) {
+    if (concept.department !== department || !concept.mode) continue;
+    if (!concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) continue;
+    if (!best || concept.boost > best.boost) best = { mode: concept.mode, boost: concept.boost };
+  }
+  return best?.mode;
+}
+
 /** Leading-verb prior: what kind of work is being asked for, independent of nouns. */
 const VERB_HINTS: Array<{ regex: RegExp; departments: string[] }> = [
   { regex: /^(write|draft|compose|rewrite)\b/i, departments: ["content"] },
@@ -702,7 +895,7 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       }
     }
     score += Math.min(12, modeSignal);
-    const intent = intentBoost(entry.skill, prompt);
+    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens);
     score += intent;
     return { entry, score, modeSignal, intent };
   });
@@ -724,8 +917,9 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
 function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score: number } {
   const index = getIndex();
   const promptTokens = tokenize(prompt);
-  const explicit = intentMode(entry.skill, prompt);
-  const preferred = explicit ?? DEFAULT_MODE[entry.skill];
+  const intent = intentMode(entry.skill, prompt);
+  const concept = conceptMode(entry.skill, promptTokens);
+  const preferred = intent ?? concept ?? DEFAULT_MODE[entry.skill];
   let bestMode: string | undefined;
   let bestScore = 0;
   for (const mode of entry.modes) {
@@ -737,9 +931,13 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
       bestMode = mode;
     }
   }
-  // A named intent ("land in spam" -> deliverability) is stronger evidence than
-  // whichever mode happened to share a noun with the prompt.
-  if (explicit && entry.modes.includes(explicit)) return { mode: explicit, score: bestScore };
+  // A named intent ("land in spam" -> deliverability) outranks a shared noun.
+  if (intent && entry.modes.includes(intent)) return { mode: intent, score: bestScore };
+  // Concept vocabulary fills a gap only: "pricing table" must not become
+  // `database:index` just because both mention a table.
+  if (concept && bestScore === 0 && entry.modes.includes(concept)) {
+    return { mode: concept, score: bestScore };
+  }
   return { mode: bestMode ?? DEFAULT_MODE[entry.skill] ?? entry.modes[0] ?? "audit", score: bestScore };
 }
 
