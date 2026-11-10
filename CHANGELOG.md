@@ -4,9 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
-## [8.4.2] - 2026-11-09
+### Fixed
 
-## [Unreleased]
+- **Dependabot update PRs target `dev`**: `.github/dependabot.yml` now sets `target-branch: "dev"` for the `bun` and `github-actions` ecosystems. Dependabot previously defaulted to the default branch, so the action-bump PRs (#410–#412) opened against `main` and would have bypassed the `dev` → `release/vX.Y.Z` → `main` train. `tests/ci-hardening.test.ts` now asserts the target branch for every configured ecosystem. The v8.4.2 section was also un-nested from a stray `## [Unreleased]` heading left by the release cut.
+
+## [8.4.2] - 2026-11-09
 
 ### Added
 
