@@ -7,6 +7,7 @@ import {
   checkSurfaceSignals,
   detectRetirementSignals,
   droppedSignals,
+  growthSignals,
   readBaseline,
 } from "../scripts/check-harness-health";
 import { type Harness, loadHarnessRegistry } from "../scripts/harness-registry";
@@ -76,6 +77,26 @@ describe("harness retirement detection", () => {
     // A harness with no baseline entry cannot regress.
     expect(droppedSignals(baseline, "roo", [])).toEqual([]);
     expect(droppedSignals(null, "opencode", [])).toEqual([]);
+  });
+
+  test("growth is reported separately from a regression", () => {
+    const baseline: Baseline = {
+      generatedAt: "2026-11-01",
+      harnesses: { opencode: { matched: ["commands/"], signals: [] } },
+    };
+    const grown = growthSignals(baseline, [
+      { harness: "opencode", status: "active", signal: "ok", matched: ["commands/", ".opencode/commands"] },
+    ]);
+    expect(grown).toEqual({ opencode: [".opencode/commands"] });
+
+    const unchanged = growthSignals(baseline, [
+      { harness: "opencode", status: "active", signal: "ok", matched: ["commands/"] },
+    ]);
+    expect(unchanged).toEqual({});
+    // A brand-new harness counts as growth, never as a regression.
+    expect(growthSignals(baseline, [{ harness: "roo", status: "active", signal: "ok", matched: ["x"] }])).toEqual({
+      roo: ["x"],
+    });
   });
 
   test("the committed baseline is populated for every harness with documented signals", () => {
