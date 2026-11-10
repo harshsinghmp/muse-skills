@@ -63,6 +63,9 @@ function hashTree(root: string): Map<string, string> {
     if (!fs.existsSync(dir)) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
       const full = path.join(dir, entry.name);
+      // Skill mirrors are symlinks to the canonical tree; hashing them twice
+      // adds nothing and readFileSync cannot read a directory link.
+      if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) {
         if (entry.name === ".git") continue;
         walk(full);
@@ -118,10 +121,20 @@ export function runInstallMatrix(): MatrixReport {
     add("harness-config", harnesses.length >= 13, `agent-dirs.conf declares ${harnesses.length} harness dirs`);
 
     // Harnesses present in the workspace, plus the dirs the exporter writes into.
-    for (const dir of [...harnesses, ".opencode", ".gemini", ".cursor", ".windsurf", ".roo", ".github", ".continue"]) {
+    for (const dir of [
+      ...harnesses,
+      ".opencode",
+      ".gemini",
+      ".cursor",
+      ".windsurf",
+      ".roo",
+      ".github",
+      ".continue",
+      ".qwen",
+    ]) {
       fs.mkdirSync(path.join(workspace, dir), { recursive: true });
     }
-    for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue"]) {
+    for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue", ".qwen"]) {
       fs.mkdirSync(path.join(home, dir), { recursive: true });
     }
 
@@ -195,6 +208,8 @@ export function runInstallMatrix(): MatrixReport {
       { label: "copilot (workspace)", dir: path.join(workspace, ".github", "prompts"), extension: ".prompt.md" },
       { label: "continue (global)", dir: path.join(home, ".continue", "prompts"), extension: ".prompt" },
       { label: "continue (workspace)", dir: path.join(workspace, ".continue", "prompts"), extension: ".prompt" },
+      { label: "qwen (global)", dir: path.join(home, ".qwen", "commands"), extension: ".md" },
+      { label: "qwen (workspace)", dir: path.join(workspace, ".qwen", "commands"), extension: ".md" },
     ].map((destination) => {
       const files = fs.existsSync(destination.dir)
         ? fs.readdirSync(destination.dir).filter((file) => file.endsWith(destination.extension)).length
@@ -225,6 +240,29 @@ export function runInstallMatrix(): MatrixReport {
     );
 
     const skillsDest = path.join(home, ".agents", "skills");
+
+    // Claude Code reads its own skill root; Amp falls back to it as well. The
+    // mirror must resolve to the canonical tree, not be a stale copy.
+    const mirrored = fs.existsSync(path.join(home, ".claude", "skills", "webdev", "SKILL.md"));
+    const resolves = (() => {
+      try {
+        return (
+          fs.realpathSync(path.join(home, ".claude", "skills", "webdev")) ===
+          fs.realpathSync(path.join(skillsDest, "webdev"))
+        );
+      } catch {
+        return false;
+      }
+    })();
+    add(
+      "skill-mirrors",
+      mirrored && resolves,
+      mirrored
+        ? resolves
+          ? "~/.claude/skills/webdev resolves to the canonical tree"
+          : "mirror is a copy, not a link"
+        : "~/.claude/skills/webdev is missing",
+    );
     // .muse-version lives beside the skill directories; only dirs are skills.
     const installed = fs.existsSync(skillsDest)
       ? fs.readdirSync(skillsDest).filter((entry) => fs.statSync(path.join(skillsDest, entry)).isDirectory())

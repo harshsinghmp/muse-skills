@@ -11,7 +11,9 @@ import {
   exportCursorCommands,
   exportGeminiCommands,
   exportOpenCodeCommands,
+  exportQwenCommands,
   exportRooCommands,
+  exportSkillMirror,
   exportSkills,
   exportWindsurfWorkflows,
   getSkillModeCommands,
@@ -40,6 +42,7 @@ const COMMAND_EXPORTERS: Array<[string, (dest: string, skills: ReturnType<typeof
   ["Gemini/Antigravity", exportGeminiCommands, ".toml"],
   ["GitHub Copilot", exportCopilotPrompts, ".prompt.md"],
   ["Continue", exportContinuePrompts, ".prompt"],
+  ["Qwen Code", exportQwenCommands, ".md"],
 ];
 
 let sandbox = "";
@@ -177,6 +180,18 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
       }
     }
     expect(checkedRefs).toBe(EXPECTED_TOTAL_COMMANDS * COMMAND_EXPORTERS.length);
+  });
+
+  it("mirrors the installed skills tree by symlink so refreshes propagate", () => {
+    const skills = getSkills();
+    const canonical = path.join(sandbox, "canonical-skills");
+    exportSkills(canonical, skills);
+    const mirror = path.join(sandbox, "claude-skills");
+    expect(exportSkillMirror(mirror, skills, canonical)).toBe(skills.length);
+
+    const sample = skills[0].name;
+    expect(fs.existsSync(path.join(mirror, sample, "SKILL.md"))).toBe(true);
+    expect(fs.realpathSync(path.join(mirror, sample))).toBe(fs.realpathSync(path.join(canonical, sample)));
   });
 
   it("writes each harness's required file format (Gemini TOML, Copilot .prompt.md, Continue .prompt)", () => {

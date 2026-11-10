@@ -120,6 +120,8 @@ function harnessTargets(home: string, workspace: string): HarnessTarget[] {
       extension: ".prompt",
       noun: "commands",
     },
+    { label: "qwen (global)", dir: path.join(home, ".qwen", "commands"), extension: ".md", noun: "commands" },
+    { label: "qwen (workspace)", dir: path.join(workspace, ".qwen", "commands"), extension: ".md", noun: "commands" },
   ];
 }
 
@@ -169,11 +171,21 @@ beforeEach(() => {
   installedSkillsRoot = path.join(fakeHome, ".agents", "skills");
 
   // Global harnesses the CLI detects by directory existence.
-  for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue"]) {
+  for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue", ".qwen"]) {
     fs.mkdirSync(path.join(fakeHome, dir), { recursive: true });
   }
   // Workspace harnesses.
-  for (const dir of [".opencode", ".gemini", ".claude", ".cursor", ".windsurf", ".roo", ".github", ".continue"]) {
+  for (const dir of [
+    ".opencode",
+    ".gemini",
+    ".claude",
+    ".cursor",
+    ".windsurf",
+    ".roo",
+    ".github",
+    ".continue",
+    ".qwen",
+  ]) {
     fs.mkdirSync(path.join(fakeWorkspace, dir), { recursive: true });
   }
 
@@ -300,6 +312,20 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     // Every mode-command and alias names its references/<mode>.md; per-skill
     // commands reference SKILL.md only, so they contribute no mode refs.
     expect(modeRefs).toBe((EXPECTED_ALIASES + SKILL_MODE_COMMANDS.length) * harnesses.length);
+  });
+
+  it("mirrors skills into the Claude Code root so Amp and Claude both see them", () => {
+    cleanRun();
+    const skills = readRegistry();
+    for (const root of [path.join(fakeHome, ".claude", "skills"), path.join(fakeWorkspace, ".claude", "skills")]) {
+      for (const skill of skills) {
+        expect(fs.existsSync(path.join(root, skill.name, "SKILL.md"))).toBe(true);
+      }
+      // A link, not a copy: refreshing the canonical tree refreshes this root.
+      expect(fs.realpathSync(path.join(root, skills[0].name))).toBe(
+        fs.realpathSync(path.join(installedSkillsRoot, skills[0].name)),
+      );
+    }
   });
 
   it("does not append a duplicate secretary router to a workspace AGENTS.md", () => {
