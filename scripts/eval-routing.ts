@@ -258,15 +258,19 @@ function main(): void {
 
   // Explanations are opt-in: the report shape above stays untouched, so `--json`
   // consumers that never pass `--verbose` see byte-identical output.
-  const explanations = verbose ? [...report.invalidPredictions, ...report.failures].map(explainFailure) : [];
+  // A failing gate explains itself: the top causes print without being asked.
+  const explain = verbose || !report.passed;
+  const explanations = explain ? [...report.invalidPredictions, ...report.failures].map(explainFailure) : [];
   const explanationById = new Map(explanations.map((explanation) => [explanation.id, explanation]));
   const printExplanation = (id: string): void => {
-    if (!verbose) return;
+    if (!explain) return;
     const explanation = explanationById.get(id);
     if (explanation) for (const line of formatFailureExplanation(explanation)) console.error(line);
   };
 
   if (json) {
+    // JSON shape stays opt-in: only --verbose adds the key, so consumers and
+    // tests written against the old shape keep working on a failing gate.
     const payload = verbose ? { ...report, explanations } : report;
     console.log(JSON.stringify(payload, null, 2));
     process.exit(report.passed ? 0 : 1);

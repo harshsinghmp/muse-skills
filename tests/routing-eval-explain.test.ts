@@ -239,3 +239,35 @@ describe("eval-routing --json shape", () => {
     expect(Object.keys(report).sort()).toEqual(REPORT_KEYS);
   });
 });
+
+describe("a failing gate explains itself without --verbose", () => {
+  test("explanations print when the gate fails, and JSON stays opt-in", () => {
+    const fixture = join(TMP_DIR, "failing.json");
+    writeFileSync(
+      fixture,
+      JSON.stringify([{ id: "force-fail", prompt: "generate a logo and brand identity", expect: "webdev:backend" }]),
+    );
+
+    // Thresholds that cannot pass, no --verbose flag.
+    const human = spawnSync(
+      "bun",
+      ["scripts/eval-routing.ts", "--fixtures", fixture, "--min-exact", "1", "--min-skill", "1"],
+      { cwd: REPO_ROOT, encoding: "utf8" },
+    );
+    expect(human.status).toBe(1);
+    expect(human.stderr).toContain("winner");
+    expect(human.stderr).toContain("hint");
+    expect(human.stderr).toContain("department miss");
+
+    // JSON without --verbose keeps the original shape even on failure.
+    const json = spawnSync(
+      "bun",
+      ["scripts/eval-routing.ts", "--fixtures", fixture, "--min-exact", "1", "--min-skill", "1", "--json"],
+      { cwd: REPO_ROOT, encoding: "utf8" },
+    );
+    expect(json.status).toBe(1);
+    const parsed = JSON.parse(json.stdout) as Record<string, unknown>;
+    expect(Object.keys(parsed).sort()).toEqual(REPORT_KEYS);
+    expect(parsed.explanations).toBeUndefined();
+  });
+});
