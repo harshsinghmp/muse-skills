@@ -28,6 +28,8 @@ export const FAST_PATH_RULES: Array<{
   department: string;
   mode: string;
   reason: string;
+  /** "hint" rules boost a department instead of short-circuiting the router. */
+  confidence?: "strong" | "hint";
 }> = [
   {
     regex: /^(bun\s+)?test\b|run\s+(the\s+)?tests?|test\s+suite|verify\s+all|add\s+unit\s+tests?|write\s+tests?\s+for/i,
@@ -76,6 +78,7 @@ export const FAST_PATH_RULES: Array<{
     department: "updateagents",
     mode: "memory-file-priorities",
     reason: "Direct context synchronization match",
+    confidence: "hint",
   },
   {
     regex: /checkout\s+(page|funnel)|stripe\s+payments|payment\s+integration|funnel\s+page/i,
@@ -94,6 +97,7 @@ export const FAST_PATH_RULES: Array<{
     department: "webdev",
     mode: "performance",
     reason: "Web performance budget match",
+    confidence: "hint",
   },
   {
     regex: /competitor\s+(analysis|dossier)|competitive\s+landscape/i,
@@ -148,6 +152,7 @@ export const FAST_PATH_RULES: Array<{
     department: "crm",
     mode: "nurture",
     reason: "Nurture sequence match",
+    confidence: "hint",
   },
   {
     regex: /^refactor\b|clean\s+up\s+and\s+refactor/i,
@@ -914,7 +919,12 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       }
     }
     score += Math.min(12, modeSignal);
-    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens);
+    let hintBoost = 0;
+    for (const rule of FAST_PATH_RULES) {
+      if (rule.confidence !== "hint" || rule.department !== entry.skill) continue;
+      if (rule.regex.test(prompt)) hintBoost += 10;
+    }
+    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens) + hintBoost;
     score += intent;
     return { entry, score, modeSignal, intent };
   });
@@ -1003,6 +1013,7 @@ export function triagePrompt(prompt: string): TriageResult {
 
   // 1. Fast-path heuristic check (<1ms)
   for (const rule of FAST_PATH_RULES) {
+    if ((rule.confidence ?? "strong") === "hint") continue;
     if (rule.regex.test(cleanPrompt)) {
       return {
         department: rule.department,
