@@ -289,6 +289,22 @@ Export native slash commands into every detected agent harness — each one in t
 **8 active · 3 skills-only · 1 legacy.** Skill roots read directly by these harnesses: `~/.agents/skills`, `.agents/skills`, `~/.claude/skills`, `.claude/skills`, `~/.config/agents/skills`.
 <!-- harness-matrix:end -->
 
+### Router Quality (measured, including the unflattering part)
+
+The router picks a department and a mode from a prompt. Its accuracy is measured on a **tuned** set and on **unseen** sets written blind by independent agents:
+
+<!-- routing-matrix:start -->
+| Distribution | Kind | Prompts | Exact `skill:mode` | Department |
+| :--- | :--- | ---: | ---: | ---: |
+| `training (tuned)` | tuned | 247 | 161 (65.2%) | 175 (70.9%) |
+| `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
+| `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
+| `v7` | unseen | 40 | 1 (2.5%) | 8 (20.0%) |
+| `v8` | unseen | 40 | 3 (7.5%) | 9 (22.5%) |
+
+Measured 2026-11-10. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
+<!-- routing-matrix:end -->
+
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 
 **Router mode signals.** `bun scripts/sync-dispatch.ts` also generates `skills/context-orchestration/secretary/references/mode-signals.json` — each mode's heading plus opening prose. The installed dispatch engine cannot read other skills' reference files, so this is how mode *content* reaches routing; `sync-dispatch --check` keeps it, the dispatch directory, and the skill tree in lockstep.

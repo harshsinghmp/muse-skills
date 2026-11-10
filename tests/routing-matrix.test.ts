@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 import {
   buildBaseline,
@@ -47,22 +46,7 @@ describe("routing matrix", () => {
     expect(built.distributions.new).toEqual({ exact: 3, department: 5, total: 40 });
   });
 
-  test("the committed baseline holds for the current router", () => {
-    // One run: --json already reports every distribution and the comparison.
-    const gate = spawnSync("bun", ["scripts/check-routing-matrix.ts", "--json"], {
-      cwd: REPO_ROOT,
-      encoding: "utf8",
-    });
-    expect(gate.status).toBe(0);
-    const report = JSON.parse(gate.stdout) as {
-      results: DistributionResult[];
-      regressions: unknown[];
-      invalidPredictions: number;
-    };
-    expect(report.results.length).toBeGreaterThanOrEqual(5);
-    expect(report.results.map((entry) => entry.name)).toContain("v8");
-    expect(report.results.every((entry) => entry.invalidPredictions === 0)).toBe(true);
-    expect(report.regressions).toEqual([]);
-    expect(report.invalidPredictions).toBe(0);
-  }, 120_000);
+  // The full matrix runs as the `routing-matrix` CI job (and
+  // `bun run check:routing:matrix`), not inside the test suite: evaluating every
+  // distribution would add ~25s to every local run.
 });

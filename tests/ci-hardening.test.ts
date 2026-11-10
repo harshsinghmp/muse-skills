@@ -56,7 +56,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("security-audit:");
     expect(ci).toContain("boundary-audit.ts -p .");
     expect(ci).toContain("--audit-lockfile .");
-    expect(ci).toContain("needs: [lint, type-check, test, secret-scan, security-audit]");
+    expect(ci).toContain("needs: [lint, type-check, test, routing-matrix, secret-scan, security-audit]");
 
     const smoke = read(".github/workflows/release-smoke.yml");
     expect(smoke).toContain("release:");
@@ -65,6 +65,11 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
     expect(ci).toContain("bun run check:deps");
     expect(read(".github/workflows/release.yml")).toContain("bun run check:ledger");
+
+    // The routing matrix is a first-class check, not a test-suite side effect.
+    expect(ci).toContain("name: routing-matrix");
+    expect(ci).toContain("bun run check:routing:matrix");
+    expect(read(".github/workflows/landing-gate.yml")).toContain('"routing-matrix"');
 
     // Checksums prove the artifact is intact; the install smoke proves it is usable.
     const smokeScript = read("scripts/release-smoke.ts");
@@ -104,7 +109,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("bun test --parallel");
     expect(ci).toContain("~/.bun/install/cache");
     expect(ci).toContain("cancel-in-progress: true");
-    expect((ci.match(/name: Install dependencies/g) ?? []).length).toBe(2);
+    expect((ci.match(/name: Install dependencies/g) ?? []).length).toBe(3);
   });
 
   test("workflows do not cache the Bun binary or swallow setup failures", () => {
@@ -127,7 +132,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     const landing = read(".github/workflows/landing-gate.yml");
     expect(landing).toMatch(/PR_NUMBER: \$\{\{ github\.event\.pull_request\.number \}\}/);
     expect(landing).toContain("check-runs");
-    expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "secret-scan")');
+    expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "routing-matrix" "secret-scan")');
     expect(landing).toMatch(/for name in "\$\{REQUIRED_CHECKS\[@\]\}"/);
     expect(landing).not.toMatch(/BRANCH="\$\{\{ github\.ref_name \}\}"/);
 
