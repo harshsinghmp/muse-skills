@@ -80,16 +80,33 @@
     "hygiene": "bun skills/core-engine/updateagents/scripts/updateagents.ts . --hygiene",
     "release:smoke": "bun scripts/release-smoke.ts",
     "check:deps": "bun scripts/check-deps.ts",
-    "check:ledger": "bun scripts/check-docs-ledger.ts"
+    "check:ledger": "bun scripts/check-docs-ledger.ts",
+    "check:harness": "bun scripts/sync-harness-docs.ts --check",
+    "sync:harness": "bun scripts/sync-harness-docs.ts --write",
+    "check:routing:signals": "bun scripts/sync-routing-signals.ts --check",
+    "sync:routing:signals": "bun scripts/sync-routing-signals.ts --write",
+    "check:routing": "bun scripts/eval-routing.ts",
+    "check:routing:heldout": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v5.json --min-exact 0 --min-skill 0",
+    "check:routing:engineering": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v6.json --min-exact 0 --min-skill 0",
+    "check:routing:v7": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v7.json --min-exact 0 --min-skill 0",
+    "check:routing:v8": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v8.json --min-exact 0 --min-skill 0",
+    "check:routing:matrix": "bun scripts/check-routing-matrix.ts",
+    "check:routing:coverage": "bun scripts/audit-routing-coverage.ts",
+    "sync:routing:coverage": "bun scripts/audit-routing-coverage.ts --write",
+    "check:routing:docs": "bun scripts/sync-routing-docs.ts --check",
+    "sync:routing:docs": "bun scripts/sync-routing-docs.ts --write",
+    "sync:routing:baseline": "bun scripts/check-routing-matrix.ts --update",
+    "check:install": "bun scripts/check-install-matrix.ts",
+    "muse": "bun scripts/muse.ts"
   },
   "type": "module",
-  "version": "8.4.2",
+  "version": "8.5.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
     "bun-types": "^1.4.4",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.3.0"
+    "musememory": "3.4.0"
   }
 }

@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.4.2-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.5.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -18,8 +18,8 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 460 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.4.2/scripts/install.sh | bash
+# 🚀 Option B: Instant Remote Setup (46 Skills + 462 Slash Commands Per Harness — No Clone Needed)
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.5.0/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -29,6 +29,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
+- **Routing gates you can audit** (v8.5.0): the routing matrix runs as its own CI job and the README publishes every measured distribution — the 65% tuned row beside the blind sets at 2.5–7.5% — plus the real coverage split (134 of 406 modes carry a curated signal, 272 are name/description only). A sixth blind set (v9) is gated at its honest score, and the landing gate no longer counts its own earlier runs.
 - **v8.4.2 release hygiene** (v8.4.2): dependency and docs-ledger gates, a weekly dependency-refresh tracker, a fully backfilled agent watermark, and a 40s parallel suite after the scaffold-test batching.
 - **v8.4.1 follow-ups** (v8.4.1): the lockfile audit accepts a project directory, CI gained a dedicated boundary/EDR/lockfile security job, issue labels and a distribution-path threat model are documented, dependencies and the docs ledger are refreshed, and every published release now gets an automatic checksum-pinned smoke check.
 - **Security wave 3, skill-quality gates & faster CI** (v8.4.0): the 2026-11-09 security audit's remaining waves land — honest receipts instead of fabricated client claims, integer money math, producer-ID metering with clamped invoices, fail-closed CI/secret scanning, a pinned installer with a release checksum, constant-time review tokens, HMAC-verified webhook scaffolds, and SSRF-safe fetchers. All 46 skills now pass a discovery-surface parity gate (`bun run check:surface`); the import-guard suite covers `updatedocs`, `new-project`, `tunnel`, and `sample-size`; and CI runs the 693-test suite in parallel (≈48s vs ≈89s) with package-tarball caching and superseded-run cancellation.
@@ -37,7 +38,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 - **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only), plus a prioritized **Next 3** follow-up block for highly technical work.
-- **Command surface**: 46 skills + 404 `<skill>-<mode>` commands + 10 aliases = **460 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 406 `<skill>-<mode>` commands + 10 aliases = **462 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.1.0**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution and ephemeral zero-trust mTLS subagent attestation.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -61,7 +62,7 @@ Every skill follows the open `SKILL.md` specification: rich intent triggers, ste
 | **Context Amnesia**: Agents lose track of architecture, conventions, and past decisions between sessions. | **Persistent Cognitive Context**: `context-anchor` and `updateagents` preserve project truth, active constraints, and architectural invariants indefinitely. |
 | **Premature Victory**: Agents claim code works without running real tests, leaving broken builds behind. | **Automated Verification Gates**: Every workflow enforces executable test commands (`bun test`, `pytest`) before sign-off (Evidence over Claims). |
 | **Chaotic Releases**: Unformatted commits directly to production branches cause merge conflicts and regressions. | **Disciplined Release Flow**: The `git` skill automates semantic versioning, feature branches, and tag creation seamlessly. |
-| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Antigravity/Gemini CLI, Cursor, Windsurf, Claude Code, and Hermes. |
+| **Harness Fragmentation**: Custom commands work in one IDE or CLI but break in another. | **Multi-Harness Slash Commands**: Instant native commands across OpenCode, Claude Code, Codex, Cursor, Windsurf, Copilot, Continue, Roo Code, Qwen Code, and Antigravity — plus `SKILL.md` that agents like Amp read directly. |
 | **Messy Client Handoffs**: Scattered requirements, manual onboarding, and accidental credential leaks. | **End-to-End Agency Operations**: Dedicated skills for `brand` intake, `client-comms`, `accounts`, and `qa-launch` with zero credential leakage. |
 
 ---
@@ -114,7 +115,7 @@ Each skill is completely self-contained within its own directory:
 ### 2. Zero-Dependency Portability
 - **Pure Markdown & Modern CLI**: Written in vendor-neutral Markdown and standards-compliant shell/TypeScript.
 - **Cross-Platform**: Operates identically across Linux, macOS, and Windows.
-- **Universal Agent Support**: Compatible with Claude Code, Cursor, OpenCode, Google Antigravity, Hermes, and any runtime implementing the standard skills protocol.
+- **Universal Agent Support**: Compatible with Claude Code, Codex, Cursor, OpenCode, Google Antigravity, Amp, Qwen Code, Copilot, Continue, Roo Code, and any runtime implementing the standard skills protocol.
 
 ### 3. Verification Doctrine (Evidence Over Claims)
 - No agent may claim completion without running executable proof commands.
@@ -248,9 +249,76 @@ Or install scoped specifically to your current project:
 npx skills add harshsinghmp/muse-skills --scope project
 ```
 
+### Keeping a Device Current
+
+Skills, native commands, and hooks are three separate surfaces — updating one without the others is how a device drifts. One command does all three and proves it:
+
+```bash
+bun scripts/muse.ts update          # resolve latest tag → pinned install → doctor
+bun scripts/muse.ts update --check  # exit 1 when behind (cron/CI friendly)
+bun scripts/muse.ts doctor          # inspect what is actually installed
+bun scripts/muse.ts doctor --fix    # re-export a drifted command surface in place
+
+# Without a clone, the doctor that ships with the install covers the same question:
+bun ~/.agents/skills/updateagents/scripts/doctor.ts [--json] [--fix]
+```
+
+The workflow, in order: `update` resolves the latest release tag and re-runs the checksum-pinned installer for it (skills, command surfaces, version marker), then runs `doctor`. `doctor` checks the disk, not the log: all 46 skills present, each detected harness carrying the expected command count **in its own format**, the installed `secretary/references/dispatch.md` resolving to references that actually exist, and git boundary hooks in place. A device is current only when `doctor` exits 0.
+
+Why not just re-run `npx skills add`? That refreshes skills only. Native slash commands live in per-harness directories (`.claude/commands`, `~/.codex/prompts`, `.gemini/commands`, …), so they need the export pass too — `update` is what makes a refresh immediate on every device.
+
 ### Option 2: Multi-Harness Native Slash Commands
 
-Export native slash commands into your detected agent harnesses (`.opencode`, `.gemini`, `.cursor`, `.windsurf`):
+Export native slash commands into every detected agent harness — each one in the format it actually reads:
+
+<!-- harness-matrix:start -->
+| Harness | Status | Project commands | Global commands | Format |
+| :--- | :--- | :--- | :--- | :--- |
+| OpenCode | ✅ active | `.opencode/commands` | `~/.config/opencode/commands` | `.md` (markdown) |
+| Claude Code | ✅ active | `.claude/commands` | `~/.claude/commands` | `.md` (markdown) |
+| Codex CLI | 🧩 skills-only | — | — | `SKILL.md` only |
+| Cursor | ✅ active | `.cursor/commands` | — | `.md` (markdown) |
+| Roo Code | ✅ active | `.roo/commands` | `~/.roo/commands` | `.md` (markdown) |
+| Qwen Code | ✅ active | `.qwen/commands` | `~/.qwen/commands` | `.md` (markdown) |
+| GitHub Copilot | ✅ active | `.github/prompts` | — | `.prompt.md` (copilot) |
+| Continue | ✅ active | `.continue/prompts` | `~/.continue/prompts` | `.prompt` (continue) |
+| Windsurf | ✅ active | `.windsurf/workflows` | — | `.md` (workflow) |
+| Gemini CLI | ⚠️ legacy | `.gemini/commands` | `~/.gemini/commands` | `.toml` (toml) |
+| Antigravity | 🧩 skills-only | — | — | `SKILL.md` only |
+| Amp | 🧩 skills-only | — | — | `SKILL.md` only |
+
+**8 active · 3 skills-only · 1 legacy.** Skill roots read directly by these harnesses: `~/.agents/skills`, `.agents/skills`, `~/.claude/skills`, `.claude/skills`, `~/.config/agents/skills`.
+<!-- harness-matrix:end -->
+
+### Router Quality (measured, including the unflattering part)
+
+The router picks a department and a mode from a prompt. Its accuracy is measured on a **tuned** set and on **unseen** sets written blind by independent agents:
+
+<!-- routing-matrix:start -->
+| Distribution | Kind | Prompts | Exact `skill:mode` | Department |
+| :--- | :--- | ---: | ---: | ---: |
+| `training (tuned)` | tuned | 247 | 161 (65.2%) | 175 (70.9%) |
+| `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
+| `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
+| `v7` | unseen | 40 | 1 (2.5%) | 8 (20.0%) |
+| `v8` | unseen | 40 | 3 (7.5%) | 9 (22.5%) |
+| `v9` | unseen | 40 | 1 (2.5%) | 10 (25.0%) |
+
+
+**Mode coverage**: 134 of 406 routable modes (33%) carry a curated routing signal; the other 272 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+
+Measured 2026-11-10. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
+<!-- routing-matrix:end -->
+
+A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
+
+**Router mode signals.** `bun scripts/sync-dispatch.ts` also generates `skills/context-orchestration/secretary/references/mode-signals.json` — each mode's heading plus opening prose. The installed dispatch engine cannot read other skills' reference files, so this is how mode *content* reaches routing; `sync-dispatch --check` keeps it, the dispatch directory, and the skill tree in lockstep.
+
+**Harness registry.** `harness.json` is the single source of truth for every destination above: status (`active` / `legacy` / `skills-only`), paths, format, skill roots, docs URL, and retired paths. `scripts/harness-registry.ts` is the loader the exporter, install matrix, and `muse doctor` share; `scripts/sync-harness-docs.ts` renders the table above and `bun run check:harness` fails when it drifts. Adding or retiring a harness is a one-file change.
+
+**Skills are the durable surface.** Slash-command files are per-harness and each has its own format; `SKILL.md` is cross-harness. Antigravity and Amp read `~/.agents/skills/` (Amp's second search root) and `.agents/skills/` in a project directly, and Claude Code reads `~/.claude/skills/`. The setup mirrors the canonical tree into `~/.claude/skills/` and `<project>/.claude/skills/` as symlinks, so a refresh of `~/.agents/skills` is immediately visible there instead of going stale.
+
+**Gemini CLI was retired on 2026-06-18** in favour of Antigravity CLI. The `.gemini/commands/` TOML writer stays as a compatibility path: Antigravity's migration imports it, paid and enterprise Gemini CLI users still exist, and it costs nothing when `.gemini/` is absent. New setups should rely on skills.
 
 ```bash
 # Auto-detects harnesses, installs skills, and exports native slash commands

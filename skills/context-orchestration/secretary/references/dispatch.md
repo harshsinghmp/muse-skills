@@ -22,6 +22,8 @@ Every routed task is governed by one of four specialized Council Leads:
 
 When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.
 
+---
+
 ### 1. Agency Delivery Division (Client Deliverables & Revenue Engines)
 
 | Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
@@ -55,58 +57,58 @@ When triaging incoming prompts, match the user's objective to the canonical depa
 
 ### 2. Context Orchestration & Memory Division
 
-| Department | Purpose & Invariant | Council Lead |
-| :--- | :--- | :--- |
-| **`relay`** | Bidirectional agent handoff and session resumption engine with ambient continuity. | **Sol** |
-| **`context-anchor`** | Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. | **Sol** |
-| **`coupling-router`** | Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. | **Sol & Nexus** |
-| **`secretary`** | Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. | **Nexus & Sol** |
-| **`evidence-ledger`** | Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. | **Crew & Nexus** |
+| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **`relay`** | `ambient-handoff`, `audit`, `resumption-protocol` | **Sol** | Bidirectional agent handoff and session resumption engine with ambient continuity. | `relay/references/<mode>.md` |
+| **`context-anchor`** | `ast-pinning-guide`, `attention-hygiene`, `deadlock-breaker`, `layering-protocol`, `observation-masking`, `prompt-cache-partitioning`, `task-interruption-and-recovery` | **Sol** | Drop a working reference anchor at any point in a session to prevent cascading context drift, and park parallel client workstreams under named anchors for instant switching. | `context-anchor/references/<mode>.md` |
+| **`coupling-router`** | `coupling-matrix`, `federation`, `mesh`, `skill-compatibility-matrix`, `swarm`, `worktree-lease-protocol` | **Sol & Nexus** | Coupling-aware architectural delegation and skill-stack compatibility router for multi-agent workflows. | `coupling-router/references/<mode>.md` |
+| **`secretary`** | `dispatch`, `onboard`, `orchestration`, `socratic-adversarial-gate`, `staff-work-doctrine` | **Nexus & Sol** | Evidence-grounded staff-work controller, approval gate, and universal agency dispatcher. | `secretary/references/<mode>.md` |
+| **`evidence-ledger`** | `academic-citation-protocol`, `audit`, `claim-verification-taxonomy`, `evidence-entry-schema`, `skill-orchestration`, `staleness-rules` | **Crew & Nexus** | Persistent per-project evidence tracking system and source-cited claim verification gate for multi-client agency workflows. | `evidence-ledger/references/<mode>.md` |
 
 ---
 
 ### 3. Core Engine & Scaffolding Division
 
-| Department | Purpose & Invariant | Council Lead |
-| :--- | :--- | :--- |
-| **`updatedocs`** | Project-wide documentation synchronization, drift detection, and governance engine. | **Sol** |
-| **`updateagents`** | Universal agent context synchronization and repository AI-readiness engine. | **Nexus** |
-| **`git`** | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. | **Nexus** |
-| **`new-project`** | Project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. | **Sol** |
+| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **`updatedocs`** | `audit` | **Sol** | Project-wide documentation synchronization, drift detection, and governance engine. | `updatedocs/references/<mode>.md` |
+| **`updateagents`** | `advanced-audit-passes`, `audit`, `discovery-commands`, `docs-backlog`, `doctor`, `fast-skip-protocol`, `fourteen-asset-matrix`, `global-atoms`, `harness-hygiene`, `legacy-promotion`, `memory-file-priorities`, `onboard`, `pr-review-mining`, `skill-authoring` | **Nexus** | Universal agent context synchronization and repository AI-readiness engine. | `updateagents/references/<mode>.md` |
+| **`git`** | `anti-slop-triage`, `audit`, `branching-and-release-matrix`, `conflict-resolution-and-recovery`, `convention-mining`, `exposure-audit`, `github-seo-and-presentation`, `gitignore-audit`, `history`, `issue-to-pr-discipline`, `monorepo-and-sanitization`, `pr-checks`, `report-template`, `worktree-parallel-lanes` | **Nexus** | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop issue triage, strict 4-phase branching (dev/master/release/feat, optionally production), surgical test gating, automated doc sync, PR review gates, GitHub SEO & Open Graph asset tuning, production release cuts with semver tagging, and branch cleanup. | `git/references/<mode>.md` |
+| **`new-project`** | `audit`, `client-onboarding`, `integration-blueprints`, `project-os-architecture`, `skill-extraction` | **Sol** | Project creator, client onboarding engine, companion configurator, DOX Engine, and Agent Engine provisioner. | `new-project/references/<mode>.md` |
 
 ---
 
 ### 4. Quality Review & Hardening Division (The Nexus Gate)
 
-| Department | Purpose & Invariant | Council Lead |
-| :--- | :--- | :--- |
-| **`code-review`** | A language-agnostic code review method derived from Linus Torvalds' review corpus. | **Nexus** |
-| **`gauntlet-loop`** | Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. | **Nexus** |
-| **`dead-letter`** | Capture a failed or blocked task before it disappears. | **Nexus** |
-| **`pua`** | Put your AI on a Performance Improvement Plan. | **Sol** |
-| **`audit`** | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. | **Nexus** |
-| **`humanize`** | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. | **Jasper** |
-| **`muse-security`** | Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, dynamic MCP server governance & tool poisoning defense, and ephemeral mutual TLS zero-trust subagent attestation — routed through nine modes. | **Nexus** |
+| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **`code-review`** | `agreement-review`, `boundary-governance`, `coupling-audit`, `cross-file-invariants`, `delegate`, `edr-and-execution-safety`, `fixing-findings`, `go-traps`, `intended-vs-implemented`, `multi-reviewer`, `pr-context`, `receiving-feedback`, `review-render`, `security-controls`, `security-process`, `simplify`, `skill-bundle-scan`, `themes`, `triage-matrix` | **Nexus** | A language-agnostic code review method derived from Linus Torvalds' review corpus. | `code-review/references/<mode>.md` |
+| **`gauntlet-loop`** | `bar-selection-and-blind-critique`, `gauntlet-protocol`, `web-security-visual-gate` | **Nexus** | Bounded multi-agent quality improvement loop that prevents infinite iterations, self-grading delusions, and regression churn. | `gauntlet-loop/references/<mode>.md` |
+| **`dead-letter`** | `circuit-breaker`, `record-schema`, `sweep-protocol` | **Nexus** | Capture a failed or blocked task before it disappears. | `dead-letter/references/<mode>.md` |
+| **`pua`** | `audit`, `flavor-packs`, `receipt-verification` | **Sol** | Put your AI on a Performance Improvement Plan. | `pua/references/<mode>.md` |
+| **`audit`** | `hygiene-rules`, `remediation-matrix` | **Nexus** | Knowledge hygiene and referential integrity auditor for AI agent memory banks, documentation trees, and knowledge bases. | `audit/references/<mode>.md` |
+| **`humanize`** | `ast-shield-and-cadence`, `audit`, `patterns`, `style-guide`, `verification` | **Jasper** | Editorial review and prose humanization system that detects and eliminates AI-generated writing artifacts, formulaic patterns, significance inflation, and robotic cadence without altering facts, claims, or the author's authentic voice. | `humanize/references/<mode>.md` |
+| **`muse-security`** | `audit`, `boundary`, `cloud-waf`, `cve`, `mcp-guard`, `remediate`, `runtime`, `sast`, `zero-trust` | **Nexus** | Unified security authority and governance engine for the agency: CVE vulnerability triage, automated remediation playbooks, Cloud WAF architectures (GCP/Cloudflare 6 pillars), static application security testing (SAST), subagent tenant boundary & worktree isolation auditing, runtime defense guardrails, dynamic MCP server governance & tool poisoning defense, and ephemeral mutual TLS zero-trust subagent attestation — routed through nine modes. | `muse-security/references/<mode>.md` |
 
 ---
 
 ### 5. Interface & Visual Engineering Division
 
-| Department | Purpose & Invariant | Council Lead |
-| :--- | :--- | :--- |
-| **`refactor`** | Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty execution modes. | **Nexus & Sol** |
-| **`designscope`** | Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design. | **Jasper** |
-| **`animate`** | Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. | **Jasper** |
+| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **`refactor`** | `01-visual-hierarchy`, `02-typography-scale`, `03-color-palette`, `04-spacing-layout`, `05-button-hierarchy`, `06-visual-clutter`, `07-empty-states`, `08-shadows-elevation`, `09-contrast-accessibility`, `10-grouping-alignment`, `11-five-state-anti-slop`, `architecture`, `audit`, `code`, `database`, `modern-techniques`, `perf`, `polish`, `sweep`, `ui` | **Nexus & Sol** | Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty execution modes. | `refactor/references/<mode>.md` |
+| **`designscope`** | `analysis-framework`, `audit`, `capture-flows`, `element-copy`, `layout-tree-extraction`, `output-template`, `token-extraction` | **Jasper** | Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design. | `designscope/references/<mode>.md` |
+| **`animate`** | `accessibility`, `audit`, `css-animations`, `delight`, `gsap`, `mobile`, `motion-dev`, `other-libraries`, `performance`, `principles`, `review-checklist`, `technical-diagrams`, `threejs` | **Jasper** | Design, build, review, and improve web UI animation and motion: library selection, easing/timing, and correct code for entrances, exits, micro-interactions, scroll, page transitions, hover/press states, and layout shifts. | `animate/references/<mode>.md` |
 
 ---
 
 ### 6. Reflection & Systems Maintenance Division
 
-| Department | Purpose & Invariant | Council Lead |
-| :--- | :--- | :--- |
-| **`coach`** | Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. | **Crew** |
-| **`periodic-retreat`** | Quarterly personal and project strategic retreat facilitator. | **Sol & Crew** |
-| **`clean-system-cache`** | Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. | **Sol** |
+| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |
+| :--- | :--- | :--- | :--- | :--- |
+| **`coach`** | `audit`, `client`, `effort-rubric`, `founder`, `team` | **Crew** | Tri-vector autonomous agency coach and reflective check-in engine for developers, delivery squads, and agency principals. | `coach/references/<mode>.md` |
+| **`periodic-retreat`** | `audit`, `retreat-framework`, `retreat-protocol` | **Sol & Crew** | Quarterly personal and project strategic retreat facilitator. | `periodic-retreat/references/<mode>.md` |
+| **`clean-system-cache`** | `audit`, `candidate-catalog` | **Sol** | Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. | `clean-system-cache/references/<mode>.md` |
 <!-- agency-directory:end -->
 
 ---

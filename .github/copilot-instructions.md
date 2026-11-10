@@ -1,9 +1,3 @@
-# 🤖 GitHub Copilot Instructions
+[//]: # (updateagents:adapter)
 
-> Canonical Architecture: Single source of truth is codified in `./AGENTS.md` and `./.agents/standards/`.
-
-## Core Guardrails
-- **Negative Constraints**: Strictly follow anti-patterns in `.agents/standards/anti-patterns.md` (no speculative architecture, no silent mocks).
-- **Stack Fence**: All dependencies must match allowlist in `.agents/context/stack.md`.
-- **Modern Tool Primacy**: Use installed CLI tools explicitly by binary name (`rg`, `fd`, `bat`, `eza`).
-- **Autonomous Orchestration**: On session start, follow Secretary Protocol in root `AGENTS.md`.
+Read and follow the workspace instructions in `AGENTS.md` and the complete migrated rules in `.agents/context/imported-agent-instructions.md`. Higher-priority system, developer and current user instructions prevail. If imported sources conflict and precedence does not resolve them, report both paths and ask the user; do not silently choose.

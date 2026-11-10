@@ -1,0 +1,202 @@
+[
+  {
+    "id": "v8-01",
+    "prompt": "half the repo is committed .DS_Store files and two .env files from 2021, and adding a new ignore line does nothing because git already tracks them",
+    "expect": "git:gitignore-audit"
+  },
+  {
+    "id": "v8-02",
+    "prompt": "31 new issues since monday, twelve of them say the login is broken and not one names a browser, a url or what they clicked",
+    "expect": "git:anti-slop-triage"
+  },
+  {
+    "id": "v8-03",
+    "prompt": "passes on my laptop, fourteen checks fail in CI, and nine of them are the same lint rule in different files",
+    "expect": "git:pr-checks"
+  },
+  {
+    "id": "v8-04",
+    "prompt": "our contributing guide still says yarn and we moved to pnpm in the spring, and the architecture doc still draws the monolith",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v8-05",
+    "prompt": "the agent context file hasn't been touched since february and we've merged sixty-odd changes since — catch it up without making me re-read git",
+    "expect": "updateagents:docs-backlog"
+  },
+  {
+    "id": "v8-06",
+    "prompt": "Next.js 16 with Payload for content, Stripe for money, Drizzle on Neon. I want the wiring written down before anyone runs an install.",
+    "expect": "new-project:integration-blueprints"
+  },
+  {
+    "id": "v8-07",
+    "prompt": "six things landed this morning: a client escalation, two quote requests, a bug, a contract question and a podcast invite — tell me what I actually do this week",
+    "expect": "secretary:dispatch"
+  },
+  {
+    "id": "v8-08",
+    "prompt": "eleven agents, two machines, three repos and one shared staging box, and nobody can say who is allowed to write where",
+    "expect": "coupling-router:federation"
+  },
+  {
+    "id": "v8-09",
+    "prompt": "we're picking between two vendors and in six months nobody will remember why, or who told us the price was locked",
+    "expect": "evidence-ledger:evidence-entry-schema"
+  },
+  {
+    "id": "v8-10",
+    "prompt": "eighty messages in and you're still quoting the draft from the top of the thread — I want you working off the current one",
+    "expect": "context-anchor:attention-hygiene"
+  },
+  {
+    "id": "v8-11",
+    "prompt": "this 380-line function threads one boolean through nine ifs and two branches do the same thing in different words",
+    "expect": "code-review:simplify"
+  },
+  {
+    "id": "v8-12",
+    "prompt": "the new admin endpoint reads your role out of a header the browser sends",
+    "expect": "code-review:security-controls"
+  },
+  {
+    "id": "v8-13",
+    "prompt": "our upload handler writes whatever arrives to /tmp and then shells out to imagemagick",
+    "expect": "muse-security:sast"
+  },
+  {
+    "id": "v8-14",
+    "prompt": "every worker should have to prove who it is before it touches the shared queue — short-lived certs, nothing long-lived sitting in env",
+    "expect": "muse-security:zero-trust"
+  },
+  {
+    "id": "v8-15",
+    "prompt": "Fourth go at this Docker build. Works on my laptop, dies in CI, and I've run out of ideas.",
+    "expect": "pua:audit"
+  },
+  {
+    "id": "v8-16",
+    "prompt": "the 2am job blew up, logs rotated, and the only trace left is a slack message that says 'failed'",
+    "expect": "dead-letter:record-schema"
+  },
+  {
+    "id": "v8-17",
+    "prompt": "we've reworked this page six times and each round somebody declares it better — I want the rounds and a stopping rule agreed before round seven",
+    "expect": "gauntlet-loop:gauntlet-protocol"
+  },
+  {
+    "id": "v8-18",
+    "prompt": "go through this page and flag the lines that smell like a model wrote them, don't change anything yet",
+    "expect": "humanize:audit"
+  },
+  {
+    "id": "v8-19",
+    "prompt": "prices show as $1,200 on one page, 1200 USD on another, and the dates flip format on every product page",
+    "expect": "refactor:sweep"
+  },
+  {
+    "id": "v8-20",
+    "prompt": "no react on this one, it's static html — I just want the cards to drift up as you scroll past",
+    "expect": "animate:css-animations"
+  },
+  {
+    "id": "v8-21",
+    "prompt": "one of our designers gets motion sick from the parallax and I'd rather not just delete it",
+    "expect": "animate:accessibility"
+  },
+  {
+    "id": "v8-22",
+    "prompt": "this navbar, exactly as it behaves — I want a spec our react devs can rebuild it from without asking me questions",
+    "expect": "designscope:element-copy"
+  },
+  {
+    "id": "v8-23",
+    "prompt": "end of week look at my own work — score what I could actually control, not how busy it felt",
+    "expect": "coach:effort-rubric"
+  },
+  {
+    "id": "v8-24",
+    "prompt": "blocking next friday to work out what the quarter is actually for instead of sliding into it again",
+    "expect": "periodic-retreat:retreat-protocol"
+  },
+  {
+    "id": "v8-25",
+    "prompt": "laptop's down to 9GB — before anything gets deleted I want to see what's actually takeable, project by project",
+    "expect": "clean-system-cache:candidate-catalog"
+  },
+  {
+    "id": "v8-26",
+    "prompt": "the page paints fine and then the header blinks and the nav jumps left",
+    "expect": "webdev:hydration-polish"
+  },
+  {
+    "id": "v8-27",
+    "prompt": "Something clickable for a client meeting Thursday. It doesn't need to be real, it needs to look real.",
+    "expect": "webdev:prototype"
+  },
+  {
+    "id": "v8-28",
+    "prompt": "the account came over with the agency we replaced: 60 campaigns, most of them paused, and the history reads like someone was guessing",
+    "expect": "paidads:audit"
+  },
+  {
+    "id": "v8-29",
+    "prompt": "the only asset we have is one 30-second cut and I want it in front of product videos on youtube",
+    "expect": "paidads:youtube"
+  },
+  {
+    "id": "v8-30",
+    "prompt": "purchase fires twice whenever someone lands from a deep link, so the revenue number is about 8% too high",
+    "expect": "analytics:events"
+  },
+  {
+    "id": "v8-31",
+    "prompt": "cart recovery works on our custom landing pages and never fires on shopify checkout",
+    "expect": "crm:abandon"
+  },
+  {
+    "id": "v8-32",
+    "prompt": "our youtube thumbnails are screenshots of slide one and nobody clicks them",
+    "expect": "content:thumbnails"
+  },
+  {
+    "id": "v8-33",
+    "prompt": "fourteen active clients and nowhere that says where each of them actually stands",
+    "expect": "ops:multi-client"
+  },
+  {
+    "id": "v8-34",
+    "prompt": "everything is served out of frankfurt and são paulo gets 900ms",
+    "expect": "devops:edge-mesh"
+  },
+  {
+    "id": "v8-35",
+    "prompt": "site's fine on a phone but the client wants it installable with push, and they don't want an app store listing",
+    "expect": "mobile:pwa"
+  },
+  {
+    "id": "v8-36",
+    "prompt": "the supplier has no api — someone logs in every morning and downloads a csv",
+    "expect": "automation:browser-relay"
+  },
+  {
+    "id": "v8-37",
+    "prompt": "nobody can explain what half of these 90 tables are for, and two of them haven't been written to since 2023",
+    "expect": "database:audit"
+  },
+  {
+    "id": "v8-38",
+    "prompt": "I'm the founder, I take every call, and I couldn't tell you what I do differently when one actually closes.",
+    "expect": "gtm:founder-sales"
+  },
+  {
+    "id": "v8-39",
+    "prompt": "we want to start selling on amazon in the uk and germany next quarter and we've only ever run our own site",
+    "expect": "brand:ecommerce"
+  },
+  {
+    "id": "v8-40",
+    "prompt": "Two clients said they'd happily recommend us. I've never actually asked either of them for anything.",
+    "expect": "retain:referral-rebuy"
+  }
+]

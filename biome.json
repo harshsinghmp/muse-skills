@@ -20,7 +20,9 @@
       "!docs/**/*.html",
       "!**/*.css",
       "!**/*.yaml",
-      "!**/*.yml"
+      "!**/*.yml",
+      "!skills/context-orchestration/secretary/references/routing-signals.json",
+      "!skills/context-orchestration/secretary/scripts/routing-defaults.ts"
     ]
   },
   "formatter": {

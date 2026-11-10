@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-11-10",
+  "note": "Per-distribution routing results. A change may not lower any of these; run --update deliberately and explain it in the PR.",
+  "distributions": {
+    "training": {
+      "exact": 161,
+      "department": 175,
+      "total": 247
+    },
+    "v5": {
+      "exact": 21,
+      "department": 28,
+      "total": 40
+    },
+    "v6": {
+      "exact": 26,
+      "department": 29,
+      "total": 40
+    },
+    "v7": {
+      "exact": 1,
+      "department": 8,
+      "total": 40
+    },
+    "v8": {
+      "exact": 3,
+      "department": 9,
+      "total": 40
+    },
+    "v9": {
+      "exact": 1,
+      "department": 10,
+      "total": 40
+    }
+  }
+}

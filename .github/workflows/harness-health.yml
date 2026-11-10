@@ -1,0 +1,115 @@
+name: Harness Health
+
+# Monthly vendor-retirement watch. harness.json promises each harness reads our
+# files; vendors silently stop doing that (Gemini CLI retired 2026-06-18, Codex
+# removed custom prompts in v0.117.0). This scans each ACTIVE harness's docs
+# page and opens/updates a tracked issue when one looks retired upstream.
+on:
+  schedule:
+    - cron: "0 7 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: harness-health
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: harness-health
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun (pinned)
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.4
+
+      - name: Scan harness docs for retirement signals
+        id: scan
+        run: |
+          set +e
+          bun scripts/check-harness-health.ts --strict > health.txt 2>&1
+          CODE=$?
+          set -e
+          cat health.txt
+          if [ "$CODE" -eq 0 ]; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=failure" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Refresh the baseline when the docs grow
+        if: steps.scan.outputs.status == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          GROWTH=$(bun scripts/check-harness-health.ts --all --json | jq -c '.growth')
+          if [ "$GROWTH" = "{}" ]; then
+            echo "Baseline unchanged."
+            exit 0
+          fi
+          echo "Growth detected: $GROWTH"
+          if [ -n "$(gh pr list --state open --search 'chore(harness): refresh baseline' --json number --jq '.[0].number // empty')" ]; then
+            echo "A baseline PR is already open; leaving it alone."
+            exit 0
+          fi
+          bun scripts/check-harness-health.ts --all --update-baseline
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="chore/harness-baseline-$(date -u +%Y%m%d)"
+          git checkout -B "$BRANCH"
+          git add harness-health.baseline.json
+          git commit -m "chore(harness): refresh baseline"
+          git push -u origin "$BRANCH"
+          gh pr create --base dev --head "$BRANCH" \
+            --title "chore(harness): refresh baseline" \
+            --body "Automated baseline refresh: the watched docs now expose signals we had not recorded.
+
+          Growth: \`$GROWTH\`
+
+          This PR only updates \`harness-health.baseline.json\`. Shrinkage is still a failure — a removed signal is reported as \`regressed\` and never auto-accepted."
+
+      - name: Track the result in an issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATUS: ${{ steps.scan.outputs.status }}
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh issue list --state open --search "Harness retirement detected" --json number --jq '.[0].number // empty')
+          if [ "$STATUS" = "success" ]; then
+            if [ -n "$EXISTING" ]; then
+              gh issue comment "$EXISTING" --body "✅ Harness health check now passes as of $(date -u +%Y-%m-%d). Closing."
+              gh issue close "$EXISTING"
+            fi
+            exit 0
+          fi
+
+          BODY_FILE="$(mktemp)"
+          {
+            echo "A harness declared \`active\` in \`harness.json\` looks retired upstream."
+            echo ""
+            echo '```text'
+            cat health.txt
+            echo '```'
+            echo ""
+            echo "Update \`harness.json\` (status, retired paths), adjust the exporter, then run:"
+            echo '`bun run sync:harness && bun run check:install && bun run doctor`'
+          } > "$BODY_FILE"
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file "$BODY_FILE"
+          else
+            gh issue create \
+              --title "Harness retirement detected ($(date -u +%Y-%m-%d))" \
+              --body-file "$BODY_FILE" \
+              --label dependencies --label area:ci --label p2
+          fi
+          exit 1

@@ -4,9 +4,15 @@ import os from "node:os";
 import path from "node:path";
 import {
   commandSurfaceCounts,
-  exportAntigravityCommands,
+  exportClaudeCommands,
+  exportContinuePrompts,
+  exportCopilotPrompts,
   exportCursorCommands,
+  exportGeminiCommands,
   exportOpenCodeCommands,
+  exportQwenCommands,
+  exportRooCommands,
+  exportSkillMirror,
   exportSkills,
   exportWindsurfWorkflows,
   getSkillModeCommands,
@@ -25,10 +31,16 @@ const SKILL_MODE_COMMANDS = getSkillModeCommands(getSkills());
 const EXPECTED_SKILL_MODE_COMMANDS = SKILL_MODE_COMMANDS.length;
 const EXPECTED_TOTAL_COMMANDS = EXPECTED_SKILL_COMMANDS + EXPECTED_SKILL_MODE_COMMANDS + EXPECTED_ALIAS_COMMANDS;
 
-const COMMAND_EXPORTERS: Array<[string, (dest: string, skills: ReturnType<typeof getSkills>) => number]> = [
-  ["OpenCode", exportOpenCodeCommands],
-  ["Antigravity/Gemini", exportAntigravityCommands],
-  ["Cursor", exportCursorCommands],
+/** label, exporter, file suffix the harness requires. */
+const COMMAND_EXPORTERS: Array<[string, (dest: string, skills: ReturnType<typeof getSkills>) => number, string]> = [
+  ["OpenCode", exportOpenCodeCommands, ".md"],
+  ["Claude Code", exportClaudeCommands, ".md"],
+  ["Cursor", exportCursorCommands, ".md"],
+  ["Roo Code", exportRooCommands, ".md"],
+  ["Gemini/Antigravity", exportGeminiCommands, ".toml"],
+  ["GitHub Copilot", exportCopilotPrompts, ".prompt.md"],
+  ["Continue", exportContinuePrompts, ".prompt"],
+  ["Qwen Code", exportQwenCommands, ".md"],
 ];
 
 let sandbox = "";
@@ -57,7 +69,7 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
     // Pre-fix this was 0: skills live at skills/<category>/<name>/, never REPO_ROOT/<name>.
     expect(count).toBe(EXPECTED_SKILL_COMMANDS);
 
-    const installedDirs = fs.readdirSync(dest).filter((entry) => fs.statSync(path.join(dest, entry)).isDirectory());
+    const installedDirs = fs.readdirSync(dest).filter((entry) => fs.existsSync(path.join(dest, entry, "SKILL.md")));
     expect(installedDirs.length).toBe(EXPECTED_SKILL_COMMANDS);
 
     for (const skill of skills) {
@@ -83,14 +95,14 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
   it("exports 46 skills + every skill-mode command + 10 aliases for every implemented harness", () => {
     const skills = getSkills();
 
-    for (const [harness, exporter] of COMMAND_EXPORTERS) {
+    for (const [harness, exporter, extension] of COMMAND_EXPORTERS) {
       const dest = path.join(sandbox, harness.replace(/\W+/g, "-"));
       expect(exporter(dest, skills)).toBe(EXPECTED_TOTAL_COMMANDS);
-      const files = fs.readdirSync(dest).filter((f) => f.endsWith(".md"));
+      const files = fs.readdirSync(dest).filter((f) => f.endsWith(extension));
       expect(files.length).toBe(EXPECTED_TOTAL_COMMANDS);
-      // The generated layer lands in every harness: <skill>-<mode>.md files.
+      // The generated layer lands in every harness: <skill>-<mode><extension>.
       for (const entry of SKILL_MODE_COMMANDS) {
-        expect(files).toContain(`${entry.command}.md`);
+        expect(files).toContain(`${entry.command}${extension}`);
       }
     }
 
@@ -151,11 +163,11 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
     exportSkills(installedRoot, skills);
 
     let checkedRefs = 0;
-    for (const [harness, exporter] of COMMAND_EXPORTERS) {
+    for (const [harness, exporter, extension] of COMMAND_EXPORTERS) {
       const dest = path.join(sandbox, `round-trip-${harness.replace(/\W+/g, "-")}`);
       exporter(dest, skills);
 
-      for (const file of fs.readdirSync(dest).filter((f) => f.endsWith(".md"))) {
+      for (const file of fs.readdirSync(dest).filter((f) => f.endsWith(extension))) {
         const body = fs.readFileSync(path.join(dest, file), "utf8");
         const refs = extractInstalledRefs(body);
         expect(refs.length).toBeGreaterThan(0);
@@ -166,6 +178,52 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
       }
     }
     expect(checkedRefs).toBe(EXPECTED_TOTAL_COMMANDS * COMMAND_EXPORTERS.length);
+  });
+
+  it("mirrors the installed skills tree by symlink so refreshes propagate", () => {
+    const skills = getSkills();
+    const canonical = path.join(sandbox, "canonical-skills");
+    exportSkills(canonical, skills);
+    const mirror = path.join(sandbox, "claude-skills");
+    expect(exportSkillMirror(mirror, skills, canonical)).toBe(skills.length);
+
+    const sample = skills[0].name;
+    expect(fs.existsSync(path.join(mirror, sample, "SKILL.md"))).toBe(true);
+    expect(fs.realpathSync(path.join(mirror, sample))).toBe(fs.realpathSync(path.join(canonical, sample)));
+  });
+
+  it("writes each harness's required file format (Gemini TOML, Copilot .prompt.md, Continue .prompt)", () => {
+    const skills = getSkills();
+
+    const geminiDest = path.join(sandbox, "format-gemini");
+    exportGeminiCommands(geminiDest, skills);
+    const geminiFiles = fs.readdirSync(geminiDest);
+    expect(geminiFiles.every((file) => file.endsWith(".toml"))).toBe(true);
+    const toml = fs.readFileSync(path.join(geminiDest, "webdev-audit.toml"), "utf8");
+    // Gemini CLI reads `prompt` and `description` only; markdown frontmatter is invisible to it.
+    expect(toml.startsWith('description = "')).toBe(true);
+    expect(toml).toContain('prompt = """');
+    expect(toml.trimEnd().endsWith('"""')).toBe(true);
+    expect(toml).toContain("~/.agents/skills/webdev/references/audit.md");
+
+    // Migration: a previous release wrote markdown here; only our own names go.
+    fs.writeFileSync(path.join(geminiDest, "webdev-audit.md"), "# stale markdown\n");
+    fs.writeFileSync(path.join(geminiDest, "my-own-note.md"), "# user file\n");
+    exportGeminiCommands(geminiDest, skills);
+    expect(fs.existsSync(path.join(geminiDest, "webdev-audit.md"))).toBe(false);
+    expect(fs.existsSync(path.join(geminiDest, "my-own-note.md"))).toBe(true);
+
+    const copilotDest = path.join(sandbox, "format-copilot");
+    exportCopilotPrompts(copilotDest, skills);
+    expect(fs.readdirSync(copilotDest).every((file) => file.endsWith(".prompt.md"))).toBe(true);
+
+    const continueDest = path.join(sandbox, "format-continue");
+    exportContinuePrompts(continueDest, skills);
+    const continueFiles = fs.readdirSync(continueDest);
+    expect(continueFiles.every((file) => file.endsWith(".prompt"))).toBe(true);
+    const prompt = fs.readFileSync(path.join(continueDest, "webdev-audit.prompt"), "utf8");
+    expect(prompt).toContain("invokable: true");
+    expect(prompt).toContain("name: webdev-audit");
   });
 
   it("windsurf alias workflows point at a real references/<mode>.md in the installed tree", () => {

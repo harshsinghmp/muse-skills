@@ -11,7 +11,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { exportAntigravityCommands, exportOpenCodeCommands, getSkills, isModeRefFile } from "./export-commands";
+import {
+  exportGeminiCommands,
+  exportOpenCodeCommands,
+  getSkills,
+  isModeRefFile,
+  resolveSkillSourceDir,
+} from "./export-commands";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const DISPATCH_MD_PATH = path.join(
@@ -22,56 +28,22 @@ const DISPATCH_MD_PATH = path.join(
   "references",
   "dispatch.md",
 );
-
-const COUNCIL_LEADS: Record<string, string> = {
-  webdev: "Sol",
-  database: "Sol",
-  devops: "Sol",
-  mobile: "Sol",
-  automation: "Sol",
-  telegram: "Sol",
-  relay: "Sol",
-  pua: "Sol",
-  "new-project": "Sol",
-  updatedocs: "Sol",
-  "clean-system-cache": "Sol",
-
-  design: "Jasper",
-  smm: "Jasper",
-  content: "Jasper",
-  seo: "Jasper",
-  crm: "Sol & Jasper",
-  brand: "Crew & Jasper",
-  growth: "Jasper & Crew",
-  animate: "Jasper",
-  designscope: "Jasper",
-  humanize: "Jasper",
-
-  ops: "Crew",
-  accounts: "Crew",
-  "client-comms": "Crew",
-  retain: "Crew",
-  gtm: "Crew",
-  "sales-enablement": "Crew",
-  paidads: "Crew & Jasper",
-  coach: "Crew",
-  "periodic-retreat": "Sol & Crew",
-
-  secretary: "Nexus & Sol",
-  "code-review": "Nexus",
-  audit: "Nexus",
-  "qa-launch": "Nexus",
-  "muse-security": "Nexus",
-  refactor: "Nexus & Sol",
-  git: "Nexus",
-  "gauntlet-loop": "Nexus",
-  "dead-letter": "Nexus",
-  "coupling-router": "Sol & Nexus",
-  "context-anchor": "Sol",
-  "evidence-ledger": "Crew & Nexus",
-  updateagents: "Nexus",
-  research: "Sol & Jasper",
-};
+const ROUTING_DEFAULTS_PATH = path.join(
+  REPO_ROOT,
+  "skills",
+  "context-orchestration",
+  "secretary",
+  "scripts",
+  "routing-defaults.ts",
+);
+const MODE_SIGNALS_PATH = path.join(
+  REPO_ROOT,
+  "skills",
+  "context-orchestration",
+  "secretary",
+  "references",
+  "mode-signals.json",
+);
 
 export function getModesForSkill(skillName: string): string[] {
   const skills = getSkills();
@@ -89,6 +61,30 @@ export function getModesForSkill(skillName: string): string[] {
     .sort();
 }
 
+/** Divisions are rendered with one uniform 5-column table so every department
+ *  advertises its routable modes — a department without a mode list cannot be
+ *  dispatched to a specific reference file. */
+const DIVISIONS: Array<{ category: string; heading: string; fallbackLead: string }> = [
+  {
+    category: "agency-delivery",
+    heading: "1. Agency Delivery Division (Client Deliverables & Revenue Engines)",
+    fallbackLead: "Nexus",
+  },
+  { category: "context-orchestration", heading: "2. Context Orchestration & Memory Division", fallbackLead: "Nexus" },
+  { category: "core-engine", heading: "3. Core Engine & Scaffolding Division", fallbackLead: "Sol" },
+  {
+    category: "quality-review",
+    heading: "4. Quality Review & Hardening Division (The Nexus Gate)",
+    fallbackLead: "Nexus",
+  },
+  { category: "design-interface", heading: "5. Interface & Visual Engineering Division", fallbackLead: "Jasper" },
+  {
+    category: "reflection-maintenance",
+    heading: "6. Reflection & Systems Maintenance Division",
+    fallbackLead: "Crew",
+  },
+];
+
 export function buildDirectoryMarkdown(): string {
   const skills = getSkills();
   const byCategory: Record<string, typeof skills> = {};
@@ -99,72 +95,150 @@ export function buildDirectoryMarkdown(): string {
   }
 
   let md = `## 📋 Canonical 46-Department Agency Directory\n\n`;
-  md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n\n`;
+  md += `When triaging incoming prompts, match the user's objective to the canonical department and select the exact operating mode. Load **only** that mode's reference file into context.\n`;
 
-  // 1. Agency Delivery Division
-  md += `### 1. Agency Delivery Division (Client Deliverables & Revenue Engines)\n\n`;
-  md += `| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |\n`;
-  md += `| :--- | :--- | :--- | :--- | :--- |\n`;
-
-  for (const s of byCategory["agency-delivery"] || []) {
-    const modes = getModesForSkill(s.name);
-    const modeList = modes.length > 0 ? modes.map((m) => `\`${m}\``).join(", ") : "`default`";
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${modeList} | **${lead}** | ${shortDesc}. | \`${s.name}/references/<mode>.md\` |\n`;
-  }
-
-  // 2. Context Orchestration & Memory Division
-  md += `\n---\n\n### 2. Context Orchestration & Memory Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["context-orchestration"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 3. Core Engine & Scaffolding Division
-  md += `\n---\n\n### 3. Core Engine & Scaffolding Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["core-engine"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Sol";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 4. Quality Review & Hardening Division (The Nexus Gate)
-  md += `\n---\n\n### 4. Quality Review & Hardening Division (The Nexus Gate)\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["quality-review"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Nexus";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 5. Interface & Visual Engineering Division
-  md += `\n---\n\n### 5. Interface & Visual Engineering Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["design-interface"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Jasper";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
-  }
-
-  // 6. Reflection & Systems Maintenance Division
-  md += `\n---\n\n### 6. Reflection & Systems Maintenance Division\n\n`;
-  md += `| Department | Purpose & Invariant | Council Lead |\n`;
-  md += `| :--- | :--- | :--- |\n`;
-  for (const s of byCategory["reflection-maintenance"] || []) {
-    const lead = COUNCIL_LEADS[s.name] || "Crew";
-    const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
-    md += `| **\`${s.name}\`** | ${shortDesc}. | **${lead}** |\n`;
+  for (const division of DIVISIONS) {
+    md += `\n---\n\n### ${division.heading}\n\n`;
+    md += `| Department | Canonical Modes | Council Lead | Primary Intent & Trigger Keywords | Reference Path |\n`;
+    md += `| :--- | :--- | :--- | :--- | :--- |\n`;
+    for (const s of byCategory[division.category] || []) {
+      const modes = getModesForSkill(s.name);
+      const modeList = modes.length > 0 ? modes.map((m) => `\`${m}\``).join(", ") : "—";
+      const lead = s.councilLead ?? division.fallbackLead;
+      const shortDesc = s.description.split(".")[0].replace(/\|/g, "-");
+      md += `| **\`${s.name}\`** | ${modeList} | **${lead}** | ${shortDesc}. | \`${s.name}/references/<mode>.md\` |\n`;
+    }
   }
 
   return md;
+}
+
+/**
+ * A mode's intent as reviewable anchors: its heading plus the short sentences
+ * and bullets the reference opens with. Anchors are how a person would describe
+ * the work, which makes them a better routing signal than a prose blob.
+ */
+function modeSignal(skillDir: string, mode: string): { heading: string; anchors: string[]; text: string } {
+  const file = path.join(skillDir, "references", `${mode}.md`);
+  if (!fs.existsSync(file)) return { heading: "", anchors: [], text: "" };
+  const text = fs.readFileSync(file, "utf8");
+  const heading =
+    text
+      .split("\n")
+      .find((line) => line.startsWith("# "))
+      ?.replace(/^#\s+/, "")
+      .replace(/^[^\w]+/, "")
+      .trim() ?? "";
+
+  const trim = (value: string, limit: number): string => {
+    if (value.length <= limit) return value;
+    const cut = value.lastIndexOf(" ", limit);
+    return `${value.slice(0, cut > 0 ? cut : limit)}…`;
+  };
+
+  const anchors: string[] = [];
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (line.startsWith("## ")) {
+      const section = line
+        .replace(/^##\s+/, "")
+        .replace(/[`*_]/g, "")
+        .trim();
+      if (section.length >= 4) anchors.push(trim(section, 60));
+      if (anchors.length >= 8) break;
+      continue;
+    }
+    if (line === "" || line.startsWith("#") || line.startsWith("```")) continue;
+    const cleaned = line
+      .replace(/^[-*\d.]+\s+/, "")
+      .replace(/[`*_]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (cleaned.length < 20) continue;
+    for (const sentence of cleaned.split(/(?<=[.!?])\s+/)) {
+      if (sentence.length < 20) continue;
+      anchors.push(trim(sentence, 90));
+      if (anchors.length >= 8) break;
+    }
+    if (anchors.length >= 8) break;
+  }
+  // Scoring still needs the opening prose: anchors alone measured 1-2 prompts
+  // worse on the engineering/blind sets. Anchors remain the reviewable view.
+  const prose = text
+    .split("\n")
+    .slice(1)
+    .filter((line) => !line.startsWith("## "))
+    .join(" ")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 420);
+  return { heading, anchors, text: prose };
+}
+
+/**
+ * Mode descriptions for the router. The installed secretary script cannot read
+ * other skills' references (different directories once installed), so the
+ * signals are generated here and shipped beside dispatch.md.
+ */
+export function buildModeSignals(): string {
+  const skills = getSkills();
+  const payload: Record<string, Record<string, { heading: string; anchors: string[]; text: string }>> = {};
+  for (const skill of skills) {
+    const modes = getModesForSkill(skill.name);
+    if (modes.length === 0) continue;
+    const skillDir = resolveSkillSourceDir(skill);
+    payload[skill.name] = Object.fromEntries(modes.map((mode) => [mode, modeSignal(skillDir, mode)]));
+  }
+  return `${JSON.stringify(payload, null, 2)}\n`;
+}
+
+/**
+ * The router needs both tables at import time, so they are generated as a
+ * TypeScript module (not JSON) from skills.json — the one curated source.
+ */
+export function buildRoutingDefaults(): string {
+  const skills = getSkills();
+  const leads: Record<string, string> = {};
+  const defaults: Record<string, string> = {};
+  for (const skill of skills) {
+    if (!skill.councilLead) throw new Error(`skills.json: ${skill.name} has no councilLead`);
+    if (!skill.defaultMode) throw new Error(`skills.json: ${skill.name} has no defaultMode`);
+    leads[skill.name] = skill.councilLead;
+    defaults[skill.name] = skill.defaultMode;
+  }
+  const entries = (value: Record<string, string>) =>
+    Object.entries(value)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, lead]) => `  ${JSON.stringify(key)}: ${JSON.stringify(lead)},`)
+      .join("\n");
+
+  return `// @generated by scripts/sync-dispatch.ts — do not edit.
+// Source of truth: skills.json (councilLead, defaultMode).
+export const COUNCIL_LEADS: Record<string, string> = {
+${entries(leads)}
+};
+
+export const DEFAULT_MODE: Record<string, string> = {
+${entries(defaults)}
+};
+`;
+}
+
+export function syncRoutingDefaults(dryRun: boolean = false): boolean {
+  const next = buildRoutingDefaults();
+  const current = fs.existsSync(ROUTING_DEFAULTS_PATH) ? fs.readFileSync(ROUTING_DEFAULTS_PATH, "utf8") : "";
+  if (current === next) return false;
+  if (!dryRun) fs.writeFileSync(ROUTING_DEFAULTS_PATH, next);
+  return true;
+}
+
+export function syncModeSignals(dryRun: boolean = false): boolean {
+  const next = buildModeSignals();
+  const current = fs.existsSync(MODE_SIGNALS_PATH) ? fs.readFileSync(MODE_SIGNALS_PATH, "utf8") : "";
+  if (current === next) return false;
+  if (!dryRun) fs.writeFileSync(MODE_SIGNALS_PATH, next);
+  return true;
 }
 
 export function syncDispatchMarkdown(dryRun: boolean = false): boolean {
@@ -206,6 +280,16 @@ export function syncAll(): void {
   } else {
     console.log(`✨ Agency Directory is already up-to-date in ${DISPATCH_MD_PATH}`);
   }
+  if (syncRoutingDefaults(false)) {
+    console.log(`✅ Updated router defaults in ${ROUTING_DEFAULTS_PATH}`);
+  } else {
+    console.log(`✨ Router defaults are up-to-date in ${ROUTING_DEFAULTS_PATH}`);
+  }
+  if (syncModeSignals(false)) {
+    console.log(`✅ Updated router mode signals in ${MODE_SIGNALS_PATH}`);
+  } else {
+    console.log(`✨ Router mode signals are up-to-date in ${MODE_SIGNALS_PATH}`);
+  }
 
   // Refresh commands across active harnesses
   const skills = getSkills();
@@ -218,7 +302,7 @@ export function syncAll(): void {
 
   const geminiGlobal = path.join(userHome, ".gemini", "commands");
   if (fs.existsSync(path.dirname(geminiGlobal))) {
-    exportAntigravityCommands(geminiGlobal, skills);
+    exportGeminiCommands(geminiGlobal, skills);
   }
 
   console.log("🎉 Secretary Dispatcher & Multi-Harness Commands are fully synchronized!");
@@ -227,10 +311,10 @@ export function syncAll(): void {
 if (import.meta.main) {
   const args = process.argv.slice(2);
   if (args.includes("--check")) {
-    const hasDrift = syncDispatchMarkdown(true);
+    const hasDrift = syncDispatchMarkdown(true) || syncModeSignals(true) || syncRoutingDefaults(true);
     if (hasDrift) {
       console.error(
-        "❌ Drift detected in secretary/references/dispatch.md! Run 'bun scripts/sync-dispatch.ts' to synchronize.",
+        "❌ Drift detected in secretary/references/dispatch.md, mode-signals.json, or routing-defaults.ts! Run 'bun scripts/sync-dispatch.ts' to synchronize.",
       );
       process.exit(1);
     } else {

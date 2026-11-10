@@ -658,7 +658,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(skillContent).toContain("**`federation`**");
       expect(skillContent).toContain("references/federation.md");
       expect(skillContent).toContain(
-        'argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm]"',
+        'argument-hint: "[coupling-matrix|skill-compatibility-matrix|worktree-lease-protocol|federation|swarm|mesh]"',
       );
 
       expect(fedContent).toContain("Worktree Federation Architecture");

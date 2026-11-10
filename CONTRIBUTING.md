@@ -170,6 +170,20 @@ When your pull request respects these standards:
 
 ---
 
+### Routing changes need a blind measurement
+
+Any change to routing behaviour — concepts, intent signals, fast paths, scoring weights — must be measured on **every** distribution before it merges:
+
+```bash
+bun run check:routing:matrix     # fails if any distribution drops below routing-baseline.json
+```
+
+`routing-baseline.json` records the tuned set plus every `heldout-*.json` file (currently `v5`–`v8`). The matrix **discovers fixtures from disk**, so a new blind set is gated automatically and an unregistered one fails until the baseline is refreshed deliberately. A change that improves one set while lowering another is a regression, even if the headline number goes up. Raising the baseline (`bun run sync:routing:baseline`) is allowed — but the PR must say which distribution moved and why.
+
+**Folding rule.** When a held-out set becomes training data, delete its fixture and add a **new blind set in the same PR** — `tests/routing-fixture-hygiene.test.ts` fails if a held-out id also appears in `prompts.json`, and the matrix fails if a fixture is missing from the baseline. Without this, the "unseen" number is fiction.
+
+History: three routing "improvements" were merged and later found neutral or overfit because only the tuned set was checked. The blind sets exist to stop that repeating.
+
 ## 🚀 5. Transition (Step-by-Step Contribution Checklist)
 
 Follow this 6-step checklist to submit your contribution:

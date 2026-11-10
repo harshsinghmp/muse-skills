@@ -56,7 +56,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("security-audit:");
     expect(ci).toContain("boundary-audit.ts -p .");
     expect(ci).toContain("--audit-lockfile .");
-    expect(ci).toContain("needs: [lint, type-check, test, secret-scan, security-audit]");
+    expect(ci).toContain("needs: [lint, type-check, test, routing-matrix, secret-scan, security-audit]");
 
     const smoke = read(".github/workflows/release-smoke.yml");
     expect(smoke).toContain("release:");
@@ -65,6 +65,35 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
     expect(ci).toContain("bun run check:deps");
     expect(read(".github/workflows/release.yml")).toContain("bun run check:ledger");
+
+    // The routing matrix is a first-class check, not a test-suite side effect.
+    expect(ci).toContain("name: routing-matrix");
+    expect(ci).toContain("bun run check:routing:matrix");
+    expect(read(".github/workflows/landing-gate.yml")).toContain('"routing-matrix"');
+
+    // Checksums prove the artifact is intact; the install smoke proves it is usable.
+    const smokeScript = read("scripts/release-smoke.ts");
+    expect(smokeScript).toContain("installSmoke");
+    expect(smokeScript).toContain("updateagents/scripts/doctor.ts");
+  });
+
+  test("the release smoke installs the tag and runs the shipped doctor", async () => {
+    const { installSmoke } = await import("../scripts/release-smoke");
+    const result = installSmoke();
+    const { version } = JSON.parse(read("package.json")) as { version: string };
+    expect(result.version).toBe(`v${version}`);
+    expect(result.destinations).toBeGreaterThanOrEqual(2);
+    expect(result.skills).toBeGreaterThanOrEqual(46);
+  }, 120_000);
+
+  test("harness baseline refresh cannot auto-accept a removed signal", () => {
+    const health = read(".github/workflows/harness-health.yml");
+    // Growth opens a PR; shrinkage fails the scan and never reaches --update-baseline.
+    expect(health).toContain("Refresh the baseline when the docs grow");
+    expect(health).toContain("if: steps.scan.outputs.status == 'success'");
+    expect(health).toContain("--update-baseline");
+    expect(health).toContain("contents: write");
+    expect(read("scripts/check-harness-health.ts")).toContain("regressed");
   });
 
   test("weekly dependency refresh is tracked in an issue", () => {
@@ -80,7 +109,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(ci).toContain("bun test --parallel");
     expect(ci).toContain("~/.bun/install/cache");
     expect(ci).toContain("cancel-in-progress: true");
-    expect((ci.match(/name: Install dependencies/g) ?? []).length).toBe(2);
+    expect((ci.match(/name: Install dependencies/g) ?? []).length).toBe(3);
   });
 
   test("workflows do not cache the Bun binary or swallow setup failures", () => {
@@ -103,7 +132,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     const landing = read(".github/workflows/landing-gate.yml");
     expect(landing).toMatch(/PR_NUMBER: \$\{\{ github\.event\.pull_request\.number \}\}/);
     expect(landing).toContain("check-runs");
-    expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "secret-scan")');
+    expect(landing).toContain('REQUIRED_CHECKS=("lint" "type-check" "bun test" "routing-matrix" "secret-scan")');
     expect(landing).toMatch(/for name in "\$\{REQUIRED_CHECKS\[@\]\}"/);
     expect(landing).not.toMatch(/BRANCH="\$\{\{ github\.ref_name \}\}"/);
 
@@ -132,8 +161,17 @@ describe("CI and supply-chain hardening (#395)", () => {
 
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.private).toBe(true);
-    expect(pkg.dependencies.musememory).toBe("3.3.0");
+    expect(pkg.dependencies.musememory).toBe("3.4.0");
     expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
+  });
+
+  test("dependabot update PRs target dev instead of main", () => {
+    const dependabot = read(".github/dependabot.yml");
+    const ecosystems = dependabot.split(/- package-ecosystem:/).slice(1);
+    expect(ecosystems.length).toBeGreaterThan(0);
+    for (const block of ecosystems) {
+      expect(block.slice(0, block.indexOf("schedule:"))).toContain('target-branch: "dev"');
+    }
   });
 
   test("installer uses a pinned tag, verifies the commit, and fails closed", () => {

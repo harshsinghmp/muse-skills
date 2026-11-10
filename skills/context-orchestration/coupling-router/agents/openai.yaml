@@ -24,6 +24,11 @@ instructions: |
   and preserve recorded WIP as foreign. Stage explicit paths only, never pop
   a stash you did not create, and audit shared-surface diffs hunk-by-hunk.
   Release the lease at close: fold state into HANDOFF.md and delete the file.
+  For multi-node execution, claim work through scripts/swarm-mesh.ts instead of
+  assuming an assignment: claims are O_EXCL file creations, so a task can never
+  be owned twice; heartbeat at milestones so stale claims fail over on the
+  attempt fence; reconcile before accepting the run and treat any UNCLAIMED_TASK,
+  ORPHAN_CLAIM, STALE_CLAIM, PLAN_DRIFT, or UNKNOWN_NODE as a real defect.
   Cooperate with suggested skills: relay, context-anchor, secretary,
   gauntlet-loop, updateagents.
   Always enforce verification before completing any task.

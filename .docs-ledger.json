@@ -2,18 +2,18 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-09T21:12:39.712Z",
-  "head": "37eb77276d86e6ede9bdf05625c385b3dfbde1ec",
+  "updatedAt": "2026-11-10T21:42:51.647Z",
+  "head": "545a94f3d0d3d2418fb6e575f3bbb97ab1f755e4",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.4.2"
+    "releaseTag": "v8.5.0"
   },
   "agentWatermark": {
-    "point": 126,
-    "commit": "c68cd790584c19e1f63089fba04deaebdf1b0b85",
-    "syncedAt": "2026-11-09T21:06:36.893Z"
+    "point": 134,
+    "commit": "f3722bc982b5c21e17e9082a6f5907842d533378",
+    "syncedAt": "2026-11-10T21:42:23.285Z"
   },
   "points": [
     {
@@ -2158,8 +2158,8 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"entry point\" found in .agents/context/current.md"
+          "docs": ["AGENTS.md"],
+          "evidence": "phrase \"entry point\" found in AGENTS.md"
         }
       },
       "shipped": true,
@@ -2408,8 +2408,8 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"runtime instead\" found in .agents/context/current.md"
+          "docs": ["AGENTS.md"],
+          "evidence": "phrase \"downloading each\" found in AGENTS.md"
         }
       },
       "shipped": true,
@@ -2557,7 +2557,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"publish curated\" found in .agents/context/current.md"
+          "evidence": "phrase \"release notes\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -2784,7 +2784,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"dual judges\" found in .agents/context/current.md"
+          "evidence": "phrase \"local cloud\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -3607,7 +3607,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"close credential\" found in .agents/context/current.md"
+          "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -5180,6 +5180,1598 @@
       "shipped": true,
       "releaseTag": "v8.4.2",
       "createdAt": "2026-11-09T21:11:29.472Z"
+    },
+    {
+      "id": "DP-0131",
+      "point": 131,
+      "commit": "79d19fa6bec1cd1c5e3dad286a6e38f7a976dead",
+      "shortCommit": "79d19fa",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #424 from harshsinghmp/release/v8.4.2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.2",
+      "createdAt": "2026-11-10T21:40:54.965Z"
+    },
+    {
+      "id": "DP-0132",
+      "point": 132,
+      "commit": "6d995ee7a1e01e37eebc4dc084d85207c6d6794a",
+      "shortCommit": "6d995ee",
+      "date": "2026-11-10",
+      "type": "fix",
+      "scope": "release",
+      "summary": "validate the checkpointed ledger, not live local docs",
+      "breaking": false,
+      "files": ["scripts/check-docs-ledger.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.2",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0133",
+      "point": 133,
+      "commit": "28a405669fe6e329090b2f5484d5d687af77ed75",
+      "shortCommit": "28a4056",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #426 from harshsinghmp/hotfix/release-ledger-check",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.4.2",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0134",
+      "point": 134,
+      "commit": "f3722bc982b5c21e17e9082a6f5907842d533378",
+      "shortCommit": "f3722bc",
+      "date": "2026-11-10",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #425 from harshsinghmp/chore/backmerge-v8.4.2",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0135",
+      "point": 135,
+      "commit": "11c759727bdf1796bda867a2cbe351f8a812185c",
+      "shortCommit": "11c7597",
+      "date": "2026-11-10",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "target dev for dependabot updates (#427)",
+      "breaking": false,
+      "files": [
+        ".github/dependabot.yml",
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "tests/ci-hardening.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0136",
+      "point": 136,
+      "commit": "842935ff8d1b81d6fa47cacf9affa872bc4d86fd",
+      "shortCommit": "842935f",
+      "date": "2026-11-10",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump actions/cache from 4.3.0 to 6.1.0 (#411)",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"actions cache\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"actions cache\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"actions cache\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0137",
+      "point": 137,
+      "commit": "6c4613ad0fae00dbe3cd2da6ad49458d9973d1b2",
+      "shortCommit": "6c4613a",
+      "date": "2026-11-10",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump github/codeql-action/upload-sarif from 4.39.1 to 4.39.3 (#412)",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0138",
+      "point": 138,
+      "commit": "43920c3d92274d240ac240f8ccd6ff792125e9a4",
+      "shortCommit": "43920c3",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "coupling-router",
+      "summary": "add swarm mesh node identity, task claim, and reconciliation (#429)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "skills.json",
+        "skills/context-orchestration/coupling-router/README.md",
+        "skills/context-orchestration/coupling-router/SKILL.md",
+        "skills/context-orchestration/coupling-router/agents/openai.yaml",
+        "skills/context-orchestration/coupling-router/references/mesh.md",
+        "skills/context-orchestration/coupling-router/scripts/swarm-mesh.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/swarm-mesh.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"swarm mesh\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"swarm mesh\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"swarm mesh\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0139",
+      "point": 139,
+      "commit": "e4038caa7dcc9afc5f92f6e5e1c7df20fcb83467",
+      "shortCommit": "e4038ca",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "measure routing quality and route from the full directory (#430)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/eval-routing.ts",
+        "scripts/sync-dispatch.ts",
+        "skills.json",
+        "skills/context-orchestration/secretary/SKILL.md",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/prompts.json",
+        "tests/routing-eval.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"routing quality\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"routing quality\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"routing quality\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0140",
+      "point": 140,
+      "commit": "c5ac65517eb66bd462b2d45004c519799aa8a843",
+      "shortCommit": "c5ac655",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "install",
+      "summary": "prove the distribution surface actually installs (#431)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/check-install-matrix.ts",
+        "scripts/hooks/agent-dirs.conf",
+        "scripts/hooks/install-hooks.sh",
+        "tests/install-matrix.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0141",
+      "point": 141,
+      "commit": "be09263b8f87b44ab2a8a8461e82c8c26ad93ada",
+      "shortCommit": "be09263",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "install",
+      "summary": "native command surfaces for nine harnesses, in their real formats (#432)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "scripts/check-install-matrix.ts",
+        "scripts/export-commands.ts",
+        "scripts/sync-dispatch.ts",
+        "tests/export-commands.test.ts",
+        "tests/setup-end-to-end.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"native command\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"native command\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"command surfaces\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0142",
+      "point": 142,
+      "commit": "7643f074965b22b859525a6652d429b45b57bb31",
+      "shortCommit": "7643f07",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "coupling-router",
+      "summary": "dispatch DAGs through the mesh (MESH-006) (#433)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "skills/context-orchestration/coupling-router/references/mesh.md",
+        "skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts",
+        "skills/context-orchestration/coupling-router/scripts/swarm-mesh.ts",
+        "tests/swarm-mesh-dispatch.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0143",
+      "point": 143,
+      "commit": "3138771d660090db876319d236907c123af4a612",
+      "shortCommit": "3138771",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "install",
+      "summary": "muse doctor and muse update prove a device is current (#434)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "scripts/check-install-matrix.ts",
+        "scripts/export-commands.ts",
+        "scripts/muse.ts",
+        "tests/muse-doctor.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"muse doctor\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"muse doctor\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"muse doctor\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0144",
+      "point": 144,
+      "commit": "a9a0c565a8acd2e3dbf7d0b9c39f882c1bbeb970",
+      "shortCommit": "a9a0c56",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "install",
+      "summary": "Qwen Code commands and cross-harness skill mirrors (#436)",
+      "breaking": false,
+      "files": [
+        "README.md",
+        "scripts/check-install-matrix.ts",
+        "scripts/export-commands.ts",
+        "scripts/muse.ts",
+        "tests/export-commands.test.ts",
+        "tests/setup-end-to-end.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"qwen code\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"qwen code\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"code commands\" found in .agents/context/imported-agent-instructions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0145",
+      "point": 145,
+      "commit": "0d6bfa719d6fb6fce29f72097de5db9001b30dba",
+      "shortCommit": "0d6bfa7",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "install",
+      "summary": "harness.json as the single source of truth (+ Codex prompts removed upstream) (#437)",
+      "breaking": false,
+      "files": [
+        "README.md",
+        "harness.json",
+        "package.json",
+        "scripts/check-install-matrix.ts",
+        "scripts/export-commands.ts",
+        "scripts/harness-registry.ts",
+        "scripts/muse.ts",
+        "scripts/sync-harness-docs.ts",
+        "tests/export-commands.test.ts",
+        "tests/harness-registry.test.ts",
+        "tests/setup-end-to-end.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness json\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness json\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/stack.md"],
+          "evidence": "phrase \"single source\" found in .agents/context/stack.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0146",
+      "point": 146,
+      "commit": "bf13819cf5a9add496d46c65d9ae2e8f4d8c8161",
+      "shortCommit": "bf13819",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "intent signals, measured-floor routing gate, fresh held-out set (#439)",
+      "breaking": false,
+      "files": [
+        "package.json",
+        "scripts/eval-routing.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v2.json",
+        "tests/fixtures/routing-eval/heldout.json",
+        "tests/fixtures/routing-eval/prompts.json",
+        "tests/routing-eval.test.ts",
+        "tests/routing-heldout.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"intent signals\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"intent signals\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"intent signals\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0147",
+      "point": 147,
+      "commit": "71dc660018d69bc1c47bf049881877fbcbbc2541",
+      "shortCommit": "71dc660",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "monthly harness-retirement watch (#438)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/harness-health.yml",
+        "CHANGELOG.md",
+        "scripts/check-harness-health.ts",
+        "tests/harness-health.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness retirement\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness retirement\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"retirement watch\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0148",
+      "point": 148,
+      "commit": "bc3b9977e02b1ad8fb8c4d7c2ccb64fe41882370",
+      "shortCommit": "bc3b997",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "updateagents",
+      "summary": "portable doctor + changelog backfill (#440)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "scripts/audit-doc-commands.ts",
+        "scripts/check-install-matrix.ts",
+        "scripts/export-commands.ts",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/core-engine/updateagents/SKILL.md",
+        "skills/core-engine/updateagents/references/doctor.md",
+        "skills/core-engine/updateagents/scripts/doctor.ts",
+        "tests/export-commands.test.ts",
+        "tests/portable-doctor.test.ts",
+        "tests/setup-end-to-end.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"portable doctor\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"portable doctor\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"portable doctor\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0149",
+      "point": 149,
+      "commit": "14e6f78801370e41743c768fa4b6d094dd158a66",
+      "shortCommit": "14e6f78",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "mode signals from reference prose (measured, honestly marginal) (#441)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "scripts/eval-routing.ts",
+        "scripts/sync-dispatch.ts",
+        "skills/context-orchestration/secretary/references/mode-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v2.json",
+        "tests/fixtures/routing-eval/heldout-v3.json",
+        "tests/fixtures/routing-eval/prompts.json",
+        "tests/routing-eval.test.ts",
+        "tests/routing-heldout.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"from reference\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"mode signals\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"from reference\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0150",
+      "point": 150,
+      "commit": "131960f59140ab7ad88ac8d0ec930129bb4e484e",
+      "shortCommit": "131960f",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "harness watch reports a surface diff and URL moves (#442)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "harness.json",
+        "scripts/check-harness-health.ts",
+        "scripts/harness-registry.ts",
+        "tests/harness-health.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness watch\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"harness watch\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"harness watch\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0151",
+      "point": 151,
+      "commit": "c2ba49e06096899bcf9339b12d299d5f38d97012",
+      "shortCommit": "c2ba49e",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "release",
+      "summary": "smoke-install the tag and run the shipped doctor (#443)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "scripts/release-smoke.ts", "tests/ci-hardening.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0152",
+      "point": 152,
+      "commit": "4bf4adbea04fc2e9fa1ec66a7a0fc8ee32686453",
+      "shortCommit": "4bf4adb",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "concept vocabulary closes the department gap (#445)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/eval-routing.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v3.json",
+        "tests/fixtures/routing-eval/heldout-v4.json",
+        "tests/fixtures/routing-eval/prompts.json",
+        "tests/routing-eval.test.ts",
+        "tests/routing-heldout.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"concept vocabulary\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"concept vocabulary\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"concept vocabulary\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0153",
+      "point": 153,
+      "commit": "0c8f328c047e0b623e9f9eeed2475a2206ebfab3",
+      "shortCommit": "0c8f328",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "harness",
+      "summary": "record the Windsurf verdict (active, docs moved to Devin) (#446)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "harness.json", "scripts/harness-registry.ts", "tests/harness-registry.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0154",
+      "point": 154,
+      "commit": "1576b2dacaee2f528f02ca12168a80b395f8ae98",
+      "shortCommit": "1576b2d",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "baseline the harness signals so a rewrite cannot hide a removal (#447)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "harness-health.baseline.json",
+        "scripts/check-harness-health.ts",
+        "tests/harness-health.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0155",
+      "point": 155,
+      "commit": "408c5db0bb4927985fa3a054869c355ebcbf6df4",
+      "shortCommit": "408c5db",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "concept evidence outranks a mode-name coincidence (#448)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/eval-routing.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v4.json",
+        "tests/fixtures/routing-eval/heldout-v5.json",
+        "tests/fixtures/routing-eval/prompts.json",
+        "tests/routing-eval.test.ts",
+        "tests/routing-heldout.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"concept evidence\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"concept evidence\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"concept evidence\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0156",
+      "point": 156,
+      "commit": "bda8f61e2dcd76379777bcb770a0999533d3de4b",
+      "shortCommit": "bda8f61",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "self-update the harness baseline on growth only (#449)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/harness-health.yml",
+        "CHANGELOG.md",
+        "scripts/check-harness-health.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/harness-health.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0157",
+      "point": 157,
+      "commit": "843884152fcf0cc6f873b368ef23f9dba6a2f8a0",
+      "shortCommit": "8438841",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "one reviewable artifact for the routing tables (#450)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "biome.json",
+        "package.json",
+        "scripts/sync-routing-signals.ts",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/routing-signals.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0158",
+      "point": 158,
+      "commit": "c697652d0bbcc0c582a369674047da4c1078c271",
+      "shortCommit": "c697652",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "explain each routing failure (--verbose) (#452)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "scripts/eval-routing.ts", "tests/routing-eval-explain.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0159",
+      "point": 159,
+      "commit": "a5c2d5d4d9d448c72b7f552fbc8d332d96285016",
+      "shortCommit": "a5c2d5d",
+      "date": "2026-11-10",
+      "type": "refactor",
+      "scope": "secretary",
+      "summary": "generate router defaults from the skill registry (#453)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "biome.json",
+        "scripts/export-commands.ts",
+        "scripts/sync-dispatch.ts",
+        "skills.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/routing-defaults.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"router defaults\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"router defaults\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0160",
+      "point": 160,
+      "commit": "0acdc3967fe1daeb5c37fcf92da030299b68b1a8",
+      "shortCommit": "0acdc39",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "engineering vocabulary + the blind check that disowns it (#454)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v7.json",
+        "tests/routing-heldout.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0161",
+      "point": 161,
+      "commit": "fd752a6e17087eef8b9cf7a6b6780847178a39df",
+      "shortCommit": "fd752a6",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "explain a failing routing gate without --verbose (#455)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "scripts/eval-routing.ts", "tests/routing-eval-explain.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"failing routing\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"failing routing\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"routing gate\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.966Z"
+    },
+    {
+      "id": "DP-0162",
+      "point": 162,
+      "commit": "7a931d38b60ad47f72ebcd38d98a31df15e4b027",
+      "shortCommit": "7a931d3",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "fast-path rules carry confidence (strong | hint) (#456)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "scripts/sync-routing-signals.ts",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/routing-eval-explain.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"fast path\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"fast path\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"fast path\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0163",
+      "point": 163,
+      "commit": "61895c8a5fee8fa251d2993d068defac7f83d6d3",
+      "shortCommit": "61895c8",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "mode-content department evidence + a per-distribution gate (#457)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "package.json",
+        "routing-baseline.json",
+        "scripts/check-routing-matrix.ts",
+        "scripts/sync-dispatch.ts",
+        "skills/context-orchestration/secretary/references/mode-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v8.json",
+        "tests/routing-heldout.test.ts",
+        "tests/routing-matrix.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"mode content\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"mode content\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"department evidence\" found in .agents/context/imported-agent-instructions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0164",
+      "point": 164,
+      "commit": "0dcac6780958811a4409ed44727b7592b9512a85",
+      "shortCommit": "0dcac67",
+      "date": "2026-11-10",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "musememory 3.4.0 (#459)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "bun.lock", "package.json", "tests/ci-hardening.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"musememory\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"musememory\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"musememory\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0165",
+      "point": 165,
+      "commit": "df650bd203ce1944cd7b82bae38e929cca3b9e25",
+      "shortCommit": "df650bd",
+      "date": "2026-11-10",
+      "type": "feat",
+      "scope": "secretary",
+      "summary": "phrase-level department evidence + mechanical held-out hygiene (#458)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "routing-baseline.json",
+        "scripts/check-routing-matrix.ts",
+        "scripts/sync-dispatch.ts",
+        "skills/context-orchestration/secretary/references/mode-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/routing-fixture-hygiene.test.ts",
+        "tests/routing-matrix.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"phrase level\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"phrase level\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/imported-agent-instructions.md"],
+          "evidence": "phrase \"department evidence\" found in .agents/context/imported-agent-instructions.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0166",
+      "point": 166,
+      "commit": "0c1da280a5525532f5bc0cd1fb79a0026a3aab70",
+      "shortCommit": "0c1da28",
+      "date": "2026-11-11",
+      "type": "fix",
+      "scope": "gate",
+      "summary": "stop the landing gate from poisoning its own commit (#460)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "scripts/check-landed.ts", "tests/landing-gate-rollup.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"landing gate\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0167",
+      "point": 167,
+      "commit": "747dd6488acb026028ed719f79f391ae7e25e306",
+      "shortCommit": "747dd64",
+      "date": "2026-11-11",
+      "type": "feat",
+      "scope": "ci",
+      "summary": "routing matrix as its own job + quality published in the README (#461)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/landing-gate.yml",
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "scripts/sync-routing-docs.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/routing-docs.test.ts",
+        "tests/routing-matrix.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"routing matrix\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"routing matrix\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"routing matrix\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
+    },
+    {
+      "id": "DP-0168",
+      "point": 168,
+      "commit": "545a94f3d0d3d2418fb6e575f3bbb97ab1f755e4",
+      "shortCommit": "545a94f",
+      "date": "2026-11-11",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "publish mode coverage, register the v9 blind set (#462)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/audit-routing-coverage.ts",
+        "scripts/sync-routing-docs.ts",
+        "tests/fixtures/routing-eval/heldout-v9.json",
+        "tests/routing-coverage.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.5.0",
+      "createdAt": "2026-11-10T21:40:54.967Z"
     }
   ]
 }

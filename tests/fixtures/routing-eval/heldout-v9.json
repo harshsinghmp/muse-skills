@@ -1,0 +1,202 @@
+[
+  {
+    "id": "v9-01",
+    "prompt": "we renamed the webhook payload fields last thursday and the api reference, the postman collection and the integrator onboarding page all still show the old names",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v9-02",
+    "prompt": "adding a fourth playbook to our internal skill pack and it has to match the ones already in there — same description grammar, same reference layout, no rule stated twice",
+    "expect": "updateagents:skill-authoring"
+  },
+  {
+    "id": "v9-03",
+    "prompt": "three years of pull request threads and the same reviewer keeps writing 'wrap this write in a transaction' — turn the repeated corrections into standing rules",
+    "expect": "updateagents:pr-review-mining"
+  },
+  {
+    "id": "v9-04",
+    "prompt": "our repo page still has the grey default avatar, an empty description, and the social preview card crops to unreadable text on linkedin",
+    "expect": "git:github-seo-and-presentation"
+  },
+  {
+    "id": "v9-05",
+    "prompt": "this retry loop points at a ticket number that no longer resolves anywhere — find whoever added it and what was breaking that week",
+    "expect": "git:history"
+  },
+  {
+    "id": "v9-06",
+    "prompt": "i'm not signing off on anything you produce until the option you rejected is written down next to the one you picked, and the approval itself is recorded somewhere we can point at in six months",
+    "expect": "secretary:staff-work-doctrine"
+  },
+  {
+    "id": "v9-07",
+    "prompt": "our handoff notes are three paragraphs of vibes with no file paths, so every new session has to re-explore the repo from scratch",
+    "expect": "relay:audit"
+  },
+  {
+    "id": "v9-08",
+    "prompt": "a live timestamp sits at the top of the preamble so every single turn bills the full input again — freeze the stable half, push the changing half to the bottom",
+    "expect": "context-anchor:prompt-cache-partitioning"
+  },
+  {
+    "id": "v9-09",
+    "prompt": "by turn nine the agent has forgotten the schema we agreed at the top, because every build log gets dumped in whole instead of collapsed to a two-line receipt",
+    "expect": "context-anchor:observation-masking"
+  },
+  {
+    "id": "v9-10",
+    "prompt": "forty minutes of the agent editing the same file, and its own error output is now the biggest thing in the window — roll the workspace back to the last green commit and reset the conversation",
+    "expect": "context-anchor:deadlock-breaker"
+  },
+  {
+    "id": "v9-11",
+    "prompt": "eleven tasks queued for tonight, four of them write to the same config file and two share an uncommitted migration — which can run together and which have to queue",
+    "expect": "coupling-router:coupling-matrix"
+  },
+  {
+    "id": "v9-12",
+    "prompt": "the whitepaper claims our inference is 30% cheaper and cites 'a recent stanford study' — either there's a DOI attached to that sentence or the sentence comes out",
+    "expect": "evidence-ledger:academic-citation-protocol"
+  },
+  {
+    "id": "v9-13",
+    "prompt": "the invoice formatter imports the user model, the user model imports billing, and now a one-line copy change touches nine files",
+    "expect": "code-review:coupling-audit"
+  },
+  {
+    "id": "v9-14",
+    "prompt": "reviewer left fourteen comments on my branch and about half of them are wrong — i want to push back on those without either caving or sounding defensive",
+    "expect": "code-review:receiving-feedback"
+  },
+  {
+    "id": "v9-15",
+    "prompt": "we've run forty reviews this quarter; catalogue the recurring defect classes with stable ids so we can tell whether the same mistake keeps coming back",
+    "expect": "code-review:themes"
+  },
+  {
+    "id": "v9-16",
+    "prompt": "someone gets a shell on that box and the first thing they do is read the env file and curl the metadata endpoint — stop that at execution time, not in a policy doc",
+    "expect": "muse-security:runtime"
+  },
+  {
+    "id": "v9-17",
+    "prompt": "the cve list is already triaged and prioritised — now i need a patch order, a canary rollout and a rollback trigger per host",
+    "expect": "muse-security:remediate"
+  },
+  {
+    "id": "v9-18",
+    "prompt": "before this goes to the client i want the automated half of the gate: response headers checked and every breakpoint screenshotted for overflow, not another round of opinions",
+    "expect": "gauntlet-loop:web-security-visual-gate"
+  },
+  {
+    "id": "v9-19",
+    "prompt": "how do i prove the de-ai pass didn't quietly move a number or drop a quote — i want that check actually run, not asserted in a paragraph",
+    "expect": "humanize:verification"
+  },
+  {
+    "id": "v9-20",
+    "prompt": "house rules for anything we publish: no em dashes, no 'delve', sentence case headings, and never open with a rhetorical question",
+    "expect": "humanize:style-guide"
+  },
+  {
+    "id": "v9-21",
+    "prompt": "ship day minus three: three different corner radii in use, two shadow scales, dead components nobody imports, and a commented-out block from 2022",
+    "expect": "refactor:polish"
+  },
+  {
+    "id": "v9-22",
+    "prompt": "the orders table renders 200 rows and typing in the filter box lags about half a second — profile it before anyone reaches for virtualization",
+    "expect": "refactor:perf"
+  },
+  {
+    "id": "v9-23",
+    "prompt": "the settings screen is forty toggles in one flat column, nothing is grouped, and nothing warns you which save is the destructive one",
+    "expect": "refactor:ui"
+  },
+  {
+    "id": "v9-24",
+    "prompt": "here's the URL. skip the palette — i want the responsive grid and flex structure written down so a frontend can rebuild the page without the screenshot",
+    "expect": "designscope:layout-tree-extraction"
+  },
+  {
+    "id": "v9-25",
+    "prompt": "i don't want another essay about the site — give me the design brief in the exact section order my design leads read every week",
+    "expect": "designscope:output-template"
+  },
+  {
+    "id": "v9-26",
+    "prompt": "make the order confirm feel celebratory",
+    "expect": "animate:delight"
+  },
+  {
+    "id": "v9-27",
+    "prompt": "architecture page needs the request journey as moving svg — packets travelling between services, dashes flowing along the pipes, and no javascript bundle attached",
+    "expect": "animate:technical-diagrams"
+  },
+  {
+    "id": "v9-28",
+    "prompt": "mid-quarter and i suspect two of the five repos are dead weight — score the health signals now instead of waiting for the retreat to argue about it",
+    "expect": "periodic-retreat:audit"
+  },
+  {
+    "id": "v9-29",
+    "prompt": "the cleaner we scheduled last month wiped a browser profile twice — before it runs again i want the exclusion list proven, not assumed",
+    "expect": "clean-system-cache:audit"
+  },
+  {
+    "id": "v9-30",
+    "prompt": "the dev server says port 3000 in use every morning after some watcher crashes overnight, and last week a contractor installed a package npm has never heard of",
+    "expect": "webdev:technical-resilience"
+  },
+  {
+    "id": "v9-31",
+    "prompt": "the editors want to schedule a post, preview it before publish, and never open a markdown file again. model the content types around that, then tell me what the frontend has to render.",
+    "expect": "webdev:cms"
+  },
+  {
+    "id": "v9-32",
+    "prompt": "we sell to finance directors, average deal is 40k, sales cycle five months. i've never run anything but search ads — where does the money go on this platform",
+    "expect": "paidads:linkedin"
+  },
+  {
+    "id": "v9-33",
+    "prompt": "cheap display across the open web, 60k to spend, but the client is a bank and will not appear next to anything grim — buy it without gambling the brand",
+    "expect": "paidads:programmatic"
+  },
+  {
+    "id": "v9-34",
+    "prompt": "instagram comments are full of 'is this a scam' plus the same three questions, nobody replies, and the DMs are worse",
+    "expect": "smm:community"
+  },
+  {
+    "id": "v9-35",
+    "prompt": "90 second product demo — vertical for reels, 16:9 cut for the site, one payoff instead of a feature tour",
+    "expect": "content:video"
+  },
+  {
+    "id": "v9-36",
+    "prompt": "the klaviyo account landed with forty flows, twelve of which nobody can name, and i doubt any of them have real exit conditions",
+    "expect": "crm:audit"
+  },
+  {
+    "id": "v9-37",
+    "prompt": "three clients on one drive and i just found client C's pricing deck sitting in client A's folder. i want the walls up before the next contractor logs in, and that includes the credentials.",
+    "expect": "ops:vault"
+  },
+  {
+    "id": "v9-38",
+    "prompt": "new brand signed friday, kickoff is tuesday — i want everything we know about them, their market and their existing assets in one place before that call",
+    "expect": "brand:intake"
+  },
+  {
+    "id": "v9-39",
+    "prompt": "closing call went well and the account exec takes over monday — pass the whole thing across with the objections raised and the numbers we actually promised",
+    "expect": "gtm:handover"
+  },
+  {
+    "id": "v9-40",
+    "prompt": "nightly playwright run over the six paths that make us money: login, add to cart, checkout, refund, password reset and the admin export",
+    "expect": "qa-launch:e2e"
+  }
+]

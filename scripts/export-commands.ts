@@ -20,6 +20,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { commandDestinations, type HarnessFormat, loadHarnessRegistry } from "./harness-registry";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const SKILLS_JSON_PATH = path.join(REPO_ROOT, "skills.json");
@@ -32,6 +33,10 @@ interface SkillItem {
   category: string;
   priority: number;
   aliases?: string[];
+  /** Curated council lead (Sol / Jasper / Crew / Nexus, or a pair). */
+  councilLead?: string;
+  /** Mode used when routing cannot infer one. */
+  defaultMode?: string;
 }
 
 interface SkillsRegistry {
@@ -39,55 +44,26 @@ interface SkillsRegistry {
 }
 
 // ─── Council Lead Assignment Mapping ──────────────────────────────────────────
-const COUNCIL_LEADS: Record<string, string> = {
-  webdev: "Sol (Product Architect & Full-Stack Automator)",
-  database: "Sol (Product Architect & Full-Stack Automator)",
-  devops: "Sol (Product Architect & Full-Stack Automator)",
-  mobile: "Sol (Product Architect & Full-Stack Automator)",
-  automation: "Sol (Product Architect & Full-Stack Automator)",
-  telegram: "Sol (Product Architect & Full-Stack Automator)",
-  relay: "Sol (Product Architect & Full-Stack Automator)",
-  pua: "Sol (Product Architect & Full-Stack Automator)",
-  "new-project": "Sol (Product Architect & Full-Stack Automator)",
-  updatedocs: "Sol (Product Architect & Full-Stack Automator)",
-  "clean-system-cache": "Sol (Product Architect & Full-Stack Automator)",
-
-  design: "Jasper (Creative Technologist & Growth Mastermind)",
-  smm: "Jasper (Creative Technologist & Growth Mastermind)",
-  content: "Jasper (Creative Technologist & Growth Mastermind)",
-  seo: "Jasper (Creative Technologist & Growth Mastermind)",
-  crm: "Sol & Jasper (CRM Architect & Retention Copywriter)",
-  brand: "Jasper & Crew (Creative Technologist & Brand Strategy)",
-  growth: "Jasper & Crew (Growth Mastermind & Operations)",
-  animate: "Jasper (Creative Technologist & Growth Mastermind)",
-  designscope: "Jasper (Creative Technologist & Growth Mastermind)",
-  humanize: "Jasper (Creative Technologist & Growth Mastermind)",
-
-  ops: "Crew (Operations Lead & Client Delivery Specialist)",
-  accounts: "Crew (Operations Lead & Client Delivery Specialist)",
-  "client-comms": "Crew (Operations Lead & Client Delivery Specialist)",
-  retain: "Crew (Operations Lead & Client Delivery Specialist)",
-  gtm: "Crew (Operations Lead & Client Delivery Specialist)",
-  "sales-enablement": "Crew (Operations Lead & Client Delivery Specialist)",
-  paidads: "Crew & Jasper (Performance Marketing & Copy)",
-  coach: "Crew (Operations Lead & Agile Coach)",
-  "periodic-retreat": "Sol & Crew (Executive Architecture Strategy)",
-
-  secretary: "Nexus & Sol (Chief of Staff & Technical Governance)",
-  "code-review": "Nexus (Technical Director & Review Head)",
-  audit: "Nexus (Technical Director & Hardening Gate)",
-  "qa-launch": "Nexus (Technical Director & Verification Gate)",
-  "muse-security": "Nexus (Technical Director & Security Gate)",
-  refactor: "Nexus & Sol (Technical Director & Senior Architect)",
-  git: "Nexus (Technical Director & Release Governor)",
-  "gauntlet-loop": "Nexus (Technical Director & Adversarial Challenge)",
-  "dead-letter": "Nexus (Technical Director & Error Triage)",
-  "coupling-router": "Sol & Nexus (Technical Director & Architecture)",
-  "context-anchor": "Sol (Product Architect & State Governor)",
-  "evidence-ledger": "Crew & Nexus (Evidence Verification Gate)",
-  updateagents: "Nexus (Technical Director & Memory Governor)",
-  research: "Sol & Jasper (Architecture & Discovery)",
+/** Presentation-only annotations for a canonical lead from skills.json. */
+const LEAD_ROLES: Record<string, string> = {
+  Sol: "Sol (Product Architect & Full-Stack Automator)",
+  Jasper: "Jasper (Creative Technologist & Growth Mastermind)",
+  Crew: "Crew (Operations Lead & Client Delivery Specialist)",
+  Nexus: "Nexus (Technical Director & Review Head)",
+  "Sol & Jasper": "Sol & Jasper (Architecture & Growth)",
+  "Jasper & Crew": "Jasper & Crew (Creative & Operations)",
+  "Crew & Jasper": "Crew & Jasper (Operations & Creative)",
+  "Sol & Crew": "Sol & Crew (Architecture & Operations)",
+  "Nexus & Sol": "Nexus & Sol (Governance & Architecture)",
+  "Sol & Nexus": "Sol & Nexus (Architecture & Governance)",
+  "Crew & Nexus": "Crew & Nexus (Operations & Governance)",
 };
+
+/** Rendered lead for a skill: annotation when known, canonical value otherwise. */
+function renderLead(skill: SkillItem): string {
+  const lead = skill.councilLead ?? "Nexus";
+  return LEAD_ROLES[lead] ?? `${lead} (Technical Director)`;
+}
 
 // ─── High-Leverage Sub-Mode Aliases ──────────────────────────────────────────
 export const SUBMODE_ALIASES: Array<{ command: string; skill: string; mode: string; desc: string }> = [
@@ -238,12 +214,13 @@ function writeSkillModeCommands(
   destDir: string,
   skills: SkillItem[],
   generate: (skill: SkillItem, mode: string, desc: string) => string,
+  extension = ".md",
 ): number {
   let count = 0;
   for (const entry of getSkillModeCommands(skills)) {
     const parent = skills.find((s) => s.name === entry.skill);
     if (!parent) continue; // unreachable: entries are derived from `skills`
-    fs.writeFileSync(path.join(destDir, `${entry.command}.md`), generate(parent, entry.mode, entry.desc));
+    fs.writeFileSync(path.join(destDir, `${entry.command}${extension}`), generate(parent, entry.mode, entry.desc));
     count++;
   }
   return count;
@@ -257,18 +234,16 @@ export function getSkills(): SkillItem[] {
   return registry.skills;
 }
 
-export function generateCommandMarkdown(skill: SkillItem, mode?: string, customDesc?: string): string {
-  const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
+/** Markdown body shared by every harness that stores a prompt as markdown. */
+export function generateCommandBody(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const lead = renderLead(skill);
   const modeText = mode ? ` in \`${mode}\` mode` : "";
   const desc = customDesc || skill.description;
   const refPath = mode ? `references/${mode}.md` : "SKILL.md";
 
-  return `---
-description: "${desc.replace(/"/g, '\\"').slice(0, 200)}"
-argument-hint: "[task or objective]"
----
+  return `# Autonomous Agency Execution: \`${skill.name}\`${modeText}
 
-# Autonomous Agency Execution: \`${skill.name}\`${modeText}
+${desc}
 
 You are executing the canonical Muse Department **\`${skill.name}\`**${modeText} governed by **${lead}**.
 
@@ -280,8 +255,60 @@ You are executing the canonical Muse Department **\`${skill.name}\`**${modeText}
 `;
 }
 
+function frontmatterDescription(desc: string): string {
+  return desc.replace(/"/g, '\\"').replace(/\n/g, " ").slice(0, 200);
+}
+
+/** OpenCode, Claude Code, Codex, Cursor and Roo all read markdown commands. */
+export function generateMarkdownCommand(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+description: "${frontmatterDescription(desc)}"
+argument-hint: "[task or objective]"
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/** Continue prompts carry name/description/invokable frontmatter and a .prompt extension. */
+export function generateContinuePrompt(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+name: ${mode ? `${skill.name}-${mode}` : skill.name}
+description: "${frontmatterDescription(desc)}"
+invokable: true
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/** GitHub Copilot prompt files use the .prompt.md extension. */
+export function generateCopilotPrompt(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+description: "${frontmatterDescription(desc)}"
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/**
+ * Gemini CLI (and Antigravity) require TOML: only `prompt` (required) and
+ * `description` (optional) are read. Markdown placed in .gemini/commands is
+ * never discovered, so this is the only valid format for that harness.
+ */
+export function generateGeminiToml(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  const body = generateCommandBody(skill, mode, customDesc).replace(/"""/g, '\\"\\"\\"');
+  return `description = "${frontmatterDescription(desc)}"
+prompt = """
+${body}"""
+`;
+}
+
+/** Kept for the Windsurf workflow body (its files read as workflows, not commands). */
 export function generateWorkflowMarkdown(skill: SkillItem, mode?: string, customDesc?: string): string {
-  const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
+  const lead = renderLead(skill);
   const modeText = mode ? ` - Mode: ${mode}` : "";
   const desc = customDesc || skill.description;
 
@@ -296,100 +323,109 @@ ${desc}
 `;
 }
 
+export interface HarnessSurface {
+  /** Full suffix for the command file, including the dot (".md", ".toml", ".prompt"). */
+  extension: string;
+  generate: (skill: SkillItem, mode?: string, customDesc?: string) => string;
+}
+
+/** One writer for every harness: 46 skills + 10 aliases + one command per routable mode. */
+export function writeHarnessCommands(destDir: string, skills: SkillItem[], surface: HarnessSurface): number {
+  fs.mkdirSync(destDir, { recursive: true });
+  const { extension, generate } = surface;
+  let count = 0;
+
+  for (const skill of skills) {
+    fs.writeFileSync(path.join(destDir, `${skill.name}${extension}`), generate(skill));
+    count++;
+  }
+
+  for (const sub of SUBMODE_ALIASES) {
+    const parentSkill = skills.find((s) => s.name === sub.skill);
+    if (!parentSkill) continue;
+    fs.writeFileSync(path.join(destDir, `${sub.command}${extension}`), generate(parentSkill, sub.mode, sub.desc));
+    count++;
+  }
+
+  count += writeSkillModeCommands(destDir, skills, (skill, mode, desc) => generate(skill, mode, desc), extension);
+
+  return count;
+}
+
+const MARKDOWN_SURFACE: HarnessSurface = { extension: ".md", generate: generateMarkdownCommand };
+
+/** OpenCode: ~/.config/opencode/commands (global) or .opencode/commands (project). */
 export function exportOpenCodeCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
-
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
-  }
-
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
-  return count;
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
 }
 
-export function exportWindsurfWorkflows(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
-
-  for (const skill of skills) {
-    const wfPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(wfPath, generateWorkflowMarkdown(skill));
-    count++;
-  }
-
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const wfPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(wfPath, generateWorkflowMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateWorkflowMarkdown);
-
-  return count;
+/** Claude Code: ~/.claude/commands (user) or .claude/commands (project). */
+export function exportClaudeCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
 }
 
+/** Cursor: .cursor/commands (project). */
 export function exportCursorCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
 
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
+/** Roo Code: .roo/commands (project) or ~/.roo/commands (global). */
+export function exportRooCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
+
+/**
+ * Older versions wrote markdown into .gemini/commands, which Gemini CLI never
+ * discovers. Remove only OUR named leftovers — never an unrelated user file.
+ */
+function pruneSupersededMarkdown(destDir: string, skills: SkillItem[]): number {
+  if (!fs.existsSync(destDir)) return 0;
+  const known = new Set([
+    ...skills.map((skill) => skill.name),
+    ...SUBMODE_ALIASES.map((alias) => alias.command),
+    ...getSkillModeCommands(skills).map((entry) => entry.command),
+  ]);
+  let removed = 0;
+  for (const file of fs.readdirSync(destDir)) {
+    if (!file.endsWith(".md")) continue;
+    const command = file.slice(0, -".md".length);
+    if (!known.has(command)) continue;
+    fs.rmSync(path.join(destDir, file), { force: true });
+    removed++;
   }
+  return removed;
+}
 
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
+/** Qwen Code: .qwen/commands (markdown with optional frontmatter; TOML is deprecated there). */
+export function exportQwenCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
 
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
+/**
+ * Gemini CLI was retired on 2026-06-18 in favour of Antigravity CLI, which
+ * reads `.agents/skills` directly. TOML commands remain here because Gemini CLI
+ * paid/enterprise users still exist and Antigravity's migration imports them.
+ */
+/** Gemini CLI (legacy) / Antigravity: .gemini/commands — TOML only. */
+export function exportGeminiCommands(destDir: string, skills: SkillItem[]): number {
+  const count = writeHarnessCommands(destDir, skills, { extension: ".toml", generate: generateGeminiToml });
+  pruneSupersededMarkdown(destDir, skills);
   return count;
 }
 
-export function exportAntigravityCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
+/** GitHub Copilot: .github/prompts/*.prompt.md (project). */
+export function exportCopilotPrompts(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".prompt.md", generate: generateCopilotPrompt });
+}
 
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
-  }
+/** Continue: .continue/prompts (project) or ~/.continue/prompts (global). */
+export function exportContinuePrompts(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".prompt", generate: generateContinuePrompt });
+}
 
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
-  return count;
+/** Windsurf: .windsurf/workflows (project). */
+export function exportWindsurfWorkflows(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".md", generate: generateWorkflowMarkdown });
 }
 
 /**
@@ -405,6 +441,33 @@ export function resolveSkillSourceDir(skill: SkillItem): string {
     throw new Error(`Skill path '${raw}' escapes the repository.`);
   }
   return path.basename(resolved) === "SKILL.md" ? path.dirname(resolved) : resolved;
+}
+
+export const MUSE_VERSION_MARKER = ".muse-version";
+
+/**
+ * Mirror an installed skills tree into another harness's skill root as
+ * symlinks, so an update to the canonical root is immediately visible there
+ * (Amp and Claude Code both read their own roots; copying would go stale).
+ * Falls back to a copy where symlinks are unavailable (e.g. Windows without
+ * developer mode).
+ */
+export function exportSkillMirror(root: string, skills: SkillItem[], sourceRoot: string): number {
+  fs.mkdirSync(root, { recursive: true });
+  let count = 0;
+  for (const skill of skills) {
+    const source = path.resolve(sourceRoot, skill.name);
+    if (!fs.existsSync(source)) continue;
+    const dest = path.join(root, skill.name);
+    fs.rmSync(dest, { recursive: true, force: true });
+    try {
+      fs.symlinkSync(source, dest, "dir");
+    } catch {
+      fs.cpSync(source, dest, { recursive: true });
+    }
+    count++;
+  }
+  return count;
 }
 
 export function exportSkills(targetDir: string, skills: SkillItem[]): number {
@@ -428,6 +491,25 @@ export function exportSkills(targetDir: string, skills: SkillItem[]): number {
     fs.rmSync(destDir, { recursive: true, force: true });
     fs.renameSync(staging, destDir);
     count++;
+  }
+
+  // Stamp the installed version so `muse doctor` / `muse update` can tell
+  // whether this device is current without guessing from skill versions.
+  let version = "unknown";
+  try {
+    version = (JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "package.json"), "utf8")) as { version: string })
+      .version;
+  } catch {
+    // keep "unknown": doctor reports an unversioned install rather than failing
+  }
+  fs.writeFileSync(path.join(targetDir, MUSE_VERSION_MARKER), `v${version}\n`, "utf8");
+
+  // Ship the harness map with the install so the portable doctor (which lives
+  // inside a skill) can verify destinations without the repository.
+  const registrySource = path.join(REPO_ROOT, "harness.json");
+  if (fs.existsSync(registrySource)) {
+    fs.mkdirSync(path.join(targetDir, ".muse"), { recursive: true });
+    fs.copyFileSync(registrySource, path.join(targetDir, ".muse", "harness.json"));
   }
 
   // Never swallow a missing source: a silent skip is exactly how the exporter
@@ -492,57 +574,51 @@ export function runSetup(options: SetupOptions = {}): void {
   const doWire = options.wireAgentsMd === true;
 
   // 1. Install Skills
+  const canonicalSkillsRoot = options.skillsDest || path.join(userHome, ".agents", "skills");
   if (doSkills) {
-    const dest = options.skillsDest || path.join(userHome, ".agents", "skills");
-    const count = exportSkills(dest, skills);
-    console.log(`✅ Skills: Installed ${count} canonical departments → ${dest}`);
+    const count = exportSkills(canonicalSkillsRoot, skills);
+    console.log(`✅ Skills: Installed ${count} canonical departments → ${canonicalSkillsRoot}`);
+
+    // Amp reads ~/.agents/skills already; Claude Code reads its own root, and
+    // Amp also falls back to it. Mirror by symlink so refreshes propagate.
+    for (const mirror of [path.join(userHome, ".claude", "skills"), path.join(workspaceRoot, ".claude", "skills")]) {
+      if (!fs.existsSync(path.dirname(mirror))) continue;
+      const mirrored = exportSkillMirror(mirror, skills, canonicalSkillsRoot);
+      console.log(`✅ Skills (Claude Code / Amp): ${mirrored} linked → ${mirror}`);
+    }
   }
 
   // 2. Export Slash Commands
+  // Destinations come from harness.json — the same registry the install matrix,
+  // `muse doctor`, and the README table read — so a retired surface (Codex
+  // prompts, Gemini commands beyond migration) is never written silently.
   let totalCommands = 0;
   if (doCommands) {
-    // OpenCode (Global & Workspace)
-    const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
-    const opencodeLocal = path.join(workspaceRoot, ".opencode", "commands");
-    if (fs.existsSync(path.dirname(opencodeGlobal))) {
-      const c = exportOpenCodeCommands(opencodeGlobal, skills);
-      console.log(`✅ OpenCode (Global): Exported ${c} commands → ${opencodeGlobal}`);
-      totalCommands += c;
-    }
-    if (fs.existsSync(path.join(workspaceRoot, ".opencode"))) {
-      const c = exportOpenCodeCommands(opencodeLocal, skills);
-      console.log(`✅ OpenCode (Local): Exported ${c} commands → ${opencodeLocal}`);
-      totalCommands += c;
-    }
+    const registry = loadHarnessRegistry();
+    const generators: Record<HarnessFormat, (skill: SkillItem, mode?: string, desc?: string) => string> = {
+      markdown: generateMarkdownCommand,
+      toml: generateGeminiToml,
+      copilot: generateCopilotPrompt,
+      continue: generateContinuePrompt,
+      workflow: generateWorkflowMarkdown,
+    };
 
-    // Antigravity / Gemini CLI (Global & Workspace)
-    const geminiGlobal = path.join(userHome, ".gemini", "commands");
-    const geminiLocal = path.join(workspaceRoot, ".gemini", "commands");
-    if (fs.existsSync(path.dirname(geminiGlobal))) {
-      const c = exportAntigravityCommands(geminiGlobal, skills);
-      console.log(`✅ Antigravity/Gemini (Global): Exported ${c} commands → ${geminiGlobal}`);
-      totalCommands += c;
-    }
-    if (fs.existsSync(path.join(workspaceRoot, ".gemini"))) {
-      const c = exportAntigravityCommands(geminiLocal, skills);
-      console.log(`✅ Antigravity/Gemini (Local): Exported ${c} commands → ${geminiLocal}`);
-      totalCommands += c;
-    }
-
-    // Windsurf Workflows
-    const windsurfLocal = path.join(workspaceRoot, ".windsurf", "workflows");
-    if (fs.existsSync(path.join(workspaceRoot, ".windsurf"))) {
-      const c = exportWindsurfWorkflows(windsurfLocal, skills);
-      console.log(`✅ Windsurf: Exported ${c} workflows → ${windsurfLocal}`);
-      totalCommands += c;
-    }
-
-    // Cursor Commands
-    const cursorLocal = path.join(workspaceRoot, ".cursor", "commands");
-    if (fs.existsSync(path.join(workspaceRoot, ".cursor"))) {
-      const c = exportCursorCommands(cursorLocal, skills);
-      console.log(`✅ Cursor: Exported ${c} commands → ${cursorLocal}`);
-      totalCommands += c;
+    for (const destination of commandDestinations(registry, { home: userHome, workspace: workspaceRoot })) {
+      if (!fs.existsSync(destination.gate)) continue;
+      // Gemini's writer also prunes markdown left by the pre-TOML releases.
+      const count =
+        destination.format === "toml"
+          ? exportGeminiCommands(destination.dir, skills)
+          : writeHarnessCommands(destination.dir, skills, {
+              extension: destination.extension,
+              generate: generators[destination.format],
+            });
+      const scope = destination.scope === "global" ? "Global" : "Local";
+      const label =
+        destination.harness.status === "legacy" ? `${destination.harness.label} (legacy)` : destination.harness.label;
+      const noun = destination.format === "workflow" ? "workflows" : "commands";
+      console.log(`✅ ${label} (${scope}): Exported ${count} ${noun} → ${destination.dir}`);
+      totalCommands += count;
     }
   }
 
