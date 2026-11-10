@@ -20,14 +20,21 @@ const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const BASELINE_PATH = path.join(REPO_ROOT, "routing-baseline.json");
 const FIXTURES = path.join(REPO_ROOT, "tests", "fixtures", "routing-eval");
 
-/** Distribution name → fixture. Training is the tuned set; the rest are unseen. */
-const DISTRIBUTIONS: Array<{ name: string; fixture: string; kind: "training" | "held-out" }> = [
-  { name: "training", fixture: "prompts.json", kind: "training" },
-  { name: "v5-agency", fixture: "heldout-v5.json", kind: "held-out" },
-  { name: "v6-engineering", fixture: "heldout-v6.json", kind: "held-out" },
-  { name: "v7-blind", fixture: "heldout-v7.json", kind: "held-out" },
-  { name: "v8-blind", fixture: "heldout-v8.json", kind: "held-out" },
-];
+/**
+ * Discovered from the directory, not a hardcoded list: a new blind set is picked
+ * up automatically, and an unregistered one fails the gate until the baseline is
+ * refreshed deliberately.
+ */
+function discoverDistributions(): Array<{ name: string; fixture: string; kind: "training" | "held-out" }> {
+  const fixtures = fs.readdirSync(FIXTURES).filter((file) => file.endsWith(".json"));
+  return fixtures
+    .map((fixture) => {
+      if (fixture === "prompts.json") return { name: "training", fixture, kind: "training" as const };
+      const name = fixture.replace(/^heldout-/, "").replace(/\.json$/, "");
+      return { name, fixture, kind: "held-out" as const };
+    })
+    .sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind === "training" ? -1 : 1));
+}
 
 export interface DistributionResult {
   name: string;
@@ -48,7 +55,7 @@ export interface RoutingBaseline {
 
 export interface MatrixRegression {
   name: string;
-  metric: "exact" | "department";
+  metric: "exact" | "department" | "unregistered";
   baseline: number;
   current: number;
 }
@@ -85,9 +92,11 @@ function evaluate(fixture: string): { exact: number; department: number; total: 
   };
 }
 
-export function runMatrix(): DistributionResult[] {
-  return DISTRIBUTIONS.map((distribution) => {
-    const result = evaluate(distribution.fixture);
+export async function runMatrix(): Promise<DistributionResult[]> {
+  const distributions = discoverDistributions();
+  const evaluated = await Promise.all(distributions.map((distribution) => evaluate(distribution.fixture)));
+  return distributions.map((distribution, index) => {
+    const result = evaluated[index];
     return {
       name: distribution.name,
       kind: distribution.kind,
@@ -105,7 +114,12 @@ export function compareToBaseline(results: DistributionResult[], baseline: Routi
   const regressions: MatrixRegression[] = [];
   for (const result of results) {
     const recorded = baseline.distributions[result.name];
-    if (!recorded) continue; // a new distribution has nothing to regress against
+    if (!recorded) {
+      // A fixture the baseline has never seen must be registered deliberately,
+      // otherwise a new blind set could be added and silently ignored.
+      regressions.push({ name: result.name, metric: "unregistered", baseline: 0, current: result.exact });
+      continue;
+    }
     if (result.exact < recorded.exact) {
       regressions.push({ name: result.name, metric: "exact", baseline: recorded.exact, current: result.exact });
     }
@@ -134,10 +148,10 @@ export function buildBaseline(results: DistributionResult[]): RoutingBaseline {
   };
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const args = Bun.argv.slice(2);
   const json = args.includes("--json");
-  const results = runMatrix();
+  const results = await runMatrix();
   const invalid = results.filter((result) => result.invalidPredictions > 0);
 
   if (args.includes("--update")) {
@@ -164,6 +178,12 @@ function main(): void {
     if (regressions.length > 0) {
       console.error("\n❌ Routing regressions against the baseline:");
       for (const regression of regressions) {
+        if (regression.metric === "unregistered") {
+          console.error(
+            `   - ${regression.name}: fixture not in the baseline — run sync:routing:baseline and explain it`,
+          );
+          continue;
+        }
         console.error(`   - ${regression.name}: ${regression.metric} ${regression.baseline} → ${regression.current}`);
       }
       console.error("   Improve the change, or run --update and justify lowering the baseline in the PR.");
@@ -176,4 +196,4 @@ function main(): void {
   process.exit(regressions.length === 0 && invalid.length === 0 ? 0 : 1);
 }
 
-if (import.meta.main) main();
+if (import.meta.main) await main();

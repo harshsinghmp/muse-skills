@@ -139,6 +139,15 @@ function modeSignal(skillDir: string, mode: string): { heading: string; anchors:
   const anchors: string[] = [];
   for (const raw of text.split("\n")) {
     const line = raw.trim();
+    if (line.startsWith("## ")) {
+      const section = line
+        .replace(/^##\s+/, "")
+        .replace(/[`*_]/g, "")
+        .trim();
+      if (section.length >= 4) anchors.push(trim(section, 60));
+      if (anchors.length >= 8) break;
+      continue;
+    }
     if (line === "" || line.startsWith("#") || line.startsWith("```")) continue;
     const cleaned = line
       .replace(/^[-*\d.]+\s+/, "")
@@ -149,12 +158,12 @@ function modeSignal(skillDir: string, mode: string): { heading: string; anchors:
     for (const sentence of cleaned.split(/(?<=[.!?])\s+/)) {
       if (sentence.length < 20) continue;
       anchors.push(trim(sentence, 90));
-      if (anchors.length >= 5) break;
+      if (anchors.length >= 8) break;
     }
-    if (anchors.length >= 5) break;
+    if (anchors.length >= 8) break;
   }
-  // Scoring keeps the opening prose (it measured better than anchors alone);
-  // anchors are the human-reviewable view of the same intent.
+  // Scoring still needs the opening prose: anchors alone measured 1-2 prompts
+  // worse on the engineering/blind sets. Anchors remain the reviewable view.
   const prose = text
     .split("\n")
     .slice(1)
