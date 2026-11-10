@@ -42,6 +42,8 @@ interface RegistrySkill {
 interface HarnessTarget {
   label: string;
   dir: string;
+  /** File suffix the harness requires (".md", ".toml", ".prompt", ".prompt.md"). */
+  extension: string;
   /** Noun the CLI uses in its per-harness summary line. */
   noun: "commands" | "workflows";
 }
@@ -54,12 +56,70 @@ function readRegistry(): RegistrySkill[] {
 /** The harness destinations `runSetup` writes into, given the dirs that exist. */
 function harnessTargets(home: string, workspace: string): HarnessTarget[] {
   return [
-    { label: "opencode (global)", dir: path.join(home, ".config", "opencode", "commands"), noun: "commands" },
-    { label: "opencode (workspace)", dir: path.join(workspace, ".opencode", "commands"), noun: "commands" },
-    { label: "gemini/antigravity (global)", dir: path.join(home, ".gemini", "commands"), noun: "commands" },
-    { label: "gemini/antigravity (workspace)", dir: path.join(workspace, ".gemini", "commands"), noun: "commands" },
-    { label: "windsurf (workspace)", dir: path.join(workspace, ".windsurf", "workflows"), noun: "workflows" },
-    { label: "cursor (workspace)", dir: path.join(workspace, ".cursor", "commands"), noun: "commands" },
+    {
+      label: "opencode (global)",
+      dir: path.join(home, ".config", "opencode", "commands"),
+      extension: ".md",
+      noun: "commands",
+    },
+    {
+      label: "opencode (workspace)",
+      dir: path.join(workspace, ".opencode", "commands"),
+      extension: ".md",
+      noun: "commands",
+    },
+    { label: "claude-code (global)", dir: path.join(home, ".claude", "commands"), extension: ".md", noun: "commands" },
+    {
+      label: "claude-code (workspace)",
+      dir: path.join(workspace, ".claude", "commands"),
+      extension: ".md",
+      noun: "commands",
+    },
+    { label: "codex (prompts)", dir: path.join(home, ".codex", "prompts"), extension: ".md", noun: "commands" },
+    {
+      label: "gemini/antigravity (global)",
+      dir: path.join(home, ".gemini", "commands"),
+      extension: ".toml",
+      noun: "commands",
+    },
+    {
+      label: "gemini/antigravity (workspace)",
+      dir: path.join(workspace, ".gemini", "commands"),
+      extension: ".toml",
+      noun: "commands",
+    },
+    {
+      label: "windsurf (workspace)",
+      dir: path.join(workspace, ".windsurf", "workflows"),
+      extension: ".md",
+      noun: "workflows",
+    },
+    {
+      label: "cursor (workspace)",
+      dir: path.join(workspace, ".cursor", "commands"),
+      extension: ".md",
+      noun: "commands",
+    },
+    { label: "roo (global)", dir: path.join(home, ".roo", "commands"), extension: ".md", noun: "commands" },
+    { label: "roo (workspace)", dir: path.join(workspace, ".roo", "commands"), extension: ".md", noun: "commands" },
+    {
+      label: "copilot (workspace)",
+      dir: path.join(workspace, ".github", "prompts"),
+      extension: ".prompt.md",
+      noun: "commands",
+    },
+    {
+      label: "continue (global)",
+      dir: path.join(home, ".continue", "prompts"),
+      extension: ".prompt",
+      noun: "commands",
+    },
+    {
+      label: "continue (workspace)",
+      dir: path.join(workspace, ".continue", "prompts"),
+      extension: ".prompt",
+      noun: "commands",
+    },
   ];
 }
 
@@ -86,10 +146,10 @@ function sha256File(file: string): string {
   return createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 }
 
-function markdownFiles(dir: string): string[] {
+function commandFiles(dir: string, extension: string): string[] {
   return fs
     .readdirSync(dir)
-    .filter((file) => file.endsWith(".md"))
+    .filter((file) => file.endsWith(extension))
     .sort();
 }
 
@@ -109,11 +169,11 @@ beforeEach(() => {
   installedSkillsRoot = path.join(fakeHome, ".agents", "skills");
 
   // Global harnesses the CLI detects by directory existence.
-  for (const dir of [".config/opencode", ".gemini"]) {
+  for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue"]) {
     fs.mkdirSync(path.join(fakeHome, dir), { recursive: true });
   }
   // Workspace harnesses.
-  for (const dir of [".opencode", ".gemini", ".windsurf", ".cursor"]) {
+  for (const dir of [".opencode", ".gemini", ".claude", ".cursor", ".windsurf", ".roo", ".github", ".continue"]) {
     fs.mkdirSync(path.join(fakeWorkspace, dir), { recursive: true });
   }
 
@@ -178,24 +238,27 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     const stdout = cleanRun();
     const skills = readRegistry();
     const harnesses = harnessTargets(fakeHome, fakeWorkspace);
-    const expectedFiles = [
-      ...skills.map((skill) => `${skill.name}.md`),
-      ...SKILL_MODE_COMMANDS.map((entry) => `${entry.command}.md`),
-      ...SUBMODE_ALIASES.map((alias) => `${alias.command}.md`),
-    ].sort();
 
     expect(SUBMODE_ALIASES.length).toBe(EXPECTED_ALIASES);
-    expect(expectedFiles.length).toBe(EXPECTED_COMMANDS_PER_HARNESS);
 
+    let exported = 0;
     for (const harness of harnesses) {
+      const expectedFiles = [
+        ...skills.map((skill) => `${skill.name}${harness.extension}`),
+        ...SKILL_MODE_COMMANDS.map((entry) => `${entry.command}${harness.extension}`),
+        ...SUBMODE_ALIASES.map((alias) => `${alias.command}${harness.extension}`),
+      ].sort();
+      expect(expectedFiles.length).toBe(EXPECTED_COMMANDS_PER_HARNESS);
+
       expect(fs.existsSync(harness.dir)).toBe(true);
-      const files = markdownFiles(harness.dir);
+      const files = commandFiles(harness.dir, harness.extension);
       expect(files.length).toBe(EXPECTED_COMMANDS_PER_HARNESS);
       expect(files).toEqual(expectedFiles);
       expect(stdout).toContain(`${EXPECTED_COMMANDS_PER_HARNESS} ${harness.noun} → ${harness.dir}`);
+      exported += files.length;
     }
 
-    expect(stdout).toContain(`(${EXPECTED_COMMANDS_PER_HARNESS * harnesses.length} slash commands exported)`);
+    expect(stdout).toContain(`(${exported} slash commands exported)`);
   });
 
   it("resolution property: every path a command tells the agent to load exists in the installed tree", () => {
@@ -206,7 +269,7 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     let modeRefs = 0;
 
     for (const harness of harnesses) {
-      for (const file of markdownFiles(harness.dir)) {
+      for (const file of commandFiles(harness.dir, harness.extension)) {
         const body = fs.readFileSync(path.join(harness.dir, file), "utf8");
         const refs = extractInstalledRefs(body);
 

@@ -42,7 +42,7 @@ export interface MatrixReport {
   hookScripts: number;
   commandSurface: number;
   skillCount: number;
-  destinations: Array<{ label: string; dir: string; files: number; expected: number }>;
+  destinations: Array<{ label: string; dir: string; extension: string; files: number; expected: number }>;
   checks: MatrixCheck[];
 }
 
@@ -118,11 +118,12 @@ export function runInstallMatrix(): MatrixReport {
     add("harness-config", harnesses.length >= 13, `agent-dirs.conf declares ${harnesses.length} harness dirs`);
 
     // Harnesses present in the workspace, plus the dirs the exporter writes into.
-    for (const dir of [...harnesses, ".opencode", ".gemini", ".cursor", ".windsurf"]) {
+    for (const dir of [...harnesses, ".opencode", ".gemini", ".cursor", ".windsurf", ".roo", ".github", ".continue"]) {
       fs.mkdirSync(path.join(workspace, dir), { recursive: true });
     }
-    fs.mkdirSync(path.join(home, ".config", "opencode"), { recursive: true });
-    fs.mkdirSync(path.join(home, ".gemini"), { recursive: true });
+    for (const dir of [".config/opencode", ".gemini", ".claude", ".codex", ".roo", ".continue"]) {
+      fs.mkdirSync(path.join(home, dir), { recursive: true });
+    }
 
     const env: NodeJS.ProcessEnv = { ...process.env, HOME: home, PATH: `${binDir}:${process.env.PATH ?? ""}` };
 
@@ -180,25 +181,47 @@ export function runInstallMatrix(): MatrixReport {
     add("export-exit", setupFirst.status === 0, `export-commands --setup exited ${setupFirst.status}`);
 
     const destinations = [
-      { label: "opencode (global)", dir: path.join(home, ".config", "opencode", "commands"), noun: "commands" },
-      { label: "opencode (workspace)", dir: path.join(workspace, ".opencode", "commands"), noun: "commands" },
-      { label: "gemini (global)", dir: path.join(home, ".gemini", "commands"), noun: "commands" },
-      { label: "gemini (workspace)", dir: path.join(workspace, ".gemini", "commands"), noun: "commands" },
-      { label: "cursor (workspace)", dir: path.join(workspace, ".cursor", "commands"), noun: "commands" },
-      { label: "windsurf (workspace)", dir: path.join(workspace, ".windsurf", "workflows"), noun: "workflows" },
+      { label: "opencode (global)", dir: path.join(home, ".config", "opencode", "commands"), extension: ".md" },
+      { label: "opencode (workspace)", dir: path.join(workspace, ".opencode", "commands"), extension: ".md" },
+      { label: "claude (global)", dir: path.join(home, ".claude", "commands"), extension: ".md" },
+      { label: "claude (workspace)", dir: path.join(workspace, ".claude", "commands"), extension: ".md" },
+      { label: "codex (prompts)", dir: path.join(home, ".codex", "prompts"), extension: ".md" },
+      { label: "gemini (global, toml)", dir: path.join(home, ".gemini", "commands"), extension: ".toml" },
+      { label: "gemini (workspace, toml)", dir: path.join(workspace, ".gemini", "commands"), extension: ".toml" },
+      { label: "cursor (workspace)", dir: path.join(workspace, ".cursor", "commands"), extension: ".md" },
+      { label: "windsurf (workspace)", dir: path.join(workspace, ".windsurf", "workflows"), extension: ".md" },
+      { label: "roo (global)", dir: path.join(home, ".roo", "commands"), extension: ".md" },
+      { label: "roo (workspace)", dir: path.join(workspace, ".roo", "commands"), extension: ".md" },
+      { label: "copilot (workspace)", dir: path.join(workspace, ".github", "prompts"), extension: ".prompt.md" },
+      { label: "continue (global)", dir: path.join(home, ".continue", "prompts"), extension: ".prompt" },
+      { label: "continue (workspace)", dir: path.join(workspace, ".continue", "prompts"), extension: ".prompt" },
     ].map((destination) => {
       const files = fs.existsSync(destination.dir)
-        ? fs.readdirSync(destination.dir).filter((file) => file.endsWith(".md")).length
+        ? fs.readdirSync(destination.dir).filter((file) => file.endsWith(destination.extension)).length
         : 0;
-      return { ...destination, files, expected: surface };
+      const stray = fs.existsSync(destination.dir)
+        ? fs.readdirSync(destination.dir).filter((file) => !file.endsWith(destination.extension)).length
+        : 0;
+      return { ...destination, files, stray, expected: surface };
     });
     const wrong = destinations.filter((destination) => destination.files !== destination.expected);
     add(
       "commands-exported",
       wrong.length === 0,
       wrong.length === 0
-        ? `${surface} ${"commands"} in ${destinations.length} destinations`
+        ? `${surface} commands in ${destinations.length} destinations`
         : wrong.map((d) => `${d.label}: ${d.files}/${d.expected}`).join("; "),
+    );
+
+    // A format mismatch is invisible-but-fatal: markdown in .gemini/commands is
+    // never discovered, so every file in a destination must carry its suffix.
+    const strayFiles = destinations.filter((destination) => destination.stray > 0);
+    add(
+      "command-formats",
+      strayFiles.length === 0,
+      strayFiles.length === 0
+        ? "every destination contains only its required file format"
+        : strayFiles.map((d) => `${d.label}: ${d.stray} file(s) with the wrong extension`).join("; "),
     );
 
     const skillsDest = path.join(home, ".agents", "skills");

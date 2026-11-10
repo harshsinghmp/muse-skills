@@ -11,7 +11,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { exportAntigravityCommands, exportOpenCodeCommands, getSkills, isModeRefFile } from "./export-commands";
+import { exportGeminiCommands, exportOpenCodeCommands, getSkills, isModeRefFile } from "./export-commands";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const DISPATCH_MD_PATH = path.join(
@@ -192,7 +192,7 @@ export function syncAll(): void {
 
   const geminiGlobal = path.join(userHome, ".gemini", "commands");
   if (fs.existsSync(path.dirname(geminiGlobal))) {
-    exportAntigravityCommands(geminiGlobal, skills);
+    exportGeminiCommands(geminiGlobal, skills);
   }
 
   console.log("🎉 Secretary Dispatcher & Multi-Harness Commands are fully synchronized!");

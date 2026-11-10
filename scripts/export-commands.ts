@@ -238,12 +238,13 @@ function writeSkillModeCommands(
   destDir: string,
   skills: SkillItem[],
   generate: (skill: SkillItem, mode: string, desc: string) => string,
+  extension = ".md",
 ): number {
   let count = 0;
   for (const entry of getSkillModeCommands(skills)) {
     const parent = skills.find((s) => s.name === entry.skill);
     if (!parent) continue; // unreachable: entries are derived from `skills`
-    fs.writeFileSync(path.join(destDir, `${entry.command}.md`), generate(parent, entry.mode, entry.desc));
+    fs.writeFileSync(path.join(destDir, `${entry.command}${extension}`), generate(parent, entry.mode, entry.desc));
     count++;
   }
   return count;
@@ -257,18 +258,16 @@ export function getSkills(): SkillItem[] {
   return registry.skills;
 }
 
-export function generateCommandMarkdown(skill: SkillItem, mode?: string, customDesc?: string): string {
+/** Markdown body shared by every harness that stores a prompt as markdown. */
+export function generateCommandBody(skill: SkillItem, mode?: string, customDesc?: string): string {
   const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
   const modeText = mode ? ` in \`${mode}\` mode` : "";
   const desc = customDesc || skill.description;
   const refPath = mode ? `references/${mode}.md` : "SKILL.md";
 
-  return `---
-description: "${desc.replace(/"/g, '\\"').slice(0, 200)}"
-argument-hint: "[task or objective]"
----
+  return `# Autonomous Agency Execution: \`${skill.name}\`${modeText}
 
-# Autonomous Agency Execution: \`${skill.name}\`${modeText}
+${desc}
 
 You are executing the canonical Muse Department **\`${skill.name}\`**${modeText} governed by **${lead}**.
 
@@ -280,6 +279,58 @@ You are executing the canonical Muse Department **\`${skill.name}\`**${modeText}
 `;
 }
 
+function frontmatterDescription(desc: string): string {
+  return desc.replace(/"/g, '\\"').replace(/\n/g, " ").slice(0, 200);
+}
+
+/** OpenCode, Claude Code, Codex, Cursor and Roo all read markdown commands. */
+export function generateMarkdownCommand(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+description: "${frontmatterDescription(desc)}"
+argument-hint: "[task or objective]"
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/** Continue prompts carry name/description/invokable frontmatter and a .prompt extension. */
+export function generateContinuePrompt(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+name: ${mode ? `${skill.name}-${mode}` : skill.name}
+description: "${frontmatterDescription(desc)}"
+invokable: true
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/** GitHub Copilot prompt files use the .prompt.md extension. */
+export function generateCopilotPrompt(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  return `---
+description: "${frontmatterDescription(desc)}"
+---
+
+${generateCommandBody(skill, mode, customDesc)}`;
+}
+
+/**
+ * Gemini CLI (and Antigravity) require TOML: only `prompt` (required) and
+ * `description` (optional) are read. Markdown placed in .gemini/commands is
+ * never discovered, so this is the only valid format for that harness.
+ */
+export function generateGeminiToml(skill: SkillItem, mode?: string, customDesc?: string): string {
+  const desc = customDesc || skill.description;
+  const body = generateCommandBody(skill, mode, customDesc).replace(/"""/g, '\\"\\"\\"');
+  return `description = "${frontmatterDescription(desc)}"
+prompt = """
+${body}"""
+`;
+}
+
+/** Kept for the Windsurf workflow body (its files read as workflows, not commands). */
 export function generateWorkflowMarkdown(skill: SkillItem, mode?: string, customDesc?: string): string {
   const lead = COUNCIL_LEADS[skill.name] || "Nexus (Technical Director)";
   const modeText = mode ? ` - Mode: ${mode}` : "";
@@ -296,100 +347,104 @@ ${desc}
 `;
 }
 
+export interface HarnessSurface {
+  /** Full suffix for the command file, including the dot (".md", ".toml", ".prompt"). */
+  extension: string;
+  generate: (skill: SkillItem, mode?: string, customDesc?: string) => string;
+}
+
+/** One writer for every harness: 46 skills + 10 aliases + one command per routable mode. */
+export function writeHarnessCommands(destDir: string, skills: SkillItem[], surface: HarnessSurface): number {
+  fs.mkdirSync(destDir, { recursive: true });
+  const { extension, generate } = surface;
+  let count = 0;
+
+  for (const skill of skills) {
+    fs.writeFileSync(path.join(destDir, `${skill.name}${extension}`), generate(skill));
+    count++;
+  }
+
+  for (const sub of SUBMODE_ALIASES) {
+    const parentSkill = skills.find((s) => s.name === sub.skill);
+    if (!parentSkill) continue;
+    fs.writeFileSync(path.join(destDir, `${sub.command}${extension}`), generate(parentSkill, sub.mode, sub.desc));
+    count++;
+  }
+
+  count += writeSkillModeCommands(destDir, skills, (skill, mode, desc) => generate(skill, mode, desc), extension);
+
+  return count;
+}
+
+const MARKDOWN_SURFACE: HarnessSurface = { extension: ".md", generate: generateMarkdownCommand };
+
+/** OpenCode: ~/.config/opencode/commands (global) or .opencode/commands (project). */
 export function exportOpenCodeCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
-
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
-  }
-
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
-  return count;
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
 }
 
-export function exportWindsurfWorkflows(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
-
-  for (const skill of skills) {
-    const wfPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(wfPath, generateWorkflowMarkdown(skill));
-    count++;
-  }
-
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const wfPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(wfPath, generateWorkflowMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateWorkflowMarkdown);
-
-  return count;
+/** Claude Code: ~/.claude/commands (user) or .claude/commands (project). */
+export function exportClaudeCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
 }
 
+/** Codex CLI custom prompts: ~/.codex/prompts (home-scoped; explicit invocation). */
+export function exportCodexPrompts(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
+
+/** Cursor: .cursor/commands (project). */
 export function exportCursorCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
 
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
+/** Roo Code: .roo/commands (project) or ~/.roo/commands (global). */
+export function exportRooCommands(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, MARKDOWN_SURFACE);
+}
+
+/**
+ * Older versions wrote markdown into .gemini/commands, which Gemini CLI never
+ * discovers. Remove only OUR named leftovers — never an unrelated user file.
+ */
+function pruneSupersededMarkdown(destDir: string, skills: SkillItem[]): number {
+  if (!fs.existsSync(destDir)) return 0;
+  const known = new Set([
+    ...skills.map((skill) => skill.name),
+    ...SUBMODE_ALIASES.map((alias) => alias.command),
+    ...getSkillModeCommands(skills).map((entry) => entry.command),
+  ]);
+  let removed = 0;
+  for (const file of fs.readdirSync(destDir)) {
+    if (!file.endsWith(".md")) continue;
+    const command = file.slice(0, -".md".length);
+    if (!known.has(command)) continue;
+    fs.rmSync(path.join(destDir, file), { force: true });
+    removed++;
   }
+  return removed;
+}
 
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
+/** Gemini CLI / Antigravity: .gemini/commands — TOML only. */
+export function exportGeminiCommands(destDir: string, skills: SkillItem[]): number {
+  const count = writeHarnessCommands(destDir, skills, { extension: ".toml", generate: generateGeminiToml });
+  pruneSupersededMarkdown(destDir, skills);
   return count;
 }
 
-export function exportAntigravityCommands(destDir: string, skills: SkillItem[]): number {
-  fs.mkdirSync(destDir, { recursive: true });
-  let count = 0;
+/** GitHub Copilot: .github/prompts/*.prompt.md (project). */
+export function exportCopilotPrompts(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".prompt.md", generate: generateCopilotPrompt });
+}
 
-  for (const skill of skills) {
-    const cmdPath = path.join(destDir, `${skill.name}.md`);
-    fs.writeFileSync(cmdPath, generateCommandMarkdown(skill));
-    count++;
-  }
+/** Continue: .continue/prompts (project) or ~/.continue/prompts (global). */
+export function exportContinuePrompts(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".prompt", generate: generateContinuePrompt });
+}
 
-  for (const sub of SUBMODE_ALIASES) {
-    const parentSkill = skills.find((s) => s.name === sub.skill);
-    if (parentSkill) {
-      const cmdPath = path.join(destDir, `${sub.command}.md`);
-      fs.writeFileSync(cmdPath, generateCommandMarkdown(parentSkill, sub.mode, sub.desc));
-      count++;
-    }
-  }
-
-  count += writeSkillModeCommands(destDir, skills, generateCommandMarkdown);
-
-  return count;
+/** Windsurf: .windsurf/workflows (project). */
+export function exportWindsurfWorkflows(destDir: string, skills: SkillItem[]): number {
+  return writeHarnessCommands(destDir, skills, { extension: ".md", generate: generateWorkflowMarkdown });
 }
 
 /**
@@ -499,51 +554,105 @@ export function runSetup(options: SetupOptions = {}): void {
   }
 
   // 2. Export Slash Commands
+  // Every destination is existence-gated: this engine never creates a harness
+  // directory the user did not already have.
   let totalCommands = 0;
+  const exportTo = (
+    label: string,
+    dest: string,
+    gate: string,
+    exporter: (dir: string, all: SkillItem[]) => number,
+    noun = "commands",
+  ) => {
+    if (!fs.existsSync(gate)) return;
+    const count = exporter(dest, skills);
+    console.log(`✅ ${label}: Exported ${count} ${noun} → ${dest}`);
+    totalCommands += count;
+  };
+
   if (doCommands) {
-    // OpenCode (Global & Workspace)
-    const opencodeGlobal = path.join(userHome, ".config", "opencode", "commands");
-    const opencodeLocal = path.join(workspaceRoot, ".opencode", "commands");
-    if (fs.existsSync(path.dirname(opencodeGlobal))) {
-      const c = exportOpenCodeCommands(opencodeGlobal, skills);
-      console.log(`✅ OpenCode (Global): Exported ${c} commands → ${opencodeGlobal}`);
-      totalCommands += c;
-    }
-    if (fs.existsSync(path.join(workspaceRoot, ".opencode"))) {
-      const c = exportOpenCodeCommands(opencodeLocal, skills);
-      console.log(`✅ OpenCode (Local): Exported ${c} commands → ${opencodeLocal}`);
-      totalCommands += c;
-    }
+    const markdown: Array<[string, string, string, (dir: string, all: SkillItem[]) => number]> = [
+      [
+        "OpenCode (Global)",
+        path.join(userHome, ".config", "opencode", "commands"),
+        path.join(userHome, ".config", "opencode"),
+        exportOpenCodeCommands,
+      ],
+      [
+        "OpenCode (Local)",
+        path.join(workspaceRoot, ".opencode", "commands"),
+        path.join(workspaceRoot, ".opencode"),
+        exportOpenCodeCommands,
+      ],
+      [
+        "Claude Code (Global)",
+        path.join(userHome, ".claude", "commands"),
+        path.join(userHome, ".claude"),
+        exportClaudeCommands,
+      ],
+      [
+        "Claude Code (Local)",
+        path.join(workspaceRoot, ".claude", "commands"),
+        path.join(workspaceRoot, ".claude"),
+        exportClaudeCommands,
+      ],
+      ["Codex (Prompts)", path.join(userHome, ".codex", "prompts"), path.join(userHome, ".codex"), exportCodexPrompts],
+      [
+        "Cursor (Local)",
+        path.join(workspaceRoot, ".cursor", "commands"),
+        path.join(workspaceRoot, ".cursor"),
+        exportCursorCommands,
+      ],
+      ["Roo Code (Global)", path.join(userHome, ".roo", "commands"), path.join(userHome, ".roo"), exportRooCommands],
+      [
+        "Roo Code (Local)",
+        path.join(workspaceRoot, ".roo", "commands"),
+        path.join(workspaceRoot, ".roo"),
+        exportRooCommands,
+      ],
+      [
+        "Copilot (Local)",
+        path.join(workspaceRoot, ".github", "prompts"),
+        path.join(workspaceRoot, ".github"),
+        exportCopilotPrompts,
+      ],
+      [
+        "Continue (Global)",
+        path.join(userHome, ".continue", "prompts"),
+        path.join(userHome, ".continue"),
+        exportContinuePrompts,
+      ],
+      [
+        "Continue (Local)",
+        path.join(workspaceRoot, ".continue", "prompts"),
+        path.join(workspaceRoot, ".continue"),
+        exportContinuePrompts,
+      ],
+    ];
+    for (const [label, dest, gate, exporter] of markdown) exportTo(label, dest, gate, exporter);
 
-    // Antigravity / Gemini CLI (Global & Workspace)
-    const geminiGlobal = path.join(userHome, ".gemini", "commands");
-    const geminiLocal = path.join(workspaceRoot, ".gemini", "commands");
-    if (fs.existsSync(path.dirname(geminiGlobal))) {
-      const c = exportAntigravityCommands(geminiGlobal, skills);
-      console.log(`✅ Antigravity/Gemini (Global): Exported ${c} commands → ${geminiGlobal}`);
-      totalCommands += c;
-    }
-    if (fs.existsSync(path.join(workspaceRoot, ".gemini"))) {
-      const c = exportAntigravityCommands(geminiLocal, skills);
-      console.log(`✅ Antigravity/Gemini (Local): Exported ${c} commands → ${geminiLocal}`);
-      totalCommands += c;
-    }
+    // Gemini CLI / Antigravity require TOML, not markdown.
+    exportTo(
+      "Gemini/Antigravity (Global, TOML)",
+      path.join(userHome, ".gemini", "commands"),
+      path.join(userHome, ".gemini"),
+      exportGeminiCommands,
+    );
+    exportTo(
+      "Gemini/Antigravity (Local, TOML)",
+      path.join(workspaceRoot, ".gemini", "commands"),
+      path.join(workspaceRoot, ".gemini"),
+      exportGeminiCommands,
+    );
 
-    // Windsurf Workflows
-    const windsurfLocal = path.join(workspaceRoot, ".windsurf", "workflows");
-    if (fs.existsSync(path.join(workspaceRoot, ".windsurf"))) {
-      const c = exportWindsurfWorkflows(windsurfLocal, skills);
-      console.log(`✅ Windsurf: Exported ${c} workflows → ${windsurfLocal}`);
-      totalCommands += c;
-    }
-
-    // Cursor Commands
-    const cursorLocal = path.join(workspaceRoot, ".cursor", "commands");
-    if (fs.existsSync(path.join(workspaceRoot, ".cursor"))) {
-      const c = exportCursorCommands(cursorLocal, skills);
-      console.log(`✅ Cursor: Exported ${c} commands → ${cursorLocal}`);
-      totalCommands += c;
-    }
+    // Windsurf stores workflows, not commands.
+    exportTo(
+      "Windsurf (Workflows)",
+      path.join(workspaceRoot, ".windsurf", "workflows"),
+      path.join(workspaceRoot, ".windsurf"),
+      exportWindsurfWorkflows,
+      "workflows",
+    );
   }
 
   // 3. Wire Secretary into AGENTS.md
