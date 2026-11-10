@@ -136,6 +136,15 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
   });
 
+  test("dependabot update PRs target dev instead of main", () => {
+    const dependabot = read(".github/dependabot.yml");
+    const ecosystems = dependabot.split(/- package-ecosystem:/).slice(1);
+    expect(ecosystems.length).toBeGreaterThan(0);
+    for (const block of ecosystems) {
+      expect(block.slice(0, block.indexOf("schedule:"))).toContain('target-branch: "dev"');
+    }
+  });
+
   test("installer uses a pinned tag, verifies the commit, and fails closed", () => {
     const installer = read("scripts/install.sh");
     expect(installer).toContain("git clone --depth 1 --branch");
