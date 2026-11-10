@@ -10,8 +10,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
+  pull-requests: write
 
 concurrency:
   group: harness-health
@@ -43,6 +44,38 @@ jobs:
           else
             echo "status=failure" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Refresh the baseline when the docs grow
+        if: steps.scan.outputs.status == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          GROWTH=$(bun scripts/check-harness-health.ts --all --json | jq -c '.growth')
+          if [ "$GROWTH" = "{}" ]; then
+            echo "Baseline unchanged."
+            exit 0
+          fi
+          echo "Growth detected: $GROWTH"
+          if [ -n "$(gh pr list --state open --search 'chore(harness): refresh baseline' --json number --jq '.[0].number // empty')" ]; then
+            echo "A baseline PR is already open; leaving it alone."
+            exit 0
+          fi
+          bun scripts/check-harness-health.ts --all --update-baseline
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="chore/harness-baseline-$(date -u +%Y%m%d)"
+          git checkout -B "$BRANCH"
+          git add harness-health.baseline.json
+          git commit -m "chore(harness): refresh baseline"
+          git push -u origin "$BRANCH"
+          gh pr create --base dev --head "$BRANCH" \
+            --title "chore(harness): refresh baseline" \
+            --body "Automated baseline refresh: the watched docs now expose signals we had not recorded.
+
+          Growth: \`$GROWTH\`
+
+          This PR only updates \`harness-health.baseline.json\`. Shrinkage is still a failure — a removed signal is reported as \`regressed\` and never auto-accepted."
 
       - name: Track the result in an issue
         env:

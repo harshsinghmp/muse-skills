@@ -81,6 +81,16 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(result.skills).toBeGreaterThanOrEqual(46);
   }, 120_000);
 
+  test("harness baseline refresh cannot auto-accept a removed signal", () => {
+    const health = read(".github/workflows/harness-health.yml");
+    // Growth opens a PR; shrinkage fails the scan and never reaches --update-baseline.
+    expect(health).toContain("Refresh the baseline when the docs grow");
+    expect(health).toContain("if: steps.scan.outputs.status == 'success'");
+    expect(health).toContain("--update-baseline");
+    expect(health).toContain("contents: write");
+    expect(read("scripts/check-harness-health.ts")).toContain("regressed");
+  });
+
   test("weekly dependency refresh is tracked in an issue", () => {
     const refresh = read(".github/workflows/dependency-refresh.yml");
     expect(refresh).toContain("schedule:");

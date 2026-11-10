@@ -34,6 +34,18 @@ export function readBaseline(file = BASELINE_PATH): Baseline | null {
   }
 }
 
+/** Signals this run found that the baseline did not record (docs grew). */
+export function growthSignals(baseline: Baseline | null, findings: HealthFinding[]): Record<string, string[]> {
+  const growth: Record<string, string[]> = {};
+  for (const finding of findings) {
+    if (!finding.matched || finding.matched.length === 0) continue;
+    const known = baseline?.harnesses[finding.harness]?.matched ?? [];
+    const added = finding.matched.filter((signal) => !known.includes(signal));
+    if (added.length > 0) growth[finding.harness] = added;
+  }
+  return growth;
+}
+
 /** Signals the baseline recorded that this run no longer finds. */
 export function droppedSignals(baseline: Baseline | null, harnessId: string, matched: string[]): string[] {
   const before = baseline?.harnesses[harnessId]?.matched ?? [];
@@ -227,7 +239,8 @@ function main(): void {
       }
 
       if (json) {
-        console.log(JSON.stringify({ findings }, null, 2));
+        const baseline = readBaseline();
+        console.log(JSON.stringify({ findings, growth: growthSignals(baseline, findings) }, null, 2));
       } else {
         console.log("🩺 Harness health — docs pages scanned for retirement\n");
         for (const finding of findings) {
@@ -259,6 +272,14 @@ function main(): void {
         );
         console.error("   Re-check the docs page, then run with --update-baseline once the surface is confirmed.");
         process.exit(strict ? 1 : 0);
+      }
+      const growth = growthSignals(readBaseline(), findings);
+      if (Object.keys(growth).length > 0) {
+        console.log(
+          `\n📈 Baseline growth: ${Object.entries(growth)
+            .map(([harness, signals]) => `${harness} (${signals.join(", ")})`)
+            .join("; ")} — run with --update-baseline to record it.`,
+        );
       }
       const moved = findings.filter((finding) => finding.signal === "moved");
       if (moved.length > 0) {
