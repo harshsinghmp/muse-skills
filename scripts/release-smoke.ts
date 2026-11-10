@@ -3,13 +3,16 @@
  * release-smoke — verify a published release is installable and reproducible.
  *
  * Checks: tag exists, tag commit matches the release checksum asset, the
- * installer default ref matches the package version, and the release is public.
+ * installer default ref matches the package version, the release is public, and
+ * — the part that matters to a user — this exact tag installs into a sandbox
+ * and passes the portable doctor.
  *
  * Usage:
  *   bun scripts/release-smoke.ts [tag]
  */
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
@@ -69,6 +72,59 @@ if (!installer.includes(`releases/download/\${MUSE_SKILLS_REF}/checksums.txt`)) 
   fail("install.sh does not verify the release checksum asset");
 }
 
+/**
+ * Install this tag into a throwaway HOME and run the doctor that ships inside
+ * the skill. Checksums prove the artifact is intact; this proves it is usable.
+ */
+export function installSmoke(): { version: string; destinations: number; skills: number } {
+  const root = mkdtempSync(join(tmpdir(), "release-smoke-install-"));
+  const home = join(root, "home");
+  const workspace = join(root, "workspace");
+  try {
+    mkdirSync(home, { recursive: true });
+    mkdirSync(workspace, { recursive: true });
+    // Two harnesses present => two destinations the doctor will verify.
+    for (const dir of [join(home, ".claude"), join(home, ".qwen")]) mkdirSync(dir, { recursive: true });
+
+    const env = { ...process.env, HOME: home };
+    const setup = spawnSync("bun", [join(REPO_ROOT, "scripts/export-commands.ts"), "--setup"], {
+      cwd: workspace,
+      encoding: "utf8",
+      env,
+    });
+    if (setup.status !== 0) fail(`install into a clean sandbox failed: ${setup.stderr.trim() || setup.stdout.trim()}`);
+
+    const doctor = spawnSync("bun", [join(REPO_ROOT, "skills/core-engine/updateagents/scripts/doctor.ts"), "--json"], {
+      cwd: workspace,
+      encoding: "utf8",
+      env,
+    });
+    let report: {
+      ok: boolean;
+      version: string | null;
+      skills: number;
+      checks: Array<{ id: string; ok: boolean; detail: string }>;
+    };
+    try {
+      report = JSON.parse(doctor.stdout);
+    } catch {
+      fail(`doctor produced no parseable report: ${doctor.stderr.trim() || doctor.stdout.trim()}`);
+    }
+    const failed = report.checks.filter((check) => !check.ok).map((check) => `${check.id}: ${check.detail}`);
+    if (!report.ok || failed.length > 0) fail(`installed tree is inconsistent: ${failed.join("; ")}`);
+    if (report.version !== tag) fail(`installed version marker is ${report.version ?? "missing"}, expected ${tag}`);
+    if (doctor.status !== 0) fail(`doctor exited ${doctor.status} despite reporting ok`);
+
+    const surfaces = report.checks.find((check) => check.id === "harness-surfaces");
+    if (!surfaces?.ok) fail(`installed harness surfaces incomplete: ${surfaces?.detail ?? "missing check"}`);
+    return { version: report.version, destinations: 2, skills: report.skills };
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+const installed = installSmoke();
+
 console.log(
   [
     `✅ release smoke passed`,
@@ -76,5 +132,6 @@ console.log(
     `   release:  ${releaseData.url}`,
     `   asset:    checksums.txt (source-commit verified)`,
     `   installer default ref: ${tag}`,
+    `   install smoke: ${installed.skills} skills, ${installed.destinations} harness destinations, doctor green (${installed.version})`,
   ].join("\n"),
 );

@@ -65,7 +65,21 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(JSON.parse(read("package.json")).scripts["release:smoke"]).toBe("bun scripts/release-smoke.ts");
     expect(ci).toContain("bun run check:deps");
     expect(read(".github/workflows/release.yml")).toContain("bun run check:ledger");
+
+    // Checksums prove the artifact is intact; the install smoke proves it is usable.
+    const smokeScript = read("scripts/release-smoke.ts");
+    expect(smokeScript).toContain("installSmoke");
+    expect(smokeScript).toContain("updateagents/scripts/doctor.ts");
   });
+
+  test("the release smoke installs the tag and runs the shipped doctor", async () => {
+    const { installSmoke } = await import("../scripts/release-smoke");
+    const result = installSmoke();
+    const { version } = JSON.parse(read("package.json")) as { version: string };
+    expect(result.version).toBe(`v${version}`);
+    expect(result.destinations).toBeGreaterThanOrEqual(2);
+    expect(result.skills).toBeGreaterThanOrEqual(46);
+  }, 120_000);
 
   test("weekly dependency refresh is tracked in an issue", () => {
     const refresh = read(".github/workflows/dependency-refresh.yml");
