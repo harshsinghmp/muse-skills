@@ -104,189 +104,216 @@
       "flags": "i",
       "department": "qa-launch",
       "mode": "gate",
-      "reason": "Direct test verification match"
+      "reason": "Direct test verification match",
+      "confidence": "strong"
     },
     {
       "pattern": "pull\\s+request|code\\s+review|review\\s+this\\s+(pr|diff|patch)",
       "flags": "i",
       "department": "code-review",
       "mode": "pr-context",
-      "reason": "Pull-request review match"
+      "reason": "Pull-request review match",
+      "confidence": "strong"
     },
     {
       "pattern": "statement\\s+of\\s+work|\\bsow\\b",
       "flags": "i",
       "department": "ops",
       "mode": "sow",
-      "reason": "Statement-of-work match"
+      "reason": "Statement-of-work match",
+      "confidence": "strong"
     },
     {
       "pattern": "press\\s+release|public\\s+relations",
       "flags": "i",
       "department": "growth",
       "mode": "pr",
-      "reason": "Public relations match"
+      "reason": "Public relations match",
+      "confidence": "strong"
     },
     {
       "pattern": "p&l|profit\\s+and\\s+loss|client\\s+pnl",
       "flags": "i",
       "department": "accounts",
       "mode": "client-pnl",
-      "reason": "Client P&L reporting match"
+      "reason": "Client P&L reporting match",
+      "confidence": "strong"
     },
     {
       "pattern": "^lint\\b|run\\s+lint|type-check|biome\\s+check",
       "flags": "i",
       "department": "code-review",
       "mode": "triage-matrix",
-      "reason": "Direct lint/type-check hygiene match"
+      "reason": "Direct lint/type-check hygiene match",
+      "confidence": "strong"
     },
     {
       "pattern": "ai[-\\s]readiness|ai-ready|readiness\\s+score",
       "flags": "i",
       "department": "updateagents",
       "mode": "audit",
-      "reason": "Direct AI readiness audit match"
+      "reason": "Direct AI readiness audit match",
+      "confidence": "strong"
     },
     {
       "pattern": "sync\\s+context|update\\s+agents|update\\s+memory",
       "flags": "i",
       "department": "updateagents",
       "mode": "memory-file-priorities",
-      "reason": "Direct context synchronization match"
+      "reason": "Direct context synchronization match",
+      "confidence": "hint"
     },
     {
       "pattern": "checkout\\s+(page|funnel)|stripe\\s+payments|payment\\s+integration|funnel\\s+page",
       "flags": "i",
       "department": "webdev",
       "mode": "funnel",
-      "reason": "E-Commerce checkout and payments match"
+      "reason": "E-Commerce checkout and payments match",
+      "confidence": "strong"
     },
     {
       "pattern": "react\\s+native|expo\\b|flutter",
       "flags": "i",
       "department": "mobile",
       "mode": "cross",
-      "reason": "Cross-platform mobile framework match"
+      "reason": "Cross-platform mobile framework match",
+      "confidence": "strong"
     },
     {
       "pattern": "bundle\\s+size|page\\s+load|lighthouse\\s+score",
       "flags": "i",
       "department": "webdev",
       "mode": "performance",
-      "reason": "Web performance budget match"
+      "reason": "Web performance budget match",
+      "confidence": "hint"
     },
     {
       "pattern": "competitor\\s+(analysis|dossier)|competitive\\s+landscape",
       "flags": "i",
       "department": "research",
       "mode": "competitor-analysis",
-      "reason": "Competitor analysis match"
+      "reason": "Competitor analysis match",
+      "confidence": "strong"
     },
     {
       "pattern": "\\bretrospective\\b|\\bretro\\b",
       "flags": "i",
       "department": "ops",
       "mode": "retro",
-      "reason": "Project retrospective match"
+      "reason": "Project retrospective match",
+      "confidence": "strong"
     },
     {
       "pattern": "system\\s+cache|free\\s+disk\\s+space|clean\\s+(the\\s+)?cache",
       "flags": "i",
       "department": "clean-system-cache",
       "mode": "audit",
-      "reason": "System cache cleanup match"
+      "reason": "System cache cleanup match",
+      "confidence": "strong"
     },
     {
       "pattern": "buyer\\s+persona|customer\\s+persona",
       "flags": "i",
       "department": "brand",
       "mode": "persona",
-      "reason": "Buyer persona match"
+      "reason": "Buyer persona match",
+      "confidence": "strong"
     },
     {
       "pattern": "broken\\s+links?|link\\s+integrity",
       "flags": "i",
       "department": "audit",
       "mode": "hygiene-rules",
-      "reason": "Documentation link-integrity match"
+      "reason": "Documentation link-integrity match",
+      "confidence": "strong"
     },
     {
       "pattern": "swarm\\s+mesh|task\\s+claim|mesh\\s+protocol",
       "flags": "i",
       "department": "coupling-router",
       "mode": "mesh",
-      "reason": "Swarm mesh claim-protocol match"
+      "reason": "Swarm mesh claim-protocol match",
+      "confidence": "strong"
     },
     {
       "pattern": "agent\\s+swarm|swarm\\s+dispatcher|\\bdag\\b|multi-agent\\s+quorum",
       "flags": "i",
       "department": "coupling-router",
       "mode": "swarm",
-      "reason": "Agent swarm dispatcher match"
+      "reason": "Agent swarm dispatcher match",
+      "confidence": "strong"
     },
     {
       "pattern": "ci\\/cd|cicd|github\\s+actions|deploy\\s+pipeline",
       "flags": "i",
       "department": "devops",
       "mode": "cicd",
-      "reason": "CI/CD pipeline match"
+      "reason": "CI/CD pipeline match",
+      "confidence": "strong"
     },
     {
       "pattern": "nurture\\s+(email|sequence|campaign)|drip\\s+campaign",
       "flags": "i",
       "department": "crm",
       "mode": "nurture",
-      "reason": "Nurture sequence match"
+      "reason": "Nurture sequence match",
+      "confidence": "hint"
     },
     {
       "pattern": "^refactor\\b|clean\\s+up\\s+and\\s+refactor",
       "flags": "i",
       "department": "refactor",
       "mode": "code",
-      "reason": "Explicit refactoring request match"
+      "reason": "Explicit refactoring request match",
+      "confidence": "strong"
     },
     {
       "pattern": "carousel|postiz|viral\\s+social|linkedin\\s+carousel",
       "flags": "i",
       "department": "smm",
       "mode": "carousel",
-      "reason": "Social carousel growth match"
+      "reason": "Social carousel growth match",
+      "confidence": "strong"
     },
     {
       "pattern": "onboard\\s+identity|onboarding\\s+interview|setup\\s+profile",
       "flags": "i",
       "department": "secretary",
       "mode": "onboard",
-      "reason": "Identity onboarding interview match"
+      "reason": "Identity onboarding interview match",
+      "confidence": "strong"
     },
     {
       "pattern": "morning\\s+(briefing|status)|^briefing\\b|session\\s+wakeup",
       "flags": "i",
       "department": "secretary",
       "mode": "orchestration",
-      "reason": "Morning executive orientation match"
+      "reason": "Morning executive orientation match",
+      "confidence": "strong"
     },
     {
       "pattern": "standup|daily\\s+standup|effort\\s+scorecard|eod\\s+check-?in",
       "flags": "i",
       "department": "coach",
       "mode": "team",
-      "reason": "Daily standup and controllable effort check-in match"
+      "reason": "Daily standup and controllable effort check-in match",
+      "confidence": "strong"
     },
     {
       "pattern": "scope\\s+creep|change\\s+order|client\\s+boundary|client\\s+digest",
       "flags": "i",
       "department": "coach",
       "mode": "client",
-      "reason": "Client boundary and change-order defense match"
+      "reason": "Client boundary and change-order defense match",
+      "confidence": "strong"
     },
     {
       "pattern": "founder\\s+leverage|70\\/30\\s+rule|founder\\s+bottleneck",
       "flags": "i",
       "department": "coach",
       "mode": "founder",
-      "reason": "Founder leverage diagnostic match"
+      "reason": "Founder leverage diagnostic match",
+      "confidence": "strong"
     }
   ],
   "intents": [
