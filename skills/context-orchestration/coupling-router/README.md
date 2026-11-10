@@ -91,3 +91,23 @@ The `swarm` mode provisions `scripts/swarm-dispatcher.ts` to coordinate complex 
 - **Byzantine Consensus Quorum (`SWM-002`)**: Requires $\ge 3$ agent votes with $> 66\%$ agreement before landing critical architectural seams or schema migrations.
 - **Global Token Ceiling Arbiter (`SWM-003`)**: Enforces an aggregate session token budget ceiling ($C \le 250\text{k}$) with automatic burn rate circuit breakers.
 - **Fast-Fail Dependent Pruning (`SWM-004`)**: Instantly prunes all downstream dependents if an upstream task fails, preventing token waste.
+
+---
+
+## 🕸️ Swarm Mesh — Node Identity, Task Claim & Failover
+
+The `swarm` mode decides *which tasks may run in parallel*; the `mesh` mode decides *which node runs each one* and proves afterwards that nothing ran twice. `scripts/swarm-mesh.ts` provides:
+
+- **Node Identity (`MESH-001`)**: every participant registers an `id/pid/startedAt/heartbeat` record before claiming; identifiers are sanitized so no id can escape the state directory.
+- **Atomic Task Claim (`MESH-002`)**: claims are `O_EXCL` file creations, so exactly one process wins; a second node receives `NO_TASK`, never a duplicate ownership record.
+- **Lease Heartbeat & Stale Failover (`MESH-003`)**: holders refresh heartbeats at milestones; an expired claim is takeover-eligible and the `attempt` number fences the previous holder out of completing.
+- **Ledger Reconciliation (`MESH-004`)**: `reconcile` rebuilds truth from plan + claims + nodes and exits non-zero on `UNCLAIMED_TASK`, `ORPHAN_CLAIM`, `STALE_CLAIM`, `PLAN_DRIFT`, or `UNKNOWN_NODE`.
+- **Local Multi-Process Simulation (`MESH-005`)**: `simulate --workers N` runs real processes against one state directory with no cloud control plane.
+
+```bash
+MESH=<skill-dir>/coupling-router/scripts/swarm-mesh.ts
+bun $MESH init      --state .agents/artifacts/swarm-mesh --plan plan.json
+bun $MESH claim     --state .agents/artifacts/swarm-mesh --node agent-a [--task <id>]
+bun $MESH simulate  --state .agents/artifacts/swarm-mesh --workers 3
+bun $MESH reconcile --state .agents/artifacts/swarm-mesh   # exit 0 = every task ran exactly once
+```
