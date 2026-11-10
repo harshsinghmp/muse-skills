@@ -13,15 +13,20 @@
  *
  * Usage:
  *   bun scripts/eval-routing.ts [--json] [--verbose] [--min-exact 0.95] [--min-skill 0.95]
+ *   bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout.json  # honest set, validity only
  */
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join, resolve } from "node:path";
 import { explainRouting, triagePrompt } from "../skills/context-orchestration/secretary/scripts/secretary";
 import { getSkillModeCommands, getSkills } from "./export-commands";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const FIXTURE_PATH = join(REPO_ROOT, "tests", "fixtures", "routing-eval", "prompts.json");
+
+function pathJoin(target: string): string {
+  return isAbsolute(target) ? target : resolve(REPO_ROOT, target);
+}
 
 export interface RoutingFixture {
   id: string;
@@ -147,7 +152,8 @@ function main(): void {
     minSkill: parseThreshold(argValue("--min-skill"), 0.95),
   };
 
-  const fixtures = JSON.parse(readFileSync(FIXTURE_PATH, "utf8")) as RoutingFixture[];
+  const fixturePath = argValue("--fixtures") ? pathJoin(argValue("--fixtures") as string) : FIXTURE_PATH;
+  const fixtures = JSON.parse(readFileSync(fixturePath, "utf8")) as RoutingFixture[];
   const ids = new Set<string>();
   const duplicates: string[] = [];
   for (const fixture of fixtures) {
@@ -168,7 +174,9 @@ function main(): void {
   }
 
   const pct = (value: number) => `${(value * 100).toFixed(1)}%`;
-  console.log(`🎯 Routing eval — ${report.total} prompt(s), ${routes.size} routable modes`);
+  console.log(
+    `🎯 Routing eval — ${fixturePath.replace(`${REPO_ROOT}/`, "")} · ${report.total} prompt(s), ${routes.size} routable modes`,
+  );
   console.log(
     `   • exact skill:mode : ${report.exact}/${report.total - report.invalidExpectations.length} (${pct(report.exactRate)}) · gate ${pct(thresholds.minExact)}`,
   );
