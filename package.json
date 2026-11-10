@@ -91,6 +91,8 @@
     "check:routing:v7": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v7.json --min-exact 0 --min-skill 0",
     "check:routing:v8": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v8.json --min-exact 0 --min-skill 0",
     "check:routing:matrix": "bun scripts/check-routing-matrix.ts",
+    "check:routing:coverage": "bun scripts/audit-routing-coverage.ts",
+    "sync:routing:coverage": "bun scripts/audit-routing-coverage.ts --write",
     "check:routing:docs": "bun scripts/sync-routing-docs.ts --check",
     "sync:routing:docs": "bun scripts/sync-routing-docs.ts --write",
     "sync:routing:baseline": "bun scripts/check-routing-matrix.ts --update",
