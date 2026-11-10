@@ -13,7 +13,32 @@
  *   bun scripts/check-harness-health.ts --all      # also check legacy/skills-only entries
  */
 
+import fs from "node:fs";
+import path from "node:path";
 import { type Harness, loadHarnessRegistry } from "./harness-registry";
+
+const REPO_ROOT = path.resolve(import.meta.dir, "..");
+const BASELINE_PATH = path.join(REPO_ROOT, "harness-health.baseline.json");
+
+export interface Baseline {
+  generatedAt: string;
+  harnesses: Record<string, { matched: string[]; signals: string[] }>;
+}
+
+export function readBaseline(file = BASELINE_PATH): Baseline | null {
+  if (!fs.existsSync(file)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8")) as Baseline;
+  } catch {
+    return null;
+  }
+}
+
+/** Signals the baseline recorded that this run no longer finds. */
+export function droppedSignals(baseline: Baseline | null, harnessId: string, matched: string[]): string[] {
+  const before = baseline?.harnesses[harnessId]?.matched ?? [];
+  return before.filter((signal) => !matched.includes(signal));
+}
 
 const DEATH_SIGNAL =
   /\b(retired?|retiring|retirement|sunset(?:ting)?|deprecated|end[ -]of[ -]life|eol|shut(?:ting)? down|no longer (?:supported|available)|replaced by|transitioning)\b/i;
@@ -25,8 +50,10 @@ export interface HealthFinding {
   harness: string;
   status: Harness["status"];
   /** retired: announcement wording. surface-changed: docs no longer mention the path we write. */
-  signal: "retired" | "surface-changed" | "moved" | "unreachable" | "ok";
+  signal: "retired" | "surface-changed" | "regressed" | "moved" | "unreachable" | "ok";
   evidence?: string;
+  /** Signals found on the page this run (used to refresh the baseline). */
+  matched?: string[];
 }
 
 /** Strip tags once, for both the sentence and the surface checks. */
@@ -150,12 +177,27 @@ export async function checkHarnessHealth(
       });
       continue;
     }
+    // A rewritten page can keep one signal while dropping another; compare
+    // against the pinned baseline so a removal is still visible.
+    const baseline = readBaseline();
+    const dropped = droppedSignals(baseline, harness.id, surface.matched);
+    if (dropped.length > 0) {
+      findings.push({
+        harness: harness.id,
+        status: harness.status,
+        signal: "regressed",
+        evidence: `documented signal(s) disappeared: ${dropped.join(", ")} (baseline ${baseline?.generatedAt ?? "unknown"})`,
+      });
+      continue;
+    }
+
     const moved = page.finalUrl.replace(/\/$/, "") !== harness.docs.replace(/\/$/, "");
     findings.push({
       harness: harness.id,
       status: harness.status,
       signal: moved ? "moved" : "ok",
       evidence: moved ? `redirected to ${page.finalUrl}` : surface.matched[0],
+      matched: surface.matched,
     });
   }
   return findings;
@@ -170,13 +212,27 @@ function main(): void {
 
   checkHarnessHealth({ offline, includeAll })
     .then((findings) => {
+      if (args.includes("--update-baseline")) {
+        const baseline: Baseline = {
+          generatedAt: new Date().toISOString().slice(0, 10),
+          harnesses: Object.fromEntries(
+            findings
+              .filter((finding) => finding.matched && finding.matched.length > 0)
+              .map((finding) => [finding.harness, { matched: finding.matched as string[], signals: [] }]),
+          ),
+        };
+        fs.writeFileSync(BASELINE_PATH, `${JSON.stringify(baseline, null, 2)}\n`, "utf8");
+        console.log(`✅ harness-health baseline updated (${Object.keys(baseline.harnesses).length} harnesses)`);
+        process.exit(0);
+      }
+
       if (json) {
         console.log(JSON.stringify({ findings }, null, 2));
       } else {
         console.log("🩺 Harness health — docs pages scanned for retirement\n");
         for (const finding of findings) {
           const icon =
-            finding.signal === "retired" || finding.signal === "surface-changed"
+            finding.signal === "retired" || finding.signal === "surface-changed" || finding.signal === "regressed"
               ? "❌"
               : finding.signal === "unreachable" || finding.signal === "moved"
                 ? "⚠️ "
@@ -194,6 +250,14 @@ function main(): void {
           `\n❌ ${retired.length} active harness(es) look retired upstream: ${retired.map((f) => f.harness).join(", ")}`,
         );
         console.error("   Update harness.json status and the affected exporter before the surface breaks silently.");
+        process.exit(strict ? 1 : 0);
+      }
+      const regressed = findings.filter((finding) => finding.signal === "regressed" && finding.status === "active");
+      if (regressed.length > 0) {
+        console.error(
+          `\n❌ ${regressed.length} active harness(es) lost a documented signal: ${regressed.map((f) => f.harness).join(", ")}`,
+        );
+        console.error("   Re-check the docs page, then run with --update-baseline once the surface is confirmed.");
         process.exit(strict ? 1 : 0);
       }
       const moved = findings.filter((finding) => finding.signal === "moved");

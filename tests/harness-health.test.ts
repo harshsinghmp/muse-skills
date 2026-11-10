@@ -1,5 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { checkHarnessHealth, checkSurfaceSignals, detectRetirementSignals } from "../scripts/check-harness-health";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import {
+  type Baseline,
+  checkHarnessHealth,
+  checkSurfaceSignals,
+  detectRetirementSignals,
+  droppedSignals,
+  readBaseline,
+} from "../scripts/check-harness-health";
 import { type Harness, loadHarnessRegistry } from "../scripts/harness-registry";
 
 const registry = loadHarnessRegistry();
@@ -54,6 +63,33 @@ describe("harness retirement detection", () => {
     const opencode = registry.harnesses.find((harness) => harness.id === "opencode") as Harness;
     // Login wall / client-rendered shell: nothing to judge from.
     expect(checkSurfaceSignals("<html><body><div id=root></div></body></html>", opencode).ok).toBe(true);
+  });
+
+  test("a rewritten page that drops a baseline signal is a regression", () => {
+    const baseline: Baseline = {
+      generatedAt: "2026-11-01",
+      harnesses: { opencode: { matched: [".opencode/commands", "commands/"], signals: [] } },
+    };
+    // Still documents one path (so surface-changed would not fire) but lost one.
+    expect(droppedSignals(baseline, "opencode", ["commands/"])).toEqual([".opencode/commands"]);
+    expect(droppedSignals(baseline, "opencode", ["commands/", ".opencode/commands"])).toEqual([]);
+    // A harness with no baseline entry cannot regress.
+    expect(droppedSignals(baseline, "roo", [])).toEqual([]);
+    expect(droppedSignals(null, "opencode", [])).toEqual([]);
+  });
+
+  test("the committed baseline is populated for every harness with documented signals", () => {
+    const baseline = readBaseline(join(import.meta.dir, "..", "harness-health.baseline.json"));
+    expect(baseline).not.toBeNull();
+    expect(baseline?.generatedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const ids = Object.keys(baseline?.harnesses ?? {});
+    expect(ids).toContain("opencode");
+    expect(ids).toContain("windsurf");
+    for (const id of ids) {
+      expect((baseline?.harnesses[id].matched ?? []).length).toBeGreaterThan(0);
+    }
+    // Sanity: the file is parseable JSON, not a stub.
+    JSON.parse(readFileSync(join(import.meta.dir, "..", "harness-health.baseline.json"), "utf8"));
   });
 
   test("offline mode reports every active harness without fetching", async () => {
