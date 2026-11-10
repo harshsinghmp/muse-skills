@@ -127,7 +127,7 @@ describe("eval-routing --verbose explanations", () => {
     // Every reported miss carries exactly one hint — and a clean run is not a failure.
     expect(hints).toBe(failureLines);
     if (failureLines === 0) expect(output).toContain("Routing quality gate passed");
-  });
+  }, 120_000);
 });
 
 describe("eval-routing explanation records", () => {
@@ -237,7 +237,7 @@ describe("eval-routing --json shape", () => {
     const { output } = runEval(["--json"]);
     const report = JSON.parse(output) as Record<string, unknown>;
     expect(Object.keys(report).sort()).toEqual(REPORT_KEYS);
-  });
+  }, 120_000);
 });
 
 describe("a failing gate explains itself without --verbose", () => {

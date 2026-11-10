@@ -54,7 +54,9 @@ jobs:
         run: bun run check:ledger
 
       - name: Verify tests pass
-        run: bun test
+        # Match CI: the default 5s cap is too tight for the routing benchmarks
+        # on a cold runner, and a timeout there blocks the release assets.
+        run: bun test --parallel --timeout 30000
 
       - name: Get version from tag
         id: version
