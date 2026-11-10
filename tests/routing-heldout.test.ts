@@ -6,7 +6,7 @@ import { getSkillModeCommands, getSkills } from "../scripts/export-commands";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const HELDOUT = JSON.parse(
-  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v2.json"), "utf8"),
+  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/heldout-v3.json"), "utf8"),
 ) as RoutingFixture[];
 
 const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry.skill}:${entry.mode}`));
@@ -34,13 +34,13 @@ describe("routing generalisation (held-out)", () => {
 
   test("held-out accuracy is measured and does not silently collapse", () => {
     const report = evaluateRouting(HELDOUT, routes, { minExact: 0, minSkill: 0 });
-    // Baseline measured 2026-11-10, after intent signals: 50% exact / 57.5%
-    // department (was 32.5% / 42.5% before). Floors sit below the measurement so
-    // a real regression trips them; they are not quality targets.
+    // v3 baseline measured 2026-11-10: 30% exact / 45% department on a set of
+    // finer-grained prompts (frontend vs backend, cro vs reporting). Floors sit
+    // below the measurement so a regression trips them; they are not targets.
     console.log(
       `[routing] held-out baseline: exact ${(report.exactRate * 100).toFixed(0)}% · department ${(report.departmentRate * 100).toFixed(0)}% (${report.exact}/${report.total})`,
     );
-    expect(report.exactRate).toBeGreaterThanOrEqual(0.45);
-    expect(report.departmentRate).toBeGreaterThanOrEqual(0.5);
+    expect(report.exactRate).toBeGreaterThanOrEqual(0.26);
+    expect(report.departmentRate).toBeGreaterThanOrEqual(0.4);
   });
 });

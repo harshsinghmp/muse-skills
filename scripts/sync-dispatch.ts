@@ -11,7 +11,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { exportGeminiCommands, exportOpenCodeCommands, getSkills, isModeRefFile } from "./export-commands";
+import {
+  exportGeminiCommands,
+  exportOpenCodeCommands,
+  getSkills,
+  isModeRefFile,
+  resolveSkillSourceDir,
+} from "./export-commands";
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const DISPATCH_MD_PATH = path.join(
@@ -21,6 +27,14 @@ const DISPATCH_MD_PATH = path.join(
   "secretary",
   "references",
   "dispatch.md",
+);
+const MODE_SIGNALS_PATH = path.join(
+  REPO_ROOT,
+  "skills",
+  "context-orchestration",
+  "secretary",
+  "references",
+  "mode-signals.json",
 );
 
 const COUNCIL_LEADS: Record<string, string> = {
@@ -141,6 +155,56 @@ export function buildDirectoryMarkdown(): string {
   return md;
 }
 
+/** A compact signal line for a mode: its heading plus the opening of its body. */
+function modeSignal(skillDir: string, mode: string): string {
+  const file = path.join(skillDir, "references", `${mode}.md`);
+  if (!fs.existsSync(file)) return "";
+  const text = fs.readFileSync(file, "utf8");
+  const heading =
+    text
+      .split("\n")
+      .find((line) => line.startsWith("# "))
+      ?.replace(/^#\s+/, "")
+      .replace(/^[^\w]+/, "")
+      .trim() ?? "";
+  // Keep the first section's prose and bullets: a mode's opening is its intent
+  // statement, and the bullets carry the vocabulary prompts actually use.
+  const body = text
+    .split("\n")
+    .slice(1)
+    .filter((line) => !line.startsWith("## "))
+    .join(" ")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return `${heading}. ${body}`.slice(0, 420);
+}
+
+/**
+ * Mode descriptions for the router. The installed secretary script cannot read
+ * other skills' references (different directories once installed), so the
+ * signals are generated here and shipped beside dispatch.md.
+ */
+export function buildModeSignals(): string {
+  const skills = getSkills();
+  const payload: Record<string, Record<string, string>> = {};
+  for (const skill of skills) {
+    const modes = getModesForSkill(skill.name);
+    if (modes.length === 0) continue;
+    const skillDir = resolveSkillSourceDir(skill);
+    payload[skill.name] = Object.fromEntries(modes.map((mode) => [mode, modeSignal(skillDir, mode)]));
+  }
+  return `${JSON.stringify(payload, null, 2)}\n`;
+}
+
+export function syncModeSignals(dryRun: boolean = false): boolean {
+  const next = buildModeSignals();
+  const current = fs.existsSync(MODE_SIGNALS_PATH) ? fs.readFileSync(MODE_SIGNALS_PATH, "utf8") : "";
+  if (current === next) return false;
+  if (!dryRun) fs.writeFileSync(MODE_SIGNALS_PATH, next);
+  return true;
+}
+
 export function syncDispatchMarkdown(dryRun: boolean = false): boolean {
   if (!fs.existsSync(DISPATCH_MD_PATH)) {
     throw new Error(`dispatch.md not found at ${DISPATCH_MD_PATH}`);
@@ -180,6 +244,11 @@ export function syncAll(): void {
   } else {
     console.log(`✨ Agency Directory is already up-to-date in ${DISPATCH_MD_PATH}`);
   }
+  if (syncModeSignals(false)) {
+    console.log(`✅ Updated router mode signals in ${MODE_SIGNALS_PATH}`);
+  } else {
+    console.log(`✨ Router mode signals are up-to-date in ${MODE_SIGNALS_PATH}`);
+  }
 
   // Refresh commands across active harnesses
   const skills = getSkills();
@@ -201,10 +270,10 @@ export function syncAll(): void {
 if (import.meta.main) {
   const args = process.argv.slice(2);
   if (args.includes("--check")) {
-    const hasDrift = syncDispatchMarkdown(true);
+    const hasDrift = syncDispatchMarkdown(true) || syncModeSignals(true);
     if (hasDrift) {
       console.error(
-        "❌ Drift detected in secretary/references/dispatch.md! Run 'bun scripts/sync-dispatch.ts' to synchronize.",
+        "❌ Drift detected in secretary/references/dispatch.md or mode-signals.json! Run 'bun scripts/sync-dispatch.ts' to synchronize.",
       );
       process.exit(1);
     } else {
