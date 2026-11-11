@@ -180,7 +180,7 @@
       "confidence": "strong"
     },
     {
-      "pattern": "react\\s+native|flutter",
+      "pattern": "\\breact\\s+native\\b|\\bflutter\\b",
       "flags": "i",
       "department": "mobile",
       "mode": "cross",
@@ -300,7 +300,7 @@
       "confidence": "strong"
     },
     {
-      "pattern": "standup|daily\\s+standup|effort\\s+scorecard|eod\\s+check-?in",
+      "pattern": "daily\\s+standup|\\bstandup\\s+(notes?|call|meeting|report)\\b|effort\\s+scorecard|eod\\s+check-?in",
       "flags": "i",
       "department": "coach",
       "mode": "team",

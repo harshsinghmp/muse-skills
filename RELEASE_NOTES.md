@@ -1,3 +1,35 @@
+# 🏛️ Muse Skills v8.6.1 — Tooling That Removes the Manual Tax
+
+> **Patch release: one command now runs every gate, one command cuts a release, and the router stops claiming certainty it does not have.** 873 automated tests. 70 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.6.1
+
+- **`bun run verify`** — 14 offline gates in one table (~35s), with per-gate timing and the tail of any failure. `--network`, `--skip`, `--list`, `--json`.
+- **`bun run release:cut`** — the mechanical half of the release checklist: every version surface, changelog stamp, notes skeleton, ledger stamp, gates, branch, commit, push, PR. It stops before the tag, which `check:release-ready` guards.
+- **`bun run check:release-ready`** — refuses to tag unless HEAD is `origin/main`, the tag is free, and `package.json` / CHANGELOG / notes / ledger agree.
+- **Honest confidence** — a near-tie caps reported confidence at 75% instead of printing 95% beside a close call.
+- **Fast-path precision** — every strong rule now has a positive and a negative probe; that table caught `flutter` matching "flutters" and `standup` matching furniture.
+
+## 📊 Verification
+
+| Metric | v8.6.0 | v8.6.1 |
+|:---|:---|:---|
+| Automated Tests | 870 | **873** |
+| Test Files | 69 | **70** |
+| Gates in one command | — | **14** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.6.0...v8.6.1
+
 # 🏛️ Muse Skills v8.6.0 — Routing That Admits Uncertainty
 
 > **Minor release: the router reports near-ties instead of guessing, two fast-path rules now match intent rather than vocabulary, installers resolve the latest release by default, and a broken release workflow can be repaired without moving a published tag.** 809 automated tests. 66 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

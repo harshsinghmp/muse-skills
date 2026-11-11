@@ -101,9 +101,10 @@ changes
 3. **Freshness**: `bun run check:sync` confirms the release branch contains the latest `dev`.
 4. **Version + derived artifacts**: move the `Unreleased` changelog block into `## [X.Y.Z]`, bump `package.json` and the README version, and regenerate every declared derived artifact in the same commit.
 5. **Release notes**: add the new version's section to `RELEASE_NOTES.md` — the tag-triggered Release workflow publishes that section, and `tests/release-notes.test.ts` fails when the current `package.json` version has none.
-6. **Delivery**: tag `vX.Y.Z` on a commit reachable from `main`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
-7. **Release smoke**: run `bun run release:smoke` (also run by the `Release Smoke` workflow on publish). It verifies the tag commit against the release `checksums.txt` asset and the installer default ref; a failure means the published installer cannot verify itself.
-8. **Docs ledger**: stamp the release with `bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release vX.Y.Z`, then confirm `bun run check:ledger` passes. The Release workflow gates on this check, so a stale ledger blocks the tag.
+6. **Preflight before tagging**: run `bun run check:release-ready`. It refuses when HEAD is not `origin/main` (the tag would ship a commit that is not on production), when the tag already exists locally or remotely, or when `package.json`, the changelog, the release notes, and the docs ledger disagree on the version. Run it **before** `git tag` — runtime verification in the Release workflow cannot catch a tag that already exists.
+7. **Delivery**: tag `vX.Y.Z` on a commit reachable from `main`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
+8. **Release smoke**: run `bun run release:smoke` (also run by the `Release Smoke` workflow on publish). It verifies the tag commit against the release `checksums.txt` asset and the installer default ref; a failure means the published installer cannot verify itself.
+9. **Docs ledger**: stamp the release with `bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release vX.Y.Z`, then confirm `bun run check:ledger` passes. The Release workflow gates on this check, so a stale ledger blocks the tag.
 9. **Dependency smoke**: `bun run check:deps` fails when a direct dependency is behind the registry or the pinned `musememory` MCP runtime cannot start. CI runs it in the lint job.
 
 ---

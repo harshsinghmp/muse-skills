@@ -97,7 +97,7 @@ export const FAST_PATH_RULES: Array<{
     reason: "Expo project match",
   },
   {
-    regex: /react\s+native|flutter/i,
+    regex: /\breact\s+native\b|\bflutter\b/i,
     department: "mobile",
     mode: "cross",
     reason: "Cross-platform mobile framework match",
@@ -189,7 +189,7 @@ export const FAST_PATH_RULES: Array<{
     reason: "Morning executive orientation match",
   },
   {
-    regex: /standup|daily\s+standup|effort\s+scorecard|eod\s+check-?in/i,
+    regex: /daily\s+standup|\bstandup\s+(notes?|call|meeting|report)\b|effort\s+scorecard|eod\s+check-?in/i,
     department: "coach",
     mode: "team",
     reason: "Daily standup and controllable effort check-in match",
@@ -1132,11 +1132,17 @@ export function triagePrompt(prompt: string): TriageResult {
   if (best && best.score > 0) {
     const { mode, score: modeScoreValue } = pickMode(best.entry, cleanPrompt);
     const alternatives = closeRunnersUp(scored, best.score);
+    // A near-tie is not a high-confidence answer. The raw score says how much
+    // evidence the winner had, not how much better it was than the runner-up —
+    // reporting 95% while naming a close call contradicts itself.
+    const baseConfidence = Math.min(0.95, 0.55 + Math.min(0.4, best.score / 40));
+    const confidence =
+      alternatives.length === 0 ? baseConfidence : Math.min(baseConfidence, 0.55 + (baseConfidence - 0.55) * 0.5);
     return {
       department: best.entry.skill,
       mode,
       councilLead: best.entry.lead || COUNCIL_LEADS[best.entry.skill] || "Nexus",
-      confidence: Math.min(0.95, 0.55 + Math.min(0.4, best.score / 40)),
+      confidence,
       fastPath: false,
       reason: `Lexical match on ${best.entry.skill} (${modeScoreValue > 0 ? `mode cue: ${mode}` : "department cue"})`,
       ...(alternatives.length > 0 ? { alternatives } : {}),
