@@ -3,8 +3,8 @@
   "note": "Per-distribution routing results. A change may not lower any of these; run --update deliberately and explain it in the PR.",
   "distributions": {
     "training": {
-      "exact": 161,
-      "department": 176,
+      "exact": 162,
+      "department": 178,
       "total": 247
     },
     "v5": {
@@ -24,12 +24,12 @@
     },
     "v8": {
       "exact": 3,
-      "department": 9,
+      "department": 10,
       "total": 40
     },
     "v9": {
-      "exact": 1,
-      "department": 10,
+      "exact": 2,
+      "department": 13,
       "total": 40
     }
   }

@@ -298,12 +298,12 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 <!-- routing-matrix:start -->
 | Distribution | Kind | Prompts | Exact `skill:mode` | Department |
 | :--- | :--- | ---: | ---: | ---: |
-| `training (tuned)` | tuned | 247 | 161 (65.2%) | 176 (71.3%) |
+| `training (tuned)` | tuned | 247 | 162 (65.6%) | 178 (72.1%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
 | `v7` | unseen | 40 | 2 (5.0%) | 8 (20.0%) |
-| `v8` | unseen | 40 | 3 (7.5%) | 9 (22.5%) |
-| `v9` | unseen | 40 | 1 (2.5%) | 10 (25.0%) |
+| `v8` | unseen | 40 | 3 (7.5%) | 10 (25.0%) |
+| `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
 **Mode coverage**: 135 of 406 routable modes (33%) carry a curated routing signal; the other 271 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).

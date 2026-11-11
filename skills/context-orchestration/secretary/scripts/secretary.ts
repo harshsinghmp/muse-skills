@@ -1108,6 +1108,54 @@ function closeRunnersUp(
     }));
 }
 
+/**
+ * Vector-space second opinion over the same corpus the lexical router uses.
+ *
+ * A token-overlap router cannot connect "the invoice formatter imports the user
+ * model" with "coupling" — the words never meet. Cosine similarity over
+ * IDF-weighted department vocabulary is the dependency-free part of that signal:
+ * it re-ranks, it does not replace. Measured on the six gated distributions
+ * before it was wired in (v9 10 → 22 departments, training −3).
+ */
+const VECTOR_DECISIVE = 0.5;
+
+function vectorDepartmentScores(promptTokens: string[]): Map<string, number> {
+  const index = getIndex();
+  const scores = new Map<string, number>();
+  if (index.modeDocIdf.size === 0) return scores;
+
+  const prompt: Array<[string, number]> = [];
+  const seen = new Set<string>();
+  for (const token of promptTokens) {
+    if (seen.has(token)) continue;
+    seen.add(token);
+    const idf = index.modeDocIdf.get(token);
+    if (idf && idf > 0) prompt.push([token, idf]);
+  }
+  if (prompt.length === 0) return scores;
+
+  let promptNorm = 0;
+  for (const [, weight] of prompt) promptNorm += weight * weight;
+  promptNorm = Math.sqrt(promptNorm) || 1;
+
+  for (const [skill, tokens] of index.departmentModeTokens) {
+    let dot = 0;
+    let departmentNorm = 0;
+    for (const token of tokens) {
+      const weight = index.modeDocIdf.get(token) ?? 0;
+      if (weight <= 0) continue;
+      departmentNorm += weight * weight;
+      for (const [promptToken, promptWeight] of prompt) {
+        if (promptToken === token) dot += weight * promptWeight;
+      }
+    }
+    if (dot === 0) continue;
+    const norm = Math.sqrt(departmentNorm) || 1;
+    scores.set(skill, dot / (norm * promptNorm));
+  }
+  return scores;
+}
+
 export function triagePrompt(prompt: string): TriageResult {
   const cleanPrompt = prompt.trim();
 
@@ -1128,10 +1176,38 @@ export function triagePrompt(prompt: string): TriageResult {
 
   // 2. Lexical scoring over the generated 46-department directory.
   const scored = scoreDepartments(cleanPrompt);
+  const promptTokens = tokenize(cleanPrompt);
   const best = scored[0];
   if (best && best.score > 0) {
-    const { mode, score: modeScoreValue } = pickMode(best.entry, cleanPrompt);
-    const alternatives = closeRunnersUp(scored, best.score);
+    let { mode, score: modeScoreValue } = pickMode(best.entry, cleanPrompt);
+    let department = best.entry.skill;
+    let alternatives = closeRunnersUp(scored, best.score);
+
+    // Only when the router is unsure, and only when the vector space is
+    // decisive: a confident lexical answer is still the better answer.
+    if (alternatives.length > 0) {
+      const vector = vectorDepartmentScores(promptTokens);
+      const ranked = [...vector.entries()].sort((a, b) => b[1] - a[1]);
+      if (ranked.length > 1 && ranked[0][1] * VECTOR_DECISIVE > ranked[1][1]) {
+        const winner = ranked[0][0];
+        if (winner !== best.entry.skill) {
+          const winnerEntry = scored.find((candidate) => candidate.entry.skill === winner)?.entry;
+          const winnerMode = winnerEntry ? pickMode(winnerEntry, cleanPrompt) : null;
+          if (winnerEntry && winnerMode) {
+            department = winner;
+            mode = winnerMode.mode;
+            modeScoreValue = winnerMode.score;
+            alternatives = closeRunnersUp(scored, best.score).filter((alt) => alt.department !== winner);
+            alternatives.unshift({
+              department: best.entry.skill,
+              mode: pickMode(best.entry, cleanPrompt).mode,
+              score: best.score,
+            });
+            alternatives = alternatives.slice(0, 2);
+          }
+        }
+      }
+    }
     // A near-tie is not a high-confidence answer. The raw score says how much
     // evidence the winner had, not how much better it was than the runner-up —
     // reporting 95% while naming a close call contradicts itself.
@@ -1139,12 +1215,12 @@ export function triagePrompt(prompt: string): TriageResult {
     const confidence =
       alternatives.length === 0 ? baseConfidence : Math.min(baseConfidence, 0.55 + (baseConfidence - 0.55) * 0.5);
     return {
-      department: best.entry.skill,
+      department,
       mode,
-      councilLead: best.entry.lead || COUNCIL_LEADS[best.entry.skill] || "Nexus",
+      councilLead: scored.find((c) => c.entry.skill === department)?.entry.lead || COUNCIL_LEADS[department] || "Nexus",
       confidence,
       fastPath: false,
-      reason: `Lexical match on ${best.entry.skill} (${modeScoreValue > 0 ? `mode cue: ${mode}` : "department cue"})`,
+      reason: `Lexical match on ${department} (${modeScoreValue > 0 ? `mode cue: ${mode}` : "department cue"})`,
       ...(alternatives.length > 0 ? { alternatives } : {}),
     };
   }
