@@ -12,6 +12,8 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Confidence now reflects near-ties, and every fast-path rule is probe-tested** (routing): `triagePrompt` reported **95% confidence while naming a close call** — the score measured how much evidence the winner had, not how far ahead it was. A near-tie now caps confidence at 75%. A per-rule table (`tests/routing-fast-path-table.test.ts`) pairs every strong rule with one positive and one negative probe, and immediately caught two more vocabulary bugs of the same class as the Expo one: `flutter` matched "flutters" and bare `standup` matched furniture, so both rules are now word-bounded and context-bound. All six distributions unchanged.
+- **Release preflight makes a mis-tagged release impossible** (`scripts/check-release-ready.ts`, `bun run check:release-ready`): the v8.6.0 tag was briefly created against a stale `origin/main`, which runtime verification cannot catch because the tag already exists by then. The gate runs **before** `git tag` and refuses when HEAD is not `origin/main`, the tag exists locally or remotely, or `package.json` / CHANGELOG / release notes / docs ledger disagree on the version.
 - **Vector-space routing measured with a number** (routing decision, stdlib-only experiment): a plain TF-IDF cosine over each mode's prose — no curated vocabulary, no model download — was scored at department level against the router on the same six fixtures. It wins where the router is weakest and loses where the router is tuned:
 
   | set | router | TF-IDF cosine | LSA (k=64) | blended, cosine only when 2:1 over its runner-up |
