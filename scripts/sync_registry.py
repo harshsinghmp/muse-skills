@@ -28,6 +28,37 @@ def safe_path(rel_path: str) -> str:
     return resolved
 
 
+def patch_registry_text(raw: str, skills: list) -> str:
+    """Replace each skill's version/description value without touching layout."""
+    out = raw
+    for skill in skills:
+        name = json.dumps(skill["name"], ensure_ascii=False)
+        start = out.find(f'"name": {name}')
+        if start == -1:
+            continue
+        for field in ("version", "description"):
+            if field not in skill:
+                continue
+            pattern = re.compile(rf'("{field}":\s*)("(?:[^"\\]|\\.)*")')
+            match = pattern.search(out, start)
+            # Compare decoded values, never encoded text: the registry mixes
+            # literal and \u-escaped non-ASCII, and re-encoding a value that did
+            # not change would rewrite the line for no reason.
+            if match and json.loads(match.group(2)) != skill[field]:
+                replacement = json.dumps(skill[field])
+                out = out[: match.start(2)] + replacement + out[match.end(2) :]
+    return out
+
+
+def write_if_changed(path: str, text: str) -> bool:
+    """Write only when the bytes differ, so a no-op sync leaves the tree clean."""
+    current = open(path, encoding="utf-8").read() if os.path.exists(path) else None
+    if current == text:
+        return False
+    atomic_write(path, text)
+    return True
+
+
 def atomic_write(path: str, text: str) -> None:
     """Write via a sibling temp file so a crash never truncates the registry."""
     fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), prefix=".tmp-registry-")
@@ -83,7 +114,8 @@ def main():
     args = ap.parse_args()
     if args.json:
         return json_report()
-    data = json.load(open(JSON_PATH, encoding="utf-8"))
+    raw_text = open(JSON_PATH, encoding="utf-8").read()
+    data = json.loads(raw_text)
     skills = data["skills"]
 
     # 1. Sync skills.json versions + descriptions from SKILL.md frontmatter
@@ -102,7 +134,14 @@ def main():
                 why.append("desc")
             fixed.append(f"{s['name']:<22} {', '.join(why)}")
 
-    atomic_write(JSON_PATH, json.dumps(data, indent=2) + "\n")
+    # Canonical generated style: json.dumps(indent=2). The registry used to be
+    # hand-formatted (some arrays inline, some wrapped inconsistently), which made
+    # every sync rewrite the whole file. One style means a sync is idempotent.
+    # Preserve formatting: sync only owns two scalar fields per skill, so patch
+    # them in place instead of re-serialising. Re-serialising with json.dumps
+    # rewrote every array in the file (the registry is formatter-maintained),
+    # which made a no-op sync look like a 1000-line change.
+    write_if_changed(JSON_PATH, patch_registry_text(raw_text, skills))
 
     print(f"skills.json: fixed {len(fixed)} skill(s)")
     for line in fixed:

@@ -1,13 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
 import {
   buildBaseline,
   compareToBaseline,
   type DistributionResult,
   type RoutingBaseline,
 } from "../scripts/check-routing-matrix";
-
-const REPO_ROOT = join(import.meta.dir, "..");
 
 function result(name: string, exact: number, department: number): DistributionResult {
   return {
