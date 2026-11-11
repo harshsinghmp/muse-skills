@@ -289,7 +289,8 @@ describe("fast-path confidence", () => {
       const result = triagePrompt(probe);
       expect(result.fastPath).toBe(false);
     }
-    // A strong rule still short-circuits.
-    expect(triagePrompt("pull request 42 changed the auth flow").fastPath).toBe(true);
+    // A strong rule still short-circuits when the prompt asks for the action.
+    // Merely describing a pull request does not — see routing-fast-path-precision.
+    expect(triagePrompt("review pull request 42").fastPath).toBe(true);
   });
 });

@@ -108,7 +108,7 @@
       "confidence": "strong"
     },
     {
-      "pattern": "pull\\s+request|code\\s+review|review\\s+this\\s+(pr|diff|patch)",
+      "pattern": "\\b(review|audit|go\\s+through|look\\s+at|check)\\b[^.!?]{0,40}\\b(pr|pull\\s+request|diff|patch)\\b|\\breview\\s+this\\s+(pr|diff|patch)\\b",
       "flags": "i",
       "department": "code-review",
       "mode": "pr-context",
@@ -172,7 +172,15 @@
       "confidence": "strong"
     },
     {
-      "pattern": "react\\s+native|expo\\b|flutter",
+      "pattern": "\\bexpo\\b",
+      "flags": "i",
+      "department": "mobile",
+      "mode": "expo",
+      "reason": "Expo project match",
+      "confidence": "strong"
+    },
+    {
+      "pattern": "react\\s+native|flutter",
       "flags": "i",
       "department": "mobile",
       "mode": "cross",

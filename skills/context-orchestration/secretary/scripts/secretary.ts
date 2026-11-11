@@ -38,7 +38,11 @@ export const FAST_PATH_RULES: Array<{
     reason: "Direct test verification match",
   },
   {
-    regex: /pull\s+request|code\s+review|review\s+this\s+(pr|diff|patch)/i,
+    // A review VERB aimed at a diff. Mentioning "pull request" is not the same
+    // as asking for a review — "the pull request threads contained the same
+    // correction" belongs to pr-review-mining, not pr-context.
+    regex:
+      /\b(review|audit|go\s+through|look\s+at|check)\b[^.!?]{0,40}\b(pr|pull\s+request|diff|patch)\b|\breview\s+this\s+(pr|diff|patch)\b/i,
     department: "code-review",
     mode: "pr-context",
     reason: "Pull-request review match",
@@ -87,7 +91,13 @@ export const FAST_PATH_RULES: Array<{
     reason: "E-Commerce checkout and payments match",
   },
   {
-    regex: /react\s+native|expo\b|flutter/i,
+    regex: /\bexpo\b/i,
+    department: "mobile",
+    mode: "expo",
+    reason: "Expo project match",
+  },
+  {
+    regex: /react\s+native|flutter/i,
     department: "mobile",
     mode: "cross",
     reason: "Cross-platform mobile framework match",

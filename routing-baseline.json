@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-10",
+  "generatedAt": "2026-11-11",
   "note": "Per-distribution routing results. A change may not lower any of these; run --update deliberately and explain it in the PR.",
   "distributions": {
     "training": {
       "exact": 161,
-      "department": 175,
+      "department": 176,
       "total": 247
     },
     "v5": {
@@ -18,7 +18,7 @@
       "total": 40
     },
     "v7": {
-      "exact": 1,
+      "exact": 2,
       "department": 8,
       "total": 40
     },
