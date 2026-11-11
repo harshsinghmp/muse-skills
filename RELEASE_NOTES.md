@@ -1,3 +1,38 @@
+# 🏛️ Muse Skills v8.6.0 — Routing That Admits Uncertainty
+
+> **Minor release: the router reports near-ties instead of guessing, two fast-path rules now match intent rather than vocabulary, installers resolve the latest release by default, and a broken release workflow can be repaired without moving a published tag.** 809 automated tests. 66 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.6.0
+
+- **Near-ties are named**: when the runner-up department is within 25% of the winner, `secretary --triage` prints `Close call: retain (13.8), webdev (11.2)` instead of implying certainty. Routing outcomes are unchanged.
+- **Fast-path rules match intent**: `expo` was bundled with `react native|flutter` and sent every Expo project to the generic mobile mode; it now lands on `mobile:expo`. The review rule no longer short-circuits on the words "pull request" alone — it requires a review verb aimed at a diff. **v7 blind 1 → 2 exact**, no distribution regressed.
+- **Installers resolve the latest release**: `install.sh` looks up the newest published release and keeps the pinned tag only as an offline fallback, still verifying the chosen tag against that release's `checksums.txt`.
+- **Releases are repairable**: `release.yml` gained `workflow_dispatch`, which runs the workflow from the default branch, targets the latest release, and attaches assets only when that commit's checks are already green — no more re-tagging to fix a workflow bug.
+- **Registry sync is idempotent**: `bun run sync` patches the two fields it owns instead of re-serialising `skills.json`, so a clean tree produces an empty diff.
+- **Vector-space routing measured**: TF-IDF cosine beats the router on the blind sets (v9 10 → 22 departments) and loses on v6 (29 → 15); the conservative blend costs one tuned point. Recorded as a decision, not shipped.
+
+## 📊 Verification
+
+| Metric | v8.5.0 | v8.6.0 |
+|:---|:---|:---|
+| Automated Tests | 800 | **809** |
+| Test Files | 63 | **66** |
+| Skills | 46 | **46** |
+| Commands / Harness | 462 | **462** |
+| Routing distributions gated | 6 | **6** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.5.0...v8.6.0
+
 # 🏛️ Muse Skills v8.5.0 — Auditable Routing Gates
 
 > **Minor release: the routing quality gate becomes its own CI job with published numbers, mode coverage is measured instead of assumed, and the landing gate stops blocking its own commits.** 800 automated tests. 63 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

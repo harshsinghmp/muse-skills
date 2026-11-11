@@ -100,13 +100,13 @@
     "muse": "bun scripts/muse.ts"
   },
   "type": "module",
-  "version": "8.5.0",
+  "version": "8.6.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
     "bun-types": "^1.4.4",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.4.0"
+    "musememory": "3.4.1"
   }
 }

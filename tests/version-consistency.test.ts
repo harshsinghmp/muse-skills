@@ -15,7 +15,10 @@ describe("release version consistency", () => {
 
     const installer = read("scripts/install.sh");
     expect(installer).toContain(`raw.githubusercontent.com/harshsinghmp/muse-skills/v${version}/scripts/install.sh`);
-    expect(installer).toContain(`MUSE_SKILLS_REF="\${MUSE_SKILLS_REF:-v${version}}"`);
+    // Default is the latest release; the pinned tag is the offline fallback.
+    expect(installer).toContain(`PINNED_REF="v${version}"`);
+    expect(installer).toContain("releases/latest");
+    expect(installer).toContain('MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-${LATEST_REF:-$PINNED_REF}}"');
   });
 
   test("the current version has a curated release-notes section", () => {

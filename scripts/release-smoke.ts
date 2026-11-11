@@ -17,7 +17,7 @@ import { join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 const pkg = JSON.parse(readFileSync(join(REPO_ROOT, "package.json"), "utf8")) as { version: string };
-const tag = process.argv[2] ?? `v${pkg.version}`;
+const tag = process.argv[2] ?? process.env.RELEASE_TAG ?? `v${pkg.version}`;
 
 function run(command: string, args: string[]) {
   const result = spawnSync(command, args, { cwd: REPO_ROOT, encoding: "utf8" });
@@ -113,8 +113,13 @@ function main(): void {
   if (sourceCommit !== commit) fail(`checksum source-commit ${sourceCommit} != tag commit ${commit}`);
 
   const installer = readFileSync(join(REPO_ROOT, "scripts/install.sh"), "utf8");
-  if (!installer.includes(`MUSE_SKILLS_REF="\${MUSE_SKILLS_REF:-${tag}}"`)) {
-    fail(`install.sh default ref does not match ${tag}`);
+  // The installer defaults to the latest release and keeps this tag as the
+  // offline fallback, so both halves have to be present.
+  if (!installer.includes(`PINNED_REF="${tag}"`)) {
+    fail(`install.sh fallback ref does not match ${tag}`);
+  }
+  if (!installer.includes("releases/latest")) {
+    fail("install.sh does not resolve the latest release");
   }
   if (!installer.includes(`releases/download/\${MUSE_SKILLS_REF}/checksums.txt`)) {
     fail("install.sh does not verify the release checksum asset");
@@ -133,7 +138,7 @@ function main(): void {
       `   tag:      ${tag} (${commit.slice(0, 12)})`,
       `   release:  ${releaseData.url}`,
       `   asset:    checksums.txt (source-commit verified)`,
-      `   installer default ref: ${tag}`,
+      `   installer default: latest release (fallback ${tag})`,
       `   install smoke: ${installed.skills} skills, ${installed.destinations} harness destinations, doctor green (${installed.version})`,
     ].join("\n"),
   );

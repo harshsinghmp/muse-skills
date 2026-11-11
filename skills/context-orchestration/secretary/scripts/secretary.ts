@@ -38,7 +38,11 @@ export const FAST_PATH_RULES: Array<{
     reason: "Direct test verification match",
   },
   {
-    regex: /pull\s+request|code\s+review|review\s+this\s+(pr|diff|patch)/i,
+    // A review VERB aimed at a diff. Mentioning "pull request" is not the same
+    // as asking for a review — "the pull request threads contained the same
+    // correction" belongs to pr-review-mining, not pr-context.
+    regex:
+      /\b(review|audit|go\s+through|look\s+at|check)\b[^.!?]{0,40}\b(pr|pull\s+request|diff|patch)\b|\breview\s+this\s+(pr|diff|patch)\b/i,
     department: "code-review",
     mode: "pr-context",
     reason: "Pull-request review match",
@@ -87,7 +91,13 @@ export const FAST_PATH_RULES: Array<{
     reason: "E-Commerce checkout and payments match",
   },
   {
-    regex: /react\s+native|expo\b|flutter/i,
+    regex: /\bexpo\b/i,
+    department: "mobile",
+    mode: "expo",
+    reason: "Expo project match",
+  },
+  {
+    regex: /react\s+native|flutter/i,
     department: "mobile",
     mode: "cross",
     reason: "Cross-platform mobile framework match",
@@ -578,6 +588,12 @@ export interface TriageResult {
   confidence: number;
   fastPath: boolean;
   reason: string;
+  /**
+   * Near-ties for the winning department. A confident single answer is the best
+   * outcome; when two departments are within a few points, naming both is more
+   * honest than pretending the top one is certain.
+   */
+  alternatives?: Array<{ department: string; mode: string; score: number }>;
 }
 
 /** One parsed row of the generated agency directory in references/dispatch.md. */
@@ -1071,6 +1087,27 @@ export function explainRouting(prompt: string): RoutingExplanation {
   };
 }
 
+/** Within 25% of the winner (or 6 points): close enough to name out loud. */
+const ALTERNATIVE_MARGIN = 0.25;
+const ALTERNATIVE_FLOOR = 6;
+
+function closeRunnersUp(
+  scored: ScoredDepartment[],
+  winnerScore: number,
+): Array<{ department: string; mode: string; score: number }> {
+  if (winnerScore <= 0) return [];
+  const margin = Math.max(ALTERNATIVE_FLOOR, winnerScore * ALTERNATIVE_MARGIN);
+  return scored
+    .slice(1)
+    .filter((candidate) => candidate.score > 0 && winnerScore - candidate.score <= margin)
+    .slice(0, 2)
+    .map((candidate) => ({
+      department: candidate.entry.skill,
+      mode: candidate.entry.modes[0] ?? "",
+      score: candidate.score,
+    }));
+}
+
 export function triagePrompt(prompt: string): TriageResult {
   const cleanPrompt = prompt.trim();
 
@@ -1094,6 +1131,7 @@ export function triagePrompt(prompt: string): TriageResult {
   const best = scored[0];
   if (best && best.score > 0) {
     const { mode, score: modeScoreValue } = pickMode(best.entry, cleanPrompt);
+    const alternatives = closeRunnersUp(scored, best.score);
     return {
       department: best.entry.skill,
       mode,
@@ -1101,6 +1139,7 @@ export function triagePrompt(prompt: string): TriageResult {
       confidence: Math.min(0.95, 0.55 + Math.min(0.4, best.score / 40)),
       fastPath: false,
       reason: `Lexical match on ${best.entry.skill} (${modeScoreValue > 0 ? `mode cue: ${mode}` : "department cue"})`,
+      ...(alternatives.length > 0 ? { alternatives } : {}),
     };
   }
 
@@ -1487,6 +1526,12 @@ Options:
       `   • Confidence   : ${(res.confidence * 100).toFixed(0)}% [${res.fastPath ? "FAST-PATH" : "HEURISTIC"}]`,
     );
     console.log(`   • Rationale    : ${res.reason}`);
+    if (res.alternatives?.length) {
+      console.log(
+        "   • Close call   : " +
+          res.alternatives.map((alt) => `${alt.department} (${alt.score.toFixed(1)})`).join(", "),
+      );
+    }
     process.exit(0);
   }
 

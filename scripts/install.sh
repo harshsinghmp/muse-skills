@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.5.0)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.6.0)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.5.0/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.6.0/scripts/install.sh | bash
 #
 # Supply-chain overrides:
-#   MUSE_SKILLS_REF=<tag>     install from this git tag (default: v8.5.0)
+#   MUSE_SKILLS_REF=<tag>     install from this git tag (default: the latest release)
 #   MUSE_SKILLS_COMMIT=<sha>  require the checkout to match this commit
 #   MUSE_SKILLS_ALLOW_UNVERIFIED=1  proceed when a release has no checksum asset (not recommended)
 #
@@ -22,9 +22,18 @@ set -euo pipefail
 
 ORIGINAL_PWD="$(pwd)"
 
-# Pinned distribution ref. The default tag is verified against the recorded
-# commit so a moved tag cannot silently change what this installer executes.
-MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-v8.5.0}"
+# Default to the LATEST published release; PINNED_REF is only the fallback when
+# the releases API is unreachable, and is the version this installer was cut
+# from. Whichever tag is chosen is still verified against that release's
+# checksums asset, so "latest" never means "unverified".
+PINNED_REF="v8.6.0"
+LATEST_REF=""
+if [ -z "${MUSE_SKILLS_REF:-}" ]; then
+  LATEST_REF="$(curl -fsSL --max-time 10 \
+    https://api.github.com/repos/harshsinghmp/muse-skills/releases/latest 2>/dev/null \
+    | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n 1 || true)"
+fi
+MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-${LATEST_REF:-$PINNED_REF}}"
 MUSE_SKILLS_COMMIT="${MUSE_SKILLS_COMMIT:-}"
 if [ "$MUSE_SKILLS_REF" = "v8.3.0" ] && [ -z "$MUSE_SKILLS_COMMIT" ]; then
   MUSE_SKILLS_COMMIT="5c91a309d64f568c1e957110832a38d471ee568e"
@@ -38,7 +47,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.5.0)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.6.0)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 
