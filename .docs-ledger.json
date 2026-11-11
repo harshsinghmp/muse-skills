@@ -2,18 +2,18 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-11T07:14:10.688Z",
-  "head": "1675f7862f7cf60f973bb982f47f3d3913718114",
+  "updatedAt": "2026-11-11T10:58:15.435Z",
+  "head": "5063f7ae72d34a84ba7cfe02ac70652a5c88fd3c",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.6.0"
+    "releaseTag": "v8.6.1"
   },
   "agentWatermark": {
-    "point": 168,
-    "commit": "545a94f3d0d3d2418fb6e575f3bbb97ab1f755e4",
-    "syncedAt": "2026-11-11T07:13:54.042Z"
+    "point": 179,
+    "commit": "a3374da4ae8c7e1c12122d1d7ddfd1a45ec752ce",
+    "syncedAt": "2026-11-11T10:58:12.167Z"
   },
   "points": [
     {
@@ -5394,7 +5394,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"bump actions\" found in .agents/context/current.md"
+          "evidence": "phrase \"actions cache\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -5524,7 +5524,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"measure routing\" found in .agents/context/current.md"
+          "evidence": "phrase \"routing quality\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -5612,7 +5612,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"native command\" found in .agents/context/current.md"
+          "evidence": "phrase \"command surfaces\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -5872,7 +5872,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"monthly harness\" found in .agents/context/current.md"
+          "evidence": "phrase \"retirement watch\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -6390,7 +6390,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"generate router\" found in .agents/context/current.md"
+          "evidence": "phrase \"router defaults\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -6470,7 +6470,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"failing routing\" found in .agents/context/current.md"
+          "evidence": "phrase \"routing gate\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -7131,6 +7131,171 @@
       "shipped": true,
       "releaseTag": "v8.6.0",
       "createdAt": "2026-11-11T07:13:42.673Z"
+    },
+    {
+      "id": "DP-0178",
+      "point": 178,
+      "commit": "95a7fdbdca9af9c0e0270a35af6955d1f3911562",
+      "shortCommit": "95a7fdb",
+      "date": "2026-11-11",
+      "type": "chore",
+      "scope": "release",
+      "summary": "v8.6.0",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json",
+        "scripts/install.sh"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.6.0",
+      "createdAt": "2026-11-11T10:55:54.135Z"
+    },
+    {
+      "id": "DP-0179",
+      "point": 179,
+      "commit": "a3374da4ae8c7e1c12122d1d7ddfd1a45ec752ce",
+      "shortCommit": "a3374da",
+      "date": "2026-11-11",
+      "type": "other",
+      "scope": "",
+      "summary": "Merge pull request #471 from harshsinghmp/release/v8.6.0",
+      "breaking": false,
+      "files": [],
+      "audiences": {
+        "developer": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.6.0",
+      "createdAt": "2026-11-11T10:55:54.135Z"
+    },
+    {
+      "id": "DP-0180",
+      "point": 180,
+      "commit": "0c43cddffa084260e056c7fbe545e9276e4afc74",
+      "shortCommit": "0c43cdd",
+      "date": "2026-11-11",
+      "type": "fix",
+      "scope": "secretary",
+      "summary": "honest confidence + release preflight (#472)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "package.json",
+        "scripts/check-release-ready.ts",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/release-ready.test.ts",
+        "tests/routing-confidence.test.ts",
+        "tests/routing-fast-path-table.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release preflight\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release preflight\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "manually documented in .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.6.1",
+      "createdAt": "2026-11-11T10:55:54.135Z"
+    },
+    {
+      "id": "DP-0181",
+      "point": 181,
+      "commit": "5063f7ae72d34a84ba7cfe02ac70652a5c88fd3c",
+      "shortCommit": "5063f7a",
+      "date": "2026-11-11",
+      "type": "feat",
+      "scope": "tooling",
+      "summary": "one command for every gate, one command to cut a release (#473)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "package.json",
+        "scripts/cut-release.ts",
+        "scripts/verify.ts",
+        "tests/tooling-scripts.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"every gate\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"every gate\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "manually documented in .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.6.1",
+      "createdAt": "2026-11-11T10:55:54.135Z"
     }
   ]
 }
