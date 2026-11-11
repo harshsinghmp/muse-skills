@@ -161,7 +161,9 @@ describe("CI and supply-chain hardening (#395)", () => {
 
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.private).toBe(true);
-    expect(pkg.dependencies.musememory).toBe("3.4.0");
+    // The invariant is an exact pin, not a specific version: hard-coding the
+    // number here made every upstream release break an unrelated PR's lint job.
+    expect(pkg.dependencies.musememory).toMatch(/^\d+\.\d+\.\d+$/);
     expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
   });
 
