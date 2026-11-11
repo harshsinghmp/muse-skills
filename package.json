@@ -98,7 +98,9 @@
     "sync:routing:baseline": "bun scripts/check-routing-matrix.ts --update",
     "check:install": "bun scripts/check-install-matrix.ts",
     "muse": "bun scripts/muse.ts",
-    "check:release-ready": "bun scripts/check-release-ready.ts"
+    "check:release-ready": "bun scripts/check-release-ready.ts",
+    "verify": "bun scripts/verify.ts",
+    "release:cut": "bun scripts/cut-release.ts"
   },
   "type": "module",
   "version": "8.6.0",
