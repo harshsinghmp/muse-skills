@@ -51,3 +51,25 @@ describe("cut-release — refuses rather than guessing", () => {
     expect(`${result.stdout}${result.stderr}`).toContain("--major");
   }, 30_000);
 });
+
+describe("branch guard", () => {
+  const guard = (branch: string, env: Record<string, string> = {}) =>
+    spawnSync("sh", ["scripts/hooks/branch-guard-pre-commit.sh"], {
+      cwd: ROOT,
+      encoding: "utf8",
+      env: { ...process.env, MUSE_BRANCH_GUARD_BRANCH: branch, ...env },
+    });
+
+  test("refuses an ordinary commit on an integration branch", () => {
+    for (const branch of ["main", "dev", "master", "trunk", "develop"]) {
+      const result = guard(branch);
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain("Refusing to commit");
+    }
+  });
+
+  test("allows feature branches and an explicit override", () => {
+    expect(guard("feat/x").status).toBe(0);
+    expect(guard("main", { MUSE_ALLOW_INTEGRATION_COMMIT: "1" }).status).toBe(0);
+  });
+});

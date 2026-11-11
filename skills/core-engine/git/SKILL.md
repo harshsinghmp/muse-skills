@@ -395,13 +395,22 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
    - Auto-detect monorepo (`pnpm-workspace.yaml`, `packages/`, `lerna.json`, `turbo.json`):
      - Monorepo format: `{package-name}-v{semver}`
      - Standard single package: `v{semver}`
-   - **Tag Pre-Existence Gate**:
+   - **Pre-Tag Gate** (run this *before* `git tag`, not after):
      ```bash
-     if git tag -l "$TAG_NAME" | (rg -q "^${TAG_NAME}$" 2>/dev/null || grep -q "^${TAG_NAME}$"); then
-       echo "🚨 Tag $TAG_NAME already exists! Bump version in package.json."
-       exit 1
-     fi
+     set -euo pipefail
+     git fetch origin "$PRODUCTION_BRANCH" --quiet
+     # 1. the tag must point at what production actually is
+     test "$(git rev-parse HEAD)" = "$(git rev-parse "origin/$PRODUCTION_BRANCH")" \
+       || { echo "🚨 HEAD is not origin/$PRODUCTION_BRANCH — fetch and merge first."; exit 1; }
+     # 2. a tag is write-once; refuse rather than re-point it
+     git tag -l "$TAG_NAME" | grep -q "^${TAG_NAME}$" && { echo "🚨 Tag $TAG_NAME already exists locally."; exit 1; }
+     git ls-remote --tags origin "refs/tags/$TAG_NAME" | grep -q "$TAG_NAME" \
+       && { echo "🚨 Tag $TAG_NAME already exists on the remote."; exit 1; }
+     # 3. every version surface must agree before an immutable artifact exists
+     #    (package manifest, changelog heading, release notes, docs ledger)
      ```
+
+     **Why before and not in CI**: a tag-triggered workflow runs the workflow file **from the tag**, not from the production branch. A broken workflow inside a tag cannot be repaired by re-running it — the only fix is deleting and re-creating a published tag. Verify first, and make the release step dispatchable (`workflow_dispatch`) so a workflow bug is fixable without touching a tag.
    *(For sanitization & monorepo rules, see [Monorepo & Sanitization Protocol](references/monorepo-and-sanitization.md)).*
 3. Cut release branch from updated `dev`:
    ```bash
@@ -479,6 +488,8 @@ mint a reviewer-facing branch with only code commits so the PR diff stays clean.
 - **No Vague Commit Messages**: Messages like "fixes bug" or "updates" are strictly forbidden. Always use Conventional Commits with scope and rationale.
 - **Never Force-Push Shared Branches**: `--force-with-lease` is permissible only on isolated feature branches; force-pushing `dev` or `master` is catastrophic.
 - **Annotated tag pushes carry tagger identity.** A `git tag -a` stores the committer's email in the tag object, so the same email-privacy rule as commits applies: use the noreply address (the repo's configured identity) or the push is rejected. Lightweight tags (`git tag vX.Y.Z`) do not, but annotated tags do. The same applies to merge commits (e.g. back-merging `main` into `dev`) — set the identity or amend with `--reset-author`.
+- **Never commit ordinary work on an integration branch.** `git checkout <branch>` can silently fall through, so "I was on the wrong branch" is invisible until the push — it happened three times in one session. Install a pre-commit guard that refuses non-merge commits on `main`/`master`/`trunk`/`dev`, with `MERGE_HEAD` exempted: back-merging production into the integration branch is a normal, intended commit on those branches. Recovering afterwards always costs a branch dance (`git reset --soft HEAD~1 && git switch -c feat/x`), so catch it before the commit exists.
+- **Make a release resumable.** A release that fails at step 6 of 9 (a stale docs ledger, a formatting gate) leaves a half-written tree; re-running from the top rewrites files that were already correct, and hand-fixing risks shipping a half-stamped version. Record completed steps in a state file outside the work tree (e.g. `.git/<tool>-state.json`), skip them on `--resume`, and make every step idempotent.
 - **Verify the current branch before any write, amend, or push.** `git checkout <branch>` can silently fall through to `dev` when the target is missing or ambiguous. Run `git branch --show-current` immediately before committing, amending, tagging, or pushing; a merge/amend/tag created on the wrong branch wastes a release cycle.
 - **`gh pr merge --delete-branch` fails when that branch is checked out.** Switch off the branch (e.g. `git checkout dev`) before merging, or delete the branch in a separate step after the merge.
 - **`gh api` branch-protection context changes need POST, not PATCH.** `gh api -X PATCH .../branches/<b>/protection/required_status_checks` does not add contexts reliably; POST to `.../required_status_checks/contexts` with `contexts[]=name` is the working call. Verify with a GET afterwards.
