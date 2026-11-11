@@ -8,6 +8,18 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **Vector-space routing measured with a number** (routing decision, stdlib-only experiment): a plain TF-IDF cosine over each mode's prose — no curated vocabulary, no model download — was scored at department level against the router on the same six fixtures. It wins where the router is weakest and loses where the router is tuned:
+
+  | set | router | TF-IDF cosine | LSA (k=64) | blended, cosine only when 2:1 over its runner-up |
+  | :--- | ---: | ---: | ---: | ---: |
+  | training | **176**/247 | 118/247 | 107/247 | 175/247 |
+  | v5 | **28**/40 | 19/40 | 18/40 | 28/40 |
+  | v6 | **29**/40 | 15/40 | 12/40 | 29/40 |
+  | v7 | 8/40 | 10/40 | 8/40 | 9/40 |
+  | v8 | 9/40 | 8/40 | 9/40 | 9/40 |
+  | v9 | 10/40 | **22**/40 | 19/40 | **12**/40 |
+
+  The distributional signal is real (v9 10 → 22 departments, v7 8 → 10) but unstable (v6 29 → 15), and a conservative blend still costs 1 on training. It was **not shipped**: the per-distribution gate forbids any drop, and shipping this would mean trading a tuned-set point for blind-set points — a values decision, not a tuning one. If it is taken later, the blend is the branch to pursue: it is the only variant that never exceeds a one-point loss.
 - **Embedding classifier evaluated, not shipped** (routing): the blind misses are semantic, not lexical — "the invoice formatter imports the user model" is labelled `code-review:coupling-audit` with zero shared tokens, and "no em dashes, no 'delve'" is `humanize:style-guide`. Two dependency-free approximations were built and measured against them: order-sensitive **phrase n-grams** (neutral on all blind sets) and **corpus-derived co-occurrence expansion** over the 406-mode corpus (716 terms, but the terms that matter — *imports*, *webhook*, *coupling* — have no associates at all, because the semantic link is not in the repository text). Both were removed. Closing the gap needs a real vector space: a ~40 MB local model (breaks the zero-dependency promise) or an API call per dispatch (breaks offline). That is a product decision, recorded here rather than guessed at in code.
 - **Releases resolve the latest tag, and a bad release workflow can be repaired without moving a tag** (`.github/workflows/release.yml`, `scripts/install.sh`): the installer now defaults to the **latest published release** (resolved from the releases API, verified against that release's `checksums.txt`) with the pinned tag as an offline fallback, and the release workflow gained `workflow_dispatch` — dispatching runs the workflow file from the default branch, targets the latest release unless a tag is given, and only attaches assets when that commit's required checks are already green. GitHub runs a tag-triggered workflow from the tag's own copy, which is why the v8.5.0 asset step had to be fixed by re-cutting the tag.
 - **Ambiguous prompts name their near-tie** (`TriageResult.alternatives`, `secretary --triage`): when the runner-up department is within 25% of the winner, the result carries up to two alternatives and the CLI prints `Close call: retain (13.8), webdev (11.2)` instead of implying certainty. Routing is unchanged — the winner and mode are still a single answer, and the six gated distributions do not move. A companion experiment, **negative signals** (subtracting evidence from `webdev`/`ops`/`retain` when their generic vocabulary appears without naming the department), was measured twice and reverted: neutral at a 9-point cap and worth **+1 department on v7 only** at a 24-point cap, with exact accuracy unchanged everywhere.
