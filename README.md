@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.5.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.6.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -19,7 +19,7 @@
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Option B: Instant Remote Setup (46 Skills + 462 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.5.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.6.0/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -29,6 +29,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 
 ## 🆕 What's New
 
+- **Routing gates that admit uncertainty** (v8.6.0): near-tie departments are reported instead of guessed, two fast-path rules were narrowed to match intent rather than vocabulary (Expo no longer routes to the generic mobile mode), installers resolve the latest release by default, and a release workflow bug can now be repaired without moving a published tag.
 - **Routing gates you can audit** (v8.5.0): the routing matrix runs as its own CI job and the README publishes every measured distribution — the 65% tuned row beside the blind sets at 2.5–7.5% — plus the real coverage split (134 of 406 modes carry a curated signal, 272 are name/description only). A sixth blind set (v9) is gated at its honest score, and the landing gate no longer counts its own earlier runs.
 - **v8.4.2 release hygiene** (v8.4.2): dependency and docs-ledger gates, a weekly dependency-refresh tracker, a fully backfilled agent watermark, and a 40s parallel suite after the scaffold-test batching.
 - **v8.4.1 follow-ups** (v8.4.1): the lockfile audit accepts a project directory, CI gained a dedicated boundary/EDR/lockfile security job, issue labels and a distribution-path threat model are documented, dependencies and the docs ledger are refreshed, and every published release now gets an automatic checksum-pinned smoke check.
