@@ -1,3 +1,32 @@
+# 🏛️ Muse Skills v8.7.0 — Routing That Reads Meaning
+
+> **Minor release: the router consults a vector-space second opinion when it is unsure — the first routing change to improve a blind set without costing another — plus a branch guard that refuses commits on integration branches and a resumable release cut.** 881 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+## 🛠️ What Changed in v8.7.0
+
+- **Vector-space second opinion**: when the lexical router is unsure and IDF-weighted cosine over department vocabulary leads its runner-up by 2:1, the vector score re-ranks the answer. Tuned set 161 → 162 exact / 176 → 178 department, v9 blind **1 → 2 exact / 10 → 13 department** — nothing dropped. The 2:1 gate is the whole result; at 1.15:1 it cost the tuned set 23 prompts.
+- **Branch guard**: a pre-commit hook refuses ordinary commits on `main`/`master`/`trunk`/`dev`/`develop`, exempting merges. `muse doctor` now reports whether it is installed.
+- **Resumable releases**: `release:cut` records completed steps and resumes from the failure point; the ledger step fails fast with the exact commands instead of after a 90-second gate sweep.
+- **Honest confidence**: a near-tie caps reported confidence at 75% instead of 95%.
+- **`git` skill**: pre-tag gate, branch-guard pitfall, and resumable-release pitfall — shipped to every project that installs the skill.
+
+## 📊 Verification
+
+| Metric | v8.6.1 | v8.7.0 |
+|:---|:---|:---|
+| Automated Tests | 873 | **881** |
+| Test Files | 70 | **72** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.6.1...v8.7.0
+
 # 🏛️ Muse Skills v8.6.1 — Tooling That Removes the Manual Tax
 
 > **Patch release: one command now runs every gate, one command cuts a release, and the router stops claiming certainty it does not have.** 873 automated tests. 70 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

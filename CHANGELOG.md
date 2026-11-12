@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.7.0] - 2026-11-12
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.6.1...v8.7.0
+
 ## [8.6.1] - 2026-11-11
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.6.0...v8.6.1
