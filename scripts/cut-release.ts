@@ -51,7 +51,8 @@ interface CutState {
   done: string[];
 }
 
-const STATE_PATH = path.join(ROOT, ".git", "muse-release-cut.json");
+// Overridable so tests never touch a developer's real interrupted release.
+const STATE_PATH = process.env.MUSE_RELEASE_CUT_STATE ?? path.join(ROOT, ".git", "muse-release-cut.json");
 
 function loadState(): CutState | null {
   try {
@@ -90,9 +91,16 @@ function bump(version: string, kind: "major" | "minor" | "patch"): string {
 }
 
 // ── 0. Arguments and preconditions ───────────────────────────────────────────
+if (args.includes("--abort")) {
+  fs.rmSync(STATE_PATH, { force: true });
+  console.log("🧹 interrupted-release state cleared");
+  process.exit(0);
+}
+
 const resume = args.includes("--resume");
 const existing = resume ? loadState() : null;
-if (resume && !existing) fail("no interrupted release to resume (.git/muse-release-cut.json is missing)");
+if (resume && !existing) fail(`no interrupted release to resume (${STATE_PATH} is missing)`);
+const resumed = existing as CutState | null;
 const explicit = args.includes("--version") ? args[args.indexOf("--version") + 1] : "";
 const kind = args.includes("--major")
   ? "major"
@@ -105,16 +113,22 @@ if (!explicit && !kind && !resume) fail("pass --major, --minor, --patch, or --ve
 
 if (!resume && run("git", ["status", "--porcelain"]).length > 0) fail("working tree is not clean");
 const branch = run("git", ["branch", "--show-current"]);
-if (branch !== "dev") fail(`release must be cut from dev (on '${branch}')`);
-run("git", ["fetch", "origin", "dev", "--quiet"]);
-if (run("git", ["rev-parse", "HEAD"]) !== run("git", ["rev-parse", "origin/dev"])) {
-  fail("local dev is not origin/dev — pull or push first");
+if (!resume) {
+  if (branch !== "dev") fail(`release must be cut from dev (on '${branch}')`);
+  run("git", ["fetch", "origin", "dev", "--quiet"]);
+  if (run("git", ["rev-parse", "HEAD"]) !== run("git", ["rev-parse", "origin/dev"])) {
+    fail("local dev is not origin/dev — pull or push first");
+  }
+} else if (resumed && branch !== resumed.branch && branch !== "dev") {
+  // A resumed cut continues on the branch it created; anything else means the
+  // state file belongs to a different attempt.
+  fail(`resume must run on ${resumed?.branch} (on '${branch}')`);
 }
 
 const pkgPath = "package.json";
 const pkg = JSON.parse(read(pkgPath)) as { version: string };
-const previous = existing?.previous ?? pkg.version;
-const version = existing?.version ?? (explicit || bump(pkg.version, kind as "major" | "minor" | "patch"));
+const previous = resumed?.previous ?? pkg.version;
+const version = resumed?.version ?? (explicit || bump(pkg.version, kind as "major" | "minor" | "patch"));
 if (!/^\d+\.\d+\.\d+$/.test(version)) fail(`'${version}' is not X.Y.Z`);
 const tag = `v${version}`;
 if (!resume && run("git", ["tag", "-l", tag]) === tag) fail(`tag ${tag} already exists locally`);
@@ -123,7 +137,7 @@ const today = new Date().toISOString().slice(0, 10);
 const compare = `**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v${previous}...${tag}`;
 console.log(`Cutting ${tag} (was v${previous}) on ${today}\n`);
 
-const state: CutState = existing ?? { version, previous, branch: `release/${tag}`, done: [] };
+const state: CutState = resumed ?? { version, previous, branch: `release/${tag}`, done: [] };
 saveState(state);
 
 // ── 1. Branch ────────────────────────────────────────────────────────────────

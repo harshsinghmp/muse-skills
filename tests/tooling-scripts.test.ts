@@ -73,3 +73,17 @@ describe("branch guard", () => {
     expect(guard("main", { MUSE_ALLOW_INTEGRATION_COMMIT: "1" }).status).toBe(0);
   });
 });
+
+describe("cut-release resume", () => {
+  test("refuses to resume without an interrupted release", () => {
+    const result = spawnSync("bun", ["scripts/cut-release.ts", "--resume"], {
+      cwd: ROOT,
+      encoding: "utf8",
+      env: { ...process.env, MUSE_RELEASE_CUT_STATE: join(ROOT, ".git", "does-not-exist.json") },
+      timeout: 60_000,
+    });
+    expect(result.status).not.toBe(0);
+    expect(`${result.stdout}${result.stderr}`).toContain("no interrupted release");
+    expect(result.status).not.toBe(0);
+  }, 30_000);
+});
