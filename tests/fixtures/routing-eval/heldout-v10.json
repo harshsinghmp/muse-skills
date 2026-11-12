@@ -1,0 +1,202 @@
+[
+  {
+    "id": "v10-01",
+    "prompt": "changelog's still sitting at 2.3.0 and we've tagged eleven releases since",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v10-02",
+    "prompt": "hotfix went out of main on friday and the release branch never got it. prod and the next cut are one commit apart.",
+    "expect": "git:branching-and-release-matrix"
+  },
+  {
+    "id": "v10-03",
+    "prompt": "AGENTS.md is 900 lines now and the agent behaves like it only ever read the first 40",
+    "expect": "updateagents:memory-file-priorities"
+  },
+  {
+    "id": "v10-04",
+    "prompt": "three of us start the same empty repo monday. i'm not losing the week to an argument about folder names.",
+    "expect": "new-project:project-os-architecture"
+  },
+  {
+    "id": "v10-05",
+    "prompt": "whoever's on rotation rewrites the handoff file, so by now it reads like fan fiction and nobody trusts it",
+    "expect": "relay:audit"
+  },
+  {
+    "id": "v10-06",
+    "prompt": "i've told it four times not to touch the pricing table markup and it refactors it anyway",
+    "expect": "context-anchor:ast-pinning-guide"
+  },
+  {
+    "id": "v10-07",
+    "prompt": "two agents grabbed the same 4-million-row backfill overnight and both started writing at 01:00. i want the work claimed before anything runs.",
+    "expect": "coupling-router:mesh"
+  },
+  {
+    "id": "v10-08",
+    "prompt": "eleven open, none finished. cap how many i'm allowed to hold at once.",
+    "expect": "secretary:orchestration"
+  },
+  {
+    "id": "v10-09",
+    "prompt": "half the numbers in this proposal trace back to a blog post somebody half-remembers",
+    "expect": "evidence-ledger:audit"
+  },
+  {
+    "id": "v10-10",
+    "prompt": "this goroutine writes to the shared map from four call sites and the mutex only guards two of them",
+    "expect": "code-review:go-traps"
+  },
+  {
+    "id": "v10-11",
+    "prompt": "round four made the hero better and the checkout worse, and everybody still voted to keep going",
+    "expect": "gauntlet-loop:gauntlet-protocol"
+  },
+  {
+    "id": "v10-12",
+    "prompt": "we've been 'waiting on the vendor' for sandbox credentials for nine days. nobody wrote down who asked, who answered, or what we're even blocked on.",
+    "expect": "dead-letter:record-schema"
+  },
+  {
+    "id": "v10-13",
+    "prompt": "third attempt, and you're asking me for the error that's been on my screen the whole time",
+    "expect": "pua:audit"
+  },
+  {
+    "id": "v10-14",
+    "prompt": "someone pasted a live stripe key into the runbook in 2023 and i'd bet there are four more like it in the same tree",
+    "expect": "audit:hygiene-rules"
+  },
+  {
+    "id": "v10-15",
+    "prompt": "reads like a press release from a company that doesn't exist yet",
+    "expect": "humanize:audit"
+  },
+  {
+    "id": "v10-16",
+    "prompt": "support can edit a yaml file and the python worker execs whatever's in it",
+    "expect": "muse-security:sast"
+  },
+  {
+    "id": "v10-17",
+    "prompt": "every screen still fetches in a useEffect and we're on react 19. one pass, not file by file.",
+    "expect": "refactor:modern-techniques"
+  },
+  {
+    "id": "v10-18",
+    "prompt": "figma link attached — half the frames are ungrouped and the prototype isn't wired. i need the click paths written down.",
+    "expect": "designscope:capture-flows"
+  },
+  {
+    "id": "v10-19",
+    "prompt": "everything in this app moves in 100ms with the same easing and the whole thing feels like a spreadsheet",
+    "expect": "animate:principles"
+  },
+  {
+    "id": "v10-20",
+    "prompt": "the client texts me at 9pm on sundays and i've started leaving the phone in the other room",
+    "expect": "coach:client"
+  },
+  {
+    "id": "v10-21",
+    "prompt": "six years in and i genuinely can't tell you whether i want to be running this agency in two more",
+    "expect": "periodic-retreat:retreat-protocol"
+  },
+  {
+    "id": "v10-22",
+    "prompt": "xcode's at 71gb. what's safe?",
+    "expect": "clean-system-cache:candidate-catalog"
+  },
+  {
+    "id": "v10-23",
+    "prompt": "woocommerce, forty skus, and stock goes negative every friday afternoon with no orders to explain it",
+    "expect": "webdev:ecommerce"
+  },
+  {
+    "id": "v10-24",
+    "prompt": "three years of features and nobody has ever asked whether the app is actually any good",
+    "expect": "mobile:audit"
+  },
+  {
+    "id": "v10-25",
+    "prompt": "traffic halved on the 14th, search console reports no issues, and nothing shipped that week",
+    "expect": "seo:audit"
+  },
+  {
+    "id": "v10-26",
+    "prompt": "twelve creators, one brief, and all twelve videos come back identical",
+    "expect": "content:ugc"
+  },
+  {
+    "id": "v10-27",
+    "prompt": "six dashboards a week land in my inbox and i still can't say whether last month beat the one before",
+    "expect": "analytics:reporting"
+  },
+  {
+    "id": "v10-28",
+    "prompt": "our ticket summariser is fine on one-liners and useless on long threads. i've rewritten the instruction nine times.",
+    "expect": "automation:prompt"
+  },
+  {
+    "id": "v10-29",
+    "prompt": "we're one env var away from a very bad day. boxes hardened before their audit lands, not after.",
+    "expect": "devops:security"
+  },
+  {
+    "id": "v10-30",
+    "prompt": "that report went 40 seconds to four minutes after two columns landed. read the plan, don't guess.",
+    "expect": "database:optimize"
+  },
+  {
+    "id": "v10-31",
+    "prompt": "worst project we've ever run just closed. i want changes out of it. two hours of blame is not it.",
+    "expect": "ops:retro"
+  },
+  {
+    "id": "v10-32",
+    "prompt": "40k visits, 12 paying customers, and nobody can point at the step where they leave",
+    "expect": "growth:funnels"
+  },
+  {
+    "id": "v10-33",
+    "prompt": "four llcs and three invoices went out this month under the wrong entity",
+    "expect": "accounts:invoicing"
+  },
+  {
+    "id": "v10-34",
+    "prompt": "before we build the next thing i want to sit with fifteen of the engineers who use us daily",
+    "expect": "gtm:discovery"
+  },
+  {
+    "id": "v10-35",
+    "prompt": "every cart dies at the shipping-cost line and we send them nothing afterwards",
+    "expect": "crm:abandon"
+  },
+  {
+    "id": "v10-36",
+    "prompt": "they filled in the post-project survey and it's mostly about our project manager",
+    "expect": "client-comms:feedback"
+  },
+  {
+    "id": "v10-37",
+    "prompt": "every deal stalls at 'we'll need our security team to look at this' and nobody on our side has an answer ready",
+    "expect": "sales-enablement:objection"
+  },
+  {
+    "id": "v10-38",
+    "prompt": "login bug fixed in 4.2, again in 4.4, back in 4.6",
+    "expect": "qa-launch:regression"
+  },
+  {
+    "id": "v10-39",
+    "prompt": "stripe webhooks stopped at 14:02 and i'm the only one at my desk",
+    "expect": "incident-response:triage"
+  },
+  {
+    "id": "v10-40",
+    "prompt": "not watching a 40-minute deploy. send two buttons and wait for my thumb.",
+    "expect": "telegram:approve"
+  }
+]
