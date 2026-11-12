@@ -262,12 +262,22 @@ export function runPortableDoctor(options: { home?: string; workspace?: string; 
   if (isDir(path.join(workspace, ".git")) && isDir(gitHooks)) {
     const preCommitPath = path.join(gitHooks, "pre-commit");
     const preCommit = fs.existsSync(preCommitPath) ? fs.readFileSync(preCommitPath, "utf8") : "";
-    const guarded = preCommit.includes("branch-guard-pre-commit.sh");
+    let guarded = preCommit.includes("branch-guard-pre-commit.sh");
+    let note = "";
+    // --fix runs the repository's own installer, when this workspace has one.
+    // An installed device has no scripts/ tree, so the message stays the fix there.
+    const installer = path.join(workspace, "scripts", "hooks", "install-hooks.sh");
+    if (!guarded && options.fix && fs.existsSync(installer)) {
+      const result = Bun.spawnSync(["bash", installer], { cwd: workspace, stdout: "pipe", stderr: "pipe" });
+      const after = fs.existsSync(preCommitPath) ? fs.readFileSync(preCommitPath, "utf8") : "";
+      guarded = after.includes("branch-guard-pre-commit.sh");
+      note = result.success && guarded ? " (installed by --fix)" : " (installer did not add the guard)";
+    }
     checks.push({
       id: "branch-guard",
       ok: guarded,
       detail: guarded
-        ? "pre-commit refuses ordinary commits on integration branches"
+        ? `pre-commit refuses ordinary commits on integration branches${note}`
         : "not installed — run `bash scripts/hooks/install-hooks.sh`",
     });
   }
