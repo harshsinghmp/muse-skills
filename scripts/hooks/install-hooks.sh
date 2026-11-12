@@ -109,6 +109,7 @@ install_git_wrapper() {
   echo "[hooks] git $hook: installed harness hygiene wrapper"
 }
 
+install_git_wrapper pre-commit "$HOOKS_DIR/branch-guard-pre-commit.sh"
 install_git_wrapper pre-commit "$HOOKS_DIR/harness-hygiene-pre-commit.sh"
 install_git_wrapper pre-push "$HOOKS_DIR/harness-hygiene-pre-push.sh"
 

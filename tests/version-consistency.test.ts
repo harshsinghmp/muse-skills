@@ -18,6 +18,7 @@ describe("release version consistency", () => {
     // Default is the latest release; the pinned tag is the offline fallback.
     expect(installer).toContain(`PINNED_REF="v${version}"`);
     expect(installer).toContain("releases/latest");
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: asserting the literal shell expansion
     expect(installer).toContain('MUSE_SKILLS_REF="${MUSE_SKILLS_REF:-${LATEST_REF:-$PINNED_REF}}"');
   });
 

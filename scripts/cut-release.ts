@@ -44,6 +44,44 @@ function write(rel: string, text: string): void {
   fs.writeFileSync(path.join(ROOT, rel), text, "utf8");
 }
 
+interface CutState {
+  version: string;
+  previous: string;
+  branch: string;
+  done: string[];
+}
+
+const STATE_PATH = path.join(ROOT, ".git", "muse-release-cut.json");
+
+function loadState(): CutState | null {
+  try {
+    return JSON.parse(fs.readFileSync(STATE_PATH, "utf8")) as CutState;
+  } catch {
+    return null;
+  }
+}
+
+function saveState(state: CutState): void {
+  fs.writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+}
+
+/**
+ * Runs a step once. A failed release keeps its progress, so `--resume` picks up
+ * where it stopped instead of rewriting six files from the top — the v8.6.1 cut
+ * aborted at the ledger stage with a half-finished tree.
+ */
+function step<T>(state: CutState, name: string, run: () => T): T {
+  if (state.done.includes(name)) {
+    console.log(`↩︎  ${name} (already done)`);
+    return undefined as T;
+  }
+  console.log(`▶︎  ${name}`);
+  const result = run();
+  state.done.push(name);
+  saveState(state);
+  return result;
+}
+
 function bump(version: string, kind: "major" | "minor" | "patch"): string {
   const [major, minor, patch] = version.split(".").map(Number);
   if (kind === "major") return `${major + 1}.0.0`;
@@ -52,6 +90,9 @@ function bump(version: string, kind: "major" | "minor" | "patch"): string {
 }
 
 // ── 0. Arguments and preconditions ───────────────────────────────────────────
+const resume = args.includes("--resume");
+const existing = resume ? loadState() : null;
+if (resume && !existing) fail("no interrupted release to resume (.git/muse-release-cut.json is missing)");
 const explicit = args.includes("--version") ? args[args.indexOf("--version") + 1] : "";
 const kind = args.includes("--major")
   ? "major"
@@ -60,9 +101,9 @@ const kind = args.includes("--major")
     : args.includes("--patch")
       ? "patch"
       : "";
-if (!explicit && !kind) fail("pass --major, --minor, --patch, or --version X.Y.Z");
+if (!explicit && !kind && !resume) fail("pass --major, --minor, --patch, or --version X.Y.Z");
 
-if (run("git", ["status", "--porcelain"]).length > 0) fail("working tree is not clean");
+if (!resume && run("git", ["status", "--porcelain"]).length > 0) fail("working tree is not clean");
 const branch = run("git", ["branch", "--show-current"]);
 if (branch !== "dev") fail(`release must be cut from dev (on '${branch}')`);
 run("git", ["fetch", "origin", "dev", "--quiet"]);
@@ -72,44 +113,58 @@ if (run("git", ["rev-parse", "HEAD"]) !== run("git", ["rev-parse", "origin/dev"]
 
 const pkgPath = "package.json";
 const pkg = JSON.parse(read(pkgPath)) as { version: string };
-const previous = pkg.version;
-const version = explicit || bump(previous, kind as "major" | "minor" | "patch");
+const previous = existing?.previous ?? pkg.version;
+const version = existing?.version ?? (explicit || bump(pkg.version, kind as "major" | "minor" | "patch"));
 if (!/^\d+\.\d+\.\d+$/.test(version)) fail(`'${version}' is not X.Y.Z`);
 const tag = `v${version}`;
-if (run("git", ["tag", "-l", tag]) === tag) fail(`tag ${tag} already exists locally`);
+if (!resume && run("git", ["tag", "-l", tag]) === tag) fail(`tag ${tag} already exists locally`);
 
 const today = new Date().toISOString().slice(0, 10);
+const compare = `**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v${previous}...${tag}`;
 console.log(`Cutting ${tag} (was v${previous}) on ${today}\n`);
 
+const state: CutState = existing ?? { version, previous, branch: `release/${tag}`, done: [] };
+saveState(state);
+
 // ── 1. Branch ────────────────────────────────────────────────────────────────
-run("git", ["checkout", "-b", `release/${tag}`, "dev"]);
+step(state, "branch", () => {
+  if (run("git", ["branch", "--show-current"]) !== `release/${tag}`) {
+    run("git", ["checkout", "-b", `release/${tag}`, "dev"], true);
+    if (run("git", ["branch", "--show-current"]) !== `release/${tag}`) fail(`could not switch to release/${tag}`);
+  }
+});
 
 // ── 2. Version surfaces ──────────────────────────────────────────────────────
-pkg.version = version;
-write(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+step(state, "version", () => {
+  pkg.version = version;
+  write(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
-// The installer carries the version in its header, its usage line, and the
-// offline fallback. Replacing the old version everywhere catches all three.
-const installer = read("scripts/install.sh").replaceAll(previous, version);
-write("scripts/install.sh", installer);
+  // The installer carries the version in its header, its usage line, and the
+  // offline fallback. Replacing the old version everywhere catches all three.
+  const installer = read("scripts/install.sh").replaceAll(previous, version);
+  write("scripts/install.sh", installer);
 
-const readme = read("README.md")
-  .replaceAll(`Version-${previous}-blue`, `Version-${version}-blue`)
-  .replaceAll(`/v${previous}/scripts/install.sh`, `/${tag}/scripts/install.sh`);
-write("README.md", readme);
+  const readme = read("README.md")
+    .replaceAll(`Version-${previous}-blue`, `Version-${version}-blue`)
+    .replaceAll(`/v${previous}/scripts/install.sh`, `/${tag}/scripts/install.sh`);
+  write("README.md", readme);
+});
 
 // ── 3. Changelog stamp ───────────────────────────────────────────────────────
-const changelog = read("CHANGELOG.md");
-if (!changelog.includes("## [Unreleased]")) fail("CHANGELOG.md has no '## [Unreleased]' block");
-const compare = `**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v${previous}...${tag}`;
-const stamped = changelog
-  .replace("## [Unreleased]\n", `## [Unreleased]\n\n## [${version}] - ${today}\n`)
-  .replace(`\n## [${previous}]`, `\n${compare}\n\n## [${previous}]`);
-write("CHANGELOG.md", stamped);
+step(state, "changelog", () => {
+  const changelog = read("CHANGELOG.md");
+  if (!changelog.includes("## [Unreleased]")) fail("CHANGELOG.md has no '## [Unreleased]' block");
+  const compare = `**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v${previous}...${tag}`;
+  const stamped = changelog
+    .replace("## [Unreleased]\n", `## [Unreleased]\n\n## [${version}] - ${today}\n`)
+    .replace(`\n## [${previous}]`, `\n${compare}\n\n## [${previous}]`);
+  write("CHANGELOG.md", stamped);
+});
 
 // ── 4. Release notes skeleton ────────────────────────────────────────────────
-const notes = read("RELEASE_NOTES.md");
-const skeleton = `# 🏛️ Muse Skills ${tag} — <one line for humans>
+step(state, "notes", () => {
+  const notes = read("RELEASE_NOTES.md");
+  const skeleton = `# 🏛️ Muse Skills ${tag} — <one line for humans>
 
 > **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
 
@@ -137,40 +192,49 @@ npx skills add harshsinghmp/muse-skills
 ${compare}
 
 `;
-write("RELEASE_NOTES.md", skeleton + notes);
+  write("RELEASE_NOTES.md", skeleton + notes);
+});
 
 // ── 5. Docs ledger ───────────────────────────────────────────────────────────
-const ledger = run("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", ".", "--release", tag], true);
-if (ledger.includes("still owe docs")) {
-  console.warn("⚠️  ledger has pending points; stamping stopped:");
-  console.warn(
-    ledger
-      .split("\n")
-      .filter((line) => line.includes("DP-"))
-      .join("\n"),
-  );
-  console.warn(
-    "   Mark them (`--mark DP-XXXX --audience all --docs CHANGELOG.md`) then re-run, or commit the version bump without a stamp.",
-  );
-} else {
+step(state, "ledger", () => {
+  const ledger = run("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", ".", "--release", tag], true);
+  if (ledger.includes("still owe docs")) {
+    // Fail before the slow gate run: an unstamped ledger fails check:ledger and
+    // wastes the whole suite. Print exactly what to do instead.
+    fail(
+      [
+        "the docs ledger has pending points — document and mark them, then re-run with --resume:",
+        ...ledger.split("\n").filter((line) => line.includes("DP-")),
+        "  bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --mark DP-XXXX --audience all --docs CHANGELOG.md,.agents/context/current.md",
+        "  bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release <tag>",
+      ].join("\n"),
+    );
+  }
+  // updatedocs writes JSON in its own style; the repo lints with biome.
+  run("bunx", ["biome", "check", "--write", ".docs-ledger.json"]);
   console.log("✅ docs ledger stamped");
-}
+});
 
 // ── 6. Gates ─────────────────────────────────────────────────────────────────
-console.log("\nRunning gates (this is the slow part)…");
-run("bun", ["run", "verify", "--skip", "deps"]);
-console.log("✅ all gates passed");
+step(state, "gates", () => {
+  console.log("\nRunning gates (this is the slow part)…");
+  run("bun", ["run", "verify", "--skip", "deps"]);
+  console.log("✅ all gates passed");
+});
 
 // ── 7. Commit, push, PR ──────────────────────────────────────────────────────
-run("git", ["add", "-A"]);
-run("git", [
-  "commit",
-  "-m",
-  `chore(release): ${tag}\n\nVersion surfaces pinned across package.json, README badge, installer pin, and\nrelease notes; ledger stamped for ${tag}.`,
-  "-m",
-  "Co-authored-by: CommandCodeBot <noreply@commandcode.ai>",
-]);
-run("git", ["push", "-u", "origin", `release/${tag}`]);
+step(state, "commit", () => {
+  run("git", ["add", "-A"]);
+  run("git", [
+    "commit",
+    "-m",
+    `chore(release): ${tag}\n\nVersion surfaces pinned across package.json, README badge, installer pin, and\nrelease notes; ledger stamped for ${tag}.`,
+    "-m",
+    "Co-authored-by: CommandCodeBot <noreply@commandcode.ai>",
+  ]);
+});
+
+step(state, "push", () => run("git", ["push", "-u", "origin", `release/${tag}`]));
 
 const prBody = `## Release ${tag}
 
@@ -189,6 +253,9 @@ gh release create ${tag} --title "${tag}" --notes-file <(sed -n '/${tag}/,/^# /p
 bun run release:smoke
 \`\`\``;
 
-const pr = run("gh", ["pr", "create", "--base", "main", "--title", `Release ${tag}`, "--body", prBody]);
+const pr = step(state, "pr", () =>
+  run("gh", ["pr", "create", "--base", "main", "--title", `Release ${tag}`, "--body", prBody]),
+);
 console.log(`\n${pr}`);
+fs.rmSync(STATE_PATH, { force: true });
 console.log(`\nNext: fill in RELEASE_NOTES.md, then merge. check:release-ready guards the tag.`);

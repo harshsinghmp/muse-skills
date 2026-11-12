@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.6.1-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.7.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -19,7 +19,7 @@
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Option B: Instant Remote Setup (46 Skills + 462 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.6.1/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.7.0/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -298,12 +298,12 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 <!-- routing-matrix:start -->
 | Distribution | Kind | Prompts | Exact `skill:mode` | Department |
 | :--- | :--- | ---: | ---: | ---: |
-| `training (tuned)` | tuned | 247 | 161 (65.2%) | 176 (71.3%) |
+| `training (tuned)` | tuned | 247 | 162 (65.6%) | 178 (72.1%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
 | `v7` | unseen | 40 | 2 (5.0%) | 8 (20.0%) |
-| `v8` | unseen | 40 | 3 (7.5%) | 9 (22.5%) |
-| `v9` | unseen | 40 | 1 (2.5%) | 10 (25.0%) |
+| `v8` | unseen | 40 | 3 (7.5%) | 10 (25.0%) |
+| `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
 **Mode coverage**: 135 of 406 routable modes (33%) carry a curated routing signal; the other 271 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
