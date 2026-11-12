@@ -256,8 +256,24 @@ export function runPortableDoctor(options: { home?: string; workspace?: string; 
     });
   }
 
+  // Repository safety net: the branch guard lives in .git/hooks, which no
+  // installer can reach for you, so a fresh clone silently loses it.
+  const gitHooks = path.join(workspace, ".git", "hooks");
+  if (isDir(path.join(workspace, ".git")) && isDir(gitHooks)) {
+    const preCommitPath = path.join(gitHooks, "pre-commit");
+    const preCommit = fs.existsSync(preCommitPath) ? fs.readFileSync(preCommitPath, "utf8") : "";
+    const guarded = preCommit.includes("branch-guard-pre-commit.sh");
+    checks.push({
+      id: "branch-guard",
+      ok: guarded,
+      detail: guarded
+        ? "pre-commit refuses ordinary commits on integration branches"
+        : "not installed — run `bash scripts/hooks/install-hooks.sh`",
+    });
+  }
+
   return {
-    ok: checks.every((check) => check.ok || check.id === "version-marker"),
+    ok: checks.every((check) => check.ok || ADVISORY.has(check.id)),
     skillsRoot,
     version,
     skills: skills.length,
@@ -265,6 +281,9 @@ export function runPortableDoctor(options: { home?: string; workspace?: string; 
     checks,
   };
 }
+
+/** Checks that inform but do not fail the report. */
+const ADVISORY = new Set(["version-marker", "branch-guard"]);
 
 function main(): void {
   const args = Bun.argv.slice(2);
@@ -276,7 +295,7 @@ function main(): void {
     console.log(`\n🩺 muse doctor (portable) — ${report.skillsRoot}`);
     console.log(`   ${report.skills} skills · ${report.modes} modes · ${report.version ?? "unversioned"}\n`);
     for (const check of report.checks) {
-      const icon = check.ok ? "✅" : check.id === "version-marker" ? "⚠️ " : "❌";
+      const icon = check.ok ? "✅" : ADVISORY.has(check.id) ? "⚠️ " : "❌";
       console.log(`   ${icon} ${check.id.padEnd(18)} ${check.detail}`);
     }
     console.log(
