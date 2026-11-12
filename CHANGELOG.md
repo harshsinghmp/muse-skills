@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.7.1] - 2026-11-12
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.7.0...v8.7.1
+
 ## [8.7.0] - 2026-11-12
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.6.1...v8.7.0
@@ -20,6 +24,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **`muse doctor --fix` installs the branch guard** (doctor): the check told you what was missing but could not fix it. When the workspace contains `scripts/hooks/install-hooks.sh` (the source repo), `--fix` runs it and re-reads the hook; an installed device has no such tree, so it keeps the actionable message instead of pretending.
 - **`muse doctor` reports the branch guard** (`doctor`, check `branch-guard`): the guard lives in `.git/hooks`, which no installer can write for you, so a fresh clone silently loses it. `doctor` now reports `installed` / `not installed — run bash scripts/hooks/install-hooks.sh` for any workspace that is a git repository. It is **advisory** like the version marker: a missing hook informs without declaring the device broken, and non-git directories are not flagged at all.
 - **The `git` skill carries the release lessons** (`skills/core-engine/git/SKILL.md`): a **pre-tag gate** that refuses to tag unless HEAD is the production branch and every version surface agrees — because a tag-triggered workflow runs the file *from the tag*, so a broken workflow can only be fixed by moving a published tag; a **branch guard** pitfall; and **resumable releases**. All three are project-agnostic and ship to every consumer of the skill.
 - **`release:cut` is resumable** (`--resume`, state in `.git/muse-release-cut.json`): it aborted mid-way on v8.6.1 and left six modified files, so re-running from the top would rewrite work that was already correct. Each step runs once and is recorded; a resumed run picks up where it stopped. The ledger step also now fails **before** the slow gate sweep with the exact `--mark` commands, and formats `.docs-ledger.json` (which `updatedocs` writes in a style biome rejects).
@@ -85,6 +90,8 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **The confident-but-wrong case resists a global override** (routing, recorded): extending the vector blend to also overrule a *confident* lexical answer was measured at four ratios (vector must prefer the alternative 2×, 3×, 4×) and three absolute-evidence floors. It never paid: the best variant gained **+1 department on v7** while costing **3–5 exact on the tuned set**, and a thin-evidence floor either changed nothing (below 12) or still cost a point. Reverted — a vector space that disagrees on correct answers cannot be trusted to overrule them globally.
+- **`release:cut --resume` works on the branch it created** (found while cutting v8.7.0): the resume path re-ran the "must be on dev" guard and refused to continue its own release branch. It also had no way to clear a stale state file, so the next cut inherited an old attempt. `--resume` now accepts the recorded branch, `--abort` clears the state, and `MUSE_RELEASE_CUT_STATE` lets tests avoid touching a real interrupted release.
 - **`release:cut` fails before the slow gates, and formats the ledger** (found by dogfooding it for v8.6.1): a pending docs-ledger point used to surface *after* the full gate run, and `updatedocs` writes the ledger in a style biome rejects. The script now stops immediately with the exact `--mark` commands, and formats `.docs-ledger.json` after stamping. The v8.6.1 cut was the first release to run through `check:release-ready` — it passed on the first attempt, where the previous manual cut had tagged a stale commit.
 - **Fast-path rules match intent, not vocabulary** (routing): `/\bexpo\b/` was bundled with `react native|flutter` and sent every Expo project to `mobile:cross`; it now has its own rule → `mobile:expo`. The review rule matched the words "pull request" anywhere, so *"three years of pull request threads … turn the repeated corrections into standing rules"* short-circuited to `code-review:pr-context` before scoring — it now requires a review verb aimed at a diff ("review this pr", "check the patch"). **v7 blind 1 → 2 exact**, no distribution regressed; the v9 miss became an honest department miss instead of a wrong short-circuit.
 - **Landing gate no longer poisons its own commits** (`scripts/check-landed.ts`): the pre-review gate read the PR's check rollup, which contains its **own** earlier runs — so the first failure on a SHA made every later run fail, permanently. It now ignores its own job and judges only the **latest** run per check name, so a superseded or cancelled run cannot outvote the run that replaced it. `check-landed` is also import-gated (`import.meta.main`), matching the repo convention; importing it no longer executes the gate.

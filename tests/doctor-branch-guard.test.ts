@@ -42,3 +42,29 @@ describe("doctor reports the repository safety net", () => {
     expect(checkFor(root)).toBeUndefined();
   });
 });
+
+describe("doctor --fix installs the guard", () => {
+  test("runs the workspace installer when one exists", () => {
+    const root = workspaceWithHook("#!/bin/sh\n");
+    mkdirSync(join(root, "scripts", "hooks"), { recursive: true });
+    writeFileSync(
+      join(root, "scripts", "hooks", "install-hooks.sh"),
+      '#!/bin/sh\nprintf "%s\\n" "bash scripts/hooks/branch-guard-pre-commit.sh" >> .git/hooks/pre-commit\n',
+      "utf8",
+    );
+    const check = runPortableDoctor({ home: join(root, "home"), workspace: root, fix: true }).checks.find(
+      (entry) => entry.id === "branch-guard",
+    );
+    expect(check?.ok).toBe(true);
+    expect(check?.detail).toContain("installed by --fix");
+  });
+
+  test("leaves an installed device alone — no scripts tree, no attempt", () => {
+    const root = workspaceWithHook("#!/bin/sh\n");
+    const check = runPortableDoctor({ home: join(root, "home"), workspace: root, fix: true }).checks.find(
+      (entry) => entry.id === "branch-guard",
+    );
+    expect(check?.ok).toBe(false);
+    expect(check?.detail).toContain("install-hooks.sh");
+  });
+});

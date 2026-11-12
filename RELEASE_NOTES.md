@@ -1,3 +1,31 @@
+# 🏛️ Muse Skills v8.7.1 — Doctor That Repairs What It Reports
+
+> **Patch release: `muse doctor --fix` now installs the branch guard it reports, and a routing experiment that did not pay is recorded rather than shipped.** 881 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.7.1
+
+- **`doctor --fix` repairs the branch guard**: the check reported a missing safety net but could not install it. When the workspace has `scripts/hooks/install-hooks.sh`, `--fix` runs it and re-reads the hook; an installed device keeps the actionable message.
+- **A rejected routing experiment, recorded**: extending the vector blend to overrule *confident* lexical answers cost 3–5 exact on the tuned set for +1 department on v7, at every ratio and evidence floor tried. Reverted rather than shipped.
+
+## 📊 Verification
+
+| Metric | v8.7.0 | v8.7.1 |
+|:---|:---|:---|
+| Automated Tests | 881 | **881** |
+| Test Files | 72 | **72** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.7.0...v8.7.1
+
 # 🏛️ Muse Skills v8.7.0 — Routing That Reads Meaning
 
 > **Minor release: the router consults a vector-space second opinion when it is unsure — the first routing change to improve a blind set without costing another — plus a branch guard that refuses commits on integration branches and a resumable release cut.** 881 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
