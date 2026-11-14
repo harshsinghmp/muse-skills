@@ -312,6 +312,25 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 Measured 2026-11-12. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
 
+### Why the router is lexical (and what a real model does instead)
+
+A lexical router matches words a human wrote down; it cannot connect *"the invoice formatter imports the user model"* with `coupling`. Real sentence embeddings can, so they were measured — `all-MiniLM-L6-v2` (q8, 23 MB) embedding the 406 mode descriptions and every prompt, scored on the same seven distributions:
+
+| Distribution | Router (exact / dept) | Embeddings (exact / dept) |
+| :--- | ---: | ---: |
+| training | **162 / 178** | 96 / 138 |
+| v5 | **21 / 28** | 15 / 20 |
+| v6 | **26 / 29** | 10 / 15 |
+| v7 | 2 / 8 | **8 / 16** |
+| v8 | 3 / 10 | **12 / 16** |
+| v9 | 2 / 13 | **8 / 14** |
+| v10 | 4 / 10 | **3 / 12** |
+| **blind total** | **11 / 160** | **31 / 160** |
+
+On prompts the router has never seen, embeddings are **2.8× better at exact routing** and 1.4× at department. On the tuned sets the hand-built vocabulary wins by the same margin — which is what "tuned" means.
+
+They are not shipped because the router is **synchronous** (dispatch returns a mode immediately, and tests assert on it), while an embedding model is async and brings a 23 MB model plus a runtime. The honest next step is a separate async entry point, not smuggling a model into a sync function.
+
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 
 **Router mode signals.** `bun scripts/sync-dispatch.ts` also generates `skills/context-orchestration/secretary/references/mode-signals.json` — each mode's heading plus opening prose. The installed dispatch engine cannot read other skills' reference files, so this is how mode *content* reaches routing; `sync-dispatch --check` keeps it, the dispatch directory, and the skill tree in lockstep.
