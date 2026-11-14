@@ -103,7 +103,8 @@
     "release:cut": "bun scripts/cut-release.ts",
     "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0",
     "route:embed": "bun scripts/route-embeddings.ts",
-    "check:routing:embeddings": "bun scripts/route-embeddings.ts --check-baseline"
+    "check:routing:embeddings": "bun scripts/route-embeddings.ts --check-baseline",
+    "export:routing-dataset": "bun scripts/export-routing-dataset.ts"
   },
   "type": "module",
   "version": "8.7.1",

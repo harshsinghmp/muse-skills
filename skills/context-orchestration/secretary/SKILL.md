@@ -37,7 +37,7 @@ metadata:
 
 | Mode | Purpose | Reference Document |
 | :--- | :--- | :--- |
-| **dispatch** | Universal Agency Department Directory, intent triage, Council Lead assignment, and progressive disclosure routing. | `references/dispatch.md` |
+| **dispatch** | Universal Agency Department Directory, intent triage, Council Lead assignment, and progressive disclosure routing. **Route by reading the directory** — the request's deliverable, not its keywords. | `references/dispatch.md` |
 | **orchestration** | Autonomous Delegation Protocol, Typed JSON Message Bus, Fast-Path Triage, Morning Briefing, and Multi-Skill Composition. | `references/orchestration.md` |
 | **onboard** | Interactive Principal & Project Identity Interview (Global `~/.agents/identity/` or Project Scoped `./.agents/context/`). | `references/onboard.md` |
 | **socratic-adversarial-gate** | Socratic Adversarial Gate & Devil's Advocate Reference | [references/socratic-adversarial-gate.md](references/socratic-adversarial-gate.md) |
@@ -105,6 +105,19 @@ Every proposal must withstand 3 mandatory challenge angles before hashing:
 | `NEEDS_APPROVAL` | Recommendation frozen with payload SHA-256 | Output `APPROVAL_PACKET.md`, wait for user hash confirmation |
 | `APPROVED` | User matches exact SHA-256 hash token | Execute proposed mutation |
 | `REJECTED` | User rejects or requests modifications | Record feedback, return to `DRAFTING` |
+
+### Routing procedure (read this before choosing a mode)
+
+The directory in `references/dispatch.md` is the router; the agent is the one applying it. Measured on a 40-prompt blind set written after every router change, an agent reading this directory routes **28/40 exact and 35/40 department**, against **4/40 and 9/40** for the bundled lexical router and **3/40 and 12/40** for a sentence-embedding model. Reading beats scoring because the directory describes *deliverables* while the prompt describes *symptoms*.
+
+1. Name the **deliverable**, not the wording ("what is the scope" → reconcile docs with code, not audit the agent).
+2. Pick **one department** whose Primary Intent owns that deliverable.
+3. Pick the **mode** whose reference title matches it, and read that reference before acting.
+4. **Tie** → name both, say which changes what you would do first, proceed with that one.
+5. **Nothing fits** → ask one question instead of guessing.
+6. **State the route** as `department:mode` before starting.
+
+`bun skills/context-orchestration/secretary/scripts/secretary.ts --triage "<request>"` remains available as a deterministic fallback for scripts, CI, and non-agent callers — it is not the preferred path when an agent is present.
 
 ### Delegation Control Gates (subagent dispatch)
 

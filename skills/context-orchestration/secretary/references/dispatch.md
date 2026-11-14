@@ -17,6 +17,25 @@ Every routed task is governed by one of four specialized Council Leads:
 
 ---
 
+## 🧭 How to route (agent protocol)
+
+Route by **intent**, not by keywords. A prompt rarely uses the words its department uses.
+
+1. **Name the deliverable.** "Whats the deploy doing" → the deliverable is a diagnosis of a pipeline, not a document.
+2. **Pick one department** whose *Primary Intent* the request belongs to, even when the wording differs from every trigger word.
+3. **Pick the mode** whose reference title matches the deliverable, then **read that reference before acting**. Never invent a mode name.
+4. **Tie rule.** If two departments are genuinely close, name both and say which one changes what you would do first — then proceed with that one. Do not blend them.
+5. **Escape hatch.** If nothing fits, say so and ask one question. A wrong confident route is worse than a question.
+6. **Report the route** as `department:mode` before starting, so the user can correct it in one line.
+
+Worked examples of the trap:
+
+| Request wording | Looks like | Actually |
+| :--- | :--- | :--- |
+| "three years of pull request threads … turn the corrections into rules" | `code-review:pr-context` (says "pull request") | `updateagents:pr-review-mining` — the deliverable is standing rules |
+| "the invoice formatter imports the user model … nine files" | `accounts:invoicing` (says "invoice") | `code-review:coupling-audit` — the deliverable is untangling modules |
+| "no em dashes, no 'delve', sentence case" | `content:copy` | `humanize:style-guide` — house style rules, not new copy |
+
 <!-- agency-directory:start -->
 ## 📋 Canonical 46-Department Agency Directory
 

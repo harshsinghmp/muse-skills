@@ -62,7 +62,7 @@
   {
     "id": "v10-13",
     "prompt": "third attempt, and you're asking me for the error that's been on my screen the whole time",
-    "expect": "pua:audit"
+    "expect": "updatedocs:audit"
   },
   {
     "id": "v10-14",
@@ -86,7 +86,7 @@
   },
   {
     "id": "v10-18",
-    "prompt": "figma link attached — half the frames are ungrouped and the prototype isn't wired. i need the click paths written down.",
+    "prompt": "figma link attached \u2014 half the frames are ungrouped and the prototype isn't wired. i need the click paths written down.",
     "expect": "designscope:capture-flows"
   },
   {
@@ -102,7 +102,7 @@
   {
     "id": "v10-21",
     "prompt": "six years in and i genuinely can't tell you whether i want to be running this agency in two more",
-    "expect": "periodic-retreat:retreat-protocol"
+    "expect": "ops:retro"
   },
   {
     "id": "v10-22",
@@ -167,7 +167,7 @@
   {
     "id": "v10-34",
     "prompt": "before we build the next thing i want to sit with fifteen of the engineers who use us daily",
-    "expect": "gtm:discovery"
+    "expect": "research:user-research"
   },
   {
     "id": "v10-35",
