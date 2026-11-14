@@ -147,9 +147,14 @@ describe("mesh-backed swarm dispatch", () => {
         expect([...firstRan, ...secondRan].sort()).toEqual(plan.tasks.map((task) => task.id).sort());
         expect(firstRan.filter((id) => secondRan.includes(id))).toEqual([]);
 
-        const mesh = firstOut.mesh.anomalies.length === 0 ? firstOut.mesh : secondOut.mesh;
-        expect(mesh.completed).toBe(6);
-        expect(mesh.anomalies).toEqual([]);
+        // Each dispatcher reports the mesh as it saw it when it finished; the
+        // later finisher can still be one claim behind. The persisted state is
+        // the only observation that is complete after both exits.
+        const persisted = meshStatus(stateDir);
+        const done = persisted.claims.filter((claim) => claim.status === "DONE").map((claim) => claim.taskId);
+        expect(done.sort()).toEqual(plan.tasks.map((task) => task.id).sort());
+        expect(persisted.claims.filter((claim) => claim.stale)).toEqual([]);
+        expect([firstOut.mesh.anomalies, secondOut.mesh.anomalies].flat()).toEqual([]);
       }),
     60_000,
   );
