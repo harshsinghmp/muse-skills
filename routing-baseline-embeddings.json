@@ -1,0 +1,15 @@
+{
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+  "generatedAt": "2026-11-12",
+  "note": "Embedding-router floors, measured with `bun run route:embed --fixtures`. Separate from routing-baseline.json (the lexical router) on purpose: the two routers have different strengths, and one baseline cannot judge both.",
+  "distributions": {
+    "training": { "exact": 101, "department": 142, "total": 247 },
+    "v5": { "exact": 14, "department": 20, "total": 40 },
+    "v6": { "exact": 9, "department": 12, "total": 40 },
+    "v7": { "exact": 9, "department": 16, "total": 40 },
+    "v8": { "exact": 12, "department": 17, "total": 40 },
+    "v9": { "exact": 9, "department": 14, "total": 40 },
+    "v10": { "exact": 3, "department": 13, "total": 40 }
+  }
+}

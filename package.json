@@ -101,12 +101,15 @@
     "check:release-ready": "bun scripts/check-release-ready.ts",
     "verify": "bun scripts/verify.ts",
     "release:cut": "bun scripts/cut-release.ts",
-    "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0"
+    "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0",
+    "route:embed": "bun scripts/route-embeddings.ts",
+    "check:routing:embeddings": "bun scripts/route-embeddings.ts --check-baseline"
   },
   "type": "module",
   "version": "8.7.1",
   "devDependencies": {
     "@biomejs/biome": "2.6.7",
+    "@huggingface/transformers": "^4.3.2",
     "bun-types": "^1.4.4",
     "typescript": "^7.0.2"
   },

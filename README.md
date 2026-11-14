@@ -329,7 +329,18 @@ A lexical router matches words a human wrote down; it cannot connect *"the invoi
 
 On prompts the router has never seen, embeddings are **2.8× better at exact routing** and 1.4× at department. On the tuned sets the hand-built vocabulary wins by the same margin — which is what "tuned" means.
 
-They are not shipped because the router is **synchronous** (dispatch returns a mode immediately, and tests assert on it), while an embedding model is async and brings a 23 MB model plus a runtime. The honest next step is a separate async entry point, not smuggling a model into a sync function.
+The router stays lexical because it is **synchronous** (dispatch returns a mode immediately, and tests assert on it), while a model is async and brings 23 MB plus a runtime. The embedding path therefore lives beside it, not inside it:
+
+```bash
+bun run route:embed --prompt "the invoice formatter imports the user model"
+bun run route:embed --check                 # warm the corpus cache (~8s, then instant)
+bun run check:routing:embeddings            # compare against routing-baseline-embeddings.json
+```
+
+- **model**: `Xenova/all-MiniLM-L6-v2` at a pinned commit — a moved tag cannot change what runs
+- **cache**: `~/.cache/muse/embeddings`, keyed by model + revision + corpus hash, so a changed corpus never reuses stale vectors
+- **offline**: a warm cache keeps working with no network; a missing runtime prints the one command that installs it
+- **separate baselines**: `routing-baseline.json` judges the lexical router, `routing-baseline-embeddings.json` judges this one — a single floor cannot judge two routers with opposite strengths
 
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 
