@@ -221,6 +221,17 @@ if ! run_ts scripts/export-commands.ts "${EXPORT_ARGS[@]}"; then
   exit 1
 fi
 
+# 5.1 Verify what was just installed, and repair what the check can repair.
+# Running this here means an install never finishes "successfully" with a
+# surface that does not resolve.
+echo -e "\n🩺 Verifying the install…"
+if run_ts skills/core-engine/updateagents/scripts/doctor.ts --fix; then
+  echo -e "✅ Install verified."
+else
+  echo -e "⚠️  Doctor reported problems it could not repair — run it again for details:"
+  echo -e "   bun skills/core-engine/updateagents/scripts/doctor.ts"
+fi
+
 # ─── 5.5 Optional Global Identity Onboarding ─────────────────────────────────
 DO_ONBOARD=false
 if [ "$ONBOARD_FLAG" = true ]; then

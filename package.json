@@ -100,7 +100,8 @@
     "muse": "bun scripts/muse.ts",
     "check:release-ready": "bun scripts/check-release-ready.ts",
     "verify": "bun scripts/verify.ts",
-    "release:cut": "bun scripts/cut-release.ts"
+    "release:cut": "bun scripts/cut-release.ts",
+    "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0"
   },
   "type": "module",
   "version": "8.7.1",
