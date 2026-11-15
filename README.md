@@ -312,6 +312,10 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 Measured 2026-11-15. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
 
+### Changing a skill
+
+A skill change is a cascade: a mode file feeds `skills.json`, the dispatch directory, mode signals, three routing artifacts, five discovery surfaces and the README. Run the ordered cascade rather than remembering it — `scripts/change-skill.ts` (`bun run change:skill --type new-mode|new-skill|edit-mode|edit-skill|rename-mode`) regenerates in dependency order and stops at the first failure. The reasoning, the manual remainder, and which shipped skill does each step are in [`docs/SKILL-CHANGE-PLAYBOOK.md`](docs/SKILL-CHANGE-PLAYBOOK.md).
+
 ### Keeping the labels honest
 
 Routing accuracy cannot exceed label accuracy. `bun run arbitrate:labels` (`scripts/arbitrate-labels.ts`, `--routes <file>`) compares a blind agent's routes against the fixtures and lists every disagreement, split into **department** and **mode** disagreements. Two independent readings settle each one: agreement becomes the label, disagreement marks it `contested`, and a contested label may not judge a router change.
