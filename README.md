@@ -329,6 +329,16 @@ A lexical router matches words a human wrote down; it cannot connect *"the invoi
 
 On prompts the router has never seen, embeddings are **2.8× better at exact routing** and 1.4× at department. On the tuned sets the hand-built vocabulary wins by the same margin — which is what "tuned" means.
 
+**But neither is how routing actually works.** An agent reading `references/dispatch.md` — the directory plus its routing protocol — was measured on all six blind sets (240 prompts) with no labels, no fixtures and no router:
+
+| Router | exact | department |
+| :--- | ---: | ---: |
+| **Agent reading `dispatch.md`** | **191/240 (80%)** | **218/240 (91%)** |
+| Lexical router | 58/240 (24%) | — |
+| Sentence embeddings | 56/240 (23%) | — |
+
+Per set: v5 32/38, v6 34/36, v7 30/34, v8 31/35, v9 36/40, v10 28/35 (exact/department). Reading beats scoring because the directory describes **deliverables** while a prompt describes **symptoms**. The scorers remain as deterministic fallbacks for scripts and CI; they are not the product path.
+
 The router stays lexical because it is **synchronous** (dispatch returns a mode immediately, and tests assert on it), while a model is async and brings 23 MB plus a runtime. The embedding path therefore lives beside it, not inside it:
 
 ```bash
