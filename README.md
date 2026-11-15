@@ -312,6 +312,10 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 Measured 2026-11-15. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
 
+### Keeping the labels honest
+
+Routing accuracy cannot exceed label accuracy. `bun run arbitrate:labels` (`scripts/arbitrate-labels.ts`, `--routes <file>`) compares a blind agent's routes against the fixtures and lists every disagreement, split into **department** and **mode** disagreements. Two independent readings settle each one: agreement becomes the label, disagreement marks it `contested`, and a contested label may not judge a router change.
+
 ### Why the router is lexical (and what a real model does instead)
 
 A lexical router matches words a human wrote down; it cannot connect *"the invoice formatter imports the user model"* with `coupling`. Real sentence embeddings can, so they were measured — `all-MiniLM-L6-v2` (q8, 23 MB) embedding the 406 mode descriptions and every prompt, scored on the same seven distributions:
