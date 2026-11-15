@@ -1,6 +1,6 @@
 # 🛠️ webdev
 
-The web engineering department head: one skill across twenty-two modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, onboard, funnel, edge, rate-limit, offline, realtime-bus, deploy, audit, hydration-polish, security-headers, technical-resilience security-headers. Stack-agnostic: uses what the project uses.
+The web engineering department head: one skill across twenty-three modes — frontend, backend, fullstack, ecommerce, cms, performance, accessibility, migrations, prototype, spec, implement, onboard, funnel, edge, rate-limit, offline, realtime-bus, deploy, audit, hydration-polish, security-headers, technical-resilience, takeover-audit security-headers. Stack-agnostic: uses what the project uses.
 
 ## Install
 
@@ -50,6 +50,7 @@ Our LCP is 4.2s on mobile — diagnose and fix.
 | **realtime-bus** | Distributed WebSockets & Server-Sent Events Engine | [references/realtime-bus.md](references/realtime-bus.md) |
 | **security-headers** | Security Headers | [references/security-headers.md](references/security-headers.md) |
 | **technical-resilience** | Subprocess Zombie Sanitizer, Typosquatting Shield & SSR Hydration Guard | [references/technical-resilience.md](references/technical-resilience.md) |
+| **takeover-audit** | Site Takeover Defect Inventory | [references/takeover-audit.md](references/takeover-audit.md) |
 
 Chain: `prototype` → `spec` → `implement` → `qa-launch` gate. Visual prototyping lives in `design`.
 
@@ -98,7 +99,7 @@ bun skills/agency-delivery/webdev/scripts/webdev.ts --ssr-boundary-scan ./src
 ## How it works
 
 1. **Intake** — the department gate in SKILL.md Quick Reference.
-2. **Mode resolution** — twenty-two mode per run; only its reference loads (token-efficient).
+2. **Mode resolution** — twenty-three mode per run; only its reference loads (token-efficient).
 3. **Execute** — the mode playbook in `references/`.
 4. **Gate** — verification checklist before delivery.
 

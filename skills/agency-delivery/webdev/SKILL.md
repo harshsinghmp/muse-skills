@@ -1,8 +1,8 @@
 ---
 name: webdev
 aliases: ["web-development", "web-engineering", "frontend", "backend", "fullstack", "fullstack-guardian", "ecommerce", "cms", "spec-miner", "responsiveness-check", "cli-developer", "cache-component", "wordpress-pro", "wordpress-elementor", "react-native-expert", "wordpress"]
-description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, real-time pub/sub bus, deploy, and responsive audits — routed through twenty-two modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, deploy WebSockets and pub/sub messaging, implement e-commerce or CMS functionality, build funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
-argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|offline|realtime-bus|deploy|audit|hydration-polish|security-headers|technical-resilience]"
+description: "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, real-time pub/sub bus, deploy, and responsive audits — routed through twenty-three modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, deploy WebSockets and pub/sub messaging, implement e-commerce or CMS functionality, build funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile)."
+argument-hint: "[frontend|backend|fullstack|ecommerce|cms|performance|accessibility|migrations|prototype|spec|implement|onboard|funnel|edge|rate-limit|offline|realtime-bus|deploy|audit|hydration-polish|security-headers|technical-resilience|takeover-audit]"
 user-invocable: true
 version: 1.9.0
 author: Harsh Singh
@@ -61,6 +61,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **hydration-polish** | "hydration-polish" | Anti-FOUC, Zero-CLS Typography, Print Styles & Anchor Offsets | [references/hydration-polish.md](references/hydration-polish.md) |
 | **security-headers** | "security-headers" | Security Headers | [references/security-headers.md](references/security-headers.md) |
 | **technical-resilience** | "technical-resilience" | Subprocess Zombie Sanitizer, Typosquatting Shield & SSR Hydration Guard | [references/technical-resilience.md](references/technical-resilience.md) |
+| **takeover-audit** | "takeover-audit" | Site Takeover Defect Inventory | [references/takeover-audit.md](references/takeover-audit.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 

@@ -181,6 +181,7 @@ Not for changing code behavior (updateagents), creating a new project skeleton (
 | **Sprint** | Multi-commit or sprint closeout review | Audit accumulated changes since baseline; reconcile drift and documentation debt. | All 21 | Full report |
 | **audit** | Certification pass: pre-release docs gate, post-refactor sweep, zero-dead-link certification | Certify link integrity, version parity, canonical-source uniqueness, snapshot classification; severity-routed remediation | [references/audit.md](references/audit.md) | brain-audit-report.md |
 | **`ledger`** | "docs ledger", "catch up docs", "what shipped", "documentation points", "forgotten session docs" | Session-proof documentation point ledger: backfill from the watermark, per-audience coverage (developer/user/agent), shipped state, what's-new, and CI gate | [references/DOCS-LEDGER.md](references/DOCS-LEDGER.md) | Ledger table + debt list |
+| **decision-record** | "decision-record" | Decision Record with Approval Evidence | — | [references/decision-record.md](references/decision-record.md) |
 
 Mode selection is made once at Step 1 and stated in the final report. A mode may be escalated mid-run (Quick → Change) when evidence shows the change touches a public contract, but never silently de-escalated. With no mode given, run the comprehensive pass (all 21 steps plus the undocumented-capability sweep) — that is the skill's default behavior, not a separate mode.
 
