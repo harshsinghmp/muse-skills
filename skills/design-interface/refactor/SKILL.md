@@ -1,8 +1,8 @@
 ---
 name: refactor
 aliases: ["refactor-ui", "refactoring", "code-refactor", "ui-polish", "ui-audit", "architecture-refactor", "perf-refactor", "database-refactor", "refactor-anything"]
-description: "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security)."
-argument-hint: "[ui|code|architecture|perf|database|sweep|polish|audit|01-visual-hierarchy|02-typography-scale|03-color-palette|04-spacing-layout|05-button-hierarchy|06-visual-clutter|07-empty-states|08-shadows-elevation|09-contrast-accessibility|10-grouping-alignment|11-five-state-anti-slop|modern-techniques]"
+description: "Universal refactoring engine: systematically evaluate, modernize, and refactor user interfaces, application code, software architecture, runtime performance, database schemas, and multi-page consistency — routed through twenty-one execution modes. Use when asked to refactor UI components or layouts, clean up code smells and reduce cyclomatic complexity, decouple architectural modules and boundaries, optimize runtime performance and bundle sizes, refactor database schemas with zero downtime, sweep consistency across an entire app, or run a pre-release polish pass. Not for novel feature creation from scratch (new-project/webdev) or full security vulnerability exploitation (muse-security)."
+argument-hint: "[ui|code|architecture|perf|database|sweep|polish|audit|01-visual-hierarchy|02-typography-scale|03-color-palette|04-spacing-layout|05-button-hierarchy|06-visual-clutter|07-empty-states|08-shadows-elevation|09-contrast-accessibility|10-grouping-alignment|11-five-state-anti-slop|modern-techniques|format-consistency]"
 user-invocable: true
 version: 1.2.0
 author: Harsh Singh
@@ -63,6 +63,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **10-grouping-alignment** | "10-grouping-alignment" | Grouping, Proximity, and Alignment | [references/10-grouping-alignment.md](references/10-grouping-alignment.md) |
 | **11-five-state-anti-slop** | "11-five-state-anti-slop" | The 5-State Anti-Slop Coverage Gate | [references/11-five-state-anti-slop.md](references/11-five-state-anti-slop.md) |
 | **modern-techniques** | "modern-techniques" | v1.1.0 additions from corpus research | [references/modern-techniques.md](references/modern-techniques.md) |
+| **format-consistency** | "format-consistency" | Value-Format Consistency | [references/format-consistency.md](references/format-consistency.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run. Note: `sweep` mode carries codebase-wide blast radius and is strictly on-demand; automated agents must never run it automatically without explicit user direction.
 

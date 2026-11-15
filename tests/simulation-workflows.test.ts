@@ -2028,7 +2028,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(devopsSkill).toContain("| **preview** |");
       expect(devopsSkill).toContain("references/preview.md");
       expect(devopsSkill).toContain(
-        'argument-hint: "[hosting|cicd|domains|cloudflare|security|monitoring|incident|preview|edge-mesh|audit]"',
+        'argument-hint: "[hosting|cicd|domains|cloudflare|security|monitoring|incident|preview|edge-mesh|audit|ci-diagnosis]"',
       );
     });
 

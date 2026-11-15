@@ -130,9 +130,12 @@ function findModesTable(lines: string[]): TableInfo | undefined {
 
 function rowFor(mode: string, description: string, columns: number): string {
   const link = `[references/${mode}.md](references/${mode}.md)`;
-  if (columns >= 4) return `| **${mode}** | "${mode}" | ${description} | ${link} |`;
-  if (columns === 3) return `| **${mode}** | ${description} | ${link} |`;
-  return `| **${mode}** | ${link} |`;
+  // Build exactly as many cells as the table declares: a short row breaks the
+  // table silently, and a generated row must never be the thing that does it.
+  const cells = [`**${mode}**`, `"${mode}"`, description];
+  while (cells.length < columns - 1) cells.push("—");
+  cells.push(link);
+  return `| ${cells.join(" | ")} |`;
 }
 
 function alignTable(lines: string[], modes: string[], skillDir: string): { lines: string[]; changed: boolean } {

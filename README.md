@@ -18,7 +18,7 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 462 Slash Commands Per Harness — No Clone Needed)
+# 🚀 Option B: Instant Remote Setup (46 Skills + 467 Slash Commands Per Harness — No Clone Needed)
 curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.7.1/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
@@ -39,7 +39,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 - **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only), plus a prioritized **Next 3** follow-up block for highly technical work.
-- **Command surface**: 46 skills + 406 `<skill>-<mode>` commands + 10 aliases = **462 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 46 skills + 406 `<skill>-<mode>` commands + 10 aliases = **467 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.1.0**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution and ephemeral zero-trust mTLS subagent attestation.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -187,11 +187,11 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`context-anchor`](skills/context-orchestration/context-anchor/README.md) | Drop a working reference anchor at any point in a session to prevent context drift, and park parallel client workstreams for instant switching. |
 | [`coupling-router`](skills/context-orchestration/coupling-router/README.md) | Coupling-aware architectural delegation, blast radius calculation, and shared-worktree lease arbitration for multi-agent workflows. |
 | [`crm`](skills/agency-delivery/crm/README.md) | Full customer relationship and marketing flow department: audience segmentation, RFM scoring, welcome onboarding, cart abandonment recovery, lead nurture journeys, winback, deliverability DNS (SPF/DKIM/DMARC), and SMS triggers across 8 modes. |
-| [`database`](skills/agency-delivery/database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 12 modes. |
+| [`database`](skills/agency-delivery/database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 13 modes. |
 | [`dead-letter`](skills/quality-review/dead-letter/README.md) | Capture, triage, and quarantine failed tasks before they disappear, generating bounded retry packets or escalation questions. |
 | [`design`](skills/agency-delivery/design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes across 15 modes. |
 | [`designscope`](skills/design-interface/designscope/README.md) | Reverse-engineers design systems, color palettes, typography hierarchies, layout trees, and tokens from existing websites, images, or Figma. |
-| [`devops`](skills/agency-delivery/devops/README.md) | Full infrastructure and reliability department: hosting, CI/CD pipelines, DNS, Cloudflare edge and Workers, security hardening, monitoring, incident response, and preview sandboxes across 10 modes. |
+| [`devops`](skills/agency-delivery/devops/README.md) | Full infrastructure and reliability department: hosting, CI/CD pipelines, DNS, Cloudflare edge and Workers, security hardening, monitoring, incident response, and preview sandboxes across 11 modes. |
 | [`evidence-ledger`](skills/context-orchestration/evidence-ledger/README.md) | Persistent per-project evidence tracking and source-cited claim verification gate enforcing 'No source, no claim. No verification path, no release.' |
 | [`gauntlet-loop`](skills/quality-review/gauntlet-loop/README.md) | Bounded multi-agent quality improvement loop preventing infinite iterations, self-grading delusions, and regression churn. |
 | [`git`](skills/core-engine/git/README.md) | Autonomous end-to-end Git & GitHub release engine: 9-tier anti-slop triage, 4-phase branching, surgical test gating, and semver release automation. |
@@ -207,7 +207,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`periodic-retreat`](skills/reflection-maintenance/periodic-retreat/README.md) | Quarterly personal and project strategic retreat facilitator conducting multi-scale audits of project health, architecture debt, and OKR handoffs. |
 | [`pua`](skills/quality-review/pua/README.md) | Performance Improvement Plan engine forcing exhaustive problem-solving and structured debugging when tasks stall. |
 | [`qa-launch`](skills/agency-delivery/qa-launch/README.md) | Pre-launch quality gate: cross-browser and device matrix planning, critical-path functional verification, front-end performance checklist, Core Web Vitals audit and production gate (sub-200ms INP, zero-CLS fences, sub-2.5s LCP, font budgets), AI agent evals and synthetic edge testing, synthetic chaos fault injection, release checklist with a Block-or-Ship verdict, regression sweeps, and Playwright synthetic smoke journeys across 10 modes. |
-| [`refactor`](skills/design-interface/refactor/README.md) | Universal refactoring engine routable across 20 modes: UI components, code cleanup, architectural decoupling, runtime performance, and database schemas. |
+| [`refactor`](skills/design-interface/refactor/README.md) | Universal refactoring engine routable across 21 modes: UI components, code cleanup, architectural decoupling, runtime performance, and database schemas. |
 | [`relay`](skills/context-orchestration/relay/README.md) | Bidirectional agent handoff and session resumption engine with ambient continuity maintaining an always-current HANDOFF.md live-state file. |
 | [`research`](skills/agency-delivery/research/README.md) | Client-serving research department: user research, market sizing, competitive intelligence, and due-diligence entity dossiers across 5 modes. |
 | [`retain`](skills/agency-delivery/retain/README.md) | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, review asks, retainer SLAs, proactive renewals, and client health telemetry across 10 modes. |
@@ -218,7 +218,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`telegram`](skills/agency-delivery/telegram/README.md) | Telegram messaging department: pure-bash bot alerts, approval boards via curl + jq, and Claude Code hook integration across 7 modes. |
 | [`updateagents`](skills/core-engine/updateagents/README.md) | Universal agent context synchronization and repository AI-readiness engine: 14-asset audit, Stage-0 Fast-Skip, synthetic ADE sanitization, and standards synchronization. |
 | [`updatedocs`](skills/core-engine/updatedocs/README.md) | Project-wide documentation synchronization, drift detection, and governance engine aligning documentation with repository code. |
-| [`webdev`](skills/agency-delivery/webdev/README.md) | Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, and responsive audits across 22 modes. |
+| [`webdev`](skills/agency-delivery/webdev/README.md) | Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, and responsive audits across 23 modes. |
 
 </details>
 
@@ -302,15 +302,19 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | `v10` | unseen | 40 | 4 (10.0%) | 9 (22.5%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
-| `v7` | unseen | 40 | 2 (5.0%) | 8 (20.0%) |
+| `v7` | unseen | 40 | 2 (5.0%) | 9 (22.5%) |
 | `v8` | unseen | 40 | 3 (7.5%) | 10 (25.0%) |
 | `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
-**Mode coverage**: 135 of 406 routable modes (33%) carry a curated routing signal; the other 271 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+**Mode coverage**: 135 of 411 routable modes (33%) carry a curated routing signal; the other 276 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
 
-Measured 2026-11-14. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
+Measured 2026-11-15. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
+
+### Keeping the labels honest
+
+Routing accuracy cannot exceed label accuracy. `bun run arbitrate:labels` (`scripts/arbitrate-labels.ts`, `--routes <file>`) compares a blind agent's routes against the fixtures and lists every disagreement, split into **department** and **mode** disagreements. Two independent readings settle each one: agreement becomes the label, disagreement marks it `contested`, and a contested label may not judge a router change.
 
 ### Why the router is lexical (and what a real model does instead)
 
@@ -339,18 +343,20 @@ On prompts the router has never seen, embeddings are **2.8× better at exact rou
 
 Per set: v5 32/38, v6 34/36, v7 30/34, v8 31/35, v9 36/40, v10 28/35 (exact/department). Reading beats scoring because the directory describes **deliverables** while a prompt describes **symptoms**. The scorers remain as deterministic fallbacks for scripts and CI; they are not the product path.
 
-The router stays lexical because it is **synchronous** (dispatch returns a mode immediately, and tests assert on it), while a model is async and brings 23 MB plus a runtime. The embedding path therefore lives beside it, not inside it:
+The lexical router stays because it is **synchronous** — dispatch returns a mode immediately, and it is the only routing that runs in CI, a hook, or a script with no model. An embedding router was built and measured (`all-MiniLM-L6-v2`, 384 dims, 23 MB q8): **2.8× better than lexical on unseen prompts, and 3.5× worse than an agent reading this directory**, at the cost of a model download and an async entry point. It was removed rather than carried.
 
-```bash
-bun run route:embed --prompt "the invoice formatter imports the user model"
-bun run route:embed --check                 # warm the corpus cache (~8s, then instant)
-bun run check:routing:embeddings            # compare against routing-baseline-embeddings.json
-```
+**But neither is how routing actually works.** An agent reading `references/dispatch.md` — the directory plus its routing protocol — was measured on all six blind sets (240 prompts) with no labels, no fixtures and no router:
 
-- **model**: `Xenova/all-MiniLM-L6-v2` at a pinned commit — a moved tag cannot change what runs
-- **cache**: `~/.cache/muse/embeddings`, keyed by model + revision + corpus hash, so a changed corpus never reuses stale vectors
-- **offline**: a warm cache keeps working with no network; a missing runtime prints the one command that installs it
-- **separate baselines**: `routing-baseline.json` judges the lexical router, `routing-baseline-embeddings.json` judges this one — a single floor cannot judge two routers with opposite strengths
+| Router | exact | department |
+| :--- | ---: | ---: |
+| **Agent reading `dispatch.md`** | **191/240 (80%)** | **218/240 (91%)** |
+| Lexical router | 58/240 (24%) | — |
+| Sentence embeddings | 56/240 (23%) | — |
+
+Per set: v5 32/38, v6 34/36, v7 30/34, v8 31/35, v9 36/40, v10 28/35 (exact/department). Reading beats scoring because the directory describes **deliverables** while a prompt describes **symptoms**. The scorers remain as deterministic fallbacks for scripts and CI; they are not the product path.
+
+The lexical router stays because it is **synchronous** — dispatch returns a mode immediately, and it is the only routing that runs in CI, a hook, or a script with no model. An embedding router was built and measured (`all-MiniLM-L6-v2`, 384 dims, 23 MB q8): **2.8× better than lexical on unseen prompts, and 3.5× worse than an agent reading this directory**, at the cost of a model download and an async entry point. It was removed rather than carried.
+
 
 A destination is written only when that harness directory already exists — the setup never invents a harness config you did not have.
 

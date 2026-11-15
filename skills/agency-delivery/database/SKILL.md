@@ -1,8 +1,8 @@
 ---
 name: database
 aliases: ["db", "database-skill", "sql-query", "db-performance", "db-tuning", "database-optimizer"]
-description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, zero-downtime migration locking guards, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through twelve modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, guard database migrations, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
-argument-hint: "[query|diagnose|index|guard|operate|optimize|migrations|graph|audit|analytical|tuning|vector-search]"
+description: "Unified database department: read-only query execution with defense-in-depth safety, schema exploration, slow-query triage with EXPLAIN ANALYZE and pg_stat_statements, missing and covering index design, RLS policy authoring with verification tests, performance optimization with memory and query tuning, zero-downtime migration locking guards, and production operations with pooling partitioning and monitoring — handles Postgres, MySQL, MSSQL, and SQLite through thirteen modes. Use when asked to run a read-only query, explore a schema, diagnose a slow query, design an index, optimize database performance, write or verify an RLS policy, tune vacuuming, size connection pooling, guard database migrations, or operate a database. Not for backend app code (webdev), infra and deploy pipelines (devops), or platform operations."
+argument-hint: "[query|diagnose|index|guard|operate|optimize|migrations|graph|audit|analytical|tuning|vector-search|invariant-review]"
 user-invocable: true
 version: 1.1.0
 author: Harsh Singh
@@ -53,6 +53,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **analytical** | "analytical" | Analytical query modes (columnar/DuckDB), autoscaling, and zero-downtime migrations (Neon/Supabase). | [references/analytical.md](references/analytical.md) |
 | **tuning** | "tuning" | Automated System Parameter Tuning & Benchmark Optimization | [references/tuning.md](references/tuning.md) |
 | **vector-search** | "vector-search" | Embeddings, ANN index choice, payload filters, hybrid FTS+vector, RAG chunks. | [references/vector-search.md](references/vector-search.md) |
+| **invariant-review** | "invariant-review" | Data Invariant Review | [references/invariant-review.md](references/invariant-review.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
