@@ -1849,9 +1849,9 @@
         "user (or an agent presenting a menu) can describe them without guessing.",
         "List live entries with sizes before quoting any number:",
         "clean-cache.sh --list # human table, numbered",
-        "clean-cache.sh --list --json # agent-parseable: id, tier, sizekb, paths",
-        "clean-cache.sh --browse <id> # exact files/folders, largest first",
-        "Tiers"
+        "clean-cache.sh --list --json # agent-parseable: id, tier, sizekb, paths, agedays, risk",
+        "clean-cache.sh --discover --json # discoveries: key, path, sizekb, agedays, risk, note",
+        "clean-cache.sh --browse <id> # exact files/folders, largest first"
       ],
       "text": "The script's registry is the source of truth. This file explains the entries so a user (or an agent presenting a menu) can describe them without guessing. List live entries with sizes before quoting any number: | Tier | Meaning | When deleted | |:---|:---|:---| | `T1` | Regenerable on next tool use | Automatically on a normal run | | `ASK` | Regenerable but expensive, or needs `sudo` | Only when selected via `--only`"
     }

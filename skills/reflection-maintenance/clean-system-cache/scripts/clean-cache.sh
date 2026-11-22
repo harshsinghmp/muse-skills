@@ -245,8 +245,9 @@ done
 get_dir_size_kb() {
     local target="$1" kb
     if [ -d "$target" ]; then
-        # awk keeps this single-line even when du reports unreadable subdirs
-        kb=$(du -sk "$target" 2>/dev/null | awk 'NR==1 {print $1}')
+        # awk keeps this single-line even when du reports unreadable subdirs.
+        # Failures are tallied so an under-reported size is never presented as exact.
+        kb=$(du -sk "$target" 2>>"${DISC_ERR_TMP:-/dev/null}" | awk 'NR==1 {print $1}')
         echo "${kb:-0}"
     elif [ -f "$target" ]; then
         local bytes
@@ -270,6 +271,199 @@ fmt_kb() {
         if(i==1) printf "%d %s", k, u[i];
         else printf "%.2f %s", k, u[i];
     }'
+}
+
+# ------------------------------------------------------------------------------
+# Artifact matchers — a directory name alone is not evidence.
+#
+# Distinctive names (.next, __pycache__, .turbo) stand alone. Generic names
+# (target, build, obj, bin, vendor, venv) additionally require the owning
+# project's manifest, so a Maven target/, a source vendor/, or a ~/bin folder
+# is never mistaken for a build cache. Symlinked artifacts are ignored.
+# ------------------------------------------------------------------------------
+
+artifact_match() {
+    local d="$1" base parent
+    [ -L "$d" ] && return 1
+    base=$(basename "$d")
+    parent=$(dirname "$d")
+    case "$base" in
+        node_modules)
+            printf 'node\n'; return 0 ;;
+        target)
+            if [ -f "$parent/Cargo.toml" ] || [ -f "$d/CACHEDIR.TAG" ]; then
+                printf 'rust\n'; return 0
+            fi
+            return 1 ;;
+        .venv|venv|.virtualenv)
+            if [ -f "$d/pyvenv.cfg" ]; then printf 'python\n'; return 0; fi
+            return 1 ;;
+        vendor)
+            if [ -f "$parent/go.mod" ]; then printf 'go-vendor\n'; return 0; fi
+            return 1 ;;
+        obj)
+            if compgen -G "$parent/*.csproj" >/dev/null 2>&1 || compgen -G "$parent/*.sln" >/dev/null 2>&1; then
+                printf 'dotnet\n'; return 0
+            fi
+            return 1 ;;
+        bin)
+            if compgen -G "$parent/*.csproj" >/dev/null 2>&1; then
+                printf 'dotnet\n'; return 0
+            fi
+            return 1 ;;
+        build)
+            if [ -f "$d/CMakeCache.txt" ] || [ -f "$parent/pubspec.yaml" ]; then
+                printf 'build\n'; return 0
+            fi
+            return 1 ;;
+        .next)          printf 'next\n'; return 0 ;;
+        .nuxt)          printf 'nuxt\n'; return 0 ;;
+        .svelte-kit)    printf 'svelte\n'; return 0 ;;
+        .turbo)         printf 'turbo\n'; return 0 ;;
+        .parcel-cache)  printf 'parcel\n'; return 0 ;;
+        .pytest_cache)  printf 'pytest\n'; return 0 ;;
+        __pycache__)    printf 'pycache\n'; return 0 ;;
+        .mypy_cache)    printf 'mypy\n'; return 0 ;;
+        .ruff_cache)    printf 'ruff\n'; return 0 ;;
+        .nyc_output)    printf 'nyc\n'; return 0 ;;
+        coverage)       printf 'coverage\n'; return 0 ;;
+        .angular)       printf 'angular\n'; return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+artifact_label() {
+    case "$1" in
+        node)       printf 'node_modules' ;;
+        rust)       printf 'Cargo target' ;;
+        python)     printf 'Python virtualenv' ;;
+        go-vendor)  printf 'Go vendor' ;;
+        dotnet)     printf '.NET build output' ;;
+        build)      printf 'CMake/Flutter build' ;;
+        next)       printf '.next build cache' ;;
+        nuxt)       printf '.nuxt build cache' ;;
+        svelte)     printf '.svelte-kit output' ;;
+        turbo)      printf '.turbo cache' ;;
+        parcel)     printf '.parcel-cache' ;;
+        pytest)     printf 'pytest cache' ;;
+        pycache)    printf '__pycache__' ;;
+        mypy)       printf 'mypy cache' ;;
+        ruff)       printf 'ruff cache' ;;
+        nyc)        printf 'nyc output' ;;
+        coverage)   printf 'coverage output' ;;
+        angular)    printf '.angular cache' ;;
+        *)          printf '%s' "$1" ;;
+    esac
+}
+
+artifact_note() {
+    case "$1" in
+        node)       printf 'Reinstall from the lockfile; needs registry access' ;;
+        rust)       printf 'Rebuilt by cargo on the next build; keep if you need offline artifacts' ;;
+        python)     printf 'Export dependencies to requirements.txt before deleting' ;;
+        go-vendor)  printf 'Recreated by go mod vendor' ;;
+        dotnet)     printf 'Rebuilt by dotnet build' ;;
+        build)      printf 'Rebuilt by the next configure/build' ;;
+        *)          printf 'Rebuilt on the next build/run' ;;
+    esac
+}
+
+find_supports_printf() {
+    if [ -z "${FIND_PRINTF_OK:-}" ]; then
+        if find / -maxdepth 0 -printf '' >/dev/null 2>&1; then
+            FIND_PRINTF_OK=1
+        else
+            FIND_PRINTF_OK=0
+        fi
+    fi
+    [ "$FIND_PRINTF_OK" = "1" ]
+}
+
+# Newest file mtime, not the directory's own mtime. Editing an existing file
+# inside a build cache does not change the directory mtime, which is exactly
+# how an actively used cache would be misread as dormant.
+path_newest_epoch() {
+    local d="$1" newest=""
+    if find_supports_printf; then
+        newest=$(find "$d" -type f -printf '%T@\n' 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1 | cut -d. -f1)
+    elif [ "$OS" = "Darwin" ]; then
+        newest=$(find "$d" -type f -exec stat -f '%m' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1)
+    else
+        newest=$(find "$d" -type f -exec stat -c '%Y' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1)
+    fi
+    if [ -z "$newest" ]; then
+        if [ "$OS" = "Darwin" ]; then
+            newest=$(stat -f %m "$d" 2>/dev/null || echo 0)
+        else
+            newest=$(stat -c %Y "$d" 2>/dev/null || echo 0)
+        fi
+    fi
+    printf '%s\n' "${newest:-0}"
+}
+
+age_days_from_epoch() {
+    local epoch="${1:-0}" now
+    case "$epoch" in ''|*[!0-9]*) return 0 ;; esac
+    [ "$epoch" -gt 0 ] || return 0
+    now=$(date +%s 2>/dev/null || echo 0)
+    printf '%s\n' $(( (now - epoch) / 86400 ))
+    return 0
+}
+
+# Defense in depth for project roots that point at home or a system tree.
+# A path here is reportable, never auto-cleaned.
+path_risk() {
+    local p="$1" rel top
+    [ -n "$p" ] || return 1
+    case "$p" in
+        */Applications/*.app|*/Applications/*.app/*) printf 'macOS .app bundle'; return 0 ;;
+        *"/Program Files/"*|*"/Program Files (x86)/"*) printf 'Program Files'; return 0 ;;
+        *"/AppData/Roaming/"*) printf 'Windows AppData Roaming'; return 0 ;;
+        *"/AppData/Local/"*)
+            case "$p" in
+                *"/AppData/Local/.cache/"*|*"/AppData/Local/.npm/"*|*"/AppData/Local/.pnpm/"*) : ;;
+                *) printf 'Windows AppData Local'; return 0 ;;
+            esac
+            ;;
+    esac
+    if [ -n "$HOME" ]; then
+        case "$p" in
+            "$HOME"/*)
+                rel="${p#"$HOME"/}"
+                case "$rel" in
+                    .config|.config/*) printf 'user configuration (~/.config)'; return 0 ;;
+                    .local/share|.local/share/*) printf 'user data (~/.local/share)'; return 0 ;;
+                    .cache|.cache/*) printf 'system cache (~/.cache)'; return 0 ;;
+                esac
+                top="${rel%%/*}"
+                case "$top" in
+                    .?*) printf 'hidden top-level folder'; return 0 ;;
+                esac
+                ;;
+        esac
+    fi
+    return 1
+}
+
+json_escape() {
+    printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+# Size candidates in parallel, one `du -sk` per path. Output is
+# "<path>\t<kb>", so paths with spaces survive and the caller can map sizes
+# back without guessing. The single-line du rule from the pitfalls still holds.
+artifact_size_map() {
+    local n
+    n=$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)
+    case "$n" in ''|*[!0-9]*) n=4 ;; esac
+    [ "$n" -gt 8 ] && n=8
+    [ "$n" -lt 1 ] && n=1
+    printf '%s\0' "$@" | xargs -0 -P "$n" -n1 sh -c '
+        for p in "$@"; do
+            kb=$(du -sk "$p" 2>>"$DISC_ERR_TMP" | awk "NR==1 {print \$1}")
+            printf "%s\t%s\n" "$p" "${kb:-0}"
+        done
+    ' sh
 }
 
 is_tool_selected() {
@@ -775,9 +969,10 @@ print_catalog() {
             first=0
             paths_line=$(cand_paths "${CAND_PATHS[$i]}" | tr '\n' '|')
             paths_line="${paths_line%|}"
-            printf '{"number":%d,"id":"%s","tier":"%s","label":"%s","tool":"%s","method":"%s","size_kb":%d,"paths":"%s","note":"%s"}' \
-                "$num" "${CAND_ID[$i]}" "${CAND_TIER[$i]}" "${CAND_LABEL[$i]}" \
-                "${CAND_TOOL[$i]}" "${CAND_METHOD[$i]}" "$size" "$paths_line" "${CAND_NOTE[$i]}"
+            paths_line=$(json_escape "$paths_line")
+            printf '{"number":%d,"id":"%s","tier":"%s","label":"%s","tool":"%s","method":"%s","size_kb":%d,"paths":"%s","age_days":null,"risk":"","note":"%s"}' \
+                "$num" "${CAND_ID[$i]}" "${CAND_TIER[$i]}" "$(json_escape "${CAND_LABEL[$i]}")" \
+                "${CAND_TOOL[$i]}" "${CAND_METHOD[$i]}" "$size" "$paths_line" "$(json_escape "${CAND_NOTE[$i]}")"
             num=$((num + 1))
         done
         printf ']\n'
@@ -1128,9 +1323,13 @@ D_SIZE=()
 D_TIER=()
 D_NOTE=()
 D_CLEANED=()
+D_RISK=()
+D_AGE=()
+D_KIND=()
 
 disc_add() {
     local key="$1" label="$2" scope="$3" path="$4" size="$5" tier="$6" note="$7"
+    local risk="${8:-}" age="${9:-}" kind="${10:-}"
     if [ -z "$size" ] || [ "$size" -le 0 ]; then
         return 0
     fi
@@ -1144,6 +1343,51 @@ disc_add() {
     D_SIZE+=("$size")
     D_TIER+=("$tier")
     D_NOTE+=("$note")
+    D_RISK+=("$risk")
+    D_AGE+=("$age")
+    D_KIND+=("$kind")
+}
+
+# Re-check the claim immediately before deleting. Discovery can be minutes or
+# hours old; the path may have been renamed, replaced, or become active again.
+# Only the recorded artifact shape is deleted — never whatever now sits there.
+disc_revalidate() {
+    local i="$1" path kind
+    path="${D_PATH[$i]}"
+    [ -d "$path" ] || return 1
+    [ -L "$path" ] && return 1
+    case "${D_SCOPE[$i]}" in
+        project)
+            kind=$(artifact_match "$path") || return 1
+            [ "$kind" = "${D_KIND[$i]}" ] || return 1
+            if [ "$(path_newest_epoch "$path")" -ge $(( $(date +%s) - DORMANT_DAYS * 86400 )) ]; then
+                return 1
+            fi
+            ;;
+        app)
+            case "${D_KEY[$i]}" in
+                flatpak:*)
+                    local app="${D_KEY[$i]#flatpak:}"
+                    if command -v flatpak >/dev/null 2>&1 && \
+                       flatpak ps --columns=application 2>/dev/null | grep -qx "$app"; then
+                        return 1
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+    return 0
+}
+
+# Project artifacts are removed whole (the build directory itself is the
+# disposable unit). XDG/app caches keep their directory and lose their contents.
+disc_purge() {
+    local i="$1"
+    if [ "${D_SCOPE[$i]}" = "project" ]; then
+        rm -rf -- "${D_PATH[$i]}" 2>/dev/null || true
+    else
+        purge_dir_contents "${D_PATH[$i]}"
+    fi
 }
 
 disc_index_of() {
@@ -1223,32 +1467,72 @@ discover_flatpak_cache() {
 }
 
 discover_projects() {
-    local root d size label
+    local root d kind size label risk age newest now_epoch cutoff
     local old_ifs="$IFS"
+    local -a paths=() kinds=() roots=()
+    now_epoch=$(date +%s 2>/dev/null || echo 0)
+    cutoff=$(( now_epoch - DORMANT_DAYS * 86400 ))
+
     IFS=':'
     for root in $PROJECT_ROOTS; do
         IFS="$old_ifs"
         [ -n "$root" ] || continue
         [ -d "$root" ] || continue
+        # Prune at the match: a build cache is a leaf for discovery. Descending
+        # into node_modules or target is the slowest part of a naive walk and
+        # can only produce double-counted nested candidates.
         while IFS= read -r d; do
             [ -d "$d" ] || continue
-            if [ -z "$(find "$d" -maxdepth 0 -mtime +"$DORMANT_DAYS" 2>/dev/null)" ]; then
-                continue
-            fi
-            size=$(get_dir_size_kb "$d")
-            label="${d#"$root"/}"
-            disc_add "proj:$d" "$label" "project" "$d" "$size" "ASK" "Dormant ${DORMANT_DAYS}+ days; rebuilt on next build/run"
-        done < <(find "$root" -maxdepth 5 \
-            \( -name .git -o -name .venv -o -name venv -o -name target -o -name vendor \
-               -o -name dist -o -name build -o -name .cache \) -prune -o \
-            -type d \( -name .next -o -name .nuxt -o -name .svelte-kit -o -name .turbo \
+            [ -L "$d" ] && continue
+            kind=$(artifact_match "$d") || continue
+            paths+=("$d")
+            kinds+=("$kind")
+            roots+=("$root")
+        done < <(find "$root" -maxdepth 6 \
+            \( -name .git -o -name .hg -o -name .svn -o -name dist -o -name .cache \) -prune -o \
+            -type d \( -name node_modules -o -name target -o -name .venv -o -name venv \
+               -o -name .virtualenv -o -name vendor -o -name obj -o -name bin -o -name build \
+               -o -name .next -o -name .nuxt -o -name .svelte-kit -o -name .turbo \
                -o -name .parcel-cache -o -name .pytest_cache -o -name __pycache__ \
                -o -name .mypy_cache -o -name .ruff_cache -o -name .nyc_output \
-               -o -name coverage -o -name .angular -o -name node_modules/.cache \
-               -o -name node_modules/.vite \) -print 2>/dev/null)
+               -o -name coverage -o -name .angular \) -prune -print \
+            2>>"${DISC_ERR_TMP:-/dev/null}")
         IFS=':'
     done
     IFS="$old_ifs"
+
+    [ "${#paths[@]}" -gt 0 ] || return 0
+
+    local sizefile
+    sizefile=$(mktemp 2>/dev/null) || {
+        echo "[clean-cache] mktemp failed; refusing to use a predictable temp path" >&2
+        return 1
+    }
+    artifact_size_map "${paths[@]}" > "$sizefile"
+
+    local i
+    for i in "${!paths[@]}"; do
+        d="${paths[$i]}"
+        kind="${kinds[$i]}"
+        root="${roots[$i]}"
+        size=$(awk -F'\t' -v p="$d" '$1==p {print $2; found=1; exit} END {if(!found) print 0}' "$sizefile")
+        [ "${size:-0}" -gt 0 ] || continue
+        # Dormancy is decided by the newest file, never the directory mtime.
+        newest=$(path_newest_epoch "$d")
+        [ "$newest" -lt "$cutoff" ] || continue
+        age=$(age_days_from_epoch "$newest")
+        label="${d#"$root"/}"
+        [ "$label" = "$d" ] && label="$d"
+        risk=$(path_risk "$d" 2>/dev/null) || risk=""
+        if [ -n "$risk" ]; then
+            disc_add "proj:$d" "$label" "project" "$d" "$size" "ASK" \
+                "Dormant ${DORMANT_DAYS}+ days; risky path ($risk) — explicit selection only" "$risk" "$age" "$kind"
+        else
+            disc_add "proj:$d" "$label" "project" "$d" "$size" "ASK" \
+                "Dormant ${DORMANT_DAYS}+ days; $(artifact_note "$kind")" "" "$age" "$kind"
+        fi
+    done
+    rm -f "$sizefile" 2>/dev/null || true
     return 0
 }
 
@@ -1262,7 +1546,7 @@ disc_sort() {
     for i in "${!D_KEY[@]}"; do
         printf '%s\t%s\n' "${D_SIZE[$i]}" "$i" >> "$tmp"
     done
-    local nk=() nl=() ns=() np=() nz=() nt=() nn=()
+    local nk=() nl=() ns=() np=() nz=() nt=() nn=() nr=() na=() nd=()
     while IFS=$'\t' read -r sz i; do
         [ -n "${D_KEY[$i]:-}" ] || continue
         nk+=("${D_KEY[$i]}")
@@ -1272,6 +1556,9 @@ disc_sort() {
         nz+=("${D_SIZE[$i]}")
         nt+=("${D_TIER[$i]}")
         nn+=("${D_NOTE[$i]}")
+        nr+=("${D_RISK[$i]:-}")
+        na+=("${D_AGE[$i]:-}")
+        nd+=("${D_KIND[$i]:-}")
     done < <(sort -rn "$tmp" 2>/dev/null)
     D_KEY=("${nk[@]}")
     D_LABEL=("${nl[@]}")
@@ -1280,17 +1567,37 @@ disc_sort() {
     D_SIZE=("${nz[@]}")
     D_TIER=("${nt[@]}")
     D_NOTE=("${nn[@]}")
+    D_RISK=("${nr[@]}")
+    D_AGE=("${na[@]}")
+    D_KIND=("${nd[@]}")
     rm -f "$tmp" 2>/dev/null || true
 }
 
 discover_all() {
     D_KEY=(); D_LABEL=(); D_SCOPE=(); D_PATH=(); D_SIZE=(); D_TIER=(); D_NOTE=(); D_CLEANED=()
+    D_RISK=(); D_AGE=(); D_KIND=()
+    DISC_ERROR_COUNT=0
+    DISC_ERR_TMP=$(mktemp 2>/dev/null) || DISC_ERR_TMP=""
+    if [ -n "$DISC_ERR_TMP" ]; then
+        DISC_ERR_OWNED=1
+    else
+        DISC_ERR_TMP="/dev/null"
+        DISC_ERR_OWNED=0
+    fi
+    export DISC_ERR_TMP
     build_discovery_skip
     discover_system_cache
     discover_config_cache
     discover_flatpak_cache
     discover_projects
     disc_sort
+    if [ "$DISC_ERR_OWNED" = "1" ] && [ -s "$DISC_ERR_TMP" ]; then
+        DISC_ERROR_COUNT=$(wc -l < "$DISC_ERR_TMP" 2>/dev/null | tr -d ' ')
+        DISC_ERROR_COUNT="${DISC_ERROR_COUNT:-0}"
+    fi
+    [ "$DISC_ERR_OWNED" = "1" ] && rm -f "$DISC_ERR_TMP" 2>/dev/null || true
+    DISC_ERR_TMP=""
+    export DISC_ERR_TMP
     write_scan_state
 }
 
@@ -1329,11 +1636,21 @@ disc_auto_clean() {
                 fi
                 ;;
         esac
+        # Risky locations are report-only, even after a learned allow.
+        if [ -n "${D_RISK[$i]:-}" ]; then
+            record_result "${D_LABEL[$i]} [${D_TIER[$i]}]" "skipped" "${D_SIZE[$i]}" "${D_SIZE[$i]}" 0 "risky path (${D_RISK[$i]}); select explicitly with --only"
+            continue
+        fi
+        # Re-check the claim right before deleting; discovery may be stale.
+        if ! disc_revalidate "$i"; then
+            record_result "${D_LABEL[$i]} [${D_TIER[$i]}]" "skipped" "${D_SIZE[$i]}" "${D_SIZE[$i]}" 0 "path changed since discovery; re-run --discover"
+            continue
+        fi
         before="${D_SIZE[$i]}"
         if [ "$DRY_RUN" = true ]; then
             record_result "${D_LABEL[$i]} [${D_TIER[$i]}]" "reclaimable" "$before" 0 "$before" "$key"
         else
-            purge_dir_contents "${D_PATH[$i]}"
+            disc_purge "$i"
             after=$(get_dir_size_kb "${D_PATH[$i]}")
             reclaimed=$(( before > after ? before - after : 0 ))
             record_result "${D_LABEL[$i]} [${D_TIER[$i]}]" "cleaned" "$before" "$after" "$reclaimed" "$key"
@@ -1346,15 +1663,41 @@ disc_auto_clean() {
 
 print_discovery() {
     local i n=0
+
+    if [ "$JSON_OUT" = true ]; then
+        local first=1 age path risk key label note
+        printf '['
+        for i in "${!D_KEY[@]}"; do
+            [ "${D_CLEANED[$i]:-0}" = "1" ] && continue
+            [ "$(learn_get "${D_KEY[$i]}")" = "deny" ] && continue
+            age="${D_AGE[$i]:-}"
+            [ -n "$age" ] || age=null
+            key=$(json_escape "${D_KEY[$i]}")
+            label=$(json_escape "${D_LABEL[$i]}")
+            path=$(json_escape "${D_PATH[$i]}")
+            risk=$(json_escape "${D_RISK[$i]:-}")
+            note=$(json_escape "${D_NOTE[$i]}")
+            [ "$first" -eq 1 ] || printf ','
+            first=0
+            printf '{"key":"%s","label":"%s","scope":"%s","tier":"%s","path":"%s","size_kb":%s,"age_days":%s,"risk":"%s","note":"%s"}' \
+                "$key" "$label" "${D_SCOPE[$i]}" "${D_TIER[$i]}" "$path" "${D_SIZE[$i]}" "$age" "$risk" "$note"
+        done
+        printf ']\n'
+        return 0
+    fi
+
     echo "===================================================================="
     echo " 🔍 Discovery — ${OS}"
     echo "===================================================================="
-    echo " Scope rule: XDG cache dirs, exact editor/app cache dirs, and dormant"
-    echo " project build caches. Browsers, agent runtimes, Trash, Downloads and"
+    echo " Scope rule: XDG cache dirs, exact editor/app cache dirs, and matcher-verified"
+    echo " dormant project artifacts. Browsers, agent runtimes, Trash, Downloads and"
     echo " data folders are never auto-cleaned."
     echo "--------------------------------------------------------------------"
     if [ "${#D_KEY[@]}" -eq 0 ]; then
         echo " Nothing new found outside the known catalog."
+        if [ "${DISC_ERROR_COUNT:-0}" -gt 0 ]; then
+            echo " ${DISC_ERROR_COUNT} path(s) were unreadable; sizes are lower bounds."
+        fi
         echo "===================================================================="
         return 0
     fi
@@ -1376,19 +1719,54 @@ print_discovery() {
                 printed=1
             fi
             n=$(( n + 1 ))
-            printf ' %2d. %-11s %-5s %s\n' "$n" "$(fmt_kb "${D_SIZE[$i]}")" "${D_TIER[$i]}" "${D_LABEL[$i]}"
+            local tag=""
+            [ -n "${D_RISK[$i]:-}" ] && tag=" ⚠"
+            [ -n "${D_AGE[$i]:-}" ] && tag="$tag  ${D_AGE[$i]}d"
+            printf ' %2d. %-11s %-5s %s%s\n' "$n" "$(fmt_kb "${D_SIZE[$i]}")" "${D_TIER[$i]}" "${D_LABEL[$i]}" "$tag"
             printf '       %s\n' "${D_PATH[$i]}"
             printf '       key: %s\n' "${D_KEY[$i]}"
+            [ -n "${D_RISK[$i]:-}" ] && printf '       risk: %s — report-only, select explicitly\n' "${D_RISK[$i]}"
         done
     done
     echo "--------------------------------------------------------------------"
+    print_project_kind_totals
     if [ "$hidden" -gt 0 ]; then
         echo " ${hidden} item(s) hidden by your learned choices (see --learned, undo with"
         echo " --learn forget <key>)."
     fi
+    if [ "${DISC_ERROR_COUNT:-0}" -gt 0 ]; then
+        echo " ${DISC_ERROR_COUNT} path(s) were unreadable; sizes are lower bounds."
+    fi
     echo " Safe (SAFE) items are cleaned on a normal run; ASK items only by selection."
     echo " Browse: clean-cache.sh --browse <key>   Apply: clean-cache.sh --only <key,..> --yes"
     echo "===================================================================="
+}
+
+# Reclaim by artifact kind: answers "what is actually eating the disk?" without
+# scrolling the per-path list.
+print_project_kind_totals() {
+    local i total_n=0 tmpf
+    for i in "${!D_KEY[@]}"; do
+        [ "${D_SCOPE[$i]}" = "project" ] || continue
+        [ "${D_CLEANED[$i]:-0}" = "1" ] && continue
+        [ "$(learn_get "${D_KEY[$i]}")" = "deny" ] && continue
+        total_n=$(( total_n + 1 ))
+    done
+    [ "$total_n" -gt 0 ] || return 0
+    tmpf=$(mktemp 2>/dev/null) || return 0
+    for i in "${!D_KEY[@]}"; do
+        [ "${D_SCOPE[$i]}" = "project" ] || continue
+        [ "${D_CLEANED[$i]:-0}" = "1" ] && continue
+        [ "$(learn_get "${D_KEY[$i]}")" = "deny" ] && continue
+        printf '%s\t%s\n' "${D_KIND[$i]:-other}" "${D_SIZE[$i]}" >> "$tmpf"
+    done
+    echo " Project caches by kind:"
+    awk -F'\t' '{kb[$1]+=$2; n[$1]++} END {for (k in kb) printf "%s\t%d\t%d\n", k, kb[k], n[k]}' "$tmpf" 2>/dev/null | \
+        sort -k2 -rn | while IFS=$'\t' read -r kind kb cnt; do
+            [ -n "$kind" ] || continue
+            printf '   %-11s %-5s %s\n' "$(fmt_kb "$kb")" "${cnt}x" "$(artifact_label "$kind")"
+        done
+    rm -f "$tmpf" 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
@@ -1496,10 +1874,14 @@ run_action() {
     else
         local before after reclaimed
         before="${D_SIZE[$ref]}"
+        if ! disc_revalidate "$ref"; then
+            record_result "${ACT_LABEL[$a]} [$tier]" "skipped" "$before" "$before" 0 "path changed since discovery; re-run --discover"
+            return 0
+        fi
         if [ "$DRY_RUN" = true ]; then
             record_result "${ACT_LABEL[$a]} [$tier]" "reclaimable" "$before" 0 "$before" "$key"
         else
-            purge_dir_contents "${D_PATH[$ref]}"
+            disc_purge "$ref"
             after=$(get_dir_size_kb "${D_PATH[$ref]}")
             reclaimed=$(( before > after ? before - after : 0 ))
             record_result "${ACT_LABEL[$a]} [$tier]" "cleaned" "$before" "$after" "$reclaimed" "$key"
@@ -2686,6 +3068,7 @@ echo "===================================================================="
 
 # Confirmation-gated and discovered candidates are never touched by the safe
 # sweep. Surface them with measured sizes and exact paths, grouped by scope.
+print_project_kind_totals
 actions_build ask
 ask_count="${#ACT_KEY[@]}"
 ask_total_kb=0
