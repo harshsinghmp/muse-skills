@@ -19,6 +19,11 @@ rem      CachedData, GPUCache, logs, CrashDumps, NuGet HTTP cache
 rem 6. Confirmation-gated candidates (ASK / ASK! - never auto-deleted):
 rem    - Recycle Bin, %TEMP%, Windows Update download cache, thumbnail cache,
 rem      Docker images
+rem 7. Dormant project artifact discovery (/discover):
+rem    - node_modules, Cargo target (Cargo.toml), Python venvs (pyvenv.cfg),
+rem      Go vendor (go.mod), .NET obj/bin (.csproj), CMake/Flutter build,
+rem      .next/.nuxt/.turbo/pytest/mypy/ruff caches. Staleness is measured by
+rem      the newest file inside the artifact, and risky paths are report-only.
 rem
 rem Selection UX: /list  /browse <id>  /only <ids> [/yes]  /interactive
 rem
@@ -181,7 +186,11 @@ echo   /all-caches                  Alias for /include-coupled.
 echo   /tool, --tool name           Clean a specific tool (e.g. npm, uv, opencode, adobe, browser, agents).
 echo   /scan-node-modules dir       Audit directory tree for dormant node_modules folders.
 echo   /list                        Catalog every candidate: id, tier, size, path. Deletes nothing.
-echo   /discover                    Scan %USERPROFILE%\projects for dormant project build caches.
+echo   /discover                    Scan project roots for dormant artifact directories:
+echo                                node_modules, Cargo target, Python venvs, Go vendor,
+echo                                .NET obj/bin, build output, .next/.turbo/pytest caches.
+echo                                Generic names need their manifest (Cargo.toml, pyvenv.cfg,
+echo                                go.mod, .csproj) and dormancy uses the newest file.
 echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
 echo   /only id,id^|proj:path [/yes] [/confirm-irreversible]
 echo                                Delete exactly these candidates. ASK! items need the
@@ -1633,19 +1642,23 @@ exit /b 0
 echo ====================================================================
 echo  Discovery - Windows
 echo ====================================================================
-echo  Roots: %PROJECT_ROOTS%   Dormant: %DORMANT_DAYS%+ days
+echo  Roots: %PROJECT_ROOTS%   Dormant: %DORMANT_DAYS%+ days (newest file)
 echo --------------------------------------------------------------------
 if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$roots='%PROJECT_ROOTS%'.Split(';'); $names=@('.next','.nuxt','.svelte-kit','.turbo','.parcel-cache','.pytest_cache','__pycache__','.mypy_cache','.ruff_cache','.nyc_output','coverage','.angular'); $old=(Get-Date).AddDays(-%DORMANT_DAYS%); $out=@(); foreach($r in $roots){ if(-not (Test-Path -LiteralPath $r)){continue}; Get-ChildItem -LiteralPath $r -Directory -Recurse -Depth 4 -Force -ErrorAction SilentlyContinue | Where-Object { ($names -contains $_.Name) -and ($_.LastWriteTime -lt $old) } | ForEach-Object { $mb=[math]::Round(((Get-ChildItem -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum)/1MB); $out += ('{0}|{1}' -f $mb,$_.FullName) } }; if($out.Count -eq 0){ 'none' } else { $out }" > "%DISC_FILE%" 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Roots "%PROJECT_ROOTS%" -DormantDays %DORMANT_DAYS% > "%DISC_FILE%" 2>nul
 set /a DNUM=0
-for /f "usebackq tokens=1,2 delims=|" %%A in ("%DISC_FILE%") do (
+for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
     if /i not "%%A"=="none" (
         set /a DNUM+=1
-        echo  !DNUM!. %%A MB   proj:%%B
+        set "RISKTAG="
+        if not "%%C"=="" set "RISKTAG=  [!] %%C (report-only)"
+        echo  !DNUM!. %%A MB   proj:%%B   ^(%%D d, %%E^)!RISKTAG!
     )
 )
 if "%DNUM%"=="0" echo  No dormant project build caches found.
 echo --------------------------------------------------------------------
+echo  Matchers require the owning manifest: target needs Cargo.toml,
+echo  .venv needs pyvenv.cfg, vendor needs go.mod, obj/bin need a .csproj.
 echo  Browse : /browse proj:^<path^>
 echo  Apply  : /only proj:^<path^> [/yes]
 echo  Learn  : /learn allow ^<path-key^>
@@ -1660,9 +1673,14 @@ if not exist "%DISC_FILE%" (
     echo Refusing: run /discover first.
     exit /b 1
 )
-findstr /i /e /c:"|%P%" "%DISC_FILE%" >nul 2>&1
+findstr /i /c:"|%P%|" "%DISC_FILE%" >nul 2>&1
 if errorlevel 1 (
     echo Refusing: %P% is not in the last discovery. Run /discover again.
+    exit /b 1
+)
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Claim "%P%" -DormantDays %DORMANT_DAYS% >nul 2>&1
+if errorlevel 1 (
+    echo Refusing: %P% is no longer the same dormant artifact. Run /discover again.
     exit /b 1
 )
 if "%DRY_RUN%"=="1" (

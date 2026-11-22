@@ -7,7 +7,8 @@ List live entries with sizes before quoting any number:
 
 ```bash
 clean-cache.sh --list          # human table, numbered
-clean-cache.sh --list --json   # agent-parseable: id, tier, size_kb, paths
+clean-cache.sh --list --json   # agent-parseable: id, tier, size_kb, paths, age_days, risk
+clean-cache.sh --discover --json  # discoveries: key, path, size_kb, age_days, risk, note
 clean-cache.sh --browse <id>   # exact files/folders, largest first
 ```
 
@@ -21,6 +22,36 @@ clean-cache.sh --browse <id>   # exact files/folders, largest first
 
 `--browse` never deletes. `--only` without `--yes` refuses `ASK`/`ASK!` selections in
 non-interactive shells, so an agent cannot silently destroy data.
+
+## Dormant project artifacts (`proj:<abs-path>`)
+
+These are discovered, not catalog entries. A name alone is not evidence: generic
+directories need their owning manifest, and staleness is measured from the
+**newest file** inside the artifact (never the directory mtime). The scanner
+prunes at the match, so it never descends into a matched artifact or `.git`.
+
+| Artifact | Matcher | Caution shown |
+|:---|:---|:---|
+| `node_modules` | name only | Reinstall from the lockfile; needs registry access |
+| `target` | sibling `Cargo.toml` or `target/CACHEDIR.TAG` | Rebuilt by cargo; keep if offline artifacts are needed |
+| `.venv` / `venv` / `.virtualenv` | inside `pyvenv.cfg` | Export dependencies to `requirements.txt` first |
+| `vendor` | sibling `go.mod` | Recreated by `go mod vendor` |
+| `obj` / `bin` | sibling `*.csproj` (`obj` also accepts `*.sln`) | Rebuilt by `dotnet build` |
+| `build` | inside `CMakeCache.txt` or sibling `pubspec.yaml` | Rebuilt by the next configure/build |
+| `.next`, `.nuxt`, `.svelte-kit`, `.turbo`, `.parcel-cache`, `.pytest_cache`, `__pycache__`, `.mypy_cache`, `.ruff_cache`, `.nyc_output`, `coverage`, `.angular` | name only | Rebuilt on next build/run |
+
+Safety properties for these keys:
+
+- Symlinked artifacts are ignored (not the artifact, and may point anywhere).
+- Risky locations inside `~/.config`, `~/.local/share`, `~/.cache`, a hidden
+  top-level folder, a `.app` bundle, `Program Files`, or `AppData` are tagged
+  `⚠`, reported only, and never auto-cleaned even after a learned `allow`.
+- Immediately before deletion the matcher and newest-file staleness are checked
+  again. A path renamed, replaced, or reactivated after discovery is skipped with
+  `path changed since discovery`.
+- Deletion removes the artifact directory itself, not just its contents.
+- If `find`/`du` reported permission errors, the report states that measured
+  sizes are lower bounds.
 
 ## Linux / macOS
 
