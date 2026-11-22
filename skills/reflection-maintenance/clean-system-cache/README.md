@@ -163,6 +163,10 @@ clean-system-cache\scripts\clean-cache.cmd /dry-run
 :: Execute full cleanup in safe mode (preserves T2 capability caches)
 clean-system-cache\scripts\clean-cache.cmd
 
+:: Scan project roots for matcher-verified dormant artifacts
+:: (uses the bundled scripts\discover-projects.ps1 helper)
+clean-system-cache\scripts\clean-cache.cmd /discover
+
 :: Opt-in to purge capability-coupled caches with Rehydration Manifest
 clean-system-cache\scripts\clean-cache.cmd /include-coupled
 
@@ -191,4 +195,4 @@ clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes
 6. **Scope-Bounded, Matcher-Verified Discovery**: Only `~/.cache/*`, exact app `Cache` dirs, and matcher-verified dormant project artifacts are ever cleaned automatically. Generic names require their project manifest; symlinks are ignored; risky locations (`~/.config`, `~/.local/share`, `.app`, `Program Files`, `AppData`, hidden top-level dirs) are report-only. Browsers, agent runtimes, `orca`/`ryoku` state, and `*-backup*` trees are excluded by rule, not by name luck.
 7. **Stale Scans Are Re-validated**: Immediately before deletion the matcher, newest-file staleness, and running state are checked again. A path renamed, replaced, or reactivated after discovery is skipped, never deleted blind.
 8. **Learning Has Hard Limits**: Remembered `allow` decisions apply only to regenerable `ASK` items whose conditions still hold. Risky locations stay report-only, and Trash/Recycle Bin, Downloads, `/tmp` strays, and Flatpak app caches ignore learning and ask every run.
-9. **Zero External Dependencies**: Native Bash on Linux/macOS; native CMD on Windows, which uses the built-in PowerShell only for project discovery and sizing. No Python or Node required.
+9. **Zero External Dependencies**: Native Bash on Linux/macOS; native CMD on Windows, whose `scripts/discover-projects.ps1` helper uses the built-in PowerShell only for project discovery and sizing. No Python or Node required.
