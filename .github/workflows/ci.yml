@@ -99,6 +99,100 @@ jobs:
       - name: TypeScript check
         run: bun run type-check
 
+  # The cache cleaner is the one skill whose behaviour depends on the host
+  # shell and filesystem tooling: GNU vs BSD find/stat on macOS, and the
+  # batch + PowerShell discovery path on Windows. The Ubuntu suite cannot
+  # exercise either, so run the real thing on both runners.
+  platform-smoke:
+    name: platform-smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun (pinned)
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.4
+
+      # BSD find/stat fallback, symlink handling, matcher corroboration,
+      # newest-file dormancy, risk gating, and whole-directory deletion.
+      - name: Cleaner suite (macOS / BSD tools)
+        if: runner.os == 'macOS'
+        run: |
+          set -euo pipefail
+          bash -n skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh
+          bun test tests/clean-system-cache.test.ts
+
+      # End-to-end Windows path: the PowerShell discovery helper (matchers,
+      # newest-file dormancy, claim revalidation) and the batch wrapper.
+      - name: Cleaner smoke (Windows / batch + PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $root = Join-Path $env:RUNNER_TEMP "clean-cache-smoke"
+          Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
+          $projects = Join-Path $root "projects"
+          $target = Join-Path $projects "app\target"
+          $maven = Join-Path $projects "maven\target"
+          $venv = Join-Path $projects "pyok\.venv"
+          $fresh = Join-Path $projects "fresh\target"
+
+          New-Item -ItemType Directory -Force -Path (Join-Path $target "debug") | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $maven "classes") | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $venv "lib") | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $fresh "debug") | Out-Null
+          Set-Content -LiteralPath (Join-Path $projects "app\Cargo.toml") -Value "[package]`nname = `"app`""
+          Set-Content -LiteralPath (Join-Path $projects "fresh\Cargo.toml") -Value "[package]`nname = `"fresh`""
+          Set-Content -LiteralPath (Join-Path $target "debug\app.exe") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $maven "classes\A.class") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $venv "lib\a.py") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $venv "pyvenv.cfg") -Value "home=C:\Python"
+          Set-Content -LiteralPath (Join-Path $fresh "debug\new.exe") -Value ("x" * 4096)
+
+          $old = (Get-Date).AddDays(-40)
+          Get-ChildItem -LiteralPath $projects -Recurse -Force | ForEach-Object { $_.LastWriteTime = $old }
+          (Get-Item -LiteralPath $projects).LastWriteTime = $old
+          # The fresh artifact keeps a new file inside an old directory.
+          (Get-Item -LiteralPath (Join-Path $fresh "debug\new.exe")).LastWriteTime = Get-Date
+
+          $discover = "skills\reflection-maintenance\clean-system-cache\scripts\discover-projects.ps1"
+          $text = (& powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Roots $projects -DormantDays 14 | Out-String)
+          if ($LASTEXITCODE -ne 0) { throw "discover-projects.ps1 failed" }
+          if (-not $text.Contains($target)) { throw "Rust target not discovered: $text" }
+          if (-not $text.Contains($venv)) { throw "Python venv not discovered: $text" }
+          if ($text.Contains($maven)) { throw "Maven target wrongly discovered: $text" }
+          if ($text.Contains($fresh)) { throw "fresh target wrongly discovered: $text" }
+
+          & powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Claim $target -DormantDays 14
+          if ($LASTEXITCODE -ne 0) { throw "claim rejected the valid Rust target" }
+          & powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Claim $maven -DormantDays 14
+          if ($LASTEXITCODE -eq 0) { throw "claim accepted a Maven target" }
+
+          $stateRoot = Join-Path $root "state"
+          $stateDir = Join-Path $stateRoot "clean-system-cache"
+          New-Item -ItemType Directory -Force -Path $stateDir | Out-Null
+          Set-Content -LiteralPath (Join-Path $stateDir "config.txt") -Value "PROJECT_ROOTS=$projects`nDORMANT_DAYS=14"
+          $env:LOCALAPPDATA = $stateRoot
+
+          $cmd = "skills\reflection-maintenance\clean-system-cache\scripts\clean-cache.cmd"
+          & cmd /c "$cmd /discover"
+          if ($LASTEXITCODE -ne 0) { throw "/discover failed" }
+          $discovered = Get-Content -Raw (Join-Path $stateDir "discovered.txt")
+          if (-not $discovered.Contains($target)) { throw "/discover did not list the Rust target" }
+
+          & cmd /c "$cmd /only proj:$target /yes"
+          if ($LASTEXITCODE -ne 0) { throw "/only failed" }
+          if (Test-Path -LiteralPath $target) { throw "target directory was not removed" }
+          if (-not (Test-Path -LiteralPath (Join-Path $projects "app\Cargo.toml"))) { throw "Cargo.toml was removed" }
+
+          Write-Host "Windows clean-system-cache smoke passed"
+
   test:
     name: bun test
     runs-on: ubuntu-latest
