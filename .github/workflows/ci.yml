@@ -186,8 +186,12 @@ jobs:
           $discovered = Get-Content -Raw (Join-Path $stateDir "discovered.txt")
           if (-not $discovered.Contains($target)) { throw "/discover did not list the Rust target" }
 
-          & cmd /c "$cmd /only proj:$target /yes"
-          if ($LASTEXITCODE -ne 0) { throw "/only failed" }
+          $onlyOut = & cmd /c "$cmd /only proj:$target /yes" 2>&1
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "discovered.txt:"
+            Get-Content -LiteralPath (Join-Path $stateDir "discovered.txt")
+            throw "/only failed: $onlyOut"
+          }
           if (Test-Path -LiteralPath $target) { throw "target directory was not removed" }
           if (-not (Test-Path -LiteralPath (Join-Path $projects "app\Cargo.toml"))) { throw "Cargo.toml was removed" }
 

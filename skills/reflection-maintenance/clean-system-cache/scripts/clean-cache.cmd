@@ -1673,8 +1673,14 @@ if not exist "%DISC_FILE%" (
     echo Refusing: run /discover first.
     exit /b 1
 )
-findstr /i /c:"|%P%|" "%DISC_FILE%" >nul 2>&1
-if errorlevel 1 (
+rem Membership is checked with the same for /f parser that renders the report.
+rem findstr cannot be trusted here: it has no Unicode mode and its pattern
+rem handling is one more thing between a valid path and the delete guard.
+set "FOUND=0"
+for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
+    if /i "%%B"=="%P%" set "FOUND=1"
+)
+if "%FOUND%"=="0" (
     echo Refusing: %P% is not in the last discovery. Run /discover again.
     exit /b 1
 )
