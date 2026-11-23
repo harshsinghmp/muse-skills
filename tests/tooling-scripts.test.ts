@@ -39,9 +39,17 @@ describe("verify — one command for every gate", () => {
     const args = ["--json"];
     for (const gate of gates) args.push("--skip", gate);
     const result = run("scripts/verify.ts", args);
-    expect(JSON.parse(result.stdout).results).toEqual([]);
+    const parsed = JSON.parse(result.stdout) as { skipped: string[]; results: unknown[] };
+    expect(parsed.results).toEqual([]);
+    expect(parsed.skipped).toEqual(gates);
     expect(result.status).toBe(0);
   }, 60_000);
+
+  test("an unknown --skip gate fails instead of silently passing", () => {
+    const result = run("scripts/verify.ts", ["--skip", "not-a-gate", "--json"]);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain("Unknown gate");
+  }, 30_000);
 });
 
 describe("cut-release — refuses rather than guessing", () => {

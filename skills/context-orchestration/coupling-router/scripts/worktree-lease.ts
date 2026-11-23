@@ -128,12 +128,20 @@ const owner = argValue("--owner") ?? "anonymous-session";
 const scope = argValue("--scope") ?? "";
 
 if (cmd === "release") {
+  const lease = readLease();
+  if (lease?.owner && lease.owner !== owner && !process.argv.includes("--force")) {
+    fail(`release: lease held by ${lease.owner}; pass --owner ${lease.owner} (or --force)`);
+  }
   if (existsSync(LEASE_PATH)) unlinkSync(LEASE_PATH);
   console.log("[worktree-lease] released — lease absent, worktree free");
   process.exit(0);
 }
 
 if (cmd === "hold") {
+  const lease = readLease();
+  if (lease?.owner && lease.owner !== owner && !process.argv.includes("--force")) {
+    fail(`hold: lease held by ${lease.owner}; pass --owner ${lease.owner} (or --force)`);
+  }
   refreshHeartbeat();
   console.log(`[worktree-lease] heartbeat refreshed at ${nowIso()}`);
   process.exit(0);

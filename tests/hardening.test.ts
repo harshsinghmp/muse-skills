@@ -162,13 +162,13 @@ describe("Worktree lease gate (coupling-router/scripts/worktree-lease.ts)", () =
     // Pin a deterministic aged heartbeat so the refresh is observable
     // (a real run can complete within the same second, making before/after equal).
     setHeartbeat("2020-01-01T00:00:00Z");
-    const rHold = runLease(["hold"]);
+    const rHold = runLease(["hold", "--force"]);
     expect(rHold.exitCode).toBe(0);
     const after = leaseHeartbeat();
     expect(after).not.toBe("2020-01-01T00:00:00Z");
     expect(after).not.toBeNull();
 
-    const rRelease = runLease(["release"]);
+    const rRelease = runLease(["release", "--force"]);
     expect(rRelease.exitCode).toBe(0);
     expect(fs.existsSync(LEASE_PATH)).toBe(false);
   });

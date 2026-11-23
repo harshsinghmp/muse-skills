@@ -48,6 +48,20 @@ function execGit(repo: string, args: string[]): string {
   }
 }
 
+function execGitResult(repo: string, args: string[]): { ok: boolean; out: string; error: string } {
+  try {
+    const out = execFileSync("git", args, {
+      cwd: repo,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      maxBuffer: 64 * 1024 * 1024,
+    }).trim();
+    return { ok: true, out, error: "" };
+  } catch (err) {
+    return { ok: false, out: "", error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 function gitOk(repo: string, args: string[]): boolean {
   try {
     execFileSync("git", args, { cwd: repo, stdio: "ignore" });
@@ -84,8 +98,10 @@ export function parsePorcelainWorktrees(porcelainText: string, repoRoot: string)
     let ageDays = 0;
 
     if (!isBare && existsSync(wtPath)) {
-      const statusOut = execGit(wtPath, ["status", "--porcelain"]);
-      isClean = statusOut.length === 0;
+      // A failed status is not "clean": an unreadable or broken worktree must
+      // be preserved, never offered to a --force prune as if it were empty.
+      const status = execGitResult(wtPath, ["status", "--porcelain"]);
+      isClean = status.ok && status.out.length === 0;
 
       try {
         const stats = statSync(wtPath);
@@ -234,7 +250,24 @@ export function spawnFederatedWorktree(opts: {
     ? ["worktree", "add", targetPath, targetBranch]
     : ["worktree", "add", "-b", targetBranch, targetPath, baseBranch];
 
-  execGit(repo, gitArgs);
+  const added = execGitResult(repo, gitArgs);
+  if (!added.ok) {
+    return {
+      success: false,
+      path: "",
+      branch: targetBranch,
+      message: `git worktree add failed for branch '${targetBranch}': ${added.error}`,
+    };
+  }
+  const verified = execGitResult(targetPath, ["rev-parse", "--is-inside-work-tree"]);
+  if (!verified.ok || verified.out !== "true") {
+    return {
+      success: false,
+      path: "",
+      branch: targetBranch,
+      message: `git worktree add reported success but ${targetPath} is not a worktree: ${verified.error || verified.out}`,
+    };
+  }
 
   // 4. Invariant FED-003: Register lease
   const leaseDir = join(targetPath, ".agents", "artifacts");
@@ -408,6 +441,7 @@ export function sweepFederatedWorktrees(
   const prunedPaths: string[] = [];
   const quarantinedPaths: string[] = [];
   const preservedPaths: string[] = [];
+  let removedCount = 0;
 
   for (const wt of worktrees) {
     if (wt.isBare) continue;
@@ -420,8 +454,13 @@ export function sweepFederatedWorktrees(
         if (qRes.success) {
           quarantinedPaths.push(`${wt.path} -> ${qRes.quarantineRef}`);
           if (opts.prune && opts.yes) {
-            execGit(wt.repo, ["worktree", "remove", "--force", wt.path]);
-            prunedPaths.push(wt.path);
+            const removal = execGitResult(wt.repo, ["worktree", "remove", "--force", wt.path]);
+            if (removal.ok) {
+              removedCount += 1;
+              prunedPaths.push(wt.path);
+            } else {
+              preservedPaths.push(`${wt.path} (PRUNE_FAILED: ${removal.error})`);
+            }
             continue;
           }
           if (opts.prune) {
@@ -441,8 +480,13 @@ export function sweepFederatedWorktrees(
 
     if (wt.ageDays >= maxAge || wt.status === "STALE") {
       if (opts.prune && opts.yes) {
-        execGit(wt.repo, ["worktree", "remove", "--force", wt.path]);
-        prunedPaths.push(wt.path);
+        const removal = execGitResult(wt.repo, ["worktree", "remove", "--force", wt.path]);
+        if (removal.ok) {
+          removedCount += 1;
+          prunedPaths.push(wt.path);
+        } else {
+          preservedPaths.push(`${wt.path} (PRUNE_FAILED: ${removal.error})`);
+        }
       } else if (opts.prune) {
         prunedPaths.push(`${wt.path} (DRY_RUN: --yes required to prune)`);
       } else {
@@ -456,7 +500,7 @@ export function sweepFederatedWorktrees(
   return {
     sweptAt: new Date().toISOString(),
     totalFound: worktrees.length,
-    prunedCount: prunedPaths.length,
+    prunedCount: removedCount,
     quarantinedCount: quarantinedPaths.length,
     preservedDirtyCount: preservedPaths.filter((p) => p.includes("DIRTY_LOCKED")).length,
     prunedPaths,
@@ -569,7 +613,8 @@ if (import.meta.main) {
     } else {
       console.log(`\n🧹 Worktree Federation Sweep (${doPrune ? "PRUNE" : "DRY RUN"}):`);
       console.log(`  Total Scanned:      ${rep.totalFound}`);
-      console.log(`  Eligible / Pruned:  ${rep.prunedCount}`);
+      console.log(`  Removed:            ${rep.prunedCount}`);
+      console.log(`  Candidates:         ${rep.prunedPaths.length}`);
       console.log(`  Quarantined:        ${rep.quarantinedCount || 0}`);
       console.log(`  Dirty Preserved:    ${rep.preservedDirtyCount}`);
       for (const p of rep.prunedPaths) console.log(`    - 🗑️  ${p}`);

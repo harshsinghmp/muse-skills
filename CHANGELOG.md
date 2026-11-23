@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - **Discovery skips junctioned artifacts** (`clean-system-cache`, `scripts/discover-projects.ps1`): a Windows junction named `target/` with a sibling `Cargo.toml` was discovered as a Rust artifact because only the claim check rejected reparse points. Discovery now skips reparse points before matching and never descends through them; the Windows platform smoke covers the junction case and asserts both discovery and `-Claim` refuse it.
+- **Fail-closed runtime** (`coupling-router`, `devops`, `new-project`, `scripts/verify.ts`): a failed `git worktree add` is no longer reported as success; a failed `git status` is no longer classified as "clean" (so a broken worktree cannot be force-pruned); the sweep counts only actual removals; an unparsable deliverable expiry now returns 410; the review token is no longer written into `wrangler` vars; framework scaffold failures abort instead of printing success; and `verify --skip` lists skipped gates and rejects unknown gate names.
 
 ## [8.8.0] - 2026-11-23
 
