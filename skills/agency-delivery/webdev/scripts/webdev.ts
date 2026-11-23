@@ -530,10 +530,18 @@ export async function generatePresignedUploadUrl(filename: string, contentType: 
     Bucket: process.env.${bucketEnv}!,
     Key: objectKey,
     ContentType: contentType,
+    // Bind the declared size into the signed request. Without this the caller
+    // can claim 1 byte and upload gigabytes with the same URL.
+    ContentLength: sizeBytes,
+    ContentDisposition: "attachment",
   });
 
-  // Short 15-minute lease
-  const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 900 });
+  // Short 15-minute lease; content-length and content-type are part of the
+  // signature, so the client must send exactly those headers.
+  const uploadUrl = await getSignedUrl(s3, command, {
+    expiresIn: 900,
+    signableHeaders: new Set(["content-length", "content-type"]),
+  });
 
   return {
     uploadUrl,
@@ -987,7 +995,9 @@ export function checkPortAvailability(
         let pid: number | undefined;
         let processName: string | undefined;
         try {
-          const lsof = spawnSync("lsof", ["-i", `:${port}`, "-t"], { encoding: "utf8" });
+          // LISTEN only: a client connected to the port must never be the PID
+          // we terminate, and -t must return the listening socket owner.
+          const lsof = spawnSync("lsof", ["-nP", `-iTCP:${port}`, "-sTCP:LISTEN", "-t"], { encoding: "utf8" });
           if (lsof.status === 0 && lsof.stdout.trim()) {
             pid = Number.parseInt(lsof.stdout.trim().split("\n")[0], 10);
             const ps = spawnSync("ps", ["-p", String(pid), "-o", "comm="], { encoding: "utf8" });
@@ -1028,6 +1038,36 @@ const DEV_SERVER_PROCESSES = [
   /expo/i,
 ];
 
+function isSelfOrAncestor(pid: number): boolean {
+  let current = process.pid;
+  for (let depth = 0; depth < 32 && current > 1; depth += 1) {
+    if (current === pid) return true;
+    const parent = spawnSync("ps", ["-o", "ppid=", "-p", String(current)], { encoding: "utf8" });
+    if (parent.status !== 0) break;
+    const next = Number.parseInt(parent.stdout.trim(), 10);
+    if (!Number.isFinite(next) || next <= 1) break;
+    current = next;
+  }
+  return false;
+}
+
+function listenerCwd(pid: number): string | null {
+  const result = spawnSync("lsof", ["-a", "-p", String(pid), "-d", "cwd", "-Fn"], { encoding: "utf8" });
+  if (result.status !== 0) return null;
+  const line = result.stdout.split("\n").find((entry) => entry.startsWith("n"));
+  return line ? line.slice(1).trim() : null;
+}
+
+function isInsideWorkspace(candidate: string, workspace: string): boolean {
+  try {
+    const realCandidate = fs.realpathSync(candidate);
+    const realWorkspace = fs.realpathSync(workspace);
+    return realCandidate === realWorkspace || realCandidate.startsWith(`${realWorkspace}${path.sep}`);
+  } catch {
+    return false;
+  }
+}
+
 export async function releasePort(
   port: number,
   options: { confirm?: boolean; force?: boolean } = {},
@@ -1046,6 +1086,26 @@ export async function releasePort(
   }
   if (!status.pid) {
     return { port, released: false, message: `Port ${port} is in use, but PID could not be determined.` };
+  }
+
+  // Ownership before termination: never kill this process or an ancestor, and
+  // never kill a listener whose working directory is outside this workspace.
+  if (isSelfOrAncestor(status.pid)) {
+    return {
+      port,
+      released: false,
+      pid: status.pid,
+      message: `Refusing to terminate PID ${status.pid}: it is this process or an ancestor.`,
+    };
+  }
+  const cwd = listenerCwd(status.pid);
+  if (!cwd || !isInsideWorkspace(cwd, process.cwd())) {
+    return {
+      port,
+      released: false,
+      pid: status.pid,
+      message: `Refusing to terminate PID ${status.pid}: listener ownership could not be verified inside ${process.cwd()}.`,
+    };
   }
 
   const processName = status.processName || "";
@@ -1109,6 +1169,8 @@ export async function releasePort(
 export interface PackageHealthResult {
   name: string;
   valid: boolean;
+  /** True only when the verdict came from a definitive check (known-bad list or heuristic). */
+  verified: boolean;
   isHallucination: boolean;
   isTyposquat: boolean;
   reason?: string;
@@ -1148,6 +1210,7 @@ export function verifyPackageHealth(packageName: string): PackageHealthResult {
     return {
       name: packageName,
       valid: false,
+      verified: true,
       isHallucination: true,
       isTyposquat: false,
       reason: `Package '${packageName}' is a known hallucinated compound package.`,
@@ -1160,6 +1223,7 @@ export function verifyPackageHealth(packageName: string): PackageHealthResult {
     return {
       name: packageName,
       valid: false,
+      verified: true,
       isHallucination: false,
       isTyposquat: true,
       reason: `Package '${packageName}' matches known malicious typosquat of '${KNOWN_TYPOSQUATS[clean]}'.`,
@@ -1172,6 +1236,7 @@ export function verifyPackageHealth(packageName: string): PackageHealthResult {
     return {
       name: packageName,
       valid: false,
+      verified: true,
       isHallucination: true,
       isTyposquat: false,
       reason: `Package '${packageName}' appears to be a hallucinated version-suffixed name.`,
@@ -1182,8 +1247,11 @@ export function verifyPackageHealth(packageName: string): PackageHealthResult {
   return {
     name: packageName,
     valid: true,
+    verified: false,
     isHallucination: false,
     isTyposquat: false,
+    reason:
+      "Not in the curated hallucination/typosquat list. This is not a registry existence check; run `npm view <pkg> version` before installing.",
   };
 }
 
@@ -1215,29 +1283,36 @@ export function scanSsrBoundaries(targetDir = process.cwd()): SsrBoundaryReport 
             scan(full);
           } else {
             const ext = path.extname(entry).toLowerCase();
-            if ([".tsx", ".jsx", ".astro"].includes(ext)) {
+            if ([".tsx", ".jsx", ".astro", ".ts"].includes(ext)) {
               filesScanned++;
               const lines = fs.readFileSync(full, "utf8").split("\n");
-              let insideClientOnlyHook = false;
+              // Track the effect body by brace depth. Idiomatic closers such as
+              // `}, []);` do not contain `})`, so a substring check would keep
+              // the whole rest of the file marked as client-only.
+              let hookDepth = 0;
               for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                if (line.includes("useEffect(") || line.includes("useLayoutEffect(")) {
-                  insideClientOnlyHook = true;
+                if (hookDepth === 0 && /useEffect\s*\(|useLayoutEffect\s*\(/.test(line)) {
+                  const opens = (line.match(/\{/g) || []).length;
+                  const closes = (line.match(/\}/g) || []).length;
+                  hookDepth = Math.max(0, opens - closes);
+                  continue;
                 }
-                if (insideClientOnlyHook && line.includes("})")) {
-                  insideClientOnlyHook = false;
+                if (hookDepth > 0) {
+                  const opens = (line.match(/\{/g) || []).length;
+                  const closes = (line.match(/\}/g) || []).length;
+                  hookDepth = Math.max(0, hookDepth + opens - closes);
+                  continue;
                 }
-                if (!insideClientOnlyHook) {
-                  const match = line.match(/\b(window|document|localStorage|sessionStorage)\.[a-zA-Z0-9_]+/);
-                  if (match && !line.includes("typeof window") && !line.includes("typeof document")) {
-                    violations.push({
-                      file: path.relative(targetDir, full),
-                      line: i + 1,
-                      globalUsed: match[1],
-                      snippet: line.trim(),
-                      fix: `Quarantine inside useEffect() or wrap with 'if (typeof ${match[1]} !== "undefined")'`,
-                    });
-                  }
+                const match = line.match(/\b(window|document|localStorage|sessionStorage)\.[a-zA-Z0-9_]+/);
+                if (match && !line.includes("typeof window") && !line.includes("typeof document")) {
+                  violations.push({
+                    file: path.relative(targetDir, full),
+                    line: i + 1,
+                    globalUsed: match[1],
+                    snippet: line.trim(),
+                    fix: `Quarantine inside useEffect() or wrap with 'if (typeof ${match[1]} !== "undefined")'`,
+                  });
                 }
               }
             }
@@ -1426,7 +1501,7 @@ if (import.meta.main) {
       console.error("Error: Please provide a valid port number (e.g. 3000)");
       process.exit(1);
     }
-    const res = await releasePort(portNum, { confirm: true, force: args.includes("--force") });
+    const res = await releasePort(portNum, { confirm: args.includes("--yes"), force: args.includes("--force") });
     if (isJson) {
       console.log(JSON.stringify(res, null, 2));
     } else {
@@ -1445,9 +1520,9 @@ if (import.meta.main) {
       console.log(JSON.stringify(res, null, 2));
     } else {
       console.log(`\n📦 Package Verification: ${pkg}`);
-      console.log(`  Status: ${res.valid ? "✅ VALID" : "❌ REJECTED"}`);
+      console.log(`  Status: ${res.valid ? "✅ NOT KNOWN-BAD (offline list)" : "❌ REJECTED"}`);
+      if (res.reason) console.log(`  Note:   ${res.reason}`);
       if (!res.valid) {
-        console.log(`  Reason: ${res.reason}`);
         if (res.suggestedFix) console.log(`  Fix:    ${res.suggestedFix}`);
       }
     }

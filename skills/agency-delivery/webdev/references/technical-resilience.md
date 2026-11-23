@@ -31,7 +31,7 @@ LLMs frequently hallucinate nonexistent package names when attempting to install
 
 ### The Invariant
 Every dependency to be installed via `bun add` or `npm install` **MUST** pass the Typosquatting & Hallucination Guard:
-1. Verify package existence on the official registry.
+1. Run the built-in known-bad lookup (`--verify-package`) **and** a registry existence check (e.g. `npm view <pkg> version`); the built-in list is offline and is not proof the package exists.
 2. Detect hallucinated compound names (e.g. `<pkg>-v5`, `<orm>-<driver>`).
 3. Ensure no unvetted typosquat variations of tier-1 libraries (`react`, `express`, `tailwind`, `zod`, `drizzle`).
 
