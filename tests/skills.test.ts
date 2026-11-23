@@ -2997,6 +2997,19 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     }
   });
 
+  test("devops docker scaffold emits a Node runtime template distinct from Next.js", () => {
+    const script = "skills/agency-delivery/devops/scripts/docker-audit.ts";
+    const node = spawnSync("bun", [script, "--scaffold", "node"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(node.status).toBe(0);
+    expect(node.stdout).toContain("FROM node:20-alpine");
+    expect(node.stdout).toContain('CMD ["node", "dist/index.js"]');
+    expect(node.stdout).not.toContain(".next/standalone");
+
+    const next = spawnSync("bun", [script, "--scaffold", "nextjs"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(next.status).toBe(0);
+    expect(next.stdout).toContain(".next/standalone");
+  });
+
   test("🐙 git skill: gitignore-audit CLI detects parent directory traps and audits tracked-ignored files", () => {
     const scriptPath = "skills/core-engine/git/scripts/gitignore-audit.ts";
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "git-ignore-test-"));

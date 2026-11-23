@@ -97,7 +97,7 @@ Rule: the simplest target that meets the SLA. Cargo-culting Kubernetes for a bro
 ### Suite contracts
 
 - Release/versioning/tag workflow → `git` (its release lifecycle).
-- Secrets-scanning and SAST in the pipeline → `code-review`.
+- Secrets-scanning and SAST in the pipeline → `muse-security` (`sast` mode; `bun run secret-scan` for secrets).
 - Deploy step automation inside an existing system → `automation`.
 
 ### Dockerfile & Container Optimization Tooling

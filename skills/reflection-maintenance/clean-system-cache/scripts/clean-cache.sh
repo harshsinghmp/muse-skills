@@ -385,11 +385,11 @@ find_supports_printf() {
 path_newest_epoch() {
     local d="$1" newest=""
     if find_supports_printf; then
-        newest=$(find "$d" -type f -printf '%T@\n' 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1 | cut -d. -f1)
+        newest=$(find "$d" -type f -printf '%T@\n' 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | awk 'NR==1 { printf "%d\n", $1 }')
     elif [ "$OS" = "Darwin" ]; then
-        newest=$(find "$d" -type f -exec stat -f '%m' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1)
+        newest=$(find "$d" -type f -exec stat -f '%m' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | awk 'NR==1 { print }')
     else
-        newest=$(find "$d" -type f -exec stat -c '%Y' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | head -1)
+        newest=$(find "$d" -type f -exec stat -c '%Y' {} + 2>>"${DISC_ERR_TMP:-/dev/null}" | sort -rn | awk 'NR==1 { print }')
     fi
     if [ -z "$newest" ]; then
         if [ "$OS" = "Darwin" ]; then
@@ -1086,7 +1086,7 @@ run_cand_method() {
             # or newline injection through the string.
             case "${CAND_CMD[$i]}" in
                 *$'\n'*|*$'\r'*|*'`'*|*'$('*|*'${'*)
-                    echo "[clean-cache] refusing unsafe catalog command for ${CAND_KEY[$i]}" >&2
+                    echo "[clean-cache] refusing unsafe catalog command for ${CAND_ID[$i]}" >&2
                     return 1
                     ;;
             esac

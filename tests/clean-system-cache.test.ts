@@ -181,10 +181,16 @@ describe("clean-system-cache — artifact matchers, dormancy, and revalidation",
     ]) {
       expect(sh).toContain(hook);
     }
+    expect(sh).toContain("${CAND_ID[$i]}");
+    expect(sh).not.toContain("CAND_KEY");
+    expect(sh).not.toContain("sort -rn | head -1");
 
     const cmd = fs.readFileSync(CMD_PATH, "utf8");
     expect(cmd).toContain("discover-projects.ps1");
     expect(cmd).toContain("-Claim");
+    expect(cmd).toContain("DEL_OK");
+    expect(cmd).toContain('if /i "!M!"=="purge"');
+    expect(cmd).toContain("failed -^>");
 
     const ps1 = fs.readFileSync(path.join(path.dirname(SH_PATH), "discover-projects.ps1"), "utf8");
     expect(ps1).toContain("Test-Artifact");

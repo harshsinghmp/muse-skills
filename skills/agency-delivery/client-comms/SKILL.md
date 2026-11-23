@@ -75,7 +75,7 @@ Loadable by topic; also routable as `/client-comms-<file>` commands (not separat
 - Internal agency ops, onboarding, SOWs, milestones, retros → `ops`.
 - Pricing strategy and value metrics behind proposals → `growth` (proposal mode structures the pitch and boundaries; `growth` owns rate calibration).
 - Measuring campaign or product metrics → `analytics`.
-- Session handoffs between agents → `handoff`.
+- Session handoffs between agents → `relay`.
 
 ---
 
