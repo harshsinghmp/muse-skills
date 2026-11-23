@@ -17,6 +17,7 @@
  */
 
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
@@ -154,9 +155,10 @@ export const SECRET_PATTERNS: PatternDef[] = [
 
 export function redactSecret(secret: string): string {
   if (secret.length <= 8) return "[REDACTED]";
-  const prefix = secret.slice(0, 4);
-  const suffix = secret.slice(-3);
-  return `${prefix}...${suffix} [REDACTED]`;
+  // A stable fingerprint locates the finding without putting any character of
+  // the live credential into logs, CI output, or a --output JSON file.
+  const digest = createHash("sha256").update(secret).digest("hex").slice(0, 8);
+  return `[REDACTED] ${digest}`;
 }
 
 export function isPlaceholderCredential(val: string): boolean {
@@ -181,7 +183,8 @@ export function isPlaceholderCredential(val: string): boolean {
 
 function isExcludedLine(line: string): boolean {
   const trimmed = line.trim();
-  if (trimmed.includes("[REDACTED]")) return true;
+  // Never exempt a line merely because it carries a [REDACTED] marker: that
+  // would let `const KEY = "sk-live..." // [REDACTED]` bypass the gate.
   if (/^\s*\/\*|\*\/\s*$/.test(trimmed)) return false;
   if (
     trimmed.includes("sk-[a-zA-Z0-9") ||

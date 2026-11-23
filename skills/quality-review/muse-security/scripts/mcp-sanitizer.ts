@@ -136,7 +136,16 @@ const CREDENTIAL_PATTERNS = [
   { name: "Private RSA/EC Key", regex: /-----BEGIN\s+(?:RSA|EC|OPENSSH|DSA)?\s*PRIVATE\s+KEY-----/ },
 ];
 
-const UNSAFE_NETWORK_HOSTS = ["0.0.0.0", "http://", "ws://"];
+function collectStrings(value: unknown, out: string[] = []): string[] {
+  if (typeof value === "string") {
+    out.push(value);
+  } else if (Array.isArray(value)) {
+    for (const item of value) collectStrings(item, out);
+  } else if (value && typeof value === "object") {
+    for (const nested of Object.values(value as Record<string, unknown>)) collectStrings(nested, out);
+  }
+  return out;
+}
 
 // =========================================================================
 // Core Engine Functions
@@ -152,38 +161,25 @@ export function scanToolManifest(manifest: McpToolManifest): McpAuditReport {
 
   for (const tool of manifest.tools || []) {
     let toolHasViolation = false;
+    const seenPatterns = new Set<RegExp>();
 
-    // Check tool description
-    const desc = tool.description || "";
-    for (const pattern of PROMPT_INJECTION_PATTERNS) {
-      if (pattern.test(desc)) {
-        toolHasViolation = true;
-        violations.push({
-          ruleId: "MCP-001",
-          severity: "CRITICAL",
-          target: `tool:${tool.name}.description`,
-          description:
-            "Tool description contains prompt injection or system override instructions (OWASP MCP03 Tool Poisoning).",
-          evidence: desc.slice(0, 120),
-        });
-      }
-    }
-
-    // Check parameter descriptions in inputSchema
-    if (tool.inputSchema?.properties) {
-      for (const [propName, propDef] of Object.entries(tool.inputSchema.properties)) {
-        const propDesc = propDef.description || "";
-        for (const pattern of PROMPT_INJECTION_PATTERNS) {
-          if (pattern.test(propDesc)) {
-            toolHasViolation = true;
-            violations.push({
-              ruleId: "MCP-001",
-              severity: "HIGH",
-              target: `tool:${tool.name}.param:${propName}`,
-              description: `Parameter '${propName}' description contains suspicious prompt injection pattern.`,
-              evidence: propDesc.slice(0, 120),
-            });
-          }
+    // Scan every string in the tool definition, not only description fields:
+    // enums, defaults, titles, examples, and nested $defs are equally usable
+    // for tool poisoning (OWASP MCP03).
+    for (const text of collectStrings(tool)) {
+      for (const pattern of PROMPT_INJECTION_PATTERNS) {
+        if (seenPatterns.has(pattern)) continue;
+        if (pattern.test(text)) {
+          seenPatterns.add(pattern);
+          toolHasViolation = true;
+          violations.push({
+            ruleId: "MCP-001",
+            severity: "CRITICAL",
+            target: `tool:${tool.name}`,
+            description:
+              "Tool schema or description contains a prompt injection or system override signature (OWASP MCP03).",
+            evidence: text.slice(0, 120),
+          });
         }
       }
     }
@@ -197,7 +193,7 @@ export function scanToolManifest(manifest: McpToolManifest): McpAuditReport {
 
   const valid = violations.length === 0;
   const summary = valid
-    ? `All ${manifest.tools.length} MCP tools certified clean against OWASP MCP03 poisoning.`
+    ? `No known poisoning signature matched across ${manifest.tools.length} MCP tools (advisory; execution-time tool calls are not inspected).`
     : `Detected ${violations.length} security violation(s) across ${quarantinedTools.length} tool(s). Quarantine enforced.`;
 
   return {
@@ -210,14 +206,20 @@ export function scanToolManifest(manifest: McpToolManifest): McpAuditReport {
   };
 }
 
+export interface McpAuditOptions {
+  /** Explicit remote hosts allowed by policy. Empty means loopback only. */
+  allowedRemoteHosts?: string[];
+}
+
 /**
  * MCP-002: Audit Server Configuration & Enforce Transport Isolation
  */
-export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult {
+export function auditServerConfig(config: McpServerConfig, options: McpAuditOptions = {}): McpConfigAuditResult {
   const violations: McpViolation[] = [];
   const isolatedServers: string[] = [];
   const riskyServers: string[] = [];
   const entries = Object.entries(config.mcpServers || {});
+  const allowedRemote = new Set(options.allowedRemoteHosts ?? []);
 
   for (const [serverName, entry] of entries) {
     let serverHasViolation = false;
@@ -226,11 +228,66 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
     const transport = entry.transport || (entry.command ? "stdio" : "http");
 
     if (transport === "stdio" || transport === "ipc") {
-      // stdio or unix domain socket is verified isolated
-      isolatedServers.push(serverName);
+      const command = entry.command || "";
+      const commandBase = command.split(/[\\/]/).pop()?.toLowerCase() ?? "";
+      const args = entry.args || [];
+      const shellLauncher = ["sh", "bash", "zsh", "cmd", "powershell", "pwsh"].includes(commandBase);
+
+      if (shellLauncher && args.some((arg) => arg === "-c" || arg === "/c")) {
+        serverHasViolation = true;
+        violations.push({
+          ruleId: "MCP-002",
+          severity: "CRITICAL",
+          target: `server:${serverName}.command`,
+          description:
+            "stdio transport launches a shell with -c; MCP launchers must execute a pinned program, not an arbitrary command string.",
+          evidence: `${command} ${args.join(" ")}`.slice(0, 120),
+        });
+      }
+
+      if (/\b(?:curl|wget)\b[^|]*\|\s*(?:sh|bash)\b/i.test(args.join(" "))) {
+        serverHasViolation = true;
+        violations.push({
+          ruleId: "MCP-002",
+          severity: "CRITICAL",
+          target: `server:${serverName}.args`,
+          description: "stdio transport pipes a network download into a shell.",
+          evidence: args.join(" ").slice(0, 120),
+        });
+      }
+
+      if (["npx", "bunx"].includes(commandBase)) {
+        const pkg = args.find((arg) => !arg.startsWith("-"));
+        if ((args.includes("-y") || args.includes("--yes")) && pkg && !pkg.includes("@")) {
+          serverHasViolation = true;
+          violations.push({
+            ruleId: "MCP-002",
+            severity: "HIGH",
+            target: `server:${serverName}.args`,
+            description: "stdio transport runs an unpinned package launcher; pin the package version.",
+            evidence: `${command} ${args.join(" ")}`.slice(0, 120),
+          });
+        }
+      }
+
+      if (serverHasViolation) {
+        riskyServers.push(serverName);
+      } else {
+        isolatedServers.push(serverName);
+      }
     } else {
-      // Network transport requires strict loopback and token authentication
+      // Network transport is loopback-only unless policy explicitly allowlists
+      // the host. A public HTTPS endpoint with a bearer token is still an
+      // exfiltration path, not "isolated".
       const url = entry.url || "";
+      let hostname = "";
+      try {
+        hostname = new URL(url).hostname.toLowerCase();
+      } catch {
+        hostname = "";
+      }
+      const loopback = isLoopbackUrl(url);
+
       if (!url) {
         serverHasViolation = true;
         violations.push({
@@ -240,33 +297,46 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
           description: "Network transport specified without target URL.",
           evidence: `transport: ${transport}`,
         });
-      }
-
-      // Check for unencrypted or open network interfaces
-      for (const unsafe of UNSAFE_NETWORK_HOSTS) {
-        if (url.includes(unsafe) && !isLoopbackUrl(url)) {
+      } else if (!hostname) {
+        serverHasViolation = true;
+        violations.push({
+          ruleId: "MCP-002",
+          severity: "HIGH",
+          target: `server:${serverName}.url`,
+          description: "Network transport URL is not a valid absolute URL.",
+          evidence: url,
+        });
+      } else if (!loopback && !allowedRemote.has(hostname)) {
+        serverHasViolation = true;
+        violations.push({
+          ruleId: "MCP-002",
+          severity: "CRITICAL",
+          target: `server:${serverName}.url`,
+          description:
+            "Non-loopback MCP transport without an explicit allowlist entry. Keep MCP on 127.0.0.1/::1 or add the host to allowedRemoteHosts.",
+          evidence: url,
+        });
+      } else {
+        if (!loopback && /^(?:http|ws):\/\//i.test(url)) {
           serverHasViolation = true;
           violations.push({
             ruleId: "MCP-002",
             severity: "CRITICAL",
             target: `server:${serverName}.url`,
-            description:
-              "Unencrypted or non-loopback network listener detected. Production MCP requires stdio or 127.0.0.1 TLS.",
+            description: "Allowlisted remote MCP transport is unencrypted; use https/wss.",
             evidence: url,
           });
         }
-      }
-
-      // Check for missing authorization headers on remote network transport
-      if (!entry.headers?.Authorization && !isLoopbackUrl(url)) {
-        serverHasViolation = true;
-        violations.push({
-          ruleId: "MCP-002",
-          severity: "HIGH",
-          target: `server:${serverName}.headers`,
-          description: "Remote MCP server configured without Authorization token header.",
-          evidence: "Missing Authorization header",
-        });
+        if (!loopback && !entry.headers?.Authorization) {
+          serverHasViolation = true;
+          violations.push({
+            ruleId: "MCP-002",
+            severity: "HIGH",
+            target: `server:${serverName}.headers`,
+            description: "Allowlisted remote MCP server configured without an Authorization header.",
+            evidence: "Missing Authorization header",
+          });
+        }
       }
 
       if (serverHasViolation) {
@@ -313,7 +383,7 @@ export function auditServerConfig(config: McpServerConfig): McpConfigAuditResult
 
   const valid = violations.length === 0;
   const summary = valid
-    ? `All ${entries.length} MCP server configurations verified under transport isolation rules.`
+    ? `No non-loopback MCP transport without an explicit allowlist across ${entries.length} server configuration(s).`
     : `Detected ${violations.length} transport security violation(s) across ${riskyServers.length} server(s).`;
 
   return {
