@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Discovery skips junctioned artifacts** (`clean-system-cache`, `scripts/discover-projects.ps1`): a Windows junction named `target/` with a sibling `Cargo.toml` was discovered as a Rust artifact because only the claim check rejected reparse points. Discovery now skips reparse points before matching and never descends through them; the Windows platform smoke covers the junction case and asserts both discovery and `-Claim` refuse it.
+
 ## [8.8.0] - 2026-11-23
 
 ### Changed

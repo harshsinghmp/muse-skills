@@ -229,6 +229,19 @@ The durable guarantee is server-side: on `dev` and `main`, enable **Require bran
 
 The gate's verdicts are `REVIEWABLE` / `NOT REVIEWABLE` before merge and `LANDED` / `LOCAL` after it; until the gate exits 0, say LOCAL — never "landed". Full standard: [`.agents/standards/landing-gate.md`](.agents/standards/landing-gate.md).
 
+### Host-dependent changes need a platform smoke job
+
+Ubuntu-only tests are not evidence when a skill's behaviour depends on the host shell or filesystem. BSD vs GNU `find`/`stat`/`xargs`, CMD batch parsing, PowerShell redirection encodings, junctions vs symlinks, and path case sensitivity all differ in ways unit tests on Linux cannot see.
+
+Add a `platform-smoke` matrix to `.github/workflows/ci.yml` when a change touches those surfaces:
+
+- `macos-latest` runs the skill's real suite so the BSD branches execute, not just the GNU ones.
+- `windows-latest` runs an end-to-end fixture through the batch/PowerShell entry point — including one destructive path, not only discovery.
+- Use `fail-fast: false`, a bounded `timeout-minutes`, and make the fixture hermetic (temp root, temp `LOCALAPPDATA`/`HOME`).
+- Assert the negative cases too: markerless directories, stale-vs-fresh timestamps, and reparse points (junctions/symlinks) must not be discovered or deleted.
+
+`clean-system-cache` is the reference implementation: the `platform-smoke` job in `ci.yml` and the fixture in `scripts/discover-projects.ps1` cover all of the above.
+
 ---
 
 ## 📄 License
