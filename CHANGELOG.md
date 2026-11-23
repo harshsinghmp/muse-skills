@@ -4,9 +4,14 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.0] - 2026-11-23
+
 ### Changed
 
-- **Cache discovery verifies artifacts by manifest, not by folder name** (`clean-system-cache`, `scripts/discover-projects.ps1`): Rust `target/` and other generic build directories are now detected by their owning manifest, staleness is measured from the newest file, risky locations are report-only, and every discovery is re-validated immediately before deletion. The Windows helper (`scripts/discover-projects.ps1`) mirrors the same matchers and claim check for `clean-cache.cmd /discover`.
+- **Verify artifacts by manifest, not by folder name** (`clean-system-cache`, `scripts/discover-projects.ps1`): Rust `target/` and other generic build directories are now detected by their owning manifest, staleness is measured from the newest file, risky locations are report-only, and every discovery is re-validated immediately before deletion. The Windows helper (`scripts/discover-projects.ps1`) mirrors the same matchers and claim check for `clean-cache.cmd /discover`.
+- **Windows and macOS runs are verified in CI** (`.github/workflows/ci.yml`): a `platform-smoke` matrix runs the cleaner suite against BSD tools on macOS and an end-to-end batch + PowerShell fixture on Windows — verify Windows and macOS paths before release instead of relying on Linux-only reasoning.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.7.1...v8.8.0
 
 ## [8.7.1] - 2026-11-12
 
