@@ -1,10 +1,10 @@
 ---
 name: clean-system-cache
 aliases: ["clean-cache","purge-cache","cache-cleaner","disk-cleanup"]
-description: "Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. On every run it scans the system for safe-to-delete caches and removes them: XDG cache dirs (~/.cache/*), exact editor/app cache dirs (Cache, GPUCache, CachedData, Code Cache), AUR helper caches (yay, shelly, paru), desktop indexes (tracker3, thumbnails, fontconfig, AppStream, KDE kcache, GPU shaders), package-manager and browser-automation caches, and dormant project build caches (.next, .turbo, .parcel-cache, __pycache__, pytest/mypy/ruff caches, node_modules/.cache, .vite). Anything affecting a running session, config, or data is skipped and offered as numbered per-app/per-project options, with a browse mode. Decisions are remembered per app and per project. Trash/Recycle Bin, Downloads, /tmp strays, and data folders ALWAYS require explicit confirmation, even after learning. Enforces active-session protection and cache-only isolation. Use when asked to clean caches, free disk space, or purge build layers."
+description: "Self-learning cross-platform cache cleaner for Windows, Linux, and macOS. On every run it scans for and removes safe-to-delete caches: XDG cache dirs, exact editor/app cache dirs (Cache, GPUCache, CachedData, Code Cache), AUR helper and desktop index caches, package-manager and browser-automation caches, and dormant project artifacts (node_modules, Cargo target, Python venvs, Go vendor, .NET obj/bin, .next, .turbo, .parcel-cache, __pycache__, pytest/mypy/ruff caches). Detection pairs names with manifests (target needs Cargo.toml, venvs pyvenv.cfg), staleness uses the newest file, risky locations are report-only, and discoveries are re-validated before deletion. Session-, config-, and data-affecting paths are skipped and offered as numbered per-app/per-project options. Decisions are remembered per app and project. Trash, Downloads, /tmp strays, and data folders ALWAYS require explicit confirmation. Protects active sessions. Use when asked to clean caches, free disk space, or purge build layers."
 argument-hint: "clean cache, free disk space, purge build layers"
 user-invocable: true
-version: 1.0.0
+version: 1.1.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -56,12 +56,12 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 ### Trigger Conditions
 Execute this skill when:
 1. **Low Disk Space Warnings**: Disk capacity drops below comfortable working thresholds due to accumulated build layers, package archives, or scratch media files.
-2. **Dangling Build Layers**: Docker BuildKit layers, Xcode DerivedData, Android build-cache, or Go/Cargo build artifacts consume tens of gigabytes without active references.
+2. **Dangling Build Layers**: Docker BuildKit layers, Xcode DerivedData, Android build-cache, or Rust `target/`, `node_modules`, and Python venv artifacts consume tens of gigabytes without active references.
 3. **Bloated Web Browser Caches**: Google Chrome, Mozilla Firefox, Zen, Brave, or Microsoft Edge disk caches grow to multiple gigabytes of stale HTTP responses.
 4. **Stale Designer Scratch Files**: Adobe Premiere, After Effects, Audition (`.cfa` / `.pek` audio peak caches), or Figma desktop app caches lock up storage.
 5. **Dormant `node_modules` Directories**: Old, abandoned repository folders hog dozens of gigabytes across user project directories.
 6. **Stale Local Package & Desktop Caches**: AUR helper build caches (`~/.cache/yay`, `~/.cache/Shelly`), the `tracker3` file index, thumbnail/fontconfig/AppStream/KDE caches, Flatpak HTTP caches, or GPU shader caches quietly grow to gigabytes.
-7. **Dormant Project Caches**: `.next`, `.turbo`, `.parcel-cache`, `__pycache__`, `.pytest_cache`, `.mypy_cache`, `node_modules/.cache` and friends sit untouched in project folders for weeks.
+7. **Dormant Project Artifacts**: `.next`, `.turbo`, `.parcel-cache`, `__pycache__`, `.pytest_cache`, `.mypy_cache`, `node_modules`, Rust `target/`, abandoned virtualenvs, Go `vendor/`, and .NET `obj/bin` sit untouched in project folders for weeks. Detection requires the artifact's manifest, and staleness is measured by the newest file inside.
 8. **Package Archives & Trash**: `/var/cache/pacman/pkg`, `/var/cache/apt/archives`, `/var/cache/dnf`, or `~/.local/share/Trash` dominate the disk — these are confirmation-gated, never automatic.
 9. **Host Vitals & Machine Inventory (`host-vitals`)**: Deterministically inspecting hardware vitals (CPU cores, GPU PCIe bus, kernel version, display resolution, RAM) via `bun skills/reflection-maintenance/clean-system-cache/scripts/host-vitals.ts`.
 
@@ -69,7 +69,7 @@ Execute this skill when:
 Do **NOT** use this skill for:
 - Wiping active project code, git histories, or working repository files.
 - Cleaning browser cookies, logins, saved passwords, bookmarks, or user profiles (the skill strictly protects them).
-- Purging virtual environments (`.venv`) or active Docker containers and volumes.
+- Purging an **active** project environment (`.venv`) or active Docker containers and volumes. Only dormant venvs are offered, with an export-dependencies caution.
 - Deleting global binary installations (`~/.cargo/bin`, `~/.nvm`, etc.).
 - Purging capability-coupled agent caches while sessions are active or offline without rehydration access.
 
@@ -94,7 +94,9 @@ Do **NOT** use this skill for:
 │ 9. App Frameworks       │ Electron prebuilt binary download caches               │
 │ 10. Web Browsers        │ Chrome, Firefox, Zen, Brave, Edge, Vivaldi, Safari     │
 │ 11. Agent Toolchains    │ OpenCode, Claude Code, Cursor, Codex, Gemini, Continue │
-│ 12. Project Audits      │ Dormant node_modules scanner across project trees      │
+│ 12. Project Artifacts   │ Dormant artifact scanner: node_modules, Cargo target,    │
+│                         │ Python venvs, Go vendor, .NET obj/bin, build output,    │
+│                         │ .next/.nuxt/.turbo/pytest/mypy/ruff caches             │
 │ 13. Local Package helpers│ yay, shelly, paru build/clone caches (AUR)             │
 │ 14. Desktop & Runtimes  │ tracker3 index, thumbnails, fontconfig, appstream,     │
 │                         │ GStreamer, KDE .kcache, Flatpak app caches, GPU shaders,│
@@ -103,7 +105,8 @@ Do **NOT** use this skill for:
 │                         │ pnpm metadata, typescript, mise, nvm tarballs, logs    │
 │ 15. Confirmation-gated  │ Trash, pacman/apt/dnf archives, journal, /tmp strays,  │
 │                         │ rustup/nvm old editions, Go modcache, Docker, Flatpak  │
-│ 16. Discovery & Learning│ XDG cache dirs, app Cache dirs, dormant project builds,│
+│ 16. Discovery & Learning│ XDG cache dirs, app Cache dirs, matcher-verified dormant │
+│                         │ project artifacts, risky-path tagging, parallel sizing, │
 │                         │ persisted allow/deny decisions per app/project         │
 └─────────────────────────┴────────────────────────────────────────────────────────┘
 ```
@@ -131,8 +134,8 @@ deserve a question because it is expensive, needs `sudo`, or is irreversible.
 | Flag | POSIX | Windows | Effect |
 | :--- | :--- | :--- | :--- |
 | Catalog | `--list` | `/list` | Known candidates: number, tier, measured size, exact paths |
-| JSON | `--list --json` | — | Agent-parseable `{id,tier,size_kb,paths,note}` |
-| Discover | `--discover` | `/discover` | Full scan of caches, app config caches, dormant project caches |
+| JSON | `--list --json` / `--discover --json` | — | Agent-parseable catalog (`{id,tier,size_kb,paths,age_days,risk,note}`) or discoveries (`{key,label,scope,tier,path,size_kb,age_days,risk,note}`) |
+| Discover | `--discover` | `/discover` | Full scan of caches, app config caches, matcher-verified dormant project artifacts |
 | Clean safe | `--clean-safe` | — | With `--discover`, also purge the SAFE discoveries |
 | Browse | `--browse <key\|id\|num>` | `/browse <key>` | The files/folders that would be deleted, largest first |
 | Depth | `--depth <n>` | — | Deeper tree for `--browse` |
@@ -140,7 +143,7 @@ deserve a question because it is expensive, needs `sudo`, or is irreversible.
 | Apply | `--only <key,..> [--yes] [--confirm-irreversible]` | `/only <key,..> [/yes]` | Delete exactly the chosen items |
 | Preview | `--dry-run` | `/dry-run` | Prints the plan without deleting |
 | Projects | `--projects <dirs>` | — | Colon-separated roots to scan (persisted) |
-| Dormant | `--dormant <days>` | — | Dormancy threshold for project caches (default 14, persisted) |
+| Dormant | `--dormant <days>` | — | Staleness threshold by newest file inside (default 14, persisted) |
 | Min size | `--min-size <mb>` | — | Hide discoveries smaller than this (default 1 MB) |
 | Learn | `--learn allow\|deny\|forget <keys>` | — | Record/undo a decision for future runs |
 | Learned | `--learned` | — | Show every remembered decision |
@@ -177,8 +180,30 @@ Reported for a decision (never automatic the first time):
 | Scope | Rule |
 | :--- | :--- |
 | `~/.var/app/<id>/cache` | Per-app Flatpak HTTP cache. Skipped while that app is running. |
-| `<project>/{.next,.nuxt,.svelte-kit,.turbo,.parcel-cache,.pytest_cache,__pycache__,.mypy_cache,.ruff_cache,.nyc_output,coverage,.angular}` | Only when untouched for `--dormant` days (default 14). |
-| `<project>/node_modules/{.cache,.vite}` | Same dormancy rule. |
+| `<project>/<artifact>` | Only when the matcher confirms the artifact's shape **and** the newest file inside is older than `--dormant` days (default 14). |
+
+### Artifact matchers — a directory name alone is not evidence
+
+Distinctive names stand alone. Generic names require the owning project's
+manifest, so a Maven `target/`, a source `vendor/`, or a `~/bin` folder is never
+mistaken for a build cache. Symlinked artifacts are ignored.
+
+| Artifact | Matcher | Caution |
+| :--- | :--- | :--- |
+| `node_modules` | Name only | Reinstall from the lockfile; needs registry access |
+| `target` | Sibling `Cargo.toml` **or** `target/CACHEDIR.TAG` | Rebuilt by cargo; keep if offline artifacts are needed |
+| `.venv`, `venv`, `.virtualenv` | Inside `pyvenv.cfg` | Export dependencies to `requirements.txt` first |
+| `vendor` | Sibling `go.mod` | Recreated by `go mod vendor` |
+| `obj`, `bin` | Sibling `*.csproj` (or `*.sln` for `obj`) | Rebuilt by `dotnet build` |
+| `build` | Inside `CMakeCache.txt` **or** sibling `pubspec.yaml` | Rebuilt by the next configure/build |
+| `.next`, `.nuxt`, `.svelte-kit`, `.turbo`, `.parcel-cache`, `.pytest_cache`, `__pycache__`, `.mypy_cache`, `.ruff_cache`, `.nyc_output`, `coverage`, `.angular` | Name only | Rebuilt on the next build/run |
+
+Dormancy is the **newest file** inside the artifact, never the directory's own
+mtime: editing an existing file does not change the directory mtime, which is
+how an actively used cache would otherwise be misread as abandoned. Discovery
+prunes at the match, so it never descends into `node_modules` or `target`, and
+sizes are measured in parallel. Deletions remove the artifact directory itself,
+not just its contents.
 
 Never discovered, never auto-cleaned:
 
@@ -200,6 +225,9 @@ the last scan in `~/.local/state/clean-system-cache/last-scan.tsv`.
   This is how "next time you already know" works.
 - **`deny`** → the item is hidden from reports and menus. Undo with
   `--learn forget <key>` (or `--learned` to list keys).
+- **Risky locations are never learned into automatic cleanup.** A learned `allow`
+  on a project artifact is ignored while the path is tagged risky; the item stays
+  report-only and requires an explicit `--only` selection.
 - **`ASK!` is never learned.** Trash/Recycle Bin, `Downloads`, stale `/tmp`, and Flatpak
   app caches always require an explicit selection plus confirmation, on every run,
   forever. A learned `allow` on an `ASK!` key is ignored by design.
@@ -223,7 +251,10 @@ Learning is per key, so per app (`app:mpv`), per Flatpak app
 | **T3 Agent Memory, Auth & State** | **NEVER TOUCHED.** Credentials (`~/.claude/settings.json`, `~/.gemini/settings.json`), session databases, agent memory (`.memory/**`), sovereign configs (`~/.memory/USER.md`, `~/.config/muse/`), and conversation histories are strictly forbidden. |
 | **Browser Cookies, Passwords & History** | **NEVER TOUCHED.** Purges purely disposable HTTP cache (`Cache_Data`, `cache2/entries`). User profiles, cookies, logins, and bookmarks remain 100% intact. |
 | **Project Repositories & Source Code** | **NEVER TOUCHED.** Does not alter active git working directories or files. |
-| **Virtual Environments (`.venv`)** | **PRESERVED.** Cleans package download wheels only; never touches virtual environments. |
+| **Discovery Staleness** | **RE-VALIDATED AT DELETE.** Immediately before removing a discovered artifact, the matcher, dormancy, and (for Flatpak) running-state are re-checked. A path that was renamed, replaced, or became active is skipped with `path changed since discovery`. |
+| **Risky Locations** | **REPORT-ONLY.** A project artifact inside `~/.config`, `~/.local/share`, `~/.cache`, a hidden top-level folder, a `.app` bundle, `Program Files`, or `AppData` is tagged `⚠` and never auto-cleaned, even after a learned `allow`. |
+| **Symlinked Artifacts** | **IGNORED.** A `target`/`node_modules`/`.venv` that is a symlink is not an artifact; discovery and deletion both skip it. |
+| **Virtual Environments (`.venv`)** | **PRESERVED BY DEFAULT.** Never auto-cleaned. An abandoned venv (dormant, containing `pyvenv.cfg`) is reported as `ASK` and deleted only on explicit selection, after dependencies are exported. |
 | **Active Containers & Volumes** | **PRESERVED.** Prunes dangling build layers only; active containers, images, and volumes are untouched. |
 | **Installed Global Binaries** | **PRESERVED.** Binaries in `~/.cargo/bin`, `~/.nvm`, `%APPDATA%`, etc. are never touched. |
 | **Confirmation-Gated Candidates** | **NEVER AUTO-DELETED.** Trash, package archives, `/tmp` strays, session snapshots, and other `ASK`/`ASK!` entries require explicit selection. `ASK!` requires a typed `yes` in a terminal or the separate `--confirm-irreversible` flag; `--yes` alone is **not** sufficient for irreversible data. |
@@ -369,10 +400,14 @@ Scan project directories for abandoned node_modules folders consuming massive di
 - **Never Bundle `ASK!` Into "Safe Cleanup"**: Trash and `/tmp` strays are unrecoverable. Present them as their own choice with sized paths, never as part of an "all safe caches" answer.
 - **Never Guess Sizes**: `du` numbers quoted to a user must come from `--list`/`--browse` on that machine right then. A number from another machine or another week is misinformation.
 - **Never Let `sudo` Prompt Mid-Script**: check `sudo -n true` first; when passwordless sudo is unavailable, print the exact command instead of blocking the run.
-- **Never Trust a Partially-Failed `du`**: with `pipefail`, a `du | cut` pipeline can emit two values for an unreadable subdirectory and corrupt arithmetic. Sizes are read single-line (`du | awk 'NR==1'`).
-- **Never Delete Outside the Three Discovery Scopes**: `~/.cache/*`, exact `<app>/Cache` dirs, and dormant project build caches. "It looked like a cache" is not a rule; a path that does not match a documented pattern is only ever reported, never auto-cleaned.
+- **Never Trust a Partially-Failed `du`**: with `pipefail`, a `du | cut` pipeline can emit two values for an unreadable subdirectory and corrupt arithmetic. Sizes are read single-line (`du | awk 'NR==1'`), and any filesystem error during discovery is counted and reported: sizes are lower bounds, not exact.
+- **Never Match a Generic Directory Name Alone**: `target`, `build`, `obj`, `bin`, `vendor`, and `venv` are common names. Require the owning manifest (`Cargo.toml`, `CMakeCache.txt`/`pubspec.yaml`, `*.csproj`, `go.mod`, `pyvenv.cfg`) before treating one as a build artifact. A Maven `target/` or a `~/bin` is not a cache.
+- **Never Use the Directory mtime for Dormancy**: editing a file inside `target/` does not change the directory's mtime. Staleness is the newest file inside the artifact; using `find <dir> -maxdepth 0 -mtime +N` misreads an active cache as abandoned.
+- **Never Delete a Discovery Without Re-validating It**: a scan can be minutes or hours old. Re-run the matcher and the dormancy check immediately before deletion; skip with `path changed since discovery` when the path was renamed, replaced, or became active.
+- **Never Follow a Symlinked Artifact**: a symlinked `target`/`node_modules`/`.venv` is not the artifact and may point anywhere. Skip symlinks in both discovery and deletion.
+- **Never Delete Outside the Three Discovery Scopes**: `~/.cache/*`, exact `<app>/Cache` dirs, and matcher-verified dormant project artifacts. "It looked like a cache" is not a rule; a path that does not match a documented matcher is only ever reported, never auto-cleaned.
 - **Never Let Learning Override `ASK!`**: Trash/Recycle Bin, `Downloads`, stale `/tmp`, and Flatpak app caches must ask every single time. A learned `allow` on those keys is deliberately ignored — treat any suggestion to auto-clean them as a bug.
-- **Never Treat a Project Cache as Dormant Without the mtime Check**: deleting `.next`/`.turbo` under an active dev server breaks the running build. Dormancy (`--dormant`, default 14 days) is the guard; do not bypass it with a manual `--only` for a project the user is currently working in.
+- **Never Treat a Project Cache as Dormant Without the Newest-File Check**: deleting `.next`/`target` under an active dev server breaks the running build. Dormancy (`--dormant`, default 14 days) is measured from the newest file inside the artifact; do not bypass it with a manual `--only` for a project the user is currently working in.
 - **Never Delete `*-backup*` / `*-ovfs*` Config Trees**: those are profile-sync-daemon lowerdirs, not caches, even when they contain a `Cache` directory.
 
 ---
@@ -389,6 +424,11 @@ Before marking cleanup complete, verify:
 7. **Every deletion was inspectable first**: each `ASK`/`ASK!` item was shown with its paths (`--discover` / `--browse <key>`) before selection, and no irreversible item was deleted without a typed `yes` or an approved `--only ... --yes --confirm-irreversible`.
 8. `--list` and `--list --json` agree on ids, tiers, and sizes; `--browse <key>` lists the same paths the delete path uses.
 9. Sudo-backed candidates either ran with passwordless sudo or reported the exact command instead of hanging.
-10. **Discovery stayed in scope**: every auto-cleaned path matched `~/.cache/*`, an exact app `Cache` dir, or a dormant project build cache. No browser profile, agent runtime, orca/ryoku state, or `*-backup*` tree was touched.
-11. **Learning behaved**: `ASK` items selected in a prior run were cleaned automatically again (when still dormant/closed); `deny` items did not appear; `ASK!` items (Trash, Downloads, `/tmp`, Flatpak app caches) were still offered and still required confirmation.
+10. **Discovery stayed in scope**: every auto-cleaned path matched `~/.cache/*`, an exact app `Cache` dir, or a matcher-verified dormant project artifact. No browser profile, agent runtime, orca/ryoku state, or `*-backup*` tree was touched.
+11. **Learning behaved**: `ASK` items selected in a prior run were cleaned automatically again (when still dormant/closed); `deny` items did not appear; `ASK!` items (Trash, Downloads, `/tmp`, Flatpak app caches) were still offered and still required confirmation; risky project artifacts stayed report-only despite a learned `allow`.
 12. State files are the documented ones only: `~/.local/state/clean-system-cache/{learned.conf,last-scan.tsv}` and `~/.config/clean-system-cache/config.conf`.
+13. **Matchers corroborated**: a `target/` without a sibling `Cargo.toml`/`CACHEDIR.TAG`, a `.venv` without `pyvenv.cfg`, a `vendor/` without `go.mod`, and a `build`/`obj`/`bin` without its project marker were not discovered. A symlinked artifact was not discovered.
+14. **Dormancy used the newest file**: an artifact containing a file newer than `--dormant` days was not reported, even when the directory mtime was old.
+15. **Discoveries were re-validated**: a path renamed, replaced, or made non-dormant after `--discover` was skipped with `path changed since discovery`, and its replacement was left intact.
+16. **JSON carried the extra evidence**: `--discover --json` emitted `key`, `path`, `size_kb`, `age_days`, `risk`, and `note`; `--list --json` also emitted `age_days` and `risk` (null/empty for catalog entries).
+17. **Unreadable paths were disclosed**: when `find`/`du` hit permission errors during discovery, the report stated that the measured sizes are lower bounds.

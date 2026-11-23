@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.7.1)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.0)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.7.1/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.0/scripts/install.sh | bash
 #
 # Supply-chain overrides:
 #   MUSE_SKILLS_REF=<tag>     install from this git tag (default: the latest release)
@@ -26,7 +26,7 @@ ORIGINAL_PWD="$(pwd)"
 # the releases API is unreachable, and is the version this installer was cut
 # from. Whichever tag is chosen is still verified against that release's
 # checksums asset, so "latest" never means "unverified".
-PINNED_REF="v8.7.1"
+PINNED_REF="v8.8.0"
 LATEST_REF=""
 if [ -z "${MUSE_SKILLS_REF:-}" ]; then
   LATEST_REF="$(curl -fsSL --max-time 10 \
@@ -47,7 +47,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.7.1)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.0)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 
@@ -219,6 +219,17 @@ echo -e "⚡ ${CYAN}Running setup engine...${RESET}\n"
 if ! run_ts scripts/export-commands.ts "${EXPORT_ARGS[@]}"; then
   echo -e "❌ Setup engine failed. Aborting; no success message was printed." >&2
   exit 1
+fi
+
+# 5.1 Verify what was just installed, and repair what the check can repair.
+# Running this here means an install never finishes "successfully" with a
+# surface that does not resolve.
+echo -e "\n🩺 Verifying the install…"
+if run_ts skills/core-engine/updateagents/scripts/doctor.ts --fix; then
+  echo -e "✅ Install verified."
+else
+  echo -e "⚠️  Doctor reported problems it could not repair — run it again for details:"
+  echo -e "   bun skills/core-engine/updateagents/scripts/doctor.ts"
 fi
 
 # ─── 5.5 Optional Global Identity Onboarding ─────────────────────────────────

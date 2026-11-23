@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-11",
-  "total": 406,
+  "generatedAt": "2026-11-15",
+  "total": 411,
   "curated": 135,
   "nameOnly": [
     "accounts:audit",
@@ -89,6 +89,7 @@
     "database:analytical",
     "database:audit",
     "database:diagnose",
+    "database:invariant-review",
     "database:optimize",
     "database:query",
     "database:vector-search",
@@ -111,6 +112,7 @@
     "designscope:layout-tree-extraction",
     "designscope:output-template",
     "devops:audit",
+    "devops:ci-diagnosis",
     "devops:cloudflare",
     "devops:edge-mesh",
     "devops:incident",
@@ -215,6 +217,7 @@
     "refactor:architecture",
     "refactor:audit",
     "refactor:database",
+    "refactor:format-consistency",
     "refactor:modern-techniques",
     "refactor:perf",
     "refactor:polish",
@@ -260,6 +263,7 @@
     "updateagents:onboard",
     "updateagents:pr-review-mining",
     "updateagents:skill-authoring",
+    "updatedocs:decision-record",
     "webdev:audit",
     "webdev:cms",
     "webdev:deploy",
@@ -273,6 +277,7 @@
     "webdev:rate-limit",
     "webdev:realtime-bus",
     "webdev:spec",
+    "webdev:takeover-audit",
     "webdev:technical-resilience"
   ]
 }

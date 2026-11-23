@@ -13,6 +13,20 @@
         "[ ] Version strings in docs match package.json version"
       ],
       "text": "- **Documentation drift audit**: quantify how far every governed doc has drifted from the code it documents. - **Pre-release docs gate**: certify link integrity, frontmatter health, and canonical-source uniqueness before a tag is cut. - **Post-refactor doc sweep**: a refactor moved code — find every doc that silently stopped being true. - [ ] Every relative markdown link in governed docs resolves to a file on disk (0"
+    },
+    "decision-record": {
+      "heading": "Decision Record with Approval Evidence",
+      "anchors": [
+        "Captures one decision, the options rejected beside it, and a resolvable pointer to who",
+        "approved it, so the choice can be re-audited months later without asking anyone.",
+        "When to Use",
+        "A choice had real alternatives and someone will ask \"why not X?\" after the people in the",
+        "A rejected option must survive in writing next to the chosen one: vendor, hosting model,",
+        "schema shape, dependency, protocol.",
+        "An approval arrived verbally or in chat and must be pointable later for audit, compliance",
+        "An earlier decision is being reversed and the original record must stay intact rather"
+      ],
+      "text": "Captures one decision, the options rejected beside it, and a resolvable pointer to who approved it, so the choice can be re-audited months later without asking anyone. - A choice had real alternatives and someone will ask \"why not X?\" after the people in the room have moved on. - A rejected option must survive in writing next to the chosen one: vendor, hosting model, schema shape, dependency, protocol. - An approval "
     }
   },
   "updateagents": {
@@ -1150,6 +1164,20 @@
       ],
       "text": "> **Executive Scope**: Zero-downtime database schema refactoring, non-breaking column migrations, query optimization, indexing strategies, and N+1 query elimination. --- Never execute destructive schema changes (`ALTER TABLE ... DROP COLUMN` or renaming active columns) in a single migration on a live production database. ### The 4-Phase Migration Lifecycle: --- ### Anti-Pattern: N+1 ORM Queries --- - **Concurrent Ind"
     },
+    "format-consistency": {
+      "heading": "Value-Format Consistency",
+      "anchors": [
+        "Makes every rendered price, date, number and unit derive from one formatter with one set…",
+        "locale rules, and pins it with tests so it cannot drift back.",
+        "When to Use",
+        "The same price renders as $19, 19.00 USD, 19 USD or €19 on different pages of one",
+        "Dates disagree across components in the same locale (03/04/2025 beside 4 March 2025,",
+        "or a day lost to timezone conversion).",
+        "Switching locale or currency changes the label but not the value, or the value but not the",
+        "Number separators, decimal commas, unit spacing (5 kg vs 5kg) or percent scaling"
+      ],
+      "text": "Makes every rendered price, date, number and unit derive from one formatter with one set of locale rules, and pins it with tests so it cannot drift back. - The same price renders as `$19`, `19.00 USD`, `19 USD` or `€19` on different pages of one product. - Dates disagree across components in the same locale (`03/04/2025` beside `4 March 2025`, or a day lost to timezone conversion). - Switching locale or currency chan"
+    },
     "modern-techniques": {
       "heading": "Modern Techniques — v1.1.0 additions from corpus research",
       "anchors": [
@@ -1821,9 +1849,9 @@
         "user (or an agent presenting a menu) can describe them without guessing.",
         "List live entries with sizes before quoting any number:",
         "clean-cache.sh --list # human table, numbered",
-        "clean-cache.sh --list --json # agent-parseable: id, tier, sizekb, paths",
-        "clean-cache.sh --browse <id> # exact files/folders, largest first",
-        "Tiers"
+        "clean-cache.sh --list --json # agent-parseable: id, tier, sizekb, paths, agedays, risk",
+        "clean-cache.sh --discover --json # discoveries: key, path, sizekb, agedays, risk, note",
+        "clean-cache.sh --browse <id> # exact files/folders, largest first"
       ],
       "text": "The script's registry is the source of truth. This file explains the entries so a user (or an agent presenting a menu) can describe them without guessing. List live entries with sizes before quoting any number: | Tier | Meaning | When deleted | |:---|:---|:---| | `T1` | Regenerable on next tool use | Automatically on a normal run | | `ASK` | Regenerable but expensive, or needs `sudo` | Only when selected via `--only`"
     }
@@ -2875,6 +2903,20 @@
       ],
       "text": "Consolidates all spec-miner reverse-engineering capabilities directly into the webdev department. No code. Produces the packet `implement` consumes. Every phase ends at a human gate — no silent progression. - Problem statement (who hurts, what breaks, why now) OR legacy codebase target to reverse-engineer - Solution sketch and non-goals (explicit Out-of-scope line) - ≤5 user stories with acceptance criteria OR undocu"
     },
+    "takeover-audit": {
+      "heading": "Site Takeover Defect Inventory",
+      "anchors": [
+        "Produces one ordered, evidence-backed list of what is actually broken on an inherited site",
+        "or app, so the first week of work is chosen from facts instead of impressions.",
+        "When to Use",
+        "You inherit a live site or app with no handover: agency change, departed contractor,",
+        "acquisition, or an abandoned internal project.",
+        "The new owner asks \"what's wrong with it?\" or \"where do we start?\" without naming a",
+        "Several audits already exist in isolation (SEO, performance, accessibility) and nobody",
+        "can say which fix comes first."
+      ],
+      "text": "Produces one ordered, evidence-backed list of what is actually broken on an inherited site or app, so the first week of work is chosen from facts instead of impressions. - You inherit a live site or app with no handover: agency change, departed contractor, acquisition, or an abandoned internal project. - The new owner asks \"what's wrong with it?\" or \"where do we start?\" without naming a domain. - Several audits alrea"
+    },
     "technical-resilience": {
       "heading": "technical-resilience — Subprocess Zombie Sanitizer, Typosquatting Shield & SSR Hydration Guard",
       "anchors": [
@@ -3656,6 +3698,20 @@
         "[ ] SEC-3 Dependency chain: dependency confusion/typosquatting defenses; package managers…"
       ],
       "text": "- **CI/CD security audit**: grade the pipeline against the OWASP Top 10 CI/CD Security Risks (CICD-SEC-1…10) before granting it production access. - **Deployment-gate audit**: verify nothing reaches production without the intended gates actually enforcing. - **Drift audit**: declared infrastructure state vs live state. - [ ] **SEC-1 Flow control**: no merge-to-default without review; no direct production deploys off "
+    },
+    "ci-diagnosis": {
+      "heading": "CI Failure Diagnosis",
+      "anchors": [
+        "Triage a red pipeline down to one named environment delta and a minimal reproduction,",
+        "instead of guessing at the workflow file until the job turns green.",
+        "When to Use",
+        "The build or tests pass on a developer machine and fail in CI, or pass in CI and fail",
+        "A pipeline that was green goes red with no code change: dependency, cache, runner image",
+        "Only some matrix legs fail — one OS, one runtime version, one architecture, one shard.",
+        "A job is being re-run repeatedly in the hope of a green run.",
+        "The suite has acquired the blanket label \"flaky\" and nobody can separate flaky from"
+      ],
+      "text": "Triage a red pipeline down to one named environment delta and a minimal reproduction, instead of guessing at the workflow file until the job turns green. - The build or tests pass on a developer machine and fail in CI, or pass in CI and fail locally. - A pipeline that was green goes red with no code change: dependency, cache, runner image or secret drift. - Only some matrix legs fail — one OS, one runtime version, on"
     },
     "cicd": {
       "heading": "cicd — CI/CD: test → build → gate → deploy, with secrets and rollback.",
@@ -4776,6 +4832,20 @@
         "Index DDL (production-safe with CONCURRENTLY) with a write-cost note per index, plus the…"
       ],
       "text": "Default stack: self-hosted Postgres 16+, btree default. Defaults: `CREATE INDEX CONCURRENTLY` on any production table; one composite beats two singles; `INCLUDE` for select-only columns; partial index when the filter is a stable subset; GIN for jsonb and full-text, HNSW for pgvector (see `operate`). - Target query plus its `EXPLAIN` output (or route through `diagnose` first). - Table sizes and write rate (indexes tax"
+    },
+    "invariant-review": {
+      "heading": "Data Invariant Review",
+      "anchors": [
+        "Finds every write path that can skip a required data invariant, gives the invariant one",
+        "enforceable owner below the application layer, and proves the gap with a test that fails",
+        "When to Use",
+        "A column such as tenantid, orgid, status or deletedat is set in several",
+        "handlers and a newly added path forgets it.",
+        "Production rows violate a rule the team believes the application enforces (\"the service",
+        "A query returns rows it should not: another tenant's data, soft-deleted records, orphaned",
+        "A new writer appeared beside the existing ones — background job, queue consumer, webhook,"
+      ],
+      "text": "Finds every write path that can skip a required data invariant, gives the invariant one enforceable owner below the application layer, and proves the gap with a test that fails before the fix. - A column such as `tenant_id`, `org_id`, `status` or `deleted_at` is set in several handlers and a newly added path forgets it. - Production rows violate a rule the team believes the application enforces (\"the service always s"
     },
     "migrations": {
       "heading": "migrations — Zero-Downtime Database Migration & Locking Guard",

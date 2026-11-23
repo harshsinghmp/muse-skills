@@ -89,8 +89,11 @@ session snapshots, and `profile-sync-daemon` backups (stop `psd` first).
 Every run performs a discovery pass, not just the fixed catalog:
 
 ```bash
-# Full scan: caches, app config caches, dormant project build caches (nothing deleted)
+# Full scan: caches, app config caches, matcher-verified dormant project artifacts (nothing deleted)
 clean-system-cache/scripts/clean-cache.sh --discover
+
+# Same scan as machine-readable JSON, including age_days and risk per discovery
+clean-system-cache/scripts/clean-cache.sh --discover --json
 
 # Same scan and purge the SAFE discoveries
 clean-system-cache/scripts/clean-cache.sh --discover --clean-safe
@@ -110,8 +113,24 @@ clean-system-cache/scripts/clean-cache.sh --projects ~/projects:~/work --dormant
 
 | Scope | Rule |
 | :--- | :--- |
-| `<project>/{.next,.nuxt,.svelte-kit,.turbo,.parcel-cache,.pytest_cache,__pycache__,.mypy_cache,.ruff_cache,.nyc_output,coverage,.angular,node_modules/.cache,node_modules/.vite}` | Only when untouched for `--dormant` days (default 14). Allow it once and later runs clean it while it stays dormant. |
+| `<project>/<artifact>` | Only when the artifact's matcher confirms its shape **and** the newest file inside is older than `--dormant` days (default 14). Allow it once and later runs clean it while it stays dormant. |
 | `~/.var/app/<id>/cache` | Per-app Flatpak cache. Skipped while that app is running, even after you allow it. |
+
+Artifact detection is name **plus** a corroborating manifest, so generic names are
+never mistaken for caches:
+
+| Artifact | Requires | Caution |
+| :--- | :--- | :--- |
+| `node_modules` | name only | reinstall from lockfile |
+| `target` | sibling `Cargo.toml` or `target/CACHEDIR.TAG` | cargo rebuild / offline artifacts |
+| `.venv`, `venv`, `.virtualenv` | `pyvenv.cfg` | export dependencies first |
+| `vendor` | sibling `go.mod` | `go mod vendor` recreates it |
+| `obj`, `bin` | sibling `*.csproj` | `dotnet build` recreates it |
+| `build` | `CMakeCache.txt` or sibling `pubspec.yaml` | rebuild/configure |
+| `.next`, `.nuxt`, `.svelte-kit`, `.turbo`, `.parcel-cache`, `.pytest_cache`, `__pycache__`, `.mypy_cache`, `.ruff_cache`, `.nyc_output`, `coverage`, `.angular` | name only | rebuilt on next build/run |
+
+Staleness uses the newest file inside, not the directory mtime, and discovery
+prunes at the match so it never descends into `node_modules` or `target`.
 
 **Always asks first** — everything else, forever:
 
@@ -144,6 +163,10 @@ clean-system-cache\scripts\clean-cache.cmd /dry-run
 :: Execute full cleanup in safe mode (preserves T2 capability caches)
 clean-system-cache\scripts\clean-cache.cmd
 
+:: Scan project roots for matcher-verified dormant artifacts
+:: (uses the bundled scripts\discover-projects.ps1 helper)
+clean-system-cache\scripts\clean-cache.cmd /discover
+
 :: Opt-in to purge capability-coupled caches with Rehydration Manifest
 clean-system-cache\scripts\clean-cache.cmd /include-coupled
 
@@ -169,6 +192,7 @@ clean-system-cache\scripts\clean-cache.cmd /only win-temp,win-recyclebin /yes
 3. **Capability Inventory Contract**: Verifies before-and-after capability counts in safe mode, guaranteeing zero tool/skill regressions.
 4. **Strictly "Cache Only"**: Never touches cookies, saved passwords, logins, bookmarks, history, tabs, or user profiles.
 5. **Browse-Before-Delete**: Every candidate has a stable id; `--browse` prints the exact paths and sizes, and nothing expensive or irreversible is deleted without an explicit selection plus confirmation.
-6. **Scope-Bounded Discovery**: Only `~/.cache/*`, exact app `Cache` dirs, and dormant project build caches are ever cleaned automatically. Browsers, agent runtimes, `orca`/`ryoku` state, and `*-backup*` tree are excluded by rule, not by name luck.
-7. **Learning Has Hard Limits**: Remembered `allow` decisions apply only to regenerable `ASK` items whose conditions still hold. Trash/Recycle Bin, Downloads, `/tmp` strays, and Flatpak app caches ignore learning and ask every run.
-8. **Zero Dependencies**: Requires no Python, Node, or external interpreters.
+6. **Scope-Bounded, Matcher-Verified Discovery**: Only `~/.cache/*`, exact app `Cache` dirs, and matcher-verified dormant project artifacts are ever cleaned automatically. Generic names require their project manifest; symlinks are ignored; risky locations (`~/.config`, `~/.local/share`, `.app`, `Program Files`, `AppData`, hidden top-level dirs) are report-only. Browsers, agent runtimes, `orca`/`ryoku` state, and `*-backup*` trees are excluded by rule, not by name luck.
+7. **Stale Scans Are Re-validated**: Immediately before deletion the matcher, newest-file staleness, and running state are checked again. A path renamed, replaced, or reactivated after discovery is skipped, never deleted blind.
+8. **Learning Has Hard Limits**: Remembered `allow` decisions apply only to regenerable `ASK` items whose conditions still hold. Risky locations stay report-only, and Trash/Recycle Bin, Downloads, `/tmp` strays, and Flatpak app caches ignore learning and ask every run.
+9. **Zero External Dependencies**: Native Bash on Linux/macOS; native CMD on Windows, whose `scripts/discover-projects.ps1` helper uses the built-in PowerShell only for project discovery and sizing. No Python or Node required.

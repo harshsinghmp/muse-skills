@@ -100,16 +100,21 @@
     "muse": "bun scripts/muse.ts",
     "check:release-ready": "bun scripts/check-release-ready.ts",
     "verify": "bun scripts/verify.ts",
-    "release:cut": "bun scripts/cut-release.ts"
+    "release:cut": "bun scripts/cut-release.ts",
+    "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0",
+    "export:routing-dataset": "bun scripts/export-routing-dataset.ts",
+    "route:log": "bun scripts/log-route.ts",
+    "arbitrate:labels": "bun scripts/arbitrate-labels.ts",
+    "change:skill": "bun scripts/change-skill.ts"
   },
   "type": "module",
-  "version": "8.7.1",
+  "version": "8.8.0",
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
-    "bun-types": "^1.4.4",
+    "@biomejs/biome": "2.6.8",
+    "bun-types": "1.4.5",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.4.1"
+    "musememory": "3.4.2"
   }
 }
