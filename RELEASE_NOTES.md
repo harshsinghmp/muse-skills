@@ -1,3 +1,30 @@
+# 🏛️ Muse Skills v8.8.0 — <one line for humans>
+
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.0
+
+- **<headline>**: <what changed, and the evidence.>
+
+## 📊 Verification
+
+| Metric | v8.7.1 | v8.8.0 |
+|:---|:---|:---|
+| Automated Tests | <n> | **<n>** |
+| Test Files | <n> | **<n>** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.7.1...v8.8.0
+
 # 🏛️ Muse Skills v8.7.1 — Doctor That Repairs What It Reports
 
 > **Patch release: `muse doctor --fix` now installs the branch guard it reports, and a routing experiment that did not pay is recorded rather than shipped.** 881 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
