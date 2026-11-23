@@ -1258,7 +1258,7 @@ call :cand_add win-cursor-codedata T1 "Cursor CachedData" "%APPDATA%\Cursor\Cach
 call :cand_add win-crashdumps T1 "Crash dumps" "%LOCALAPPDATA%\CrashDumps" rm "" "Only written when an app crashes"
 call :cand_add win-electron T1 "Electron download cache" "%LOCALAPPDATA%\electron\Cache" rm "" "Re-downloaded on next electron install"
 call :cand_add win-nuget T1 "NuGet HTTP cache" "%LOCALAPPDATA%\NuGet\v3-cache" rm "" "Re-fetched on next restore"
-call :cand_add win-temp ASK! "User TEMP folder" "%LOCALAPPDATA%\Temp" rm "" "PERMANENT - open apps may hold files in use"
+call :cand_add win-temp ASK! "User TEMP folder" "%LOCALAPPDATA%\Temp" purge "" "Clears TEMP contents; PERMANENT - open apps may hold files in use"
 call :cand_add win-update ASK "Windows Update downloads" "%SYSTEMROOT%\SoftwareDistribution\Download" rm "" "Needs an elevated prompt; re-downloaded on next update"
 call :cand_add win-thumbs ASK "Explorer thumbnail cache" "%LOCALAPPDATA%\Microsoft\Windows\Explorer" rm "" "Close Explorer first; thumbcache_*.db regenerate"
 call :cand_add win-recyclebin ASK! "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
@@ -1416,13 +1416,39 @@ if "%DRY_RUN%"=="1" (
     echo [!L!] reclaimable -^> !P!
     exit /b 0
 )
-if /i "!M!"=="rm" (
-    if exist "!P!" rmdir /s /q "!P!" >nul 2>&1
-) else (
-    if not "!C_CMD_%N%!"=="" call !C_CMD_%N%! >nul 2>&1
+if "!P!"=="" (
+    echo [!L!] refused -^> target path is empty
+    exit /b 1
 )
-if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
-echo [!L!] cleaned
+if /i "!P!"=="\Temp" (
+    echo [!L!] refused -^> LOCALAPPDATA is empty (would target the drive root)
+    exit /b 1
+)
+set "DEL_OK=1"
+if /i "!M!"=="rm" (
+    if exist "!P!" (
+        rmdir /s /q "!P!" >nul 2>&1
+        if errorlevel 1 set "DEL_OK=0"
+    )
+) else if /i "!M!"=="purge" (
+    rem Clear contents, never the TEMP directory itself.
+    if exist "!P!" (
+        del /q /s /f "!P!\*" >nul 2>&1
+        for /d %%D in ("!P!\*") do rmdir /s /q "%%D" >nul 2>&1
+    )
+) else (
+    if not "!C_CMD_%N%!"=="" (
+        call !C_CMD_%N%! >nul 2>&1
+        if errorlevel 1 set "DEL_OK=0"
+    )
+)
+if "!DEL_OK!"=="1" (
+    if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
+    echo [!L!] cleaned
+) else (
+    echo [!L!] failed -^> !P!
+    exit /b 1
+)
 exit /b 0
 
 :cat_auto

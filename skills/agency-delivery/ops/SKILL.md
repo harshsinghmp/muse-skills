@@ -83,7 +83,7 @@ Loadable by topic; also routable as `/ops-<file>` commands (not separate routed 
 ### Anti-Triggers
 
 - Client-facing delivery (design, code, SEO) → the relevant department skill.
-- Session handoff between agents → `handoff`.
+- Session handoff between agents → `relay`.
 - Internal quality and evidence tracking → `secretary` / `evidence-ledger`.
 - Billing/accounting software setup → out of scope.
 
@@ -112,7 +112,7 @@ Rule: match the paperwork to the risk. Big ambiguous work needs a discovery phas
 ### Suite contracts
 
 - Isolated client workspace scaffold → `new-project` (client mode).
-- Session continuity across the engagement → `handoff` / `context-anchor`.
+- Session continuity across the engagement → `relay` / `context-anchor`.
 - Evidence of work done → `evidence-ledger`.
 
 ---
