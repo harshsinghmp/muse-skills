@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # secret-scan-pre-commit — block commits that leak credentials
 # Trigger: git pre-commit hook
-# Fail-open with warning for staged files (non-blocking advisory)
+# Fails closed: exits 1 when findings are at/above the threshold. Use
+# --advisory for the old non-blocking warning behaviour.
 #
-# Audit-gate options (additive; defaults preserve existing behavior):
+# Audit-gate options:
 #   --severity-threshold <critical|high|medium|low>  (default: low = show all)
 #   --format <text|json|sarif>                       (default: text)
 #   --rules-file <path>  extra ERE patterns, one per line (# comments OK;
 #     *.yaml/*.yml reads `patterns:` list). See audit-rules.example.yaml for
 #     the 3-layer merge sketch (defaults < repo < local/explicit, doc-only).
 #   --output <path>      write formatted payload to file instead of stdout
-#   --fail-on-findings   exit 1 when findings at/above threshold (opt-in;
-#     default stays advisory exit 0)
+#   --fail-on-findings   explicit fail-closed (default)
+#   --advisory           warn and exit 0 even when findings exist
 # Pattern: runkids/skillshare `audit` flags --threshold/--format/--output
 # (MIT, pattern-only; no skillshare code vendored).
 set -euo pipefail
@@ -73,8 +74,7 @@ emit_text() {
   done
   if [ "$FOUND" -eq 1 ]; then
     echo "[hooks] Review staged files above before committing."
-    # skill-spector-ignore: advisory-only hook; --no-verify is the real git escape hatch, never used by this script
-    echo "[hooks] To bypass: git commit --no-verify"
+    echo "[hooks] To bypass: git commit --no-verify (or run this hook with --advisory)"
   fi
 }
 emit_json() {
@@ -82,7 +82,8 @@ emit_json() {
   FIRST=1
   printf '%s' "$FINDINGS" | while IFS='|' read -r f s m; do
     [ -z "$f" ] && continue
-    m_esc=$(printf '%s' "$m" | sed 's/\\/\\\\/g;s/"/\\"/g' | cut -c1-64)
+    # Never copy the matched credential into the JSON payload or --output file.
+    m_esc="[REDACTED]"
     [ "$FIRST" -eq 0 ] && printf ','
     printf '{"file":"%s","severity":"%s","match":"%s"}' "$f" "$s" "$m_esc"
     FIRST=0
