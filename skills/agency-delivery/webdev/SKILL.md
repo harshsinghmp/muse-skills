@@ -74,7 +74,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 
 ### Support references (load on topic)
 
-Loadable by topic; also routable as `/webdev-<file>` commands (not separate routed modes):
+Loadable by topic; also available as `/webdev-<file>` commands:
 
 - [technical-resilience.md](references/technical-resilience.md)
 - [security-headers.md](references/security-headers.md)
@@ -128,9 +128,17 @@ A change is not done until the gate is green. If no gate exists, say so and add 
 | `bun webdev.ts --polish-audit [dir]` | Audit target codebase for hydration and polish standards | Structured scorecard (0-100) with remediation steps |
 | `bun webdev.ts --scaffold-polish-suite [dir]` | Scaffold complete CSS and HTML hydrator suite | `styles/hydration-polish.css` and `theme-hydrator.html` |
 | `bun webdev.ts --port-check` | Probe dev server ports (3000, 4321, 5173, 8080) | Identifies port occupancy and associated PIDs |
-| `bun webdev.ts --port-clean <port>` | Cleanly release occupied dev port | Terminates orphaned zombie process (`SIGTERM` → `SIGKILL`) |
-| `bun webdev.ts --verify-package <name>` | Audit dependency against hallucinated/typosquatted names | Protects package integrity before `bun add` |
+| `bun webdev.ts --port-clean <port> [--yes] [--force]` | Release a listening dev-server port | Refuses unless `--yes`; only kills the LISTEN owner and only when its cwd is inside this workspace |
+| `bun webdev.ts --verify-package <name>` | Check a package against the curated hallucination/typosquat list | Offline known-bad lookup; not a registry existence check (`npm view <pkg> version` is still required) |
 | `bun webdev.ts --ssr-boundary-scan [dir]` | Scan codebase for top-level browser global violations | Catches `window is not defined` and hydration errors |
+| `bun webdev.ts --brownfield-scan [dir]` | Classify a legacy codebase and its invariants | Risk rating and locked constraints before migration |
+| `bun webdev.ts --webhook-scaffold <stripe\|shopify\|generic>` | Generate a raw-body, timing-safe webhook handler | Signature verified before JSON parse |
+| `bun webdev.ts --form-shield-scaffold [turnstile\|hcaptcha]` | Generate a bot-shielded form handler | Server-side token verification |
+| `bun webdev.ts --migration-check <dir>` | Detect migration hazards | Blocking findings with rollback notes |
+| `bun webdev.ts --edge-scan <dir>` | Audit edge-runtime compatibility | Flags Node-only APIs in Workers code |
+| `bun webdev.ts --check-pooling <dir>` | Check database connection pooling | Flags per-request clients |
+| `bun webdev.ts --presigned-upload-scaffold <s3\|r2>` | Generate a hardened direct-upload handler | MIME + signed `Content-Length` ceiling, attachment disposition |
+| `bun webdev.ts --widget-scaffold [name]` | Generate an isolated Shadow DOM widget | Zero style bleed into the host page |
 | `bun sw-generator.ts --generate-sw` | Generate production Service Worker with CacheFirst & NetworkFirst | `sw.js` with offline fallback shell |
 | `bun sw-generator.ts --audit-pwa [dir]` | Audit target codebase for PWA compliance (SW, manifest, icons) | Structured scorecard (0-100) with remediation steps |
 
@@ -175,6 +183,8 @@ primary source; defaults here are fallbacks. Record which URLs were used.
 - [ ] The project's own verification gate (build/test/lint) ran green.
 - [ ] All changes follow existing repo patterns (imports, naming, structure).
 - [ ] Anti-FOUC blocking head script present in `<head>` (zero theme flash on refresh).
+- [ ] Security headers set: CSP, HSTS, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, and a `__Host-` session cookie without `Domain`.
+- [ ] Service worker never caches authenticated/private HTML; `Cache-Control: private`/`no-store` is honoured and logout clears the runtime cache.
 - [ ] Zero-CLS `@font-face` metric overrides configured for web font system fallbacks.
 - [ ] Clean `@media print` stylesheet active (interactive chrome stripped, ink-safe).
 - [ ] `scroll-padding-top` declared on root `<html>` matching sticky/fixed navigation header.

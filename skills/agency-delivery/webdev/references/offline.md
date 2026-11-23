@@ -79,11 +79,22 @@ const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [
-  '/',
   '/offline.html',
   '/favicon.ico',
   '/manifest.webmanifest'
 ];
+
+// Never persist personalized or credentialed responses. A cached dashboard
+// survives logout and is readable offline by the next user of the device.
+// Authenticated HTML must also be served with `Cache-Control: private` or
+// `no-store`; the guards here are the client-side second line of defence.
+function isCacheable(response, request) {
+  if (!response || !response.ok) return false;
+  if (request.headers.has('authorization')) return false;
+  const cacheControl = (response.headers.get('cache-control') || '').toLowerCase();
+  if (cacheControl.includes('no-store') || cacheControl.includes('private')) return false;
+  return response.type === 'basic' || response.type === 'default';
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -113,8 +124,10 @@ self.addEventListener('fetch', (event) => {
   if (url.origin === self.location.origin && /\.(css|js|woff2|png|svg|webp|ico)$/.test(url.pathname)) {
     event.respondWith(
       caches.match(request).then((cached) => cached || fetch(request).then((res) => {
-        const copy = res.clone();
-        caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
+        if (isCacheable(res, request)) {
+          const copy = res.clone();
+          caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
+        }
         return res;
       }))
     );
@@ -126,13 +139,22 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       Promise.race([
         fetch(request).then((res) => {
-          const copy = res.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          if (isCacheable(res, request)) {
+            const copy = res.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          }
           return res;
         }),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), 3000))
       ]).catch(() => caches.match(request).then((cached) => cached || caches.match(OFFLINE_URL)))
     );
+  }
+});
+
+// Clear personalized runtime HTML when the app signals a logout.
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'LOGOUT') {
+    event.waitUntil(caches.delete(RUNTIME_CACHE));
   }
 });
 ```
@@ -142,6 +164,7 @@ self.addEventListener('fetch', (event) => {
 ## Verification & Acceptance Checklist
 
 - [ ] `sw.js` registers cleanly in browser with zero lifecycle console errors.
+- [ ] Authenticated/private HTML is never cached; `Cache-Control: private`/`no-store` and logout clear the runtime cache.
 - [ ] Static assets load from `CacheStorage` upon refreshing in disconnected airplane mode.
 - [ ] Disconnecting Wi-Fi navigates gracefully to `/offline.html` rather than browser crash dinosaur.
 - [ ] Offline form mutations serialize cleanly to IndexedDB and replay with idempotency keys upon reconnect.
