@@ -321,6 +321,15 @@ elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
 fi
 
 if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
+  # Reject traversal before the lexical prefix check below: "$PWD/../../x"
+  # still starts with "$PWD/" and would otherwise pass.
+  case "/$NEW_PROJECT_DIR/" in
+    *"/../"*)
+      echo "Error: --new-project must not contain '..' path segments." >&2
+      exit 1
+      ;;
+  esac
+
   if [[ "$NEW_PROJECT_DIR" = /* ]]; then
     RESOLVED_PROJECT_DIR="$NEW_PROJECT_DIR"
   else
