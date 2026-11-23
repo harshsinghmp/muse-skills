@@ -1645,7 +1645,7 @@ echo ====================================================================
 echo  Roots: %PROJECT_ROOTS%   Dormant: %DORMANT_DAYS%+ days (newest file)
 echo --------------------------------------------------------------------
 if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Roots "%PROJECT_ROOTS%" -DormantDays %DORMANT_DAYS% > "%DISC_FILE%" 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Roots "%PROJECT_ROOTS%" -DormantDays %DORMANT_DAYS% -OutFile "%DISC_FILE%" >nul 2>&1
 set /a DNUM=0
 for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
     if /i not "%%A"=="none" (

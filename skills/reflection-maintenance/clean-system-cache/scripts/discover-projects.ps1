@@ -8,12 +8,14 @@
 #
 # Modes:
 #   (default)  print one "<mb>|<path>|<risk>|<age-days>|<kind>" line per artifact
+#   -OutFile F write the same lines to F as ASCII (findstr cannot match UTF-16LE)
 #   -Claim P   exit 0 when P is still the same dormant artifact, else exit 1
 
 param(
     [string]$Roots = "",
     [int]$DormantDays = 14,
     [string]$Claim = "",
+    [string]$OutFile = "",
     [int]$Depth = 5
 )
 
@@ -143,4 +145,9 @@ if ($out.Count -eq 0) {
     "none"
 } else {
     $out
+}
+
+if ($OutFile) {
+    $lines = if ($out.Count -eq 0) { @("none") } else { $out }
+    Set-Content -LiteralPath $OutFile -Value $lines -Encoding ASCII
 }
