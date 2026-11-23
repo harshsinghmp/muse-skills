@@ -313,7 +313,7 @@ export function auditWorktreeLeases(rootPath: string): BoundaryIssue[] {
           target: file,
           rule: "Stale Worktree Lease",
           message: `Worktree lease held by '${lease.holder}' on branch '${lease.branch}' has stale heartbeat (${Math.round(ageMs / 60000)}m ago).`,
-          remediation: `Release expired lease with 'bun coupling-router/scripts/worktree-lease.ts release --branch ${lease.branch}' or reclaim.`,
+          remediation: `Release expired lease with 'bun coupling-router/scripts/worktree-lease.ts release --owner ${lease.holder}' or reclaim.`,
           metadata: { ageMinutes: Math.round(ageMs / 60000), lease },
         });
       } else {

@@ -113,7 +113,6 @@ export function scaffoldLivingDeliverable(workspaceRoot: string, options: Delive
         DELIVERABLE_SLUG: slug,
         CLIENT_CODENAME: client,
         EXPIRES_AT: expiresAtDate.toISOString(),
-        REVIEW_TOKEN: token,
         UPSTREAM_PORT: targetPort.toString(),
       },
       assets: {
@@ -156,9 +155,10 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // 1. Ephemeral Expiry Gate Check
+    // 1. Ephemeral Expiry Gate Check. A missing or unparsable timestamp must
+    //    fail closed, not compare false against NaN and serve forever.
     const expiryTime = new Date(env.EXPIRES_AT).getTime();
-    if (Date.now() > expiryTime) {
+    if (!Number.isFinite(expiryTime) || Date.now() > expiryTime) {
       return new Response(
         \`<!DOCTYPE html>
 <html>
@@ -311,8 +311,10 @@ export function checkDeliverableExpiry(workspaceRoot: string, slug: string): Exp
   const data = JSON.parse(readFileSync(metaPath, "utf8")) as DeliverableMetadata;
   const now = Date.now();
   const expiryTime = new Date(data.expiresAt).getTime();
-  const expired = now > expiryTime;
-  const hoursRemaining = Math.max(0, Math.round((expiryTime - now) / (1000 * 60 * 60)));
+  const expired = !Number.isFinite(expiryTime) || now > expiryTime;
+  const hoursRemaining = Number.isFinite(expiryTime)
+    ? Math.max(0, Math.round((expiryTime - now) / (1000 * 60 * 60)))
+    : 0;
 
   return {
     slug: data.slug,
@@ -390,7 +392,10 @@ Options:
       console.log(`  Directory:      ${res.deliverableDir}`);
       console.log(`  Client:         ${res.metadata.client}`);
       console.log(`  Expires At:     ${res.metadata.expiresAt}`);
-      console.log(`  Review Token:   ${res.metadata.token}`);
+      console.log(
+        `  Review Token:   ${process.argv.includes("--reveal") ? res.metadata.token : "[hidden — pass --reveal]"}`,
+      );
+      console.log(`  Set secret:     cd ${res.deliverableDir} && wrangler secret put REVIEW_TOKEN`);
       console.log(`  URL Pattern:    ${res.reviewUrlPattern}`);
       console.log(`  Files:`);
       for (const f of res.filesCreated) {

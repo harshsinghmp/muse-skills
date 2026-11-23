@@ -26,7 +26,17 @@ if (IS_ENTRY_POINT) {
 
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import os from "node:os";
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
@@ -3713,8 +3723,9 @@ async function main() {
     console.log(`🚀 Bootstrapping ${config.framework.toUpperCase()} Framework (@latest)...`);
     try {
       if (config.framework === "astro") {
-        const stagingDir = join(os.tmpdir(), `astro-scaffold-${Date.now()}`);
-        spawnSync(
+        const stagingParent = mkdtempSync(join(os.tmpdir(), "astro-scaffold-"));
+        const stagingDir = join(stagingParent, "app");
+        const create = spawnSync(
           "bun",
           [
             "create",
@@ -3730,6 +3741,9 @@ async function main() {
             stdio: "inherit",
           },
         );
+        if (create.status !== 0) {
+          throw new Error(`bun create astro failed (exit ${create.status ?? "signal"})`);
+        }
         const claudeMd = join(stagingDir, "CLAUDE.md");
         if (existsSync(claudeMd)) rmSync(claudeMd, { force: true });
         const astroAgentsMd = join(stagingDir, "AGENTS.md");
@@ -3743,9 +3757,10 @@ async function main() {
           rmSync(stagingGitignore, { force: true });
         }
         cpSync(stagingDir, resolvedTarget, { recursive: true });
-        rmSync(stagingDir, { recursive: true, force: true });
+        rmSync(stagingParent, { recursive: true, force: true });
       } else if (config.framework === "nextjs") {
-        const stagingDir = join(os.tmpdir(), `next-scaffold-${Date.now()}`);
+        const stagingParent = mkdtempSync(join(os.tmpdir(), "next-scaffold-"));
+        const stagingDir = join(stagingParent, "app");
         const nextArgs = [
           "create",
           "next-app@latest",
@@ -3763,7 +3778,10 @@ async function main() {
         if (config.styling === "tailwind" || config.styling === "hybrid") {
           nextArgs.push("--tailwind");
         }
-        spawnSync("bun", nextArgs, { stdio: "inherit" });
+        const create = spawnSync("bun", nextArgs, { stdio: "inherit" });
+        if (create.status !== 0) {
+          throw new Error(`bun create next-app failed (exit ${create.status ?? "signal"})`);
+        }
         const claudeMd = join(stagingDir, "CLAUDE.md");
         if (existsSync(claudeMd)) rmSync(claudeMd, { force: true });
         const nextAgentsMd = join(stagingDir, "AGENTS.md");
@@ -3777,7 +3795,7 @@ async function main() {
           rmSync(stagingGitignore, { force: true });
         }
         cpSync(stagingDir, resolvedTarget, { recursive: true });
-        rmSync(stagingDir, { recursive: true, force: true });
+        rmSync(stagingParent, { recursive: true, force: true });
       } else if (config.framework === "instatic") {
         const stagingDir = join(os.tmpdir(), `instatic-scaffold-${Date.now()}`);
         let cloned = false;
@@ -3884,16 +3902,24 @@ title: ${projectName} - Instatic Builder
           );
         }
       } else if (config.framework === "expo") {
-        spawnSync("bun", ["create", "expo-app@latest", ".", "--template", "blank-typescript", "--no-install"], {
-          cwd: resolvedTarget,
-          stdio: "inherit",
-        });
+        const expo = spawnSync(
+          "bun",
+          ["create", "expo-app@latest", ".", "--template", "blank-typescript", "--no-install"],
+          {
+            cwd: resolvedTarget,
+            stdio: "inherit",
+          },
+        );
+        if (expo.status !== 0) {
+          throw new Error(`bun create expo-app failed (exit ${expo.status ?? "signal"})`);
+        }
       } else if (config.framework === "html") {
         mkdirSync(join(resolvedTarget, "src", "styles"), { recursive: true });
       }
       console.log(`  ✅ Framework initialized: \`${config.framework.toUpperCase()}\`\n`);
     } catch (err) {
-      console.warn(`  ⚠️ Framework initialization warning: ${err}`);
+      console.error(`  ❌ Framework initialization failed: ${err}`);
+      throw err;
     }
   }
 
@@ -4593,9 +4619,10 @@ const PrerenderedPage = makePage(config);
 
         if (!skipInstall) {
           console.log("  📦 Running official install (`npm install`)...");
-          try {
-            spawnSync("npm", ["install"], { cwd: resolvedTarget, stdio: "ignore" });
-          } catch {}
+          const install = spawnSync("npm", ["install"], { cwd: resolvedTarget, stdio: "ignore" });
+          if (install.status !== 0) {
+            throw new Error(`npm install failed for Aria Builder (exit ${install.status ?? "signal"})`);
+          }
         }
         console.log("  ✅ Scaffolded: official Aria Builder (Astro + UnoCSS Wind 4 + CMS + SQLite)");
         console.log(
