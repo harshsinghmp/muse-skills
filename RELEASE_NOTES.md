@@ -1,19 +1,21 @@
-# 🏛️ Muse Skills v8.8.0 — <one line for humans>
+# 🏛️ Muse Skills v8.8.0 — Real Build Artifacts, Verified on Real Platforms
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+> **Minor release: cache cleanup now identifies build directories by their manifest and re-validates every discovery before deleting it; Windows and macOS run the cleaner in CI.** 890 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
 ## 🛠️ What Changed in v8.8.0
 
-- **<headline>**: <what changed, and the evidence.>
+- **Manifest-verified artifact cleanup** (`clean-system-cache`, closes #491): a directory name alone is no longer evidence. Rust `target/` needs a sibling `Cargo.toml` or `CACHEDIR.TAG`; virtualenvs need `pyvenv.cfg`; Go `vendor/` needs `go.mod`; .NET `obj/bin` need a `.csproj`; `build` needs `CMakeCache.txt` or `pubspec.yaml`. Staleness uses the newest file inside, risky locations are report-only, and every discovery is re-validated immediately before deletion. Discovery prunes at the match and sizes in parallel.
+- **Windows and macOS are verified in CI** (`.github/workflows/ci.yml`): a `platform-smoke` matrix runs the cleaner suite against BSD tools on macOS and an end-to-end batch + PowerShell fixture on Windows. The real runner found and fixed three Windows-only defects: inverted irreversible consent for `/only proj:`, shifted discovery columns when risk was empty, and UTF-16 state that `findstr` could not read.
+- **Documentation ledger backfill**: the doctor surface repair, async embedding experiment, agent-routing fallback, and embedding-router removal (DP-0194–DP-0197) are recorded for the agent audience, so the release ledger is complete for every point since v8.7.1.
 
 ## 📊 Verification
 
 | Metric | v8.7.1 | v8.8.0 |
 |:---|:---|:---|
-| Automated Tests | <n> | **<n>** |
-| Test Files | <n> | **<n>** |
+| Automated Tests | 881 | **890** |
+| Test Files | 72 | **72** |
 | Test Failures | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
