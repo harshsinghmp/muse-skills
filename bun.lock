@@ -5,7 +5,7 @@
     "": {
       "name": "@harshsinghmp/muse-skills",
       "dependencies": {
-        "musememory": "3.4.2",
+        "musememory": "3.4.3",
       },
       "devDependencies": {
         "@biomejs/biome": "2.6.8",
@@ -199,7 +199,7 @@
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
-    "musememory": ["musememory@3.4.2", "", { "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "ajv": "^8.17.1", "js-yaml": "^4.1.0" }, "bin": { "memory": "dist/index.js", "musememory": "dist/index.js" } }, "sha512-LEL3we5zo/ERXihuLcbxACDJ/EdSx5BxEZ2SSdLFdNEZZffHYjoPsBGhf8tcrlczKwbYBwNxaQoXtGKFrwY/zw=="],
+    "musememory": ["musememory@3.4.3", "", { "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "ajv": "^8.17.1", "js-yaml": "^4.1.0" }, "bin": { "memory": "dist/index.js", "musememory": "dist/index.js" } }, "sha512-C3gdkfsRX4ENyG2sjR1f1Tj5sr3LWKp4Wpw8ETObBUq7u138tv4Il71ZeSu/zstP5VX5/AAXWHuzpbzvT59D/g=="],
 
     "negotiator": ["negotiator@1.1.0", "", { "dependencies": { "content-type": "^2.1.0" } }, "sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg=="],
 
