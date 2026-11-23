@@ -125,7 +125,9 @@ function Walk([string]$Dir, [int]$Level) {
         if ($report.Newest -lt $old) {
             $mb = [math]::Round($report.Bytes / 1MB)
             $age = [math]::Floor(((Get-Date) - $report.Newest).TotalDays)
-            [void]$script:out.Add(("{0}|{1}|{2}|{3}|{4}" -f $mb, $Dir, (Get-Risk $Dir), $age, $kind))
+            $risk = Get-Risk $Dir
+            if (-not $risk) { $risk = "none" }
+            [void]$script:out.Add(("{0}|{1}|{2}|{3}|{4}" -f $mb, $Dir, $risk, $age, $kind))
         }
         return
     }

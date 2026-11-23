@@ -1495,7 +1495,7 @@ if "%~1"=="" (
 )
 call :hazard_banner %~1
 call :has_irreversible %~1
-if errorlevel 1 (
+if not errorlevel 1 (
     rem ASK! is irreversible; /yes alone is not consent. Require the explicit flag
     rem or a typed yes, even in a non-interactive shell.
     if "%CONFIRM_IRREV%"=="1" goto cat_only_delete
@@ -1651,7 +1651,7 @@ for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
     if /i not "%%A"=="none" (
         set /a DNUM+=1
         set "RISKTAG="
-        if not "%%C"=="" set "RISKTAG=  [!] %%C (report-only)"
+        if /i not "%%C"=="none" set "RISKTAG=  [!] %%C (report-only)"
         echo  !DNUM!. %%A MB   proj:%%B   ^(%%D d, %%E^)!RISKTAG!
     )
 )
