@@ -1495,7 +1495,7 @@ if "%~1"=="" (
 )
 call :hazard_banner %~1
 call :has_irreversible %~1
-if errorlevel 1 (
+if not errorlevel 1 (
     rem ASK! is irreversible; /yes alone is not consent. Require the explicit flag
     rem or a typed yes, even in a non-interactive shell.
     if "%CONFIRM_IRREV%"=="1" goto cat_only_delete
@@ -1645,13 +1645,13 @@ echo ====================================================================
 echo  Roots: %PROJECT_ROOTS%   Dormant: %DORMANT_DAYS%+ days (newest file)
 echo --------------------------------------------------------------------
 if not exist "%STATE_DIR%" mkdir "%STATE_DIR%" >nul 2>&1
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Roots "%PROJECT_ROOTS%" -DormantDays %DORMANT_DAYS% > "%DISC_FILE%" 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0discover-projects.ps1" -Roots "%PROJECT_ROOTS%" -DormantDays %DORMANT_DAYS% -OutFile "%DISC_FILE%" >nul 2>&1
 set /a DNUM=0
 for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
     if /i not "%%A"=="none" (
         set /a DNUM+=1
         set "RISKTAG="
-        if not "%%C"=="" set "RISKTAG=  [!] %%C (report-only)"
+        if /i not "%%C"=="none" set "RISKTAG=  [!] %%C (report-only)"
         echo  !DNUM!. %%A MB   proj:%%B   ^(%%D d, %%E^)!RISKTAG!
     )
 )
@@ -1673,8 +1673,14 @@ if not exist "%DISC_FILE%" (
     echo Refusing: run /discover first.
     exit /b 1
 )
-findstr /i /c:"|%P%|" "%DISC_FILE%" >nul 2>&1
-if errorlevel 1 (
+rem Membership is checked with the same for /f parser that renders the report.
+rem findstr cannot be trusted here: it has no Unicode mode and its pattern
+rem handling is one more thing between a valid path and the delete guard.
+set "FOUND=0"
+for /f "usebackq tokens=1-5 delims=|" %%A in ("%DISC_FILE%") do (
+    if /i "%%B"=="%P%" set "FOUND=1"
+)
+if "%FOUND%"=="0" (
     echo Refusing: %P% is not in the last discovery. Run /discover again.
     exit /b 1
 )

@@ -8,12 +8,14 @@
 #
 # Modes:
 #   (default)  print one "<mb>|<path>|<risk>|<age-days>|<kind>" line per artifact
+#   -OutFile F write the same lines to F as ASCII (findstr cannot match UTF-16LE)
 #   -Claim P   exit 0 when P is still the same dormant artifact, else exit 1
 
 param(
     [string]$Roots = "",
     [int]$DormantDays = 14,
     [string]$Claim = "",
+    [string]$OutFile = "",
     [int]$Depth = 5
 )
 
@@ -125,7 +127,9 @@ function Walk([string]$Dir, [int]$Level) {
         if ($report.Newest -lt $old) {
             $mb = [math]::Round($report.Bytes / 1MB)
             $age = [math]::Floor(((Get-Date) - $report.Newest).TotalDays)
-            [void]$script:out.Add(("{0}|{1}|{2}|{3}|{4}" -f $mb, $Dir, (Get-Risk $Dir), $age, $kind))
+            $risk = Get-Risk $Dir
+            if (-not $risk) { $risk = "none" }
+            [void]$script:out.Add(("{0}|{1}|{2}|{3}|{4}" -f $mb, $Dir, $risk, $age, $kind))
         }
         return
     }
@@ -141,4 +145,9 @@ if ($out.Count -eq 0) {
     "none"
 } else {
     $out
+}
+
+if ($OutFile) {
+    $lines = if ($out.Count -eq 0) { @("none") } else { $out }
+    Set-Content -LiteralPath $OutFile -Value $lines -Encoding ASCII
 }
