@@ -1,3 +1,34 @@
+# 🏛️ Muse Skills v8.8.1 — Hardened Edges, Verified on Windows
+
+> **Patch release: closes the hardening findings from the suite review — review tokens, worktrees, shell hooks, webhooks, and the Windows TEMP purge — and keeps the real Windows/macOS smoke as the proof.** 919 automated tests. 76 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.1
+
+- **Windows TEMP purge actually deletes** (`clean-system-cache`): the TEMP and Recycle Bin candidates were being dropped because a bare `ASK!` tier literal was consumed by delayed expansion; the internal tier is now `IRREV`, the display keeps `ASK!`, and the delete dispatcher uses single-line branches. `.gitattributes` forces CRLF for `.cmd`/`.bat`, and the Windows smoke asserts the contents are cleared while the TEMP directory survives.
+- **Review secrets stay in one place** (`living-deliverable`): the review token lives only in a `0600` `review-token.txt`. It is no longer written to metadata, JSON output, or `wrangler` vars; the review URL renders a `<REVIEW_TOKEN>` placeholder and the CLI prints `[hidden]` unless asked to reveal it.
+- **Fail-closed runtime** (`coupling-router`, `devops`, `new-project`, `telegram`): failed `git worktree add`/`git status` calls cannot report success or get force-pruned; federation defaults to `dev` then the repo default; duplicate swarm task ids and oversized webhook bodies are rejected; an unparsable deliverable expiry returns 410; framework scaffold failures abort.
+- **Shell hooks and cross-skill contracts** (`scripts/install.sh`, `scripts/hooks/*`, `relay`, `ops`, `client-comms`, `devops`, `new-project`): installer traversal is rejected before containment; cron rejects shell metacharacters; the lease hook and secret scanner fail closed; `handoff` is a `relay` alias; devops emits a real Node template; new-project documents the generated hook.
+- **Dependency refresh**: `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept.
+
+## 📊 Verification
+
+| Metric | v8.8.0 | v8.8.1 |
+|:---|:---|:---|
+| Automated Tests | 890 | **919** |
+| Test Files | 72 | **76** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.0...v8.8.1
+
 # 🏛️ Muse Skills v8.8.0 — Real Build Artifacts, Verified on Real Platforms
 
 > **Minor release: cache cleanup now identifies build directories by their manifest and re-validates every discovery before deleting it; Windows and macOS run the cleaner in CI.** 890 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

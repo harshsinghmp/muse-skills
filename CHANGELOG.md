@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.1] - 2026-11-24
+
 ### Fixed
 
 - **Discovery skips junctioned artifacts** (`clean-system-cache`, `scripts/discover-projects.ps1`): a Windows junction named `target/` with a sibling `Cargo.toml` was discovered as a Rust artifact because only the claim check rejected reparse points. Discovery now skips reparse points before matching and never descends through them; the Windows platform smoke covers the junction case and asserts both discovery and `-Claim` refuse it.
@@ -11,6 +13,12 @@ All notable changes to this project are documented in this file.
 - **Cross-skill contract drift** (`relay`, `ops`, `client-comms`, `devops`, `new-project`, `clean-system-cache`): `handoff` is registered as a `relay` alias and routing pointers name `relay`; devops `--scaffold node` emits a real Node runtime instead of the Next.js standalone template and SAST routes to `muse-security`; new-project documents the generated hook at `<project>/scripts/pre-commit.sh`; clean-system-cache fixes the `${CAND_KEY}` diagnostic, the `sort | head` pipefail abort, the Windows false-`cleaned` path, the whole-directory TEMP delete, and documents the `--all-caches` alias.
 - **Shell-hook hardening** (`scripts/install.sh`, `scripts/hooks/*`): `--new-project` rejects `..` path segments before the prefix containment check; cron registration rejects shell metacharacters and will not clobber a crontab after a failed read; the worktree-lease hook fails closed and points at the real probe; the pre-commit secret scanner fails closed by default and never writes the matched secret into JSON output; the dead-letter sweep tolerates a missing `fd` and a non-numeric count.
 - **Hardening follow-ups** (`devops`, `coupling-router`, `telegram`, `clean-system-cache`, CI): review tokens live only in a 0600 file (not metadata, JSON, or wrangler vars); worktree federation defaults to `dev` then the repo default branch and treats a failed `git status` as dirty; duplicate swarm task ids fail with a precise error; the webhook receiver rejects oversized bodies with 413; `candidate-catalog` is a support reference rather than a mode; the Windows smoke covers the TEMP purge path; and the batch catalog escapes `ASK!` tier literals so the TEMP and Recycle Bin candidates survive delayed expansion and actually register.
+
+### Changed
+
+- **Dependency refresh** (`package.json`, `bun.lock`): `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept; `check:deps` and the CI hardening tests track them.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.0...v8.8.1
 
 ## [8.8.0] - 2026-11-23
 
