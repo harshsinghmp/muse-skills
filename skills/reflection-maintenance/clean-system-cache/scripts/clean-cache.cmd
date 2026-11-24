@@ -1299,6 +1299,7 @@ exit /b 0
 echo ====================================================================
 echo  Cache Candidate Catalog - Windows
 echo ====================================================================
+echo  DEBUG CAND_N=%CAND_N%
 echo  T1 = auto-cleaned   ASK = needs selection   ASK! = irreversible
 echo --------------------------------------------------------------------
 set /a CAT_NUM=0
@@ -1319,6 +1320,7 @@ if not "!P!"=="" (
 ) else (
     set "SZ_KB=0"
 )
+if /i "!C_ID_%N%!"=="win-temp" echo  DEBUG win-temp path=!P! sz=!SZ_KB! method=!M!
 if "!SZ_KB!"=="0" if /i not "!M!"=="guide" exit /b 0
 set /a CAT_NUM+=1
 if "!SZ_KB!"=="0" (
