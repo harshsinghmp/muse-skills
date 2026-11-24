@@ -1431,34 +1431,38 @@ if /i "!P!"=="\Temp" (
     exit /b 1
 )
 set "DEL_OK=1"
-if /i "!M!"=="rm" (
-    if exist "!P!" (
-        rmdir /s /q "!P!" >nul 2>&1
-        if exist "!P!" set "DEL_OK=0"
-    )
-) else (
-    if /i "!M!"=="purge" (
-        rem Clear contents, never the TEMP directory itself. pushd makes the
-        rem wildcards relative, so a quoted absolute path with \* cannot be
-        rem misread by del/for.
-        if exist "!P!" (
-            pushd "!P!" >nul 2>&1
-            if errorlevel 1 (
-                set "DEL_OK=0"
-            ) else (
-                del /q /f /a * >nul 2>&1
-                for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
-                popd
-                if exist "!P!\*" set "DEL_OK=0"
-            )
-        )
+if /i "!M!"=="rm" goto cat_delete_rm
+if /i "!M!"=="purge" goto cat_delete_purge
+if not "!C_CMD_%N%!"=="" (
+    call !C_CMD_%N%! >nul 2>&1
+    if errorlevel 1 set "DEL_OK=0"
+)
+goto cat_delete_done
+
+:cat_delete_rm
+if exist "!P!" (
+    rmdir /s /q "!P!" >nul 2>&1
+    if exist "!P!" set "DEL_OK=0"
+)
+goto cat_delete_done
+
+:cat_delete_purge
+echo [purge] start p=!P!
+if exist "!P!" (
+    pushd "!P!" >nul 2>&1
+    if errorlevel 1 (
+        set "DEL_OK=0"
     ) else (
-        if not "!C_CMD_%N%!"=="" (
-            call !C_CMD_%N%! >nul 2>&1
-            if errorlevel 1 set "DEL_OK=0"
-        )
+        del /q /f /a * >nul 2>&1
+        for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
+        popd
+        for /f "delims=" %%A in ('dir /b /a "!P!" 2^>nul') do set "DEL_OK=0"
     )
 )
+echo [purge] end ok=!DEL_OK!
+goto cat_delete_done
+
+:cat_delete_done
 if "!DEL_OK!"=="1" (
     if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
     echo [!L!] cleaned
