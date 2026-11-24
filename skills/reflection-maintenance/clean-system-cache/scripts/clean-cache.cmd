@@ -1409,6 +1409,7 @@ exit /b 0
 
 rem Delete one candidate, honouring DRY_RUN and printing one table row.
 :cat_delete
+echo [del] n=%~1 p=!C_PATH_%~1! m=!C_METHOD_%~1!
 set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
@@ -1475,12 +1476,15 @@ call :cat_delete %~1
 exit /b 0
 
 :cat_resolve_delete
+echo [rd] arg=%~1
+if not "!CAND_N!"=="" echo [rd] cand_n=!CAND_N!
 echo %~1| findstr /b /i /c:"proj:" >nul
 if not errorlevel 1 (
     call :disc_delete "%~1"
     exit /b 0
 )
 call :cat_resolve "%~1"
+echo [rd2] arg=%~1 res=!RES_IDX!
 if not "!RES_IDX!"=="" call :cat_delete !RES_IDX!
 exit /b 0
 
