@@ -1410,10 +1410,12 @@ exit /b 0
 rem Delete one candidate, honouring DRY_RUN and printing one table row.
 :cat_delete
 echo [del] n=%~1 p=!C_PATH_%~1! m=!C_METHOD_%~1!
+echo [del0]
 set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
 set "L=!C_LABEL_%N%!"
+echo [del1] N=!N! M=!M! L=!L!
 if /i "!M!"=="guide" (
     echo [!L!] manual - !C_CMD_%N%!
     exit /b 0
