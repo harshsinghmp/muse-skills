@@ -1712,8 +1712,11 @@ Disallow: /
       const data = JSON.parse(scaffoldRes.stdout);
       expect(data.success).toBe(true);
       expect(data.metadata.client).toBe("ACME-Corp");
-      expect(data.metadata.token).toBeDefined();
-      expect(data.metadata.token.length).toBe(32);
+      expect(data.metadata.token).toBeUndefined();
+      expect(data.tokenFile).toBeDefined();
+      const reviewToken = fs.readFileSync(data.tokenFile, "utf8").trim();
+      expect(reviewToken.length).toBe(32);
+      expect(fs.statSync(data.tokenFile).mode & 0o777).toBe(0o600);
       expect(data.metadata.expired).toBe(false);
 
       const deliverableDir = path.join(tempDir, ".agents/deliverables/client-preview-flow");

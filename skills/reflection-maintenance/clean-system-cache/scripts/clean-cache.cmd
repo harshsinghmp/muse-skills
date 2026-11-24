@@ -193,7 +193,7 @@ echo                                Generic names need their manifest (Cargo.tom
 echo                                go.mod, .csproj) and dormancy uses the newest file.
 echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
 echo   /only id,id^|proj:path [/yes] [/confirm-irreversible]
-echo                                Delete exactly these candidates. ASK! items need the
+echo                                Delete exactly these candidates. ASK^^! items need the
 echo                                explicit flag or a typed yes; /yes alone is not enough.
 echo   /interactive                 Numbered menu for confirmation-gated (ASK) candidates.
 echo   /learn allow^|deny^|forget k Record a decision so later runs already know.
@@ -203,7 +203,7 @@ echo.
 echo Tiers:
 echo   T1   Regenerable, auto-cleaned on a normal run.
 echo   ASK  Expensive or admin-gated; only deleted when you select it.
-echo   ASK! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
+echo   ASK^^! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
@@ -1243,6 +1243,7 @@ endlocal
 exit /b 0
 
 :cat_init
+set "TIER_IRREV=IRREV"
 set CAND_N=0
 call :cand_add win-playwright T1 "Playwright browsers" "%LOCALAPPDATA%\ms-playwright" rm "" "Reinstall with: npx playwright install"
 call :cand_add win-puppeteer T1 "Puppeteer Chrome download" "%USERPROFILE%\.cache\puppeteer" rm "" "Re-downloaded on next puppeteer install"
@@ -1258,10 +1259,10 @@ call :cand_add win-cursor-codedata T1 "Cursor CachedData" "%APPDATA%\Cursor\Cach
 call :cand_add win-crashdumps T1 "Crash dumps" "%LOCALAPPDATA%\CrashDumps" rm "" "Only written when an app crashes"
 call :cand_add win-electron T1 "Electron download cache" "%LOCALAPPDATA%\electron\Cache" rm "" "Re-downloaded on next electron install"
 call :cand_add win-nuget T1 "NuGet HTTP cache" "%LOCALAPPDATA%\NuGet\v3-cache" rm "" "Re-fetched on next restore"
-call :cand_add win-temp ASK! "User TEMP folder" "%LOCALAPPDATA%\Temp" purge "" "Clears TEMP contents; PERMANENT - open apps may hold files in use"
+call :cand_add win-temp "!TIER_IRREV!" "User TEMP folder" "%LOCALAPPDATA%\Temp" purge "" "Clears TEMP contents; PERMANENT - open apps may hold files in use"
 call :cand_add win-update ASK "Windows Update downloads" "%SYSTEMROOT%\SoftwareDistribution\Download" rm "" "Needs an elevated prompt; re-downloaded on next update"
 call :cand_add win-thumbs ASK "Explorer thumbnail cache" "%LOCALAPPDATA%\Microsoft\Windows\Explorer" rm "" "Close Explorer first; thumbcache_*.db regenerate"
-call :cand_add win-recyclebin ASK! "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
+call :cand_add win-recyclebin "!TIER_IRREV!" "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
 call :cand_add win-docker ASK "Docker images/build cache" "" guide "" "Inspect: docker system df - Prune: docker system prune [-a]"
 exit /b 0
 
@@ -1299,7 +1300,7 @@ exit /b 0
 echo ====================================================================
 echo  Cache Candidate Catalog - Windows
 echo ====================================================================
-echo  T1 = auto-cleaned   ASK = needs selection   ASK! = irreversible
+echo  T1 = auto-cleaned   ASK = needs selection   ASK^^! = irreversible
 echo --------------------------------------------------------------------
 set /a CAT_NUM=0
 for /l %%i in (1,1,%CAND_N%) do call :cat_list_one %%i
@@ -1314,6 +1315,8 @@ exit /b 0
 set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
+set "TIER_TXT=!C_TIER_%N%!"
+if /i "!TIER_TXT!"=="IRREV" set "TIER_TXT=ASK^^!"
 if not "!P!"=="" (
     call :cat_size "!P!"
 ) else (
@@ -1326,7 +1329,7 @@ if "!SZ_KB!"=="0" (
 ) else (
     call :cat_fmt !SZ_KB!
 )
-echo  !CAT_NUM!. !SZ_TXT! [!C_TIER_%N%!] !C_LABEL_%N%!  ^[!C_ID_%N%!^]
+echo  !CAT_NUM!. !SZ_TXT! [!TIER_TXT!] !C_LABEL_%N%!  ^[!C_ID_%N%!^]
 if not "!P!"=="" echo       -^> !P!
 if not "!C_NOTE_%N%!"=="" echo       !C_NOTE_%N%!
 exit /b 0
@@ -1380,9 +1383,11 @@ if "!RES_IDX!"=="" (
     exit /b 1
 )
 set "N=!RES_IDX!"
+set "TIER_TXT=!C_TIER_%N%!"
+if /i "!TIER_TXT!"=="IRREV" set "TIER_TXT=ASK^^!"
 echo.
 echo --------------------------------------------------------------------
-echo  !C_ID_%N%!  [!C_TIER_%N%!]  !C_LABEL_%N%!
+echo  !C_ID_%N%!  [!TIER_TXT!]  !C_LABEL_%N%!
 echo --------------------------------------------------------------------
 if not "!C_NOTE_%N%!"=="" echo  Note   : !C_NOTE_%N%!
 set "P=!C_PATH_%N%!"
@@ -1408,48 +1413,66 @@ set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
 set "L=!C_LABEL_%N%!"
-if /i "!M!"=="guide" (
-    echo [!L!] manual - !C_CMD_%N%!
-    exit /b 0
-)
-if "%DRY_RUN%"=="1" (
-    echo [!L!] reclaimable -^> !P!
-    exit /b 0
-)
-if "!P!"=="" (
-    echo [!L!] refused -^> target path is empty
-    exit /b 1
-)
-if /i "!P!"=="\Temp" (
-    echo [!L!] refused -^> LOCALAPPDATA is empty (would target the drive root)
-    exit /b 1
-)
+if /i "!M!"=="guide" goto cat_delete_guide
+if "%DRY_RUN%"=="1" goto cat_delete_dry
+if "!P!"=="" goto cat_delete_nopath
+if /i "!P!"=="\Temp" goto cat_delete_nolocalappdata
 set "DEL_OK=1"
-if /i "!M!"=="rm" (
-    if exist "!P!" (
-        rmdir /s /q "!P!" >nul 2>&1
-        if errorlevel 1 set "DEL_OK=0"
-    )
-) else if /i "!M!"=="purge" (
-    rem Clear contents, never the TEMP directory itself.
-    if exist "!P!" (
-        del /q /s /f "!P!\*" >nul 2>&1
-        for /d %%D in ("!P!\*") do rmdir /s /q "%%D" >nul 2>&1
-    )
-) else (
-    if not "!C_CMD_%N%!"=="" (
-        call !C_CMD_%N%! >nul 2>&1
-        if errorlevel 1 set "DEL_OK=0"
-    )
-)
-if "!DEL_OK!"=="1" (
-    if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
-    echo [!L!] cleaned
-) else (
-    echo [!L!] failed -^> !P!
-    exit /b 1
-)
+if /i "!M!"=="rm" goto cat_delete_rm
+if /i "!M!"=="purge" goto cat_delete_purge
+if not "!C_CMD_%N%!"=="" goto cat_delete_cmd
+goto cat_delete_done
+
+:cat_delete_guide
+echo [!L!] manual - !C_CMD_%N%!
 exit /b 0
+
+:cat_delete_dry
+echo [!L!] reclaimable -^> !P!
+exit /b 0
+
+:cat_delete_nopath
+echo [!L!] refused -^> target path is empty
+exit /b 1
+
+:cat_delete_nolocalappdata
+echo [!L!] refused -^> LOCALAPPDATA is empty (would target the drive root)
+exit /b 1
+
+:cat_delete_cmd
+call !C_CMD_%N%! >nul 2>&1
+if errorlevel 1 set "DEL_OK=0"
+goto cat_delete_done
+
+:cat_delete_rm
+if not exist "!P!" goto cat_delete_done
+rmdir /s /q "!P!" >nul 2>&1
+if exist "!P!" set "DEL_OK=0"
+goto cat_delete_done
+
+:cat_delete_purge
+if not exist "!P!" goto cat_delete_done
+pushd "!P!" >nul 2>&1
+if errorlevel 1 goto cat_delete_purge_fail
+del /q /f /a * >nul 2>&1
+for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
+popd
+for /f "delims=" %%A in ('dir /b /a "!P!" 2^>nul') do set "DEL_OK=0"
+goto cat_delete_done
+
+:cat_delete_purge_fail
+set "DEL_OK=0"
+goto cat_delete_done
+
+:cat_delete_done
+if not "!DEL_OK!"=="1" goto cat_delete_failed
+if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
+echo [!L!] cleaned
+exit /b 0
+
+:cat_delete_failed
+echo [!L!] failed -^> !P!
+exit /b 1
 
 :cat_auto
 if /i not "!C_TIER_%~1!"=="T1" exit /b 0
@@ -1474,7 +1497,7 @@ set "HAZ=0"
 set "HAZ_ALL=0"
 if "%~1"=="" set "HAZ_ALL=1"
 for /l %%i in (1,1,%CAND_N%) do (
-    if /i "!C_TIER_%%i!"=="ASK!" (
+    if /i "!C_TIER_%%i!"=="!TIER_IRREV!" (
         if "!HAZ_ALL!"=="1" (
             set "HAZ=1"
         ) else (
@@ -1498,7 +1521,7 @@ if "%HAZ_ALL%"=="1" (
     echo    These selections are NOT caches. Deleting them CANNOT be undone:
 )
 for /l %%i in (1,1,%CAND_N%) do (
-    if /i "!C_TIER_%%i!"=="ASK!" (
+    if /i "!C_TIER_%%i!"=="!TIER_IRREV!" (
         if "!HAZ_ALL!"=="1" (
             echo      - !C_LABEL_%%i!
         ) else (
@@ -1548,7 +1571,7 @@ exit /b 0
 :has_irreversible
 for /l %%i in (1,1,%CAND_N%) do (
     for %%a in (%~1) do (
-        if /i "!C_ID_%%i!"=="%%~a" if /i "!C_TIER_%%i!"=="ASK!" exit /b 0
+        if /i "!C_ID_%%i!"=="%%~a" if /i "!C_TIER_%%i!"=="!TIER_IRREV!" exit /b 0
     )
 )
 exit /b 1

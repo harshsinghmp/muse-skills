@@ -205,6 +205,17 @@ jobs:
           if (Test-Path -LiteralPath $target) { throw "target directory was not removed" }
           if (-not (Test-Path -LiteralPath (Join-Path $projects "app\Cargo.toml"))) { throw "Cargo.toml was removed" }
 
+          # The purge/status branch for ASK! TEMP: clear contents, keep the dir.
+          $localTemp = Join-Path $stateRoot "Temp"
+          New-Item -ItemType Directory -Force -Path (Join-Path $localTemp "nested") | Out-Null
+          Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value ("x" * 4096)
+          $tempOut = & cmd /c "$cmd /only win-temp /yes /confirm-irreversible" 2>&1
+          if ($LASTEXITCODE -ne 0) { throw "win-temp purge failed: $tempOut" }
+          if (-not (Test-Path -LiteralPath $localTemp)) { throw "win-temp removed the TEMP directory instead of its contents" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "loose.tmp")) { throw "win-temp left a file behind: $tempOut" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "nested")) { throw "win-temp left a subdirectory behind: $tempOut" }
+
           Write-Host "Windows clean-system-cache smoke passed"
 
   test:

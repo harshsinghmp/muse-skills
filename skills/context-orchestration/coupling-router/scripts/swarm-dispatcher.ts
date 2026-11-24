@@ -96,6 +96,13 @@ export function partitionDagIntoWaves(tasks: SwarmTask[]): {
   const dependents = new Map<string, string[]>();
 
   for (const t of tasks) {
+    if (taskMap.has(t.id)) {
+      return {
+        waves: [],
+        isValid: false,
+        error: `Duplicate task id: '${t.id}'. Task ids must be unique.`,
+      };
+    }
     taskMap.set(t.id, t);
     inDegree.set(t.id, (t.dependsOn || []).length);
     dependents.set(t.id, []);

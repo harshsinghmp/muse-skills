@@ -276,17 +276,35 @@ export function createWebhookListener(options: WebhookListenerOptions): http.Ser
       return;
     }
 
-    // Parse Body
+    // Parse Body. Reject on the declared length before reading, then count
+    // real bytes (String.length is UTF-16 code units, not bytes).
+    const maxBodyBytes = 10 * 1024 * 1024;
+    const declaredLength = Number(req.headers["content-length"] ?? 0);
+    if (Number.isFinite(declaredLength) && declaredLength > maxBodyBytes) {
+      res.writeHead(413, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Payload Too Large" }));
+      req.destroy();
+      return;
+    }
+
     let body = "";
+    let receivedBytes = 0;
+    let tooLarge = false;
     req.on("data", (chunk) => {
-      body += chunk;
-      // Guard against payloads > 10MB
-      if (body.length > 10 * 1024 * 1024) {
-        req.destroy(new Error("Payload too large"));
+      if (tooLarge) return;
+      receivedBytes += Buffer.byteLength(chunk);
+      if (receivedBytes > maxBodyBytes) {
+        tooLarge = true;
+        res.writeHead(413, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Payload Too Large" }));
+        req.destroy();
+        return;
       }
+      body += chunk;
     });
 
     req.on("end", () => {
+      if (tooLarge) return;
       try {
         const update = JSON.parse(body);
         const updateId = update.update_id;

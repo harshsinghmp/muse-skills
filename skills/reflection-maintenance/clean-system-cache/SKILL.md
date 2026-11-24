@@ -49,7 +49,8 @@ Every invocation resolves to exactly one mode. Load **only** the matched referen
 | **`audit`** | "cache audit", "inventory caches", "pre-purge audit" | Classify purge candidates safe/protected/ask-first with du-verified reclaim estimates; dry-run only. | [references/audit.md](references/audit.md) |
 | **`select`** | "what would you delete", "let me choose", "browse candidates" | Catalog → browse → numbered multi-select → confirmed delete; decisions are learned. | [references/candidate-catalog.md](references/candidate-catalog.md) |
 | **`learn`** | "remember this", "stop asking", "forget that" | Inspect and edit the persisted per-app/per-project decisions. | this file |
-| **candidate-catalog** | "candidate-catalog" | what each candidate owns and what it costs to delete | [references/candidate-catalog.md](references/candidate-catalog.md) |
+
+`references/candidate-catalog.md` is the `select` mode's support reference, not a separate routed mode.
 
 ## When to Use
 

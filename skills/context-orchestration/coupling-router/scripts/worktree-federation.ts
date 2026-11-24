@@ -71,6 +71,17 @@ function gitOk(repo: string, args: string[]): boolean {
   }
 }
 
+function defaultBaseBranch(repo: string): string {
+  // This repository integrates on `dev`; a general repository may use `main`
+  // or `master`. Prefer an explicit remote HEAD, then dev, then main/master.
+  const originHead = execGit(repo, ["symbolic-ref", "--short", "refs/remotes/origin/HEAD"]);
+  if (originHead.startsWith("origin/")) return originHead.slice("origin/".length);
+  for (const candidate of ["dev", "main", "master"]) {
+    if (gitOk(repo, ["rev-parse", "--verify", `refs/heads/${candidate}`])) return candidate;
+  }
+  return "main";
+}
+
 export function parsePorcelainWorktrees(porcelainText: string, repoRoot: string): FederatedWorktree[] {
   const worktrees: FederatedWorktree[] = [];
   const blocks = porcelainText
@@ -243,7 +254,7 @@ export function spawnFederatedWorktree(opts: {
   mkdirSync(dirname(targetPath), { recursive: true });
 
   // 3. Create worktree via git
-  const baseBranch = opts.base || "dev";
+  const baseBranch = opts.base || defaultBaseBranch(repo);
   const branchExists = execGit(repo, ["rev-parse", "--verify", `refs/heads/${targetBranch}`]).length > 0;
 
   const gitArgs = branchExists
