@@ -211,7 +211,6 @@ jobs:
           Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value ("x" * 4096)
           Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value ("x" * 4096)
           $tempOut = & cmd /c "$cmd /only win-temp /yes /confirm-irreversible" 2>&1
-          Write-Host "win-temp output: [$tempOut] exit=$LASTEXITCODE"
           if ($LASTEXITCODE -ne 0) { throw "win-temp purge failed: $tempOut" }
           if (-not (Test-Path -LiteralPath $localTemp)) { throw "win-temp removed the TEMP directory instead of its contents" }
           if (Test-Path -LiteralPath (Join-Path $localTemp "loose.tmp")) { throw "win-temp left a file behind: $tempOut" }
