@@ -213,8 +213,8 @@ jobs:
           $tempOut = & cmd /c "$cmd /only win-temp /yes /confirm-irreversible" 2>&1
           if ($LASTEXITCODE -ne 0) { throw "win-temp purge failed: $tempOut" }
           if (-not (Test-Path -LiteralPath $localTemp)) { throw "win-temp removed the TEMP directory instead of its contents" }
-          if (Test-Path -LiteralPath (Join-Path $localTemp "loose.tmp")) { throw "win-temp left a file behind" }
-          if (Test-Path -LiteralPath (Join-Path $localTemp "nested")) { throw "win-temp left a subdirectory behind" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "loose.tmp")) { throw "win-temp left a file behind: $tempOut" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "nested")) { throw "win-temp left a subdirectory behind: $tempOut" }
 
           Write-Host "Windows clean-system-cache smoke passed"
 

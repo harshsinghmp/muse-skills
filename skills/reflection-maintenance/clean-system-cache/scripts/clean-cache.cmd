@@ -1428,18 +1428,29 @@ set "DEL_OK=1"
 if /i "!M!"=="rm" (
     if exist "!P!" (
         rmdir /s /q "!P!" >nul 2>&1
-        if errorlevel 1 set "DEL_OK=0"
-    )
-) else if /i "!M!"=="purge" (
-    rem Clear contents, never the TEMP directory itself.
-    if exist "!P!" (
-        del /q /s /f "!P!\*" >nul 2>&1
-        for /d %%D in ("!P!\*") do rmdir /s /q "%%D" >nul 2>&1
+        if exist "!P!" set "DEL_OK=0"
     )
 ) else (
-    if not "!C_CMD_%N%!"=="" (
-        call !C_CMD_%N%! >nul 2>&1
-        if errorlevel 1 set "DEL_OK=0"
+    if /i "!M!"=="purge" (
+        rem Clear contents, never the TEMP directory itself. pushd makes the
+        rem wildcards relative, so a quoted absolute path with \* cannot be
+        rem misread by del/for.
+        if exist "!P!" (
+            pushd "!P!" >nul 2>&1
+            if errorlevel 1 (
+                set "DEL_OK=0"
+            ) else (
+                del /q /f /a * >nul 2>&1
+                for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
+                popd
+                if exist "!P!\*" set "DEL_OK=0"
+            )
+        )
+    ) else (
+        if not "!C_CMD_%N%!"=="" (
+            call !C_CMD_%N%! >nul 2>&1
+            if errorlevel 1 set "DEL_OK=0"
+        )
     )
 )
 if "!DEL_OK!"=="1" (
