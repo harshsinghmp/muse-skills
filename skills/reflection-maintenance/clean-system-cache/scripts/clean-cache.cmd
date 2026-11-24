@@ -193,7 +193,7 @@ echo                                Generic names need their manifest (Cargo.tom
 echo                                go.mod, .csproj) and dormancy uses the newest file.
 echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
 echo   /only id,id^|proj:path [/yes] [/confirm-irreversible]
-echo                                Delete exactly these candidates. ASK! items need the
+echo                                Delete exactly these candidates. ASK^! items need the
 echo                                explicit flag or a typed yes; /yes alone is not enough.
 echo   /interactive                 Numbered menu for confirmation-gated (ASK) candidates.
 echo   /learn allow^|deny^|forget k Record a decision so later runs already know.
@@ -203,7 +203,7 @@ echo.
 echo Tiers:
 echo   T1   Regenerable, auto-cleaned on a normal run.
 echo   ASK  Expensive or admin-gated; only deleted when you select it.
-echo   ASK! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
+echo   ASK^! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
@@ -1243,6 +1243,7 @@ endlocal
 exit /b 0
 
 :cat_init
+set "TIER_IRREV=ASK^!"
 set CAND_N=0
 call :cand_add win-playwright T1 "Playwright browsers" "%LOCALAPPDATA%\ms-playwright" rm "" "Reinstall with: npx playwright install"
 call :cand_add win-puppeteer T1 "Puppeteer Chrome download" "%USERPROFILE%\.cache\puppeteer" rm "" "Re-downloaded on next puppeteer install"
@@ -1258,10 +1259,10 @@ call :cand_add win-cursor-codedata T1 "Cursor CachedData" "%APPDATA%\Cursor\Cach
 call :cand_add win-crashdumps T1 "Crash dumps" "%LOCALAPPDATA%\CrashDumps" rm "" "Only written when an app crashes"
 call :cand_add win-electron T1 "Electron download cache" "%LOCALAPPDATA%\electron\Cache" rm "" "Re-downloaded on next electron install"
 call :cand_add win-nuget T1 "NuGet HTTP cache" "%LOCALAPPDATA%\NuGet\v3-cache" rm "" "Re-fetched on next restore"
-call :cand_add win-temp ASK! "User TEMP folder" "%LOCALAPPDATA%\Temp" purge "" "Clears TEMP contents; PERMANENT - open apps may hold files in use"
+call :cand_add win-temp "!TIER_IRREV!" "User TEMP folder" "%LOCALAPPDATA%\Temp" purge "" "Clears TEMP contents; PERMANENT - open apps may hold files in use"
 call :cand_add win-update ASK "Windows Update downloads" "%SYSTEMROOT%\SoftwareDistribution\Download" rm "" "Needs an elevated prompt; re-downloaded on next update"
 call :cand_add win-thumbs ASK "Explorer thumbnail cache" "%LOCALAPPDATA%\Microsoft\Windows\Explorer" rm "" "Close Explorer first; thumbcache_*.db regenerate"
-call :cand_add win-recyclebin ASK! "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
+call :cand_add win-recyclebin "!TIER_IRREV!" "Recycle Bin" "%SYSTEMDRIVE%\$Recycle.Bin" cmd "powershell -NoProfile -Command \"Clear-RecycleBin -Force -ErrorAction SilentlyContinue\"" "PERMANENT - deleted files cannot be restored"
 call :cand_add win-docker ASK "Docker images/build cache" "" guide "" "Inspect: docker system df - Prune: docker system prune [-a]"
 exit /b 0
 
@@ -1299,8 +1300,7 @@ exit /b 0
 echo ====================================================================
 echo  Cache Candidate Catalog - Windows
 echo ====================================================================
-echo  DEBUG CAND_N=%CAND_N%
-echo  T1 = auto-cleaned   ASK = needs selection   ASK! = irreversible
+echo  T1 = auto-cleaned   ASK = needs selection   ASK^! = irreversible
 echo --------------------------------------------------------------------
 set /a CAT_NUM=0
 for /l %%i in (1,1,%CAND_N%) do call :cat_list_one %%i
@@ -1320,7 +1320,6 @@ if not "!P!"=="" (
 ) else (
     set "SZ_KB=0"
 )
-if /i "!C_ID_%N%!"=="win-temp" echo  DEBUG win-temp path=!P! sz=!SZ_KB! method=!M!
 if "!SZ_KB!"=="0" if /i not "!M!"=="guide" exit /b 0
 set /a CAT_NUM+=1
 if "!SZ_KB!"=="0" (
@@ -1487,7 +1486,7 @@ set "HAZ=0"
 set "HAZ_ALL=0"
 if "%~1"=="" set "HAZ_ALL=1"
 for /l %%i in (1,1,%CAND_N%) do (
-    if /i "!C_TIER_%%i!"=="ASK!" (
+    if /i "!C_TIER_%%i!"=="!TIER_IRREV!" (
         if "!HAZ_ALL!"=="1" (
             set "HAZ=1"
         ) else (
@@ -1511,7 +1510,7 @@ if "%HAZ_ALL%"=="1" (
     echo    These selections are NOT caches. Deleting them CANNOT be undone:
 )
 for /l %%i in (1,1,%CAND_N%) do (
-    if /i "!C_TIER_%%i!"=="ASK!" (
+    if /i "!C_TIER_%%i!"=="!TIER_IRREV!" (
         if "!HAZ_ALL!"=="1" (
             echo      - !C_LABEL_%%i!
         ) else (
@@ -1528,7 +1527,6 @@ echo.
 exit /b 0
 
 :cat_only
-echo [cat_only] arg=%~1 mode=%CATALOG_MODE%
 if "%~1"=="" (
     echo Usage: clean-cache.cmd /only ^<id,id^> [/yes] [/confirm-irreversible]
     exit /b 1
@@ -1562,7 +1560,7 @@ exit /b 0
 :has_irreversible
 for /l %%i in (1,1,%CAND_N%) do (
     for %%a in (%~1) do (
-        if /i "!C_ID_%%i!"=="%%~a" if /i "!C_TIER_%%i!"=="ASK!" exit /b 0
+        if /i "!C_ID_%%i!"=="%%~a" if /i "!C_TIER_%%i!"=="!TIER_IRREV!" exit /b 0
     )
 )
 exit /b 1
