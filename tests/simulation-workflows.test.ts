@@ -745,7 +745,8 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
         ],
         { prune: true, maxAgeDays: 7 },
       );
-      expect(sweepRes.prunedCount).toBe(1);
+      expect(sweepRes.prunedCount).toBe(0);
+      expect(sweepRes.prunedPaths[0]).toContain("DRY_RUN");
 
       fs.rmSync(sandbox, { recursive: true, force: true });
     });

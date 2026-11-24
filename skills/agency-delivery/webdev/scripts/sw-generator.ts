@@ -41,11 +41,22 @@ const RUNTIME_CACHE = \`runtime-\${CACHE_VERSION}\`;
 const OFFLINE_URL = '${offlinePage}';
 
 const PRECACHE_ASSETS = [
-  '/',
   '${offlinePage}',
   '/manifest.webmanifest',
   '/favicon.ico'
 ];
+
+// Never persist personalized or credentialed responses. A cached dashboard
+// survives logout and is readable offline by the next user of the device.
+// Servers must mark authenticated HTML 'Cache-Control: private' or 'no-store';
+// the guards here are the client-side second line of defence.
+function isCacheable(response, request) {
+  if (!response || !response.ok) return false;
+  if (request.headers.has('authorization')) return false;
+  const cacheControl = (response.headers.get('cache-control') || '').toLowerCase();
+  if (cacheControl.includes('no-store') || cacheControl.includes('private')) return false;
+  return response.type === 'basic' || response.type === 'default';
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -80,11 +91,10 @@ self.addEventListener('fetch', (event) => {
       caches.match(request).then((cached) => {
         if (cached) return cached;
         return fetch(request).then((response) => {
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
+          if (isCacheable(response, request)) {
+            const clone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => cache.put(request, clone));
           }
-          const clone = response.clone();
-          caches.open(STATIC_CACHE).then((cache) => cache.put(request, clone));
           return response;
         });
       })
@@ -97,8 +107,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       Promise.race([
         fetch(request).then((response) => {
-          const clone = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, clone));
+          if (isCacheable(response, request)) {
+            const clone = response.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, clone));
+          }
           return response;
         }),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), 3000))
@@ -106,6 +118,14 @@ self.addEventListener('fetch', (event) => {
     );
   }
 });
+
+// Clear personalized runtime HTML when the app signals a logout.
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'LOGOUT') {
+    event.waitUntil(caches.delete(RUNTIME_CACHE));
+  }
+});
+
 
 // PWA-003: Background Sync event
 self.addEventListener('sync', (event) => {
@@ -190,7 +210,21 @@ export function auditPwaReadiness(targetDir: string): PwaAuditResult {
   ];
   const hasServiceWorker = swPaths.some((p) => fs.existsSync(p));
   if (hasServiceWorker) {
-    score += 30;
+    const swPath = swPaths.find((p) => fs.existsSync(p));
+    const swContent = swPath ? fs.readFileSync(swPath, "utf8") : "";
+    const cachesNavigation = /caches\.put/.test(swContent) && /mode\s*===\s*['"]navigate['"]/.test(swContent);
+    const guardsCaching = /isCacheable|response\.ok|res\.ok|no-store|private/.test(swContent);
+    if (cachesNavigation && !guardsCaching) {
+      score += 10;
+      findings.push(
+        "Service Worker caches navigation responses without an ok/private guard; authenticated HTML can survive logout.",
+      );
+      recommendations.push(
+        "Use the generated `isCacheable()` guard (response.ok, no authorization, no-store/private).",
+      );
+    } else {
+      score += 30;
+    }
   } else {
     findings.push("Missing Service Worker script (sw.js / public/sw.js).");
     recommendations.push("Generate a service worker script via `bun sw-generator.ts --generate-sw`.");
@@ -203,9 +237,22 @@ export function auditPwaReadiness(targetDir: string): PwaAuditResult {
     path.join(targetDir, "public", "manifest.webmanifest"),
     path.join(targetDir, "public", "manifest.json"),
   ];
-  const hasManifest = manifestPaths.some((p) => fs.existsSync(p));
-  if (hasManifest) {
+  const manifestPath = manifestPaths.find((p) => fs.existsSync(p));
+  const hasManifest = Boolean(manifestPath);
+  let manifestJson: { name?: string; start_url?: string; display?: string; icons?: unknown[] } | null = null;
+  if (manifestPath) {
+    try {
+      manifestJson = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    } catch {
+      manifestJson = null;
+    }
+  }
+  if (manifestJson?.name && manifestJson.start_url && manifestJson.display) {
     score += 25;
+  } else if (hasManifest) {
+    score += 10;
+    findings.push("Manifest is missing name, start_url, or display; installation will be unreliable.");
+    recommendations.push("Include name, short_name, start_url, display, theme_color, and icons in the manifest.");
   } else {
     findings.push("Missing Web App Manifest (manifest.webmanifest).");
     recommendations.push("Generate a compliant manifest via `bun sw-generator.ts --generate-manifest`.");
@@ -227,9 +274,21 @@ export function auditPwaReadiness(targetDir: string): PwaAuditResult {
     path.join(targetDir, "icons"),
     path.join(targetDir, "public", "icon-192x192.png"),
   ];
-  const hasIcons = iconPaths.some((p) => fs.existsSync(p));
-  if (hasIcons) {
+  const manifestIcons = Array.isArray(manifestJson?.icons) ? manifestJson.icons : [];
+  const iconSizes = new Set(
+    manifestIcons.flatMap((icon) =>
+      String((icon as { sizes?: string }).sizes ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    ),
+  );
+  const hasIcons = iconPaths.some((p) => fs.existsSync(p)) || iconSizes.size > 0;
+  if (iconSizes.has("192x192") && iconSizes.has("512x512")) {
     score += 20;
+  } else if (hasIcons) {
+    score += 10;
+    findings.push("Icons should include both 192x192 and 512x512 (with a maskable 512).");
+    recommendations.push("Add standard and maskable icons under `/public/icons/`.");
   } else {
     findings.push("Missing 192x192 and 512x512 PWA icons.");
     recommendations.push("Add standard and maskable icons under `/public/icons/`.");

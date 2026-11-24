@@ -18,7 +18,7 @@
  */
 
 import { randomBytes } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -35,7 +35,6 @@ export interface DeliverableMetadata {
   slug: string;
   client: string;
   title: string;
-  token: string;
   targetPort: number;
   targetDir: string;
   createdAt: string;
@@ -49,6 +48,8 @@ export interface ScaffoldResult {
   metadata: DeliverableMetadata;
   filesCreated: string[];
   reviewUrlPattern: string;
+  /** 0600 file containing the review token; never written to metadata or wrangler vars. */
+  tokenFile: string;
   error?: string;
 }
 
@@ -87,7 +88,6 @@ export function scaffoldLivingDeliverable(workspaceRoot: string, options: Delive
       slug,
       client,
       title,
-      token,
       targetPort,
       targetDir,
       createdAt: createdAtDate.toISOString(),
@@ -102,6 +102,17 @@ export function scaffoldLivingDeliverable(workspaceRoot: string, options: Delive
     writeFileSync(metaPath, JSON.stringify(metadata, null, 2), "utf8");
     filesCreated.push(metaPath);
 
+    // 1b. Write the review token only to a 0600 file. It never enters
+    //     metadata.json, wrangler vars, or JSON output.
+    const tokenPath = resolve(deliverableDir, "review-token.txt");
+    writeFileSync(tokenPath, token, { encoding: "utf8", mode: 0o600 });
+    try {
+      chmodSync(tokenPath, 0o600);
+    } catch {
+      // Best effort on filesystems without POSIX modes.
+    }
+    filesCreated.push(tokenPath);
+
     // 2. Write wrangler.jsonc with workerd runtime definition
     const wranglerConfig = {
       $schema: "./node_modules/wrangler/config-schema.json",
@@ -113,7 +124,6 @@ export function scaffoldLivingDeliverable(workspaceRoot: string, options: Delive
         DELIVERABLE_SLUG: slug,
         CLIENT_CODENAME: client,
         EXPIRES_AT: expiresAtDate.toISOString(),
-        REVIEW_TOKEN: token,
         UPSTREAM_PORT: targetPort.toString(),
       },
       assets: {
@@ -156,9 +166,10 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // 1. Ephemeral Expiry Gate Check
+    // 1. Ephemeral Expiry Gate Check. A missing or unparsable timestamp must
+    //    fail closed, not compare false against NaN and serve forever.
     const expiryTime = new Date(env.EXPIRES_AT).getTime();
-    if (Date.now() > expiryTime) {
+    if (!Number.isFinite(expiryTime) || Date.now() > expiryTime) {
       return new Response(
         \`<!DOCTYPE html>
 <html>
@@ -274,8 +285,9 @@ export default {
       filesCreated,
       // The token lives in the URL fragment: browsers do not send it to the
       // server, referrers, or access logs. The unlock page exchanges it for a
-      // Secure, SameSite=Strict cookie.
-      reviewUrlPattern: `https://<tunnel-subdomain>.trycloudflare.com/#review_token=${token}`,
+      // Secure, SameSite=Strict cookie. The token itself is in tokenFile.
+      reviewUrlPattern: "https://<tunnel-subdomain>.trycloudflare.com/#review_token=<REVIEW_TOKEN>",
+      tokenFile: tokenPath,
     };
   } catch (err: unknown) {
     return {
@@ -285,7 +297,6 @@ export default {
         slug: options.slug,
         client: options.client || "",
         title: options.title || "",
-        token: "",
         targetPort: options.targetPort || 3000,
         targetDir: options.targetDir || "dist",
         createdAt: new Date().toISOString(),
@@ -294,6 +305,7 @@ export default {
       },
       filesCreated: [],
       reviewUrlPattern: "",
+      tokenFile: "",
       error: String(err),
     };
   }
@@ -311,8 +323,10 @@ export function checkDeliverableExpiry(workspaceRoot: string, slug: string): Exp
   const data = JSON.parse(readFileSync(metaPath, "utf8")) as DeliverableMetadata;
   const now = Date.now();
   const expiryTime = new Date(data.expiresAt).getTime();
-  const expired = now > expiryTime;
-  const hoursRemaining = Math.max(0, Math.round((expiryTime - now) / (1000 * 60 * 60)));
+  const expired = !Number.isFinite(expiryTime) || now > expiryTime;
+  const hoursRemaining = Number.isFinite(expiryTime)
+    ? Math.max(0, Math.round((expiryTime - now) / (1000 * 60 * 60)))
+    : 0;
 
   return {
     slug: data.slug,
@@ -390,7 +404,13 @@ Options:
       console.log(`  Directory:      ${res.deliverableDir}`);
       console.log(`  Client:         ${res.metadata.client}`);
       console.log(`  Expires At:     ${res.metadata.expiresAt}`);
-      console.log(`  Review Token:   ${res.metadata.token}`);
+      const revealed =
+        process.argv.includes("--reveal") && res.tokenFile
+          ? readFileSync(res.tokenFile, "utf8").trim()
+          : "[hidden — pass --reveal]";
+      console.log(`  Review Token:   ${revealed}`);
+      console.log(`  Token File:     ${res.tokenFile || "(none)"} (0600)`);
+      console.log(`  Set secret:     cd ${res.deliverableDir} && wrangler secret put REVIEW_TOKEN`);
       console.log(`  URL Pattern:    ${res.reviewUrlPattern}`);
       console.log(`  Files:`);
       for (const f of res.filesCreated) {

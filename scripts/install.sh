@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.0)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.1)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.0/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.1/scripts/install.sh | bash
 #
 # Supply-chain overrides:
 #   MUSE_SKILLS_REF=<tag>     install from this git tag (default: the latest release)
@@ -26,7 +26,7 @@ ORIGINAL_PWD="$(pwd)"
 # the releases API is unreachable, and is the version this installer was cut
 # from. Whichever tag is chosen is still verified against that release's
 # checksums asset, so "latest" never means "unverified".
-PINNED_REF="v8.8.0"
+PINNED_REF="v8.8.1"
 LATEST_REF=""
 if [ -z "${MUSE_SKILLS_REF:-}" ]; then
   LATEST_REF="$(curl -fsSL --max-time 10 \
@@ -47,7 +47,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.0)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.1)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 
@@ -321,6 +321,15 @@ elif [ "$IS_INTERACTIVE" = true ] && ([ -t 0 ] || [ -e /dev/tty ]); then
 fi
 
 if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
+  # Reject traversal before the lexical prefix check below: "$PWD/../../x"
+  # still starts with "$PWD/" and would otherwise pass.
+  case "/$NEW_PROJECT_DIR/" in
+    *"/../"*)
+      echo "Error: --new-project must not contain '..' path segments." >&2
+      exit 1
+      ;;
+  esac
+
   if [[ "$NEW_PROJECT_DIR" = /* ]]; then
     RESOLVED_PROJECT_DIR="$NEW_PROJECT_DIR"
   else

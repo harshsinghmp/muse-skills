@@ -1712,8 +1712,11 @@ Disallow: /
       const data = JSON.parse(scaffoldRes.stdout);
       expect(data.success).toBe(true);
       expect(data.metadata.client).toBe("ACME-Corp");
-      expect(data.metadata.token).toBeDefined();
-      expect(data.metadata.token.length).toBe(32);
+      expect(data.metadata.token).toBeUndefined();
+      expect(data.tokenFile).toBeDefined();
+      const reviewToken = fs.readFileSync(data.tokenFile, "utf8").trim();
+      expect(reviewToken.length).toBe(32);
+      expect(fs.statSync(data.tokenFile).mode & 0o777).toBe(0o600);
       expect(data.metadata.expired).toBe(false);
 
       const deliverableDir = path.join(tempDir, ".agents/deliverables/client-preview-flow");
@@ -2995,6 +2998,19 @@ describe("Two-Tier Identity Onboarding, Strategic Vision (vision.md) Convention 
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
+  });
+
+  test("devops docker scaffold emits a Node runtime template distinct from Next.js", () => {
+    const script = "skills/agency-delivery/devops/scripts/docker-audit.ts";
+    const node = spawnSync("bun", [script, "--scaffold", "node"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(node.status).toBe(0);
+    expect(node.stdout).toContain("FROM node:20-alpine");
+    expect(node.stdout).toContain('CMD ["node", "dist/index.js"]');
+    expect(node.stdout).not.toContain(".next/standalone");
+
+    const next = spawnSync("bun", [script, "--scaffold", "nextjs"], { encoding: "utf8", cwd: REPO_ROOT });
+    expect(next.status).toBe(0);
+    expect(next.stdout).toContain(".next/standalone");
   });
 
   test("🐙 git skill: gitignore-audit CLI detects parent directory traps and audits tracked-ignored files", () => {

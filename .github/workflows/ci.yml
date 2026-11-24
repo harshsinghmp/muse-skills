@@ -147,8 +147,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path (Join-Path $maven "classes") | Out-Null
           New-Item -ItemType Directory -Force -Path (Join-Path $venv "lib") | Out-Null
           New-Item -ItemType Directory -Force -Path (Join-Path $fresh "debug") | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $projects "linked") | Out-Null
           Set-Content -LiteralPath (Join-Path $projects "app\Cargo.toml") -Value "[package]`nname = `"app`""
           Set-Content -LiteralPath (Join-Path $projects "fresh\Cargo.toml") -Value "[package]`nname = `"fresh`""
+          Set-Content -LiteralPath (Join-Path $projects "linked\Cargo.toml") -Value "[package]`nname = `"linked`""
           Set-Content -LiteralPath (Join-Path $target "debug\app.exe") -Value ("x" * 4096)
           Set-Content -LiteralPath (Join-Path $maven "classes\A.class") -Value ("x" * 4096)
           Set-Content -LiteralPath (Join-Path $venv "lib\a.py") -Value ("x" * 4096)
@@ -160,6 +162,11 @@ jobs:
           (Get-Item -LiteralPath $projects).LastWriteTime = $old
           # The fresh artifact keeps a new file inside an old directory.
           (Get-Item -LiteralPath (Join-Path $fresh "debug\new.exe")).LastWriteTime = Get-Date
+          # A junction named target/ with a sibling Cargo.toml must never be
+          # treated as a Rust artifact, and discovery must not descend into it.
+          $linked = Join-Path $projects "linked\target"
+          New-Item -ItemType Junction -Path $linked -Target $target | Out-Null
+          if (-not (Test-Path -LiteralPath $linked)) { throw "junction was not created" }
 
           $discover = "skills\reflection-maintenance\clean-system-cache\scripts\discover-projects.ps1"
           $text = (& powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Roots $projects -DormantDays 14 | Out-String)
@@ -168,11 +175,14 @@ jobs:
           if (-not $text.Contains($venv)) { throw "Python venv not discovered: $text" }
           if ($text.Contains($maven)) { throw "Maven target wrongly discovered: $text" }
           if ($text.Contains($fresh)) { throw "fresh target wrongly discovered: $text" }
+          if ($text.Contains($linked)) { throw "junction target wrongly discovered: $text" }
 
           & powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Claim $target -DormantDays 14
           if ($LASTEXITCODE -ne 0) { throw "claim rejected the valid Rust target" }
           & powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Claim $maven -DormantDays 14
           if ($LASTEXITCODE -eq 0) { throw "claim accepted a Maven target" }
+          & powershell -NoProfile -ExecutionPolicy Bypass -File $discover -Claim $linked -DormantDays 14
+          if ($LASTEXITCODE -eq 0) { throw "claim accepted a junction" }
 
           $stateRoot = Join-Path $root "state"
           $stateDir = Join-Path $stateRoot "clean-system-cache"
@@ -194,6 +204,17 @@ jobs:
           }
           if (Test-Path -LiteralPath $target) { throw "target directory was not removed" }
           if (-not (Test-Path -LiteralPath (Join-Path $projects "app\Cargo.toml"))) { throw "Cargo.toml was removed" }
+
+          # The purge/status branch for ASK! TEMP: clear contents, keep the dir.
+          $localTemp = Join-Path $stateRoot "Temp"
+          New-Item -ItemType Directory -Force -Path (Join-Path $localTemp "nested") | Out-Null
+          Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value ("x" * 4096)
+          $tempOut = & cmd /c "$cmd /only win-temp /yes /confirm-irreversible" 2>&1
+          if ($LASTEXITCODE -ne 0) { throw "win-temp purge failed: $tempOut" }
+          if (-not (Test-Path -LiteralPath $localTemp)) { throw "win-temp removed the TEMP directory instead of its contents" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "loose.tmp")) { throw "win-temp left a file behind: $tempOut" }
+          if (Test-Path -LiteralPath (Join-Path $localTemp "nested")) { throw "win-temp left a subdirectory behind: $tempOut" }
 
           Write-Host "Windows clean-system-cache smoke passed"
 

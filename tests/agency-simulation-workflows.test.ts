@@ -186,7 +186,11 @@ describe("🏢 Multi-client agency simulation workflows", () => {
         expect(held.status).toBe(0);
         expect(held.stdout).toContain("heartbeat refreshed");
 
-        const released = lease(dir, "release");
+        const foreignRelease = lease(dir, "release", "--owner", "agent-b");
+        expect(foreignRelease.status).toBe(2);
+        expect(foreignRelease.stderr).toContain("held by agent-a");
+
+        const released = lease(dir, "release", "--owner", "agent-a");
         expect(released.status).toBe(0);
         expect(fs.existsSync(path.join(dir, ".agents", "artifacts", "WORKTREE-LEASE.md"))).toBe(false);
 

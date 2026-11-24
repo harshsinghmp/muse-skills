@@ -1,6 +1,6 @@
 ---
 name: relay
-aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
+aliases: ["handoff","agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
 description: "Bidirectional agent handoff and session resumption engine with ambient continuity. Generates lean, bounded context packets before dispatching subagents, resumes previous sessions with boundary-safe directory matching and unanswered questions leading, and maintains an always-current HANDOFF.md live-state file with a state-source ladder (live file, memory recall, project context, git forensics) probed on every workspace entry so any new conversation or agent continues prior work at lowest token cost — even after abrupt endings, with no explicit handoff requested. Dispatches embed the worktree-lease gate for shared checkouts. Use when asked to hand off work, resume a session, or write a context packet."
 argument-hint: "[ambient-handoff|resumption-protocol|audit]"
 user-invocable: true
@@ -15,7 +15,7 @@ metadata:
     optional: ["coupling-router", "dead-letter"]
   category: context-orchestration
   priority: 6
-  aliases: ["agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
+  aliases: ["handoff","agent-handoff","subagent-handoff","context-packet","resume","where-were-we"]
   suggested_skills: ["context-anchor","dead-letter","coupling-router","updateagents"]
   hermes:
     tags: [subagents, handoff, resume, orchestration, context, governance, reliability, ambient-continuity, session-state, git-forensics]
@@ -32,7 +32,7 @@ metadata:
 
 # 🤝 relay — Bidirectional Handoff, Resumption & Ambient Continuity Engine
 
-> **Aliases**: `agent-handoff` | `subagent-handoff` | `context-packet` | `resume` | `where-were-we`
+> **Aliases**: `handoff` | `agent-handoff` | `subagent-handoff` | `context-packet` | `resume` | `where-were-we`
 
 `relay` provides context continuity across agent lifecycles in three modes:
 1. **Inbound Resumption**: Resumes previous agent sessions with boundary-safe directory matching, leading with any unanswered open questions.

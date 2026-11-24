@@ -36,8 +36,22 @@ const includeNetwork = args.includes("--network");
 const asJson = args.includes("--json");
 const skipped = new Set<string>();
 for (let i = 0; i < args.length; i += 1) {
-  if (args[i] === "--skip") skipped.add(args[i + 1]);
+  if (args[i] === "--skip") {
+    const name = args[i + 1];
+    if (!name || name.startsWith("-")) {
+      console.error("--skip requires a gate name (see `bun run verify --list`).");
+      process.exit(2);
+    }
+    skipped.add(name);
+  }
 }
+const knownGates = new Set(GATES.map((gate) => gate.name));
+const unknownSkips = [...skipped].filter((name) => !knownGates.has(name));
+if (unknownSkips.length > 0) {
+  console.error(`Unknown gate(s) to skip: ${unknownSkips.join(", ")}. See \`bun run verify --list\`.`);
+  process.exit(2);
+}
+const skippedGates = GATES.filter((gate) => skipped.has(gate.name));
 
 if (args.includes("--list")) {
   console.log(
@@ -85,20 +99,29 @@ async function main() {
   if (asJson) {
     console.log(
       JSON.stringify(
-        { passed: results.filter((r) => r.ok).length, failed: results.filter((r) => !r.ok).length, results },
+        {
+          passed: results.filter((r) => r.ok).length,
+          failed: results.filter((r) => !r.ok).length,
+          skipped: skippedGates.map((gate) => gate.name),
+          results,
+        },
         null,
         2,
       ),
     );
   } else {
-    const width = Math.max(...results.map((r) => r.name.length));
+    const width = Math.max(0, ...results.map((r) => r.name.length), ...skippedGates.map((gate) => gate.name.length));
     for (const result of results) {
       const mark = result.ok ? "✅" : "❌";
       console.log(`${mark} ${result.name.padEnd(width)} ${String(result.ms).padStart(6)}ms`);
     }
+    for (const gate of skippedGates) {
+      console.log(`⏭ ${gate.name.padEnd(width)} skipped`);
+    }
     const failed = results.filter((r) => !r.ok);
+    const skippedNote = skippedGates.length > 0 ? `, ${skippedGates.length} skipped` : "";
     console.log(
-      `\n${results.length - failed.length}/${results.length} gates passed${failed.length ? "" : " — ready to push"}.`,
+      `\n${results.length - failed.length}/${results.length} gates passed${skippedNote}${failed.length ? "" : " — ready to push"}.`,
     );
     if (failed.length > 0) {
       for (const result of failed) {

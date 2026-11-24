@@ -255,9 +255,9 @@ The provisioner enforces **Zero Half-Baked Stubs**. Every selected technology is
   - `tests/health.test.ts`: Out-of-the-box health check asserting environment configuration, AI governance container, and design tokens baseline.
   - `biome.json`: High-speed zero-config linter and formatter.
 - **Day-1 Secret Defense (Vibeguard Pre-Commit Hook)**:
-  - A generated pre-commit shell hook installed at `.git/hooks/pre-commit`: executable hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
+  - A generated pre-commit shell hook installed at `scripts/pre-commit.sh`: executable hook that automatically blocks commits containing staged `.env` files or high-entropy credentials.
 - **Package Scripts & Secrets Injection**:
-  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash .git/hooks/pre-commit`).
+  - Injects `setup` (one-command bootstrap handling dependencies, Docker container startup, and Drizzle migrations), `test` (`bun test`), `lint` (`biome check src`), `format` (`biome format --write src`), and `precommit` (`bash <project>/scripts/pre-commit.sh`).
   - Automatically provisions `db:generate`, `db:push`, `docker:up`, `docker:down`, `payload`, `dev:backend`, and `backend:migrate` into `package.json`.
   - Populates `.env.example` with every required key name and an unmistakable placeholder (`<your-value>`); real secrets go only into the ignored `.env`, never into a committed file.
   - Synchronizes official dependencies in `package.json` with self-verification gate.

@@ -45,7 +45,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **remediate** | "patch vulnerability", "ansible playbook", "canary rollout", "fix cve" | Idempotent remediation playbooks, staged canary rollouts (Canary → 10% → 50% → 100%), and rollback gates | [references/remediate.md](references/remediate.md) |
 | **cloud-waf** | "cloud waf", "cloud armor", "cloudflare waf", "waf pillars", "ddos rules" | GCP Cloud Armor & Cloudflare WAF architecture across all 6 Well-Architected Framework pillars | [references/cloud-waf.md](references/cloud-waf.md) |
 | **sast** | "sast audit", "static analysis", "dependency audit", "mitre attack" | Source code security review, dependency vulnerability trees, and MITRE ATT&CK / ATLAS control mapping | [references/sast.md](references/sast.md) |
-| **runtime** | "runtime defense", "destructive command check", "zero-secret enforcement" | AST command interception (blocking `rm -rf /`, `terraform destroy`) and process environment isolation | [references/runtime.md](references/runtime.md) |
+| **runtime** | "runtime defense", "destructive command check", "zero-secret enforcement" | Runtime guard guidance for destructive commands, secret masking, and process environment isolation (documents the guard; ships no bundled AST analyzer) | [references/runtime.md](references/runtime.md) |
 | **boundary** | "subagent boundary", "worktree isolation", "symlink escape", "permission fence", "tenant isolation" | Subagent tenant boundary & worktree isolation auditor: symlink traversal fences, shared worktree lease arbitration, permission fences, and argv hygiene | [references/boundary.md](references/boundary.md) |
 | **mcp-guard** | "mcp guard", "mcp security", "tool poisoning", "owasp mcp03", "sanitize mcp", "mcp audit" | Dynamic MCP server governance, OWASP MCP03 tool poisoning scanner, transport isolation, and credential tripwires | [references/mcp-guard.md](references/mcp-guard.md) |
 | **zero-trust** | "zero trust", "spiffe", "spire", "subagent attestation", "mtls", "capability scope", "tamper evident audit" | Ephemeral mutual TLS zero-trust subagent attestation: SPIFFE SVIDs, least-privilege capability scope jails, mTLS verification, and linked cryptographic audit chains | [references/zero-trust.md](references/zero-trust.md) |
@@ -96,7 +96,7 @@ Only the resolved mode's reference is loaded — the rest stay on disk, saving t
 ## Procedure
 
 1. **Intake & Scope**: Determine the target scope (source code, container, Linux server fleet, or cloud perimeter).
-2. **Resolve Mode**: Match request against the mode table (cve, remediate, cloud-waf, sast, runtime, audit).
+2. **Resolve Mode**: Match request against the mode table (cve, remediate, cloud-waf, sast, runtime, boundary, mcp-guard, zero-trust, audit).
 3. **Execute Mode Playbook**: Load `references/<mode>.md` and execute its step-by-step procedure.
 4. **Evidence Collection**: Capture exact CVSS scores, vulnerability IDs, scanner logs, or WAF rule states.
 5. **Quality Gate & Verification**: Run standalone pre-ship secret scan (`bun run secret-scan [path]`) to verify zero credential leakage (Vibeguard Protocol) across tokens (`sk-*`, `ghp_*`), private keys, and database URLs; verify that all remediation playbooks are idempotent with dry-run verification.

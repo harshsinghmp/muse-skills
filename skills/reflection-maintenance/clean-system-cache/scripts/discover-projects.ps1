@@ -22,6 +22,10 @@ param(
 $ErrorActionPreference = "SilentlyContinue"
 
 function Test-Artifact([string]$Path, [string]$Name) {
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (-not $item) { return $null }
+    # A junction or symlink is not the artifact; it may point anywhere.
+    if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { return $null }
     $parent = Split-Path -Parent $Path
     switch -Regex ($Name) {
         '^node_modules$' { return "node" }
@@ -119,6 +123,10 @@ $out = New-Object System.Collections.ArrayList
 
 function Walk([string]$Dir, [int]$Level) {
     if ($Level -lt 0) { return }
+    $item = Get-Item -LiteralPath $Dir -Force -ErrorAction SilentlyContinue
+    if (-not $item) { return }
+    # Never descend through a junction or symlink, even under another name.
+    if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { return }
     $name = Split-Path -Leaf $Dir
     $kind = Test-Artifact $Dir $name
     if ($kind) {

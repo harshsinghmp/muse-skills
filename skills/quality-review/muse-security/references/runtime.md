@@ -35,7 +35,7 @@ A runtime defense verification report detailing:
 
 ## Quality gate
 
-- [ ] High-risk destructive commands blocked by pre-execution AST analyzer.
+- [ ] High-risk destructive commands covered by an installed harness guard/hook; this skill documents the guard but ships no pre-execution AST analyzer, so verify the hook is actually wired.
 - [ ] No raw credentials (`sk-*`, `ghp_*`, passwords, private keys) committed or printed.
 - [ ] Secrets injected out-of-band at process spawn time.
 - [ ] Output logs verified clean with zero secrets.

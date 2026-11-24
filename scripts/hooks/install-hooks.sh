@@ -119,8 +119,8 @@ install_git_wrapper pre-push "$HOOKS_DIR/harness-hygiene-pre-push.sh"
 CRON_ROOT="$(cd "$HOOKS_DIR/../.." && pwd)"
 CRON_SAFE=true
 case "$CRON_ROOT" in
-  *$'\n'*|*$'\r'*|*%*|*'"'*)
-    echo "[hooks] refusing cron registration: repo path contains a newline, '%', or double quote: $CRON_ROOT" >&2
+  *$'\n'*|*$'\r'*|*%*|*'"'*|*'$'*|*'`'*|*'\'*)
+    echo "[hooks] refusing cron registration: repo path contains a newline, '%', '\"', '$', backtick, or backslash: $CRON_ROOT" >&2
     CRON_SAFE=false
     ;;
 esac
@@ -131,10 +131,29 @@ CRON_HOOKS=(
 )
 
 if [ "$CRON_SAFE" = true ] && command -v crontab >/dev/null 2>&1; then
+  # Cache the existing table once. Re-running `crontab -l` inside the loop and
+  # piping it to `crontab -` replaces the whole table when the read fails.
+  CRON_EXISTING=""
+  if ! CRON_EXISTING=$(crontab -l 2>/dev/null); then
+    if ! crontab -l 2>&1 | grep -qi 'no crontab'; then
+      echo "[hooks] refusing cron registration: 'crontab -l' failed for a reason other than an empty table" >&2
+      CRON_SAFE=false
+    fi
+    CRON_EXISTING=""
+  fi
+fi
+
+if [ "$CRON_SAFE" = true ] && command -v crontab >/dev/null 2>&1; then
   INSTALLED_CRON=0
   for entry in "${CRON_HOOKS[@]}"; do
-    if ! crontab -l 2>/dev/null | grep -qF "$entry"; then
-      (crontab -l 2>/dev/null; echo "$entry") | crontab - 2>/dev/null && INSTALLED_CRON=$((INSTALLED_CRON + 1))
+    if ! printf '%s\n' "$CRON_EXISTING" | grep -qF "$entry"; then
+      { printf '%s\n' "$CRON_EXISTING"; echo "$entry"; } | crontab - 2>/dev/null && INSTALLED_CRON=$((INSTALLED_CRON + 1))
+      if [ -n "$CRON_EXISTING" ]; then
+        CRON_EXISTING="$CRON_EXISTING
+$entry"
+      else
+        CRON_EXISTING="$entry"
+      fi
     fi
   done
   if [ "$INSTALLED_CRON" -gt 0 ]; then

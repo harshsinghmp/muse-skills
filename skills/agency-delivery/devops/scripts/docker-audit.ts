@@ -187,6 +187,30 @@ CMD ["bun", "run", "dist/index.js"]
 `;
   }
 
+  if (template === "node") {
+    return `# Hardened Multi-Stage Dockerfile (Node.js Runtime)
+FROM node:20-alpine AS base
+WORKDIR /app
+
+# Stage 2: Layer-cached production dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* bun.lock* ./
+RUN npm ci --omit=dev
+
+# Stage 3: Production runner (non-root, no build toolchain)
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+USER node
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+`;
+  }
+
   return `# Hardened Multi-Stage Dockerfile (Next.js Standalone / Node)
 # Stage 1: Base image
 FROM node:20-alpine AS base
@@ -255,6 +279,6 @@ if (import.meta.main) {
       }
     }
   } else {
-    console.log("Usage: bun docker-audit.ts [--audit [Dockerfile]] [--scaffold <nextjs|bun>]");
+    console.log("Usage: bun docker-audit.ts [--audit [Dockerfile]] [--scaffold <nextjs|node|bun>]");
   }
 }
