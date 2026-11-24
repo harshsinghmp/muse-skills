@@ -1410,69 +1410,71 @@ exit /b 0
 rem Delete one candidate, honouring DRY_RUN and printing one table row.
 :cat_delete
 echo [del] n=%~1 p=!C_PATH_%~1! m=!C_METHOD_%~1!
-echo [del0]
 set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
 set "L=!C_LABEL_%N%!"
-echo [del1] N=!N! M=!M! L=!L!
-if /i "!M!"=="guide" (
-    echo [!L!] manual - !C_CMD_%N%!
-    exit /b 0
-)
-if "%DRY_RUN%"=="1" (
-    echo [!L!] reclaimable -^> !P!
-    exit /b 0
-)
-if "!P!"=="" (
-    echo [!L!] refused -^> target path is empty
-    exit /b 1
-)
-if /i "!P!"=="\Temp" (
-    echo [!L!] refused -^> LOCALAPPDATA is empty (would target the drive root)
-    exit /b 1
-)
+if /i "!M!"=="guide" goto cat_delete_guide
+if "%DRY_RUN%"=="1" goto cat_delete_dry
+if "!P!"=="" goto cat_delete_nopath
+if /i "!P!"=="\Temp" goto cat_delete_nolocalappdata
 set "DEL_OK=1"
 if /i "!M!"=="rm" goto cat_delete_rm
 if /i "!M!"=="purge" goto cat_delete_purge
-if not "!C_CMD_%N%!"=="" (
-    call !C_CMD_%N%! >nul 2>&1
-    if errorlevel 1 set "DEL_OK=0"
-)
+if not "!C_CMD_%N%!"=="" goto cat_delete_cmd
+goto cat_delete_done
+
+:cat_delete_guide
+echo [!L!] manual - !C_CMD_%N%!
+exit /b 0
+
+:cat_delete_dry
+echo [!L!] reclaimable -^> !P!
+exit /b 0
+
+:cat_delete_nopath
+echo [!L!] refused -^> target path is empty
+exit /b 1
+
+:cat_delete_nolocalappdata
+echo [!L!] refused -^> LOCALAPPDATA is empty (would target the drive root)
+exit /b 1
+
+:cat_delete_cmd
+call !C_CMD_%N%! >nul 2>&1
+if errorlevel 1 set "DEL_OK=0"
 goto cat_delete_done
 
 :cat_delete_rm
-if exist "!P!" (
-    rmdir /s /q "!P!" >nul 2>&1
-    if exist "!P!" set "DEL_OK=0"
-)
+if not exist "!P!" goto cat_delete_done
+rmdir /s /q "!P!" >nul 2>&1
+if exist "!P!" set "DEL_OK=0"
 goto cat_delete_done
 
 :cat_delete_purge
 echo [purge] start p=!P!
-if exist "!P!" (
-    pushd "!P!" >nul 2>&1
-    if errorlevel 1 (
-        set "DEL_OK=0"
-    ) else (
-        del /q /f /a * >nul 2>&1
-        for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
-        popd
-        for /f "delims=" %%A in ('dir /b /a "!P!" 2^>nul') do set "DEL_OK=0"
-    )
-)
-echo [purge] end ok=!DEL_OK!
+if not exist "!P!" goto cat_delete_done
+pushd "!P!" >nul 2>&1
+if errorlevel 1 goto cat_delete_purge_fail
+del /q /f /a * >nul 2>&1
+for /d %%D in (*) do rmdir /s /q "%%D" >nul 2>&1
+popd
+for /f "delims=" %%A in ('dir /b /a "!P!" 2^>nul') do set "DEL_OK=0"
+goto cat_delete_done
+
+:cat_delete_purge_fail
+set "DEL_OK=0"
 goto cat_delete_done
 
 :cat_delete_done
-if "!DEL_OK!"=="1" (
-    if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
-    echo [!L!] cleaned
-) else (
-    echo [!L!] failed -^> !P!
-    exit /b 1
-)
+if not "!DEL_OK!"=="1" goto cat_delete_failed
+if /i "!C_TIER_%N%!"=="ASK" call :learn_set "!C_ID_%N%!" allow
+echo [!L!] cleaned
 exit /b 0
+
+:cat_delete_failed
+echo [!L!] failed -^> !P!
+exit /b 1
 
 :cat_auto
 if /i not "!C_TIER_%~1!"=="T1" exit /b 0
