@@ -10,7 +10,7 @@
 - **Review secrets stay in one place** (`living-deliverable`): the review token lives only in a `0600` `review-token.txt`. It is no longer written to metadata, JSON output, or `wrangler` vars; the review URL renders a `<REVIEW_TOKEN>` placeholder and the CLI prints `[hidden]` unless asked to reveal it.
 - **Fail-closed runtime** (`coupling-router`, `devops`, `new-project`, `telegram`): failed `git worktree add`/`git status` calls cannot report success or get force-pruned; federation defaults to `dev` then the repo default; duplicate swarm task ids and oversized webhook bodies are rejected; an unparsable deliverable expiry returns 410; framework scaffold failures abort.
 - **Shell hooks and cross-skill contracts** (`scripts/install.sh`, `scripts/hooks/*`, `relay`, `ops`, `client-comms`, `devops`, `new-project`): installer traversal is rejected before containment; cron rejects shell metacharacters; the lease hook and secret scanner fail closed; `handoff` is a `relay` alias; devops emits a real Node template; new-project documents the generated hook.
-- **Dependency refresh**: `musememory` `3.4.2 → 3.4.3`, exact pin kept.
+- **Dependency refresh**: `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept.
 
 ## 📊 Verification
 

@@ -16,7 +16,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **Dependency refresh** (`package.json`, `bun.lock`): `musememory` `3.4.2 → 3.4.3`, exact pin kept; `check:deps` and the CI hardening tests track the version.
+- **Dependency refresh** (`package.json`, `bun.lock`): `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept; `check:deps` and the CI hardening tests track them.
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.0...v8.8.1
 
