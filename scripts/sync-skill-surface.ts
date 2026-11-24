@@ -11,7 +11,7 @@
  *   bun scripts/sync-skill-surface.ts --write   # rewrite the derived surfaces
  */
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 
 const REPO_ROOT = join(import.meta.dir, "..");
 
@@ -69,6 +69,13 @@ const MODE_CLAIM = new RegExp(
 
 const isModeRefFile = (file: string) => file.endsWith(".md") && /^[a-z0-9-]+\.md$/.test(file);
 
+// A references/*.md file is not automatically a routed mode. These support
+// documents are loaded by a mode (e.g. clean-system-cache:select), so they must
+// not be appended to the Modes table or counted in the mode surface.
+const SUPPORT_REFERENCES: Record<string, string[]> = {
+  "clean-system-cache": ["candidate-catalog.md"],
+};
+
 function skills(): SkillEntry[] {
   const registry = JSON.parse(readFileSync(join(REPO_ROOT, "skills.json"), "utf8")) as {
     skills: SkillEntry[];
@@ -79,8 +86,10 @@ function skills(): SkillEntry[] {
 function referenceModes(skillDir: string): string[] {
   const refs = join(skillDir, "references");
   if (!existsSync(refs)) return [];
+  const support = new Set(SUPPORT_REFERENCES[basename(skillDir)] ?? []);
   return readdirSync(refs)
     .filter(isModeRefFile)
+    .filter((file) => !support.has(file))
     .map((file) => file.replace(/\.md$/, ""))
     .sort();
 }

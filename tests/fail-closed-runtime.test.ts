@@ -7,7 +7,9 @@ import {
   checkDeliverableExpiry,
   scaffoldLivingDeliverable,
 } from "../skills/agency-delivery/devops/scripts/living-deliverable";
+import { partitionDagIntoWaves } from "../skills/context-orchestration/coupling-router/scripts/swarm-dispatcher";
 import {
+  parsePorcelainWorktrees,
   spawnFederatedWorktree,
   sweepFederatedWorktrees,
 } from "../skills/context-orchestration/coupling-router/scripts/worktree-federation";
@@ -65,6 +67,54 @@ describe("fail-closed runtime", () => {
     expect(report.prunedPaths[0]).toContain("DRY_RUN");
   });
 
+  test("a worktree whose git status fails is dirty and never pruned", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wt-broken-"));
+    try {
+      const worktree = path.join(dir, "broken-wt");
+      fs.mkdirSync(worktree, { recursive: true });
+      fs.writeFileSync(path.join(worktree, ".git"), "gitdir: /nonexistent-gitdir\n");
+      const porcelain = `worktree ${worktree}\nHEAD abc1234\nbranch refs/heads/feat/broken\n\n`;
+      const parsed = parsePorcelainWorktrees(porcelain, dir);
+      expect(parsed).toHaveLength(1);
+      expect(parsed[0].isClean).toBe(false);
+      expect(parsed[0].status).toBe("DIRTY_LOCKED");
+
+      const sweep = sweepFederatedWorktrees(parsed, { prune: true, yes: true, maxAgeDays: 1 });
+      expect(sweep.prunedCount).toBe(0);
+      expect(sweep.preservedPaths[0]).toContain("DIRTY_LOCKED");
+      expect(fs.existsSync(worktree)).toBe(true);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("duplicate swarm task ids are rejected, not reported as a cycle", () => {
+    const result = partitionDagIntoWaves([
+      { id: "task-a", name: "first" },
+      { id: "task-a", name: "duplicate" },
+    ]);
+    expect(result.isValid).toBe(false);
+    expect(result.error).toContain("Duplicate task id");
+    expect(result.error).not.toContain("Cyclic dependency");
+  });
+
+  test("the federation base defaults to dev, then the repo default branch", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wt-base-"));
+    try {
+      git(dir, ["init", "-q"]);
+      fs.writeFileSync(path.join(dir, "README.md"), "init\n");
+      git(dir, ["add", "README.md"]);
+      git(dir, ["commit", "-qm", "init"]);
+      git(dir, ["branch", "-M", "main"]);
+
+      const result = spawnFederatedWorktree({ repo: dir, branch: "feat/no-base" });
+      expect(result.success).toBe(true);
+      expect(fs.existsSync(result.path)).toBe(true);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test("an unparsable expiry fails closed", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "expiry-"));
     try {
@@ -95,6 +145,9 @@ describe("fail-closed runtime", () => {
       expect(result.success).toBe(true);
       const wrangler = fs.readFileSync(path.join(result.deliverableDir, "wrangler.jsonc"), "utf8");
       expect(wrangler).not.toContain("REVIEW_TOKEN");
+      const metadata = JSON.parse(fs.readFileSync(path.join(result.deliverableDir, "metadata.json"), "utf8"));
+      expect(metadata.token).toBeUndefined();
+      expect(fs.readFileSync(result.tokenFile, "utf8").trim().length).toBe(32);
       const worker = fs.readFileSync(path.join(result.deliverableDir, "worker.ts"), "utf8");
       expect(worker).toContain("REVIEW_TOKEN");
       expect(worker).toContain("Number.isFinite(expiryTime)");
