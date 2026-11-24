@@ -1526,6 +1526,7 @@ echo.
 exit /b 0
 
 :cat_only
+echo [cat_only] arg=%~1 mode=%CATALOG_MODE%
 if "%~1"=="" (
     echo Usage: clean-cache.cmd /only ^<id,id^> [/yes] [/confirm-irreversible]
     exit /b 1
