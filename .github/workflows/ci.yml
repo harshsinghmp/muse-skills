@@ -208,8 +208,8 @@ jobs:
           # The purge/status branch for ASK! TEMP: clear contents, keep the dir.
           $localTemp = Join-Path $stateRoot "Temp"
           New-Item -ItemType Directory -Force -Path (Join-Path $localTemp "nested") | Out-Null
-          Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value "x"
-          Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value "x"
+          Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value ("x" * 4096)
+          Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value ("x" * 4096)
           $listOut = & cmd /c "$cmd /list" 2>&1
           Write-Host "win-temp in /list: $([bool]($listOut -match 'win-temp'))"
           if (-not ($listOut -match "win-temp")) { throw "/list did not include win-temp: $listOut" }
