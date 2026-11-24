@@ -193,7 +193,7 @@ echo                                Generic names need their manifest (Cargo.tom
 echo                                go.mod, .csproj) and dormancy uses the newest file.
 echo   /browse id^|proj:path         Show the files/folders a candidate would delete.
 echo   /only id,id^|proj:path [/yes] [/confirm-irreversible]
-echo                                Delete exactly these candidates. ASK^! items need the
+echo                                Delete exactly these candidates. ASK^^! items need the
 echo                                explicit flag or a typed yes; /yes alone is not enough.
 echo   /interactive                 Numbered menu for confirmation-gated (ASK) candidates.
 echo   /learn allow^|deny^|forget k Record a decision so later runs already know.
@@ -203,7 +203,7 @@ echo.
 echo Tiers:
 echo   T1   Regenerable, auto-cleaned on a normal run.
 echo   ASK  Expensive or admin-gated; only deleted when you select it.
-echo   ASK^! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
+echo   ASK^^! Irreversible (Recycle Bin, %%TEMP%%); only deleted after typing yes.
 echo.
 echo Supported Tools:
 echo   Package Managers : uv, npm, bun, pip, pnpm, yarn, cargo, go, dotnet, composer, gradle
@@ -1243,7 +1243,7 @@ endlocal
 exit /b 0
 
 :cat_init
-set "TIER_IRREV=ASK^!"
+set "TIER_IRREV=IRREV"
 set CAND_N=0
 call :cand_add win-playwright T1 "Playwright browsers" "%LOCALAPPDATA%\ms-playwright" rm "" "Reinstall with: npx playwright install"
 call :cand_add win-puppeteer T1 "Puppeteer Chrome download" "%USERPROFILE%\.cache\puppeteer" rm "" "Re-downloaded on next puppeteer install"
@@ -1300,7 +1300,7 @@ exit /b 0
 echo ====================================================================
 echo  Cache Candidate Catalog - Windows
 echo ====================================================================
-echo  T1 = auto-cleaned   ASK = needs selection   ASK^! = irreversible
+echo  T1 = auto-cleaned   ASK = needs selection   ASK^^! = irreversible
 echo --------------------------------------------------------------------
 set /a CAT_NUM=0
 for /l %%i in (1,1,%CAND_N%) do call :cat_list_one %%i
@@ -1315,6 +1315,8 @@ exit /b 0
 set "N=%~1"
 set "P=!C_PATH_%N%!"
 set "M=!C_METHOD_%N%!"
+set "TIER_TXT=!C_TIER_%N%!"
+if /i "!TIER_TXT!"=="IRREV" set "TIER_TXT=ASK^^!"
 if not "!P!"=="" (
     call :cat_size "!P!"
 ) else (
@@ -1327,7 +1329,7 @@ if "!SZ_KB!"=="0" (
 ) else (
     call :cat_fmt !SZ_KB!
 )
-echo  !CAT_NUM!. !SZ_TXT! [!C_TIER_%N%!] !C_LABEL_%N%!  ^[!C_ID_%N%!^]
+echo  !CAT_NUM!. !SZ_TXT! [!TIER_TXT!] !C_LABEL_%N%!  ^[!C_ID_%N%!^]
 if not "!P!"=="" echo       -^> !P!
 if not "!C_NOTE_%N%!"=="" echo       !C_NOTE_%N%!
 exit /b 0
@@ -1381,9 +1383,11 @@ if "!RES_IDX!"=="" (
     exit /b 1
 )
 set "N=!RES_IDX!"
+set "TIER_TXT=!C_TIER_%N%!"
+if /i "!TIER_TXT!"=="IRREV" set "TIER_TXT=ASK^^!"
 echo.
 echo --------------------------------------------------------------------
-echo  !C_ID_%N%!  [!C_TIER_%N%!]  !C_LABEL_%N%!
+echo  !C_ID_%N%!  [!TIER_TXT!]  !C_LABEL_%N%!
 echo --------------------------------------------------------------------
 if not "!C_NOTE_%N%!"=="" echo  Note   : !C_NOTE_%N%!
 set "P=!C_PATH_%N%!"

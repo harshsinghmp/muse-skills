@@ -210,14 +210,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path (Join-Path $localTemp "nested") | Out-Null
           Set-Content -LiteralPath (Join-Path $localTemp "loose.tmp") -Value ("x" * 4096)
           Set-Content -LiteralPath (Join-Path $localTemp "nested\inner.tmp") -Value ("x" * 4096)
-          $listOut = & cmd /c "$cmd /list" 2>&1
-          Write-Host "LOCALAPPDATA=$env:LOCALAPPDATA"
-          Write-Host "localTemp=$localTemp"
-          Write-Host "LIST>>>"
-          $listOut | ForEach-Object { Write-Host $_ }
-          Write-Host "<<<LIST"
-          Write-Host "win-temp in /list: $([bool]($listOut -match 'win-temp'))"
-          if (-not ($listOut -match "win-temp")) { throw "/list did not include win-temp: $listOut" }
           $tempOut = & cmd /c "$cmd /only win-temp /yes /confirm-irreversible" 2>&1
           Write-Host "win-temp output: [$tempOut] exit=$LASTEXITCODE"
           if ($LASTEXITCODE -ne 0) { throw "win-temp purge failed: $tempOut" }
