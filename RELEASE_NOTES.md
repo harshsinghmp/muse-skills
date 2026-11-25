@@ -1,3 +1,30 @@
+# 🏛️ Muse Skills v8.8.2 — <one line for humans>
+
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.2
+
+- **<headline>**: <what changed, and the evidence.>
+
+## 📊 Verification
+
+| Metric | v8.8.1 | v8.8.2 |
+|:---|:---|:---|
+| Automated Tests | <n> | **<n>** |
+| Test Files | <n> | **<n>** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.1...v8.8.2
+
 # 🏛️ Muse Skills v8.8.1 — Hardened Edges, Verified on Windows
 
 > **Patch release: closes the hardening findings from the suite review — review tokens, worktrees, shell hooks, webhooks, and the Windows TEMP purge — and keeps the real Windows/macOS smoke as the proof.** 919 automated tests. 76 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

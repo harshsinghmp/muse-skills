@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-24T17:05:30.613Z",
-  "head": "cd35e7381793d4afaac97f564bd7d601f749b71e",
+  "updatedAt": "2026-11-25T04:18:31.956Z",
+  "head": "ceae72d6c2b1655f2b9dcad7e6389a27d9143a23",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.8.1"
+    "releaseTag": "v8.8.2"
   },
   "agentWatermark": {
     "point": 185,
@@ -8500,6 +8500,210 @@
       "shipped": true,
       "releaseTag": "v8.8.1",
       "createdAt": "2026-11-24T17:04:18.972Z"
+    },
+    {
+      "id": "DP-0210",
+      "point": 210,
+      "commit": "749636777a44194e88f7c3a71b0cbdc4e6d67ec6",
+      "shortCommit": "7496367",
+      "date": "2026-11-24",
+      "type": "other",
+      "scope": "",
+      "summary": "Release v8.8.1 (#506)",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        ".gitattributes",
+        ".github/workflows/ci.yml",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "bun.lock",
+        "package.json",
+        "scripts/hooks/dead-letter-nightly.sh",
+        "scripts/hooks/install-hooks.sh",
+        "scripts/hooks/secret-scan-pre-commit.sh",
+        "scripts/hooks/worktree-lease-check.sh",
+        "scripts/install.sh",
+        "scripts/sync-skill-surface.ts",
+        "scripts/verify.ts",
+        "skills/agency-delivery/client-comms/SKILL.md",
+        "skills/agency-delivery/devops/SKILL.md",
+        "skills/agency-delivery/devops/scripts/docker-audit.ts",
+        "skills/agency-delivery/devops/scripts/living-deliverable.ts",
+        "skills/agency-delivery/ops/SKILL.md",
+        "skills/agency-delivery/telegram/scripts/webhook-receiver.ts",
+        "skills/agency-delivery/webdev/SKILL.md",
+        "skills/agency-delivery/webdev/references/offline.md",
+        "skills/agency-delivery/webdev/references/technical-resilience.md",
+        "skills/agency-delivery/webdev/scripts/sw-generator.ts",
+        "skills/agency-delivery/webdev/scripts/webdev.ts",
+        "skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts",
+        "skills/context-orchestration/coupling-router/scripts/worktree-federation.ts",
+        "skills/context-orchestration/coupling-router/scripts/worktree-lease.ts",
+        "skills/context-orchestration/relay/SKILL.md",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/core-engine/new-project/scripts/new-project.ts",
+        "skills/quality-review/muse-security/SKILL.md",
+        "skills/quality-review/muse-security/references/runtime.md",
+        "skills/quality-review/muse-security/scripts/boundary-audit.ts",
+        "skills/quality-review/muse-security/scripts/mcp-sanitizer.ts",
+        "skills/quality-review/muse-security/scripts/secret-scan.ts",
+        "skills/reflection-maintenance/clean-system-cache/SKILL.md",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.cmd",
+        "skills/reflection-maintenance/clean-system-cache/scripts/clean-cache.sh",
+        "skills/reflection-maintenance/clean-system-cache/scripts/discover-projects.ps1",
+        "tests/agency-simulation-workflows.test.ts",
+        "tests/clean-system-cache.test.ts",
+        "tests/fail-closed-runtime.test.ts",
+        "tests/hardening.test.ts",
+        "tests/muse-security-hardening.test.ts",
+        "tests/shell-hooks-hardening.test.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/skills.test.ts",
+        "tests/tooling-scripts.test.ts",
+        "tests/webdev-security.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.1",
+      "createdAt": "2026-11-25T04:18:09.459Z"
+    },
+    {
+      "id": "DP-0211",
+      "point": 211,
+      "commit": "097d2abeb343491d6352540ae1e0851ff8fafe05",
+      "shortCommit": "097d2ab",
+      "date": "2026-11-25",
+      "type": "fix",
+      "scope": "followups",
+      "summary": "unique staging, physical containment, honest invalid plans (#507)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "scripts/install.sh",
+        "skills/context-orchestration/coupling-router/scripts/swarm-dispatcher.ts",
+        "skills/core-engine/new-project/scripts/new-project.ts",
+        "tests/low-severity-followups.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.2",
+      "createdAt": "2026-11-25T04:18:09.459Z"
+    },
+    {
+      "id": "DP-0212",
+      "point": 212,
+      "commit": "fc62ef5ee374f2490956059e98bdee23a4ead841",
+      "shortCommit": "fc62ef5",
+      "date": "2026-11-25",
+      "type": "fix",
+      "scope": "release",
+      "summary": "reject placeholder release notes before tagging (#508)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "scripts/check-release-ready.ts", "tests/release-ready.test.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release notes\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release notes\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.2",
+      "createdAt": "2026-11-25T04:18:09.459Z"
+    },
+    {
+      "id": "DP-0213",
+      "point": 213,
+      "commit": "ceae72d6c2b1655f2b9dcad7e6389a27d9143a23",
+      "shortCommit": "ceae72d",
+      "date": "2026-11-25",
+      "type": "fix",
+      "scope": "new-project",
+      "summary": "retry a transient astro scaffold fetch once (#509)",
+      "breaking": false,
+      "files": ["CHANGELOG.md", "skills/core-engine/new-project/scripts/new-project.ts"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": false,
+          "status": "not-needed",
+          "docs": [],
+          "evidence": "no audience impact detected"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.2",
+      "createdAt": "2026-11-25T04:18:09.459Z"
     }
   ]
 }
