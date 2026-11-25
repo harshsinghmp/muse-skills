@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.1)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.2)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.1/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.2/scripts/install.sh | bash
 #
 # Supply-chain overrides:
 #   MUSE_SKILLS_REF=<tag>     install from this git tag (default: the latest release)
@@ -20,13 +20,34 @@
 
 set -euo pipefail
 
-ORIGINAL_PWD="$(pwd)"
+ORIGINAL_PWD="$(pwd -P)"
+
+# Resolve an absolute path physically. Existing components (including a final
+# symlink) are resolved with `cd -P`; a non-existent tail is appended to the
+# resolved parent, so a symlinked ancestor cannot escape the prefix check.
+physical_path() {
+  local target="$1"
+  if [ -d "$target" ]; then
+    (cd "$target" 2>/dev/null && pwd -P)
+    return
+  fi
+  local parent base
+  parent="$(dirname "$target")"
+  base="$(basename "$target")"
+  if [ "$parent" = "$target" ]; then
+    printf '%s
+' "$target"
+    return
+  fi
+  printf '%s/%s
+' "$(physical_path "$parent")" "$base"
+}
 
 # Default to the LATEST published release; PINNED_REF is only the fallback when
 # the releases API is unreachable, and is the version this installer was cut
 # from. Whichever tag is chosen is still verified against that release's
 # checksums asset, so "latest" never means "unverified".
-PINNED_REF="v8.8.1"
+PINNED_REF="v8.8.2"
 LATEST_REF=""
 if [ -z "${MUSE_SKILLS_REF:-}" ]; then
   LATEST_REF="$(curl -fsSL --max-time 10 \
@@ -47,7 +68,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.1)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.2)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 
@@ -335,6 +356,7 @@ if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
   else
     RESOLVED_PROJECT_DIR="${ORIGINAL_PWD}/${NEW_PROJECT_DIR}"
   fi
+  RESOLVED_PROJECT_DIR="$(physical_path "$RESOLVED_PROJECT_DIR")"
 
   case "$RESOLVED_PROJECT_DIR" in
     "$ORIGINAL_PWD"|"$ORIGINAL_PWD"/*) ;;

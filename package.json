@@ -108,7 +108,7 @@
     "change:skill": "bun scripts/change-skill.ts"
   },
   "type": "module",
-  "version": "8.8.1",
+  "version": "8.8.2",
   "devDependencies": {
     "@biomejs/biome": "2.6.9",
     "bun-types": "1.4.5",

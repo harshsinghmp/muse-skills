@@ -30,8 +30,27 @@ export interface ReleaseFacts {
   changelogHeading: boolean;
   notesHeading: boolean;
   notesCompareLink: boolean;
+  notesPlaceholders: string[];
   ledgerTag: string | null;
 }
+
+/** Only the current tag's section matters; older releases may quote history. */
+function releaseNotesSection(notes: string, tag: string): string {
+  const start = notes.indexOf(`Muse Skills ${tag}`);
+  if (start === -1) return "";
+  const next = notes.indexOf("\n# ", start);
+  return next === -1 ? notes.slice(start) : notes.slice(start, next);
+}
+
+const NOTE_PLACEHOLDERS = [
+  "<one line for humans>",
+  "<Patch|Minor>",
+  "<N> automated tests",
+  "<F> test files",
+  "<headline>",
+  "<what changed, and the evidence.>",
+  "| <n> | **<n>** |",
+];
 
 export function checkReleaseReady(facts: ReleaseFacts): string[] {
   const issues: string[] = [];
@@ -55,6 +74,9 @@ export function checkReleaseReady(facts: ReleaseFacts): string[] {
   if (!facts.changelogHeading) issues.push(`CHANGELOG.md has no '## [${version}]' heading`);
   if (!facts.notesHeading) issues.push(`RELEASE_NOTES.md has no 'Muse Skills ${facts.tag}' heading`);
   if (!facts.notesCompareLink) issues.push(`RELEASE_NOTES.md is missing the ...${facts.tag} compare link`);
+  if (facts.notesPlaceholders.length > 0) {
+    issues.push(`RELEASE_NOTES.md still contains placeholders: ${facts.notesPlaceholders.join(", ")}`);
+  }
   if (facts.ledgerTag !== facts.tag) {
     issues.push(`docs ledger is stamped ${facts.ledgerTag ?? "not at all"}, expected ${facts.tag}`);
   }
@@ -88,6 +110,7 @@ export function collectFacts(tagOverride = ""): ReleaseFacts {
     changelogHeading: changelog.includes(`## [${version}]`),
     notesHeading: notes.includes(`Muse Skills ${tag}`),
     notesCompareLink: notes.includes(`...${tag}`),
+    notesPlaceholders: NOTE_PLACEHOLDERS.filter((p) => releaseNotesSection(notes, tag).includes(p)),
     ledgerTag: ledger?.watermark?.releaseTag ?? null,
   };
 }
