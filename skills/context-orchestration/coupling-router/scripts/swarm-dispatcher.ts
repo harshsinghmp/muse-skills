@@ -245,13 +245,13 @@ export function dispatchSwarmPlan(
       waves: [],
       totalTasks: plan.tasks.length,
       completedTasks: 0,
-      failedTasks: plan.tasks.length,
+      failedTasks: 0,
       skippedTasks: 0,
       totalTokensBurned: 0,
       tokenCeiling: plan.maxTokenCeiling || 250000,
       budgetExhausted: false,
       results: [],
-      summary: `Swarm dispatch halted: ${error}`,
+      summary: `Swarm dispatch halted before execution (no task ran): ${error}`,
     };
   }
 

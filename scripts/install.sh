@@ -20,7 +20,28 @@
 
 set -euo pipefail
 
-ORIGINAL_PWD="$(pwd)"
+ORIGINAL_PWD="$(pwd -P)"
+
+# Resolve an absolute path physically. Existing components (including a final
+# symlink) are resolved with `cd -P`; a non-existent tail is appended to the
+# resolved parent, so a symlinked ancestor cannot escape the prefix check.
+physical_path() {
+  local target="$1"
+  if [ -d "$target" ]; then
+    (cd "$target" 2>/dev/null && pwd -P)
+    return
+  fi
+  local parent base
+  parent="$(dirname "$target")"
+  base="$(basename "$target")"
+  if [ "$parent" = "$target" ]; then
+    printf '%s
+' "$target"
+    return
+  fi
+  printf '%s/%s
+' "$(physical_path "$parent")" "$base"
+}
 
 # Default to the LATEST published release; PINNED_REF is only the fallback when
 # the releases API is unreachable, and is the version this installer was cut
@@ -335,6 +356,7 @@ if [ "$DO_NEW_PROJECT" = true ] && [ -n "$NEW_PROJECT_DIR" ]; then
   else
     RESOLVED_PROJECT_DIR="${ORIGINAL_PWD}/${NEW_PROJECT_DIR}"
   fi
+  RESOLVED_PROJECT_DIR="$(physical_path "$RESOLVED_PROJECT_DIR")"
 
   case "$RESOLVED_PROJECT_DIR" in
     "$ORIGINAL_PWD"|"$ORIGINAL_PWD"/*) ;;

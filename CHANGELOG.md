@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Low-severity follow-ups** (`new-project`, `install.sh`, `coupling-router`, closes #505): framework staging directories use `mkdtemp` instead of predictable `Date.now()` names; the installer resolves symlinks in the nearest existing ancestor before the new-project containment check; and an invalid swarm plan reports zero executed tasks (not every planned task as failed) and names the defective task.
+
 ## [8.8.1] - 2026-11-24
 
 ### Fixed
