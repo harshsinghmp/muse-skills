@@ -3725,24 +3725,31 @@ async function main() {
       if (config.framework === "astro") {
         const stagingParent = mkdtempSync(join(os.tmpdir(), "astro-scaffold-"));
         const stagingDir = join(stagingParent, "app");
-        const create = spawnSync(
-          "bun",
-          [
-            "create",
-            "astro@latest",
-            stagingDir,
-            "--template",
-            "minimal",
-            "--yes",
-            "--no-git",
-            skipInstall ? "--no-install" : "--install",
-          ],
-          {
-            stdio: "inherit",
-          },
-        );
+        const createAstro = () =>
+          spawnSync(
+            "bun",
+            [
+              "create",
+              "astro@latest",
+              stagingDir,
+              "--template",
+              "minimal",
+              "--yes",
+              "--no-git",
+              skipInstall ? "--no-install" : "--install",
+            ],
+            {
+              stdio: "inherit",
+            },
+          );
+        let create = createAstro();
         if (create.status !== 0) {
-          throw new Error(`bun create astro failed (exit ${create.status ?? "signal"})`);
+          rmSync(stagingParent, { recursive: true, force: true });
+          mkdirSync(stagingParent, { recursive: true });
+          create = createAstro();
+        }
+        if (create.status !== 0) {
+          throw new Error(`bun create astro failed after retry (exit ${create.status ?? "signal"})`);
         }
         const claudeMd = join(stagingDir, "CLAUDE.md");
         if (existsSync(claudeMd)) rmSync(claudeMd, { force: true });
