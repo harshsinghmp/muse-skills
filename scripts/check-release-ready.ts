@@ -34,6 +34,14 @@ export interface ReleaseFacts {
   ledgerTag: string | null;
 }
 
+/** Only the current tag's section matters; older releases may quote history. */
+function releaseNotesSection(notes: string, tag: string): string {
+  const start = notes.indexOf(`Muse Skills ${tag}`);
+  if (start === -1) return "";
+  const next = notes.indexOf("\n# ", start);
+  return next === -1 ? notes.slice(start) : notes.slice(start, next);
+}
+
 const NOTE_PLACEHOLDERS = [
   "<one line for humans>",
   "<Patch|Minor>",
@@ -102,7 +110,7 @@ export function collectFacts(tagOverride = ""): ReleaseFacts {
     changelogHeading: changelog.includes(`## [${version}]`),
     notesHeading: notes.includes(`Muse Skills ${tag}`),
     notesCompareLink: notes.includes(`...${tag}`),
-    notesPlaceholders: NOTE_PLACEHOLDERS.filter((p) => notes.includes(p)),
+    notesPlaceholders: NOTE_PLACEHOLDERS.filter((p) => releaseNotesSection(notes, tag).includes(p)),
     ledgerTag: ledger?.watermark?.releaseTag ?? null,
   };
 }

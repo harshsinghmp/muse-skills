@@ -1,19 +1,23 @@
-# 🏛️ Muse Skills v8.8.2 — <one line for humans>
+# 🏛️ Muse Skills v8.8.2 — Follow-up Hardening
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+> **Patch release: turns the v8.8.1 review follow-ups into enforced behavior — unique staging, physical path containment, honest invalid-plan accounting, and a release-notes placeholder gate.** 923 automated tests. 77 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
 ## 🛠️ What Changed in v8.8.2
 
-- **<headline>**: <what changed, and the evidence.>
+- **Unique framework staging** (`new-project`): the Instatic, Aria Builder, and Atomic Payload branches use `mkdtemp` instead of `Date.now()`-suffixed names, so parallel runs cannot collide or be predicted.
+- **Physical path containment** (`install.sh`): `physical_path` resolves symlinks in the nearest existing ancestor (and a final symlink) with `cd -P` before the `--new-project` prefix check; the `..` guard still runs first.
+- **Honest invalid-plan accounting** (`swarm-dispatcher`): an invalid DAG reports `completedTasks/failedTasks/skippedTasks = 0`, `results: []`, and a summary that says no task ran and names the defect.
+- **Release preflight rejects placeholders** (`check-release-ready`): a tag cannot be cut while `RELEASE_NOTES.md` still contains the skeleton title blurb, headline bullet, or placeholder test-count cells.
+- **Scaffold fetch retry** (`new-project`): `bun create astro` gets one clean retry with a fresh staging directory after a failed registry fetch; the scaffold simulation no longer flakes the release gate on a transient network error.
 
 ## 📊 Verification
 
 | Metric | v8.8.1 | v8.8.2 |
 |:---|:---|:---|
-| Automated Tests | <n> | **<n>** |
-| Test Files | <n> | **<n>** |
+| Automated Tests | 919 | **923** |
+| Test Files | 76 | **77** |
 | Test Failures | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
