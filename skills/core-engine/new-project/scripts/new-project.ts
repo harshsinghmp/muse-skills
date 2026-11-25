@@ -3797,7 +3797,7 @@ async function main() {
         cpSync(stagingDir, resolvedTarget, { recursive: true });
         rmSync(stagingParent, { recursive: true, force: true });
       } else if (config.framework === "instatic") {
-        const stagingDir = join(os.tmpdir(), `instatic-scaffold-${Date.now()}`);
+        const stagingDir = mkdtempSync(join(os.tmpdir(), "instatic-scaffold-"));
         let cloned = false;
         try {
           const res = spawnSync(
@@ -4549,7 +4549,7 @@ const PrerenderedPage = makePage(config);
       // repo untouched, ensure the Wind 4 preset, add nothing else unless asked.
       const ARIA_UPSTREAM = "https://github.com/ariabuilder/aria.git";
       if (!isDryRun) {
-        const stagingDir = join(os.tmpdir(), `aria-upstream-${Date.now()}`);
+        const stagingDir = mkdtempSync(join(os.tmpdir(), "aria-upstream-"));
         console.log(`  📦 Cloning official Aria Builder (${ARIA_UPSTREAM})...`);
         const clone = spawnSync("git", ["clone", "--depth", "1", ARIA_UPSTREAM, stagingDir], { stdio: "ignore" });
         if (clone.status === 0) {
@@ -4641,8 +4641,7 @@ const PrerenderedPage = makePage(config);
       // bundled scaffold, and merge it in untouched — skip-if-exists so engine
       // governance files are never overwritten.
       if (!isDryRun) {
-        const stagingParent = join(os.tmpdir(), `atomic-payload-pack-${Date.now()}`);
-        mkdirSync(stagingParent, { recursive: true });
+        const stagingParent = mkdtempSync(join(os.tmpdir(), "atomic-payload-pack-"));
         console.log("  📦 Fetching official Atomic Payload template (npm pack @pro-laico/create-atomic-payload)...");
         let scaffoldSrc: string | null = null;
         const pack = spawnSync(
