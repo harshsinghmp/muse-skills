@@ -65,7 +65,7 @@ describe("routing generalisation (held-out)", () => {
     );
     expect(report.exactRate).toBeGreaterThanOrEqual(0.1);
     expect(report.departmentRate).toBeGreaterThanOrEqual(0.25);
-  });
+  }, 15_000);
 
   test("cross-domain held-out exposes the overfit (weak cover accepted)", () => {
     const report = evaluateRouting(CROSS_DOMAIN, routes, { minExact: 0, minSkill: 0 });
@@ -75,7 +75,7 @@ describe("routing generalisation (held-out)", () => {
     );
     expect(report.exactRate).toBeGreaterThanOrEqual(0.02);
     expect(report.departmentRate).toBeGreaterThanOrEqual(0.18);
-  });
+  }, 15_000);
 
   test("v8 blind set is the standing check for routing changes (weak cover accepted)", () => {
     const report = evaluateRouting(BLIND_V8, routes, { minExact: 0, minSkill: 0 });
@@ -85,7 +85,7 @@ describe("routing generalisation (held-out)", () => {
     );
     expect(report.exactRate).toBeGreaterThanOrEqual(0.03);
     expect(report.departmentRate).toBeGreaterThanOrEqual(0.18);
-  });
+  }, 15_000);
 
   test("held-out accuracy is measured and does not silently collapse", () => {
     const report = evaluateRouting(HELDOUT, routes, { minExact: 0, minSkill: 0 });

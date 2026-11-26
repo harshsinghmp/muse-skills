@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = join(import.meta.dir, "..");
@@ -53,6 +54,16 @@ describe("verify — one command for every gate", () => {
 });
 
 describe("cut-release — refuses rather than guessing", () => {
+  test("checks dependency freshness before creating the release branch", () => {
+    const source = readFileSync(join(ROOT, "scripts", "cut-release.ts"), "utf8");
+    const deps = source.indexOf('step(state, "deps"');
+    const branch = source.indexOf('step(state, "branch"');
+    expect(deps).toBeGreaterThan(-1);
+    expect(deps).toBeLessThan(branch);
+    expect(source).toContain("check:deps");
+    expect(source).toContain("refresh pins before cutting");
+  });
+
   test("requires a version argument", () => {
     const result = run("scripts/cut-release.ts", []);
     expect(result.status).not.toBe(0);
