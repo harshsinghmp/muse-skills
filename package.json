@@ -108,13 +108,13 @@
     "change:skill": "bun scripts/change-skill.ts"
   },
   "type": "module",
-  "version": "8.8.2",
+  "version": "8.8.3",
   "devDependencies": {
     "@biomejs/biome": "2.6.9",
     "bun-types": "1.4.5",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "musememory": "3.4.4"
+    "musememory": "3.4.5"
   }
 }

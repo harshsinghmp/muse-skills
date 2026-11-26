@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.3] - 2026-11-26
+
+### Fixed
+
+- **Scaffold clone/pack retries** (`new-project`): Aria Builder and Instatic `git clone` and Atomic Payload `npm pack` each get one clean retry with a fresh staging directory when the first fetch fails; the offline fallbacks remain the final fallback.
+- **Routing held-out timeout** (`tests/routing-heldout.test.ts`): the measured engineering, cross-domain, and v8 held-out cases get an explicit 15 s budget, so a loaded runner cannot fail them at the 5 s default.
+- **Pre-cut dependency check** (`scripts/cut-release.ts`): `release:cut` runs `check:deps` before creating the release branch and stops with the failing dependency instead of discovering drift after the branch exists.
+- **Dependency refresh**: `musememory` `3.4.4 → 3.4.5`, exact pin kept; `check:deps` tracks it.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.2...v8.8.3
+
 ## [8.8.2] - 2026-11-25
 
 ### Fixed

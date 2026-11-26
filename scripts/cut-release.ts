@@ -140,7 +140,22 @@ console.log(`Cutting ${tag} (was v${previous}) on ${today}\n`);
 const state: CutState = resumed ?? { version, previous, branch: `release/${tag}`, done: [] };
 saveState(state);
 
-// ── 1. Branch ────────────────────────────────────────────────────────────────
+// ── 1. Dependency freshness ──────────────────────────────────────────────────
+step(state, "deps", () => {
+  console.log("Checking direct dependencies before creating the release branch…");
+  const result = Bun.spawnSync(["bun", "run", "check:deps"], {
+    cwd: ROOT,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const out = `${result.stdout.toString()}${result.stderr.toString()}`.trim();
+  if (!result.success) {
+    fail(`dependency freshness check failed — refresh pins before cutting:\n${out}`);
+  }
+  console.log("✅ dependencies current");
+});
+
+// ── 2. Branch ────────────────────────────────────────────────────────────────
 step(state, "branch", () => {
   if (run("git", ["branch", "--show-current"]) !== `release/${tag}`) {
     run("git", ["checkout", "-b", `release/${tag}`, "dev"], true);
