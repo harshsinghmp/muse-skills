@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Release notes are drafted from the ledger** (`scripts/cut-release.ts`, `scripts/release-notes.ts`): the cut turns every unshipped docs point into a bullet (summary, commit, type, scope), leaving only the human title, blurb, and test counts.
+- **Ledger marks require evidence** (`updatedocs --mark`): `--mark` now requires `--docs` and `--evidence <phrase>`, and the phrase must actually appear in a named doc. A status flip alone can no longer claim documentation.
+
 ## [8.8.3] - 2026-11-26
 
 ### Fixed
