@@ -1,19 +1,22 @@
-# 🏛️ Muse Skills v8.8.3 — <one line for humans>
+# 🏛️ Muse Skills v8.8.3 — Reliability Release
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+> **Patch release: removes the remaining release-gate flakes — broader scaffold retries, a real budget for the measured routing gate, and a dependency check before a release branch exists.** 924 automated tests. 77 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
 ## 🛠️ What Changed in v8.8.3
 
-- **<headline>**: <what changed, and the evidence.>
+- **Scaffold clone/pack retries** (`new-project`): Aria Builder and Instatic `git clone` and Atomic Payload `npm pack` each retry once with a fresh staging directory; the offline fallbacks remain the final fallback. The Astro create retry shipped in v8.8.2.
+- **Routing held-out budget** (`tests/routing-heldout.test.ts`): the measured engineering, cross-domain, and v8 held-out cases have an explicit 15 s budget instead of the 5 s default. Cross-domain had run 5.15 s under parallel load with no code regression.
+- **Pre-cut dependency check** (`scripts/cut-release.ts`): `release:cut` now runs `check:deps` before creating the release branch and stops with the failing dependency. v8.8.1 and v8.8.2 discovered drift only after the branch existed.
+- **Dependency refresh**: `musememory` `3.4.4 → 3.4.5`, exact pin kept; `check:deps` reports it current.
 
 ## 📊 Verification
 
 | Metric | v8.8.2 | v8.8.3 |
 |:---|:---|:---|
-| Automated Tests | <n> | **<n>** |
-| Test Files | <n> | **<n>** |
+| Automated Tests | 923 | **924** |
+| Test Files | 77 | **77** |
 | Test Failures | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
