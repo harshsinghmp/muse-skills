@@ -4,11 +4,18 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Scaffold clone/pack retries** (`new-project`): Aria Builder and Instatic `git clone` and Atomic Payload `npm pack` each get one clean retry with a fresh staging directory when the first fetch fails; the offline fallbacks remain the final fallback.
+- **Routing held-out timeout** (`tests/routing-heldout.test.ts`): the measured engineering, cross-domain, and v8 held-out cases get an explicit 15 s budget, so a loaded runner cannot fail them at the 5 s default.
+- **Pre-cut dependency check** (`scripts/cut-release.ts`): `release:cut` runs `check:deps` before creating the release branch and stops with the failing dependency instead of discovering drift after the branch exists.
+- **Dependency refresh**: `musememory` `3.4.4 → 3.4.5`, exact pin kept; `check:deps` tracks it.
+
 ## [8.8.2] - 2026-11-25
 
 ### Fixed
 
-- **Scaffold network retries** (`new-project`): Astro create, Aria/Instatic clone, and Atomic Payload `npm pack` each get one clean retry with a fresh staging directory when the first fetch fails, so a transient network error no longer fails the scaffold simulation.
+- **Scaffold fetch retry** (`new-project`): `bun create astro` gets one clean retry with a fresh staging directory when the first registry fetch fails, so a transient network error no longer fails the whole scaffold simulation.
 - **Low-severity follow-ups** (`new-project`, `install.sh`, `coupling-router`, closes #505): framework staging directories use `mkdtemp` instead of predictable `Date.now()` names; the installer resolves symlinks in the nearest existing ancestor before the new-project containment check; and an invalid swarm plan reports zero executed tasks (not every planned task as failed) and names the defective task.
 - **Release preflight rejects placeholder notes** (`scripts/check-release-ready.ts`): the gate now refuses `RELEASE_NOTES.md` while the skeleton tokens (`<one line for humans>`, `<headline>`, `<N> automated tests`, `<n>` table cells) remain, so a tag cannot be cut with unfilled notes. The scan is scoped to the current release section, so older notes may quote the tokens; the v8.8.1 cut hit this manually, and the gate makes it mechanical.
 
