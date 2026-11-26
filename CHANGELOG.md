@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Held-out budget to 30 s** (`tests/routing-heldout.test.ts`): the cross-domain case ran 15.3 s under parallel `verify`, so the 15 s budget still timed out. The measured engineering, cross-domain, and v8 cases now use the same 30 s budget as the other slow integration tests.
+
 ### Changed
 
 - **Release notes are drafted from the ledger** (`scripts/cut-release.ts`, `scripts/release-notes.ts`): the cut turns every unshipped docs point into a bullet (summary, commit, type, scope), leaving only the human title, blurb, and test counts.
