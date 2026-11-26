@@ -19,6 +19,9 @@ describe("low-severity follow-ups (#505)", () => {
       expect(source).toContain(`mkdtempSync(join(os.tmpdir(), "${prefix}"))`);
     }
     expect(source).not.toMatch(/`(instatic-scaffold|aria-upstream|atomic-payload-pack)-\$\{Date\.now\(\)\}/);
+    for (const retrying of ["createAstro", "cloneInstatic", "cloneAria", "packAtomic"]) {
+      expect(source).toContain(`const ${retrying} = () =>`);
+    }
   });
 
   test("the installer resolves symlinks before the new-project containment check", () => {
