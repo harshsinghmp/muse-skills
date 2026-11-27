@@ -304,6 +304,7 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | `v11` | unseen | 40 | 18 (45.0%) | 26 (65.0%) |
 | `v12` | unseen | 40 | 19 (47.5%) | 22 (55.0%) |
 | `v13` | unseen | 40 | 28 (70.0%) | 29 (72.5%) |
+| `v14` | unseen | 40 | 18 (45.0%) | 22 (55.0%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
 | `v7` | unseen | 40 | 9 (22.5%) | 10 (25.0%) |

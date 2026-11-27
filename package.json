@@ -105,6 +105,7 @@
     "check:routing:v11": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v11.json --min-exact 0 --min-skill 0",
     "check:routing:v12": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v12.json --min-exact 0 --min-skill 0",
     "check:routing:v13": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v13.json --min-exact 0 --min-skill 0",
+    "check:routing:v14": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v14.json --min-exact 0 --min-skill 0",
     "export:routing-dataset": "bun scripts/export-routing-dataset.ts",
     "route:log": "bun scripts/log-route.ts",
     "arbitrate:labels": "bun scripts/arbitrate-labels.ts",

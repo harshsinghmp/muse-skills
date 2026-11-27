@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ### Changed
 
 - **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime is on the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
+- **Fresh cross-domain held-out set** (`heldout-v14.json`): 40 new prompts written after the v13 work, scored once at **18/40 exact · 22/40 department**, and frozen without tuning.
 
 ### Fixed
 
