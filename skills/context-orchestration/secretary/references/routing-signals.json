@@ -1372,6 +1372,118 @@
         "ai-sounding",
         "tone-deaf"
       ]
+    },
+    {
+      "department": "content",
+      "mode": "ugc",
+      "boost": 9,
+      "tokens": [
+        "ugc",
+        "creators",
+        "creator"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "reporting",
+      "boost": 14,
+      "tokens": [
+        "month over month",
+        "last month"
+      ]
+    },
+    {
+      "department": "analytics",
+      "mode": "attribution-graph",
+      "boost": 10,
+      "tokens": [
+        "last-click",
+        "last click",
+        "credit split"
+      ]
+    },
+    {
+      "department": "growth",
+      "mode": "viral",
+      "boost": 10,
+      "tokens": [
+        "refer-a-friend",
+        "refer a friend",
+        "viral loop"
+      ]
+    },
+    {
+      "department": "git",
+      "mode": "conflict-resolution-and-recovery",
+      "boost": 10,
+      "tokens": [
+        "merge conflict",
+        "resolved the merge",
+        "conflict resolution"
+      ]
+    },
+    {
+      "department": "code-review",
+      "mode": "triage-matrix",
+      "boost": 10,
+      "tokens": [
+        "block the merge",
+        "blocking comments",
+        "triage comments"
+      ]
+    },
+    {
+      "department": "database",
+      "mode": "optimize",
+      "boost": 14,
+      "tokens": [
+        "query plan",
+        "slow query",
+        "explain analyze",
+        "plan"
+      ]
+    },
+    {
+      "department": "accounts",
+      "mode": "audit",
+      "boost": 9,
+      "tokens": [
+        "under-billed",
+        "underbilled",
+        "revenue leak",
+        "money leaks"
+      ]
+    },
+    {
+      "department": "devops",
+      "mode": "audit",
+      "boost": 14,
+      "tokens": [
+        "whole shape",
+        "infrastructure audit",
+        "hosting audit"
+      ]
+    },
+    {
+      "department": "relay",
+      "mode": "audit",
+      "boost": 14,
+      "tokens": [
+        "handoff quality",
+        "handoff reads",
+        "trust the handoff",
+        "trust"
+      ]
+    },
+    {
+      "department": "mobile",
+      "mode": "audit",
+      "boost": 9,
+      "tokens": [
+        "app audit",
+        "app quality",
+        "any good"
+      ]
     }
   ]
 }
