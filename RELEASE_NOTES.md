@@ -1,3 +1,31 @@
+# 🏛️ Muse Skills v8.8.4 — <one line for humans>
+
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.4
+
+- **draft notes from the ledger and require mark evidence (#514)** (`03b1c72`, feat(release)): see the CHANGELOG entry for the detailed evidence.
+- **pin P1 regressions and fix the press-release fast path (#516)** (`5ae7381`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+
+## 📊 Verification
+
+| Metric | v8.8.3 | v8.8.4 |
+|:---|:---|:---|
+| Automated Tests | <n> | **<n>** |
+| Test Files | <n> | **<n>** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.3...v8.8.4
+
 # 🏛️ Muse Skills v8.8.3 — Reliability Release
 
 > **Patch release: removes the remaining release-gate flakes — broader scaffold retries, a real budget for the measured routing gate, and a dependency check before a release branch exists.** 924 automated tests. 77 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

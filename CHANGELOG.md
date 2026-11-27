@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.4] - 2026-11-27
+
 ### Fixed
 
 - **Press release is not a growth request** (`secretary`): the fast-path rule now requires an action verb (write/draft/prepare/issue/send/publish), so a critique like "reads like a press release" routes to `humanize:audit` instead of `growth:pr`.
@@ -18,6 +20,8 @@ All notable changes to this project are documented in this file.
 
 - **Release notes are drafted from the ledger** (`scripts/cut-release.ts`, `scripts/release-notes.ts`): the cut turns every unshipped docs point into a bullet (summary, commit, type, scope), leaving only the human title, blurb, and test counts.
 - **Ledger marks require evidence** (`updatedocs --mark`): `--mark` now requires `--docs` and `--evidence <phrase>`, and the phrase must actually appear in a named doc. A status flip alone can no longer claim documentation.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.3...v8.8.4
 
 ## [8.8.3] - 2026-11-26
 
