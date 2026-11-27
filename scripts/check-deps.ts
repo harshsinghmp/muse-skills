@@ -36,7 +36,10 @@ const rows = `${outdated.stdout ?? ""}`
   .filter((cells) => cells.length === 4)
   .map(([name, current, update, latest]) => ({ name: name.replace(/ \(dev\)$/, ""), current, update, latest }));
 
-const directOutdated = rows.filter((row) => direct.has(row.name));
+// musememory is intentionally on the `latest` dist-tag: it is an owned project
+// evolving rapidly, so a patch release must not fail unrelated PRs. The runtime
+// start check below is the invariant.
+const directOutdated = rows.filter((row) => direct.has(row.name) && row.name !== "musememory");
 if (directOutdated.length > 0) {
   console.error("❌ Direct dependencies are behind the registry:");
   for (const row of directOutdated) {

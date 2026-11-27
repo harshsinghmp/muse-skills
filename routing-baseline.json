@@ -1,15 +1,45 @@
 {
-  "generatedAt": "2026-11-15",
+  "generatedAt": "2026-11-27",
   "note": "Per-distribution routing results. A change may not lower any of these; run --update deliberately and explain it in the PR.",
   "distributions": {
     "training": {
-      "exact": 162,
-      "department": 178,
+      "exact": 166,
+      "department": 182,
       "total": 247
     },
+    "regressions-v1": {
+      "exact": 12,
+      "department": 12,
+      "total": 12
+    },
     "v10": {
-      "exact": 4,
-      "department": 9,
+      "exact": 11,
+      "department": 12,
+      "total": 40
+    },
+    "v11": {
+      "exact": 18,
+      "department": 27,
+      "total": 40
+    },
+    "v12": {
+      "exact": 19,
+      "department": 22,
+      "total": 40
+    },
+    "v13": {
+      "exact": 29,
+      "department": 30,
+      "total": 40
+    },
+    "v14": {
+      "exact": 27,
+      "department": 29,
+      "total": 40
+    },
+    "v15": {
+      "exact": 6,
+      "department": 14,
       "total": 40
     },
     "v5": {
@@ -18,13 +48,13 @@
       "total": 40
     },
     "v6": {
-      "exact": 26,
-      "department": 29,
+      "exact": 27,
+      "department": 30,
       "total": 40
     },
     "v7": {
-      "exact": 2,
-      "department": 9,
+      "exact": 9,
+      "department": 10,
       "total": 40
     },
     "v8": {
@@ -34,7 +64,7 @@
     },
     "v9": {
       "exact": 2,
-      "department": 13,
+      "department": 14,
       "total": 40
     }
   }

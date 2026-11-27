@@ -131,8 +131,22 @@ describe("updatedocs documentation point ledger", () => {
     expect(checkGate.status).toBe(1);
     expect(checkGate.stdout).toContain("Documentation Point Ledger gate failed");
 
+    const noEvidence = runUpdatedocs(target, ["--mark", "DP-0002", "--audience", "developer", "--docs", "README.md"]);
+    expect(noEvidence.status).not.toBe(0);
+    expect(noEvidence.stdout).toContain("--evidence");
+
+    write(target, "README.md", `${readFileSync(join(target, "README.md"), "utf8")}\nSAML metadata endpoint.\n`);
     for (const audience of ["developer", "user", "agent"]) {
-      const marked = runUpdatedocs(target, ["--mark", "DP-0002", "--audience", audience, "--docs", "README.md"]);
+      const marked = runUpdatedocs(target, [
+        "--mark",
+        "DP-0002",
+        "--audience",
+        audience,
+        "--docs",
+        "README.md",
+        "--evidence",
+        "SAML metadata",
+      ]);
       expect(marked.status, marked.stderr).toBe(0);
     }
     const afterMark = runUpdatedocs(target, ["--checkpoint", "--json"]);

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "v11-01",
+    "prompt": "the changelog says 2.4.0 but package.json has been 2.5.0 for a week; nobody remembers what shipped",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v11-02",
+    "prompt": "our AGENTS.md contradicts the README about where standards live, and the agent keeps following the wrong one",
+    "expect": "updateagents:audit"
+  },
+  {
+    "id": "v11-03",
+    "prompt": "a hotfix went into the release branch, then got reverted on main; now both branches disagree and the next deploy is ambiguous",
+    "expect": "git:conflict-resolution-and-recovery"
+  },
+  {
+    "id": "v11-04",
+    "prompt": "this PR changes the refund helper but not the retry path that calls it; will the two still agree under a partial failure",
+    "expect": "code-review:cross-file-invariants"
+  },
+  {
+    "id": "v11-05",
+    "prompt": "four contractors, one empty repo, and no agreement on where the app, infra, and docs live",
+    "expect": "new-project:project-os-architecture"
+  },
+  {
+    "id": "v11-06",
+    "prompt": "i'm handing this to the next shift; capture what changed, what's blocked, and what to do first",
+    "expect": "relay:ambient-handoff"
+  },
+  {
+    "id": "v11-07",
+    "prompt": "the agent keeps rereading the same forty files; make it hold the task boundaries across a long session",
+    "expect": "context-anchor:attention-hygiene"
+  },
+  {
+    "id": "v11-08",
+    "prompt": "this landing page is fine but not excellent; set a bar and run blind critiques until it clears",
+    "expect": "gauntlet-loop:bar-selection-and-blind-critique"
+  },
+  {
+    "id": "v11-09",
+    "prompt": "every button on the settings page looks equally important; the destructive one is next to save",
+    "expect": "refactor:05-button-hierarchy"
+  },
+  {
+    "id": "v11-10",
+    "prompt": "pull the exact spacing, type scale, and hover states from this screenshot into our tokens",
+    "expect": "designscope:element-copy"
+  },
+  {
+    "id": "v11-11",
+    "prompt": "two repos need one shared skill but must keep separate worktrees and release cadence",
+    "expect": "coupling-router:federation"
+  },
+  {
+    "id": "v11-12",
+    "prompt": "i have five unrelated asks this morning; route them and tell me what runs first",
+    "expect": "secretary:dispatch"
+  },
+  {
+    "id": "v11-13",
+    "prompt": "the launch note cites three metrics; verify each claim against a source and label confidence",
+    "expect": "evidence-ledger:claim-verification-taxonomy"
+  },
+  {
+    "id": "v11-14",
+    "prompt": "three background jobs have been stuck since friday and nobody owns the retries",
+    "expect": "dead-letter:sweep-protocol"
+  },
+  {
+    "id": "v11-15",
+    "prompt": "the vendor says the migration is done; check the receipts before we pay",
+    "expect": "pua:receipt-verification"
+  },
+  {
+    "id": "v11-16",
+    "prompt": "my senior engineer ships slowly; separate effort from impact before the review",
+    "expect": "coach:effort-rubric"
+  },
+  {
+    "id": "v11-17",
+    "prompt": "the accessibility audit found forty issues; rank them by user harm and fix cost",
+    "expect": "audit:remediation-matrix"
+  },
+  {
+    "id": "v11-18",
+    "prompt": "we need a quarterly reset: what to kill, what to keep, and the next three bets",
+    "expect": "periodic-retreat:retreat-protocol"
+  },
+  {
+    "id": "v11-19",
+    "prompt": "the laptop is out of disk; show the caches and build dirs with sizes before deleting",
+    "expect": "clean-system-cache:candidate-catalog"
+  },
+  {
+    "id": "v11-20",
+    "prompt": "our docs sound like a chatbot wrote them; give the team a voice guide with before and after examples",
+    "expect": "humanize:style-guide"
+  },
+  {
+    "id": "v11-21",
+    "prompt": "the modal snaps open; make it feel deliberate without hurting reduced-motion users",
+    "expect": "animate:css-animations"
+  },
+  {
+    "id": "v11-22",
+    "prompt": "the new brand deck should drive the product UI, not just the logo",
+    "expect": "design:brand-immersion"
+  },
+  {
+    "id": "v11-23",
+    "prompt": "we need pipeline from fintech ops leaders; build the campaign and the exclusions",
+    "expect": "paidads:linkedin"
+  },
+  {
+    "id": "v11-24",
+    "prompt": "buyers ask chatgpt for our category; make the site answer the questions it cites",
+    "expect": "seo:aeo"
+  },
+  {
+    "id": "v11-25",
+    "prompt": "the export endpoint times out after thirty seconds and retries double the load",
+    "expect": "webdev:backend"
+  },
+  {
+    "id": "v11-26",
+    "prompt": "our app store page gets views but no installs; fix the screenshots and title",
+    "expect": "mobile:aso"
+  },
+  {
+    "id": "v11-27",
+    "prompt": "turn the launch memo into a ten-slide linkedin carousel with a clear hook",
+    "expect": "smm:carousel"
+  },
+  {
+    "id": "v11-28",
+    "prompt": "the client renewed after a bad quarter; write the story with the numbers we can defend",
+    "expect": "content:case-study"
+  },
+  {
+    "id": "v11-29",
+    "prompt": "enterprise deals touch six channels; split credit without last-click",
+    "expect": "analytics:attribution-graph"
+  },
+  {
+    "id": "v11-30",
+    "prompt": "the support inbox needs a triage agent with escalation and a human handoff",
+    "expect": "automation:agents"
+  },
+  {
+    "id": "v11-31",
+    "prompt": "ci is green locally and red on every pr after the cache change",
+    "expect": "devops:ci-diagnosis"
+  },
+  {
+    "id": "v11-32",
+    "prompt": "the design contractor ghosted mid-sprint; document the handoff and the risk",
+    "expect": "ops:vendor"
+  },
+  {
+    "id": "v11-33",
+    "prompt": "we have four hundred discord members and no reason for them to return",
+    "expect": "growth:community"
+  },
+  {
+    "id": "v11-34",
+    "prompt": "test the checkout when the payment provider drops for thirty seconds mid-flow",
+    "expect": "qa-launch:chaos"
+  },
+  {
+    "id": "v11-35",
+    "prompt": "the client's ceo wants a one-paragraph pulse: shipped, risk, next decision",
+    "expect": "client-comms:executive-pulse"
+  },
+  {
+    "id": "v11-36",
+    "prompt": "we think we know the buyer; test the problem with ten interviews before the deck",
+    "expect": "gtm:discovery"
+  },
+  {
+    "id": "v11-37",
+    "prompt": "the api is down and support is improvising; give us the external update and cadence",
+    "expect": "incident-response:communicate"
+  },
+  {
+    "id": "v11-38",
+    "prompt": "writes spike every hour and the lock wait graph is a knot",
+    "expect": "database:diagnose"
+  },
+  {
+    "id": "v11-39",
+    "prompt": "what changed in the ai coding market this quarter that affects our positioning",
+    "expect": "research:market-pulse"
+  },
+  {
+    "id": "v11-40",
+    "prompt": "we have sixty days of runway and three invoices overdue; show the next ninety days",
+    "expect": "accounts:cashflow"
+  }
+]

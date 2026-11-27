@@ -1,3 +1,155 @@
+# 🏛️ Muse Skills v8.8.5 — Routing Measured, Loop Closed
+
+> **Patch release: ships the measured routing work through a frozen v15 set, moves `musememory` to the latest dist-tag, and closes the continuous routing-iteration loop.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.5
+
+- **Routing measured through v15** (`secretary`, routing fixtures): mode and department cues raised the measured sets to v10 **11/40**, v11 **18/26**, v12 **19/22**, v13 **28/29**, and v14 **27/29** exact/department. The tuned set is **166/182**, regressions-v1 is **12/12**, and a fresh v15 set is frozen at **6/40 exact · 14/40 department**.
+- **The iteration loop is closed:** v15 is the current held-out baseline. Further routing quality work returns to the normal backlog instead of continuous set-by-set iteration.
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime uses the `latest` dist-tag, so its patch cadence no longer fails unrelated PRs on an exact pin. The dependency gate still verifies it starts.
+
+## 📊 Verification
+
+| Metric | v8.8.4 | v8.8.5 |
+|:---|:---|:---|
+| Automated Tests | 927 | **927** |
+| Test Files | 78 | **78** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
+
+# 🏛️ Muse Skills v8.8.4 — Routing Fixes, Release Automation
+
+> **Patch release: fixes the press-release fast path and adds a measured humanize cue (v10 5/40 exact, 10/40 department), pins every P1 regression, drafts release notes from the ledger, and requires evidence for a docs mark.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.4
+
+- **Press-release fast path corrected** (`secretary`): the rule now needs an action verb (write/draft/prepare/issue/send/publish), so "reads like a press release" routes to `humanize:audit` instead of `growth:pr`.
+- **Measured humanize cue** (`secretary`): phrase-level concept cues are matched against the normalized prompt; the `humanize:audit` cue lifts v10 to **5/40 exact, 10/40 department** (from 4/9) with the tuned set (162/178) and v7 (2/9) unchanged.
+- **P1 regressions pinned** (`regressions-v1.json`): every mode-pair miss from the baseline and the press-release prompt now has a fixture that asserts its department and expected route.
+- **Release notes and ledger evidence** (`release:cut`, `updatedocs --mark`): the cut materializes ledger points, then drafts note bullets; `--mark` requires `--docs` plus an `--evidence` phrase that actually appears in a named doc.
+- **Held-out budget to 30 s** (`tests/routing-heldout.test.ts`): the cross-domain case ran 15.3 s under parallel `verify`; the measured cases now use the same 30 s budget as the other slow integration tests.
+
+## 📊 Verification
+
+| Metric | v8.8.3 | v8.8.4 |
+|:---|:---|:---|
+| Automated Tests | 924 | **927** |
+| Test Files | 77 | **78** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.3...v8.8.4
+
+# 🏛️ Muse Skills v8.8.3 — Reliability Release
+
+> **Patch release: removes the remaining release-gate flakes — broader scaffold retries, a real budget for the measured routing gate, and a dependency check before a release branch exists.** 924 automated tests. 77 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.3
+
+- **Scaffold clone/pack retries** (`new-project`): Aria Builder and Instatic `git clone` and Atomic Payload `npm pack` each retry once with a fresh staging directory; the offline fallbacks remain the final fallback. The Astro create retry shipped in v8.8.2.
+- **Routing held-out budget** (`tests/routing-heldout.test.ts`): the measured engineering, cross-domain, and v8 held-out cases have an explicit 15 s budget instead of the 5 s default. Cross-domain had run 5.15 s under parallel load with no code regression.
+- **Pre-cut dependency check** (`scripts/cut-release.ts`): `release:cut` now runs `check:deps` before creating the release branch and stops with the failing dependency. v8.8.1 and v8.8.2 discovered drift only after the branch existed.
+- **Dependency refresh**: `musememory` `3.4.4 → 3.4.5`, exact pin kept; `check:deps` reports it current.
+
+## 📊 Verification
+
+| Metric | v8.8.2 | v8.8.3 |
+|:---|:---|:---|
+| Automated Tests | 923 | **924** |
+| Test Files | 77 | **77** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.2...v8.8.3
+
+# 🏛️ Muse Skills v8.8.2 — Follow-up Hardening
+
+> **Patch release: turns the v8.8.1 review follow-ups into enforced behavior — unique staging, physical path containment, honest invalid-plan accounting, and a release-notes placeholder gate.** 923 automated tests. 77 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.2
+
+- **Unique framework staging** (`new-project`): the Instatic, Aria Builder, and Atomic Payload branches use `mkdtemp` instead of `Date.now()`-suffixed names, so parallel runs cannot collide or be predicted.
+- **Physical path containment** (`install.sh`): `physical_path` resolves symlinks in the nearest existing ancestor (and a final symlink) with `cd -P` before the `--new-project` prefix check; the `..` guard still runs first.
+- **Honest invalid-plan accounting** (`swarm-dispatcher`): an invalid DAG reports `completedTasks/failedTasks/skippedTasks = 0`, `results: []`, and a summary that says no task ran and names the defect.
+- **Release preflight rejects placeholders** (`check-release-ready`): a tag cannot be cut while `RELEASE_NOTES.md` still contains the skeleton title blurb, headline bullet, or placeholder test-count cells.
+- **Scaffold fetch retry** (`new-project`): `bun create astro` gets one clean retry with a fresh staging directory after a failed registry fetch; the scaffold simulation no longer flakes the release gate on a transient network error.
+
+## 📊 Verification
+
+| Metric | v8.8.1 | v8.8.2 |
+|:---|:---|:---|
+| Automated Tests | 919 | **923** |
+| Test Files | 76 | **77** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.1...v8.8.2
+
+# 🏛️ Muse Skills v8.8.1 — Hardened Edges, Verified on Windows
+
+> **Patch release: closes the hardening findings from the suite review — review tokens, worktrees, shell hooks, webhooks, and the Windows TEMP purge — and keeps the real Windows/macOS smoke as the proof.** 919 automated tests. 76 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.1
+
+- **Windows TEMP purge actually deletes** (`clean-system-cache`): the TEMP and Recycle Bin candidates were being dropped because a bare `ASK!` tier literal was consumed by delayed expansion; the internal tier is now `IRREV`, the display keeps `ASK!`, and the delete dispatcher uses single-line branches. `.gitattributes` forces CRLF for `.cmd`/`.bat`, and the Windows smoke asserts the contents are cleared while the TEMP directory survives.
+- **Review secrets stay in one place** (`living-deliverable`): the review token lives only in a `0600` `review-token.txt`. It is no longer written to metadata, JSON output, or `wrangler` vars; the review URL renders a `<REVIEW_TOKEN>` placeholder and the CLI prints `[hidden]` unless asked to reveal it.
+- **Fail-closed runtime** (`coupling-router`, `devops`, `new-project`, `telegram`): failed `git worktree add`/`git status` calls cannot report success or get force-pruned; federation defaults to `dev` then the repo default; duplicate swarm task ids and oversized webhook bodies are rejected; an unparsable deliverable expiry returns 410; framework scaffold failures abort.
+- **Shell hooks and cross-skill contracts** (`scripts/install.sh`, `scripts/hooks/*`, `relay`, `ops`, `client-comms`, `devops`, `new-project`): installer traversal is rejected before containment; cron rejects shell metacharacters; the lease hook and secret scanner fail closed; `handoff` is a `relay` alias; devops emits a real Node template; new-project documents the generated hook.
+- **Dependency refresh**: `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept.
+
+## 📊 Verification
+
+| Metric | v8.8.0 | v8.8.1 |
+|:---|:---|:---|
+| Automated Tests | 890 | **919** |
+| Test Files | 72 | **76** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.0...v8.8.1
+
 # 🏛️ Muse Skills v8.8.0 — Real Build Artifacts, Verified on Real Platforms
 
 > **Minor release: cache cleanup now identifies build directories by their manifest and re-validates every discovery before deleting it; Windows and macOS run the cleaner in CI.** 890 automated tests. 72 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

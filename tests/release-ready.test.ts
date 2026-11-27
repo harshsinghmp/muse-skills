@@ -11,6 +11,7 @@ const GREEN: ReleaseFacts = {
   changelogHeading: true,
   notesHeading: true,
   notesCompareLink: true,
+  notesPlaceholders: [],
   ledgerTag: "v9.0.0",
 };
 
@@ -37,6 +38,13 @@ describe("release preflight", () => {
     expect(checkReleaseReady({ ...GREEN, changelogHeading: false })[0]).toContain("CHANGELOG");
     expect(checkReleaseReady({ ...GREEN, notesHeading: false })[0]).toContain("RELEASE_NOTES");
     expect(checkReleaseReady({ ...GREEN, notesCompareLink: false })[0]).toContain("compare link");
+  });
+
+  test("unfilled release-note placeholders are refused", () => {
+    const issues = checkReleaseReady({ ...GREEN, notesPlaceholders: ["<one line for humans>", "<headline>"] });
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toContain("placeholders");
+    expect(issues[0]).toContain("<one line for humans>");
   });
 
   test("the tag must be semver", () => {

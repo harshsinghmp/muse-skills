@@ -1,0 +1,194 @@
+[
+  {
+    "id": "v13-01",
+    "prompt": "the deploy bot should post a threaded summary and link the run, not a bare sha",
+    "expect": "telegram:hook"
+  },
+  {
+    "id": "v13-02",
+    "prompt": "send alerts to the on-call channel and client questions to the account channel",
+    "expect": "telegram:route"
+  },
+  {
+    "id": "v13-03",
+    "prompt": "people add to cart, get one email, then vanish; build the recovery flow",
+    "expect": "crm:abandon"
+  },
+  {
+    "id": "v13-04",
+    "prompt": "new subscribers get a welcome email and then silence; design the first fourteen days",
+    "expect": "crm:onboard"
+  },
+  {
+    "id": "v13-05",
+    "prompt": "the founder's voice, the exclusions, and the proof points need to be captured before the rebrand",
+    "expect": "brand:intake"
+  },
+  {
+    "id": "v13-06",
+    "prompt": "the buyer is a forty-five-year-old ops director, not the twenty-five-year-old developer we keep writing for",
+    "expect": "brand:persona"
+  },
+  {
+    "id": "v13-07",
+    "prompt": "scan the pull request for injection and unsafe deserialization before merge",
+    "expect": "muse-security:sast"
+  },
+  {
+    "id": "v13-08",
+    "prompt": "an uploaded file can reach a shell path; find the runtime boundary",
+    "expect": "muse-security:runtime"
+  },
+  {
+    "id": "v13-09",
+    "prompt": "turn the pricing logic into a one-pager the account executive can leave behind",
+    "expect": "sales-enablement:one-pager"
+  },
+  {
+    "id": "v13-10",
+    "prompt": "write the discovery-to-close playbook for the mid-market segment",
+    "expect": "sales-enablement:playbook"
+  },
+  {
+    "id": "v13-11",
+    "prompt": "two accounts went quiet after the champion left; flag them before renewal",
+    "expect": "retain:churn-watch"
+  },
+  {
+    "id": "v13-12",
+    "prompt": "ask the happy client for a review without sounding like a template",
+    "expect": "retain:review-ask"
+  },
+  {
+    "id": "v13-13",
+    "prompt": "we have forty tables and no idea which indexes are unused; audit the schema",
+    "expect": "database:audit"
+  },
+  {
+    "id": "v13-14",
+    "prompt": "the finance team wants cohort revenue by month without hitting the production primary",
+    "expect": "database:analytical"
+  },
+  {
+    "id": "v13-15",
+    "prompt": "signup drops at the email step; instrument the funnel and find the leak",
+    "expect": "webdev:funnel"
+  },
+  {
+    "id": "v13-16",
+    "prompt": "one api key is hammering the export endpoint; add per-tenant limits",
+    "expect": "webdev:rate-limit"
+  },
+  {
+    "id": "v13-17",
+    "prompt": "the app has grown for three years and nobody has reviewed the navigation",
+    "expect": "mobile:audit"
+  },
+  { "id": "v13-18", "prompt": "the back button exits checkout on android but not ios", "expect": "mobile:android" },
+  {
+    "id": "v13-19",
+    "prompt": "google indexes the staging domain and ignores the canonical; fix crawl signals",
+    "expect": "seo:technical"
+  },
+  {
+    "id": "v13-20",
+    "prompt": "the category page has the right words but the wrong heading structure",
+    "expect": "seo:onpage"
+  },
+  {
+    "id": "v13-21",
+    "prompt": "the facebook campaign spends on broad reach and never reaches the icp",
+    "expect": "paidads:meta"
+  },
+  {
+    "id": "v13-22",
+    "prompt": "target fintech ops leaders and exclude the students; build the linkedin campaign",
+    "expect": "paidads:linkedin"
+  },
+  {
+    "id": "v13-23",
+    "prompt": "we post randomly; build a four-week calendar with one theme per week",
+    "expect": "smm:calendar"
+  },
+  {
+    "id": "v13-24",
+    "prompt": "we get likes but no traffic; find which posts actually drive clicks",
+    "expect": "smm:analytics"
+  },
+  { "id": "v13-25", "prompt": "rewrite the homepage hero so it says what we do in one line", "expect": "content:copy" },
+  {
+    "id": "v13-26",
+    "prompt": "the feature is ready; write the launch sequence and the announcement",
+    "expect": "content:launch"
+  },
+  {
+    "id": "v13-27",
+    "prompt": "the purchase event fires twice on mobile; fix the tag setup",
+    "expect": "analytics:tracking"
+  },
+  {
+    "id": "v13-28",
+    "prompt": "ga4 says one thing, the warehouse says another; audit the property",
+    "expect": "analytics:audit"
+  },
+  {
+    "id": "v13-29",
+    "prompt": "when a typeform arrives, create the deal, notify the owner, and schedule the follow-up",
+    "expect": "automation:workflow"
+  },
+  {
+    "id": "v13-30",
+    "prompt": "the faq bot answers refund questions with the wrong policy; ground it in the docs",
+    "expect": "automation:chatbot"
+  },
+  {
+    "id": "v13-31",
+    "prompt": "every merge rebuilds the world; cache the right layers and split the pipeline",
+    "expect": "devops:cicd"
+  },
+  {
+    "id": "v13-32",
+    "prompt": "the bill doubled after the traffic spike; find the egress and the idle instances",
+    "expect": "devops:hosting"
+  },
+  {
+    "id": "v13-33",
+    "prompt": "the checkout test passes alone and fails in the suite; find the shared state",
+    "expect": "qa-launch:e2e"
+  },
+  {
+    "id": "v13-34",
+    "prompt": "define the release gate: tests, budget, and the rollback trigger",
+    "expect": "qa-launch:gate"
+  },
+  {
+    "id": "v13-35",
+    "prompt": "the request is make us faster; turn it into a scoped engagement",
+    "expect": "ops:shape"
+  },
+  {
+    "id": "v13-36",
+    "prompt": "turn the forty-minute call into decisions, owners, and dates",
+    "expect": "ops:meeting-notes"
+  },
+  {
+    "id": "v13-37",
+    "prompt": "the client says the work feels slow; collect the specifics without getting defensive",
+    "expect": "client-comms:feedback"
+  },
+  {
+    "id": "v13-38",
+    "prompt": "the account manager is leaving; hand the relationship over without losing context",
+    "expect": "client-comms:handover"
+  },
+  {
+    "id": "v13-39",
+    "prompt": "we need fifty accounts that match the icp and have a trigger event",
+    "expect": "gtm:research"
+  },
+  {
+    "id": "v13-40",
+    "prompt": "three invoices are overdue and one has the wrong po; fix the billing run",
+    "expect": "accounts:invoicing"
+  }
+]

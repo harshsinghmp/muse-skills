@@ -54,7 +54,7 @@ export const FAST_PATH_RULES: Array<{
     reason: "Statement-of-work match",
   },
   {
-    regex: /press\s+release|public\s+relations/i,
+    regex: /\b(write|draft|prepare|issue|send|publish)\b[^.!?]{0,30}\bpress\s+release\b|\bpublic\s+relations\b/i,
     department: "growth",
     mode: "pr",
     reason: "Public relations match",
@@ -418,14 +418,39 @@ export const CONCEPTS: Concept[] = [
   { department: "ops", mode: "sow", boost: 10, tokens: ["sow", "statement", "work", "schedule"] },
   { department: "paidads", mode: "meta", boost: 9, tokens: ["meta", "facebook", "instagram"] },
   { department: "paidads", mode: "retargeting", boost: 9, tokens: ["retargeting", "audience", "audiences", "stale"] },
-  { department: "updatedocs", mode: "audit", boost: 9, tokens: ["changelog", "release", "notes", "documentation"] },
+  {
+    department: "updatedocs",
+    mode: "audit",
+    boost: 14,
+    tokens: [
+      "changelog",
+      "release",
+      "notes",
+      "documentation",
+      "stale changelog",
+      "version drift",
+      "docs drift",
+      "tagged releases",
+    ],
+  },
   // Core / quality / reflection departments: the engineering long tail. Their
   // descriptions are thin, so the vocabulary comes from the work itself.
   {
     department: "context-anchor",
     mode: "task-interruption-and-recovery",
     boost: 10,
-    tokens: ["interruption", "interrupted", "paused", "derive", "drift", "resume-session"],
+    tokens: [
+      "interruption",
+      "interrupted",
+      "paused",
+      "derive",
+      "drift",
+      "resume-session",
+      "where was i",
+      "context window",
+      "switch context",
+      "park",
+    ],
   },
   {
     department: "relay",
@@ -448,7 +473,7 @@ export const CONCEPTS: Concept[] = [
   {
     department: "pua",
     mode: "receipt-verification",
-    boost: 10,
+    boost: 14,
     tokens: ["receipt", "receipts", "flaky", "unverified"],
   },
   {
@@ -461,7 +486,17 @@ export const CONCEPTS: Concept[] = [
     department: "coupling-router",
     mode: "worktree-lease-protocol",
     boost: 10,
-    tokens: ["subagent", "subagents", "worktree", "lease", "overwriting"],
+    tokens: [
+      "subagent",
+      "subagents",
+      "worktree",
+      "lease",
+      "overwriting",
+      "same file",
+      "overwrote",
+      "edit conflict",
+      "lease conflict",
+    ],
   },
   {
     department: "git",
@@ -529,24 +564,318 @@ export const CONCEPTS: Concept[] = [
   { department: "sales-enablement", mode: "playbook", boost: 9, tokens: ["demoed", "playbook", "demo", "pitch"] },
   { department: "qa-launch", mode: "chaos", boost: 10, tokens: ["chaos", "failover", "resilience", "disappears"] },
   { department: "client-comms", mode: "change", boost: 10, tokens: ["tweaks", "pushback", "timeline", "extra"] },
+  {
+    department: "humanize",
+    mode: "audit",
+    boost: 14,
+    tokens: ["reads like", "sounds like", "robotic", "ai-sounding", "tone-deaf"],
+  },
+  {
+    department: "content",
+    mode: "ugc",
+    boost: 9,
+    tokens: ["ugc", "creators", "creator"],
+  },
+  {
+    department: "analytics",
+    mode: "reporting",
+    boost: 14,
+    tokens: ["month over month", "last month"],
+  },
+  {
+    department: "analytics",
+    mode: "attribution-graph",
+    boost: 10,
+    tokens: ["last-click", "last click", "credit split"],
+  },
+  {
+    department: "growth",
+    mode: "viral",
+    boost: 10,
+    tokens: ["refer-a-friend", "refer a friend", "viral loop"],
+  },
+  {
+    department: "git",
+    mode: "conflict-resolution-and-recovery",
+    boost: 10,
+    tokens: ["merge conflict", "resolved the merge", "conflict resolution"],
+  },
+  {
+    department: "code-review",
+    mode: "triage-matrix",
+    boost: 10,
+    tokens: ["block the merge", "blocking comments", "triage comments"],
+  },
+  {
+    department: "database",
+    mode: "optimize",
+    boost: 14,
+    tokens: ["query plan", "slow query", "explain analyze", "plan"],
+  },
+  {
+    department: "accounts",
+    mode: "audit",
+    boost: 9,
+    tokens: ["under-billed", "underbilled", "revenue leak", "money leaks"],
+  },
+  {
+    department: "devops",
+    mode: "audit",
+    boost: 14,
+    tokens: ["whole shape", "infrastructure audit", "hosting audit"],
+  },
+  {
+    department: "relay",
+    mode: "audit",
+    boost: 14,
+    tokens: ["handoff quality", "handoff reads", "trust the handoff", "trust"],
+  },
+  {
+    department: "mobile",
+    mode: "audit",
+    boost: 9,
+    tokens: ["app audit", "app quality", "any good"],
+  },
+  {
+    department: "updateagents",
+    mode: "audit",
+    boost: 10,
+    tokens: ["agents md", "agent instructions", "instruction budget"],
+  },
+  {
+    department: "code-review",
+    mode: "cross-file-invariants",
+    boost: 10,
+    tokens: ["cross-file", "retry path", "partial failure"],
+  },
+  {
+    department: "new-project",
+    mode: "project-os-architecture",
+    boost: 10,
+    tokens: ["empty repo", "repository layout", "greenfield"],
+  },
+  {
+    department: "context-anchor",
+    mode: "attention-hygiene",
+    boost: 10,
+    tokens: ["reread", "rereading", "task boundaries", "long session"],
+  },
+  {
+    department: "dead-letter",
+    mode: "sweep-protocol",
+    boost: 10,
+    tokens: ["stuck", "retries", "background jobs"],
+  },
+  {
+    department: "audit",
+    mode: "remediation-matrix",
+    boost: 10,
+    tokens: ["remediation", "fix cost", "user harm"],
+  },
+  {
+    department: "periodic-retreat",
+    mode: "retreat-protocol",
+    boost: 10,
+    tokens: ["quarterly reset", "what to kill", "next bets"],
+  },
+  {
+    department: "humanize",
+    mode: "style-guide",
+    boost: 10,
+    tokens: ["voice guide", "style guide"],
+  },
+  { department: "crm", mode: "deliverability", boost: 10, tokens: ["spam", "dkim", "spf", "dmarc", "authentication"] },
+  { department: "brand", mode: "assets", boost: 10, tokens: ["brand kit", "font files", "logo files"] },
+  { department: "retain", mode: "health", boost: 10, tokens: ["silent risk", "health score", "renewal quarter"] },
+  { department: "webdev", mode: "accessibility", boost: 10, tokens: ["keyboard", "screen reader", "focus trap"] },
+  { department: "mobile", mode: "cross", boost: 10, tokens: ["ios and android", "same screen"] },
+  { department: "mobile", mode: "pwa", boost: 10, tokens: ["offline", "sync when signal"] },
+  { department: "seo", mode: "links", boost: 10, tokens: ["link profile", "backlink", "outranking"] },
+  { department: "paidads", mode: "google", boost: 10, tokens: ["brand terms", "non-brand", "google ads"] },
+  { department: "content", mode: "blog", boost: 10, tokens: ["technical blog", "postmortem", "timeline"] },
+  { department: "automation", mode: "alerts", boost: 10, tokens: ["page us", "error rate", "threshold"] },
+  { department: "devops", mode: "monitoring", boost: 10, tokens: ["outages", "signals", "monitoring"] },
+  { department: "qa-launch", mode: "evals", boost: 10, tokens: ["eval set", "evals", "confidently"] },
+  { department: "ops", mode: "legal", boost: 10, tokens: ["msa", "liability cap", "auto-renews"] },
+  { department: "gtm", mode: "founder-sales", boost: 10, tokens: ["founder", "repeatable sales motion"] },
+  { department: "telegram", mode: "notify", boost: 10, tokens: ["deploy finished", "ping"] },
+  { department: "telegram", mode: "hook", boost: 10, tokens: ["deploy bot", "threaded summary"] },
+  { department: "telegram", mode: "route", boost: 10, tokens: ["on-call channel", "route alerts", "account channel"] },
+  {
+    department: "crm",
+    mode: "onboard",
+    boost: 10,
+    tokens: ["welcome email", "first fourteen days"],
+  },
+  { department: "brand", mode: "intake", boost: 10, tokens: ["founder's voice", "proof points", "rebrand"] },
+  { department: "brand", mode: "persona", boost: 10, tokens: ["buyer is", "ops director"] },
+  { department: "muse-security", mode: "sast", boost: 10, tokens: ["injection", "deserialization", "static analysis"] },
+  {
+    department: "sales-enablement",
+    mode: "playbook",
+    boost: 10,
+    tokens: ["discovery-to-close", "playbook", "mid-market"],
+  },
+  { department: "retain", mode: "churn-watch", boost: 10, tokens: ["went quiet", "champion left"] },
+  { department: "database", mode: "audit", boost: 10, tokens: ["unused indexes", "audit the schema", "schema audit"] },
+  {
+    department: "database",
+    mode: "analytical",
+    boost: 10,
+    tokens: ["cohort revenue", "production primary", "analytical"],
+  },
+  { department: "webdev", mode: "rate-limit", boost: 10, tokens: ["per-tenant limits", "rate limit", "hammering"] },
+  {
+    department: "mobile",
+    mode: "audit",
+    boost: 10,
+    tokens: ["app navigation", "reviewed the navigation", "mobile audit"],
+  },
+  { department: "seo", mode: "technical", boost: 10, tokens: ["staging domain", "canonical", "crawl"] },
+  { department: "seo", mode: "onpage", boost: 10, tokens: ["heading structure", "category page", "h1"] },
+  { department: "smm", mode: "analytics", boost: 10, tokens: ["which posts", "drive clicks", "likes but no traffic"] },
+  { department: "content", mode: "copy", boost: 10, tokens: ["homepage hero", "one line", "rewrite"] },
+  { department: "content", mode: "launch", boost: 10, tokens: ["launch sequence", "announcement", "feature is ready"] },
+  { department: "analytics", mode: "audit", boost: 10, tokens: ["warehouse", "audit the property"] },
+  {
+    department: "automation",
+    mode: "workflow",
+    boost: 10,
+    tokens: ["typeform", "create the deal", "schedule the follow-up"],
+  },
+  { department: "automation", mode: "chatbot", boost: 10, tokens: ["faq bot", "ground it", "refund questions"] },
+  { department: "devops", mode: "cicd", boost: 10, tokens: ["rebuilds the world", "split the pipeline"] },
+  { department: "devops", mode: "hosting", boost: 10, tokens: ["egress", "idle instances", "bill doubled"] },
+  { department: "qa-launch", mode: "e2e", boost: 10, tokens: ["passes alone", "fails in the suite", "shared state"] },
+  { department: "ops", mode: "shape", boost: 10, tokens: ["scoped engagement", "make us faster", "turn it into"] },
+  {
+    department: "client-comms",
+    mode: "feedback",
+    boost: 10,
+    tokens: ["feels slow", "collect the specifics", "without getting defensive"],
+  },
+  {
+    department: "client-comms",
+    mode: "handover",
+    boost: 10,
+    tokens: ["account manager is leaving", "hand the relationship", "handover"],
+  },
+  { department: "gtm", mode: "research", boost: 10, tokens: ["match the icp", "trigger event", "fifty accounts"] },
+  { department: "accounts", mode: "invoicing", boost: 10, tokens: ["overdue", "wrong po", "billing run"] },
+  { department: "git", mode: "audit", boost: 10, tokens: ["force-push", "rewrote a release", "audit the damage"] },
+  {
+    department: "code-review",
+    mode: "security-controls",
+    boost: 10,
+    tokens: ["timing-unsafe", "token comparison", "auth change"],
+  },
+  {
+    department: "new-project",
+    mode: "client-onboarding",
+    boost: 10,
+    tokens: ["new client signed", "capture the stack", "launch constraints"],
+  },
+  {
+    department: "gauntlet-loop",
+    mode: "web-security-visual-gate",
+    boost: 10,
+    tokens: ["adversarial pass", "pen test", "upload flow"],
+  },
+  { department: "refactor", mode: "perf", boost: 10, tokens: ["re-renders", "render performance", "keystroke"] },
+  {
+    department: "designscope",
+    mode: "capture-flows",
+    boost: 10,
+    tokens: ["capture the onboarding flow", "prototype into steps", "edge cases"],
+  },
+  {
+    department: "secretary",
+    mode: "socratic-adversarial-gate",
+    boost: 10,
+    tokens: ["strongest case against", "case against", "tear it apart"],
+  },
+  {
+    department: "dead-letter",
+    mode: "record-schema",
+    boost: 10,
+    tokens: ["retry queue", "owner field", "record schema"],
+  },
+  { department: "pua", mode: "audit", boost: 10, tokens: ["completion report", "audit the claims", "screenshots"] },
+  { department: "coach", mode: "team", boost: 10, tokens: ["never retros", "build the habit", "team retro"] },
+  {
+    department: "periodic-retreat",
+    mode: "retreat-framework",
+    boost: 10,
+    tokens: ["retreat agenda", "quarterly retreat", "three decisions"],
+  },
+  { department: "humanize", mode: "patterns", boost: 10, tokens: ["ai tells", "without changing the facts"] },
+  {
+    department: "animate",
+    mode: "accessibility",
+    boost: 10,
+    tokens: ["reduced-motion", "reduced motion", "hard to follow"],
+  },
+  { department: "design", mode: "ux", boost: 10, tokens: ["redesign the flow", "same address", "checkout flow"] },
+  { department: "paidads", mode: "tiktok", boost: 10, tokens: ["short-form demand"] },
+  { department: "smm", mode: "influencer", boost: 10, tokens: ["influencer", "unbox", "creators"] },
+  { department: "content", mode: "vsl", boost: 10, tokens: ["sales video script", "ninety-second", "video script"] },
+  {
+    department: "automation",
+    mode: "rag",
+    boost: 10,
+    tokens: ["retrieval with citations", "internal assistant", "old docs"],
+  },
+  { department: "ops", mode: "sku", boost: 10, tokens: ["repeatable service", "scope and price"] },
+  { department: "gtm", mode: "outreach", boost: 10, tokens: ["first touch", "gets a reply", "accounts"] },
+  {
+    department: "incident-response",
+    mode: "retro",
+    boost: 10,
+    tokens: ["outage is over", "systemic fix", "run the retro"],
+  },
+  {
+    department: "research",
+    mode: "user-research",
+    boost: 10,
+    tokens: ["why trial users leave", "run the interviews", "user interviews"],
+  },
 ];
 
-function conceptBoost(department: string, promptTokens: string[]): number {
+function normalizedPhrase(prompt: string): string {
+  return ` ${prompt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()} `;
+}
+
+function conceptMatches(concept: Concept, promptTokens: string[], normalized: string): boolean {
+  return concept.tokens.some((token) =>
+    token.includes(" ")
+      ? normalized.includes(` ${token} `)
+      : promptTokens.some((candidate) => stemsMatch(candidate, token)),
+  );
+}
+
+function conceptBoost(department: string, promptTokens: string[], prompt: string): number {
   let boost = 0;
+  const normalized = normalizedPhrase(prompt);
   for (const concept of CONCEPTS) {
     if (concept.department !== department) continue;
-    if (concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) {
-      boost += concept.boost;
-    }
+    if (conceptMatches(concept, promptTokens, normalized)) boost += concept.boost;
   }
   return boost;
 }
 
-function conceptMode(department: string, promptTokens: string[]): { mode: string; boost: number } | undefined {
+function conceptMode(
+  department: string,
+  promptTokens: string[],
+  prompt: string,
+): { mode: string; boost: number } | undefined {
   let best: { mode: string; boost: number } | undefined;
+  const normalized = normalizedPhrase(prompt);
   for (const concept of CONCEPTS) {
     if (concept.department !== department || !concept.mode) continue;
-    if (!concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) continue;
+    if (!conceptMatches(concept, promptTokens, normalized)) continue;
     if (!best || concept.boost > best.boost) best = { mode: concept.mode, boost: concept.boost };
   }
   return best;
@@ -1003,7 +1332,7 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       if (rule.confidence !== "hint" || rule.department !== entry.skill) continue;
       if (rule.regex.test(prompt)) hintBoost += 10;
     }
-    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens) + hintBoost;
+    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens, prompt) + hintBoost;
     score += intent;
     return { entry, score, modeSignal, intent };
   });
@@ -1026,7 +1355,7 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
   const index = getIndex();
   const promptTokens = tokenize(prompt);
   const intent = intentMode(entry.skill, prompt);
-  const concept = conceptMode(entry.skill, promptTokens);
+  const concept = conceptMode(entry.skill, promptTokens, prompt);
   const preferred = intent ?? concept?.mode ?? DEFAULT_MODE[entry.skill];
   let bestMode: string | undefined;
   let bestScore = 0;
