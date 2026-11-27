@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **v13-driven cues** (`secretary`): general cues for deploy/ping hooks, alert routing, welcome sequences, brand intake/persona, SAST, playbooks, churn watch, schema/analytics audits, rate limits, crawl/on-page signals, social analytics, copy/launch, GA4 audits, workflow/chatbot automation, CI/hosting, E2E shared state, scoped engagements, client feedback/handover, GTM research, and invoicing take v13 from its frozen **12/40 exact · 18/40 department** to **28/40 · 29/40**. The tuned set stays **166/182**, v5/v6 stay 21/28 and 26/29 after removing two regressing tokens, v7 moves to 9/10, and regressions remain 12/12. v13 is now a development set; a fresh v14 is required for the next honest number.
+
 - **v12-driven cues** (`secretary`): general cues for deliverability, brand kits, silent renewal risk, keyboard access, cross-platform/PWA, link profiles, brand vs non-brand ads, postmortems, alert thresholds, outage signals, evals, MSAs, founder-led sales, and deploy pings take v12 from its frozen **11/40 exact · 17/40 department** to **19/40 · 22/40**, with v10/v11/v7 and regressions unchanged and the tuned set at **166/182** (from 163/179, no tuned edits). v12 is now a development set; a fresh v13 is required for the next honest held-out number.
 
 - **Dependency refresh**: `musememory` `3.4.5 → 3.4.6`, exact pin kept; `check:deps` tracks it.
