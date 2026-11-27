@@ -27,6 +27,11 @@
       "department": 22,
       "total": 40
     },
+    "v13": {
+      "exact": 28,
+      "department": 29,
+      "total": 40
+    },
     "v5": {
       "exact": 21,
       "department": 28,
@@ -38,8 +43,8 @@
       "total": 40
     },
     "v7": {
-      "exact": 8,
-      "department": 9,
+      "exact": 9,
+      "department": 10,
       "total": 40
     },
     "v8": {

@@ -6,9 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **v13-driven cues** (`secretary`): general cues for deploy/ping hooks, alert routing, welcome sequences, brand intake/persona, SAST, playbooks, churn watch, schema/analytics audits, rate limits, crawl/on-page signals, social analytics, copy/launch, GA4 audits, workflow/chatbot automation, CI/hosting, E2E shared state, scoped engagements, client feedback/handover, GTM research, and invoicing take v13 from its frozen **12/40 exact · 18/40 department** to **28/40 · 29/40**. The tuned set stays **166/182**, v5/v6 stay 21/28 and 26/29 after removing two regressing tokens, v7 moves to 9/10, and regressions remain 12/12. v13 is now a development set; a fresh v14 is required for the next honest number.
+
 - **v12-driven cues** (`secretary`): general cues for deliverability, brand kits, silent renewal risk, keyboard access, cross-platform/PWA, link profiles, brand vs non-brand ads, postmortems, alert thresholds, outage signals, evals, MSAs, founder-led sales, and deploy pings take v12 from its frozen **11/40 exact · 17/40 department** to **19/40 · 22/40**, with v10/v11/v7 and regressions unchanged and the tuned set at **166/182** (from 163/179, no tuned edits). v12 is now a development set; a fresh v13 is required for the next honest held-out number.
 
-- **Dependency refresh**: `musememory` `3.4.5 → 3.4.6`, exact pin kept; `check:deps` tracks it.
+- **Dependency refresh**: `musememory` `3.4.5 → 3.4.7`, exact pin kept; `check:deps` tracks it.
 
 - **v11-driven department/mode cues** (`secretary`): general cues for changelog drift, AGENTS drift, cross-file invariants, empty-repo layout, attention hygiene, stuck retries, remediation ranking, quarterly resets, and voice guides take v11 from **9/40 to 18/40 exact** and **17/40 to 26/40 department**; v10 moves to 11/12 and the tuned set to **163/179**, with no tuned-file edits. v11 is now a development set; the next honest number needs a fresh held-out set.
 

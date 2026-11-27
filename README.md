@@ -303,14 +303,15 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | `v10` | unseen | 40 | 11 (27.5%) | 12 (30.0%) |
 | `v11` | unseen | 40 | 18 (45.0%) | 26 (65.0%) |
 | `v12` | unseen | 40 | 19 (47.5%) | 22 (55.0%) |
+| `v13` | unseen | 40 | 28 (70.0%) | 29 (72.5%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
-| `v7` | unseen | 40 | 8 (20.0%) | 9 (22.5%) |
+| `v7` | unseen | 40 | 9 (22.5%) | 10 (25.0%) |
 | `v8` | unseen | 40 | 3 (7.5%) | 10 (25.0%) |
 | `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
-**Mode coverage**: 156 of 411 routable modes (38%) carry a curated routing signal; the other 255 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+**Mode coverage**: 169 of 411 routable modes (41%) carry a curated routing signal; the other 242 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
 
 Measured 2026-11-27. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
