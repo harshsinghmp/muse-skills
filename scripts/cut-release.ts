@@ -193,6 +193,9 @@ step(state, "changelog", () => {
 
 // ── 4. Release notes skeleton ────────────────────────────────────────────────
 step(state, "notes", () => {
+  // Materialize points from commits before drafting. The ledger step below
+  // marks them shipped; drafting must happen before that.
+  run("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", ".", "--ledger"], true);
   const notes = read("RELEASE_NOTES.md");
   const ledgerPath = path.join(ROOT, ".docs-ledger.json");
   const ledger = fs.existsSync(ledgerPath)
