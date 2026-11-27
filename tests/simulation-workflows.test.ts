@@ -1278,7 +1278,7 @@ describe("🔬 Workflow Simulation & Integration Engine", () => {
       expect(designSkill).toContain("visual storytelling");
       expect(designSkill).toContain("references/story.md");
       expect(designSkill).toContain(
-        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides]"',
+        'argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides|scope]"',
       );
 
       const storyRef = fs.readFileSync(

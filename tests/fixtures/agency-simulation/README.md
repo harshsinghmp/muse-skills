@@ -11,7 +11,7 @@ if the union of scenario skills diverges from `skills.json`.
 | --- | --- | --- | --- |
 | `ecommerce.json` | E-commerce | Northwind Supply Co. | Brand → design/motion/copy/humanize/SEO → funnel (critical seam) → ads/analytics/CRM/automation/Telegram/mobile → QA → handover → invoicing |
 | `b2b-saas.json` | B2B SaaS | Helios Analytics | Research/evidence → brief/demo → wireframe → rebuild (critical seam) → migration/CI/CD → review/refactor/git → SAST (critical seam) → runbook/QA/audit → status → pricing |
-| `productized-agency.json` | Turnkey productized agency | Beacon Studio | Onboarding/scaffold/context sync → dispatch/swarm/anchor/relay/dead-letter → intake/designscope → positioning/pua (critical seam) → content/gauntlet/social/analytics → check-in → P&L → retreat → coaching |
+| `productized-agency.json` | Turnkey productized agency | Beacon Studio | Onboarding/scaffold/context sync → dispatch/swarm/anchor/relay/dead-letter → intake/design:scope → positioning/pua (critical seam) → content/gauntlet/social/analytics → check-in → P&L → retreat → coaching |
 
 ## Schema
 

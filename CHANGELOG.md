@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **`designscope` merged into `design:scope`** (breaking, 46 → 45 skills): the seven extraction workflows now live in one `design` mode (`references/scope.md`) with their scripts under `design/scripts/scope/`. The retired skill and its seven mode commands are gone; the registry, dispatch, README, llms, routing fixtures, agency simulation, and tests are updated. Command surface: **460 per harness** (45 skills + 405 modes + 10 aliases).
+
 ### Fixed
 
 - **Reference step numbering** (12 reference files): repaired duplicate and backwards top-level step numbers in `content/email`, `content/blog`, `mobile/android`, `mobile/pwa`, `smm/content`, `ops/proposal`, `ops/onboarding`, `gtm/list`, `gtm/handover`, `code-review/receiving-feedback`, `database/vector-search`, and `accounts/tax-compliance`. Text is unchanged; only the numbers are sequential.

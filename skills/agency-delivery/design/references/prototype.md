@@ -35,9 +35,9 @@ Clickable mock of the tested path only (real copy, fake data; motion only if the
 ## Routing
 
 - Locked direction → `webdev` (prototype/spec/implement modes) rebuilds from the locked direction.
-- Tokens must be extracted from a live reference first → `designscope`, then return here (never re-extract here).
+- Tokens must be extracted from a live reference first → `design`, then return here (never re-extract here).
 - Structure questions → `wireframe`/`ux`; visual polish of approved UI → `ui`; motion choreography → `animate`.
 
 ## Sources
 
-pocock prototype-UI branch (to-spec/prototype/incremental program: disposable mock before build); hallmark study-verb/direction-lock patterns (enrich, not duplicate); deepen (design-quality bar for the locked direction); designscope (token-extraction DNA — referenced, never duplicated here). When a cited source conflicts with a default above, the source wins — record the override and why.
+pocock prototype-UI branch (to-spec/prototype/incremental program: disposable mock before build); hallmark study-verb/direction-lock patterns (enrich, not duplicate); deepen (design-quality bar for the locked direction); design (token-extraction DNA — referenced, never duplicated here). When a cited source conflicts with a default above, the source wins — record the override and why.

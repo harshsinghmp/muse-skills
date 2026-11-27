@@ -58,7 +58,7 @@ When conflicting instructions arise, skills must yield according to the followin
                             ▼
 ┌────────────────────────────────────────────────────────┐
 │ Tier 4: Domain Implementation Specialists              │
-│ (refactor-ui, designscope, updatedocs, git)            │
+│ (refactor-ui, design, updatedocs, git)            │
 └───────────────────────────┬────────────────────────────┘
                             │ Dominates feature execution
                             ▼

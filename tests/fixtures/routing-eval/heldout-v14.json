@@ -47,7 +47,7 @@
   {
     "id": "v14-10",
     "prompt": "capture the onboarding flow from this prototype into steps and edge cases",
-    "expect": "designscope:capture-flows"
+    "expect": "design:scope"
   },
   {
     "id": "v14-11",

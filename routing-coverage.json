@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-27",
-  "total": 411,
-  "curated": 184,
+  "total": 405,
+  "curated": 182,
   "nameOnly": [
     "accounts:cashflow",
     "accounts:pricing",
@@ -87,10 +87,6 @@
     "design:story",
     "design:uikit",
     "design:wireframe",
-    "designscope:audit",
-    "designscope:element-copy",
-    "designscope:layout-tree-extraction",
-    "designscope:output-template",
     "devops:ci-diagnosis",
     "devops:cloudflare",
     "devops:edge-mesh",

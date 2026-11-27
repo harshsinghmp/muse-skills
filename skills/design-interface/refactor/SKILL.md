@@ -11,21 +11,21 @@ platforms: [macos, linux, windows]
 category: design-interface
 metadata:
   skill_orchestration:
-    pre: ["designscope"]
+    pre: ["design"]
     post: ["code-review"]
     optional: ["animate", "gauntlet-loop"]
   category: design-interface
   priority: 10
   aliases: ["refactor-ui", "refactoring", "code-refactor", "ui-polish", "ui-audit", "architecture-refactor", "perf-refactor", "database-refactor", "refactor-anything"]
-  suggested_skills: ["designscope", "gauntlet-loop", "code-review", "animate", "database"]
+  suggested_skills: ["design", "gauntlet-loop", "code-review", "animate", "database"]
   hermes:
     tags: ["refactor", "refactor-ui", "code-refactoring", "architecture", "performance", "database-refactoring", "ui-design", "tailwind", "typography", "color-palette", "visual-hierarchy", "accessibility", "clean-code", "wcag-2.2", "container-queries", "ui-sweep", "polish"]
-    related_skills: ["designscope", "gauntlet-loop", "code-review", "animate", "database"]
-    suggested_skills: ["designscope", "gauntlet-loop", "code-review", "animate", "database"]
+    related_skills: ["design", "gauntlet-loop", "code-review", "animate", "database"]
+    suggested_skills: ["design", "gauntlet-loop", "code-review", "animate", "database"]
     requires_tools: ["view_file", "replace_file_content", "write_to_file", "run_command"]
   openclaw:
     category: design-interface
-    suggested_skills: ["designscope", "gauntlet-loop", "code-review", "animate", "database"]
+    suggested_skills: ["design", "gauntlet-loop", "code-review", "animate", "database"]
     primary_triggers: ["refactor this UI", "refactor this function", "clean up this code", "refactor architecture", "optimize performance", "refactor schema", "make pages consistent", "final polish before launch"]
     requires_tools: ["view_file", "replace_file_content", "write_to_file", "run_command"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]

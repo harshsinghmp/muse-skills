@@ -24,7 +24,6 @@ const EXPECTED_ORDERED_SKILLS = [
   "context-anchor",
   "gauntlet-loop",
   "refactor",
-  "designscope",
   "coupling-router",
   "secretary",
   "evidence-ledger",
@@ -81,15 +80,15 @@ describe("Muse Skills Registry & Catalog Integrity (TDD)", () => {
 
   test("skills.json preserves canonical ordering (updatedocs through crm)", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(46);
+    expect(skills.length).toBe(45);
     for (let i = 0; i < EXPECTED_ORDERED_SKILLS.length; i++) {
       expect(skills[i].name).toBe(EXPECTED_ORDERED_SKILLS[i]);
     }
   });
 
-  test("skills.json contains all 46 total skills categorized across 6 divisions", () => {
+  test("skills.json contains all 45 total skills categorized across 6 divisions", () => {
     const { skills } = JSON.parse(fs.readFileSync(SKILLS_JSON_PATH, "utf8"));
-    expect(skills.length).toBe(46);
+    expect(skills.length).toBe(45);
 
     const skillNames = skills.map((s: { name: string }) => s.name);
     for (const skill of EXPECTED_ORDERED_SKILLS) {
@@ -763,15 +762,15 @@ describe("Invocation UX & conventions", () => {
     expect(migrationsContent).toContain("Phase 3: Contract (Deprecate & Drop)");
   });
 
-  test("designscope token-extraction mode and token_fence CLI enforce design token fence and bracket filter", () => {
-    const tokenExtPath = path.join(REPO_ROOT, "skills/design-interface/designscope/references/token-extraction.md");
+  test("design scope mode and token_fence CLI enforce design token fence and bracket filter", () => {
+    const tokenExtPath = path.join(REPO_ROOT, "skills/agency-delivery/design/references/scope.md");
     expect(fs.existsSync(tokenExtPath)).toBe(true);
     const content = fs.readFileSync(tokenExtPath, "utf8");
     expect(content).toContain("The Design Token Fence & Strict Arbitrary Bracket Filter");
     expect(content).toContain("The 4-Tier Token Snapping Invariant");
     expect(content).toContain("The Fluid Typography & Spacing Fallback");
 
-    const scriptPath = "skills/design-interface/designscope/scripts/token_fence.ts";
+    const scriptPath = "skills/agency-delivery/design/scripts/scope/token_fence.ts";
     const tempFile = path.join(REPO_ROOT, "tmp-test-bracket.html");
     try {
       fs.writeFileSync(tempFile, '<div class="w-[375px] bg-[#1e293b] p-[17px] rounded-[7px]">Test</div>', "utf8");
@@ -796,7 +795,7 @@ describe("Invocation UX & conventions", () => {
     expect(content).toContain("The Zero-Clickable-`<div>` Ban");
 
     // Test --audit-media and --audit-a11y CLI capabilities
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "designscope-test-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "design-scope-test-"));
     const badCodePath = path.join(tempDir, "bad-ui.tsx");
     fs.writeFileSync(
       badCodePath,

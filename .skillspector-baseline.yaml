@@ -284,10 +284,6 @@ fingerprints:
   rule_id: RP1
   file: dead-letter/README.md
   reason: Accepted finding (auto-generated baseline)
-- hash: sha256:5700f136f98d57df42a9c852f1491c0c04182b28497e36b92ddda9a4138ceea8
-  rule_id: RP1
-  file: designscope/README.md
-  reason: Accepted finding (auto-generated baseline)
 - hash: sha256:92f8e252286609f18f10e813f0cd0d13c89b7c5f6d3f4ef301cf83aeba4926b5
   rule_id: RP1
   file: docs/ARCHITECTURE.md
@@ -375,10 +371,6 @@ fingerprints:
 - hash: sha256:2610cd8a7778c6e8cfe308568b0850564a1824a40ab7bb79820668ffeea779f2
   rule_id: EA2
   file: context-anchor/SKILL.md
-  reason: Accepted finding (auto-generated baseline)
-- hash: sha256:3802419fea95859a8123fe749b864749c72d7c6fb30adcc980543ad2ce4bdadf
-  rule_id: EA3
-  file: designscope/LICENSE
   reason: Accepted finding (auto-generated baseline)
 - hash: sha256:ae57788ce00216fc122101bfc13654b3c1ddd517405e3d6cd95025af53b9f51b
   rule_id: EA2

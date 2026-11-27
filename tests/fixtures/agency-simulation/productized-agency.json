@@ -106,10 +106,10 @@
       "estimatedTokens": 8000
     },
     {
-      "id": "designscope-tokens",
+      "id": "design-scope-tokens",
       "name": "Client design token extraction",
-      "skill": "designscope",
-      "mode": "token-extraction",
+      "skill": "design",
+      "mode": "scope",
       "assignedDivision": "Jasper",
       "dependsOn": ["brand-intake"],
       "estimatedTokens": 10000

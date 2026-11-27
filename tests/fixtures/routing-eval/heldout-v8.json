@@ -107,7 +107,7 @@
   {
     "id": "v8-22",
     "prompt": "this navbar, exactly as it behaves — I want a spec our react devs can rebuild it from without asking me questions",
-    "expect": "designscope:element-copy"
+    "expect": "design:scope"
   },
   {
     "id": "v8-23",

@@ -34,7 +34,7 @@
 ## Routing
 
 - Existing-site rebrand triage (audit → targeted upgrades, no rewrite) → `refactor-ui` (improve/polish modes).
-- Tokens must be extracted from a live reference first → `designscope`, then return here.
+- Tokens must be extracted from a live reference first → `design`, then return here.
 
 ## Sources
 

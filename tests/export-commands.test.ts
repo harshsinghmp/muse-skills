@@ -25,7 +25,7 @@ import {
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 
 /** 46 per-skill commands + one generated <skill>-<mode> command per routable reference + 10 flat aliases. */
-const EXPECTED_SKILL_COMMANDS = 46;
+const EXPECTED_SKILL_COMMANDS = 45;
 const EXPECTED_ALIAS_COMMANDS = 10;
 const SKILL_MODE_COMMANDS = getSkillModeCommands(getSkills());
 const EXPECTED_SKILL_MODE_COMMANDS = SKILL_MODE_COMMANDS.length;
@@ -59,7 +59,7 @@ function extractInstalledRefs(markdown: string): string[] {
 }
 
 describe("📦 export-commands: installed tree is the source of truth", () => {
-  it("exportSkills installs all 46 skills, each with a SKILL.md, into the target dir", () => {
+  it("exportSkills installs all 45 skills, each with a SKILL.md, into the target dir", () => {
     const skills = getSkills();
     expect(skills.length).toBe(EXPECTED_SKILL_COMMANDS);
 
@@ -92,7 +92,7 @@ describe("📦 export-commands: installed tree is the source of truth", () => {
     expect(() => exportSkills(path.join(sandbox, "broken"), broken)).toThrow(/missing/);
   });
 
-  it("exports 46 skills + every skill-mode command + 10 aliases for every implemented harness", () => {
+  it("exports 45 skills + every skill-mode command + 10 aliases for every implemented harness", () => {
     const skills = getSkills();
 
     for (const [harness, exporter, extension] of COMMAND_EXPORTERS) {

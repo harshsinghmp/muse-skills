@@ -75,7 +75,7 @@ new-project embeds audit at two stages:
 For deeper audit of the scaffolded output, route to:
 - **UI/component audit** → `refactor-ui` audit mode (scored UI report)
 - **Code-quality audit** → `code-review` audit mode (cross-file invariants)
-- **Design-system audit** → `designscope` audit/score modes
+- **Design-system audit** → `design` audit/score modes
 - **Skill-registry audit** → `sync_registry.py` check (run `audit-quick-on-skill-use.sh`)
 
 Cross-link: `skills/references/audit-mode-guidance.md` for canonical severity + routing.

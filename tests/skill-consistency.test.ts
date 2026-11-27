@@ -10,10 +10,7 @@ describe("skill documentation consistency (#380)", () => {
     expect(read("skills/context-orchestration/coupling-router/scripts/worktree-federation.ts")).not.toContain(
       "300 * 1000",
     );
-    expect(read("skills/design-interface/designscope/SKILL.md")).not.toContain("5 analysis layers");
-    expect(read("skills/design-interface/designscope/references/analysis-framework.md")).not.toContain(
-      "5 analysis layers",
-    );
+    expect(read("skills/agency-delivery/design/references/scope.md")).not.toContain("5 analysis layers");
 
     const relay =
       read("skills/context-orchestration/relay/SKILL.md") + read("skills/context-orchestration/relay/README.md");

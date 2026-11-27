@@ -9,7 +9,7 @@ Add `audit` as a first-class mode when the skill produces persistent artifacts t
 - Reports and documents (`updatedocs`, `dead-letter`)
 - Routing and config tables (`secretary`, `coupling-router`)
 - Knowledge bases and evidence stores (`evidence-ledger`)
-- Design systems and style guides (`designscope`, `design`)
+- Design systems and style guides (`design`, `design`)
 
 For these, "audit the thing I produce" is a first-class task — you can't use the skill without eventually needing to verify its output.
 

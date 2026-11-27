@@ -21,7 +21,7 @@ const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry
 describe("secretary routing surface", () => {
   test("the generated agency directory exposes modes for every department", () => {
     const directory = loadAgencyDirectory();
-    expect(directory.length).toBe(46);
+    expect(directory.length).toBe(45);
     const withoutModes = directory.filter((entry) => entry.modes.length === 0).map((entry) => entry.skill);
     expect(withoutModes).toEqual([]);
   });

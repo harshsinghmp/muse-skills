@@ -1,10 +1,10 @@
 ---
 name: design
-aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "canvas", "canvas-relay"]
-description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes — routed through fifteen modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, stream live component canvas previews, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate)."
-argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides]"
+aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "canvas", "canvas-relay", "extract-design", "design-tokens", "layout-tree"]
+description: "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes — routed through sixteen modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, stream live component canvas previews, integrate 3D Spline/Three.js assets, or extract a design system from a screenshot, URL, or Figma file. Not for refactoring existing UI (refactor-ui) or animation (animate)."
+argument-hint: "[ui|ux|wireframe|logo|branding|socials|graphics|prototype|uikit|story|canvas|3d|audit|brand-immersion|slides|scope]"
 user-invocable: true
-version: 1.2.0
+version: 1.3.0
 author: Harsh Singh
 license: MIT
 platforms: [macos, linux, windows]
@@ -12,16 +12,16 @@ category: agency-delivery
 metadata:
   category: agency-delivery
   priority: 23
-  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "3d-design", "canvas", "canvas-relay"]
-  suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
+  aliases: ["design-department", "ui-design", "visual-design", "graphic-design", "branding", "wireframe", "logo-design", "brandkit", "banner-creator", "stitch-design-taste", "starwind-ui", "uikit", "visual-storyteller", "storyboarding", "3d-design", "canvas", "canvas-relay", "extract-design", "design-tokens", "layout-tree"]
+  suggested_skills: ["refactor-ui", "animate", "new-project"]
   hermes:
     tags: ["design", "ui", "ux", "wireframe", "logo", "branding", "brand-identity", "social-media-design", "graphics", "visual-design", "design-tokens", "typography", "color", "layout", "starwind-ui", "brandkit", "banner-creator", "stitch-design-taste", "uikit", "visual-storytelling", "storyboard", "narrative-arc", "data-storytelling", "3d", "spline", "threejs", "webgl", "blender", "brand-immersion", "favicon", "canvas", "canvas-relay"]
-    related_skills: ["refactor-ui", "designscope", "animate", "new-project"]
-    suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
+    related_skills: ["refactor-ui", "animate", "new-project"]
+    suggested_skills: ["refactor-ui", "animate", "new-project"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   openclaw:
     category: agency-delivery
-    suggested_skills: ["refactor-ui", "designscope", "animate", "new-project"]
+    suggested_skills: ["refactor-ui", "animate", "new-project"]
     primary_triggers: ["design a website", "design a landing page", "create a wireframe", "design a logo", "build a brand identity", "social media templates", "design our dashboard", "graphic design", "starwind-ui", "ui kit", "stitch design taste", "brandkit", "banner creator", "visual storytelling", "storyboard", "3d scene", "spline", "three.js", "brand immersion", "adaptive favicon", "brand assets audit", "design canvas", "canvas relay", "live component preview"]
     requires_tools: ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "find_by_name"]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -54,6 +54,7 @@ Every invocation resolves to exactly **one** mode. Match the request, then load 
 | **audit** | "design audit", "design QA", "audit this screen", "contrast check", "design handoff review" | Score the view against hierarchy, contrast, states, tokens, and responsive integrity; severity-routed fixes | [references/audit.md](references/audit.md) |
 | **brand-immersion** | "brand-immersion" | 🎨 Brand Immersion & Adaptive Asset Standard | [references/brand-immersion.md](references/brand-immersion.md) |
 | **slides** | "slides" | Presentation Decks, Slide Layouts & Narrative Pitch Structures | [references/slides.md](references/slides.md) |
+| **scope** | "extract the design system", "deconstruct this layout", "recreate this design", "screenshot to tokens", "document this design", "copy this navbar" | Reverse-engineer the design system: analysis, capture, tokens, layout tree, design.md, element copy, and audit | [references/scope.md](references/scope.md) |
 
 Only the resolved mode's reference is loaded — the rest stay on disk, saving tokens on every run.
 
@@ -94,7 +95,6 @@ Layout template details:
 ### Anti-Triggers
 
 - Improving or refactoring an **existing** interface → `refactor-ui`.
-- Extracting a design system **from a reference** (screenshot/URL/Figma) → `designscope`.
 - Adding motion or animation → `animate`.
 - Scaffolding the project repository → `new-project`.
 
@@ -111,7 +111,7 @@ Layout template details:
 | What brand inputs exist (tokens, brand doc, logo)? | Existing brand wins — never invent over it |
 | What references or mood direction is approved? | Prevents rework after hi-fi |
 
-Client has a live brand but no tokens → run `designscope` on their site first.
+Client has a live brand but no tokens → run `design:scope` on their site first.
 
 ### Deliverable ladder
 
@@ -154,7 +154,7 @@ Skipping an approval gate is how rework happens.
 ## Pitfalls
 
 - Designing hi-fi before structure is agreed — rework machine. Wireframe approval comes first.
-- Inventing brand colors when the client already has a brand — `designscope` their assets; existing tokens win.
+- Inventing brand colors when the client already has a brand — `design:scope` their assets; existing tokens win.
 - More than 2 type families, or decorative faces on body text.
 - Happy-path-only components — every component needs hover, focus, disabled, loading, empty, and error states.
 - Default OS artifacts: generic blue `::selection`, default OS scrollbars, or unpadded focus rectangles.
