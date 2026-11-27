@@ -149,7 +149,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     expect(release).toContain("^v[0-9]+\\.[0-9]+\\.[0-9]+$");
   });
 
-  test("one authoritative lockfile and an exact runtime dependency", () => {
+  test("one authoritative lockfile and a latest-tracked runtime dependency", () => {
     expect(fs.existsSync(path.join(REPO_ROOT, "bun.lock"))).toBe(true);
     expect(fs.existsSync(path.join(REPO_ROOT, "package-lock.json"))).toBe(false);
     expect(fs.existsSync(path.join(REPO_ROOT, "pnpm-lock.yaml"))).toBe(false);
@@ -161,10 +161,9 @@ describe("CI and supply-chain hardening (#395)", () => {
 
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.private).toBe(true);
-    // The invariant is an exact pin, not a specific version: hard-coding the
-    // number here made every upstream release break an unrelated PR's lint job.
-    expect(pkg.dependencies.musememory).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(pkg.dependencies.musememory).not.toMatch(/^[\^~]/);
+    // musememory is an owned project on a fast cadence; track the `latest`
+    // dist-tag and let the runtime start check below verify the installed build.
+    expect(pkg.dependencies.musememory).toBe("latest");
   });
 
   test("dependabot update PRs target dev instead of main", () => {
