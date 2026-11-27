@@ -8,26 +8,8 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **v14-derived cues** (`secretary`): general cues for release-audit, token timing, client onboarding, adversarial passes, render performance, flow capture, plan opposition, retry schemas, vendor claims, team habits, retreat agendas, AI patterns, reduced motion, checkout UX, short-form demand, influencer programs, video scripts, RAG, productized services, outbound, incident retros, and user research take v14 from its frozen **18/40 exact · 22/40 department** to **27/40 · 29/40**. Tuned stays **166/182**; v6/v9/v11/v13 improve without drops; v5/v7/v8/v10/v12/regressions hold. v14 is now a development set.
-- **Fresh cross-domain held-out set** (`heldout-v15.json`): 40 new prompts written after the v14 iteration, scored once at **6/40 exact · 14/40 department**, and frozen without tuning.
-
-### Changed
-
-- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime is on the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
-- **Fresh cross-domain held-out set** (`heldout-v14.json`): 40 new prompts written after the v13 work, scored once at **18/40 exact · 22/40 department**, and frozen without tuning.
-
-### Fixed
-
-- **v13-driven cues** (`secretary`): general cues for deploy/ping hooks, alert routing, welcome sequences, brand intake/persona, SAST, playbooks, churn watch, schema/analytics audits, rate limits, crawl/on-page signals, social analytics, copy/launch, GA4 audits, workflow/chatbot automation, CI/hosting, E2E shared state, scoped engagements, client feedback/handover, GTM research, and invoicing take v13 from its frozen **12/40 exact · 18/40 department** to **28/40 · 29/40**. The tuned set stays **166/182**, v5/v6 stay 21/28 and 26/29 after removing two regressing tokens, v7 moves to 9/10, and regressions remain 12/12. v13 is now a development set; a fresh v14 is required for the next honest number.
-
-- **v12-driven cues** (`secretary`): general cues for deliverability, brand kits, silent renewal risk, keyboard access, cross-platform/PWA, link profiles, brand vs non-brand ads, postmortems, alert thresholds, outage signals, evals, MSAs, founder-led sales, and deploy pings take v12 from its frozen **11/40 exact · 17/40 department** to **19/40 · 22/40**, with v10/v11/v7 and regressions unchanged and the tuned set at **166/182** (from 163/179, no tuned edits). v12 is now a development set; a fresh v13 is required for the next honest held-out number.
-
-- **Dependency refresh**: `musememory` `3.4.5 → 3.4.7`, exact pin kept; `check:deps` tracks it.
-
-- **v11-driven department/mode cues** (`secretary`): general cues for changelog drift, AGENTS drift, cross-file invariants, empty-repo layout, attention hygiene, stuck retries, remediation ranking, quarterly resets, and voice guides take v11 from **9/40 to 18/40 exact** and **17/40 to 26/40 department**; v10 moves to 11/12 and the tuned set to **163/179**, with no tuned-file edits. v11 is now a development set; the next honest number needs a fresh held-out set.
-
-- **Mode-intent routing cues** (`secretary`): generic mode cues for assessment, reporting, attribution, viral/referral, merge recovery, review triage, and query tuning take v10 from **5/40 to 10/40 exact** and v7 from **2/40 to 8/40 exact**, with the tuned set unchanged at 162/178. All 12 P1 regression fixtures now route exactly.
-- **Fresh cross-domain held-out set** (`heldout-v11.json`): 40 new prompts written after the mode work, scored once at **9/40 exact · 17/40 department** and frozen without tuning.
+- **Routing measured through v15** (`secretary`, routing fixtures): mode and department cues raised the measured sets — v10 **11/40**, v11 **18/26**, v12 **19/22**, v13 **28/29**, v14 **27/29** exact/department; the tuned set is **166/182** and regressions-v1 is **12/12**. A fresh v15 set is frozen at **6/40 exact · 14/40 department**. The continuous routing-iteration loop ends here; remaining quality work returns to the normal backlog.
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime uses the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
 
 **Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
 
