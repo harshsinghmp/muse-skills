@@ -4,6 +4,55 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.5] - 2026-11-27
+
+### Changed
+
+- **Routing measured through v15** (`secretary`, routing fixtures): mode and department cues raised the measured sets — v10 **11/40**, v11 **18/26**, v12 **19/22**, v13 **28/29**, v14 **27/29** exact/department; the tuned set is **166/182** and regressions-v1 is **12/12**. A fresh v15 set is frozen at **6/40 exact · 14/40 department**. The continuous routing-iteration loop ends here; remaining quality work returns to the normal backlog.
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime uses the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
+
+## [8.8.4] - 2026-11-27
+
+### Fixed
+
+- **Press release is not a growth request** (`secretary`): the fast-path rule now requires an action verb (write/draft/prepare/issue/send/publish), so a critique like "reads like a press release" routes to `humanize:audit` instead of `growth:pr`.
+- **Humanize cue, measured** (`secretary`): phrase-level concept cues are now matched against the normalized prompt, and a `humanize:audit` cue for "reads like / sounds like / robotic / ai-sounding / tone-deaf" lifts v10 to **5/40 exact, 10/40 department** (from 4/9) with the tuned set (162/178) and v7 (2/9) unchanged.
+- **Routing regressions** (`tests/fixtures/routing-eval/regressions-v1.json`): every mode-pair miss from the P1 baseline and the press-release prompt now have a fixture that pins the department and the exact expected route.
+
+- **Held-out budget to 30 s** (`tests/routing-heldout.test.ts`): the cross-domain case ran 15.3 s under parallel `verify`, so the 15 s budget still timed out. The measured engineering, cross-domain, and v8 cases now use the same 30 s budget as the other slow integration tests.
+
+### Changed
+
+- **Release notes are drafted from the ledger** (`scripts/cut-release.ts`, `scripts/release-notes.ts`): the cut materializes points from the commits, turns every unshipped point into a bullet (summary, commit, type, scope), and leaves only the human title, blurb, and test counts.
+- **Ledger marks require evidence** (`updatedocs --mark`): `--mark` now requires `--docs` and `--evidence <phrase>`, and the phrase must actually appear in a named doc. A status flip alone can no longer claim documentation.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.3...v8.8.4
+
+## [8.8.3] - 2026-11-26
+
+### Fixed
+
+- **Scaffold clone/pack retries** (`new-project`): Aria Builder and Instatic `git clone` and Atomic Payload `npm pack` each get one clean retry with a fresh staging directory when the first fetch fails; the offline fallbacks remain the final fallback.
+- **Routing held-out timeout** (`tests/routing-heldout.test.ts`): the measured engineering, cross-domain, and v8 held-out cases get an explicit 15 s budget, so a loaded runner cannot fail them at the 5 s default.
+- **Pre-cut dependency check** (`scripts/cut-release.ts`): `release:cut` runs `check:deps` before creating the release branch and stops with the failing dependency instead of discovering drift after the branch exists.
+- **Dependency refresh**: `musememory` `3.4.4 → 3.4.5`, exact pin kept; `check:deps` tracks it.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.2...v8.8.3
+
+## [8.8.2] - 2026-11-25
+
+### Fixed
+
+- **Scaffold fetch retry** (`new-project`): `bun create astro` gets one clean retry with a fresh staging directory when the first registry fetch fails, so a transient network error no longer fails the whole scaffold simulation.
+- **Low-severity follow-ups** (`new-project`, `install.sh`, `coupling-router`, closes #505): framework staging directories use `mkdtemp` instead of predictable `Date.now()` names; the installer resolves symlinks in the nearest existing ancestor before the new-project containment check; and an invalid swarm plan reports zero executed tasks (not every planned task as failed) and names the defective task.
+- **Release preflight rejects placeholder notes** (`scripts/check-release-ready.ts`): the gate now refuses `RELEASE_NOTES.md` while the skeleton tokens (`<one line for humans>`, `<headline>`, `<N> automated tests`, `<n>` table cells) remain, so a tag cannot be cut with unfilled notes. The scan is scoped to the current release section, so older notes may quote the tokens; the v8.8.1 cut hit this manually, and the gate makes it mechanical.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.1...v8.8.2
+
+## [8.8.1] - 2026-11-24
+
 ### Fixed
 
 - **Discovery skips junctioned artifacts** (`clean-system-cache`, `scripts/discover-projects.ps1`): a Windows junction named `target/` with a sibling `Cargo.toml` was discovered as a Rust artifact because only the claim check rejected reparse points. Discovery now skips reparse points before matching and never descends through them; the Windows platform smoke covers the junction case and asserts both discovery and `-Claim` refuse it.
@@ -11,6 +60,12 @@ All notable changes to this project are documented in this file.
 - **Cross-skill contract drift** (`relay`, `ops`, `client-comms`, `devops`, `new-project`, `clean-system-cache`): `handoff` is registered as a `relay` alias and routing pointers name `relay`; devops `--scaffold node` emits a real Node runtime instead of the Next.js standalone template and SAST routes to `muse-security`; new-project documents the generated hook at `<project>/scripts/pre-commit.sh`; clean-system-cache fixes the `${CAND_KEY}` diagnostic, the `sort | head` pipefail abort, the Windows false-`cleaned` path, the whole-directory TEMP delete, and documents the `--all-caches` alias.
 - **Shell-hook hardening** (`scripts/install.sh`, `scripts/hooks/*`): `--new-project` rejects `..` path segments before the prefix containment check; cron registration rejects shell metacharacters and will not clobber a crontab after a failed read; the worktree-lease hook fails closed and points at the real probe; the pre-commit secret scanner fails closed by default and never writes the matched secret into JSON output; the dead-letter sweep tolerates a missing `fd` and a non-numeric count.
 - **Hardening follow-ups** (`devops`, `coupling-router`, `telegram`, `clean-system-cache`, CI): review tokens live only in a 0600 file (not metadata, JSON, or wrangler vars); worktree federation defaults to `dev` then the repo default branch and treats a failed `git status` as dirty; duplicate swarm task ids fail with a precise error; the webhook receiver rejects oversized bodies with 413; `candidate-catalog` is a support reference rather than a mode; the Windows smoke covers the TEMP purge path; and the batch catalog escapes `ASK!` tier literals so the TEMP and Recycle Bin candidates survive delayed expansion and actually register.
+
+### Changed
+
+- **Dependency refresh** (`package.json`, `bun.lock`): `musememory` `3.4.2 → 3.4.4` and `@biomejs/biome` `2.6.8 → 2.6.9`, exact pins kept; `check:deps` and the CI hardening tests track them.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.0...v8.8.1
 
 ## [8.8.0] - 2026-11-23
 

@@ -66,6 +66,7 @@ const { values, positionals } = parseArgs({
     mark: { type: "string" },
     audience: { type: "string" },
     docs: { type: "string" },
+    evidence: { type: "string" },
     release: { type: "string" },
     since: { type: "string" },
     "write-changelog": { type: "boolean", default: false },
@@ -115,6 +116,7 @@ Core Capabilities:
       --mark <id|sha>       Mark a point's audience coverage as documented (pair with --audience/--docs)
       --audience <name>     developer | user | agent | all (default: all)
       --docs <list>         Comma-separated doc paths that document the point (used with --mark)
+      --evidence <phrase>   Quote a phrase that must appear in a --docs file (required with --mark)
       --release <tag>       Mark every complete point as shipped in the given release tag
       --since <ref>         Override the ledger baseline (default: watermark, then last release tag)
       --write-changelog     Write the managed Documentation Points block into CHANGELOG.md [Unreleased]
@@ -791,6 +793,7 @@ export function markDocumentationPoint(
   idOrCommit: string,
   audience: AudienceName | "all" = "all",
   docs: string[] = [],
+  evidence = "",
 ): { ok: boolean; message: string } {
   const ledger = readDocsLedger(targetDir);
   if (!ledger) return { ok: false, message: `No ${DOCS_LEDGER_FILE} found. Run --ledger first.` };
@@ -800,6 +803,22 @@ export function markDocumentationPoint(
   );
   if (!point) return { ok: false, message: `No documentation point matches "${idOrCommit}".` };
 
+  const phrase = evidence.trim();
+  if (docs.length === 0 || phrase === "") {
+    return {
+      ok: false,
+      message:
+        "--mark requires --docs and --evidence: quote a phrase that actually appears in the named doc (status alone is not documentation).",
+    };
+  }
+  const matched = docs.filter((doc) => {
+    const file = join(targetDir, doc);
+    return existsSync(file) && readFileSync(file, "utf8").includes(phrase);
+  });
+  if (matched.length === 0) {
+    return { ok: false, message: `--evidence "${phrase}" was not found in ${docs.join(", ")}.` };
+  }
+
   const audiences: AudienceName[] = audience === "all" ? ["developer", "user", "agent"] : [audience];
   for (const name of audiences) {
     const coverage = point.audiences[name];
@@ -807,7 +826,7 @@ export function markDocumentationPoint(
     coverage.status = "documented";
     coverage.manual = true;
     coverage.docs = [...new Set([...coverage.docs, ...docs])];
-    coverage.evidence = docs.length > 0 ? `manually documented in ${docs.join(", ")}` : "manually marked via --mark";
+    coverage.evidence = `phrase "${phrase}" found in ${matched.join(", ")}`;
   }
   ledger.updatedAt = new Date().toISOString();
   writeDocsLedger(targetDir, ledger, false);
@@ -2189,7 +2208,7 @@ if (IS_ENTRY_POINT) {
       since: values.since,
       includeChore: values["include-chore"],
     });
-    const result = markDocumentationPoint(targetDir, values.mark, ledgerAudience, ledgerDocs);
+    const result = markDocumentationPoint(targetDir, values.mark, ledgerAudience, ledgerDocs, values.evidence ?? "");
     console.log(result.ok ? `✅ ${result.message}` : `❌ ${result.message}`);
     process.exit(result.ok ? 0 : 1);
   }
