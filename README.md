@@ -299,7 +299,8 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | Distribution | Kind | Prompts | Exact `skill:mode` | Department |
 | :--- | :--- | ---: | ---: | ---: |
 | `training (tuned)` | tuned | 247 | 162 (65.6%) | 178 (72.1%) |
-| `v10` | unseen | 40 | 4 (10.0%) | 9 (22.5%) |
+| `regressions-v1` | unseen | 12 | 1 (8.3%) | 12 (100.0%) |
+| `v10` | unseen | 40 | 5 (12.5%) | 10 (25.0%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
 | `v7` | unseen | 40 | 2 (5.0%) | 9 (22.5%) |
@@ -307,9 +308,9 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
-**Mode coverage**: 135 of 411 routable modes (33%) carry a curated routing signal; the other 276 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+**Mode coverage**: 136 of 411 routable modes (33%) carry a curated routing signal; the other 275 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
 
-Measured 2026-11-15. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
+Measured 2026-11-27. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
 
 ### Changing a skill
