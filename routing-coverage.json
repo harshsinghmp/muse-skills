@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-27",
   "total": 411,
-  "curated": 145,
+  "curated": 148,
   "nameOnly": [
     "accounts:cashflow",
     "accounts:pricing",
@@ -19,7 +19,6 @@
     "animate:review-checklist",
     "animate:technical-diagrams",
     "animate:threejs",
-    "audit:remediation-matrix",
     "automation:agents",
     "automation:alerts",
     "automation:audit",
@@ -50,7 +49,6 @@
     "code-review:agreement-review",
     "code-review:boundary-governance",
     "code-review:coupling-audit",
-    "code-review:cross-file-invariants",
     "code-review:delegate",
     "code-review:edr-and-execution-safety",
     "code-review:fixing-findings",
@@ -74,7 +72,6 @@
     "content:video",
     "content:voice-archetypes",
     "context-anchor:ast-pinning-guide",
-    "context-anchor:attention-hygiene",
     "context-anchor:deadlock-breaker",
     "context-anchor:observation-masking",
     "context-anchor:prompt-cache-partitioning",

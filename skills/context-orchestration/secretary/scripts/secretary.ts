@@ -421,7 +421,7 @@ export const CONCEPTS: Concept[] = [
   {
     department: "updatedocs",
     mode: "audit",
-    boost: 9,
+    boost: 14,
     tokens: [
       "changelog",
       "release",
@@ -473,7 +473,7 @@ export const CONCEPTS: Concept[] = [
   {
     department: "pua",
     mode: "receipt-verification",
-    boost: 10,
+    boost: 14,
     tokens: ["receipt", "receipts", "flaky", "unverified"],
   },
   {
@@ -635,6 +635,54 @@ export const CONCEPTS: Concept[] = [
     mode: "audit",
     boost: 9,
     tokens: ["app audit", "app quality", "any good"],
+  },
+  {
+    department: "updateagents",
+    mode: "audit",
+    boost: 10,
+    tokens: ["agents md", "agent instructions", "instruction budget"],
+  },
+  {
+    department: "code-review",
+    mode: "cross-file-invariants",
+    boost: 10,
+    tokens: ["cross-file", "retry path", "partial failure"],
+  },
+  {
+    department: "new-project",
+    mode: "project-os-architecture",
+    boost: 10,
+    tokens: ["empty repo", "repository layout", "greenfield"],
+  },
+  {
+    department: "context-anchor",
+    mode: "attention-hygiene",
+    boost: 10,
+    tokens: ["reread", "rereading", "task boundaries", "long session"],
+  },
+  {
+    department: "dead-letter",
+    mode: "sweep-protocol",
+    boost: 10,
+    tokens: ["stuck", "retries", "background jobs"],
+  },
+  {
+    department: "audit",
+    mode: "remediation-matrix",
+    boost: 10,
+    tokens: ["remediation", "fix cost", "user harm"],
+  },
+  {
+    department: "periodic-retreat",
+    mode: "retreat-protocol",
+    boost: 10,
+    tokens: ["quarterly reset", "what to kill", "next bets"],
+  },
+  {
+    department: "humanize",
+    mode: "style-guide",
+    boost: 10,
+    tokens: ["voice guide", "style guide"],
   },
 ];
 

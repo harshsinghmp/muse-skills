@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **v11-driven department/mode cues** (`secretary`): general cues for changelog drift, AGENTS drift, cross-file invariants, empty-repo layout, attention hygiene, stuck retries, remediation ranking, quarterly resets, and voice guides take v11 from **9/40 to 18/40 exact** and **17/40 to 26/40 department**; v10 moves to 11/12 and the tuned set to **163/179**, with no tuned-file edits. v11 is now a development set; the next honest number needs a fresh held-out set.
+
 - **Mode-intent routing cues** (`secretary`): generic mode cues for assessment, reporting, attribution, viral/referral, merge recovery, review triage, and query tuning take v10 from **5/40 to 10/40 exact** and v7 from **2/40 to 8/40 exact**, with the tuned set unchanged at 162/178. All 12 P1 regression fixtures now route exactly.
 - **Fresh cross-domain held-out set** (`heldout-v11.json`): 40 new prompts written after the mode work, scored once at **9/40 exact · 17/40 department** and frozen without tuning.
 
