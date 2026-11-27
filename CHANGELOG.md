@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.5] - 2026-11-27
+
 ### Changed
 
 - **v14-derived cues** (`secretary`): general cues for release-audit, token timing, client onboarding, adversarial passes, render performance, flow capture, plan opposition, retry schemas, vendor claims, team habits, retreat agendas, AI patterns, reduced motion, checkout UX, short-form demand, influencer programs, video scripts, RAG, productized services, outbound, incident retros, and user research take v14 from its frozen **18/40 exact · 22/40 department** to **27/40 · 29/40**. Tuned stays **166/182**; v6/v9/v11/v13 improve without drops; v5/v7/v8/v10/v12/regressions hold. v14 is now a development set.
@@ -26,6 +28,8 @@ All notable changes to this project are documented in this file.
 
 - **Mode-intent routing cues** (`secretary`): generic mode cues for assessment, reporting, attribution, viral/referral, merge recovery, review triage, and query tuning take v10 from **5/40 to 10/40 exact** and v7 from **2/40 to 8/40 exact**, with the tuned set unchanged at 162/178. All 12 P1 regression fixtures now route exactly.
 - **Fresh cross-domain held-out set** (`heldout-v11.json`): 40 new prompts written after the mode work, scored once at **9/40 exact · 17/40 department** and frozen without tuning.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
 
 ## [8.8.4] - 2026-11-27
 

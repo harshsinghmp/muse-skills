@@ -1,3 +1,35 @@
+# 🏛️ Muse Skills v8.8.5 — <one line for humans>
+
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.5
+
+- **add measured mode cues and a fresh v11 held-out set (#518)** (`62af2e6`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **iterate from v11 misses with general cues (#519)** (`7163a8f`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **add fresh v12 set and iterate from its misses (#520)** (`489a74e`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **add fresh v13 set and iterate from its misses (#521)** (`2384d74`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **track musememory latest instead of an exact pin (#522)** (`05a8f56`, chore(deps)): see the CHANGELOG entry for the detailed evidence.
+- **iterate from v14 and add fresh v15 set (#524)** (`9681ae6`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+
+## 📊 Verification
+
+| Metric | v8.8.4 | v8.8.5 |
+|:---|:---|:---|
+| Automated Tests | <n> | **<n>** |
+| Test Files | <n> | **<n>** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
+
 # 🏛️ Muse Skills v8.8.4 — Routing Fixes, Release Automation
 
 > **Patch release: fixes the press-release fast path and adds a measured humanize cue (v10 5/40 exact, 10/40 department), pins every P1 regression, drafts release notes from the ledger, and requires evidence for a docs mark.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
