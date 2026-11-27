@@ -1,20 +1,23 @@
-# 🏛️ Muse Skills v8.8.4 — <one line for humans>
+# 🏛️ Muse Skills v8.8.4 — Routing Fixes, Release Automation
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+> **Patch release: fixes the press-release fast path and adds a measured humanize cue (v10 5/40 exact, 10/40 department), pins every P1 regression, drafts release notes from the ledger, and requires evidence for a docs mark.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
 ## 🛠️ What Changed in v8.8.4
 
-- **draft notes from the ledger and require mark evidence (#514)** (`03b1c72`, feat(release)): see the CHANGELOG entry for the detailed evidence.
-- **pin P1 regressions and fix the press-release fast path (#516)** (`5ae7381`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **Press-release fast path corrected** (`secretary`): the rule now needs an action verb (write/draft/prepare/issue/send/publish), so "reads like a press release" routes to `humanize:audit` instead of `growth:pr`.
+- **Measured humanize cue** (`secretary`): phrase-level concept cues are matched against the normalized prompt; the `humanize:audit` cue lifts v10 to **5/40 exact, 10/40 department** (from 4/9) with the tuned set (162/178) and v7 (2/9) unchanged.
+- **P1 regressions pinned** (`regressions-v1.json`): every mode-pair miss from the baseline and the press-release prompt now has a fixture that asserts its department and expected route.
+- **Release notes and ledger evidence** (`release:cut`, `updatedocs --mark`): the cut materializes ledger points, then drafts note bullets; `--mark` requires `--docs` plus an `--evidence` phrase that actually appears in a named doc.
+- **Held-out budget to 30 s** (`tests/routing-heldout.test.ts`): the cross-domain case ran 15.3 s under parallel `verify`; the measured cases now use the same 30 s budget as the other slow integration tests.
 
 ## 📊 Verification
 
 | Metric | v8.8.3 | v8.8.4 |
 |:---|:---|:---|
-| Automated Tests | <n> | **<n>** |
-| Test Files | <n> | **<n>** |
+| Automated Tests | 924 | **927** |
+| Test Files | 77 | **78** |
 | Test Failures | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
