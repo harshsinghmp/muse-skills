@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Reference step numbering** (12 reference files): repaired duplicate and backwards top-level step numbers in `content/email`, `content/blog`, `mobile/android`, `mobile/pwa`, `smm/content`, `ops/proposal`, `ops/onboarding`, `gtm/list`, `gtm/handover`, `code-review/receiving-feedback`, `database/vector-search`, and `accounts/tax-compliance`. Text is unchanged; only the numbers are sequential.
+
 ## [8.8.5] - 2026-11-27
 
 ### Changed

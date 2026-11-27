@@ -19,8 +19,8 @@ An installable PWA: valid manifest, service worker with an explicit caching stra
 4. Offline fallback page for un-cached navigations; queue mutations (background sync where supported).
 5. Install: beforeinstallprompt handling for Android/desktop; iOS Add-to-Homescreen guidance (no prompt API). UI mechanics: form inputs ≥16px (prevents iOS zoom on focus); safe-area insets honored in standalone display mode (notch/gesture bar); semantic color tokens verified in both color schemes; icons optically aligned (nudge by eye, stroke matched to text weight).
 6. Touch-state inventory per control: default/pressed/disabled/loading/empty/error — no happy-path-only controls. Extremes-first: smallest viewport/oldest target device first; breakpoints where content breaks, not device presets.
-6. Push (optional): web push VAPID keys, opt-in UX with context, notification UX per platform.
-7. Verify with Lighthouse PWA audit + real offline testing (DevTools offline + airplane-mode device).
+7. Push (optional): web push VAPID keys, opt-in UX with context, notification UX per platform.
+8. Verify with Lighthouse PWA audit + real offline testing (DevTools offline + airplane-mode device).
 
 ## Quality gate
 
