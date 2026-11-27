@@ -9,6 +9,9 @@ const REPO_ROOT = join(import.meta.dir, "..");
 const REGRESSIONS = JSON.parse(
   readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/regressions-v1.json"), "utf8"),
 ) as RoutingFixture[];
+const REGRESSIONS_V2 = JSON.parse(
+  readFileSync(join(REPO_ROOT, "tests/fixtures/routing-eval/regressions-v2.json"), "utf8"),
+) as RoutingFixture[];
 const routes = new Set(getSkillModeCommands(getSkills()).map((entry) => `${entry.skill}:${entry.mode}`));
 
 describe("routing regressions from the P1 baseline", () => {
@@ -24,6 +27,13 @@ describe("routing regressions from the P1 baseline", () => {
     expect(report.invalidPredictions).toEqual([]);
     expect(report.failures).toEqual([]);
     expect(report.exact).toBe(REGRESSIONS.length);
+  });
+
+  test("bounded B clusters route exactly", () => {
+    const report = evaluateRouting(REGRESSIONS_V2, routes, { minExact: 0, minSkill: 0 });
+    expect(report.invalidPredictions).toEqual([]);
+    expect(report.failures).toEqual([]);
+    expect(report.exact).toBe(REGRESSIONS_V2.length);
   });
 
   test("a press release mentioned, not requested, does not fire the growth fast path", () => {
