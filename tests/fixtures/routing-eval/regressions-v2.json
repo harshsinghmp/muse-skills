@@ -1,0 +1,17 @@
+[
+  {
+    "id": "b-01",
+    "prompt": "the deploy took down checkout; run the incident bridge",
+    "expect": "devops:incident"
+  },
+  {
+    "id": "b-02",
+    "prompt": "stop the bleeding on the duplicate-charge bug before the rca",
+    "expect": "incident-response:mitigate"
+  },
+  {
+    "id": "b-03",
+    "prompt": "classify these three launch claims by evidence strength",
+    "expect": "evidence-ledger:claim-verification-taxonomy"
+  }
+]

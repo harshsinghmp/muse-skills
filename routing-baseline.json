@@ -12,6 +12,11 @@
       "department": 12,
       "total": 12
     },
+    "regressions-v2": {
+      "exact": 3,
+      "department": 3,
+      "total": 3
+    },
     "v10": {
       "exact": 11,
       "department": 12,
@@ -33,13 +38,13 @@
       "total": 40
     },
     "v14": {
-      "exact": 26,
+      "exact": 27,
       "department": 29,
       "total": 40
     },
     "v15": {
-      "exact": 6,
-      "department": 14,
+      "exact": 9,
+      "department": 16,
       "total": 40
     },
     "v5": {
