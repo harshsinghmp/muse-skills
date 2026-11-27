@@ -1,0 +1,62 @@
+[
+  {
+    "id": "reg-01",
+    "prompt": "whoever's on rotation rewrites the handoff file, so by now it reads like fan fiction and nobody trusts it",
+    "expect": "relay:audit"
+  },
+  {
+    "id": "reg-02",
+    "prompt": "three years of features and nobody has ever asked whether the app is actually any good",
+    "expect": "mobile:audit"
+  },
+  {
+    "id": "reg-03",
+    "prompt": "twelve creators, one brief, and all twelve videos come back identical",
+    "expect": "content:ugc"
+  },
+  {
+    "id": "reg-04",
+    "prompt": "six dashboards a week land in my inbox and i still can't say whether last month beat the one before",
+    "expect": "analytics:reporting"
+  },
+  {
+    "id": "reg-05",
+    "prompt": "that report went 40 seconds to four minutes after two columns landed. read the plan, don't guess.",
+    "expect": "database:optimize"
+  },
+  {
+    "id": "reg-06",
+    "prompt": "six-figure deals touch paid, a webinar, outbound and a partner before they close, and the cfo wants credit split fairly across all four instead of last-click eating everything",
+    "expect": "analytics:attribution-graph"
+  },
+  {
+    "id": "reg-07",
+    "prompt": "our bookkeeper left in june, i'm carrying three clients, and i'm fairly sure we've under-billed one of them for months — sweep it and tell me where the money leaks",
+    "expect": "accounts:audit"
+  },
+  {
+    "id": "reg-08",
+    "prompt": "refer-a-friend currently gives a free month, i want to know what that actually produces per user before we bump it to three months",
+    "expect": "growth:viral"
+  },
+  {
+    "id": "reg-09",
+    "prompt": "we've got hosting, two ci pipelines, four domains and five cloudflare workers and nobody has looked at the whole shape of it since 2022",
+    "expect": "devops:audit"
+  },
+  {
+    "id": "reg-10",
+    "prompt": "i resolved the merge wrong and pushed, main now has half of each branch and prod deploys straight from main",
+    "expect": "git:conflict-resolution-and-recovery"
+  },
+  {
+    "id": "reg-11",
+    "prompt": "reviewer dumped 31 comments on the PR, half of them are naming opinions — tell me which ones actually block the merge",
+    "expect": "code-review:triage-matrix"
+  },
+  {
+    "id": "reg-12",
+    "prompt": "reads like a press release from a company that doesn't exist yet",
+    "expect": "humanize:audit"
+  }
+]

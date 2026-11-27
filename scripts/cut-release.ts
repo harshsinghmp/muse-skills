@@ -20,6 +20,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { draftReleaseNoteBullets, type ReleaseNotePoint } from "./release-notes";
 
 const ROOT = path.resolve(import.meta.dir, "..");
 const args = process.argv.slice(2);
@@ -192,7 +193,16 @@ step(state, "changelog", () => {
 
 // ── 4. Release notes skeleton ────────────────────────────────────────────────
 step(state, "notes", () => {
+  // Materialize points from commits before drafting. The ledger step below
+  // marks them shipped; drafting must happen before that.
+  run("bun", ["skills/core-engine/updatedocs/scripts/updatedocs.ts", ".", "--ledger"], true);
   const notes = read("RELEASE_NOTES.md");
+  const ledgerPath = path.join(ROOT, ".docs-ledger.json");
+  const ledger = fs.existsSync(ledgerPath)
+    ? (JSON.parse(fs.readFileSync(ledgerPath, "utf8")) as { points: ReleaseNotePoint[] })
+    : { points: [] as ReleaseNotePoint[] };
+  const bullets = draftReleaseNoteBullets(ledger.points);
+  const changed = bullets.length > 0 ? bullets.join("\n") : "- **<headline>**: <what changed, and the evidence.>";
   const skeleton = `# 🏛️ Muse Skills ${tag} — <one line for humans>
 
 > **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
@@ -201,7 +211,7 @@ step(state, "notes", () => {
 
 ## 🛠️ What Changed in ${tag}
 
-- **<headline>**: <what changed, and the evidence.>
+${changed}
 
 ## 📊 Verification
 
@@ -234,7 +244,7 @@ step(state, "ledger", () => {
       [
         "the docs ledger has pending points — document and mark them, then re-run with --resume:",
         ...ledger.split("\n").filter((line) => line.includes("DP-")),
-        "  bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --mark DP-XXXX --audience all --docs CHANGELOG.md,.agents/context/current.md",
+        '  bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --mark DP-XXXX --audience all --docs CHANGELOG.md,.agents/context/current.md --evidence "phrase quoted from the docs"',
         "  bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release <tag>",
       ].join("\n"),
     );

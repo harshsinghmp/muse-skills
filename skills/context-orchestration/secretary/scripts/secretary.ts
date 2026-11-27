@@ -54,7 +54,7 @@ export const FAST_PATH_RULES: Array<{
     reason: "Statement-of-work match",
   },
   {
-    regex: /press\s+release|public\s+relations/i,
+    regex: /\b(write|draft|prepare|issue|send|publish)\b[^.!?]{0,30}\bpress\s+release\b|\bpublic\s+relations\b/i,
     department: "growth",
     mode: "pr",
     reason: "Public relations match",
@@ -418,14 +418,39 @@ export const CONCEPTS: Concept[] = [
   { department: "ops", mode: "sow", boost: 10, tokens: ["sow", "statement", "work", "schedule"] },
   { department: "paidads", mode: "meta", boost: 9, tokens: ["meta", "facebook", "instagram"] },
   { department: "paidads", mode: "retargeting", boost: 9, tokens: ["retargeting", "audience", "audiences", "stale"] },
-  { department: "updatedocs", mode: "audit", boost: 9, tokens: ["changelog", "release", "notes", "documentation"] },
+  {
+    department: "updatedocs",
+    mode: "audit",
+    boost: 9,
+    tokens: [
+      "changelog",
+      "release",
+      "notes",
+      "documentation",
+      "stale changelog",
+      "version drift",
+      "docs drift",
+      "tagged releases",
+    ],
+  },
   // Core / quality / reflection departments: the engineering long tail. Their
   // descriptions are thin, so the vocabulary comes from the work itself.
   {
     department: "context-anchor",
     mode: "task-interruption-and-recovery",
     boost: 10,
-    tokens: ["interruption", "interrupted", "paused", "derive", "drift", "resume-session"],
+    tokens: [
+      "interruption",
+      "interrupted",
+      "paused",
+      "derive",
+      "drift",
+      "resume-session",
+      "where was i",
+      "context window",
+      "switch context",
+      "park",
+    ],
   },
   {
     department: "relay",
@@ -461,7 +486,17 @@ export const CONCEPTS: Concept[] = [
     department: "coupling-router",
     mode: "worktree-lease-protocol",
     boost: 10,
-    tokens: ["subagent", "subagents", "worktree", "lease", "overwriting"],
+    tokens: [
+      "subagent",
+      "subagents",
+      "worktree",
+      "lease",
+      "overwriting",
+      "same file",
+      "overwrote",
+      "edit conflict",
+      "lease conflict",
+    ],
   },
   {
     department: "git",
@@ -529,24 +564,49 @@ export const CONCEPTS: Concept[] = [
   { department: "sales-enablement", mode: "playbook", boost: 9, tokens: ["demoed", "playbook", "demo", "pitch"] },
   { department: "qa-launch", mode: "chaos", boost: 10, tokens: ["chaos", "failover", "resilience", "disappears"] },
   { department: "client-comms", mode: "change", boost: 10, tokens: ["tweaks", "pushback", "timeline", "extra"] },
+  {
+    department: "humanize",
+    mode: "audit",
+    boost: 14,
+    tokens: ["reads like", "sounds like", "robotic", "ai-sounding", "tone-deaf"],
+  },
 ];
 
-function conceptBoost(department: string, promptTokens: string[]): number {
+function normalizedPhrase(prompt: string): string {
+  return ` ${prompt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()} `;
+}
+
+function conceptMatches(concept: Concept, promptTokens: string[], normalized: string): boolean {
+  return concept.tokens.some((token) =>
+    token.includes(" ")
+      ? normalized.includes(` ${token} `)
+      : promptTokens.some((candidate) => stemsMatch(candidate, token)),
+  );
+}
+
+function conceptBoost(department: string, promptTokens: string[], prompt: string): number {
   let boost = 0;
+  const normalized = normalizedPhrase(prompt);
   for (const concept of CONCEPTS) {
     if (concept.department !== department) continue;
-    if (concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) {
-      boost += concept.boost;
-    }
+    if (conceptMatches(concept, promptTokens, normalized)) boost += concept.boost;
   }
   return boost;
 }
 
-function conceptMode(department: string, promptTokens: string[]): { mode: string; boost: number } | undefined {
+function conceptMode(
+  department: string,
+  promptTokens: string[],
+  prompt: string,
+): { mode: string; boost: number } | undefined {
   let best: { mode: string; boost: number } | undefined;
+  const normalized = normalizedPhrase(prompt);
   for (const concept of CONCEPTS) {
     if (concept.department !== department || !concept.mode) continue;
-    if (!concept.tokens.some((token) => promptTokens.some((candidate) => stemsMatch(candidate, token)))) continue;
+    if (!conceptMatches(concept, promptTokens, normalized)) continue;
     if (!best || concept.boost > best.boost) best = { mode: concept.mode, boost: concept.boost };
   }
   return best;
@@ -1003,7 +1063,7 @@ function scoreDepartments(prompt: string): ScoredDepartment[] {
       if (rule.confidence !== "hint" || rule.department !== entry.skill) continue;
       if (rule.regex.test(prompt)) hintBoost += 10;
     }
-    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens) + hintBoost;
+    const intent = intentBoost(entry.skill, prompt) + conceptBoost(entry.skill, promptTokens, prompt) + hintBoost;
     score += intent;
     return { entry, score, modeSignal, intent };
   });
@@ -1026,7 +1086,7 @@ function pickMode(entry: DirectoryEntry, prompt: string): { mode: string; score:
   const index = getIndex();
   const promptTokens = tokenize(prompt);
   const intent = intentMode(entry.skill, prompt);
-  const concept = conceptMode(entry.skill, promptTokens);
+  const concept = conceptMode(entry.skill, promptTokens, prompt);
   const preferred = intent ?? concept?.mode ?? DEFAULT_MODE[entry.skill];
   let bestMode: string | undefined;
   let bestScore = 0;

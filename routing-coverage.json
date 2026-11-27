@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-15",
+  "generatedAt": "2026-11-27",
   "total": 411,
-  "curated": 135,
+  "curated": 136,
   "nameOnly": [
     "accounts:audit",
     "accounts:cashflow",
@@ -151,7 +151,6 @@
     "gtm:research",
     "gtm:score",
     "humanize:ast-shield-and-cadence",
-    "humanize:audit",
     "humanize:patterns",
     "humanize:verification",
     "incident-response:audit",

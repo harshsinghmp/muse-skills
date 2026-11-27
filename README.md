@@ -7,7 +7,7 @@
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.8.3-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Version](https://img.shields.io/badge/Version-8.8.4-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
 [![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
@@ -19,7 +19,7 @@
 npx skills add harshsinghmp/muse-skills
 
 # 🚀 Option B: Instant Remote Setup (46 Skills + 467 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.3/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.4/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -299,7 +299,8 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | Distribution | Kind | Prompts | Exact `skill:mode` | Department |
 | :--- | :--- | ---: | ---: | ---: |
 | `training (tuned)` | tuned | 247 | 162 (65.6%) | 178 (72.1%) |
-| `v10` | unseen | 40 | 4 (10.0%) | 9 (22.5%) |
+| `regressions-v1` | unseen | 12 | 1 (8.3%) | 12 (100.0%) |
+| `v10` | unseen | 40 | 5 (12.5%) | 10 (25.0%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
 | `v6` | unseen | 40 | 26 (65.0%) | 29 (72.5%) |
 | `v7` | unseen | 40 | 2 (5.0%) | 9 (22.5%) |
@@ -307,9 +308,9 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 | `v9` | unseen | 40 | 2 (5.0%) | 13 (32.5%) |
 
 
-**Mode coverage**: 135 of 411 routable modes (33%) carry a curated routing signal; the other 276 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+**Mode coverage**: 136 of 411 routable modes (33%) carry a curated routing signal; the other 275 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
 
-Measured 2026-11-15. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
+Measured 2026-11-27. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
 
 ### Changing a skill
