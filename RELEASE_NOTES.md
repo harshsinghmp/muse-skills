@@ -1,3 +1,32 @@
+# 🏛️ Muse Skills v8.8.5 — Routing Measured, Loop Closed
+
+> **Patch release: ships the measured routing work through a frozen v15 set, moves `musememory` to the latest dist-tag, and closes the continuous routing-iteration loop.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.8.5
+
+- **Routing measured through v15** (`secretary`, routing fixtures): mode and department cues raised the measured sets to v10 **11/40**, v11 **18/26**, v12 **19/22**, v13 **28/29**, and v14 **27/29** exact/department. The tuned set is **166/182**, regressions-v1 is **12/12**, and a fresh v15 set is frozen at **6/40 exact · 14/40 department**.
+- **The iteration loop is closed:** v15 is the current held-out baseline. Further routing quality work returns to the normal backlog instead of continuous set-by-set iteration.
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime uses the `latest` dist-tag, so its patch cadence no longer fails unrelated PRs on an exact pin. The dependency gate still verifies it starts.
+
+## 📊 Verification
+
+| Metric | v8.8.4 | v8.8.5 |
+|:---|:---|:---|
+| Automated Tests | 927 | **927** |
+| Test Files | 78 | **78** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
+
 # 🏛️ Muse Skills v8.8.4 — Routing Fixes, Release Automation
 
 > **Patch release: fixes the press-release fast path and adds a measured humanize cue (v10 5/40 exact, 10/40 department), pins every P1 regression, drafts release notes from the ledger, and requires evidence for a docs mark.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
