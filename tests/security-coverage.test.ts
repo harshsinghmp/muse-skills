@@ -208,11 +208,11 @@ describe("audit coverage gaps (#397)", () => {
     expect(script).toContain("</dev/null");
   });
 
-  test("Python designscope fetchers reject file:// and metadata/loopback addresses", () => {
+  test("Python design fetchers reject file:// and metadata/loopback addresses", () => {
     const script = [
       "import importlib.util, sys",
-      "paths = ['skills/design-interface/designscope/scripts/extract_css_vars.py',",
-      "         'skills/design-interface/designscope/scripts/verify_design.py']",
+      "paths = ['skills/agency-delivery/design/scripts/scope/extract_css_vars.py',",
+      "         'skills/agency-delivery/design/scripts/scope/verify_design.py']",
       "for i, p in enumerate(paths):",
       "    spec = importlib.util.spec_from_file_location(f'm{i}', p)",
       "    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)",

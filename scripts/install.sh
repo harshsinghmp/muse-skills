@@ -9,8 +9,8 @@
 #   MUSE_SKILLS_ALLOW_UNVERIFIED=1  proceed when a release has no checksum asset (not recommended)
 #
 # Flags (for non-interactive / CI automation):
-#   --all                 Install all 46 skills & native slash commands (default)
-#   --skills-only         Install 46 skills only
+#   --all                 Install all 45 skills & native slash commands (default)
+#   --skills-only         Install 45 skills only
 #   --commands-only       Export slash commands only
 #   --sync-agents         Automatically run updateagents to modernize workspace context
 #   --new-project [dir]   Automatically launch new-project scaffolder in specified directory

@@ -25,7 +25,7 @@ const EXPORTER_CLI = path.join(REPO_ROOT, "scripts/export-commands.ts");
 const REPO_AGENTS_MD = path.join(REPO_ROOT, "AGENTS.md");
 
 /** Documented contract: 46 canonical skills + every generated <skill>-<mode> command + 10 aliases, per harness. */
-const EXPECTED_SKILLS = 46;
+const EXPECTED_SKILLS = 45;
 const EXPECTED_ALIASES = 10;
 const SKILL_MODE_COMMANDS = getSkillModeCommands(getSkills());
 const EXPECTED_COMMANDS_PER_HARNESS = EXPECTED_SKILLS + SKILL_MODE_COMMANDS.length + EXPECTED_ALIASES;
@@ -222,7 +222,7 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     expect(stdout).toContain("Setup Complete");
   });
 
-  it("installs 46 skills, each with a SKILL.md, under the HOME the CLI actually uses", () => {
+  it("installs 45 skills, each with a SKILL.md, under the HOME the CLI actually uses", () => {
     const stdout = cleanRun();
     const skills = readRegistry();
     expect(skills.length).toBe(EXPECTED_SKILLS);
@@ -246,7 +246,7 @@ describe("🚀 export-commands --setup: real CLI wiring end-to-end", () => {
     }
   });
 
-  it("writes the full command surface per detected harness (46 skills + every skill-mode + 10 aliases), derived not hardcoded", () => {
+  it("writes the full command surface per detected harness (45 skills + every skill-mode + 10 aliases), derived not hardcoded", () => {
     const stdout = cleanRun();
     const skills = readRegistry();
     const harnesses = harnessTargets(fakeHome, fakeWorkspace);

@@ -2,7 +2,7 @@
 /**
  * eval-routing.ts — routing-quality gate for `secretary:dispatch`.
  *
- * The command surface (46 skills × modes) was always measurable; the router
+ * The command surface (45 skills × modes) was always measurable; the router
  * behind it was not. The gate is a regression baseline over realistic prompts,
  * not a claim of generalisation — a miss means either the router or the
  * fixture's intent needs an explicit decision. This evaluates `triagePrompt` against a fixture set of

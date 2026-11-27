@@ -87,7 +87,7 @@
   {
     "id": "v10-18",
     "prompt": "figma link attached \u2014 half the frames are ungrouped and the prototype isn't wired. i need the click paths written down.",
-    "expect": "designscope:capture-flows"
+    "expect": "design:scope"
   },
   {
     "id": "v10-19",

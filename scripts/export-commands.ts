@@ -329,7 +329,7 @@ export interface HarnessSurface {
   generate: (skill: SkillItem, mode?: string, customDesc?: string) => string;
 }
 
-/** One writer for every harness: 46 skills + 10 aliases + one command per routable mode. */
+/** One writer for every harness: 45 skills + 10 aliases + one command per routable mode. */
 export function writeHarnessCommands(destDir: string, skills: SkillItem[], surface: HarnessSurface): number {
   fs.mkdirSync(destDir, { recursive: true });
   const { extension, generate } = surface;

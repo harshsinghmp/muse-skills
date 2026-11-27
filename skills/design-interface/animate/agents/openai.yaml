@@ -22,5 +22,5 @@ instructions: |
   (CSS/WAAPI/scroll-driven/View Transitions), performance.md (60fps), accessibility.md
   (reduced motion), review-checklist.md (review/audit), gsap.md and mobile.md (explicit
   ask only), other-libraries.md (Anime.js/Lottie/Rive/SVG/Three.js). Cooperate with
-  suggested skills: refactor-ui, designscope, code-review, gauntlet-loop. Always enforce
+  suggested skills: refactor-ui, design, code-review, gauntlet-loop. Always enforce
   the Verification checklist before completing any task.

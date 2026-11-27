@@ -43,7 +43,7 @@
   {
     "id": "v15-10",
     "prompt": "break this landing page into hierarchy, spacing, and color decisions",
-    "expect": "designscope:analysis-framework"
+    "expect": "design:scope"
   },
   {
     "id": "v15-11",

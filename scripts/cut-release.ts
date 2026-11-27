@@ -205,7 +205,7 @@ step(state, "notes", () => {
   const changed = bullets.length > 0 ? bullets.join("\n") : "- **<headline>**: <what changed, and the evidence.>";
   const skeleton = `# 🏛️ Muse Skills ${tag} — <one line for humans>
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 45 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 

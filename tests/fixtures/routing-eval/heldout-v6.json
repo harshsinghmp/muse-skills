@@ -163,7 +163,7 @@
   {
     "id": "v6-32",
     "prompt": "screenshot of a competitor's dashboard attached — I want their colour and spacing scale in a form I can hand to the devs",
-    "expect": "designscope:token-extraction"
+    "expect": "design:scope"
   },
   {
     "id": "v6-33",

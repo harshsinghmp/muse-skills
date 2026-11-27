@@ -541,8 +541,8 @@ export const CONCEPTS: Concept[] = [
   { department: "content", mode: "vsl", boost: 10, tokens: ["vsl", "salesletter", "programme", "webinar-pitch"] },
   { department: "retain", mode: "check-in", boost: 9, tokens: ["silent", "checkin", "touchpoint", "quiet"] },
   {
-    department: "designscope",
-    mode: "token-extraction",
+    department: "design",
+    mode: "scope",
     boost: 10,
     tokens: ["screenshot", "spacing", "palette"],
   },
@@ -783,8 +783,8 @@ export const CONCEPTS: Concept[] = [
   },
   { department: "refactor", mode: "perf", boost: 10, tokens: ["re-renders", "render performance", "keystroke"] },
   {
-    department: "designscope",
-    mode: "capture-flows",
+    department: "design",
+    mode: "scope",
     boost: 10,
     tokens: ["capture the onboarding flow", "prototype into steps", "edge cases"],
   },

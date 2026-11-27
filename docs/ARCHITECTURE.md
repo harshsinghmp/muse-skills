@@ -78,7 +78,6 @@ muse-skills/
 │   ├── README.md                   # Child documentation
 │   └── SKILL.md                    # Core operational procedure
 │
-├── designscope/                    # Design system extraction from any visual source
 │   ├── agents/openai.yaml          # Agent tool definition
 │   ├── references/                 # Capture flows, analysis framework, templates
 │   ├── scripts/                    # Stdlib-only validation & audit tools

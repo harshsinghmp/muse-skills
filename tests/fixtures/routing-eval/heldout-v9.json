@@ -117,12 +117,12 @@
   {
     "id": "v9-24",
     "prompt": "here's the URL. skip the palette — i want the responsive grid and flex structure written down so a frontend can rebuild the page without the screenshot",
-    "expect": "designscope:layout-tree-extraction"
+    "expect": "design:scope"
   },
   {
     "id": "v9-25",
     "prompt": "i don't want another essay about the site — give me the design brief in the exact section order my design leads read every week",
-    "expect": "designscope:output-template"
+    "expect": "design:scope"
   },
   {
     "id": "v9-26",

@@ -84,7 +84,7 @@ Hero H1 ≤ 3 lines in a wide container; no stats, pills, or badges inside the h
 ## Routing (token discipline — do not duplicate)
 
 - Existing UI needs verdict/score/polish/drift triage → `refactor-ui` (review/audit/polish modes).
-- Tokens must be extracted from a live reference first → `designscope`, then return here.
+- Tokens must be extracted from a live reference first → `design`, then return here.
 - Motion choreography → `animate` (this mode notes intent only).
 - Raster art, mockups, OG/share imagery beyond spec → `graphics` mode.
 

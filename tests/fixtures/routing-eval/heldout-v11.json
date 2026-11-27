@@ -47,7 +47,7 @@
   {
     "id": "v11-10",
     "prompt": "pull the exact spacing, type scale, and hover states from this screenshot into our tokens",
-    "expect": "designscope:element-copy"
+    "expect": "design:scope"
   },
   {
     "id": "v11-11",

@@ -13,15 +13,15 @@ metadata:
   category: design-interface
   priority: 22
   aliases: ["motion", "animation", "ui-animation", "framer-motion", "motion-design", "transitions", "scroll-experience", "animation-on-scroll", "gsap", "threejs", "webgl", "delight", "whimsy"]
-  suggested_skills: ["refactor-ui", "designscope", "code-review", "gauntlet-loop"]
+  suggested_skills: ["refactor-ui", "design", "code-review", "gauntlet-loop"]
   hermes:
     tags: [animation, motion, framer-motion, motion-dev, css, transitions, easing, gsap, threejs, webgl, scroll, scroll-experience, animation-on-scroll, micro-interactions, ui, design, springs, reduced-motion, accessibility, delight, whimsy, confetti, easter-egg]
-    related_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
-    suggested_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
+    related_skills: [refactor-ui, design, code-review, gauntlet-loop]
+    suggested_skills: [refactor-ui, design, code-review, gauntlet-loop]
     requires_tools: [view_file, write_to_file, bash]
   openclaw:
     category: design-interface
-    suggested_skills: [refactor-ui, designscope, code-review, gauntlet-loop]
+    suggested_skills: [refactor-ui, design, code-review, gauntlet-loop]
     primary_triggers: ["animate this", "add motion", "add a transition", "make it feel alive", "spring", "entrance animation", "exit animation", "micro-interaction", "scroll animation", "page transition", "hover effect", "framer motion", "gsap", "threejs", "three.js", "webgl", "3d canvas", "reduce motion", "review animation", "audit motion", "improve animations", "what could animate here", "delight", "whimsy", "confetti", "easter egg"]
     requires_tools: [view_file, write_to_file, bash]
   compatibility: [hermes, openclaw, claude-code, codex, cursor, gemini-cli, opencode]
@@ -95,7 +95,7 @@ Loadable by topic; also routable as `/animate-<file>` commands (not separate rou
 
 - Building a *component* (toast, drawer, dropdown, command menu) rather than an animation → that is a UI-library decision, not motion.
 - Pure **layout/visual design** without motion → [`refactor`](../refactor/SKILL.md).
-- Extracting a **design system / design tokens** → [`designscope`](../designscope/SKILL.md).
+- Extracting a **design system / design tokens** → [`design`](../design/SKILL.md).
 - Native mobile animation is **explicit-ask-only**; do not reach for `references/mobile.md` unless the user names a mobile platform.
 
 ---
