@@ -8,13 +8,18 @@
       "total": 247
     },
     "regressions-v1": {
-      "exact": 1,
+      "exact": 12,
       "department": 12,
       "total": 12
     },
     "v10": {
-      "exact": 5,
+      "exact": 10,
       "department": 10,
+      "total": 40
+    },
+    "v11": {
+      "exact": 9,
+      "department": 17,
       "total": 40
     },
     "v5": {
@@ -28,7 +33,7 @@
       "total": 40
     },
     "v7": {
-      "exact": 2,
+      "exact": 8,
       "department": 9,
       "total": 40
     },

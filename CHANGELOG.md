@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Mode-intent routing cues** (`secretary`): generic mode cues for assessment, reporting, attribution, viral/referral, merge recovery, review triage, and query tuning take v10 from **5/40 to 10/40 exact** and v7 from **2/40 to 8/40 exact**, with the tuned set unchanged at 162/178. All 12 P1 regression fixtures now route exactly.
+- **Fresh cross-domain held-out set** (`heldout-v11.json`): 40 new prompts written after the mode work, scored once at **9/40 exact · 17/40 department** and frozen without tuning.
+
 ## [8.8.4] - 2026-11-27
 
 ### Fixed

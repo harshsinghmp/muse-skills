@@ -102,6 +102,7 @@
     "verify": "bun scripts/verify.ts",
     "release:cut": "bun scripts/cut-release.ts",
     "check:routing:v10": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v10.json --min-exact 0 --min-skill 0",
+    "check:routing:v11": "bun scripts/eval-routing.ts --fixtures tests/fixtures/routing-eval/heldout-v11.json --min-exact 0 --min-skill 0",
     "export:routing-dataset": "bun scripts/export-routing-dataset.ts",
     "route:log": "bun scripts/log-route.ts",
     "arbitrate:labels": "bun scripts/arbitrate-labels.ts",
