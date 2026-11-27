@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-27T06:30:55.395Z",
-  "head": "5ae738186825a88744770a7f387a11bc9ccce3f3",
+  "updatedAt": "2026-11-27T18:06:05.340Z",
+  "head": "9681ae6ed5a0c6b51493a136e5219203dac053ec",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.8.4"
+    "releaseTag": "v8.8.5"
   },
   "agentWatermark": {
     "point": 185,
@@ -8973,6 +8973,343 @@
       "shipped": true,
       "releaseTag": "v8.8.4",
       "createdAt": "2026-11-27T06:30:09.140Z"
+    },
+    {
+      "id": "DP-0220",
+      "point": 220,
+      "commit": "1a777b2e61a54ce4568f4ad96c6c5a83fb061a64",
+      "shortCommit": "1a777b2",
+      "date": "2026-11-27",
+      "type": "other",
+      "scope": "",
+      "summary": "Release v8.8.4 (#517)",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/cut-release.ts",
+        "scripts/install.sh",
+        "scripts/release-notes.ts",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "skills/core-engine/updatedocs/scripts/updatedocs.ts",
+        "tests/docs-ledger.test.ts",
+        "tests/fixtures/routing-eval/regressions-v1.json",
+        "tests/release-notes.test.ts",
+        "tests/routing-fast-path-table.test.ts",
+        "tests/routing-heldout.test.ts",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.4",
+      "createdAt": "2026-11-27T18:05:26.820Z"
+    },
+    {
+      "id": "DP-0221",
+      "point": 221,
+      "commit": "62af2e6c1e0bdae48be6e22a381babecdd37edd9",
+      "shortCommit": "62af2e6",
+      "date": "2026-11-27",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "add measured mode cues and a fresh v11 held-out set (#518)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v11.json",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.820Z"
+    },
+    {
+      "id": "DP-0222",
+      "point": 222,
+      "commit": "7163a8fd31708ec3800492f8027bfa005b679b39",
+      "shortCommit": "7163a8f",
+      "date": "2026-11-27",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "iterate from v11 misses with general cues (#519)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "bun.lock",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0223",
+      "point": 223,
+      "commit": "489a74e749c6a8ac483a19b005ba3d76eeab2e92",
+      "shortCommit": "489a74e",
+      "date": "2026-11-27",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "add fresh v12 set and iterate from its misses (#520)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v12.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0224",
+      "point": 224,
+      "commit": "2384d744a62155700d0021eb243596571a374986",
+      "shortCommit": "2384d74",
+      "date": "2026-11-27",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "add fresh v13 set and iterate from its misses (#521)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "bun.lock",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v13.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0225",
+      "point": 225,
+      "commit": "05a8f564a821461def0c56914ab5f731f5059a26",
+      "shortCommit": "05a8f56",
+      "date": "2026-11-27",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "track musememory latest instead of an exact pin (#522)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "bun.lock",
+        "package.json",
+        "scripts/check-deps.ts",
+        "tests/ci-hardening.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0226",
+      "point": 226,
+      "commit": "9681ae6ed5a0c6b51493a136e5219203dac053ec",
+      "shortCommit": "9681ae6",
+      "date": "2026-11-27",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "iterate from v14 and add fresh v15 set (#524)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/heldout-v15.json"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-27T18:05:26.821Z"
     }
   ]
 }

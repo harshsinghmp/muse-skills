@@ -19,11 +19,11 @@ describe("routing regressions from the P1 baseline", () => {
     expect(invalid).toEqual([]);
   });
 
-  test("every mode-pair regression keeps the right department", () => {
+  test("every mode-pair regression routes exactly", () => {
     const report = evaluateRouting(REGRESSIONS, routes, { minExact: 0, minSkill: 0 });
     expect(report.invalidPredictions).toEqual([]);
-    const departmentMisses = report.failures.filter((failure) => failure.reason === "department");
-    expect(departmentMisses).toEqual([]);
+    expect(report.failures).toEqual([]);
+    expect(report.exact).toBe(REGRESSIONS.length);
   });
 
   test("a press release mentioned, not requested, does not fire the growth fast path", () => {

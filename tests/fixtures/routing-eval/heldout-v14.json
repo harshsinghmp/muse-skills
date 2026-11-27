@@ -1,0 +1,186 @@
+[
+  {
+    "id": "v14-01",
+    "prompt": "record why we chose postgres over the managed option, including what we rejected",
+    "expect": "updatedocs:decision-record"
+  },
+  {
+    "id": "v14-02",
+    "prompt": "the docs backlog has thirty stale pages; rank them by which mislead users most",
+    "expect": "updateagents:docs-backlog"
+  },
+  {
+    "id": "v14-03",
+    "prompt": "our commit history hides a force-push that rewrote a release; audit the damage",
+    "expect": "git:audit"
+  },
+  {
+    "id": "v14-04",
+    "prompt": "this auth change looks fine but the token comparison is timing-unsafe",
+    "expect": "code-review:security-controls"
+  },
+  {
+    "id": "v14-05",
+    "prompt": "new client signed; capture the stack, access, and launch constraints before code",
+    "expect": "new-project:client-onboarding"
+  },
+  {
+    "id": "v14-06",
+    "prompt": "i am closing the laptop; leave the exact next step and the files i had open",
+    "expect": "relay:resumption-protocol"
+  },
+  {
+    "id": "v14-07",
+    "prompt": "park this task with the current hypothesis and the failed attempts",
+    "expect": "context-anchor:task-interruption-and-recovery"
+  },
+  {
+    "id": "v14-08",
+    "prompt": "run an adversarial pass on the upload flow before the pen test",
+    "expect": "gauntlet-loop:web-security-visual-gate"
+  },
+  {
+    "id": "v14-09",
+    "prompt": "the settings page re-renders every keystroke; cut the work without changing the ui",
+    "expect": "refactor:perf"
+  },
+  {
+    "id": "v14-10",
+    "prompt": "capture the onboarding flow from this prototype into steps and edge cases",
+    "expect": "designscope:capture-flows"
+  },
+  {
+    "id": "v14-11",
+    "prompt": "two agents are claiming the same task; make the mesh settle it",
+    "expect": "coupling-router:mesh"
+  },
+  {
+    "id": "v14-12",
+    "prompt": "before we commit to this plan, write the strongest case against it",
+    "expect": "secretary:socratic-adversarial-gate"
+  },
+  {
+    "id": "v14-13",
+    "prompt": "define the evidence schema for launch claims before marketing writes them",
+    "expect": "evidence-ledger:evidence-entry-schema"
+  },
+  {
+    "id": "v14-14",
+    "prompt": "the retry queue has no owner field; define the record so failures can be routed",
+    "expect": "dead-letter:record-schema"
+  },
+  {
+    "id": "v14-15",
+    "prompt": "the vendor's completion report is mostly screenshots; audit the claims",
+    "expect": "pua:audit"
+  },
+  {
+    "id": "v14-16",
+    "prompt": "the team ships features but never retros; build the habit without another meeting",
+    "expect": "coach:team"
+  },
+  {
+    "id": "v14-17",
+    "prompt": "our docs have broken links and duplicated headings; define the hygiene rules",
+    "expect": "audit:hygiene-rules"
+  },
+  {
+    "id": "v14-18",
+    "prompt": "design the quarterly retreat agenda around three decisions, not a status readout",
+    "expect": "periodic-retreat:retreat-framework"
+  },
+  {
+    "id": "v14-19",
+    "prompt": "which caches are safe to delete on this machine, and which are expensive to rebuild",
+    "expect": "clean-system-cache:audit"
+  },
+  {
+    "id": "v14-20",
+    "prompt": "find the ai tells in this draft and replace them without changing the facts",
+    "expect": "humanize:patterns"
+  },
+  {
+    "id": "v14-21",
+    "prompt": "the animation ignores reduced-motion and makes the form hard to follow",
+    "expect": "animate:accessibility"
+  },
+  {
+    "id": "v14-22",
+    "prompt": "the checkout asks for the same address twice; redesign the flow",
+    "expect": "design:ux"
+  },
+  {
+    "id": "v14-23",
+    "prompt": "we need short-form demand for a developer tool; test tiktok without burning the budget",
+    "expect": "paidads:tiktok"
+  },
+  {
+    "id": "v14-24",
+    "prompt": "we have the keywords but no pages that answer the actual question",
+    "expect": "seo:content"
+  },
+  {
+    "id": "v14-25",
+    "prompt": "add csp and hsts without breaking the embedded checkout",
+    "expect": "webdev:security-headers"
+  },
+  { "id": "v14-26", "prompt": "the app store listing says powerful and shows a login screen", "expect": "mobile:aso" },
+  {
+    "id": "v14-27",
+    "prompt": "find creators who can explain the workflow, not just unbox it",
+    "expect": "smm:influencer"
+  },
+  { "id": "v14-28", "prompt": "turn the case study into a ninety-second sales video script", "expect": "content:vsl" },
+  { "id": "v14-29", "prompt": "define the product events we need before the dashboard", "expect": "analytics:events" },
+  {
+    "id": "v14-30",
+    "prompt": "the internal assistant answers from old docs; build retrieval with citations",
+    "expect": "automation:rag"
+  },
+  {
+    "id": "v14-31",
+    "prompt": "we moved dns and half the subdomains still point at the old host",
+    "expect": "devops:domains"
+  },
+  {
+    "id": "v14-32",
+    "prompt": "build the browser and device matrix for the checkout launch",
+    "expect": "qa-launch:matrix"
+  },
+  {
+    "id": "v14-33",
+    "prompt": "turn the custom build into a repeatable service with scope and price",
+    "expect": "ops:sku"
+  },
+  {
+    "id": "v14-34",
+    "prompt": "the client wants two extra pages for free; write the change request",
+    "expect": "client-comms:change"
+  },
+  {
+    "id": "v14-35",
+    "prompt": "we have two hundred accounts; write the first touch that gets a reply",
+    "expect": "gtm:outreach"
+  },
+  {
+    "id": "v14-36",
+    "prompt": "the outage is over; run the retro and name the systemic fix",
+    "expect": "incident-response:retro"
+  },
+  {
+    "id": "v14-37",
+    "prompt": "the query is slow because the composite index is in the wrong order",
+    "expect": "database:index"
+  },
+  {
+    "id": "v14-38",
+    "prompt": "we need to know why trial users leave in week one; run the interviews",
+    "expect": "research:user-research"
+  },
+  { "id": "v14-39", "prompt": "the books do not reconcile after the stripe payout", "expect": "accounts:bookkeeping" },
+  {
+    "id": "v14-40",
+    "prompt": "trial users get one email and nothing else; build the nurture track",
+    "expect": "crm:nurture"
+  }
+]

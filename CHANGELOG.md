@@ -4,6 +4,15 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.8.5] - 2026-11-27
+
+### Changed
+
+- **Routing measured through v15** (`secretary`, routing fixtures): mode and department cues raised the measured sets — v10 **11/40**, v11 **18/26**, v12 **19/22**, v13 **28/29**, v14 **27/29** exact/department; the tuned set is **166/182** and regressions-v1 is **12/12**. A fresh v15 set is frozen at **6/40 exact · 14/40 department**. The continuous routing-iteration loop ends here; remaining quality work returns to the normal backlog.
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime uses the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.4...v8.8.5
+
 ## [8.8.4] - 2026-11-27
 
 ### Fixed

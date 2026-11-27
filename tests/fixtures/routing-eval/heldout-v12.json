@@ -1,0 +1,190 @@
+[
+  {
+    "id": "v12-01",
+    "prompt": "deploy finished; send the team a short ping with the sha and who approved it",
+    "expect": "telegram:notify"
+  },
+  {
+    "id": "v12-02",
+    "prompt": "block the production deploy until a human taps approve in chat",
+    "expect": "telegram:approve"
+  },
+  {
+    "id": "v12-03",
+    "prompt": "half the newsletter goes to spam after the domain change; fix authentication",
+    "expect": "crm:deliverability"
+  },
+  {
+    "id": "v12-04",
+    "prompt": "dedupe eight thousand contacts and keep the most recent consent",
+    "expect": "crm:contacts"
+  },
+  {
+    "id": "v12-05",
+    "prompt": "collect the logo, fonts, and color files into one shareable brand kit",
+    "expect": "brand:assets"
+  },
+  {
+    "id": "v12-06",
+    "prompt": "write the creative brief for the spring campaign from the positioning doc",
+    "expect": "brand:brief"
+  },
+  {
+    "id": "v12-07",
+    "prompt": "a critical cve just landed in our image; tell me if we are exposed and what to patch first",
+    "expect": "muse-security:cve"
+  },
+  {
+    "id": "v12-08",
+    "prompt": "one tenant can read another tenant's export; find the boundary break",
+    "expect": "muse-security:boundary"
+  },
+  {
+    "id": "v12-09",
+    "prompt": "prospects keep saying we are too expensive; give the team a defensible response",
+    "expect": "sales-enablement:objection"
+  },
+  {
+    "id": "v12-10",
+    "prompt": "build a twelve-minute demo that lands the admin workflow, not the dashboard",
+    "expect": "sales-enablement:demo"
+  },
+  { "id": "v12-11", "prompt": "rank accounts by silent risk before the renewal quarter", "expect": "retain:health" },
+  { "id": "v12-12", "prompt": "build the quarterly review around outcomes, not feature usage", "expect": "retain:qbr" },
+  {
+    "id": "v12-13",
+    "prompt": "we need to add a nullable column and backfill forty million rows without locking writes",
+    "expect": "database:migrations"
+  },
+  {
+    "id": "v12-14",
+    "prompt": "the nightly aggregation is six times slower after the index change; find the regression",
+    "expect": "database:tuning"
+  },
+  {
+    "id": "v12-15",
+    "prompt": "keyboard users cannot reach the save button in the drawer",
+    "expect": "webdev:accessibility"
+  },
+  {
+    "id": "v12-16",
+    "prompt": "the marketing team needs to edit the pricing page without a deploy",
+    "expect": "webdev:cms"
+  },
+  {
+    "id": "v12-17",
+    "prompt": "the same screen behaves differently on ios and android after the upgrade",
+    "expect": "mobile:cross"
+  },
+  {
+    "id": "v12-18",
+    "prompt": "the field team needs the app to work offline and sync when signal returns",
+    "expect": "mobile:pwa"
+  },
+  {
+    "id": "v12-19",
+    "prompt": "we opened three clinics; make each location findable with the right hours",
+    "expect": "seo:local"
+  },
+  {
+    "id": "v12-20",
+    "prompt": "a competitor is outranking us on our own brand term; audit the link profile",
+    "expect": "seo:links"
+  },
+  {
+    "id": "v12-21",
+    "prompt": "brand terms are eating the budget; separate brand and non-brand",
+    "expect": "paidads:google"
+  },
+  {
+    "id": "v12-22",
+    "prompt": "cart abandoners see the same ad for thirty days; fix frequency and window",
+    "expect": "paidads:retargeting"
+  },
+  {
+    "id": "v12-23",
+    "prompt": "the discord is quiet except for support complaints; give it a reason to exist",
+    "expect": "smm:community"
+  },
+  {
+    "id": "v12-24",
+    "prompt": "our launch thread got forty replies and no clicks; rewrite the hook and the cta",
+    "expect": "smm:x"
+  },
+  {
+    "id": "v12-25",
+    "prompt": "turn the migration postmortem into a technical blog with the timeline and the fix",
+    "expect": "content:blog"
+  },
+  { "id": "v12-26", "prompt": "write the winback sequence for trials that never activated", "expect": "content:email" },
+  {
+    "id": "v12-27",
+    "prompt": "the exec dashboard has thirty tiles and nobody looks at it; cut it to the decision",
+    "expect": "analytics:dashboards"
+  },
+  {
+    "id": "v12-28",
+    "prompt": "the pricing page gets traffic but the trial button is ignored; find the drop",
+    "expect": "analytics:cro"
+  },
+  {
+    "id": "v12-29",
+    "prompt": "we have three tiers and everyone picks the middle; test the packaging",
+    "expect": "growth:pricing"
+  },
+  {
+    "id": "v12-30",
+    "prompt": "the referral program pays on signup, not activation; redesign the incentive",
+    "expect": "growth:referral"
+  },
+  {
+    "id": "v12-31",
+    "prompt": "sync stripe invoices into the crm without a nightly csv",
+    "expect": "automation:integrations"
+  },
+  {
+    "id": "v12-32",
+    "prompt": "page us only when checkout error rate crosses two percent for five minutes",
+    "expect": "automation:alerts"
+  },
+  {
+    "id": "v12-33",
+    "prompt": "move the marketing site to the edge without losing the redirects",
+    "expect": "devops:cloudflare"
+  },
+  {
+    "id": "v12-34",
+    "prompt": "we find out about outages from customers; add the missing signals",
+    "expect": "devops:monitoring"
+  },
+  {
+    "id": "v12-35",
+    "prompt": "the checkout page scores forty-two on mobile; find what blocks first paint",
+    "expect": "qa-launch:performance"
+  },
+  {
+    "id": "v12-36",
+    "prompt": "the support agent answers confidently and wrongly; build the eval set",
+    "expect": "qa-launch:evals"
+  },
+  {
+    "id": "v12-37",
+    "prompt": "the msa auto-renews in thirty days and the liability cap is missing",
+    "expect": "ops:legal"
+  },
+  {
+    "id": "v12-38",
+    "prompt": "the contractor agreement has no ip assignment; flag the gaps",
+    "expect": "ops:contracts"
+  },
+  {
+    "id": "v12-39",
+    "prompt": "the client wants a weekly status that is not a wall of text",
+    "expect": "client-comms:status"
+  },
+  {
+    "id": "v12-40",
+    "prompt": "the founder is doing every demo; build a repeatable sales motion",
+    "expect": "gtm:founder-sales"
+  }
+]

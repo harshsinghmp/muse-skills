@@ -1,0 +1,170 @@
+[
+  {
+    "id": "v15-01",
+    "prompt": "the release notes claim three fixes that never shipped; audit the changelog against the tags",
+    "expect": "updatedocs:audit"
+  },
+  {
+    "id": "v15-02",
+    "prompt": "run a second pass over the agent instructions for contradictions and dead references",
+    "expect": "updateagents:advanced-audit-passes"
+  },
+  {
+    "id": "v15-03",
+    "prompt": "a pr has forty commits and a merge commit; decide what to keep before review",
+    "expect": "git:anti-slop-triage"
+  },
+  {
+    "id": "v15-04",
+    "prompt": "the rfc says retries are idempotent; check the code actually agrees",
+    "expect": "code-review:agreement-review"
+  },
+  {
+    "id": "v15-05",
+    "prompt": "we need clerk, stripe, and postgres wired together in a new app",
+    "expect": "new-project:integration-blueprints"
+  },
+  {
+    "id": "v15-06",
+    "prompt": "summarize this session so the next person can continue without reading the transcript",
+    "expect": "relay:ambient-handoff"
+  },
+  {
+    "id": "v15-07",
+    "prompt": "hide the noisy tool output but keep the relevant failure in context",
+    "expect": "context-anchor:observation-masking"
+  },
+  {
+    "id": "v15-08",
+    "prompt": "run three critique rounds on this pricing page until the bar is met",
+    "expect": "gauntlet-loop:gauntlet-protocol"
+  },
+  { "id": "v15-09", "prompt": "the settings form has five competing visual styles; unify it", "expect": "refactor:ui" },
+  {
+    "id": "v15-10",
+    "prompt": "break this landing page into hierarchy, spacing, and color decisions",
+    "expect": "designscope:analysis-framework"
+  },
+  {
+    "id": "v15-11",
+    "prompt": "which skills must change together when the routing schema changes",
+    "expect": "coupling-router:coupling-matrix"
+  },
+  {
+    "id": "v15-12",
+    "prompt": "walk a new client through how this workspace is organized",
+    "expect": "secretary:onboard"
+  },
+  {
+    "id": "v15-13",
+    "prompt": "classify these three launch claims by evidence strength",
+    "expect": "evidence-ledger:claim-verification-taxonomy"
+  },
+  {
+    "id": "v15-14",
+    "prompt": "the retry storm keeps restarting; add a breaker and an owner",
+    "expect": "dead-letter:circuit-breaker"
+  },
+  {
+    "id": "v15-15",
+    "prompt": "the vendor's deck uses three different metrics for the same claim",
+    "expect": "pua:flavor-packs"
+  },
+  {
+    "id": "v15-16",
+    "prompt": "the client keeps expanding scope; coach the account lead through the conversation",
+    "expect": "coach:client"
+  },
+  {
+    "id": "v15-17",
+    "prompt": "turn the security findings into a fix order with owners",
+    "expect": "audit:remediation-matrix"
+  },
+  {
+    "id": "v15-18",
+    "prompt": "review last quarter's bets and decide what to stop",
+    "expect": "periodic-retreat:audit"
+  },
+  {
+    "id": "v15-19",
+    "prompt": "find the largest rebuildable caches without touching source",
+    "expect": "clean-system-cache:audit"
+  },
+  {
+    "id": "v15-20",
+    "prompt": "remove the listy rhythm and the em-dash habit from this page",
+    "expect": "humanize:ast-shield-and-cadence"
+  },
+  {
+    "id": "v15-21",
+    "prompt": "make the success state feel rewarding without a confetti cannon",
+    "expect": "animate:delight"
+  },
+  { "id": "v15-22", "prompt": "sketch the empty state for the new inbox", "expect": "design:wireframe" },
+  {
+    "id": "v15-23",
+    "prompt": "test reddit and quora for demand before adding budget",
+    "expect": "paidads:extra-platforms"
+  },
+  {
+    "id": "v15-24",
+    "prompt": "we need two hundred city pages that do not read like doorways",
+    "expect": "seo:programmatic"
+  },
+  {
+    "id": "v15-25",
+    "prompt": "move personalization to the edge without caching private data",
+    "expect": "webdev:edge"
+  },
+  {
+    "id": "v15-26",
+    "prompt": "the android build crashes on cold start after the sdk upgrade",
+    "expect": "mobile:android"
+  },
+  { "id": "v15-27", "prompt": "turn customer clips into a repeatable ugc program", "expect": "smm:ugc" },
+  {
+    "id": "v15-28",
+    "prompt": "turn the founder interview into a podcast episode with chapters",
+    "expect": "content:podcast"
+  },
+  { "id": "v15-29", "prompt": "the cfo wants channel credit without last-click", "expect": "analytics:attribution" },
+  {
+    "id": "v15-30",
+    "prompt": "build a voice agent that books appointments and hands off edge cases",
+    "expect": "automation:voice"
+  },
+  { "id": "v15-31", "prompt": "the deploy took down checkout; run the incident bridge", "expect": "devops:incident" },
+  {
+    "id": "v15-32",
+    "prompt": "test the new billing portal across plans and permissions",
+    "expect": "qa-launch:functional"
+  },
+  { "id": "v15-33", "prompt": "compare three agencies on scope, price, and exit terms", "expect": "ops:vendor" },
+  {
+    "id": "v15-34",
+    "prompt": "write the ceo friday note: shipped, stuck, decision needed",
+    "expect": "client-comms:executive-pulse"
+  },
+  {
+    "id": "v15-35",
+    "prompt": "score these fifty accounts against the icp and rank the top ten",
+    "expect": "gtm:score"
+  },
+  {
+    "id": "v15-36",
+    "prompt": "stop the bleeding on the duplicate-charge bug before the rca",
+    "expect": "incident-response:mitigate"
+  },
+  {
+    "id": "v15-37",
+    "prompt": "add a constraint so a tenant can never reference another tenant's row",
+    "expect": "database:guard"
+  },
+  {
+    "id": "v15-38",
+    "prompt": "profile the competitor's founder and funding before the partnership call",
+    "expect": "research:entity-dossier"
+  },
+  { "id": "v15-39", "prompt": "find the invoices that were paid twice last quarter", "expect": "accounts:audit" },
+  { "id": "v15-40", "prompt": "win back customers who downgraded but still use the product", "expect": "crm:winback" }
+]
