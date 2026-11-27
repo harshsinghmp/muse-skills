@@ -19,7 +19,7 @@
     },
     "v11": {
       "exact": 18,
-      "department": 26,
+      "department": 27,
       "total": 40
     },
     "v12": {
@@ -28,13 +28,18 @@
       "total": 40
     },
     "v13": {
-      "exact": 28,
-      "department": 29,
+      "exact": 29,
+      "department": 30,
       "total": 40
     },
     "v14": {
-      "exact": 18,
-      "department": 22,
+      "exact": 27,
+      "department": 29,
+      "total": 40
+    },
+    "v15": {
+      "exact": 6,
+      "department": 14,
       "total": 40
     },
     "v5": {
@@ -43,8 +48,8 @@
       "total": 40
     },
     "v6": {
-      "exact": 26,
-      "department": 29,
+      "exact": 27,
+      "department": 30,
       "total": 40
     },
     "v7": {
@@ -59,7 +64,7 @@
     },
     "v9": {
       "exact": 2,
-      "department": 13,
+      "department": 14,
       "total": 40
     }
   }
