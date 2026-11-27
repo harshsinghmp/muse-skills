@@ -6,6 +6,12 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Press release is not a growth request** (`secretary`): the fast-path rule now requires an action verb (write/draft/prepare/issue/send/publish), so a critique like "reads like a press release" routes to `humanize:audit` instead of `growth:pr`.
+- **Humanize cue, measured** (`secretary`): phrase-level concept cues are now matched against the normalized prompt, and a `humanize:audit` cue for "reads like / sounds like / robotic / ai-sounding / tone-deaf" lifts v10 to **5/40 exact, 10/40 department** (from 4/9) with the tuned set (162/178) and v7 (2/9) unchanged.
+- **Routing regressions** (`tests/fixtures/routing-eval/regressions-v1.json`): every mode-pair miss from the P1 baseline and the press-release prompt now have a fixture that pins the department and the exact expected route.
+
+### Fixed
+
 - **Held-out budget to 30 s** (`tests/routing-heldout.test.ts`): the cross-domain case ran 15.3 s under parallel `verify`, so the 15 s budget still timed out. The measured engineering, cross-domain, and v8 cases now use the same 30 s budget as the other slow integration tests.
 
 ### Changed

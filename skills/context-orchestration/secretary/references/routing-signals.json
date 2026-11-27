@@ -124,7 +124,7 @@
       "confidence": "strong"
     },
     {
-      "pattern": "press\\s+release|public\\s+relations",
+      "pattern": "\\b(write|draft|prepare|issue|send|publish)\\b[^.!?]{0,30}\\bpress\\s+release\\b|\\bpublic\\s+relations\\b",
       "flags": "i",
       "department": "growth",
       "mode": "pr",
@@ -980,7 +980,11 @@
         "changelog",
         "release",
         "notes",
-        "documentation"
+        "documentation",
+        "stale changelog",
+        "version drift",
+        "docs drift",
+        "tagged releases"
       ]
     },
     {
@@ -993,7 +997,11 @@
         "paused",
         "derive",
         "drift",
-        "resume-session"
+        "resume-session",
+        "where was i",
+        "context window",
+        "switch context",
+        "park"
       ]
     },
     {
@@ -1063,7 +1071,11 @@
         "subagents",
         "worktree",
         "lease",
-        "overwriting"
+        "overwriting",
+        "same file",
+        "overwrote",
+        "edit conflict",
+        "lease conflict"
       ]
     },
     {
@@ -1347,6 +1359,18 @@
         "pushback",
         "timeline",
         "extra"
+      ]
+    },
+    {
+      "department": "humanize",
+      "mode": "audit",
+      "boost": 14,
+      "tokens": [
+        "reads like",
+        "sounds like",
+        "robotic",
+        "ai-sounding",
+        "tone-deaf"
       ]
     }
   ]
