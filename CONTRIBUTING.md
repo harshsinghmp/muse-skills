@@ -105,7 +105,7 @@ changes
 7. **Delivery**: tag `vX.Y.Z` on a commit reachable from `main`, publish the release, merge back into `dev`, then confirm `bun run check:landed` exits 0.
 8. **Release smoke**: run `bun run release:smoke` (also run by the `Release Smoke` workflow on publish). It verifies the tag commit against the release `checksums.txt` asset and the installer default ref; a failure means the published installer cannot verify itself.
 9. **Docs ledger**: stamp the release with `bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --release vX.Y.Z`, then confirm `bun run check:ledger` passes. The Release workflow gates on this check, so a stale ledger blocks the tag.
-9. **Dependency smoke**: `bun run check:deps` fails when a direct dependency is behind the registry or the pinned `musememory` MCP runtime cannot start. CI runs it in the lint job.
+9. **Dependency smoke**: `bun run check:deps` fails when a direct dependency is behind the registry or the `musememory` MCP runtime cannot start. `musememory` is owned and on a fast cadence, so it tracks the `latest` dist-tag and is excluded from the behind-registry check; the runtime start check is its invariant. CI runs it in the lint job.
 
 ---
 

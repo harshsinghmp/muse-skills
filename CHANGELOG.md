@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime is on the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
+
 ### Fixed
 
 - **v13-driven cues** (`secretary`): general cues for deploy/ping hooks, alert routing, welcome sequences, brand intake/persona, SAST, playbooks, churn watch, schema/analytics audits, rate limits, crawl/on-page signals, social analytics, copy/launch, GA4 audits, workflow/chatbot automation, CI/hosting, E2E shared state, scoped engagements, client feedback/handover, GTM research, and invoicing take v13 from its frozen **12/40 exact · 18/40 department** to **28/40 · 29/40**. The tuned set stays **166/182**, v5/v6 stay 21/28 and 26/29 after removing two regressing tokens, v7 moves to 9/10, and regressions remain 12/12. v13 is now a development set; a fresh v14 is required for the next honest number.
