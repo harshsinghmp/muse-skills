@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
+- **v14-derived cues** (`secretary`): general cues for release-audit, token timing, client onboarding, adversarial passes, render performance, flow capture, plan opposition, retry schemas, vendor claims, team habits, retreat agendas, AI patterns, reduced motion, checkout UX, short-form demand, influencer programs, video scripts, RAG, productized services, outbound, incident retros, and user research take v14 from its frozen **18/40 exact · 22/40 department** to **27/40 · 29/40**. Tuned stays **166/182**; v6/v9/v11/v13 improve without drops; v5/v7/v8/v10/v12/regressions hold. v14 is now a development set.
+- **Fresh cross-domain held-out set** (`heldout-v15.json`): 40 new prompts written after the v14 iteration, scored once at **6/40 exact · 14/40 department**, and frozen without tuning.
+
+### Changed
+
 - **`musememory` tracks latest** (`package.json`, `scripts/check-deps.ts`): the owned MCP runtime is on the `latest` dist-tag, so a patch release no longer fails unrelated PRs on an exact pin. The dependency gate still verifies the installed binary starts; other direct dependencies remain behind-registry gated.
 - **Fresh cross-domain held-out set** (`heldout-v14.json`): 40 new prompts written after the v13 work, scored once at **18/40 exact · 22/40 department**, and frozen without tuning.
 
