@@ -11,7 +11,10 @@ const PROBES: Record<string, { fires: string; quiet: string }> = {
   "qa-launch:gate": { fires: "run the tests", quiet: "our test coverage numbers look good" },
   "code-review:pr-context": { fires: "review this pr", quiet: "we have 300 pull requests open" },
   "ops:sow": { fires: "draft a statement of work", quiet: "the scope changed after kickoff" },
-  "growth:pr": { fires: "write a press release", quiet: "the newsroom page needs updating" },
+  "growth:pr": {
+    fires: "write a press release",
+    quiet: "reads like a press release from a company that doesn't exist yet",
+  },
   "accounts:client-pnl": { fires: "build the p&l for the client", quiet: "margins are thin this quarter" },
   "code-review:triage-matrix": { fires: "run lint on the branch", quiet: "our lint rules disagree" },
   "updateagents:audit": { fires: "what is our ai readiness score", quiet: "the readme is out of date" },
