@@ -684,6 +684,21 @@ export const CONCEPTS: Concept[] = [
     boost: 10,
     tokens: ["voice guide", "style guide"],
   },
+  { department: "crm", mode: "deliverability", boost: 10, tokens: ["spam", "dkim", "spf", "dmarc", "authentication"] },
+  { department: "brand", mode: "assets", boost: 10, tokens: ["brand kit", "font files", "logo files"] },
+  { department: "retain", mode: "health", boost: 10, tokens: ["silent risk", "health score", "renewal quarter"] },
+  { department: "webdev", mode: "accessibility", boost: 10, tokens: ["keyboard", "screen reader", "focus trap"] },
+  { department: "mobile", mode: "cross", boost: 10, tokens: ["ios and android", "same screen"] },
+  { department: "mobile", mode: "pwa", boost: 10, tokens: ["offline", "sync when signal"] },
+  { department: "seo", mode: "links", boost: 10, tokens: ["link profile", "backlink", "outranking"] },
+  { department: "paidads", mode: "google", boost: 10, tokens: ["brand terms", "non-brand", "google ads"] },
+  { department: "content", mode: "blog", boost: 10, tokens: ["technical blog", "postmortem", "timeline"] },
+  { department: "automation", mode: "alerts", boost: 10, tokens: ["page us", "error rate", "threshold"] },
+  { department: "devops", mode: "monitoring", boost: 10, tokens: ["outages", "signals", "monitoring"] },
+  { department: "qa-launch", mode: "evals", boost: 10, tokens: ["eval set", "evals", "confidently"] },
+  { department: "ops", mode: "legal", boost: 10, tokens: ["msa", "liability cap", "auto-renews"] },
+  { department: "gtm", mode: "founder-sales", boost: 10, tokens: ["founder", "repeatable sales motion"] },
+  { department: "telegram", mode: "notify", boost: 10, tokens: ["deploy finished", "ping"] },
 ];
 
 function normalizedPhrase(prompt: string): string {
