@@ -40,11 +40,11 @@ A search-index plan: embedding source and chunking rule, ANN index type with a r
    - **RRF** (default): `score = Σ 1/(k + rank_i)` with `k ≈ 60` — rank-based, no score-normalization tuning.
    - Or weighted sum when scores are comparable; normalize both to [0,1] first. Tune weights on a labeled eval set, not vibes.
    - FTS pipeline: `to_tsvector`/`config` per language, `ts_rank`/`plainto_tsquery`; index with GIN (`operate`/`index` covers the btree side).
-5. Chunk for RAG deliberately — chunking beats model choice at small corpus sizes:
+6. Chunk for RAG deliberately — chunking beats model choice at small corpus sizes:
    - Chunk by semantic boundary (headers, markdown blocks) not fixed character counts; 256–512 tokens is a sane default for embedding retrieval.
    - Overlap 10–20% at boundaries so context isn't split mid-meaning.
    - Keep chunk source + sequence metadata in the payload (document_id, chunk_index, section) so results can be stitched and cited.
-6. Run and verify:
+7. Run and verify:
    - Confirm prefilter is applied before ANN (look at the filter-bypass / exact counts).
    - Sample recall on a labeled query set; widen HNSW `ef_search` (or Qdrant `search_params.hnsw_ef`) only where measured recall drops.
 

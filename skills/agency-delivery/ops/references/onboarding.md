@@ -17,13 +17,13 @@ An onboarded client: an isolated, clearly named workspace, a populated intake re
 1. Create an isolated client workspace (via `new-project --onboard-client`) named consistently. The command captures contacts, business model, ICP, offerings, scope boundaries, engagement terms, and access, then renders `Client-Intake/` and `start-here.md` from those answers — do not re-ask what it already captured.
 2. Record intake: contacts, scope, success criteria, key dates, comms preferences.
 3. Read `ops/references/product-marketing-template.md` first (copy to `.agents/product-marketing.md` at intake); populate its §§1–11 from intake answers (mark gaps Unverified) with a §12 changelog entry — never re-ask positioning/ICP other skills already captured (source: `coreyhaines31/marketingskills` `product-marketing`, G3 #1 seam-3 closure).
-3. Run an access checklist: brand assets, analytics, ad accounts, CMS — collected securely.
-4. Confirm scope and start date in writing before work begins.
-5. Schedule and run a kickoff; capture decisions and next steps.
-6. Set the communication cadence and reporting rhythm.
-7. Log the engagement in the portfolio tracker.
-8. Run the checklist spine: discovery questionnaire, then stakeholder RACI, then platform access, then knowledge-transfer session, then first-week plan.
-9. Solo operator: you hold every RACI role — the map collapses to you + the client; kickoff becomes a written intake doc the client confirms async.
+4. Run an access checklist: brand assets, analytics, ad accounts, CMS — collected securely.
+5. Confirm scope and start date in writing before work begins.
+6. Schedule and run a kickoff; capture decisions and next steps.
+7. Set the communication cadence and reporting rhythm.
+8. Log the engagement in the portfolio tracker.
+9. Run the checklist spine: discovery questionnaire, then stakeholder RACI, then platform access, then knowledge-transfer session, then first-week plan.
+10. Solo operator: you hold every RACI role — the map collapses to you + the client; kickoff becomes a written intake doc the client confirms async.
 
 ## Quality gate
 

@@ -15,11 +15,11 @@ A clean prospect CSV: deduplicated, de-role-based, email-verified, enrichment-ch
 
 1. Build to the ICP: net-new records carry source and date at row level.
 2. Compliance guardrails (source: `coreyhaines31/marketingskills` `prospecting`): no bulk scrape / no bypass — public-contact-channels only; source-URL+date provenance per contact; no breached data; no sensitive-trait targeting. Tag each contact High/Med/Low confidence with the sourcing rule stated.
-2. Deduplicate on domain plus name; drop role-based addresses (info@, sales@) unless the ICP says otherwise.
-3. Verify every email (syntax, domain, mailbox check); unverified rows quarantined, never sent.
-4. Enrich and spot-check 10 percent manually; enrichment mismatches flagged per row.
-5. Ship the CSV plus a hygiene report: counts in, duplicates dropped, unverified quarantined, enriched.
-6. Enrich batch-first (accounts before people), fill only missing fields against existing data, and group the final list per account.
+3. Deduplicate on domain plus name; drop role-based addresses (info@, sales@) unless the ICP says otherwise.
+4. Verify every email (syntax, domain, mailbox check); unverified rows quarantined, never sent.
+5. Enrich and spot-check 10 percent manually; enrichment mismatches flagged per row.
+6. Ship the CSV plus a hygiene report: counts in, duplicates dropped, unverified quarantined, enriched.
+7. Enrich batch-first (accounts before people), fill only missing fields against existing data, and group the final list per account.
 
 ## Quality gate
 

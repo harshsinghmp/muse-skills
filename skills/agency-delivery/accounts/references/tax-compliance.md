@@ -54,7 +54,7 @@ A cross-border digital service tax decision matrix, compliant export invoice dis
      - Deduct Tax Deducted at Source (TDS) under Section 194J (10% or 2% for Technical Services) or Section 194C (1% or 2% for Contracts) when invoices exceed statutory thresholds.
      - Deposit deducted tax to the government by the 7th of the following month.
 
-3. **Statutory Invoice Minimum Check**:
+4. **Statutory Invoice Minimum Check**:
    - [ ] Consecutive serial invoice number.
    - [ ] Date of issuance and delivery date.
    - [ ] Full legal name, registered address, and Tax ID (GSTIN, VAT, EIN) of both seller and buyer.
