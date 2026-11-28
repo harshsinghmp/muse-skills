@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-27T18:06:05.340Z",
-  "head": "9681ae6ed5a0c6b51493a136e5219203dac053ec",
+  "updatedAt": "2026-11-28T08:42:02.180Z",
+  "head": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
@@ -11,9 +11,9 @@
     "releaseTag": "v8.8.5"
   },
   "agentWatermark": {
-    "point": 185,
-    "commit": "11cf83d34a22ba10ffb4c5c4e6c01c490da86f36",
-    "syncedAt": "2026-11-12T03:15:42.458Z"
+    "point": 231,
+    "commit": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
+    "syncedAt": "2026-11-28T08:42:02.180Z"
   },
   "points": [
     {
@@ -37,21 +37,27 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "docs": [
+            "skills/core-engine/updateagents/SKILL.md"
+          ],
           "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
           "manual": true
         }
@@ -70,26 +76,37 @@
       "scope": "release",
       "summary": "v8.1.1",
       "breaking": false,
-      "files": [".docs-ledger.json", "CHANGELOG.md", "README.md", "package.json"],
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "README.md",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         }
@@ -143,26 +160,35 @@
       "scope": "updateagents",
       "summary": "derive audit total from checks",
       "breaking": false,
-      "files": ["skills/core-engine/updateagents/scripts/updateagents.ts", "tests/updateagents-audit.test.ts"],
+      "files": [
+        "skills/core-engine/updateagents/scripts/updateagents.ts",
+        "tests/updateagents-audit.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "docs": [
+            "skills/core-engine/updateagents/SKILL.md"
+          ],
           "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
           "manual": true
         }
@@ -225,19 +251,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"write modes\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"write modes\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "docs": [
+            "skills/core-engine/updateagents/SKILL.md"
+          ],
           "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
           "manual": true
         }
@@ -370,19 +402,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"generated destinations\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"generated destinations\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["skills/core-engine/updateagents/SKILL.md"],
+          "docs": [
+            "skills/core-engine/updateagents/SKILL.md"
+          ],
           "evidence": "manually documented in skills/core-engine/updateagents/SKILL.md",
           "manual": true
         }
@@ -471,26 +509,37 @@
       "scope": "release",
       "summary": "v8.1.2",
       "breaking": false,
-      "files": ["CHANGELOG.md", "README.md", "RELEASE_NOTES.md", "package.json"],
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         }
@@ -509,24 +558,32 @@
       "scope": "deps",
       "summary": "bump astral-sh/setup-uv from 6.8.0 to 10.3.3",
       "breaking": false,
-      "files": [".github/workflows/ci.yml"],
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"bump astral\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         }
@@ -650,26 +707,35 @@
       "scope": "deps-dev",
       "summary": "bump typescript from 5.9.3 to 7.0.2",
       "breaking": false,
-      "files": ["bun.lock", "package.json"],
+      "files": [
+        "bun.lock",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         }
@@ -758,26 +824,37 @@
       "scope": "release",
       "summary": "v8.1.3",
       "breaking": false,
-      "files": ["CHANGELOG.md", "README.md", "RELEASE_NOTES.md", "package.json"],
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md",
           "manual": true
         }
@@ -839,19 +916,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"landing gate\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"landing gate\" found in llms.txt"
         }
       },
@@ -957,7 +1040,9 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"couple mode\" found in llms.txt"
         },
         "user": {
@@ -969,7 +1054,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"couple mode\" found in llms.txt"
         }
       },
@@ -1043,19 +1130,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -1143,12 +1236,16 @@
       "scope": "new-project",
       "summary": "create src/ before writing emdash live.config.ts",
       "breaking": false,
-      "files": ["skills/core-engine/new-project/scripts/new-project.ts"],
+      "files": [
+        "skills/core-engine/new-project/scripts/new-project.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"before writing\" found in CHANGELOG.md"
         },
         "user": {
@@ -1160,7 +1257,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/imported-agent-instructions.md"],
+          "docs": [
+            ".agents/context/imported-agent-instructions.md"
+          ],
           "evidence": "phrase \"before writing\" found in .agents/context/imported-agent-instructions.md"
         }
       },
@@ -1248,24 +1347,33 @@
       "scope": "deps-dev",
       "summary": "bump @biomejs/biome from 2.6.2 to 2.6.5",
       "breaking": false,
-      "files": ["package-lock.json", "package.json"],
+      "files": [
+        "package-lock.json",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"bump biomejs\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"bump biomejs\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"bump biomejs\" found in .agents/context/current.md"
         }
       },
@@ -1292,7 +1400,9 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"universal english\" found in CHANGELOG.md"
         },
         "user": {
@@ -1304,7 +1414,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/invariants.md"],
+          "docs": [
+            ".agents/context/invariants.md"
+          ],
           "evidence": "phrase \"universal english\" found in .agents/context/invariants.md"
         }
       },
@@ -1357,24 +1469,33 @@
       "scope": "ci",
       "summary": "retry Bun setup once when the GitHub asset CDN returns 504",
       "breaking": false,
-      "files": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["README.md"],
+          "docs": [
+            "README.md"
+          ],
           "evidence": "phrase \"setup once\" found in README.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["README.md"],
+          "docs": [
+            "README.md"
+          ],
           "evidence": "phrase \"setup once\" found in README.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"setup once\" found in .agents/context/current.md"
         }
       },
@@ -1497,24 +1618,32 @@
       "scope": "deps",
       "summary": "refresh bun.lock for biome 2.6.5 after dev merge",
       "breaking": false,
-      "files": ["bun.lock"],
+      "files": [
+        "bun.lock"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"lock biome\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"lock biome\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"dp-0041\" found in .agents/context/current.md"
         }
       },
@@ -1648,19 +1777,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"banner before\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"banner before\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"loud banner\" found in .agents/context/current.md"
         }
       },
@@ -1725,19 +1860,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -1802,19 +1943,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"merge sync\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"merge sync\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/invariants.md"],
+          "docs": [
+            ".agents/context/invariants.md"
+          ],
           "evidence": "phrase \"merge sync\" found in .agents/context/invariants.md"
         }
       },
@@ -1876,7 +2023,9 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"tool call\" found in CHANGELOG.md"
         },
         "user": {
@@ -1888,7 +2037,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/invariants.md"],
+          "docs": [
+            ".agents/context/invariants.md"
+          ],
           "evidence": "phrase \"tool call\" found in .agents/context/invariants.md"
         }
       },
@@ -1990,19 +2141,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"self contained\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"self contained\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/invariants.md"],
+          "docs": [
+            ".agents/context/invariants.md"
+          ],
           "evidence": "phrase \"self contained\" found in .agents/context/invariants.md"
         }
       },
@@ -2067,19 +2224,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -2146,19 +2309,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"entry point\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"entry point\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"entry point\" found in .agents/context/current.md"
         }
       },
@@ -2396,19 +2565,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"runtime instead\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"runtime instead\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["AGENTS.md"],
+          "docs": [
+            "AGENTS.md"
+          ],
           "evidence": "phrase \"downloading each\" found in AGENTS.md"
         }
       },
@@ -2474,19 +2649,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -2539,24 +2720,34 @@
       "scope": "",
       "summary": "publish curated release notes in the GitHub release",
       "breaking": false,
-      "files": [".github/workflows/release.yml", "CHANGELOG.md", "tests/release-notes.test.ts"],
+      "files": [
+        ".github/workflows/release.yml",
+        "CHANGELOG.md",
+        "tests/release-notes.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"curated release\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"curated release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"release notes\" found in .agents/context/current.md"
         }
       },
@@ -2609,24 +2800,34 @@
       "scope": "release",
       "summary": "dedupe landing gate and require release notes",
       "breaking": false,
-      "files": [".github/workflows/landing-gate.yml", "CHANGELOG.md", "CONTRIBUTING.md"],
+      "files": [
+        ".github/workflows/landing-gate.yml",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"landing gate\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"landing gate\" found in llms.txt"
         }
       },
@@ -2694,19 +2895,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"local ollama\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"ollama vllm\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"local ollama\" found in llms.txt"
         }
       },
@@ -2771,19 +2978,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"local cloud\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"local cloud\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"local cloud\" found in .agents/context/current.md"
         }
       },
@@ -2880,21 +3093,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -2961,21 +3183,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3029,26 +3260,38 @@
       "scope": "content",
       "summary": "honour --author and stop hardcoding a personal name",
       "breaking": false,
-      "files": ["skills/agency-delivery/content/scripts/aeo-schema.ts", "tests/content-aeo-author.test.ts"],
+      "files": [
+        "skills/agency-delivery/content/scripts/aeo-schema.ts",
+        "tests/content-aeo-author.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3111,19 +3354,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"coach skill\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"when coach\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"coach skill\" found in llms.txt"
         }
       },
@@ -3186,19 +3435,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"zero trust\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"zero trust\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"zero trust\" found in llms.txt"
         }
       },
@@ -3287,21 +3542,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3397,21 +3661,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3496,19 +3769,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"data loss\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"data loss\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"data loss\" found in llms.txt"
         }
       },
@@ -3594,19 +3873,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
         }
       },
@@ -3683,21 +3968,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3776,21 +4070,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3876,21 +4179,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -3971,19 +4283,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"supply chain\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"supply chain\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/imported-agent-instructions.md"],
+          "docs": [
+            ".agents/context/imported-agent-instructions.md"
+          ],
           "evidence": "phrase \"release distribution\" found in .agents/context/imported-agent-instructions.md"
         }
       },
@@ -4001,24 +4319,34 @@
       "scope": "ci",
       "summary": "make the secret scan dependency-free and fail closed",
       "breaking": false,
-      "files": [".github/workflows/ci.yml", "tests/ci-hardening.test.ts", "tests/extract-skill.test.ts"],
+      "files": [
+        ".github/workflows/ci.yml",
+        "tests/ci-hardening.test.ts",
+        "tests/extract-skill.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"secret scan\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"secret scan\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/decisions.md"],
+          "docs": [
+            ".agents/context/decisions.md"
+          ],
           "evidence": "phrase \"secret scan\" found in .agents/context/decisions.md"
         }
       },
@@ -4036,24 +4364,35 @@
       "scope": "ci",
       "summary": "repair sync-gate base ref and document the MCP gate",
       "breaking": false,
-      "files": [".github/workflows/sync-gate.yml", "CHANGELOG.md", "README.md", "llms.txt"],
+      "files": [
+        ".github/workflows/sync-gate.yml",
+        "CHANGELOG.md",
+        "README.md",
+        "llms.txt"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"sync gate\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"sync gate\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/invariants.md"],
+          "docs": [
+            ".agents/context/invariants.md"
+          ],
           "evidence": "phrase \"sync gate\" found in .agents/context/invariants.md"
         }
       },
@@ -4071,26 +4410,38 @@
       "scope": "ci",
       "summary": "treat \"bun test\" as one check name in the landing gate",
       "breaking": false,
-      "files": [".github/workflows/landing-gate.yml", "tests/ci-hardening.test.ts"],
+      "files": [
+        ".github/workflows/landing-gate.yml",
+        "tests/ci-hardening.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -4317,21 +4668,31 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md", "llms.txt"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -4385,19 +4746,27 @@
       "scope": "test",
       "summary": "ignore Bun's cache in the repo containment snapshot",
       "breaking": false,
-      "files": ["tests/setup-end-to-end.test.ts"],
+      "files": [
+        "tests/setup-end-to-end.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
@@ -4575,21 +4944,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -4656,21 +5034,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", "llms.txt"],
+          "docs": [
+            "CHANGELOG.md",
+            "llms.txt"
+          ],
           "evidence": "manually documented in CHANGELOG.md, llms.txt",
           "manual": true
         }
@@ -4747,19 +5134,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"audit follow\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"audit follow\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "manually documented in llms.txt",
           "manual": true
         }
@@ -4918,24 +5311,33 @@
       "scope": "",
       "summary": "run release smoke inside the release workflow",
       "breaking": false,
-      "files": [".github/workflows/release.yml", "tests/ci-hardening.test.ts"],
+      "files": [
+        ".github/workflows/release.yml",
+        "tests/ci-hardening.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release smoke\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release smoke\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release smoke\" found in llms.txt"
         }
       },
@@ -5007,20 +5409,26 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"dependency ledger\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["README.md"],
+          "docs": [
+            "README.md"
+          ],
           "evidence": "manually documented in README.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"dependency ledger\" found in llms.txt"
         }
       },
@@ -5083,19 +5491,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"weekly dependency\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"weekly dependency\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "manually documented in llms.txt",
           "manual": true
         }
@@ -5161,19 +5575,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -5226,19 +5646,27 @@
       "scope": "release",
       "summary": "validate the checkpointed ledger, not live local docs",
       "breaking": false,
-      "files": ["scripts/check-docs-ledger.ts"],
+      "files": [
+        "scripts/check-docs-ledger.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
@@ -5343,21 +5771,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -5376,24 +5813,32 @@
       "scope": "deps",
       "summary": "Bump actions/cache from 4.3.0 to 6.1.0 (#411)",
       "breaking": false,
-      "files": [".github/workflows/ci.yml"],
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"actions cache\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"actions cache\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"actions cache\" found in .agents/context/current.md"
         }
       },
@@ -5411,26 +5856,37 @@
       "scope": "deps",
       "summary": "Bump github/codeql-action/upload-sarif from 4.39.1 to 4.39.3 (#412)",
       "breaking": false,
-      "files": [".github/workflows/ci.yml"],
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -5465,19 +5921,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"swarm mesh\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"swarm mesh\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"swarm mesh\" found in .agents/context/current.md"
         }
       },
@@ -5511,19 +5973,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"routing quality\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"routing quality\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"routing quality\" found in .agents/context/current.md"
         }
       },
@@ -5553,21 +6021,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -5599,19 +6076,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"native command\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"native command\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"command surfaces\" found in .agents/context/current.md"
         }
       },
@@ -5640,21 +6123,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -5686,19 +6178,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"muse doctor\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"muse doctor\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"muse doctor\" found in .agents/context/current.md"
         }
       },
@@ -5728,19 +6226,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"qwen code\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"qwen code\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/imported-agent-instructions.md"],
+          "docs": [
+            ".agents/context/imported-agent-instructions.md"
+          ],
           "evidence": "phrase \"code commands\" found in .agents/context/imported-agent-instructions.md"
         }
       },
@@ -5775,19 +6279,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness json\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness json\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/stack.md"],
+          "docs": [
+            ".agents/context/stack.md"
+          ],
           "evidence": "phrase \"single source\" found in .agents/context/stack.md"
         }
       },
@@ -5819,19 +6329,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"intent signals\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"intent signals\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"intent signals\" found in .agents/context/current.md"
         }
       },
@@ -5859,19 +6375,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness retirement\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness retirement\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"retirement watch\" found in .agents/context/current.md"
         }
       },
@@ -5907,19 +6429,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"portable doctor\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"portable doctor\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"portable doctor\" found in .agents/context/current.md"
         }
       },
@@ -5955,19 +6483,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"from reference\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"mode signals\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"from reference\" found in llms.txt"
         }
       },
@@ -5996,19 +6530,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness watch\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"harness watch\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"harness watch\" found in .agents/context/current.md"
         }
       },
@@ -6026,26 +6566,39 @@
       "scope": "release",
       "summary": "smoke-install the tag and run the shipped doctor (#443)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/release-smoke.ts", "tests/ci-hardening.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/release-smoke.ts",
+        "tests/ci-hardening.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6079,19 +6632,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"concept vocabulary\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"concept vocabulary\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"concept vocabulary\" found in .agents/context/current.md"
         }
       },
@@ -6109,26 +6668,40 @@
       "scope": "harness",
       "summary": "record the Windsurf verdict (active, docs moved to Devin) (#446)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "harness.json", "scripts/harness-registry.ts", "tests/harness-registry.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "harness.json",
+        "scripts/harness-registry.ts",
+        "tests/harness-registry.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6157,21 +6730,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6205,19 +6787,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"concept evidence\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"concept evidence\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"concept evidence\" found in .agents/context/current.md"
         }
       },
@@ -6246,21 +6834,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6292,21 +6889,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6325,26 +6931,39 @@
       "scope": "secretary",
       "summary": "explain each routing failure (--verbose) (#452)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/eval-routing.ts", "tests/routing-eval-explain.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/eval-routing.ts",
+        "tests/routing-eval-explain.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6377,7 +6996,9 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"router defaults\" found in CHANGELOG.md"
         },
         "user": {
@@ -6389,7 +7010,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"router defaults\" found in .agents/context/current.md"
         }
       },
@@ -6419,21 +7042,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6452,24 +7084,34 @@
       "scope": "secretary",
       "summary": "explain a failing routing gate without --verbose (#455)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/eval-routing.ts", "tests/routing-eval-explain.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/eval-routing.ts",
+        "tests/routing-eval-explain.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"failing routing\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"failing routing\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"routing gate\" found in .agents/context/current.md"
         }
       },
@@ -6498,19 +7140,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fast path\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fast path\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"fast path\" found in .agents/context/current.md"
         }
       },
@@ -6545,19 +7193,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"mode content\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"mode content\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/imported-agent-instructions.md"],
+          "docs": [
+            ".agents/context/imported-agent-instructions.md"
+          ],
           "evidence": "phrase \"department evidence\" found in .agents/context/imported-agent-instructions.md"
         }
       },
@@ -6575,24 +7229,35 @@
       "scope": "deps",
       "summary": "musememory 3.4.0 (#459)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "bun.lock", "package.json", "tests/ci-hardening.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "bun.lock",
+        "package.json",
+        "tests/ci-hardening.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"musememory\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"musememory\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"musememory\" found in llms.txt"
         }
       },
@@ -6625,19 +7290,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"phrase level\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"phrase level\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/imported-agent-instructions.md"],
+          "docs": [
+            ".agents/context/imported-agent-instructions.md"
+          ],
           "evidence": "phrase \"department evidence\" found in .agents/context/imported-agent-instructions.md"
         }
       },
@@ -6655,18 +7326,26 @@
       "scope": "gate",
       "summary": "stop the landing gate from poisoning its own commit (#460)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/check-landed.ts", "tests/landing-gate-rollup.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/check-landed.ts",
+        "tests/landing-gate-rollup.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"landing gate\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"landing gate\" found in CHANGELOG.md"
         },
         "agent": {
@@ -6705,19 +7384,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"routing matrix\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"routing matrix\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"routing matrix\" found in .agents/context/current.md"
         }
       },
@@ -6750,21 +7435,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6783,26 +7477,37 @@
       "scope": "deps",
       "summary": "Bump softprops/action-gh-release from 3.0.3 to 3.0.4 (#410)",
       "breaking": false,
-      "files": [".github/workflows/release.yml"],
+      "files": [
+        ".github/workflows/release.yml"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -6834,19 +7539,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -6934,24 +7645,34 @@
       "scope": "release",
       "summary": "give the routing benchmarks timeout headroom (#464)",
       "breaking": false,
-      "files": [".github/workflows/release.yml", "tests/routing-eval-explain.test.ts", "tests/routing-eval.test.ts"],
+      "files": [
+        ".github/workflows/release.yml",
+        "tests/routing-eval-explain.test.ts",
+        "tests/routing-eval.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"timeout headroom\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"timeout headroom\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"routing benchmarks\" found in .agents/context/current.md"
         }
       },
@@ -6979,14 +7700,20 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
@@ -7020,21 +7747,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -7064,19 +7800,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"latest release\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"latest release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7112,19 +7854,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fast path\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fast path\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"fast path\" found in .agents/context/current.md"
         }
       },
@@ -7154,19 +7902,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -7234,19 +7988,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release preflight\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release preflight\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7276,19 +8036,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"every gate\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"every gate\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7319,19 +8085,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -7384,18 +8156,25 @@
       "scope": "release",
       "summary": "cut-release fails before the gates and formats the ledger (#475)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "tests/version-consistency.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "tests/version-consistency.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fails before\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fails before\" found in CHANGELOG.md"
         },
         "agent": {
@@ -7430,19 +8209,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"vector space\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"vector space\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"vector space\" found in .agents/context/current.md"
         }
       },
@@ -7472,21 +8257,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -7516,19 +8310,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch guard\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch guard\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7559,19 +8359,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -7624,18 +8430,26 @@
       "scope": "release",
       "summary": "--resume continues on its own branch; add --abort (#480)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/cut-release.ts", "tests/tooling-scripts.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/cut-release.ts",
+        "tests/tooling-scripts.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch abort\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch abort\" found in CHANGELOG.md"
         },
         "agent": {
@@ -7668,19 +8482,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch guard\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"branch guard\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"branch guard\" found in .agents/context/current.md"
         }
       },
@@ -7710,19 +8530,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -7786,19 +8612,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"surfaces before\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"surfaces before\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7830,19 +8662,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"async embedding\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"async embedding\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7877,19 +8715,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"agent routes\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"agent routes\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -7948,19 +8792,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"embedding router\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"embedding router\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in .agents/context/current.md",
           "manual": true
         }
@@ -8000,21 +8850,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8042,21 +8901,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8087,19 +8955,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -8162,21 +9036,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8195,26 +9078,38 @@
       "scope": "deps",
       "summary": "bump musememory to 3.4.3 (#498)",
       "breaking": false,
-      "files": ["bun.lock", "package.json"],
+      "files": [
+        "bun.lock",
+        "package.json"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8244,20 +9139,26 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
+          "docs": [
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"audits fail\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -8286,19 +9187,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"service worker\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"service worker\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"service worker\" found in llms.txt"
         }
       },
@@ -8334,19 +9241,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"fail closed\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
+          "docs": [
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
         }
       },
@@ -8382,21 +9295,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8428,14 +9350,20 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
@@ -8478,21 +9406,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8569,19 +9506,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -8610,21 +9553,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8643,18 +9595,26 @@
       "scope": "release",
       "summary": "reject placeholder release notes before tagging (#508)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "scripts/check-release-ready.ts", "tests/release-ready.test.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "scripts/check-release-ready.ts",
+        "tests/release-ready.test.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release notes\" found in CHANGELOG.md"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release notes\" found in CHANGELOG.md"
         },
         "agent": {
@@ -8678,12 +9638,18 @@
       "scope": "new-project",
       "summary": "retry a transient astro scaffold fetch once (#509)",
       "breaking": false,
-      "files": ["CHANGELOG.md", "skills/core-engine/new-project/scripts/new-project.ts"],
+      "files": [
+        "CHANGELOG.md",
+        "skills/core-engine/new-project/scripts/new-project.ts"
+      ],
       "audiences": {
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
@@ -8696,7 +9662,10 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8732,19 +9701,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -8771,21 +9746,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "manually documented in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -8816,19 +9800,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"gate check\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"gate check\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"gate check\" found in llms.txt"
         }
       },
@@ -8864,19 +9854,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -8906,21 +9902,29 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"Release notes are drafted from the ledger\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"Release notes are drafted from the ledger\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"Release notes are drafted from the ledger\" found in CHANGELOG.md",
           "manual": true
         }
@@ -8954,19 +9958,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"press release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"press release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"press release\" found in llms.txt"
         }
       },
@@ -9009,19 +10019,25 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md"],
+          "docs": [
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"release\" found in CHANGELOG.md"
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": ["llms.txt"],
+          "docs": [
+            "llms.txt"
+          ],
           "evidence": "phrase \"release\" found in llms.txt"
         }
       },
@@ -9054,21 +10070,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"Mode-intent routing cues\" found in CHANGELOG.md",
           "manual": true
         }
@@ -9101,21 +10126,30 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"v11-driven department/mode cues\" found in CHANGELOG.md",
           "manual": true
         }
@@ -9148,21 +10182,32 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"v12-driven cues\" found in CHANGELOG.md, .agents/context/current.md",
           "manual": true
         }
@@ -9196,21 +10241,32 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"v13-driven cues\" found in CHANGELOG.md",
           "manual": true
         }
@@ -9241,21 +10297,32 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"tracks latest\" found in CHANGELOG.md",
           "manual": true
         }
@@ -9288,21 +10355,32 @@
         "developer": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
           "manual": true
         },
         "user": {
           "required": true,
           "status": "documented",
-          "docs": ["RELEASE_NOTES.md", "CHANGELOG.md", ".agents/context/current.md"],
+          "docs": [
+            "RELEASE_NOTES.md",
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
           "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
           "manual": true
         },
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
           "evidence": "phrase \"v14-derived cues\" found in CHANGELOG.md",
           "manual": true
         }
@@ -9310,6 +10388,334 @@
       "shipped": true,
       "releaseTag": "v8.8.5",
       "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0227",
+      "point": 227,
+      "commit": "4478f19234e3c9d5ca2e2c916bc86e794de3a1f1",
+      "shortCommit": "4478f19",
+      "date": "2026-11-27",
+      "type": "other",
+      "scope": "",
+      "summary": "Release v8.8.5 (#525)",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "bun.lock",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/check-deps.ts",
+        "scripts/install.sh",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/fixtures/routing-eval/heldout-v11.json",
+        "tests/fixtures/routing-eval/heldout-v12.json",
+        "tests/fixtures/routing-eval/heldout-v13.json",
+        "tests/fixtures/routing-eval/heldout-v14.json",
+        "tests/fixtures/routing-eval/heldout-v15.json",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "llms.txt"
+          ],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "llms.txt"
+          ],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0228",
+      "point": 228,
+      "commit": "e38706d36026e0d8884e145159c2dec37851efc8",
+      "shortCommit": "e38706d",
+      "date": "2026-11-28",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump astral-sh/setup-uv from 10.3.3 to 10.4.0 (#504)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0229",
+      "point": 229,
+      "commit": "13d5220a531a965c287a4c9edcdbb6a754553c9e",
+      "shortCommit": "13d5220",
+      "date": "2026-11-28",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump github/codeql-action/upload-sarif (#503)",
+      "breaking": false,
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md",
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            ".agents/context/current.md",
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0230",
+      "point": 230,
+      "commit": "01a2804d7a73520340eae14a96e16ad33de672d7",
+      "shortCommit": "01a2804",
+      "date": "2026-11-28",
+      "type": "feat",
+      "scope": "design",
+      "summary": "merge designscope into one design:scope mode (#527)",
+      "breaking": false,
+      "files": [
+        ".skillspector-baseline.yaml",
+        "CHANGELOG.md",
+        "CREDITS.md",
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/credits.html",
+        "llms.txt",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/cut-release.ts",
+        "scripts/eval-routing.ts",
+        "scripts/export-commands.ts",
+        "scripts/gen-banner.ts",
+        "scripts/install.sh",
+        "scripts/sync-skill-surface.ts",
+        "skills.json",
+        "skills/agency-delivery/design/README.md",
+        "skills/agency-delivery/design/SKILL.md",
+        "skills/agency-delivery/design/agents/openai.yaml",
+        "skills/agency-delivery/design/references/branding.md",
+        "skills/agency-delivery/design/references/prototype.md",
+        "skills/agency-delivery/design/references/scope.md",
+        "skills/agency-delivery/design/references/ui.md",
+        "skills/agency-delivery/design/references/uikit.md",
+        "skills/agency-delivery/design/scripts/scope/check_contrast.py",
+        "skills/agency-delivery/design/scripts/scope/extract_css_vars.py",
+        "skills/agency-delivery/design/scripts/scope/lint_design_md.py",
+        "skills/agency-delivery/design/scripts/scope/token_fence.ts",
+        "skills/agency-delivery/design/scripts/scope/verify_design.py",
+        "skills/agency-delivery/webdev/SKILL.md",
+        "skills/agency-delivery/webdev/agents/openai.yaml",
+        "skills/context-orchestration/coupling-router/SKILL.md",
+        "skills/context-orchestration/coupling-router/references/skill-compatibility-matrix.md",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/context-orchestration/secretary/references/mode-signals.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/routing-defaults.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/design-interface/animate/SKILL.md",
+        "skills/design-interface/animate/agents/openai.yaml",
+        "skills/design-interface/designscope/LICENSE",
+        "skills/design-interface/designscope/README.md",
+        "skills/design-interface/designscope/SKILL.md",
+        "skills/design-interface/designscope/agents/openai.yaml",
+        "skills/design-interface/designscope/references/analysis-framework.md",
+        "skills/design-interface/designscope/references/audit.md",
+        "skills/design-interface/designscope/references/capture-flows.md",
+        "skills/design-interface/designscope/references/element-copy.md",
+        "skills/design-interface/designscope/references/layout-tree-extraction.md",
+        "skills/design-interface/designscope/references/output-template.md",
+        "skills/design-interface/designscope/references/token-extraction.md",
+        "skills/design-interface/refactor/SKILL.md",
+        "skills/design-interface/refactor/agents/openai.yaml",
+        "skills/design-interface/refactor/examples/sample-5-state-refactor.md",
+        "skills/references/audit-mode-guidance.md",
+        "tests/ci-hardening.test.ts",
+        "tests/export-commands.test.ts",
+        "tests/fixtures/agency-simulation/README.md",
+        "tests/fixtures/agency-simulation/productized-agency.json",
+        "tests/fixtures/routing-eval/heldout-v10.json",
+        "tests/fixtures/routing-eval/heldout-v11.json",
+        "tests/fixtures/routing-eval/heldout-v14.json",
+        "tests/fixtures/routing-eval/heldout-v15.json",
+        "tests/fixtures/routing-eval/heldout-v6.json",
+        "tests/fixtures/routing-eval/heldout-v8.json",
+        "tests/fixtures/routing-eval/heldout-v9.json",
+        "tests/portable-doctor.test.ts",
+        "tests/routing-eval.test.ts",
+        "tests/security-coverage.test.ts",
+        "tests/security-guidance.test.ts",
+        "tests/setup-end-to-end.test.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/skill-consistency.test.ts",
+        "tests/skills.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"into design\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"into design\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            ".agents/context/current.md"
+          ],
+          "evidence": "phrase \"design scope\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0231",
+      "point": 231,
+      "commit": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
+      "shortCommit": "368e28a",
+      "date": "2026-11-28",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "bounded incident and evidence cues (#528)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/regressions-v2.json",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"evidence cues\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            "CHANGELOG.md"
+          ],
+          "evidence": "phrase \"evidence cues\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [
+            ".agents/context/roadmap.md"
+          ],
+          "evidence": "phrase \"bounded incident\" found in .agents/context/roadmap.md"
+        }
+      },
+      "shipped": false,
+      "releaseTag": null,
+      "createdAt": "2026-11-28T08:41:30.036Z"
     }
   ]
 }

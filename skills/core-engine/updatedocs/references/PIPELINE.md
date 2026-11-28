@@ -168,7 +168,7 @@ Understand synchronization boundaries: `WORKTREE`, `COMMIT`, `PR`, `MERGE`, `REL
 ---
 
 ### Step 20 — Final Verification
-Execute the 14-point audit protocol ([references/AUDIT-CHECKLIST.md](./references/AUDIT-CHECKLIST.md)) for every modified document, and verify that all non-negotiable boundaries were respected. In Quick mode, run the audit protocol only against the documents actually edited.
+Execute the 14-point audit protocol ([references/AUDIT-CHECKLIST.md](./AUDIT-CHECKLIST.md)) for every modified document, and verify that all non-negotiable boundaries were respected. In Quick mode, run the audit protocol only against the documents actually edited.
 
 ### Step 21 — Verify After Bulk Edit
 Any bulk editing pass — `sd`/`sed`/`awk` sweeps, scripted rewrites (python/perl), multi-file find-replace, multi-hunk `str_replace` batches, or registry-wide version bumps — triggers a mandatory verification gate **before** the next edit or commit:

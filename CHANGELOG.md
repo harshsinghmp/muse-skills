@@ -4,17 +4,15 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-
-- **Bounded routing batch** (`secretary`): incident-response and evidence cues take v15 from **6/40 exact · 14/40 department** to **9/40 · 16/40**, with v5–v14, tuned (166/183), and regressions-v1 unchanged. `regressions-v2` pins the three fixed prompts (incident bridge, stop the bleeding, evidence strength). Audit-remediation and quarterly-retreat cues were dropped because they did not move the department without overfitting.
-
 ### Changed
 
 - **`designscope` merged into `design:scope`** (breaking, 46 → 45 skills): the seven extraction workflows now live in one `design` mode (`references/scope.md`) with their scripts under `design/scripts/scope/`. The retired skill and its seven mode commands are gone; the registry, dispatch, README, llms, routing fixtures, agency simulation, and tests are updated. Command surface: **460 per harness** (45 skills + 405 modes + 10 aliases).
+- **CI action pins** (`setup-uv`, `codeql-action`): `astral-sh/setup-uv` 10.4.0 and `github/codeql-action/upload-sarif` 4.39.4; no runtime behavior change.
 
 ### Fixed
 
-- **Reference step numbering** (12 reference files): repaired duplicate and backwards top-level step numbers in `content/email`, `content/blog`, `mobile/android`, `mobile/pwa`, `smm/content`, `ops/proposal`, `ops/onboarding`, `gtm/list`, `gtm/handover`, `code-review/receiving-feedback`, `database/vector-search`, and `accounts/tax-compliance`. Text is unchanged; only the numbers are sequential.
+- **Bounded routing batch** (`secretary`): incident-response and evidence cues take v15 from **6/40 exact · 14/40 department** to **9/40 · 16/40**, with v5–v14, tuned (166/183), and regressions-v1 unchanged. `regressions-v2` pins the three fixed prompts. Audit-remediation and quarterly-retreat cues were dropped because they did not move the department without overfitting.
+- **Reference step numbering** (12 reference files): repaired duplicate and backwards top-level step numbers in `content/email`, `content/blog`, `mobile/android`, `mobile/pwa`, `smm/content`, `ops/proposal`, `ops/onboarding`, `gtm/list`, `gtm/handover`, `code-review/receiving-feedback`, `database/vector-search`, and `accounts/tax-compliance`.
 
 ## [8.8.5] - 2026-11-27
 
@@ -1420,7 +1418,7 @@ All notable changes to this project are documented in this file.
 - **Ambient Continuity (`handoff` v2.1.0)**: a third operating mode that makes continuation the default — a ≤30-line `.agents/artifacts/HANDOFF.md` live-state file (fixed name, overwritten on every real state change) written passively at checkpoints, decisions, incomplete turn-ends, and ending signals, and probed on every workspace entry so any new conversation or agent resumes prior work with no explicit handoff request.
 - **State-Source Ladder (`handoff` v2.1.0)**: cold-start resolution order for prior state — live file → memory recall → `.agents/context/` project context → git forensics (with a mandatory write-back of HANDOFF.md after reconstruction) → honest cold-start declaration — plus hard token budgets (one-command entry probe, ≤5-line resumption block, on-demand detail).
 - **Memory Hooks (`handoff` v2.1.0)**: durable decisions pushed through the runtime's memory-write tool API on dispatch/full flush and recall filtered to directory boundaries on entry; `.memory/**` remains untouched by hand (owned by `musememory`), with `updateagents` as the durable-truth fallback.
-- **Ambient Contract References (`handoff` v2.1.0)**: new [Ambient Continuity & Live Handoff File Contract](skills/context-orchestration/relay/references/ambient-handoff.md) (file schema, freshness rules, write triggers, memory protocol), a git-forensics recipe in the [resumption protocol](skills/context-orchestration/relay/references/resumption-protocol.md), and a [sample live HANDOFF file](skills/context-orchestration/relay/examples/sample-HANDOFF.md) example.
+- **Ambient Contract References (`handoff` v2.1.0)**: new [Ambient Continuity & Live Handoff File Contract](skills/context-orchestration/relay/references/ambient-handoff.md) (file schema, freshness rules, write triggers, memory protocol), a git-forensics recipe in the [resumption protocol](skills/context-orchestration/relay/references/resumption-protocol.md), and a [sample live HANDOFF file](skills/context-orchestration/relay/examples/sample-live-handoff.md) example.
 - **External Dogfood Runbook (docs/DOGFOOD.md)**: a ~45-minute runbook exercising the multi-project story this repo cannot test on itself — `new-project`/`ai-ready` scaffold, cross-session continuity (`handoff` ambient resume, including a deliberate kill test), `context-anchor` workstream parking across clients, `evidence-ledger` decision tracking, and a shared-checkout two-session lease scenario — with a per-phase verification table and an evidence-file reporting protocol for rough edges.
 - **Drift & Lease Hardening Pins (tests/hardening.test.ts)**: five new invariant pins that make previously ad-hoc checks permanent — skills.json↔SKILL.md frontmatter version parity, frontmatter description parity (the class that drifted on `new-project` and 4 others), llms.txt description parity, executable lease-gate behavior (acquire/defer/takeover/refresh/release), and CI least-privilege permissions. The pins immediately caught and fixed 6 real drifts on landing.
 - **Generated-Secret Hygiene (new-project)**: scaffolded projects' `.env` secrets (`JWT_SECRET`, `COOKIE_SECRET`, `PAYLOAD_SECRET`, `BETTER_AUTH_SECRET`, `CMS_ENCRYPTION_KEY`, EMDASH key) are now generated per-project with `crypto.randomBytes` at scaffold time instead of shipping predictable static literals — the security audit's F1 finding, pinned by test so the class cannot regress.
