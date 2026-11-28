@@ -181,7 +181,6 @@
         "session-resumption",
         "context-packet",
         "handoff-md",
-        "handoff",
         "worktree-lease",
         "subagent-dispatch",
         "ambient-continuity",
@@ -273,7 +272,7 @@
         "ui-sweep",
         "polish"
       ],
-      "suggested_skills": ["design", "designscope", "animate", "code-review", "database"],
+      "suggested_skills": ["design", "animate", "code-review", "database"],
       "aliases": [
         "refactor-ui",
         "refactoring",
@@ -288,37 +287,6 @@
       "scope": "local",
       "councilLead": "Nexus & Sol",
       "defaultMode": "code"
-    },
-    {
-      "name": "designscope",
-      "description": "Analyze any visual source — image, website URL, or Figma file — to extract its structured design system — a design.md brief, responsive CSS Grid/Flexbox component layout tree, DTCG design-tokens.json, and optional WCAG contrast report. Also handles element mode: copy one component as a rebuild spec, or turn visual art into a token-grounded generative image prompt. Trigger on 'extract the design system from X', 'deconstruct this layout', 'recreate this website design', 'convert this screenshot into tokens and layout tree', 'what palette does this site use', 'document this design', 'copy this navbar', 'recreate this illustration', or whenever the user brings a screenshot, URL, Figma link, or mockup and wants it understood at a structural and design level.",
-      "path": "skills/design-interface/designscope/SKILL.md",
-      "version": "1.3.0",
-      "category": "design-interface",
-      "tools": ["bash", "view_file", "write_to_file", "replace_file_content", "grep_search", "web_fetch"],
-      "tags": [
-        "designscope",
-        "design-scope",
-        "design-system",
-        "extract-design-system",
-        "visual-analysis",
-        "design-tokens",
-        "layout-tree",
-        "css-grid",
-        "flexbox",
-        "dtcg",
-        "figma",
-        "screenshot-to-design",
-        "design-brief",
-        "wcag-contrast",
-        "element-copy",
-        "generative-prompt"
-      ],
-      "suggested_skills": ["design", "refactor-ui", "animate"],
-      "aliases": ["design_scope", "designscope", "extract_design", "visual_design_analysis"],
-      "scope": "local",
-      "councilLead": "Jasper",
-      "defaultMode": "analysis-framework"
     },
     {
       "name": "coupling-router",
@@ -701,7 +669,7 @@
         "native-mobile",
         "react"
       ],
-      "suggested_skills": ["design", "refactor-ui", "designscope", "code-review"],
+      "suggested_skills": ["design", "refactor-ui", "code-review"],
       "aliases": ["animation", "motion-design", "ui-animation", "add-motion", "animate_this"],
       "scope": "local",
       "councilLead": "Jasper",
@@ -709,9 +677,9 @@
     },
     {
       "name": "design",
-      "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes — routed through fifteen modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, stream live component canvas previews, or integrate 3D Spline/Three.js assets. Not for refactoring existing UI (refactor-ui), extracting a design system from a reference (designscope), or animation (animate).",
+      "description": "Full website design department: creates original visual design from a brief, idea, or reference — UI design, UX flows, wireframes, logos, brand identity, social templates, graphic assets, prototypes, component UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes — routed through sixteen modes. Use when asked to design a website, page, or dashboard, create a wireframe or mockup, design a logo or brand identity, build social media templates, produce graphic assets, prototype flows, build UI kits, architect visual narratives, stream live component canvas previews, integrate 3D Spline/Three.js assets, or extract a design system from a screenshot, URL, or Figma file. Not for refactoring existing UI (refactor-ui) or animation (animate).",
       "path": "skills/agency-delivery/design/SKILL.md",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "agency-delivery",
       "tools": [
         "bash",
@@ -743,7 +711,7 @@
         "narrative-arc",
         "data-storytelling"
       ],
-      "suggested_skills": ["refactor-ui", "designscope", "animate", "new-project"],
+      "suggested_skills": ["refactor-ui", "design", "animate", "new-project"],
       "aliases": [
         "web-design",
         "ui-design",
@@ -751,7 +719,10 @@
         "graphic-design",
         "brand-design",
         "visual-storyteller",
-        "storyboarding"
+        "storyboarding",
+        "extract-design",
+        "design-tokens",
+        "layout-tree"
       ],
       "scope": "local",
       "councilLead": "Jasper",
@@ -828,7 +799,7 @@
     },
     {
       "name": "webdev",
-      "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, real-time pub/sub bus, deploy, and responsive audits — routed through twenty-three modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, deploy WebSockets and pub/sub messaging, implement e-commerce or CMS functionality, build funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, designscope), animation (animate), or mobile apps (mobile).",
+      "description": "Full web engineering department: frontend, backend, fullstack builds with layered security, e-commerce, CMS integration, web performance, accessibility, migrations, developer onboarding, funnel pipelines, edge runtime architecture, edge rate limiting, offline-first PWA caching and background sync, real-time pub/sub bus, deploy, and responsive audits \u2014 routed through twenty-three modes. Use when asked to build or refactor web features or apps, design APIs or data models, deploy Hono edge micro-APIs, enforce sliding-window rate limiting, implement offline PWA service workers and mutation queues, deploy WebSockets and pub/sub messaging, implement e-commerce or CMS functionality, build funnel and checkout flows, fix performance or accessibility issues, audit mobile responsiveness, migrate sites and stacks, reverse-engineer legacy codebases into specs, orient developers on unfamiliar repositories, or ship builds. Not for design (design, refactor-ui, design), animation (animate), or mobile apps (mobile).",
       "path": "skills/agency-delivery/webdev/SKILL.md",
       "version": "1.9.0",
       "category": "agency-delivery",

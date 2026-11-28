@@ -83,7 +83,7 @@ describe("CI and supply-chain hardening (#395)", () => {
     const { version } = JSON.parse(read("package.json")) as { version: string };
     expect(result.version).toBe(`v${version}`);
     expect(result.destinations).toBeGreaterThanOrEqual(2);
-    expect(result.skills).toBeGreaterThanOrEqual(46);
+    expect(result.skills).toBeGreaterThanOrEqual(45);
   }, 120_000);
 
   test("harness baseline refresh cannot auto-accept a removed signal", () => {

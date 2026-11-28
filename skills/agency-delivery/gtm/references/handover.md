@@ -15,10 +15,10 @@ A sales context packet: account summary, contact history, research highlights, s
 
 1. Compile the packet: account summary, every touch with dates, research highlights, score and why.
 2. Stage the lead on the lifecycle (source: `coreyhaines31/marketingskills` `revops`): Subscriber → Lead → MQL → SQL → Opportunity → Customer → Evangelist, with entry/exit criteria + owner per stage. MQL = fit × engagement (neither alone suffices). MQL→SQL SLA: alert → 4h contact → 48h qualify/reject; rejects recycled with a reason code.
-2. Write the suggested talk track: trigger, hypothesis, two discovery questions, the ask.
-3. Name gaps explicitly — what sales should verify on the call.
-4. Route the packet to sales (Twenty CRM records, else markdown) and log the handoff in `ops` milestones.
-5. Set the feedback loop: call outcome returns to gtm to rescore and refine the ICP.
+3. Write the suggested talk track: trigger, hypothesis, two discovery questions, the ask.
+4. Name gaps explicitly — what sales should verify on the call.
+5. Route the packet to sales (Twenty CRM records, else markdown) and log the handoff in `ops` milestones.
+6. Set the feedback loop: call outcome returns to gtm to rescore and refine the ICP.
 
 ## Quality gate
 

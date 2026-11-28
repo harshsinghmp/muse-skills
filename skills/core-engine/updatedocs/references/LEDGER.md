@@ -45,4 +45,4 @@ bun skills/core-engine/updatedocs/scripts/updatedocs.ts . --install-hook
 - The `.docs.hash` fast-skip cannot hide a pending point; `--check` disables the fast path when the ledger has debt.
 - `.memory/` is never read or written. `--memory-hint` prints a safe one-line hint per point for the user's harness memory tooling.
 - `.agents/context/` is updated only by `updateagents --docs-backlog`, never by `updatedocs`.
-- Full schema, phrase-evidence rules, managed blocks, and recovery flow: [references/DOCS-LEDGER.md](./references/DOCS-LEDGER.md).
+- Full schema, phrase-evidence rules, managed blocks, and recovery flow: [references/DOCS-LEDGER.md](./DOCS-LEDGER.md).

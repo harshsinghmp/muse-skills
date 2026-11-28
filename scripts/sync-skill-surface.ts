@@ -142,8 +142,12 @@ function rowFor(mode: string, description: string, columns: number): string {
   // Build exactly as many cells as the table declares: a short row breaks the
   // table silently, and a generated row must never be the thing that does it.
   const cells = [`**${mode}**`, `"${mode}"`, description];
-  while (cells.length < columns - 1) cells.push("—");
-  cells.push(link);
+  if (columns >= 4) {
+    while (cells.length < columns - 1) cells.push("—");
+    cells.push(link);
+  } else {
+    cells.length = columns;
+  }
   return `| ${cells.join(" | ")} |`;
 }
 

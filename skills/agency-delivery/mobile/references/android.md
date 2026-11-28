@@ -21,7 +21,7 @@ A buildable Compose app: Material 3 screens per spec, platform integrations, and
 6. UI mechanics: text inputs ≥16sp equivalent (no zoom-inducing tiny type); edge-to-edge with WindowInsets/safe-area respected (status/nav bars, cutouts); semantic color tokens verified in light AND dark mode; nudge icons/asymmetric glyphs by eye to optical alignment (match icon stroke to text weight).
 7. Extremes-first testing: smallest/oldest supported device first (low-RAM, small screen), then flagships — size content to where it breaks, not to device presets.
 8. Test on emulator AND physical device (sizes, OEM quirks, permission flows).
-7. Release: signed AAB, staged rollout, data-safety form, store listing assets.
+9. Release: signed AAB, staged rollout, data-safety form, store listing assets.
 
 ## Compose performance audit (enrich — source: `android-skills-compose-performance-audit`, raw SKILL.md v1.0.0 fetched 2026-09-19)
 

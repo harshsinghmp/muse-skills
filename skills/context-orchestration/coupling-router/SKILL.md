@@ -120,7 +120,7 @@ Do NOT use this skill when:
 Tier 1: Governance & Verification (secretary, evidence-ledger, gauntlet-loop)
    └── Tier 2: Review & Correctness Doctrine (code-review / Karpathy)
          └── Tier 3: Architecture & Context Engines (coupling-router, updateagents, new-project)
-               └── Tier 4: Domain Implementation Specialists (refactor-ui, designscope, updatedocs, git)
+               └── Tier 4: Domain Implementation Specialists (refactor-ui, design, updatedocs, git)
                      └── Tier 5: Ad-Hoc / Generic Prompts (Suppressed when higher tiers active)
 ```
 

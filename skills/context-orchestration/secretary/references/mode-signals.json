@@ -1249,106 +1249,6 @@
       "text": "> **Executive Scope**: Visual hierarchy, atomic design heuristics, contrast parity, spacing scales, and typography refinement based on Wathan & Schoger's *Refactoring UI* and modern CSS container queries. --- Every UI refactoring pass verifies these 10 invariants: 1. **Visual Hierarchy & Weight**: Primary actions stand out clearly; secondary elements are de-emphasized. Do not rely on color alone—use size, weight, con"
     }
   },
-  "designscope": {
-    "analysis-framework": {
-      "heading": "Analysis Framework — The 6 analysis layers",
-      "anchors": [
-        "This reference defines how to analyze the captured material.",
-        "Consult it when you start Step 3",
-        "of the main workflow.",
-        "Analysis goes from general to specific, from intent to detail.",
-        "Don't skip layers: jumping",
-        "from \"mood\" to \"tokens\" without passing through \"system\" loses the why.",
-        "Layer 1 — Visual identity",
-        "Guiding question: What does this design want to be?"
-      ],
-      "text": "This reference defines how to analyze the captured material. Consult it when you start Step 3 of the main workflow. Analysis goes **from general to specific**, from intent to detail. Don't skip layers: jumping from \"mood\" to \"tokens\" without passing through \"system\" loses the why. --- **Guiding question:** *What does this design want to be?* Before measuring, feel. This layer is interpretive but not vague: every stat"
-    },
-    "audit": {
-      "heading": "audit — designscope audit mode",
-      "anchors": [
-        "When to Use",
-        "Design-system audit: score an extracted (or existing) system across its five dimensions —…",
-        "Design↔code agreement audit: verify the Figma component and the coded component describe…",
-        "Extraction fidelity audit: a design system was reverse-engineered by designscope — verify…",
-        "Checklist",
-        "[ ] Token architecture: primitive/semantic/component layers separated; aliasing…",
-        "[ ] Tokens actually referenced: flag every raw hex/px value doing a token's job (lint:…",
-        "[ ] Component contract: default, hover, focus, disabled, loading, error, empty, overflow…"
-      ],
-      "text": "- **Design-system audit**: score an extracted (or existing) system across its five dimensions — tokens, components, documentation, process, tooling. - **Design↔code agreement audit**: verify the Figma component and the coded component describe the same thing, state by state. - **Extraction fidelity audit**: a design system was reverse-engineered by `designscope` — verify nothing was invented that the source does not "
-    },
-    "capture-flows": {
-      "heading": "Capture Flows — How to capture each source type",
-      "anchors": [
-        "This reference defines the technical capture flow for each input type.",
-        "Consult it when you start",
-        "Step 2 of the main workflow.",
-        "Flow 1 — Local image",
-        "Typical input: the user uploads a PNG/JPG/WebP, or passes a path like",
-        "The image is already available via multimodal vision.",
-        "Reference the path directly when analyzing.",
-        "If you need pixel-precise hex codes and your agent host offers an image-inspection or"
-      ],
-      "text": "This reference defines the technical capture flow for each input type. Consult it when you start Step 2 of the main workflow. --- **Typical input:** the user uploads a PNG/JPG/WebP, or passes a path like `./ref.png`. **What to do:** 1. The image is already available via multimodal vision. **No script needed.** 2. Reference the path directly when analyzing. 3. If you need pixel-precise hex codes and your agent host of"
-    },
-    "element-copy": {
-      "heading": "Element Copy — the \"copy element\" mode",
-      "anchors": [
-        "This reference defines element mode: instead of analyzing a full page/file and producing",
-        "a system-level design.md, the skill zooms into one visual element (a navbar, a card,",
-        "a 3D illustration, a hero graphic) and produces a focused element.md that lets the user",
-        "replicate that element with maximum fidelity.",
-        "Consult this file when the user's intent is element-scoped (see activation rules in",
-        "The mode reuses the capture flows from references/capture-flows.md — only the",
-        "scope and the output contract change.",
-        "The core decision: what KIND of element is it?"
-      ],
-      "text": "This reference defines **element mode**: instead of analyzing a full page/file and producing a system-level `design.md`, the skill zooms into **one visual element** (a navbar, a card, a 3D illustration, a hero graphic) and produces a focused `element.md` that lets the user replicate *that element* with maximum fidelity. Consult this file when the user's intent is element-scoped (see activation rules in SKILL.md). The"
-    },
-    "layout-tree-extraction": {
-      "heading": "Layout Tree Extraction Reference",
-      "anchors": [
-        "> Guide for decomposing visual UI screenshots, website captures, and Figma mockups into…",
-        "1. Visual-to-Code Decomposition Pipeline",
-        "Extracting a layout tree converts a 2D visual composition into a structured, responsive…",
-        "Cursor, v0, Lovable) can implement directly without guessing.",
-        "┌─────────────────────────────────────────────────────────────┐",
-        "│ Visual Input (Screenshot / Live Web Viewport / Figma Frame) │",
-        "└──────────────────────────────┬──────────────────────────────┘",
-        "┌─────────────────────────────────────────────────────────────┐"
-      ],
-      "text": "> Guide for decomposing visual UI screenshots, website captures, and Figma mockups into responsive CSS Grid and Flexbox component layout trees with token-grounded hierarchy. --- Extracting a layout tree converts a 2D visual composition into a structured, responsive box-model hierarchy that frontend engineers and AI code builders (e.g. Cursor, v0, Lovable) can implement directly without guessing. --- Analyze the viewp"
-    },
-    "output-template": {
-      "heading": "Output Template — The design.md template",
-      "anchors": [
-        "This is the base template of the design.md file the skill generates.",
-        "Adapt the depth of each section based on the user's emphasis",
-        "(reconstruction / mood / system), but don't remove sections unless explicitly empty",
-        "due to lack of info — in which case, say so.",
-        "Template",
-        "The design.md has two halves: a YAML frontmatter block fenced by --- that holds",
-        "structured tokens an agent can parse mechanically, followed by a markdown body of prose",
-        "sections that turns those tokens into language an agent (or a human) can act on."
-      ],
-      "text": "This is the **base** template of the `design.md` file the skill generates. Use it as the output contract. Adapt the depth of each section based on the user's emphasis (reconstruction / mood / system), but **don't remove sections** unless explicitly empty due to lack of info — in which case, say so. --- The design.md has **two halves**: a YAML frontmatter block fenced by `---` that holds structured tokens an agent can"
-    },
-    "token-extraction": {
-      "heading": "Token Extraction — How to infer tokens with rigor",
-      "anchors": [
-        "This reference defines how to go from \"I see colors and sizes\" to a documented token…",
-        "It's the difference between describing and systematizing.",
-        "Philosophy",
-        "Token = named, reusable design decision.",
-        "A color is not a token; primary-500 = #3B82F6 with a semantic role is.",
-        "infer the system the designer used (consciously or not), not list loose values.",
-        "Look for repetition.",
-        "If a value appears once, it's not a token."
-      ],
-      "text": "This reference defines how to go from \"I see colors and sizes\" to a documented token system. It's the difference between describing and systematizing. --- **Token = named, reusable design decision.** A color is not a token; `primary-500 = #3B82F6` with a semantic role is. Your job is to **infer the system** the designer used (consciously or not), not list loose values. Three principles: 1. **Look for repetition.** If"
-    }
-  },
   "coupling-router": {
     "coupling-matrix": {
       "heading": "Coupling Analysis Matrix Reference",
@@ -2224,6 +2124,20 @@
         "Real copy for the tested path; fake data flagged as fake"
       ],
       "text": "Disposable by design. Answers one visual question (\"does this flow read?\") before hi-fi investment. Mock never becomes production markup. - The single riskiest visual unknown, stated as one question (e.g. \"can first-time buyers find checkout in this layout?\") - Approved structure (`wireframe`) and direction inputs (tokens, brand doc, or style tile) — prototype tests, never invents - Real copy for the tested path; fak"
+    },
+    "scope": {
+      "heading": "scope — Design System Extraction & Documentation",
+      "anchors": [
+        "Point at a visual source — screenshot, live URL, Figma link, mockup — and extract its",
+        "structured design system: a design.md brief with a responsive CSS Grid/Flexbox",
+        "component layout tree, a W3C DTCG design-tokens.json, and an optional WCAG report.",
+        "Element mode copies one component as a rebuild spec or a token-grounded image prompt.",
+        "This single mode consolidates the former designscope workflows.",
+        "for the work at hand; do not load every section by default.",
+        "Layout-tree extraction",
+        "1. Analysis framework"
+      ],
+      "text": "Point at a visual source — screenshot, live URL, Figma link, mockup — and extract its structured design system: a `design.md` brief with a responsive CSS Grid/Flexbox component layout tree, a W3C DTCG `design-tokens.json`, and an optional WCAG report. Element mode copies one component as a rebuild spec or a token-grounded image prompt. This single mode consolidates the former `designscope` workflows. Read the section"
     },
     "slides": {
       "heading": "design:slides — Presentation Decks, Slide Layouts & Narrative Pitch Structures",

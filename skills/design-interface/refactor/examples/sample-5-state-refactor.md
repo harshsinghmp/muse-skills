@@ -50,7 +50,7 @@ scope); container-query behavior (component rendered in one context only).
 
 | Finding class | Route to |
 |:---|:---|
-| Token extraction for the full dashboard (14 grays detected) | `designscope` |
+| Token extraction for the full dashboard (14 grays detected) | `design` |
 | Entrance stagger for the card grid | `animate` |
 
 *Next offer: "want `improve` to fix all four rows now?"*

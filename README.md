@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="Muse Skills — 46 production-grade agent departments" width="100%" />
+<img src="assets/banner.svg" alt="Muse Skills — 45 production-grade agent departments" width="100%" />
 
 # 🏛️ Muse Skills
 
 **Production-grade skills for AI coding agents. Turn any coding assistant into an autonomous senior engineering team and full-service digital agency with persistent context, automated verification gates, and zero external dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-8.8.5-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
-[![Skills Count](https://img.shields.io/badge/Skills-46%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
+[![Version](https://img.shields.io/badge/Version-8.9.0-blue.svg?style=for-the-badge)](https://github.com/harshsinghmp/muse-skills/releases)
+[![Skills Count](https://img.shields.io/badge/Skills-45%20Available-purple.svg?style=for-the-badge)](#-complete-skill-catalog)
 [![Tests Passing](https://img.shields.io/badge/Tests-CI%20Green%20Required-brightgreen.svg?style=for-the-badge)](.github/workflows/ci.yml)
 [![Runtime Compatibility](https://img.shields.io/badge/Compatible%20With-OpenCode%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Claude%20Code%20%7C%20Hermes-orange.svg?style=for-the-badge)](#-runtime-compatibility)
 
@@ -18,8 +18,8 @@
 # ⚡ Option A: Quick Install (Agent Natural Language Discovery)
 npx skills add harshsinghmp/muse-skills
 
-# 🚀 Option B: Instant Remote Setup (46 Skills + 467 Slash Commands Per Harness — No Clone Needed)
-curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.5/scripts/install.sh | bash
+# 🚀 Option B: Instant Remote Setup (45 Skills + 460 Slash Commands Per Harness — No Clone Needed)
+curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.9.0/scripts/install.sh | bash
 
 # 🛠️ Option C: Manual Setup (From Source)
 git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && bun run setup
@@ -39,7 +39,7 @@ git clone https://github.com/harshsinghmp/muse-skills.git && cd muse-skills && b
 - **Session-proof docs + clean agent roots** (v8.1.0): `updatedocs` now keeps a `.docs-ledger.json` point ledger with developer/user/agent coverage, shipped state, what's-new generation, and a post-commit capture hook (`DOCS-LEDGER.md`); `updateagents` consumes completed points with `--docs-backlog` and enforces clean roots with `--hygiene`, active-harness skip, `harness-hygiene-session.sh`, `harness-hygiene-pre-commit.sh`, `harness-hygiene-pre-push.sh`, and local-only `.git/info/exclude` patterns (`gitignore.private.template`). `new-project` now runs a five-section client onboarding and renders every intake document from real answers.
 - **Engine upgrades scaffolded into every new project** (v7.7.0): derived-artifact release invariant (bump ⇄ regenerate ⇄ `--check` gate) + `{{integration_branch}}`/`{{production_branch}}` branch placeholders, auto-provisioned `landing-gate.yml` CI, **SHA-pinned GitHub Actions** in every scaffolded workflow, and a hardened installer (no `eval`, arg-array spawn everywhere).
 - **New operational standards** (v7.6.0): **Landing Gate** — `bun run check:landed`, LANDED/LOCAL verdicts, delivery is not commitment; **Test-Failure Audit** — self-triage before fixing on repeated red; **Session Report Protocol** — technical report, then a plain-language Layman Report appendix (user-facing only), plus a prioritized **Next 3** follow-up block for highly technical work.
-- **Command surface**: 46 skills + 406 `<skill>-<mode>` commands + 10 aliases = **467 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
+- **Command surface**: 45 skills + 405 `<skill>-<mode>` commands + 10 aliases = **460 slash commands per harness**, plus `<skill>-<file>` support-reference commands on 20 skills.
 - **muse-security 1.1.0**: its audit mode integrates the OWASP LLM Top 10 **2026 edition** and the OWASP **Top 10 for Agentic Applications**, with runtime-vs-build-time control attribution and ephemeral zero-trust mTLS subagent attestation.
 All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See the [Full Changelog](CHANGELOG.md) or explore all [GitHub Releases](https://github.com/harshsinghmp/muse-skills/releases).
 
@@ -47,7 +47,7 @@ All verified by the CI suite (`bun test` + lint + type-check + secret-scan). See
 
 ## 🧭 Overview
 
-**Muse Skills** transforms vanilla AI coding assistants into an autonomous, senior full-service engineering team and digital agency. Built on the open `SKILL.md` RFC specification, it injects 46 production-grade departments—spanning full-stack engineering, motion design, growth hacking, client operations, and rigorous quality auditing—directly into your agent harness with zero runtime bloat, zero API lock-in, and zero credential leakage.
+**Muse Skills** transforms vanilla AI coding assistants into an autonomous, senior full-service engineering team and digital agency. Built on the open `SKILL.md` RFC specification, it injects 45 production-grade departments—spanning full-stack engineering, motion design, growth hacking, client operations, and rigorous quality auditing—directly into your agent harness with zero runtime bloat, zero API lock-in, and zero credential leakage.
 
 Unlike brittle system prompts or heavy wrapper frameworks, Muse Skills enforces **Progressive Disclosure**: agents read only what they need, execute structured mode playbooks, and verify every single claim against executable tests before declaring work complete.
 
@@ -86,9 +86,9 @@ flowchart TD
         Dispatcher --> NexusLead["🛡️ Nexus: Technical Director & Hardening Gate"]
     end
 
-    subgraph SkillLayer ["📦 46 Canonical Departments (Loaded On-Demand)"]
+    subgraph SkillLayer ["📦 45 Canonical Departments (Loaded On-Demand)"]
         Sol --> EngSkills["webdev, database, devops, mobile, automation, new-project, crm"]
-        Jasper --> DesignSkills["design, animate, designscope, content, smm, seo"]
+        Jasper --> DesignSkills["design, animate, content, smm, seo"]
         Crew --> OpsSkills["brand, ops, client-comms, accounts, gtm, retain"]
         NexusLead --> QualitySkills["code-review, qa-launch, muse-security, gauntlet-loop, git"]
     end
@@ -127,7 +127,7 @@ Each skill is completely self-contained within its own directory:
 
 ## 💼 Core Agency Divisions
 
-Muse Skills organizes 46 specialized capabilities into four internal agency divisions:
+Muse Skills organizes 45 specialized capabilities into four internal agency divisions:
 
 ### 1. 🏗️ Engineering & System Architecture
 High-performance application development, database design, and cloud infrastructure.
@@ -142,7 +142,7 @@ High-performance application development, database design, and cloud infrastruct
 Award-winning user interfaces, design systems, and rich interactive web experiences.
 - **Design Systems & UI Kits**: Design tokens, component primitives, responsive layouts, and CRO patterns ([`design`](skills/agency-delivery/design/README.md)).
 - **Unified Motion & 3D**: Three.js WebGL scenes, interactive canvas shaders, and smooth GSAP choreography ([`animate`](skills/design-interface/animate/README.md)).
-- **Design System Extraction**: Reverse-engineer design tokens and component catalogs from existing websites ([`designscope`](skills/design-interface/designscope/README.md)).
+- **Design System Extraction**: Reverse-engineer design tokens and component catalogs from existing websites, images, or Figma with the `design:scope` mode.
 - **Natural Copywriting**: Humanize AI drafts and apply battle-tested copywriting formulas ([`humanize`](skills/quality-review/humanize/README.md), [`content`](skills/agency-delivery/content/README.md)).
 
 ### 3. 📈 Growth, Marketing & Operations
@@ -168,7 +168,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 ## 📦 Complete Skill Catalog
 
 <details open>
-<summary><b>📋 Browse All 46 Production Skills (Click to collapse/expand)</b></summary>
+<summary><b>📋 Browse All 45 Production Skills (Click to collapse/expand)</b></summary>
 <br/>
 
 | Skill | Description |
@@ -189,8 +189,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`crm`](skills/agency-delivery/crm/README.md) | Full customer relationship and marketing flow department: audience segmentation, RFM scoring, welcome onboarding, cart abandonment recovery, lead nurture journeys, winback, deliverability DNS (SPF/DKIM/DMARC), and SMS triggers across 8 modes. |
 | [`database`](skills/agency-delivery/database/README.md) | Unified database engineering: read-only query execution, slow-query diagnosis, index design, RLS security policies, performance tuning, and pooling across 13 modes. |
 | [`dead-letter`](skills/quality-review/dead-letter/README.md) | Capture, triage, and quarantine failed tasks before they disappear, generating bounded retry packets or escalation questions. |
-| [`design`](skills/agency-delivery/design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, visual storytelling, dynamic visual canvas previews, and interactive 3D web scenes across 15 modes. |
-| [`designscope`](skills/design-interface/designscope/README.md) | Reverse-engineers design systems, color palettes, typography hierarchies, layout trees, and tokens from existing websites, images, or Figma. |
+| [`design`](skills/agency-delivery/design/README.md) | Full website design department: UI design, UX flows, wireframes, brand identity, social templates, UI kits, visual storytelling, canvas/3D scenes, and design-system extraction (`scope`) across 16 modes. |
 | [`devops`](skills/agency-delivery/devops/README.md) | Full infrastructure and reliability department: hosting, CI/CD pipelines, DNS, Cloudflare edge and Workers, security hardening, monitoring, incident response, and preview sandboxes across 11 modes. |
 | [`evidence-ledger`](skills/context-orchestration/evidence-ledger/README.md) | Persistent per-project evidence tracking and source-cited claim verification gate enforcing 'No source, no claim. No verification path, no release.' |
 | [`gauntlet-loop`](skills/quality-review/gauntlet-loop/README.md) | Bounded multi-agent quality improvement loop preventing infinite iterations, self-grading delusions, and regression churn. |
@@ -212,7 +211,7 @@ The hardening gate that audits every line of code, design asset, and deployment.
 | [`research`](skills/agency-delivery/research/README.md) | Client-serving research department: user research, market sizing, competitive intelligence, and due-diligence entity dossiers across 5 modes. |
 | [`retain`](skills/agency-delivery/retain/README.md) | Post-delivery retention loop: scheduled check-ins, monthly value notes, quarterly business reviews, review asks, retainer SLAs, proactive renewals, and client health telemetry across 10 modes. |
 | [`sales-enablement`](skills/agency-delivery/sales-enablement/README.md) | Pre-sale sales enablement department: demo scripts, objection-handling handbooks, one-pagers, and sales playbooks across 5 modes. |
-| [`secretary`](skills/context-orchestration/secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 46 departments. |
+| [`secretary`](skills/context-orchestration/secretary/README.md) | Evidence-grounded staff-work controller, approval hash gate, Socratic adversarial gate, and universal agency dispatcher routing across 45 departments. |
 | [`seo`](skills/agency-delivery/seo/README.md) | Full SEO and AEO department: technical SEO, on-page optimization, content strategy, local SEO, link building, and AI answer engine optimization across 8 modes. |
 | [`smm`](skills/agency-delivery/smm/README.md) | Full organic social department: platform strategy, editorial calendars, post writing, community management, viral carousel generation, and Postiz automation across 13 modes. |
 | [`telegram`](skills/agency-delivery/telegram/README.md) | Telegram messaging department: pure-bash bot alerts, approval boards via curl + jq, and Claude Code hook integration across 7 modes. |
@@ -226,11 +225,11 @@ The hardening gate that audits every line of code, design asset, and deployment.
 
 ## 🔗 Companion & Community Skills
 
-Skills an agent can reach **outside** this source tree. None of them are vendored into `skills/`, and none touch the 46-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) — the zero-dependency portability rule and registry parity both hold.
+Skills an agent can reach **outside** this source tree. None of them are vendored into `skills/`, and none touch the 45-skill registry (`skills.json`, `llms.txt`, `secretary:dispatch`) — the zero-dependency portability rule and registry parity both hold.
 
 | Skill | What it adds | Install |
 |:---|:---|:---|
-| [`muse-skills`](https://github.com/harshsinghmp/muse-skills) | **This suite** — 46 departments. Install everything, or a single department with `--skill <name>` (e.g. `--skill qa-launch`). | `npx skills add harshsinghmp/muse-skills` |
+| [`muse-skills`](https://github.com/harshsinghmp/muse-skills) | **This suite** — 45 departments. Install everything, or a single department with `--skill <name>` (e.g. `--skill qa-launch`). | `npx skills add harshsinghmp/muse-skills` |
 
 ---
 
@@ -238,7 +237,7 @@ Skills an agent can reach **outside** this source tree. None of them are vendore
 
 ### Option 1: Install Complete Suite (Recommended)
 
-Install all 46 skills globally in one command:
+Install all 45 skills globally in one command:
 
 ```bash
 npx skills add harshsinghmp/muse-skills
@@ -264,7 +263,7 @@ bun scripts/muse.ts doctor --fix    # re-export a drifted command surface in pla
 bun ~/.agents/skills/updateagents/scripts/doctor.ts [--json] [--fix]
 ```
 
-The workflow, in order: `update` resolves the latest release tag and re-runs the checksum-pinned installer for it (skills, command surfaces, version marker), then runs `doctor`. `doctor` checks the disk, not the log: all 46 skills present, each detected harness carrying the expected command count **in its own format**, the installed `secretary/references/dispatch.md` resolving to references that actually exist, and git boundary hooks in place. A device is current only when `doctor` exits 0.
+The workflow, in order: `update` resolves the latest release tag and re-runs the checksum-pinned installer for it (skills, command surfaces, version marker), then runs `doctor`. `doctor` checks the disk, not the log: all 45 skills present, each detected harness carrying the expected command count **in its own format**, the installed `secretary/references/dispatch.md` resolving to references that actually exist, and git boundary hooks in place. A device is current only when `doctor` exits 0.
 
 Why not just re-run `npx skills add`? That refreshes skills only. Native slash commands live in per-harness directories (`.claude/commands`, `~/.codex/prompts`, `.gemini/commands`, …), so they need the export pass too — `update` is what makes a refresh immediate on every device.
 
@@ -298,22 +297,23 @@ The router picks a department and a mode from a prompt. Its accuracy is measured
 <!-- routing-matrix:start -->
 | Distribution | Kind | Prompts | Exact `skill:mode` | Department |
 | :--- | :--- | ---: | ---: | ---: |
-| `training (tuned)` | tuned | 247 | 166 (67.2%) | 182 (73.7%) |
+| `training (tuned)` | tuned | 247 | 166 (67.2%) | 183 (74.1%) |
 | `regressions-v1` | unseen | 12 | 12 (100.0%) | 12 (100.0%) |
+| `regressions-v2` | unseen | 3 | 3 (100.0%) | 3 (100.0%) |
 | `v10` | unseen | 40 | 11 (27.5%) | 12 (30.0%) |
-| `v11` | unseen | 40 | 18 (45.0%) | 27 (67.5%) |
+| `v11` | unseen | 40 | 18 (45.0%) | 26 (65.0%) |
 | `v12` | unseen | 40 | 19 (47.5%) | 22 (55.0%) |
 | `v13` | unseen | 40 | 29 (72.5%) | 30 (75.0%) |
 | `v14` | unseen | 40 | 27 (67.5%) | 29 (72.5%) |
-| `v15` | unseen | 40 | 6 (15.0%) | 14 (35.0%) |
+| `v15` | unseen | 40 | 9 (22.5%) | 16 (40.0%) |
 | `v5` | unseen | 40 | 21 (52.5%) | 28 (70.0%) |
-| `v6` | unseen | 40 | 27 (67.5%) | 30 (75.0%) |
+| `v6` | unseen | 40 | 28 (70.0%) | 31 (77.5%) |
 | `v7` | unseen | 40 | 9 (22.5%) | 10 (25.0%) |
 | `v8` | unseen | 40 | 3 (7.5%) | 10 (25.0%) |
 | `v9` | unseen | 40 | 2 (5.0%) | 14 (35.0%) |
 
 
-**Mode coverage**: 184 of 411 routable modes (45%) carry a curated routing signal; the other 227 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
+**Mode coverage**: 186 of 405 routable modes (46%) carry a curated routing signal; the other 219 are reachable only by name/description matching (`routing-coverage.json`, gated by `bun run check:routing:coverage`).
 
 Measured 2026-11-27. The **tuned** set is where the router's vocabulary exists; the **unseen** sets are prompts written blind by independent agents, never used for tuning. Read the unseen rows as the honest state of the routing long tail — `bun run check:routing:matrix` fails if any row drops, and `bun run sync:routing:baseline` is the only way to accept a lower number.
 <!-- routing-matrix:end -->
@@ -328,7 +328,7 @@ Routing accuracy cannot exceed label accuracy. `bun run arbitrate:labels` (`scri
 
 ### Why the router is lexical (and what a real model does instead)
 
-A lexical router matches words a human wrote down; it cannot connect *"the invoice formatter imports the user model"* with `coupling`. Real sentence embeddings can, so they were measured — `all-MiniLM-L6-v2` (q8, 23 MB) embedding the 406 mode descriptions and every prompt, scored on the same seven distributions:
+A lexical router matches words a human wrote down; it cannot connect *"the invoice formatter imports the user model"* with `coupling`. Real sentence embeddings can, so they were measured — `all-MiniLM-L6-v2` (q8, 23 MB) embedding the 405 mode descriptions and every prompt, scored on the same seven distributions:
 
 | Distribution | Router (exact / dept) | Embeddings (exact / dept) |
 | :--- | ---: | ---: |
@@ -386,14 +386,14 @@ bun run setup
 Once installed, invoke any skill or mode directly in your agent:
 
 ```text
-/webdev            # one flat command per skill (46 per-skill commands)
+/webdev            # one flat command per skill (45 per-skill commands)
 /webdev-audit      # every skill-mode as its own command: /<skill>-<mode>
 /git-audit         # ... every shipped audit mode: /seo-audit, /ops-audit, /database-audit ...
 /design uikit      # shortcut: pass the mode as an argument
 /funnel            # the webdev funnel mode, via its flat alias
 ```
 
-- **46 per-skill commands**: the exporter writes flat filenames (`webdev.md` → `/webdev`). There is no `/<skill>:<mode>` colon form — colon-form commands never resolve.
+- **45 per-skill commands**: the exporter writes flat filenames (`webdev.md` → `/webdev`). There is no `/<skill>:<mode>` colon form — colon-form commands never resolve.
 - **355 `<skill>-<mode>` commands**: one generated command per routable `references/<mode>.md`, derived from the same source the secretary dispatch directory is generated from. The skill prefix makes every name unique and self-describing, so modes that repeat across departments — **39 skills ship an `audit` mode**, each reachable as `/git-audit`, `/webdev-audit`, `/design-audit`, `/crm-audit`, ... — never shadow each other, and no mode is unreachable because another skill claimed the bare name.
 - **Mode routing by argument**: modes without an alias are passed as an argument — `/design uikit`, `/design ux`, `/refactor perf`, `/database index`.
 - **10 mode aliases**: `/carousel` (smm), `/funnel` (webdev), `/obsidian` (ops), `/wrangler` (devops), `/pr` (growth), `/aso` (mobile), `/delight` (animate), `/podcast` (content), `/aeo` (seo), `/dispatch` (secretary).

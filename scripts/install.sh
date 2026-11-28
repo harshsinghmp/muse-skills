@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# install.sh — Interactive & Remote Installer for Muse Skills (v8.8.5)
+# install.sh — Interactive & Remote Installer for Muse Skills (v8.9.0)
 # Usage (pinned tag, not a mutable branch):
-#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.8.5/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/harshsinghmp/muse-skills/v8.9.0/scripts/install.sh | bash
 #
 # Supply-chain overrides:
 #   MUSE_SKILLS_REF=<tag>     install from this git tag (default: the latest release)
@@ -9,8 +9,8 @@
 #   MUSE_SKILLS_ALLOW_UNVERIFIED=1  proceed when a release has no checksum asset (not recommended)
 #
 # Flags (for non-interactive / CI automation):
-#   --all                 Install all 46 skills & native slash commands (default)
-#   --skills-only         Install 46 skills only
+#   --all                 Install all 45 skills & native slash commands (default)
+#   --skills-only         Install 45 skills only
 #   --commands-only       Export slash commands only
 #   --sync-agents         Automatically run updateagents to modernize workspace context
 #   --new-project [dir]   Automatically launch new-project scaffolder in specified directory
@@ -47,7 +47,7 @@ physical_path() {
 # the releases API is unreachable, and is the version this installer was cut
 # from. Whichever tag is chosen is still verified against that release's
 # checksums asset, so "latest" never means "unverified".
-PINNED_REF="v8.8.5"
+PINNED_REF="v8.9.0"
 LATEST_REF=""
 if [ -z "${MUSE_SKILLS_REF:-}" ]; then
   LATEST_REF="$(curl -fsSL --max-time 10 \
@@ -68,7 +68,7 @@ YELLOW="\033[33m"
 CYAN="\033[36m"
 RESET="\033[0m"
 
-echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.8.5)${RESET}"
+echo -e "${BOLD}${BLUE}🏛️  Muse Skills Universal Installer (v8.9.0)${RESET}"
 echo -e "Curated suite of 46 universal AI agent skills. MIT License."
 echo "================================================================"
 

@@ -2,18 +2,18 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-27T18:06:05.340Z",
-  "head": "9681ae6ed5a0c6b51493a136e5219203dac053ec",
+  "updatedAt": "2026-11-28T08:49:15.457Z",
+  "head": "3a068b9ce89364333738872997f1e9e882b8e410",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.8.5"
+    "releaseTag": "v8.9.0"
   },
   "agentWatermark": {
-    "point": 185,
-    "commit": "11cf83d34a22ba10ffb4c5c4e6c01c490da86f36",
-    "syncedAt": "2026-11-12T03:15:42.458Z"
+    "point": 231,
+    "commit": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
+    "syncedAt": "2026-11-28T08:42:02.180Z"
   },
   "points": [
     {
@@ -7680,8 +7680,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"branch guard\" found in .agents/context/current.md"
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"branch guard\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
         }
       },
       "shipped": true,
@@ -9310,6 +9311,294 @@
       "shipped": true,
       "releaseTag": "v8.8.5",
       "createdAt": "2026-11-27T18:05:26.821Z"
+    },
+    {
+      "id": "DP-0227",
+      "point": 227,
+      "commit": "4478f19234e3c9d5ca2e2c916bc86e794de3a1f1",
+      "shortCommit": "4478f19",
+      "date": "2026-11-27",
+      "type": "other",
+      "scope": "",
+      "summary": "Release v8.8.5 (#525)",
+      "breaking": false,
+      "files": [
+        ".docs-ledger.json",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "RELEASE_NOTES.md",
+        "bun.lock",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/check-deps.ts",
+        "scripts/install.sh",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/ci-hardening.test.ts",
+        "tests/fixtures/routing-eval/heldout-v11.json",
+        "tests/fixtures/routing-eval/heldout-v12.json",
+        "tests/fixtures/routing-eval/heldout-v13.json",
+        "tests/fixtures/routing-eval/heldout-v14.json",
+        "tests/fixtures/routing-eval/heldout-v15.json",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"release\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": ["llms.txt"],
+          "evidence": "phrase \"release\" found in llms.txt"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.8.5",
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0228",
+      "point": 228,
+      "commit": "e38706d36026e0d8884e145159c2dec37851efc8",
+      "shortCommit": "e38706d",
+      "date": "2026-11-28",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump astral-sh/setup-uv from 10.3.3 to 10.4.0 (#504)",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"setup-uv 10.4.0\" found in .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.9.0",
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0229",
+      "point": 229,
+      "commit": "13d5220a531a965c287a4c9edcdbb6a754553c9e",
+      "shortCommit": "13d5220",
+      "date": "2026-11-28",
+      "type": "chore",
+      "scope": "deps",
+      "summary": "Bump github/codeql-action/upload-sarif (#503)",
+      "breaking": false,
+      "files": [".github/workflows/ci.yml"],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md", ".agents/context/current.md"],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"CI action pins\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.9.0",
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0230",
+      "point": 230,
+      "commit": "01a2804d7a73520340eae14a96e16ad33de672d7",
+      "shortCommit": "01a2804",
+      "date": "2026-11-28",
+      "type": "feat",
+      "scope": "design",
+      "summary": "merge designscope into one design:scope mode (#527)",
+      "breaking": false,
+      "files": [
+        ".skillspector-baseline.yaml",
+        "CHANGELOG.md",
+        "CREDITS.md",
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/credits.html",
+        "llms.txt",
+        "package.json",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "scripts/cut-release.ts",
+        "scripts/eval-routing.ts",
+        "scripts/export-commands.ts",
+        "scripts/gen-banner.ts",
+        "scripts/install.sh",
+        "scripts/sync-skill-surface.ts",
+        "skills.json",
+        "skills/agency-delivery/design/README.md",
+        "skills/agency-delivery/design/SKILL.md",
+        "skills/agency-delivery/design/agents/openai.yaml",
+        "skills/agency-delivery/design/references/branding.md",
+        "skills/agency-delivery/design/references/prototype.md",
+        "skills/agency-delivery/design/references/scope.md",
+        "skills/agency-delivery/design/references/ui.md",
+        "skills/agency-delivery/design/references/uikit.md",
+        "skills/agency-delivery/design/scripts/scope/check_contrast.py",
+        "skills/agency-delivery/design/scripts/scope/extract_css_vars.py",
+        "skills/agency-delivery/design/scripts/scope/lint_design_md.py",
+        "skills/agency-delivery/design/scripts/scope/token_fence.ts",
+        "skills/agency-delivery/design/scripts/scope/verify_design.py",
+        "skills/agency-delivery/webdev/SKILL.md",
+        "skills/agency-delivery/webdev/agents/openai.yaml",
+        "skills/context-orchestration/coupling-router/SKILL.md",
+        "skills/context-orchestration/coupling-router/references/skill-compatibility-matrix.md",
+        "skills/context-orchestration/secretary/references/dispatch.md",
+        "skills/context-orchestration/secretary/references/mode-signals.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/routing-defaults.ts",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "skills/core-engine/new-project/SKILL.md",
+        "skills/design-interface/animate/SKILL.md",
+        "skills/design-interface/animate/agents/openai.yaml",
+        "skills/design-interface/designscope/LICENSE",
+        "skills/design-interface/designscope/README.md",
+        "skills/design-interface/designscope/SKILL.md",
+        "skills/design-interface/designscope/agents/openai.yaml",
+        "skills/design-interface/designscope/references/analysis-framework.md",
+        "skills/design-interface/designscope/references/audit.md",
+        "skills/design-interface/designscope/references/capture-flows.md",
+        "skills/design-interface/designscope/references/element-copy.md",
+        "skills/design-interface/designscope/references/layout-tree-extraction.md",
+        "skills/design-interface/designscope/references/output-template.md",
+        "skills/design-interface/designscope/references/token-extraction.md",
+        "skills/design-interface/refactor/SKILL.md",
+        "skills/design-interface/refactor/agents/openai.yaml",
+        "skills/design-interface/refactor/examples/sample-5-state-refactor.md",
+        "skills/references/audit-mode-guidance.md",
+        "tests/ci-hardening.test.ts",
+        "tests/export-commands.test.ts",
+        "tests/fixtures/agency-simulation/README.md",
+        "tests/fixtures/agency-simulation/productized-agency.json",
+        "tests/fixtures/routing-eval/heldout-v10.json",
+        "tests/fixtures/routing-eval/heldout-v11.json",
+        "tests/fixtures/routing-eval/heldout-v14.json",
+        "tests/fixtures/routing-eval/heldout-v15.json",
+        "tests/fixtures/routing-eval/heldout-v6.json",
+        "tests/fixtures/routing-eval/heldout-v8.json",
+        "tests/fixtures/routing-eval/heldout-v9.json",
+        "tests/portable-doctor.test.ts",
+        "tests/routing-eval.test.ts",
+        "tests/security-coverage.test.ts",
+        "tests/security-guidance.test.ts",
+        "tests/setup-end-to-end.test.ts",
+        "tests/simulation-workflows.test.ts",
+        "tests/skill-consistency.test.ts",
+        "tests/skills.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"into design\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"into design\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"merge designscope\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.9.0",
+      "createdAt": "2026-11-28T08:41:30.036Z"
+    },
+    {
+      "id": "DP-0231",
+      "point": 231,
+      "commit": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
+      "shortCommit": "368e28a",
+      "date": "2026-11-28",
+      "type": "feat",
+      "scope": "routing",
+      "summary": "bounded incident and evidence cues (#528)",
+      "breaking": false,
+      "files": [
+        "CHANGELOG.md",
+        "README.md",
+        "routing-baseline.json",
+        "routing-coverage.json",
+        "skills/context-orchestration/secretary/references/routing-signals.json",
+        "skills/context-orchestration/secretary/scripts/secretary.ts",
+        "tests/fixtures/routing-eval/regressions-v2.json",
+        "tests/routing-regressions.test.ts"
+      ],
+      "audiences": {
+        "developer": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"evidence cues\" found in CHANGELOG.md"
+        },
+        "user": {
+          "required": true,
+          "status": "documented",
+          "docs": ["CHANGELOG.md"],
+          "evidence": "phrase \"evidence cues\" found in CHANGELOG.md"
+        },
+        "agent": {
+          "required": true,
+          "status": "documented",
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"bounded incident\" found in .agents/context/current.md"
+        }
+      },
+      "shipped": true,
+      "releaseTag": "v8.9.0",
+      "createdAt": "2026-11-28T08:41:30.036Z"
     }
   ]
 }

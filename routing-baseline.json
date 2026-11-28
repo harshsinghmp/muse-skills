@@ -4,13 +4,18 @@
   "distributions": {
     "training": {
       "exact": 166,
-      "department": 182,
+      "department": 183,
       "total": 247
     },
     "regressions-v1": {
       "exact": 12,
       "department": 12,
       "total": 12
+    },
+    "regressions-v2": {
+      "exact": 3,
+      "department": 3,
+      "total": 3
     },
     "v10": {
       "exact": 11,
@@ -19,7 +24,7 @@
     },
     "v11": {
       "exact": 18,
-      "department": 27,
+      "department": 26,
       "total": 40
     },
     "v12": {
@@ -38,8 +43,8 @@
       "total": 40
     },
     "v15": {
-      "exact": 6,
-      "department": 14,
+      "exact": 9,
+      "department": 16,
       "total": 40
     },
     "v5": {
@@ -48,8 +53,8 @@
       "total": 40
     },
     "v6": {
-      "exact": 27,
-      "department": 30,
+      "exact": 28,
+      "department": 31,
       "total": 40
     },
     "v7": {

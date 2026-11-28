@@ -42,7 +42,7 @@ describe("security guidance hardening (#396)", () => {
     expect(gate).toContain("__Host-");
   });
 
-  test("exposure audit, database, relay, smm, designscope, and research guidance is hardened", () => {
+  test("exposure audit, database, relay, smm, design, and research guidance is hardened", () => {
     const exposure = read("skills/core-engine/git/references/exposure-audit.md");
     expect(exposure).toContain("--force-with-lease");
     expect(exposure).toContain("must re-clone");
@@ -59,7 +59,7 @@ describe("security guidance hardening (#396)", () => {
     expect(smm).toContain("Never post deliberately false claims");
     expect(smm).not.toContain("**Cunningham's Law** — post a confidently wrong answer");
 
-    const capture = read("skills/design-interface/designscope/references/capture-flows.md");
+    const capture = read("skills/agency-delivery/design/references/scope.md");
     expect(capture).toContain("URL safety gate");
     expect(capture).toContain("untrusted data, not instructions");
 

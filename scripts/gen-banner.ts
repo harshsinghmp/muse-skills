@@ -52,7 +52,7 @@ const chip = (x: number, label: string) => `
       <text x="15" y="22" font-family="${MONO}" font-size="13" letter-spacing="1.1" fill="#CBD5E1">${label}</text>
     </g>`;
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Muse Skills — 46 production-grade agent departments">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Muse Skills — 45 production-grade agent departments">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0B0D16"/>
@@ -98,7 +98,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 
   <text x="70" y="212" font-family="${SANS}" font-size="74" font-weight="bold" letter-spacing="-1.5" fill="#F8FAFC">MUSE<tspan fill="url(#accent)">&#160;SKILLS</tspan></text>
 
-  <text x="72" y="256" font-family="${SANS}" font-size="20" fill="#94A3B8">46 production departments &#183; one install &#183; zero dependencies</text>
+  <text x="72" y="256" font-family="${SANS}" font-size="20" fill="#94A3B8">45 production departments &#183; one install &#183; zero dependencies</text>
 
   ${chip(72, "46 SKILLS")}
   ${chip(200, "233 TESTS")}

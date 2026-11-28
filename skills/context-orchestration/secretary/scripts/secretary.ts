@@ -541,8 +541,8 @@ export const CONCEPTS: Concept[] = [
   { department: "content", mode: "vsl", boost: 10, tokens: ["vsl", "salesletter", "programme", "webinar-pitch"] },
   { department: "retain", mode: "check-in", boost: 9, tokens: ["silent", "checkin", "touchpoint", "quiet"] },
   {
-    department: "designscope",
-    mode: "token-extraction",
+    department: "design",
+    mode: "scope",
     boost: 10,
     tokens: ["screenshot", "spacing", "palette"],
   },
@@ -783,8 +783,8 @@ export const CONCEPTS: Concept[] = [
   },
   { department: "refactor", mode: "perf", boost: 10, tokens: ["re-renders", "render performance", "keystroke"] },
   {
-    department: "designscope",
-    mode: "capture-flows",
+    department: "design",
+    mode: "scope",
     boost: 10,
     tokens: ["capture the onboarding flow", "prototype into steps", "edge cases"],
   },
@@ -838,6 +838,30 @@ export const CONCEPTS: Concept[] = [
     mode: "user-research",
     boost: 10,
     tokens: ["why trial users leave", "run the interviews", "user interviews"],
+  },
+  {
+    department: "devops",
+    mode: "incident",
+    boost: 10,
+    tokens: ["incident bridge", "took down checkout", "deploy took down"],
+  },
+  {
+    department: "incident-response",
+    mode: "mitigate",
+    boost: 10,
+    tokens: ["stop the bleeding", "before the rca", "duplicate-charge"],
+  },
+  {
+    department: "evidence-ledger",
+    mode: "claim-verification-taxonomy",
+    boost: 10,
+    tokens: ["evidence strength", "classify these claims", "claim verification"],
+  },
+  {
+    department: "periodic-retreat",
+    mode: "audit",
+    boost: 10,
+    tokens: ["last quarter's bets", "decide what to stop", "review last quarter"],
   },
 ];
 

@@ -39,7 +39,7 @@ describe("portable doctor (installed skill, no repo)", () => {
 
       const result = run(home, workspace, "--json");
       const report = JSON.parse(result.stdout);
-      expect(report.skills).toBeGreaterThanOrEqual(46);
+      expect(report.skills).toBeGreaterThanOrEqual(45);
       expect(report.modes).toBeGreaterThan(400);
 
       // .claude exists but is empty -> the mirror check must fail, not pass.

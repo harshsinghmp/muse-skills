@@ -12,7 +12,7 @@ implementing feedback because it arrived, not because it is correct.
    upload/excerpt, not defects. Adjudicating those as real breaks correct work.
 2. **Verify before implementing.** Check every piece of feedback against the actual
    code. Read the lines the reviewer cites; confirm the claimed behavior exists.
-2. **Classify each item** into exactly one response:
+3. **Classify each item** into exactly one response:
    - **Implement** — verified correct; apply it (one commit per finding when more
      than one).
    - **Rebut** — verified wrong; answer with evidence (test output, spec reference,
@@ -20,15 +20,15 @@ implementing feedback because it arrived, not because it is correct.
      arbiter.
    - **Ask** — genuinely ambiguous; reply with one specific question, not a restate
      of the feedback.
-3. **Risk-gate before applying.** Feedback touching authentication, payments,
+4. **Risk-gate before applying.** Feedback touching authentication, payments,
    migrations, or public contracts gets investigation before application — never a
    blind edit, however senior the source. Blocking feedback that you decline needs a
    stated reason and, where the call is not yours to make, a named authority to
    override — you are the executor, not the approver, on blockers.
-4. **Answer every comment.** Every piece of feedback is either fixed and verified or
+5. **Answer every comment.** Every piece of feedback is either fixed and verified or
    answered with a reasoned why-not (with evidence), before the thread closes. No
    silent partial application.
-5. **Close the loop.** After applying, re-verify the original concern is actually
+6. **Close the loop.** After applying, re-verify the original concern is actually
    addressed (not just the literal suggestion implemented) and report what was done
    per item.
 

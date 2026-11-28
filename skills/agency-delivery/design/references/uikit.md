@@ -70,7 +70,7 @@ A production-grade, accessible UI component kit architecture:
 
 ## Routing
 
-- Extracting tokens from an existing website → `designscope`.
+- Extracting tokens from an existing website → `design`.
 - Refactoring and polishing an existing UI component → `refactor-ui`.
 - Building full application pages or layouts → `design:ui` or `webdev:frontend`.
 - Adding rich scroll or interactive animations → `animate`.
