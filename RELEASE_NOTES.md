@@ -1,3 +1,33 @@
+# 🏛️ Muse Skills v8.9.0 — <one line for humans>
+
+> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 45 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
+
+---
+
+## 🛠️ What Changed in v8.9.0
+
+- **Bump astral-sh/setup-uv from 10.3.3 to 10.4.0 (#504)** (`e38706d`, chore(deps)): see the CHANGELOG entry for the detailed evidence.
+- **Bump github/codeql-action/upload-sarif (#503)** (`13d5220`, chore(deps)): see the CHANGELOG entry for the detailed evidence.
+- **merge designscope into one design:scope mode (#527)** (`01a2804`, feat(design)): see the CHANGELOG entry for the detailed evidence.
+- **bounded incident and evidence cues (#528)** (`368e28a`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+
+## 📊 Verification
+
+| Metric | v8.8.5 | v8.9.0 |
+|:---|:---|:---|
+| Automated Tests | <n> | **<n>** |
+| Test Files | <n> | **<n>** |
+| Test Failures | 0 | **0** |
+| Secret Leaks | 0 | **0** |
+
+## 🚀 Install
+
+```bash
+npx skills add harshsinghmp/muse-skills
+```
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.5...v8.9.0
+
 # 🏛️ Muse Skills v8.8.5 — Routing Measured, Loop Closed
 
 > **Patch release: ships the measured routing work through a frozen v15 set, moves `musememory` to the latest dist-tag, and closes the continuous routing-iteration loop.** 927 automated tests. 78 test files. 46 production-grade skills. 462 slash commands per harness. Zero failures. Zero credential leaks.

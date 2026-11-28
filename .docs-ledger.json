@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": "@harshsinghmp/muse-skills",
   "createdAt": "2026-11-03T06:30:02.216Z",
-  "updatedAt": "2026-11-28T08:42:02.180Z",
-  "head": "368e28a75f37b25dbed43e355cf8f384e061c1f2",
+  "updatedAt": "2026-11-28T08:49:15.457Z",
+  "head": "3a068b9ce89364333738872997f1e9e882b8e410",
   "watermark": {
     "point": 130,
     "commit": "104631001684a5be95448bee35f71699e1198ae2",
     "date": "2026-11-09T21:11:37.728Z",
-    "releaseTag": "v8.8.5"
+    "releaseTag": "v8.9.0"
   },
   "agentWatermark": {
     "point": 231,
@@ -7680,8 +7680,9 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"branch guard\" found in .agents/context/current.md"
+          "docs": [".agents/context/current.md", "CHANGELOG.md"],
+          "evidence": "phrase \"branch guard\" found in CHANGELOG.md, .agents/context/current.md",
+          "manual": true
         }
       },
       "shipped": true,
@@ -8257,7 +8258,7 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"audits fail\" found in .agents/context/current.md"
+          "evidence": "phrase \"fail closed\" found in .agents/context/current.md"
         }
       },
       "shipped": true,
@@ -9401,8 +9402,8 @@
           "manual": true
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.9.0",
       "createdAt": "2026-11-28T08:41:30.036Z"
     },
     {
@@ -9439,8 +9440,8 @@
           "manual": true
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.9.0",
       "createdAt": "2026-11-28T08:41:30.036Z"
     },
     {
@@ -9548,11 +9549,11 @@
           "required": true,
           "status": "documented",
           "docs": [".agents/context/current.md"],
-          "evidence": "phrase \"design scope\" found in .agents/context/current.md"
+          "evidence": "phrase \"merge designscope\" found in .agents/context/current.md"
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.9.0",
       "createdAt": "2026-11-28T08:41:30.036Z"
     },
     {
@@ -9591,12 +9592,12 @@
         "agent": {
           "required": true,
           "status": "documented",
-          "docs": [".agents/context/roadmap.md"],
-          "evidence": "phrase \"bounded incident\" found in .agents/context/roadmap.md"
+          "docs": [".agents/context/current.md"],
+          "evidence": "phrase \"bounded incident\" found in .agents/context/current.md"
         }
       },
-      "shipped": false,
-      "releaseTag": null,
+      "shipped": true,
+      "releaseTag": "v8.9.0",
       "createdAt": "2026-11-28T08:41:30.036Z"
     }
   ]
