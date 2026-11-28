@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [8.9.0] - 2026-11-28
+
 ### Changed
 
 - **`designscope` merged into `design:scope`** (breaking, 46 → 45 skills): the seven extraction workflows now live in one `design` mode (`references/scope.md`) with their scripts under `design/scripts/scope/`. The retired skill and its seven mode commands are gone; the registry, dispatch, README, llms, routing fixtures, agency simulation, and tests are updated. Command surface: **460 per harness** (45 skills + 405 modes + 10 aliases).
@@ -13,6 +15,8 @@ All notable changes to this project are documented in this file.
 
 - **Bounded routing batch** (`secretary`): incident-response and evidence cues take v15 from **6/40 exact · 14/40 department** to **9/40 · 16/40**, with v5–v14, tuned (166/183), and regressions-v1 unchanged. `regressions-v2` pins the three fixed prompts. Audit-remediation and quarterly-retreat cues were dropped because they did not move the department without overfitting.
 - **Reference step numbering** (12 reference files): repaired duplicate and backwards top-level step numbers in `content/email`, `content/blog`, `mobile/android`, `mobile/pwa`, `smm/content`, `ops/proposal`, `ops/onboarding`, `gtm/list`, `gtm/handover`, `code-review/receiving-feedback`, `database/vector-search`, and `accounts/tax-compliance`.
+
+**Full Changelog**: https://github.com/harshsinghmp/muse-skills/compare/v8.8.5...v8.9.0
 
 ## [8.8.5] - 2026-11-27
 
