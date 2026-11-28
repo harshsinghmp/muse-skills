@@ -1,22 +1,22 @@
-# 🏛️ Muse Skills v8.9.0 — <one line for humans>
+# 🏛️ Muse Skills v8.9.0 — Design Scope Consolidation
 
-> **<Patch|Minor> release: <what changed and why it matters>.** <N> automated tests. <F> test files. 45 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
+> **Minor release: `designscope` becomes one `design:scope` mode, the surface and artifact debt is cleared, and the bounded incident/evidence routing batch lands.** 924 automated tests. 78 test files. 45 production-grade skills. 460 slash commands per harness. Zero failures. Zero credential leaks.
 
 ---
 
 ## 🛠️ What Changed in v8.9.0
 
-- **Bump astral-sh/setup-uv from 10.3.3 to 10.4.0 (#504)** (`e38706d`, chore(deps)): see the CHANGELOG entry for the detailed evidence.
-- **Bump github/codeql-action/upload-sarif (#503)** (`13d5220`, chore(deps)): see the CHANGELOG entry for the detailed evidence.
-- **merge designscope into one design:scope mode (#527)** (`01a2804`, feat(design)): see the CHANGELOG entry for the detailed evidence.
-- **bounded incident and evidence cues (#528)** (`368e28a`, feat(routing)): see the CHANGELOG entry for the detailed evidence.
+- **`designscope` merged into `design:scope` (breaking)** (`design`): the seven extraction workflows now live in one `design` mode with references in `design/references/scope.md` and scripts in `design/scripts/scope/`. The retired skill and its seven mode commands are gone. The suite is **45 skills, 405 modes, 460 commands per harness**.
+- **Bounded routing batch** (`secretary`): incident-response and evidence cues take v15 to **9/40 exact · 16/40 department**; v5–v14, tuned (166/183), and regressions-v1 are unchanged. `regressions-v2` pins the fixed prompts.
+- **Surface hygiene**: stale remote branches pruned to `dev`/`main`, old artifacts archived (17 MB → 216 KB active), 12 reference step sequences normalized, and CI action pins refreshed (setup-uv 10.4.0, codeql upload-sarif 4.39.4).
+- **Documentation sync**: `updatedocs` 100/100 with zero broken links and zero pending ledger points; `updateagents` folded DP-0227–DP-0231 into agent context and refreshed its hash.
 
 ## 📊 Verification
 
 | Metric | v8.8.5 | v8.9.0 |
 |:---|:---|:---|
-| Automated Tests | <n> | **<n>** |
-| Test Files | <n> | **<n>** |
+| Automated Tests | 927 | **924** |
+| Test Files | 78 | **78** |
 | Test Failures | 0 | **0** |
 | Secret Leaks | 0 | **0** |
 
